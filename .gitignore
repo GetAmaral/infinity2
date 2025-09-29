@@ -1,0 +1,180 @@
+# 🚀 INFINITY - GITIGNORE
+# Modern Symfony UX Application with Docker
+
+###> Symfony Framework ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< Symfony Framework ###
+
+###> Doctrine DBAL ###
+/.env.test.local
+###< Doctrine DBAL ###
+
+###> FrankenPHP ###
+/public/hot
+/public/storage
+###< FrankenPHP ###
+
+###> AssetMapper ###
+/public/assets/
+!/public/assets/.gitkeep
+###< AssetMapper ###
+
+###> Docker ###
+# Docker volumes
+.docker/
+docker-data/
+postgres_data/
+
+# Docker Compose override files
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# Docker build context
+.dockerignore
+###< Docker ###
+
+###> SSL Certificates ###
+nginx/ssl/*.crt
+nginx/ssl/*.key
+nginx/ssl/*.pem
+###< SSL Certificates ###
+
+###> IDE ###
+# PhpStorm / IntelliJ
+.idea/
+*.iml
+*.iws
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+###< IDE ###
+
+###> Operating System ###
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+###< Operating System ###
+
+###> Logs ###
+*.log
+/logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+###< Logs ###
+
+###> Node.js (if using) ###
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+###< Node.js ###
+
+###> PHP ###
+# Composer
+/vendor/
+composer.phar
+composer.lock
+
+# PHP-CS-Fixer
+/.php-cs-fixer.cache
+/.php_cs.cache
+
+# PHPUnit
+/.phpunit.result.cache
+/phpunit.xml
+/coverage/
+###< PHP ###
+
+###> Database ###
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Database dumps
+*.sql
+*.dump
+###< Database ###
+
+###> Application Specific ###
+# Temporary files
+/tmp/
+/temp/
+
+# Cache
+/cache/
+
+# Runtime files
+*.pid
+
+# Application logs
+/var/log/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# API documentation generated files
+/api-docs/
+
+# Test coverage
+/coverage/
+###< Application Specific ###
+
+###> Security ###
+# Environment files with secrets
+.env.prod
+.env.production
+.env.staging
+
+# Private keys
+*.pem
+*.key
+*.p12
+
+# Certificate files
+*.crt
+*.cer
+
+# SSH keys
+id_rsa
+id_rsa.pub
+known_hosts
+###< Security ###

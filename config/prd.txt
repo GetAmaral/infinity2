@@ -1,0 +1,38 @@
+this is a brand new project.
+
+ 🏗️ Architecture
+
+  - Separate Docker Services: API Platform backend and Refine.dev frontend in separate containers, postgresql database service
+  - GraphQL Integration: Full GraphQL support with API Platform and Refine.dev data provider
+  - Microservices Pattern: Following 2025 best practices with proper separation of concerns
+
+  🔧 Backend (API Platform + Symfony)
+
+  - Symfony with API Platform
+  - GraphQL support enabled with GraphiQL interface
+  - PostgreSQL 16 with Doctrine ORM
+  - FrankenPHP for modern PHP performance
+  - Sample Organization OneToMany User entities with full GraphQL operations
+
+  🎨 Frontend (Refine.dev)
+
+  - React 18 + TypeScript with Next.js
+  - GraphQL data provider for API Platform integration
+  - Ant Design UI components
+  - Complete CRUD interface for Organization OneToMany Users
+  - Hot reloading enabled
+
+  🐳 Docker Configuration
+
+  - No version tags in compose.yaml
+  - File sync for easy development (all folders auto-sync)
+  - Separate services for frontend/backend/database
+  - Optimized volumes for performance
+
+study the best architecture for ports (i wish in dev, localhost access the frontend and localhodt/api access backend)
+
+you must study hard and deep online about all latest versions of the techs, best practices and latest docs. implement all, pit services running and migrate darabase and test /localhost endpoint untill all is working.
+
+after all research, prepare a detailed plan for this implementation, eithh all necessary orientations for a claude code agente implement. the plan must be a continuous topic tasks flow, each task very detailed, without "phases" or tinelines, just one detaiked step after the other.
+
+once you elaborare the plan, come to me for discussion
