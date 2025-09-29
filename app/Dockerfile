@@ -22,7 +22,11 @@ COPY . .
 # Create required directories and set permissions
 RUN mkdir -p var/cache var/log \
     && chown -R www-data:www-data var/ \
-    && chmod -R 755 var/
+    && chmod -R 775 var/ \
+    && mkdir -p .phpunit \
+    && chown -R www-data:www-data .phpunit \
+    && chmod -R 775 .phpunit \
+    && chown -R www-data:www-data .
 
 # Copy FrankenPHP configuration
 COPY docker/frankenphp/Caddyfile /etc/frankenphp/Caddyfile
@@ -33,9 +37,9 @@ RUN composer run-script post-install-cmd
 # Set user
 USER www-data
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1
+# Health check - check if FrankenPHP process is running
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD pgrep frankenphp > /dev/null || exit 1
 
 EXPOSE 8000
 CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile"]

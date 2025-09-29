@@ -21,7 +21,7 @@ class Organization
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: UuidV7Generator::class)]
-    public readonly Uuid $id;
+    public Uuid $id;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]

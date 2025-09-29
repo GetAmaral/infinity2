@@ -20,7 +20,8 @@ class OrganizationApiTest extends WebTestCase
         $this->assertIsArray($content);
         $this->assertArrayHasKey('@context', $content);
         $this->assertArrayHasKey('@type', $content);
-        $this->assertArrayHasKey('hydra:member', $content);
+        $this->assertArrayHasKey('member', $content);
+        $this->assertArrayHasKey('totalItems', $content);
     }
 
     public function testGetSingleOrganizationApi(): void
@@ -56,13 +57,15 @@ class OrganizationApiTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('POST', '/api/organizations', [
-            'headers' => ['Content-Type' => 'application/ld+json'],
-            'json' => [
+        $client->request('POST', '/api/organizations',
+            [], // parameters
+            [], // files
+            ['CONTENT_TYPE' => 'application/ld+json'], // server
+            json_encode([
                 'name' => 'Created via API',
                 'description' => 'This organization was created through the API'
-            ]
-        ]);
+            ])
+        );
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');

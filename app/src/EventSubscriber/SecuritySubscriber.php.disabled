@@ -30,7 +30,7 @@ final class SecuritySubscriber implements EventSubscriberInterface
         '/passthru\s*\(/i', // Passthru function
         '/file_get_contents\s*\(/i', // File read attempts
         '/\.\.\/\.\.\//i', // Path traversal
-        '/\.\.\\\.\.\\/i', // Windows path traversal
+        '/\.\.\\\\\.\.\\\\/i', // Windows path traversal
     ];
 
     private const SUSPICIOUS_USER_AGENTS = [
@@ -53,7 +53,6 @@ final class SecuritySubscriber implements EventSubscriberInterface
     ];
 
     public function __construct(
-        #[Autowire(service: 'monolog.logger.security')]
         private readonly LoggerInterface $securityLogger
     ) {
     }
@@ -144,7 +143,7 @@ final class SecuritySubscriber implements EventSubscriberInterface
     {
         $maxRequestSize = 10 * 1024 * 1024; // 10MB
 
-        $contentLength = (int) $request->headers->get('Content-Length', 0);
+        $contentLength = (int) $request->headers->get('Content-Length', '0');
 
         if ($contentLength > $maxRequestSize) {
             $this->securityLogger->warning('Excessively large request detected', [

@@ -47,6 +47,25 @@ chmod +x scripts/setup.sh && ./scripts/setup.sh
 # https://localhost/health/detailed (System Status)
 ```
 
+### **🧪 Testing Commands**
+```bash
+# Run ALL tests from /tests directory with detailed output and system status
+./scripts/run-tests.sh
+
+# Quick test run - all tests, simple output
+./scripts/test-quick.sh
+
+# Manual test execution (runs all tests in /tests directory)
+docker run --rm --network=inf_infinity_network -v "$(pwd)/app:/app" -w /app inf-app php bin/phpunit
+
+# Run specific test file or method
+docker run --rm --network=inf_infinity_network -v "$(pwd)/app:/app" -w /app inf-app php bin/phpunit tests/Entity/UserTest.php
+docker run --rm --network=inf_infinity_network -v "$(pwd)/app:/app" -w /app inf-app php bin/phpunit --filter testMethodName
+```
+
+**📝 Note for Claude Code Sessions:**
+> When adding new tests to this project, they will automatically be discovered and executed by the test scripts above. PHPUnit scans the entire `/tests` directory recursively, so any new test files following PSR-4 naming conventions (e.g., `SomeNewTest.php`) will be included in the test runs. No modifications to the test scripts are needed when adding new tests.
+
 ### **🏭 Production Setup**
 ```bash
 # Production deployment with optimizations

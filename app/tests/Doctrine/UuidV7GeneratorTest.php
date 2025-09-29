@@ -5,6 +5,7 @@ namespace App\Tests\Doctrine;
 use App\Doctrine\UuidV7Generator;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV7;
 
 class UuidV7GeneratorTest extends TestCase
@@ -18,7 +19,7 @@ class UuidV7GeneratorTest extends TestCase
         $uuid = $generator->generateId($entityManager, $entity);
 
         $this->assertInstanceOf(UuidV7::class, $uuid);
-        $this->assertTrue($uuid->isValid());
+        $this->assertTrue(Uuid::isValid($uuid->toRfc4122()));
     }
 
     public function testIsPostInsertGenerator(): void

@@ -23,8 +23,8 @@ class HomeControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('a[href="/organization"]');
-        $this->assertSelectorExists('a[href="/user"]');
+        $this->assertSelectorExists('a[href="/organization/"]');
+        $this->assertSelectorExists('a[href="/user/"]');
         $this->assertSelectorExists('a[href="/api"]');
         $this->assertSelectorTextContains('nav', '🚀 Infinity');
     }

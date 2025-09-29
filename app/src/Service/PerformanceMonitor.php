@@ -12,7 +12,6 @@ final class PerformanceMonitor
     private array $timers = [];
 
     public function __construct(
-        #[Autowire(service: 'monolog.logger.performance')]
         private readonly LoggerInterface $performanceLogger
     ) {
     }

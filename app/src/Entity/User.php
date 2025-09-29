@@ -11,6 +11,7 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '`user`')]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource]
 class User
@@ -19,7 +20,7 @@ class User
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: UuidV7Generator::class)]
-    public readonly Uuid $id;
+    public Uuid $id;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]

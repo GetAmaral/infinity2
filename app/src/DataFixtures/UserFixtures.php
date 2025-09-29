@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Organization;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -22,7 +23,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user = new User();
             $user->setName($name);
             $user->setEmail($email);
-            $user->setOrganization($this->getReference(OrganizationFixtures::ORG_ACME_REFERENCE));
+            $user->setOrganization($this->getReference(OrganizationFixtures::ORG_ACME_REFERENCE, Organization::class));
             $manager->persist($user);
         }
 
@@ -37,7 +38,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user = new User();
             $user->setName($name);
             $user->setEmail($email);
-            $user->setOrganization($this->getReference(OrganizationFixtures::ORG_GLOBEX_REFERENCE));
+            $user->setOrganization($this->getReference(OrganizationFixtures::ORG_GLOBEX_REFERENCE, Organization::class));
             $manager->persist($user);
         }
 
@@ -53,7 +54,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user = new User();
             $user->setName($name);
             $user->setEmail($email);
-            $user->setOrganization($this->getReference(OrganizationFixtures::ORG_WAYNETECH_REFERENCE));
+            $user->setOrganization($this->getReference(OrganizationFixtures::ORG_WAYNETECH_REFERENCE, Organization::class));
             $manager->persist($user);
         }
 
@@ -69,7 +70,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user = new User();
             $user->setName($name);
             $user->setEmail($email);
-            $user->setOrganization($this->getReference(OrganizationFixtures::ORG_STARK_REFERENCE));
+            $user->setOrganization($this->getReference(OrganizationFixtures::ORG_STARK_REFERENCE, Organization::class));
             $manager->persist($user);
         }
 
@@ -84,7 +85,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user = new User();
             $user->setName($name);
             $user->setEmail($email);
-            $user->setOrganization($this->getReference(OrganizationFixtures::ORG_UMBRELLA_REFERENCE));
+            $user->setOrganization($this->getReference(OrganizationFixtures::ORG_UMBRELLA_REFERENCE, Organization::class));
             $manager->persist($user);
         }
 

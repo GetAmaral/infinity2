@@ -19,7 +19,6 @@ final class PerformanceMonitoringSubscriber implements EventSubscriberInterface
 
     public function __construct(
         private readonly PerformanceMonitor $performanceMonitor,
-        #[Autowire(service: 'monolog.logger.app')]
         private readonly LoggerInterface $appLogger
     ) {
     }

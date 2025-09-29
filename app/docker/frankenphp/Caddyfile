@@ -1,8 +1,5 @@
 {
-    frankenphp {
-        worker ./public/index.php
-        num_threads 4
-    }
+    frankenphp
     auto_https off
 }
 
