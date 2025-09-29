@@ -1,5 +1,3 @@
-import { startStimulusApp } from '@symfony/stimulus-bundle';
-
-const app = startStimulusApp();
-// register any custom, 3rd party controllers here
-// app.register('some_controller_name', SomeImportedController);
+// Stimulus controllers bootstrap file
+// This file is automatically processed by the stimulus-bridge
+export { Application } from '@hotwired/stimulus';

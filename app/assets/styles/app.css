@@ -1,3 +1,19 @@
-body {
-    background-color: skyblue;
+:root {
+    --infinity-primary: #4f46e5;
+    --infinity-secondary: #7c3aed;
+}
+
+.infinity-navbar {
+    background: linear-gradient(135deg, var(--infinity-primary), var(--infinity-secondary));
+}
+
+.infinity-card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-radius: 0.75rem;
+}
+
+.infinity-btn-primary {
+    background: linear-gradient(135deg, var(--infinity-primary), var(--infinity-secondary));
+    border: none;
 }
