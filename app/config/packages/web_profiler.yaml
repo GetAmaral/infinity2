@@ -1,10 +1,13 @@
 when@dev:
     web_profiler:
         toolbar: true
+        intercept_redirects: false
 
     framework:
         profiler:
             collect_serializer_data: true
+        router:
+            default_uri: 'https://localhost'
 
 when@test:
     framework:

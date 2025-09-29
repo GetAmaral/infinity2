@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <title>{% block title %}Infinity{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     {% block stylesheets %}{{ importmap('app') }}{% endblock %}
 </head>
 <body>
     <nav class="navbar navbar-expand-lg infinity-navbar">
         <div class="container">
-            <a class="navbar-brand text-white" href="{{ path('app_home') }}">🚀 Infinity</a>
+            <a class="navbar-brand text-white d-flex align-items-center" href="{{ path('app_home') }}">
+                <img src="/infinity_logo_sm.png" alt="Infinity" height="24" class="me-2">
+                Infinity
+            </a>
             <div class="navbar-nav">
                 <a class="nav-link text-white" href="{{ path('app_home') }}">Home</a>
                 <a class="nav-link text-white" href="{{ path('organization_index') }}">Organizations</a>
