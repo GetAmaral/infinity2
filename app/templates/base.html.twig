@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Infinity{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block stylesheets %}{{ importmap('app') }}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg infinity-navbar">
+        <div class="container">
+            <a class="navbar-brand text-white" href="{{ path('app_home') }}">🚀 Infinity</a>
+            <div class="navbar-nav">
+                <a class="nav-link text-white" href="{{ path('app_home') }}">Home</a>
+                <a class="nav-link text-white" href="{{ path('organization_index') }}">Organizations</a>
+                <a class="nav-link text-white" href="{{ path('user_index') }}">Users</a>
+                <a class="nav-link text-white" href="/api">API</a>
+            </div>
+        </div>
+    </nav>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
+    <main class="container mt-4">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
         {% block body %}{% endblock %}
-    </body>
+    </main>
+
+    {% block javascripts %}{% endblock %}
+</body>
 </html>

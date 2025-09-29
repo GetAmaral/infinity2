@@ -1,0 +1,43 @@
+{
+    frankenphp {
+        worker ./public/index.php
+        num_threads 4
+    }
+    auto_https off
+}
+
+:8000 {
+    root * public
+
+    # Enable FrankenPHP
+    php_server {
+        resolve_root_symlink
+    }
+
+    # Security headers
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    # Asset optimization
+    @static {
+        path *.css *.js *.ico *.png *.jpg *.jpeg *.gif *.svg *.woff *.woff2 *.ttf *.eot
+    }
+    header @static {
+        Cache-Control "public, max-age=31536000, immutable"
+    }
+
+    # Enable compression
+    encode gzip
+
+    # File server for static assets
+    file_server
+
+    # Logging
+    log {
+        level INFO
+    }
+}

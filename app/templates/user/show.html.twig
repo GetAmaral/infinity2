@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.name }}{% endblock %}
+
+{% block body %}
+<div class="mb-3">
+    <a href="{{ path('user_index') }}" class="btn btn-outline-secondary">← Back to Users</a>
+</div>
+
+<div class="infinity-card p-4">
+    <h1>{{ user.name }}</h1>
+    <p class="lead">{{ user.email }}</p>
+
+    {% if user.organization %}
+        <hr>
+        <h5>Organization</h5>
+        <p><a href="{{ path('organization_show', {id: user.organization.id}) }}">{{ user.organization.name }}</a></p>
+    {% endif %}
+
+    <hr>
+    <small class="text-muted">Created: {{ user.createdAt|date('Y-m-d H:i') }}</small>
+</div>
+{% endblock %}

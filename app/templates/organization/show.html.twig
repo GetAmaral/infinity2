@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ organization.name }}{% endblock %}
+
+{% block body %}
+<div class="mb-3">
+    <a href="{{ path('organization_index') }}" class="btn btn-outline-secondary">← Back to Organizations</a>
+</div>
+
+<div class="infinity-card p-4">
+    <h1>{{ organization.name }}</h1>
+    {% if organization.description %}
+        <p class="lead">{{ organization.description }}</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Users ({{ organization.users|length }})</h3>
+    {% if organization.users %}
+        <div class="row">
+            {% for user in organization.users %}
+                <div class="col-md-4 mb-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>{{ user.name }}</h6>
+                            <small class="text-muted">{{ user.email }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">No users in this organization.</div>
+    {% endif %}
+</div>
+{% endblock %}
