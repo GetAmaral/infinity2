@@ -10,6 +10,8 @@ use Symfony\Component\Uid\UuidV7;
 
 class UuidV7GeneratorTest extends TestCase
 {
+    /**
+     */
     public function testGenerateId(): void
     {
         $generator = new UuidV7Generator();
@@ -22,6 +24,8 @@ class UuidV7GeneratorTest extends TestCase
         $this->assertTrue(Uuid::isValid($uuid->toRfc4122()));
     }
 
+    /**
+     */
     public function testIsPostInsertGenerator(): void
     {
         $generator = new UuidV7Generator();
@@ -29,6 +33,8 @@ class UuidV7GeneratorTest extends TestCase
         $this->assertFalse($generator->isPostInsertGenerator());
     }
 
+    /**
+     */
     public function testGenerateUniqueIds(): void
     {
         $generator = new UuidV7Generator();
@@ -41,6 +47,8 @@ class UuidV7GeneratorTest extends TestCase
         $this->assertNotEquals($uuid1->toString(), $uuid2->toString());
     }
 
+    /**
+     */
     public function testGenerateChronologicalIds(): void
     {
         $generator = new UuidV7Generator();

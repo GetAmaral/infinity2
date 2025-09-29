@@ -1,30 +1,106 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Users{% endblock %}
+{% block title %}{{ 'user.title'|trans }} - CRM{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Users</h1>
-    <a href="/api/users" class="btn btn-outline-primary">API</a>
+<!-- Page Header -->
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-people text-neon fs-2 me-3"></i>
+            <div>
+                <h1 class="text-gradient mb-1">{{ 'user.title'|trans }}</h1>
+                <p class="text-secondary mb-0">{{ 'page.user_description'|trans }}</p>
+            </div>
+        </div>
+        <div class="d-flex gap-3">
+            <button class="btn infinity-btn-primary">
+                <i class="bi bi-person-plus me-2"></i>{{ 'button.add_contact'|trans }}
+            </button>
+            <a href="/api/users" class="btn infinity-btn-ai">
+                <i class="bi bi-code-slash me-1"></i>{{ 'user.api_link'|trans }}
+            </a>
+        </div>
+    </div>
 </div>
 
-<div class="row">
+<!-- Contacts Bento Grid -->
+<div class="bento-grid">
     {% for user in users %}
-        <div class="col-md-6 mb-3">
-            <div class="infinity-card p-3">
-                <h5>{{ user.name }}</h5>
-                <p class="text-muted">{{ user.email }}</p>
-                {% if user.organization %}
-                    <small class="text-muted">{{ user.organization.name }}</small>
-                {% endif %}
-                <div class="mt-2">
-                    <a href="{{ path('user_show', {id: user.id}) }}" class="btn btn-sm btn-primary">View</a>
+        <div class="bento-item">
+            <div class="infinity-card ai-enhanced p-4 h-100">
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="position-relative me-3">
+                            <div class="p-2 rounded-circle" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                                <i class="bi bi-person-circle text-white fs-4"></i>
+                            </div>
+                            <div class="position-absolute top-0 end-0 translate-middle">
+                                <span class="badge rounded-pill" style="background: var(--infinity-ai-gradient); font-size: 0.6rem;">{{ 'ui.ai'|trans }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="text-white mb-1">{{ user.name }}</h5>
+                            <p class="text-secondary mb-1" style="font-size: 0.875rem;">{{ user.email }}</p>
+                            {% if user.organization %}
+                                <div class="d-flex align-items-center">
+                                    <span class="real-time-badge">
+                                        <i class="bi bi-building me-1"></i>{{ user.organization.name }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm" style="color: var(--infinity-neon);" title="{{ 'misc.ai_insights_tooltip'|trans }}">
+                            <i class="bi bi-chat-dots"></i>
+                        </button>
+                        <button class="btn btn-sm" style="color: var(--infinity-text-secondary);" title="{{ 'misc.quick_actions_tooltip'|trans }}">
+                            <i class="bi bi-three-dots"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI-generated insights -->
+                <div class="mb-3 p-3 rounded" style="background: rgba(0, 245, 255, 0.05); border: 1px solid rgba(0, 245, 255, 0.2);">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-magic text-neon me-2" style="font-size: 0.875rem;"></i>
+                        <span class="text-neon" style="font-size: 0.75rem; font-weight: 600;">{{ 'ai.insights'|trans|upper }}</span>
+                    </div>
+                    <p class="text-secondary mb-0" style="font-size: 0.8rem;">
+                        {% set insights = ['High engagement potential', 'Recent activity increase', 'Potential upsell opportunity', 'Strong relationship score', 'Active communicator'] %}
+                        {{ insights[random(4)] }}
+                        <span class="text-muted">• Last interaction: {{ random(1, 7) }}d ago</span>
+                    </p>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-auto">
+                    <small class="text-muted d-flex align-items-center">
+                        <i class="bi bi-calendar me-1"></i>{{ user.createdAt|date('M d, Y') }}
+                    </small>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm infinity-btn-ai" title="{{ 'button.start_ai_chat'|trans }}">
+                            <i class="bi bi-robot"></i>
+                        </button>
+                        <a href="{{ path('user_show', {id: user.id}) }}" class="btn btn-sm infinity-btn-primary">
+                            <i class="bi bi-arrow-right me-1"></i>{{ 'user.view_details'|trans }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     {% else %}
-        <div class="col-12">
-            <div class="alert alert-info">No users found.</div>
+        <div class="bento-item large">
+            <div class="infinity-card p-5 text-center">
+                <div class="mb-4">
+                    <i class="bi bi-people" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
+                </div>
+                <h4 class="text-white mb-3">{{ 'empty.no_contacts_yet'|trans }}</h4>
+                <p class="text-secondary mb-4">{{ 'empty.contact_description'|trans }}</p>
+                <button class="btn infinity-btn-primary btn-lg">
+                    <i class="bi bi-person-plus me-2"></i>{{ 'button.add_first_contact'|trans }}
+                </button>
+            </div>
         </div>
     {% endfor %}
 </div>

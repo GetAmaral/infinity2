@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" target-language="pt-BR" datatype="plaintext" original="file.ext">
+    <body>
+      <!-- Navigation -->
+      <trans-unit id="nav.infinity">
+        <source>nav.infinity</source>
+        <target>Infinity</target>
+        <note>Nome da marca da aplicação na navegação</note>
+      </trans-unit>
+      <trans-unit id="nav.home">
+        <source>nav.home</source>
+        <target>Início</target>
+        <note>Link de navegação para início</note>
+      </trans-unit>
+      <trans-unit id="nav.organizations">
+        <source>nav.organizations</source>
+        <target>Organizações</target>
+        <note>Link de navegação para organizações</note>
+      </trans-unit>
+      <trans-unit id="nav.users">
+        <source>nav.users</source>
+        <target>Usuários</target>
+        <note>Link de navegação para usuários</note>
+      </trans-unit>
+      <trans-unit id="nav.settings">
+        <source>nav.settings</source>
+        <target>Configurações</target>
+        <note>Link de navegação para configurações</note>
+      </trans-unit>
+      <trans-unit id="nav.language">
+        <source>nav.language</source>
+        <target>Idioma</target>
+        <note>Seletor de idioma na navegação</note>
+      </trans-unit>
+
+      <!-- Home Page -->
+      <trans-unit id="home.title">
+        <source>home.title</source>
+        <target>Bem-vindo ao Infinity</target>
+        <note>Título principal da página inicial</note>
+      </trans-unit>
+      <trans-unit id="home.subtitle">
+        <source>home.subtitle</source>
+        <target>Aplicação Symfony Moderna</target>
+        <note>Subtítulo da página inicial</note>
+      </trans-unit>
+      <trans-unit id="home.description">
+        <source>home.description</source>
+        <target>Uma aplicação Symfony 7.3 completa e pronta para empresas, com PostgreSQL 18, Redis 7, FrankenPHP 1.9 e práticas modernas de desenvolvimento.</target>
+        <note>Descrição principal da página inicial</note>
+      </trans-unit>
+      <trans-unit id="home.view_organizations">
+        <source>home.view_organizations</source>
+        <target>Ver Organizações</target>
+        <note>Texto do botão para visualizar organizações</note>
+      </trans-unit>
+      <trans-unit id="home.view_users">
+        <source>home.view_users</source>
+        <target>Ver Usuários</target>
+        <note>Texto do botão para visualizar usuários</note>
+      </trans-unit>
+
+      <!-- Organization Pages -->
+      <trans-unit id="organization.title">
+        <source>organization.title</source>
+        <target>Organizações</target>
+        <note>Título da página para lista de organizações</note>
+      </trans-unit>
+      <trans-unit id="organization.name">
+        <source>organization.name</source>
+        <target>Nome</target>
+        <note>Rótulo do campo nome da organização</note>
+      </trans-unit>
+      <trans-unit id="organization.description">
+        <source>organization.description</source>
+        <target>Descrição</target>
+        <note>Rótulo do campo descrição da organização</note>
+      </trans-unit>
+      <trans-unit id="organization.users_count">
+        <source>organization.users_count</source>
+        <target>%count% usuário|%count% usuários</target>
+        <note>Contagem de usuários com pluralização</note>
+      </trans-unit>
+      <trans-unit id="organization.no_users">
+        <source>organization.no_users</source>
+        <target>Nenhum usuário</target>
+        <note>Mensagem de zero usuários</note>
+      </trans-unit>
+      <trans-unit id="organization.view_details">
+        <source>organization.view_details</source>
+        <target>Ver Detalhes</target>
+        <note>Texto do botão para ver detalhes da organização</note>
+      </trans-unit>
+      <trans-unit id="organization.api_link">
+        <source>organization.api_link</source>
+        <target>API</target>
+        <note>Link para endpoint da API da organização</note>
+      </trans-unit>
+      <trans-unit id="organization.back_to_list">
+        <source>organization.back_to_list</source>
+        <target>Voltar para Organizações</target>
+        <note>Link para voltar à lista de organizações</note>
+      </trans-unit>
+      <trans-unit id="organization.created_at">
+        <source>organization.created_at</source>
+        <target>Criado em</target>
+        <note>Rótulo da data de criação da organização</note>
+      </trans-unit>
+      <trans-unit id="organization.updated_at">
+        <source>organization.updated_at</source>
+        <target>Atualizado em</target>
+        <note>Rótulo da data da última atualização da organização</note>
+      </trans-unit>
+      <trans-unit id="organization.users_in_organization">
+        <source>organization.users_in_organization</source>
+        <target>Usuários nesta Organização</target>
+        <note>Título da seção para lista de usuários na organização</note>
+      </trans-unit>
+
+      <!-- User Pages -->
+      <trans-unit id="user.title">
+        <source>user.title</source>
+        <target>Usuários</target>
+        <note>Título da página para lista de usuários</note>
+      </trans-unit>
+      <trans-unit id="user.name">
+        <source>user.name</source>
+        <target>Nome</target>
+        <note>Rótulo do campo nome do usuário</note>
+      </trans-unit>
+      <trans-unit id="user.email">
+        <source>user.email</source>
+        <target>Email</target>
+        <note>Rótulo do campo email do usuário</note>
+      </trans-unit>
+      <trans-unit id="user.organization">
+        <source>user.organization</source>
+        <target>Organização</target>
+        <note>Rótulo do campo organização do usuário</note>
+      </trans-unit>
+      <trans-unit id="user.view_details">
+        <source>user.view_details</source>
+        <target>Ver Detalhes</target>
+        <note>Texto do botão para ver detalhes do usuário</note>
+      </trans-unit>
+      <trans-unit id="user.api_link">
+        <source>user.api_link</source>
+        <target>API</target>
+        <note>Link para endpoint da API do usuário</note>
+      </trans-unit>
+      <trans-unit id="user.back_to_list">
+        <source>user.back_to_list</source>
+        <target>Voltar para Usuários</target>
+        <note>Link para voltar à lista de usuários</note>
+      </trans-unit>
+      <trans-unit id="user.created_at">
+        <source>user.created_at</source>
+        <target>Criado em</target>
+        <note>Rótulo da data de criação do usuário</note>
+      </trans-unit>
+      <trans-unit id="user.updated_at">
+        <source>user.updated_at</source>
+        <target>Atualizado em</target>
+        <note>Rótulo da data da última atualização do usuário</note>
+      </trans-unit>
+      <trans-unit id="user.view_organization">
+        <source>user.view_organization</source>
+        <target>Ver Organização</target>
+        <note>Link para ver a organização do usuário</note>
+      </trans-unit>
+
+      <!-- Settings Page -->
+      <trans-unit id="settings.title">
+        <source>settings.title</source>
+        <target>Configurações</target>
+        <note>Título da página de configurações</note>
+      </trans-unit>
+      <trans-unit id="settings.language_preferences">
+        <source>settings.language_preferences</source>
+        <target>Preferências de Idioma</target>
+        <note>Título da seção de preferências de idioma</note>
+      </trans-unit>
+      <trans-unit id="settings.current_language">
+        <source>settings.current_language</source>
+        <target>Idioma Atual</target>
+        <note>Rótulo do idioma atual</note>
+      </trans-unit>
+      <trans-unit id="settings.choose_language">
+        <source>settings.choose_language</source>
+        <target>Escolher Idioma</target>
+        <note>Rótulo da seleção de idioma</note>
+      </trans-unit>
+      <trans-unit id="settings.save_changes">
+        <source>settings.save_changes</source>
+        <target>Salvar Alterações</target>
+        <note>Texto do botão salvar</note>
+      </trans-unit>
+      <trans-unit id="settings.language_saved">
+        <source>settings.language_saved</source>
+        <target>Preferência de idioma salva com sucesso!</target>
+        <note>Mensagem de sucesso após salvar o idioma</note>
+      </trans-unit>
+
+      <!-- Language Names -->
+      <trans-unit id="language.en">
+        <source>language.en</source>
+        <target>Inglês</target>
+        <note>Nome do idioma inglês</note>
+      </trans-unit>
+      <trans-unit id="language.pt_BR">
+        <source>language.pt_BR</source>
+        <target>Português (Brasil)</target>
+        <note>Nome do idioma português (Brasil)</note>
+      </trans-unit>
+
+      <!-- Common Actions -->
+      <trans-unit id="action.save">
+        <source>action.save</source>
+        <target>Salvar</target>
+        <note>Ação genérica salvar</note>
+      </trans-unit>
+      <trans-unit id="action.cancel">
+        <source>action.cancel</source>
+        <target>Cancelar</target>
+        <note>Ação genérica cancelar</note>
+      </trans-unit>
+      <trans-unit id="action.edit">
+        <source>action.edit</source>
+        <target>Editar</target>
+        <note>Ação genérica editar</note>
+      </trans-unit>
+      <trans-unit id="action.delete">
+        <source>action.delete</source>
+        <target>Excluir</target>
+        <note>Ação genérica excluir</note>
+      </trans-unit>
+      <trans-unit id="action.view">
+        <source>action.view</source>
+        <target>Visualizar</target>
+        <note>Ação genérica visualizar</note>
+      </trans-unit>
+
+      <!-- Date/Time Formatting -->
+      <trans-unit id="date.format">
+        <source>date.format</source>
+        <target>d/m/Y</target>
+        <note>Formato de data para localidade brasileira</note>
+      </trans-unit>
+      <trans-unit id="datetime.format">
+        <source>datetime.format</source>
+        <target>d/m/Y H:i</target>
+        <note>Formato de data/hora para localidade brasileira</note>
+      </trans-unit>
+
+      <!-- General UI Text -->
+      <trans-unit id="ui.ai">
+        <source>ui.ai</source>
+        <target>IA</target>
+        <note>Abreviação de Inteligência Artificial</note>
+      </trans-unit>
+      <trans-unit id="ui.active">
+        <source>ui.active</source>
+        <target>Ativo</target>
+        <note>Indicador de status ativo</note>
+      </trans-unit>
+      <trans-unit id="ui.account">
+        <source>ui.account</source>
+        <target>Conta</target>
+        <note>Rótulo do menu de conta</note>
+      </trans-unit>
+      <trans-unit id="ui.dashboard">
+        <source>ui.dashboard</source>
+        <target>Painel</target>
+        <note>Título da página do painel</note>
+      </trans-unit>
+      <trans-unit id="ui.back_to_dashboard">
+        <source>ui.back_to_dashboard</source>
+        <target>Voltar ao Painel</target>
+        <note>Link para voltar ao painel</note>
+      </trans-unit>
+
+      <!-- Empty States -->
+      <trans-unit id="empty.no_description">
+        <source>empty.no_description</source>
+        <target>Nenhuma descrição disponível</target>
+        <note>Mensagem quando nenhuma descrição é fornecida</note>
+      </trans-unit>
+      <trans-unit id="empty.no_contacts_yet">
+        <source>empty.no_contacts_yet</source>
+        <target>Nenhum Contato Ainda</target>
+        <note>Título de estado vazio para contatos</note>
+      </trans-unit>
+      <trans-unit id="empty.no_organizations_yet">
+        <source>empty.no_organizations_yet</source>
+        <target>Nenhuma Organização Ainda</target>
+        <note>Título de estado vazio para organizações</note>
+      </trans-unit>
+      <trans-unit id="empty.contact_description">
+        <source>empty.contact_description</source>
+        <target>Comece a construir sua rede adicionando seu primeiro contato. Nossa IA ajudará você a gerenciar relacionamentos e fornecer insights valiosos.</target>
+        <note>Descrição de estado vazio para contatos</note>
+      </trans-unit>
+      <trans-unit id="empty.organization_description">
+        <source>empty.organization_description</source>
+        <target>Comece a construir seus relacionamentos empresariais criando sua primeira organização. Nossa IA ajudará você a gerenciar e desenvolver essas conexões.</target>
+        <note>Descrição de estado vazio para organizações</note>
+      </trans-unit>
+      <trans-unit id="empty.organization_contacts_description">
+        <source>empty.organization_contacts_description</source>
+        <target>Comece a construir relacionamentos adicionando contatos a esta organização.</target>
+        <note>Descrição de estado vazio para contatos da organização</note>
+      </trans-unit>
+
+      <!-- Buttons -->
+      <trans-unit id="button.add_organization">
+        <source>button.add_organization</source>
+        <target>Adicionar Organização</target>
+        <note>Botão para adicionar nova organização</note>
+      </trans-unit>
+      <trans-unit id="button.add_contact">
+        <source>button.add_contact</source>
+        <target>Adicionar Contato</target>
+        <note>Botão para adicionar novo contato</note>
+      </trans-unit>
+      <trans-unit id="button.add_first_contact">
+        <source>button.add_first_contact</source>
+        <target>Adicionar Primeiro Contato</target>
+        <note>Botão para adicionar primeiro contato</note>
+      </trans-unit>
+      <trans-unit id="button.create_first_organization">
+        <source>button.create_first_organization</source>
+        <target>Criar Primeira Organização</target>
+        <note>Botão para criar primeira organização</note>
+      </trans-unit>
+      <trans-unit id="button.edit_contact">
+        <source>button.edit_contact</source>
+        <target>Editar Contato</target>
+        <note>Botão para editar contato</note>
+      </trans-unit>
+      <trans-unit id="button.send_email">
+        <source>button.send_email</source>
+        <target>Enviar Email</target>
+        <note>Botão para enviar email</note>
+      </trans-unit>
+      <trans-unit id="button.send_message">
+        <source>button.send_message</source>
+        <target>Enviar Mensagem</target>
+        <note>Botão para enviar mensagem</note>
+      </trans-unit>
+      <trans-unit id="button.call_contact">
+        <source>button.call_contact</source>
+        <target>Ligar para Contato</target>
+        <note>Botão para ligar para contato</note>
+      </trans-unit>
+      <trans-unit id="button.schedule_meeting">
+        <source>button.schedule_meeting</source>
+        <target>Agendar Reunião</target>
+        <note>Botão para agendar reunião</note>
+      </trans-unit>
+      <trans-unit id="button.share_contact">
+        <source>button.share_contact</source>
+        <target>Compartilhar Contato</target>
+        <note>Botão para compartilhar contato</note>
+      </trans-unit>
+      <trans-unit id="button.start_ai_chat">
+        <source>button.start_ai_chat</source>
+        <target>Iniciar Chat IA</target>
+        <note>Botão para iniciar chat IA</note>
+      </trans-unit>
+
+      <!-- Metrics and Statistics -->
+      <trans-unit id="metric.total_contacts">
+        <source>metric.total_contacts</source>
+        <target>Total de Contatos</target>
+        <note>Rótulo para métrica de total de contatos</note>
+      </trans-unit>
+      <trans-unit id="metric.ai_interactions">
+        <source>metric.ai_interactions</source>
+        <target>Interações IA</target>
+        <note>Rótulo para métrica de interações IA</note>
+      </trans-unit>
+      <trans-unit id="metric.uptime">
+        <source>metric.uptime</source>
+        <target>Tempo Ativo</target>
+        <note>Métrica de tempo ativo do sistema</note>
+      </trans-unit>
+      <trans-unit id="metric.response_time">
+        <source>metric.response_time</source>
+        <target>Tempo de Resposta</target>
+        <note>Métrica de tempo de resposta do sistema</note>
+      </trans-unit>
+      <trans-unit id="metric.encryption">
+        <source>metric.encryption</source>
+        <target>Criptografia</target>
+        <note>Métrica de criptografia de segurança</note>
+      </trans-unit>
+
+      <!-- Page Descriptions -->
+      <trans-unit id="page.user_description">
+        <source>page.user_description</source>
+        <target>Gerenciamento de contatos com IA e insights de relacionamento</target>
+        <note>Descrição da página de usuários</note>
+      </trans-unit>
+      <trans-unit id="page.organization_description">
+        <source>page.organization_description</source>
+        <target>Gerencie seus relacionamentos empresariais com insights de IA</target>
+        <note>Descrição da página de organizações</note>
+      </trans-unit>
+      <trans-unit id="page.settings_description">
+        <source>page.settings_description</source>
+        <target>Personalize sua experiência do Infinity CRM</target>
+        <note>Descrição da página de configurações</note>
+      </trans-unit>
+
+      <!-- AI Features -->
+      <trans-unit id="ai.insights">
+        <source>ai.insights</source>
+        <target>Insights IA</target>
+        <note>Título da seção de insights IA</note>
+      </trans-unit>
+      <trans-unit id="ai.assistant">
+        <source>ai.assistant</source>
+        <target>Assistente IA</target>
+        <note>Título do assistente IA</note>
+      </trans-unit>
+      <trans-unit id="ai.chat">
+        <source>ai.chat</source>
+        <target>Chat IA</target>
+        <note>Recurso de chat IA</note>
+      </trans-unit>
+      <trans-unit id="ai.analytics">
+        <source>ai.analytics</source>
+        <target>Análises</target>
+        <note>Recurso de análises</note>
+      </trans-unit>
+      <trans-unit id="ai.quick_actions">
+        <source>ai.quick_actions</source>
+        <target>Ações Rápidas</target>
+        <note>Seção de ações rápidas</note>
+      </trans-unit>
+      <trans-unit id="ai.powered_crm">
+        <source>ai.powered_crm</source>
+        <target>Recursos CRM com IA</target>
+        <note>Seção de recursos CRM com IA</note>
+      </trans-unit>
+      <trans-unit id="ai.conversational">
+        <source>ai.conversational</source>
+        <target>IA Conversacional</target>
+        <note>Recurso de IA conversacional</note>
+      </trans-unit>
+      <trans-unit id="ai.conversational_description">
+        <source>ai.conversational_description</source>
+        <target>Comandos de voz, integração WhatsApp e processamento de linguagem natural</target>
+        <note>Descrição da IA conversacional</note>
+      </trans-unit>
+      <trans-unit id="ai.predictive_analytics">
+        <source>ai.predictive_analytics</source>
+        <target>Análises Preditivas</target>
+        <note>Recurso de análises preditivas</note>
+      </trans-unit>
+      <trans-unit id="ai.predictive_description">
+        <source>ai.predictive_description</source>
+        <target>Insights orientados por IA e previsões de comportamento do cliente</target>
+        <note>Descrição das análises preditivas</note>
+      </trans-unit>
+      <trans-unit id="ai.smart_automation">
+        <source>ai.smart_automation</source>
+        <target>Automação Inteligente</target>
+        <note>Recurso de automação inteligente</note>
+      </trans-unit>
+      <trans-unit id="ai.automation_description">
+        <source>ai.automation_description</source>
+        <target>Fluxos de trabalho inteligentes e interações automatizadas com clientes</target>
+        <note>Descrição da automação inteligente</note>
+      </trans-unit>
+      <trans-unit id="ai.coming_soon">
+        <source>ai.coming_soon</source>
+        <target>Chat IA em breve...</target>
+        <note>Mensagem de chat IA em breve</note>
+      </trans-unit>
+      <trans-unit id="ai.settings">
+        <source>ai.settings</source>
+        <target>Configurações IA</target>
+        <note>Seção de configurações IA</note>
+      </trans-unit>
+      <trans-unit id="ai.settings_description">
+        <source>ai.settings_description</source>
+        <target>Configure o comportamento e preferências do assistente IA</target>
+        <note>Descrição das configurações IA</note>
+      </trans-unit>
+      <trans-unit id="ai.crm_question">
+        <source>ai.crm_question</source>
+        <target>Pergunte-me qualquer coisa sobre seu CRM</target>
+        <note>Prompt do assistente IA</note>
+      </trans-unit>
+
+      <!-- Insights and Status -->
+      <trans-unit id="insight.high_engagement">
+        <source>insight.high_engagement</source>
+        <target>Pontuação de engajamento alta</target>
+        <note>Insight IA de alto engajamento</note>
+      </trans-unit>
+      <trans-unit id="insight.active_communicator">
+        <source>insight.active_communicator</source>
+        <target>Comunicador ativo</target>
+        <note>Insight IA de comunicador ativo</note>
+      </trans-unit>
+      <trans-unit id="insight.key_relationship">
+        <source>insight.key_relationship</source>
+        <target>Relacionamento chave</target>
+        <note>Insight IA de relacionamento chave</note>
+      </trans-unit>
+      <trans-unit id="insight.strong_engagement">
+        <source>insight.strong_engagement</source>
+        <target>Métricas de engajamento fortes</target>
+        <note>Insight IA de engajamento forte</note>
+      </trans-unit>
+      <trans-unit id="insight.growth_potential">
+        <source>insight.growth_potential</source>
+        <target>Potencial de crescimento identificado</target>
+        <note>Insight IA de potencial de crescimento</note>
+      </trans-unit>
+      <trans-unit id="insight.high_relationship_score">
+        <source>insight.high_relationship_score</source>
+        <target>Pontuação de relacionamento alta</target>
+        <note>Insight IA de pontuação de relacionamento alta</note>
+      </trans-unit>
+      <trans-unit id="insight.active_organization">
+        <source>insight.active_organization</source>
+        <target>Organização ativa</target>
+        <note>Status de organização ativa</note>
+      </trans-unit>
+
+      <!-- System Information -->
+      <trans-unit id="system.performance">
+        <source>system.performance</source>
+        <target>Desempenho do Sistema</target>
+        <note>Seção de desempenho do sistema</note>
+      </trans-unit>
+      <trans-unit id="system.information">
+        <source>system.information</source>
+        <target>Informações do Sistema</target>
+        <note>Seção de informações do sistema</note>
+      </trans-unit>
+      <trans-unit id="system.status">
+        <source>system.status</source>
+        <target>Status do Sistema</target>
+        <note>Rótulo de status do sistema</note>
+      </trans-unit>
+      <trans-unit id="system.security_status">
+        <source>system.security_status</source>
+        <target>Status de Segurança:</target>
+        <note>Rótulo de status de segurança</note>
+      </trans-unit>
+      <trans-unit id="system.security_message">
+        <source>system.security_message</source>
+        <target>Todos os sistemas seguros e atualizados</target>
+        <note>Mensagem de status de segurança</note>
+      </trans-unit>
+      <trans-unit id="system.version">
+        <source>system.version</source>
+        <target>Versão</target>
+        <note>Rótulo de versão do sistema</note>
+      </trans-unit>
+      <trans-unit id="system.runtime">
+        <source>system.runtime</source>
+        <target>Runtime</target>
+        <note>Rótulo de runtime do sistema</note>
+      </trans-unit>
+      <trans-unit id="system.framework">
+        <source>system.framework</source>
+        <target>Framework</target>
+        <note>Rótulo de framework do sistema</note>
+      </trans-unit>
+      <trans-unit id="system.database">
+        <source>system.database</source>
+        <target>Banco de Dados</target>
+        <note>Rótulo de banco de dados do sistema</note>
+      </trans-unit>
+
+      <!-- Theme Settings -->
+      <trans-unit id="theme.settings">
+        <source>theme.settings</source>
+        <target>Configurações de Tema</target>
+        <note>Seção de configurações de tema</note>
+      </trans-unit>
+      <trans-unit id="theme.dark">
+        <source>theme.dark</source>
+        <target>Tema Escuro</target>
+        <note>Opção de tema escuro</note>
+      </trans-unit>
+      <trans-unit id="theme.light">
+        <source>theme.light</source>
+        <target>Tema Claro</target>
+        <note>Opção de tema claro</note>
+      </trans-unit>
+      <trans-unit id="theme.dark_description">
+        <source>theme.dark_description</source>
+        <target>Interface escura moderna com acentos neon</target>
+        <note>Descrição do tema escuro</note>
+      </trans-unit>
+      <trans-unit id="theme.light_description">
+        <source>theme.light_description</source>
+        <target>Interface clara limpa com cores vibrantes</target>
+        <note>Descrição do tema claro</note>
+      </trans-unit>
+
+      <!-- Contact Information -->
+      <trans-unit id="contact.information">
+        <source>contact.information</source>
+        <target>Informações do Contato</target>
+        <note>Seção de informações do contato</note>
+      </trans-unit>
+      <trans-unit id="contact.last_activity">
+        <source>contact.last_activity</source>
+        <target>Última Atividade</target>
+        <note>Rótulo de última atividade</note>
+      </trans-unit>
+      <trans-unit id="contact.member_since">
+        <source>contact.member_since</source>
+        <target>Membro Desde</target>
+        <note>Rótulo de membro desde</note>
+      </trans-unit>
+      <trans-unit id="contact.active_user">
+        <source>contact.active_user</source>
+        <target>Usuário ativo</target>
+        <note>Status de usuário ativo</note>
+      </trans-unit>
+
+      <!-- Misc UI Elements -->
+      <trans-unit id="misc.contacts_section">
+        <source>misc.contacts_section</source>
+        <target>Contatos</target>
+        <note>Título da seção de contatos</note>
+      </trans-unit>
+      <trans-unit id="misc.coming_soon">
+        <source>misc.coming_soon</source>
+        <target>Em Breve</target>
+        <note>Rótulo em breve</note>
+      </trans-unit>
+      <trans-unit id="misc.voice_commands">
+        <source>misc.voice_commands</source>
+        <target>Comandos de Voz</target>
+        <note>Tooltip de comandos de voz</note>
+      </trans-unit>
+      <trans-unit id="misc.ai_insights_tooltip">
+        <source>misc.ai_insights_tooltip</source>
+        <target>Insights IA</target>
+        <note>Tooltip de insights IA</note>
+      </trans-unit>
+      <trans-unit id="misc.quick_actions_tooltip">
+        <source>misc.quick_actions_tooltip</source>
+        <target>Ações Rápidas</target>
+        <note>Tooltip de ações rápidas</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

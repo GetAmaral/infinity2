@@ -1,0 +1,321 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'settings.title'|trans }} - CRM{% endblock %}
+
+{% block body %}
+<!-- Navigation -->
+<div class="mb-4">
+    <a href="{{ path('app_home') }}" class="btn infinity-btn-ai">
+        <i class="bi bi-arrow-left me-2"></i>{{ 'ui.back_to_dashboard'|trans }}
+    </a>
+</div>
+
+<!-- Settings Header -->
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex align-items-center">
+        <i class="bi bi-gear text-neon fs-2 me-3"></i>
+        <div>
+            <h1 class="text-gradient mb-1">{{ 'settings.title'|trans }}</h1>
+            <p class="text-secondary mb-0">{{ 'page.settings_description'|trans }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Categories -->
+<div class="bento-grid">
+    <!-- Theme Selection -->
+    <div class="bento-item large">
+        <div class="infinity-card ai-enhanced p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="text-neon mb-0">
+                    <i class="bi bi-palette me-2"></i>{{ 'theme.settings'|trans }}
+                </h5>
+                <div class="ai-status-indicator" id="currentThemeStatus">
+                    {{ 'theme.dark'|trans }}
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Dark Theme -->
+                <div class="col-md-6 mb-3">
+                    <div class="theme-card" data-theme="dark" id="darkTheme" onclick="switchTheme('dark')">
+                        <div class="theme-preview-mini dark-preview-mini">
+                            <div class="theme-header"></div>
+                            <div class="theme-content">
+                                <div class="theme-card-mini"></div>
+                                <div class="theme-sidebar-mini"></div>
+                            </div>
+                        </div>
+                        <div class="theme-info p-3">
+                            <h6 class="text-white mb-2">
+                                <i class="bi bi-moon-stars me-2"></i>{{ 'theme.dark'|trans }}
+                            </h6>
+                            <p class="text-secondary mb-0" style="font-size: 0.875rem;">{{ 'theme.dark_description'|trans }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Light Theme -->
+                <div class="col-md-6 mb-3">
+                    <div class="theme-card" data-theme="light" id="lightTheme" onclick="switchTheme('light')">
+                        <div class="theme-preview-mini light-preview-mini">
+                            <div class="theme-header"></div>
+                            <div class="theme-content">
+                                <div class="theme-card-mini"></div>
+                                <div class="theme-sidebar-mini"></div>
+                            </div>
+                        </div>
+                        <div class="theme-info p-3">
+                            <h6 class="text-white mb-2">
+                                <i class="bi bi-sun me-2"></i>{{ 'theme.light'|trans }}
+                            </h6>
+                            <p class="text-secondary mb-0" style="font-size: 0.875rem;">{{ 'theme.light_description'|trans }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Preferences -->
+    <div class="bento-item">
+        <div class="infinity-card p-4 h-100">
+            <div class="mb-4">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-translate text-neon fs-4 me-3"></i>
+                    <h5 class="text-white mb-0">{{ 'settings.language_preferences'|trans }}</h5>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary">{{ 'settings.current_language'|trans }}:</label>
+                    <div class="text-white fw-semibold">{{ ('language.' ~ current_locale)|trans }}</div>
+                </div>
+
+                <form method="post" action="{{ path('app_settings_locale') }}">
+                    <div class="mb-3">
+                        <label for="locale" class="form-label text-secondary">{{ 'settings.choose_language'|trans }}:</label>
+                        <select name="locale" id="locale" class="form-select" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.2); color: white;" onchange="this.form.submit()">
+                            {% for locale_code, locale_name in supported_locales %}
+                                <option value="{{ locale_code }}" {{ locale_code == current_locale ? 'selected' : '' }}>
+                                    {{ locale_name|trans }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Configuration -->
+    <div class="bento-item">
+        <div class="infinity-card p-4 h-100">
+            <div class="text-center mb-4">
+                <div class="p-3 rounded-circle mx-auto mb-3" style="background: linear-gradient(135deg, var(--infinity-primary), var(--infinity-secondary)); width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-robot text-white fs-2"></i>
+                </div>
+                <h5 class="text-white mb-2">{{ 'ai.settings'|trans }}</h5>
+                <p class="text-secondary mb-3">{{ 'ai.settings_description'|trans }}</p>
+                <button class="btn infinity-btn-ai" disabled>
+                    <i class="bi bi-magic me-2"></i>{{ 'misc.coming_soon'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Information -->
+    <div class="bento-item large">
+        <div class="infinity-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="text-neon mb-0">
+                    <i class="bi bi-info-circle me-2"></i>{{ 'system.information'|trans }}
+                </h5>
+                <div class="ai-status-indicator">
+                    {{ 'system.status'|trans }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-value" style="font-size: 1.5rem;">v1.0</div>
+                        <div class="metric-label">{{ 'system.version'|trans }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-value" style="font-size: 1.5rem;">PHP 8.4</div>
+                        <div class="metric-label">{{ 'system.runtime'|trans }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-value" style="font-size: 1.5rem;">Symfony 7.3</div>
+                        <div class="metric-label">{{ 'system.framework'|trans }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-value" style="font-size: 1.5rem;">PostgreSQL 18</div>
+                        <div class="metric-label">{{ 'system.database'|trans }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 p-3 rounded" style="background: rgba(0, 245, 255, 0.05); border: 1px solid rgba(0, 245, 255, 0.2);">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-shield-check text-neon me-2"></i>
+                    <div>
+                        <strong class="text-white">{{ 'system.security_status'|trans }}</strong>
+                        <span class="text-secondary ms-2">{{ 'system.security_message'|trans }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<style>
+/* Simple Theme Cards */
+.theme-card {
+    background: var(--infinity-dark-surface);
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.theme-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.theme-card.active {
+    border-color: var(--infinity-neon);
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+}
+
+.theme-preview-mini {
+    height: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-preview-mini {
+    background: linear-gradient(135deg, #0a0a0b 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.light-preview-mini {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #e2e8f0 100%);
+}
+
+.theme-header {
+    height: 25px;
+    margin: 8px;
+    border-radius: 4px;
+}
+
+.dark-preview-mini .theme-header {
+    background: rgba(26, 26, 30, 0.9);
+    border-bottom: 1px solid rgba(0, 245, 255, 0.3);
+}
+
+.light-preview-mini .theme-header {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.theme-content {
+    display: flex;
+    gap: 8px;
+    margin: 8px;
+    height: 70px;
+}
+
+.theme-card-mini {
+    flex-grow: 1;
+    border-radius: 6px;
+}
+
+.dark-preview-mini .theme-card-mini {
+    background: rgba(45, 45, 52, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light-preview-mini .theme-card-mini {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.theme-sidebar-mini {
+    width: 30px;
+    border-radius: 6px;
+}
+
+.dark-preview-mini .theme-sidebar-mini {
+    background: rgba(79, 70, 229, 0.3);
+}
+
+.light-preview-mini .theme-sidebar-mini {
+    background: rgba(59, 130, 246, 0.3);
+}
+</style>
+
+<script>
+// Settings page theme management
+const SettingsTheme = {
+    init() {
+        // Update UI based on current theme
+        const current = localStorage.getItem('infinity-theme') || 'dark';
+        this.updateUI(current);
+    },
+
+    updateUI(theme) {
+        // Update active state
+        document.querySelectorAll('.theme-card').forEach(card => {
+            card.classList.remove('active');
+        });
+        document.getElementById(theme + 'Theme')?.classList.add('active');
+
+        // Update status indicator
+        const status = document.getElementById('currentThemeStatus');
+        if (status) {
+            status.textContent = theme === 'light' ? 'Light Theme' : 'Dark Theme';
+        }
+    }
+};
+
+// Global theme switch function
+function switchTheme(theme) {
+    // Apply theme globally
+    if (typeof GlobalTheme !== 'undefined') {
+        GlobalTheme.apply(theme);
+        GlobalTheme.updateNavbar();
+    } else {
+        // Fallback if GlobalTheme not available
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('infinity-theme', theme);
+    }
+
+    // Update local UI
+    SettingsTheme.updateUI(theme);
+
+    // Show feedback
+    const card = document.getElementById(theme + 'Theme');
+    const originalContent = card.querySelector('.theme-info h6').innerHTML;
+    card.querySelector('.theme-info h6').innerHTML = '<i class="bi bi-check-circle me-2"></i>Applied!';
+
+    setTimeout(() => {
+        card.querySelector('.theme-info h6').innerHTML = originalContent;
+    }, 1500);
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    SettingsTheme.init();
+});
+</script>
+{% endblock %}

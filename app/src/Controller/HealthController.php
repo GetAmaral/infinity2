@@ -101,13 +101,28 @@ class HealthController extends AbstractController
             $dbMetrics = $this->connection->executeQuery("
                 SELECT
                     schemaname,
-                    tablename,
+                    relname as table_name,
                     n_tup_ins as inserts,
                     n_tup_upd as updates,
-                    n_tup_del as deletes
+                    n_tup_del as deletes,
+                    n_live_tup as live_tuples,
+                    n_dead_tup as dead_tuples
                 FROM pg_stat_user_tables
-                ORDER BY schemaname, tablename
+                ORDER BY schemaname, relname
             ")->fetchAllAssociative();
+
+            // Add database size information
+            $dbSizeResult = $this->connection->executeQuery("
+                SELECT pg_size_pretty(pg_database_size(current_database())) as database_size
+            ")->fetchAssociative();
+
+            $dbMetrics = [
+                'tables' => $dbMetrics,
+                'database_size' => $dbSizeResult['database_size'] ?? 'Unknown',
+                'connection_count' => $this->connection->executeQuery(
+                    "SELECT count(*) as count FROM pg_stat_activity WHERE datname = current_database()"
+                )->fetchAssociative()['count'] ?? 0
+            ];
         } catch (\Exception $e) {
             $dbMetrics = ['error' => 'Could not fetch database metrics: ' . $e->getMessage()];
         }

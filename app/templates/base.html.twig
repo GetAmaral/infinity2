@@ -2,34 +2,210 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Infinity{% endblock %}</title>
+    <title>{% block title %}Infinity CRM{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     {% block stylesheets %}{{ importmap('app') }}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg infinity-navbar">
+    <nav class="navbar infinity-navbar">
         <div class="container">
             <a class="navbar-brand text-white d-flex align-items-center" href="{{ path('app_home') }}">
-                <img src="/infinity_logo_sm.png" alt="Infinity" height="24" class="me-2">
-                Infinity
+                <img src="/infinity_logo_sm.png" alt="Infinity" height="32" class="me-2">
+                <span class="fw-bold text-gradient">{{ 'nav.infinity'|trans }}</span>
+                <span class="badge ms-2" style="background: var(--infinity-ai-gradient); font-size: 0.6rem; padding: 0.2rem 0.5rem;">{{ 'ui.ai'|trans }}</span>
             </a>
-            <div class="navbar-nav">
-                <a class="nav-link text-white" href="{{ path('app_home') }}">Home</a>
-                <a class="nav-link text-white" href="{{ path('organization_index') }}">Organizations</a>
-                <a class="nav-link text-white" href="{{ path('user_index') }}">Users</a>
-                <a class="nav-link text-white" href="/api">API</a>
+
+            <div class="d-flex align-items-center me-3">
+                <div class="ai-status-indicator me-3">
+                    {{ 'ui.ai'|trans }} {{ 'ui.active'|trans }}
+                </div>
+                <div class="real-time-badge">
+                    Live
+                </div>
+            </div>
+
+            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ path('app_home') }}">
+                            <i class="bi bi-house me-1"></i>{{ 'nav.home'|trans }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ path('organization_index') }}">
+                            <i class="bi bi-building me-1"></i>{{ 'nav.organizations'|trans }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ path('user_index') }}">
+                            <i class="bi bi-people me-1"></i>{{ 'nav.users'|trans }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/api">
+                            <i class="bi bi-robot me-1"></i>AI Chat
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/health">
+                            <i class="bi bi-activity me-1"></i>Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-translate me-1"></i>{{ 'nav.language'|trans }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="languageDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <li>
+                                <form method="post" action="{{ path('app_settings_locale') }}" class="d-inline">
+                                    <input type="hidden" name="locale" value="en">
+                                    <button type="submit" class="dropdown-item {% if app.request.locale == 'en' %}active{% endif %}" style="border: none; background: none; width: 100%; text-align: left;">
+                                        <i class="bi bi-flag me-2"></i>{{ 'language.en'|trans }}
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="post" action="{{ path('app_settings_locale') }}" class="d-inline">
+                                    <input type="hidden" name="locale" value="pt_BR">
+                                    <button type="submit" class="dropdown-item {% if app.request.locale == 'pt_BR' %}active{% endif %}" style="border: none; background: none; width: 100%; text-align: left;">
+                                        <i class="bi bi-flag me-2"></i>{{ 'language.pt_BR'|trans }}
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>{{ 'ui.account'|trans }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_settings') }}">
+                                    <i class="bi bi-gear me-2"></i>{{ 'nav.settings'|trans }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <main class="container mt-4">
+    <main class="container">
         {% for message in app.flashes('success') %}
-            <div class="alert alert-success">{{ message }}</div>
+            <div class="alert alert-success border-0 rounded-3" style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3) !important; color: #22c55e;">
+                <i class="bi bi-check-circle me-2"></i>{{ message|trans }}
+            </div>
         {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger border-0 rounded-3" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3) !important; color: #ef4444;">
+                <i class="bi bi-exclamation-triangle me-2"></i>{{ message|trans }}
+            </div>
+        {% endfor %}
+
         {% block body %}{% endblock %}
     </main>
 
+    <!-- Voice Command Interface -->
+    <div class="voice-command-zone">
+        <button class="voice-btn" id="voiceBtn" title="{{ 'misc.voice_commands'|trans }}">
+            <i class="bi bi-mic"></i>
+        </button>
+    </div>
+
+    <!-- AI Chat Panel (Hidden by default) -->
+    <div class="chat-panel" id="chatPanel">
+        <div class="p-3 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+            <h6 class="text-gradient mb-0">{{ 'ai.assistant'|trans }}</h6>
+            <small class="text-muted">{{ 'ai.crm_question'|trans }}</small>
+        </div>
+        <div class="p-3">
+            <div class="text-center text-muted py-5">
+                <i class="bi bi-robot" style="font-size: 3rem; opacity: 0.5;"></i>
+                <p class="mt-3">{{ 'ai.coming_soon'|trans }}</p>
+            </div>
+        </div>
+    </div>
+
     {% block javascripts %}{% endblock %}
+
+    <script>
+        // Global theme management
+        const GlobalTheme = {
+            current: 'dark',
+
+            init() {
+                // Load saved theme preference
+                const saved = localStorage.getItem('infinity-theme');
+                const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                this.current = saved || system;
+
+                this.apply(this.current);
+                this.updateNavbar();
+
+                // Listen for system theme changes
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    if (!localStorage.getItem('infinity-theme')) {
+                        this.apply(e.matches ? 'dark' : 'light');
+                        this.updateNavbar();
+                    }
+                });
+            },
+
+            apply(theme) {
+                this.current = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('infinity-theme', theme);
+            },
+
+            updateNavbar() {
+                const icon = document.getElementById('navThemeIcon');
+                const text = document.getElementById('navThemeText');
+
+                if (this.current === 'light') {
+                    if (icon) icon.className = 'bi bi-moon-stars me-2';
+                    if (text) text.textContent = 'Switch to Dark';
+                } else {
+                    if (icon) icon.className = 'bi bi-sun me-2';
+                    if (text) text.textContent = 'Switch to Light';
+                }
+            }
+        };
+
+        // Global functions
+        function toggleThemeQuick() {
+            const newTheme = GlobalTheme.current === 'dark' ? 'light' : 'dark';
+            GlobalTheme.apply(newTheme);
+            GlobalTheme.updateNavbar();
+        }
+
+        // Simple voice button interaction
+        document.getElementById('voiceBtn')?.addEventListener('click', function() {
+            this.classList.toggle('listening');
+            const icon = this.querySelector('i');
+
+            if (this.classList.contains('listening')) {
+                icon.className = 'bi bi-mic-fill';
+                setTimeout(() => {
+                    this.classList.remove('listening');
+                    icon.className = 'bi bi-mic';
+                }, 3000);
+            }
+        });
+
+        // Initialize theme on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            GlobalTheme.init();
+        });
+    </script>
 </body>
 </html>

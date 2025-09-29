@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class OrganizationApiTest extends WebTestCase
 {
+    /**
+     */
     public function testGetOrganizationsApi(): void
     {
         $client = static::createClient();
@@ -24,6 +26,8 @@ class OrganizationApiTest extends WebTestCase
         $this->assertArrayHasKey('totalItems', $content);
     }
 
+    /**
+     */
     public function testGetSingleOrganizationApi(): void
     {
         $client = static::createClient();
@@ -53,6 +57,8 @@ class OrganizationApiTest extends WebTestCase
         $entityManager->flush();
     }
 
+    /**
+     */
     public function testCreateOrganizationApi(): void
     {
         $client = static::createClient();

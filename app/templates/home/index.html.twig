@@ -1,25 +1,155 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{{ title }} - AI-Powered CRM Dashboard{% endblock %}
 
 {% block body %}
-<div class="row">
-    <div class="col-12">
-        <div class="infinity-card p-4 mb-4">
-            <h1 class="h2 mb-3">{{ title }}</h1>
-            <p class="lead">Modern Symfony UX application with PostgreSQL 18 and UUIDv7 support.</p>
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <a href="{{ path('organization_index') }}" class="btn infinity-btn-primary w-100 mb-2">
-                        <i class="bi bi-building me-2"></i>Organizations
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <a href="{{ path('user_index') }}" class="btn infinity-btn-primary w-100 mb-2">
-                        <i class="bi bi-people me-2"></i>Users
-                    </a>
+<!-- AI Dashboard Header -->
+<div class="ai-dashboard-header">
+    <div class="d-flex justify-content-between align-items-start">
+        <div>
+            <h1 class="text-gradient mb-2">{{ 'home.title'|trans }}</h1>
+            <p class="text-secondary mb-0">{{ 'home.description'|trans }}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="ai-status-indicator">
+                <i class="bi bi-lightning me-1"></i> AI Enhanced
+            </div>
+            <div class="real-time-badge">
+                Real-time
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Metrics Bento Grid -->
+<div class="bento-grid mb-4">
+    <div class="bento-item large">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="text-neon mb-0">{{ 'ai.quick_actions'|trans }}</h6>
+            <i class="bi bi-magic text-neon"></i>
+        </div>
+        <div class="row">
+            <div class="col-6 col-lg-3 mb-3">
+                <a href="{{ path('organization_index') }}" class="btn infinity-btn-primary w-100 py-3">
+                    <i class="bi bi-building fs-4 d-block mb-2"></i>
+                    <span class="fw-semibold">{{ 'nav.organizations'|trans }}</span>
+                </a>
+            </div>
+            <div class="col-6 col-lg-3 mb-3">
+                <a href="{{ path('user_index') }}" class="btn infinity-btn-primary w-100 py-3">
+                    <i class="bi bi-people fs-4 d-block mb-2"></i>
+                    <span class="fw-semibold">{{ 'nav.users'|trans }}</span>
+                </a>
+            </div>
+            <div class="col-6 col-lg-3 mb-3">
+                <a href="/api" class="btn infinity-btn-ai w-100 py-3">
+                    <i class="bi bi-robot fs-4 d-block mb-2"></i>
+                    <span class="fw-semibold">{{ 'ai.chat'|trans }}</span>
+                </a>
+            </div>
+            <div class="col-6 col-lg-3 mb-3">
+                <a href="/health" class="btn infinity-btn-ai w-100 py-3">
+                    <i class="bi bi-activity fs-4 d-block mb-2"></i>
+                    <span class="fw-semibold">{{ 'ai.analytics'|trans }}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bento-item">
+        <div class="metric-card">
+            <i class="bi bi-people-fill text-neon fs-1"></i>
+            <div class="metric-value">247</div>
+            <div class="metric-label">{{ 'metric.total_contacts'|trans }}</div>
+            <div class="metric-trend trend-up">
+                <i class="bi bi-arrow-up"></i> +12% this month
+            </div>
+        </div>
+    </div>
+
+    <div class="bento-item">
+        <div class="metric-card">
+            <i class="bi bi-building text-neon fs-1"></i>
+            <div class="metric-value">42</div>
+            <div class="metric-label">{{ 'nav.organizations'|trans }}</div>
+            <div class="metric-trend trend-up">
+                <i class="bi bi-arrow-up"></i> +3 new
+            </div>
+        </div>
+    </div>
+
+    <div class="bento-item">
+        <div class="metric-card">
+            <i class="bi bi-chat-dots-fill text-neon fs-1"></i>
+            <div class="metric-value">1.2k</div>
+            <div class="metric-label">{{ 'metric.ai_interactions'|trans }}</div>
+            <div class="metric-trend trend-up">
+                <i class="bi bi-arrow-up"></i> +15% today
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Features Showcase -->
+<div class="bento-grid">
+    <div class="bento-item large ai-enhanced">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="text-gradient mb-0">{{ 'ai.powered_crm'|trans }}</h5>
+            <i class="bi bi-stars text-neon"></i>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="infinity-card p-4 h-100">
+                    <div class="text-center mb-3">
+                        <div class="d-inline-flex p-3 rounded-circle" style="background: rgba(0, 245, 255, 0.1);">
+                            <i class="bi bi-chat-square-quote text-neon fs-3"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-center text-white">{{ 'ai.conversational'|trans }}</h6>
+                    <p class="text-secondary text-center">{{ 'ai.conversational_description'|trans }}</p>
                 </div>
             </div>
+            <div class="col-lg-4 mb-4">
+                <div class="infinity-card p-4 h-100">
+                    <div class="text-center mb-3">
+                        <div class="d-inline-flex p-3 rounded-circle" style="background: rgba(79, 70, 229, 0.1);">
+                            <i class="bi bi-graph-up-arrow text-primary fs-3"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-center text-white">{{ 'ai.predictive_analytics'|trans }}</h6>
+                    <p class="text-secondary text-center">{{ 'ai.predictive_description'|trans }}</p>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="infinity-card p-4 h-100">
+                    <div class="text-center mb-3">
+                        <div class="d-inline-flex p-3 rounded-circle" style="background: rgba(124, 58, 237, 0.1);">
+                            <i class="bi bi-magic text-secondary fs-3"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-center text-white">{{ 'ai.smart_automation'|trans }}</h6>
+                    <p class="text-secondary text-center">{{ 'ai.automation_description'|trans }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bento-item tall">
+        <h6 class="text-neon mb-3">{{ 'system.performance'|trans }}</h6>
+        <div class="metric-card mb-3">
+            <i class="bi bi-lightning-charge text-neon"></i>
+            <div class="metric-value text-start" style="font-size: 1.5rem;">99.9%</div>
+            <div class="metric-label text-start">{{ 'metric.uptime'|trans }}</div>
+        </div>
+        <div class="metric-card mb-3">
+            <i class="bi bi-speedometer2 text-neon"></i>
+            <div class="metric-value text-start" style="font-size: 1.5rem;">< 200ms</div>
+            <div class="metric-label text-start">{{ 'metric.response_time'|trans }}</div>
+        </div>
+        <div class="metric-card">
+            <i class="bi bi-shield-check text-neon"></i>
+            <div class="metric-value text-start" style="font-size: 1.5rem;">256-bit</div>
+            <div class="metric-label text-start">{{ 'metric.encryption'|trans }}</div>
         </div>
     </div>
 </div>

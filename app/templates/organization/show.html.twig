@@ -1,36 +1,124 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ organization.name }}{% endblock %}
+{% block title %}{{ organization.name }} - Organization Details{% endblock %}
 
 {% block body %}
-<div class="mb-3">
-    <a href="{{ path('organization_index') }}" class="btn btn-outline-secondary">← Back to Organizations</a>
+<!-- Navigation -->
+<div class="mb-4">
+    <a href="{{ path('organization_index') }}" class="btn infinity-btn-ai">
+        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back_to_list'|trans }}
+    </a>
 </div>
 
-<div class="infinity-card p-4">
-    <h1>{{ organization.name }}</h1>
-    {% if organization.description %}
-        <p class="lead">{{ organization.description }}</p>
-    {% endif %}
-
-    <hr>
-
-    <h3>Users ({{ organization.users|length }})</h3>
-    {% if organization.users %}
-        <div class="row">
-            {% for user in organization.users %}
-                <div class="col-md-4 mb-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <h6>{{ user.name }}</h6>
-                            <small class="text-muted">{{ user.email }}</small>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+<!-- Organization Header -->
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center">
+            <div class="p-3 rounded-circle me-4" style="background: var(--infinity-ai-gradient);">
+                <i class="bi bi-building text-white fs-2"></i>
+            </div>
+            <div>
+                <h1 class="text-gradient mb-2">{{ organization.name }}</h1>
+                {% if organization.description %}
+                    <p class="text-secondary mb-0 fs-5">{{ organization.description }}</p>
+                {% else %}
+                    <p class="text-muted mb-0 fst-italic">{{ 'empty.no_description'|trans }}</p>
+                {% endif %}
+            </div>
         </div>
-    {% else %}
-        <div class="alert alert-info">No users in this organization.</div>
-    {% endif %}
+        <div class="d-flex gap-2">
+            <div class="ai-status-indicator">
+                <i class="bi bi-star-fill"></i> Organization
+            </div>
+            <div class="real-time-badge">
+                {% if organization.users|length == 0 %}
+                    {{ 'organization.no_users'|trans }}
+                {% else %}
+                    {{ 'organization.users_count'|trans({'%count%': organization.users|length}, 'messages', null, organization.users|length) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Organization Details Bento Grid -->
+<div class="bento-grid">
+    <!-- Quick Stats -->
+    <div class="bento-item">
+        <div class="metric-card">
+            <i class="bi bi-people-fill text-neon fs-1"></i>
+            <div class="metric-value">{{ organization.users|length }}</div>
+            <div class="metric-label">{{ 'metric.total_contacts'|trans }}</div>
+            <div class="metric-trend trend-up">
+                <i class="bi bi-arrow-up"></i> {{ 'insight.active_organization'|trans }}
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="bento-item">
+        <div class="infinity-card ai-enhanced p-4 h-100">
+            <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-magic text-neon me-2"></i>
+                <h6 class="text-gradient mb-0">{{ 'ai.insights'|trans }}</h6>
+            </div>
+            <div class="text-secondary">
+                <p class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>{{ 'insight.strong_engagement'|trans }}</p>
+                <p class="mb-2"><i class="bi bi-trending-up text-neon me-2"></i>{{ 'insight.growth_potential'|trans }}</p>
+                <p class="mb-0"><i class="bi bi-heart text-danger me-2"></i>{{ 'insight.high_relationship_score'|trans }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contacts Section -->
+    <div class="bento-item large">
+        <div class="infinity-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="text-neon mb-0">
+                    <i class="bi bi-people me-2"></i>{{ 'organization.users_in_organization'|trans }} ({{ organization.users|length }})
+                </h5>
+                <button class="btn infinity-btn-primary btn-sm">
+                    <i class="bi bi-person-plus me-1"></i>{{ 'button.add_contact'|trans }}
+                </button>
+            </div>
+
+            {% if organization.users %}
+                <div class="row">
+                    {% for user in organization.users %}
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="infinity-card p-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="p-2 rounded-circle me-3" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                                        <i class="bi bi-person-circle text-white"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="text-white mb-1">{{ user.name }}</h6>
+                                        <small class="text-secondary">{{ user.email }}</small>
+                                    </div>
+                                    <a href="{{ path('user_show', {id: user.id}) }}" class="btn btn-sm infinity-btn-ai">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="real-time-badge">
+                                        <i class="bi bi-calendar me-1"></i>{{ user.createdAt|date('M d') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-person-plus" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
+                    <h5 class="text-white mt-3 mb-2">{{ 'empty.no_contacts_yet'|trans }}</h5>
+                    <p class="text-secondary mb-4">{{ 'empty.organization_contacts_description'|trans }}</p>
+                    <button class="btn infinity-btn-primary">
+                        <i class="bi bi-person-plus me-2"></i>{{ 'button.add_first_contact'|trans }}
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}

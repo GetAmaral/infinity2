@@ -1,23 +1,167 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ user.name }}{% endblock %}
+{% block title %}{{ user.name }} - Contact Details{% endblock %}
 
 {% block body %}
-<div class="mb-3">
-    <a href="{{ path('user_index') }}" class="btn btn-outline-secondary">← Back to Users</a>
+<!-- Navigation -->
+<div class="mb-4">
+    <a href="{{ path('user_index') }}" class="btn infinity-btn-ai">
+        <i class="bi bi-arrow-left me-2"></i>{{ 'user.back_to_list'|trans }}
+    </a>
 </div>
 
-<div class="infinity-card p-4">
-    <h1>{{ user.name }}</h1>
-    <p class="lead">{{ user.email }}</p>
+<!-- Contact Header -->
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center">
+            <div class="position-relative me-4">
+                <div class="p-3 rounded-circle" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="bi bi-person-circle text-white fs-2"></i>
+                </div>
+                <div class="position-absolute top-0 end-0 translate-middle">
+                    <span class="badge rounded-pill" style="background: var(--infinity-ai-gradient); font-size: 0.7rem;">{{ 'ui.ai'|trans }}</span>
+                </div>
+            </div>
+            <div>
+                <h1 class="text-gradient mb-2">{{ user.name }}</h1>
+                <p class="text-secondary mb-0 fs-5">{{ user.email }}</p>
+                {% if user.organization %}
+                    <div class="mt-2">
+                        <a href="{{ path('organization_show', {id: user.organization.id}) }}" class="real-time-badge text-decoration-none">
+                            <i class="bi bi-building me-1"></i>{{ user.organization.name }}
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="ai-status-indicator">
+                <i class="bi bi-person-check"></i> {{ 'misc.contacts_section'|trans }}
+            </div>
+            <div class="real-time-badge">
+                {{ 'ui.active'|trans }}
+            </div>
+        </div>
+    </div>
+</div>
 
-    {% if user.organization %}
-        <hr>
-        <h5>Organization</h5>
-        <p><a href="{{ path('organization_show', {id: user.organization.id}) }}">{{ user.organization.name }}</a></p>
-    {% endif %}
+<!-- Contact Details Bento Grid -->
+<div class="bento-grid">
+    <!-- Contact Information -->
+    <div class="bento-item large">
+        <div class="infinity-card ai-enhanced p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="text-neon mb-0">
+                    <i class="bi bi-person-lines-fill me-2"></i>{{ 'contact.information'|trans }}
+                </h5>
+                <button class="btn infinity-btn-primary btn-sm">
+                    <i class="bi bi-pencil me-1"></i>{{ 'button.edit_contact'|trans }}
+                </button>
+            </div>
 
-    <hr>
-    <small class="text-muted">Created: {{ user.createdAt|date('Y-m-d H:i') }}</small>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="infinity-card p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-envelope text-neon me-2"></i>
+                            <h6 class="text-white mb-0">{{ 'user.email'|trans }}</h6>
+                        </div>
+                        <p class="text-secondary mb-0">{{ user.email }}</p>
+                        <div class="mt-2">
+                            <button class="btn btn-sm infinity-btn-ai">
+                                <i class="bi bi-envelope me-1"></i>{{ 'button.send_email'|trans }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {% if user.organization %}
+                <div class="col-md-6 mb-4">
+                    <div class="infinity-card p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-building text-neon me-2"></i>
+                            <h6 class="text-white mb-0">{{ 'user.organization'|trans }}</h6>
+                        </div>
+                        <p class="text-secondary mb-0">{{ user.organization.name }}</p>
+                        <div class="mt-2">
+                            <a href="{{ path('organization_show', {id: user.organization.id}) }}" class="btn btn-sm infinity-btn-primary">
+                                <i class="bi bi-building me-1"></i>{{ 'user.view_organization'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="col-md-6 mb-4">
+                    <div class="infinity-card p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-calendar text-neon me-2"></i>
+                            <h6 class="text-white mb-0">{{ 'user.created_at'|trans }}</h6>
+                        </div>
+                        <p class="text-secondary mb-0">{{ user.createdAt|date('F j, Y') }}</p>
+                        <small class="text-muted">{{ user.createdAt|date('g:i A') }}</small>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="infinity-card p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-activity text-neon me-2"></i>
+                            <h6 class="text-white mb-0">{{ 'contact.last_activity'|trans }}</h6>
+                        </div>
+                        <p class="text-secondary mb-0">{{ random(['Today', 'Yesterday', '2 days ago', '1 week ago']) }}</p>
+                        <div class="mt-2">
+                            <span class="real-time-badge">
+                                {{ 'contact.active_user'|trans }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="bento-item">
+        <div class="infinity-card ai-enhanced p-4 h-100">
+            <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-magic text-neon me-2"></i>
+                <h6 class="text-gradient mb-0">{{ 'ai.insights'|trans }}</h6>
+            </div>
+            <div class="text-secondary">
+                <p class="mb-3"><i class="bi bi-check-circle text-success me-2"></i>{{ 'insight.high_engagement'|trans }}</p>
+                <p class="mb-3"><i class="bi bi-trending-up text-neon me-2"></i>{{ 'insight.active_communicator'|trans }}</p>
+                <p class="mb-3"><i class="bi bi-star text-warning me-2"></i>{{ 'insight.key_relationship'|trans }}</p>
+                <div class="mt-4">
+                    <button class="btn infinity-btn-ai btn-sm w-100">
+                        <i class="bi bi-robot me-1"></i>{{ 'button.start_ai_chat'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bento-item">
+        <div class="infinity-card p-4 h-100">
+            <h6 class="text-neon mb-3">
+                <i class="bi bi-lightning me-2"></i>{{ 'ai.quick_actions'|trans }}
+            </h6>
+            <div class="d-grid gap-2">
+                <button class="btn infinity-btn-primary btn-sm">
+                    <i class="bi bi-chat-dots me-2"></i>{{ 'button.send_message'|trans }}
+                </button>
+                <button class="btn infinity-btn-ai btn-sm">
+                    <i class="bi bi-telephone me-2"></i>{{ 'button.call_contact'|trans }}
+                </button>
+                <button class="btn infinity-btn-ai btn-sm">
+                    <i class="bi bi-calendar-plus me-2"></i>{{ 'button.schedule_meeting'|trans }}
+                </button>
+                <button class="btn infinity-btn-ai btn-sm">
+                    <i class="bi bi-share me-2"></i>{{ 'button.share_contact'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

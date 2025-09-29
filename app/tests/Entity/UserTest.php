@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
+    /**
+     */
     public function testUserCreation(): void
     {
         $user = new User();
@@ -21,6 +23,8 @@ class UserTest extends TestCase
         $this->assertNull($user->getOrganization());
     }
 
+    /**
+     */
     public function testUserOrganizationRelationship(): void
     {
         $organization = new Organization();
@@ -35,6 +39,8 @@ class UserTest extends TestCase
         $this->assertEquals('Test Org', $user->getOrganization()->getName());
     }
 
+    /**
+     */
     public function testPreUpdate(): void
     {
         $user = new User();

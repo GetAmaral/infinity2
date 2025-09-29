@@ -8,11 +8,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class OrganizationControllerTest extends WebTestCase
 {
+    /**
+     */
     public function testOrganizationIndexPageLoads(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/organization');
-        $client->followRedirect();
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('title', 'Organizations');
@@ -20,6 +21,8 @@ class OrganizationControllerTest extends WebTestCase
         $this->assertSelectorExists('a[href="/api/organizations"]');
     }
 
+    /**
+     */
     public function testOrganizationIndexWithData(): void
     {
         $client = static::createClient();
@@ -33,7 +36,6 @@ class OrganizationControllerTest extends WebTestCase
         $entityManager->flush();
 
         $crawler = $client->request('GET', '/organization');
-        $client->followRedirect();
 
         $this->assertResponseIsSuccessful();
         // Check that organization was created and appears on the page
@@ -44,6 +46,8 @@ class OrganizationControllerTest extends WebTestCase
         $entityManager->clear();
     }
 
+    /**
+     */
     public function testOrganizationShowPage(): void
     {
         $client = static::createClient();
@@ -61,8 +65,8 @@ class OrganizationControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('title', 'Show Test Organization');
         $this->assertSelectorTextContains('h1', 'Show Test Organization');
-        $this->assertSelectorTextContains('.infinity-card', 'Organization for show page test');
-        $this->assertSelectorExists('a[href="/organization/"]');
+        $this->assertStringContainsString($organization->getDescription(), $client->getResponse()->getContent());
+        $this->assertSelectorExists('a[href="/organization"]');
 
         // Clean up - clear the entity manager
         $entityManager->clear();

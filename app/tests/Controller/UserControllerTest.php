@@ -9,11 +9,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserControllerTest extends WebTestCase
 {
+    /**
+     */
     public function testUserIndexPageLoads(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/user');
-        $client->followRedirect();
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('title', 'Users');
@@ -21,6 +22,8 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorExists('a[href="/api/users"]');
     }
 
+    /**
+     */
     public function testUserIndexWithData(): void
     {
         $client = static::createClient();
@@ -34,24 +37,25 @@ class UserControllerTest extends WebTestCase
 
         $user = new User();
         $user->setName('John Doe');
-        $user->setEmail('john.doe.index.' . time() . '@test.com');
+        $user->setEmail('john.doe.index.' . microtime(true) . '@test.com');
         $user->setOrganization($organization);
         $entityManager->persist($user);
 
         $entityManager->flush();
 
         $crawler = $client->request('GET', '/user');
-        $client->followRedirect();
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.infinity-card', 'John Doe');
-        $this->assertSelectorTextContains('.infinity-card', 'john.doe@test.com');
+        $this->assertStringContainsString($user->getEmail(), $client->getResponse()->getContent());
         $this->assertSelectorTextContains('.infinity-card', 'User Test Org');
 
         // Clean up - clear the entity manager
         $entityManager->clear();
     }
 
+    /**
+     */
     public function testUserShowPage(): void
     {
         $client = static::createClient();
@@ -65,7 +69,7 @@ class UserControllerTest extends WebTestCase
 
         $user = new User();
         $user->setName('Jane Smith');
-        $user->setEmail('jane.smith.show.' . time() . '@test.com');
+        $user->setEmail('jane.smith.show.' . microtime(true) . '@test.com');
         $user->setOrganization($organization);
         $entityManager->persist($user);
 
@@ -78,7 +82,7 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Jane Smith');
         $this->assertSelectorTextContains('.infinity-card', $user->getEmail());
         $this->assertSelectorTextContains('.infinity-card', 'Show Test Org');
-        $this->assertSelectorExists('a[href="/user/"]');
+        $this->assertSelectorExists('a[href="/user"]');
 
         // Clean up - clear the entity manager
         $entityManager->clear();

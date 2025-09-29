@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class HealthControllerTest extends WebTestCase
 {
+    /**
+     */
     public function testHealthEndpoint(): void
     {
         $client = static::createClient();

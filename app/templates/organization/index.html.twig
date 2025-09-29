@@ -1,31 +1,99 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Organizations{% endblock %}
+{% block title %}{{ 'organization.title'|trans }} - CRM{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Organizations</h1>
-    <a href="/api/organizations" class="btn btn-outline-primary">API</a>
+<!-- Page Header -->
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-building text-neon fs-2 me-3"></i>
+            <div>
+                <h1 class="text-gradient mb-1">{{ 'organization.title'|trans }}</h1>
+                <p class="text-secondary mb-0">{{ 'page.organization_description'|trans }}</p>
+            </div>
+        </div>
+        <div class="d-flex gap-3">
+            <button class="btn infinity-btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>{{ 'button.add_organization'|trans }}
+            </button>
+            <a href="/api/organizations" class="btn infinity-btn-ai">
+                <i class="bi bi-code-slash me-1"></i>{{ 'organization.api_link'|trans }}
+            </a>
+        </div>
+    </div>
 </div>
 
-<div class="row">
+<!-- Organizations Bento Grid -->
+<div class="bento-grid">
     {% for org in organizations %}
-        <div class="col-md-6 mb-3">
-            <div class="infinity-card p-3">
-                <h5>{{ org.name }}</h5>
+        <div class="bento-item {% if loop.index0 % 3 == 0 %}large{% endif %}">
+            <div class="infinity-card ai-enhanced p-4 h-100">
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="p-2 rounded-circle me-3" style="background: var(--infinity-ai-gradient); background-size: 200% 200%; animation: gradientShift 4s ease infinite;">
+                            <i class="bi bi-building text-white fs-4"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-white mb-1">{{ org.name }}</h5>
+                            <div class="d-flex gap-2 align-items-center">
+                                <span class="real-time-badge">
+                                    {% if org.users|length == 0 %}
+                                        {{ 'organization.no_users'|trans }}
+                                    {% else %}
+                                        {{ 'organization.users_count'|trans({'%count%': org.users|length}, 'messages', null, org.users|length) }}
+                                    {% endif %}
+                                </span>
+                                {% if org.users|length > 5 %}
+                                    <span class="ai-status-indicator" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;">
+                                        <i class="bi bi-star-fill"></i> Active
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm" style="color: var(--infinity-text-secondary);" title="{{ 'misc.ai_insights_tooltip'|trans }}">
+                        <i class="bi bi-magic"></i>
+                    </button>
+                </div>
                 {% if org.description %}
-                    <p class="text-muted">{{ org.description }}</p>
+                    <p class="text-secondary mb-3">{{ org.description|slice(0, 100) }}{% if org.description|length > 100 %}...{% endif %}</p>
+                {% else %}
+                    <p class="text-muted mb-3 fst-italic">{{ 'empty.no_description'|trans }}</p>
                 {% endif %}
-                <small class="text-muted">{{ org.users|length }} users</small>
-                <div class="mt-2">
-                    <a href="{{ path('organization_show', {id: org.id}) }}" class="btn btn-sm btn-primary">View</a>
+                <div class="d-flex justify-content-between align-items-center mt-auto">
+                    <small class="text-muted d-flex align-items-center">
+                        <i class="bi bi-calendar me-1"></i>{{ org.createdAt|date('M d, Y') }}
+                    </small>
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('organization_show', {id: org.id}) }}" class="btn btn-sm infinity-btn-primary">
+                            <i class="bi bi-arrow-right me-1"></i>{{ 'organization.view_details'|trans }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     {% else %}
-        <div class="col-12">
-            <div class="alert alert-info">No organizations found.</div>
+        <div class="bento-item large">
+            <div class="infinity-card p-5 text-center">
+                <div class="mb-4">
+                    <i class="bi bi-building" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
+                </div>
+                <h4 class="text-white mb-3">{{ 'empty.no_organizations_yet'|trans }}</h4>
+                <p class="text-secondary mb-4">{{ 'empty.organization_description'|trans }}</p>
+                <button class="btn infinity-btn-primary btn-lg">
+                    <i class="bi bi-plus-circle me-2"></i>{{ 'button.create_first_organization'|trans }}
+                </button>
+            </div>
         </div>
     {% endfor %}
 </div>
+
+<style>
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+</style>
 {% endblock %}

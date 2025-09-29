@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
+    <body>
+      <!-- Navigation -->
+      <trans-unit id="nav.infinity">
+        <source>nav.infinity</source>
+        <target>🚀 Infinity</target>
+        <note>Application brand name in navigation</note>
+      </trans-unit>
+      <trans-unit id="nav.home">
+        <source>nav.home</source>
+        <target>Home</target>
+        <note>Home navigation link</note>
+      </trans-unit>
+      <trans-unit id="nav.organizations">
+        <source>nav.organizations</source>
+        <target>Organizations</target>
+        <note>Organizations navigation link</note>
+      </trans-unit>
+      <trans-unit id="nav.users">
+        <source>nav.users</source>
+        <target>Users</target>
+        <note>Users navigation link</note>
+      </trans-unit>
+      <trans-unit id="nav.settings">
+        <source>nav.settings</source>
+        <target>Settings</target>
+        <note>Settings navigation link</note>
+      </trans-unit>
+      <trans-unit id="nav.language">
+        <source>nav.language</source>
+        <target>Language</target>
+        <note>Language selector in navigation</note>
+      </trans-unit>
+
+      <!-- Home Page -->
+      <trans-unit id="home.title">
+        <source>home.title</source>
+        <target>Welcome to Infinity</target>
+        <note>Main title on home page</note>
+      </trans-unit>
+      <trans-unit id="home.subtitle">
+        <source>home.subtitle</source>
+        <target>Modern Symfony Application</target>
+        <note>Subtitle on home page</note>
+      </trans-unit>
+      <trans-unit id="home.description">
+        <source>home.description</source>
+        <target>A complete enterprise-ready Symfony 7.3 application featuring PostgreSQL 18, Redis 7, FrankenPHP 1.9, and modern development practices.</target>
+        <note>Main description on home page</note>
+      </trans-unit>
+      <trans-unit id="home.view_organizations">
+        <source>home.view_organizations</source>
+        <target>View Organizations</target>
+        <note>Button text for viewing organizations</note>
+      </trans-unit>
+      <trans-unit id="home.view_users">
+        <source>home.view_users</source>
+        <target>View Users</target>
+        <note>Button text for viewing users</note>
+      </trans-unit>
+
+      <!-- Organization Pages -->
+      <trans-unit id="organization.title">
+        <source>organization.title</source>
+        <target>Organizations</target>
+        <note>Page title for organizations list</note>
+      </trans-unit>
+      <trans-unit id="organization.name">
+        <source>organization.name</source>
+        <target>Name</target>
+        <note>Organization name field label</note>
+      </trans-unit>
+      <trans-unit id="organization.description">
+        <source>organization.description</source>
+        <target>Description</target>
+        <note>Organization description field label</note>
+      </trans-unit>
+      <trans-unit id="organization.users_count">
+        <source>organization.users_count</source>
+        <target>%count% user|%count% users</target>
+        <note>Users count with pluralization</note>
+      </trans-unit>
+      <trans-unit id="organization.no_users">
+        <source>organization.no_users</source>
+        <target>No users</target>
+        <note>Zero users message</note>
+      </trans-unit>
+      <trans-unit id="organization.view_details">
+        <source>organization.view_details</source>
+        <target>View Details</target>
+        <note>Button text to view organization details</note>
+      </trans-unit>
+      <trans-unit id="organization.api_link">
+        <source>organization.api_link</source>
+        <target>API</target>
+        <note>Link to organization API endpoint</note>
+      </trans-unit>
+      <trans-unit id="organization.back_to_list">
+        <source>organization.back_to_list</source>
+        <target>Back to Organizations</target>
+        <note>Link to go back to organizations list</note>
+      </trans-unit>
+      <trans-unit id="organization.created_at">
+        <source>organization.created_at</source>
+        <target>Created</target>
+        <note>Organization creation date label</note>
+      </trans-unit>
+      <trans-unit id="organization.updated_at">
+        <source>organization.updated_at</source>
+        <target>Updated</target>
+        <note>Organization last update date label</note>
+      </trans-unit>
+      <trans-unit id="organization.users_in_organization">
+        <source>organization.users_in_organization</source>
+        <target>Users in this Organization</target>
+        <note>Section title for users list in organization</note>
+      </trans-unit>
+
+      <!-- User Pages -->
+      <trans-unit id="user.title">
+        <source>user.title</source>
+        <target>Users</target>
+        <note>Page title for users list</note>
+      </trans-unit>
+      <trans-unit id="user.name">
+        <source>user.name</source>
+        <target>Name</target>
+        <note>User name field label</note>
+      </trans-unit>
+      <trans-unit id="user.email">
+        <source>user.email</source>
+        <target>Email</target>
+        <note>User email field label</note>
+      </trans-unit>
+      <trans-unit id="user.organization">
+        <source>user.organization</source>
+        <target>Organization</target>
+        <note>User organization field label</note>
+      </trans-unit>
+      <trans-unit id="user.view_details">
+        <source>user.view_details</source>
+        <target>View Details</target>
+        <note>Button text to view user details</note>
+      </trans-unit>
+      <trans-unit id="user.api_link">
+        <source>user.api_link</source>
+        <target>API</target>
+        <note>Link to user API endpoint</note>
+      </trans-unit>
+      <trans-unit id="user.back_to_list">
+        <source>user.back_to_list</source>
+        <target>Back to Users</target>
+        <note>Link to go back to users list</note>
+      </trans-unit>
+      <trans-unit id="user.created_at">
+        <source>user.created_at</source>
+        <target>Created</target>
+        <note>User creation date label</note>
+      </trans-unit>
+      <trans-unit id="user.updated_at">
+        <source>user.updated_at</source>
+        <target>Updated</target>
+        <note>User last update date label</note>
+      </trans-unit>
+      <trans-unit id="user.view_organization">
+        <source>user.view_organization</source>
+        <target>View Organization</target>
+        <note>Link to view user's organization</note>
+      </trans-unit>
+
+      <!-- Settings Page -->
+      <trans-unit id="settings.title">
+        <source>settings.title</source>
+        <target>Settings</target>
+        <note>Settings page title</note>
+      </trans-unit>
+      <trans-unit id="settings.language_preferences">
+        <source>settings.language_preferences</source>
+        <target>Language Preferences</target>
+        <note>Language preferences section title</note>
+      </trans-unit>
+      <trans-unit id="settings.current_language">
+        <source>settings.current_language</source>
+        <target>Current Language</target>
+        <note>Current language label</note>
+      </trans-unit>
+      <trans-unit id="settings.choose_language">
+        <source>settings.choose_language</source>
+        <target>Choose Language</target>
+        <note>Language selection label</note>
+      </trans-unit>
+      <trans-unit id="settings.save_changes">
+        <source>settings.save_changes</source>
+        <target>Save Changes</target>
+        <note>Save button text</note>
+      </trans-unit>
+      <trans-unit id="settings.language_saved">
+        <source>settings.language_saved</source>
+        <target>Language preference saved successfully!</target>
+        <note>Success message after saving language</note>
+      </trans-unit>
+
+      <!-- Language Names -->
+      <trans-unit id="language.en">
+        <source>language.en</source>
+        <target>English</target>
+        <note>English language name</note>
+      </trans-unit>
+      <trans-unit id="language.pt_BR">
+        <source>language.pt_BR</source>
+        <target>Português (Brasil)</target>
+        <note>Portuguese (Brazil) language name</note>
+      </trans-unit>
+
+      <!-- Common Actions -->
+      <trans-unit id="action.save">
+        <source>action.save</source>
+        <target>Save</target>
+        <note>Generic save action</note>
+      </trans-unit>
+      <trans-unit id="action.cancel">
+        <source>action.cancel</source>
+        <target>Cancel</target>
+        <note>Generic cancel action</note>
+      </trans-unit>
+      <trans-unit id="action.edit">
+        <source>action.edit</source>
+        <target>Edit</target>
+        <note>Generic edit action</note>
+      </trans-unit>
+      <trans-unit id="action.delete">
+        <source>action.delete</source>
+        <target>Delete</target>
+        <note>Generic delete action</note>
+      </trans-unit>
+      <trans-unit id="action.view">
+        <source>action.view</source>
+        <target>View</target>
+        <note>Generic view action</note>
+      </trans-unit>
+
+      <!-- Date/Time Formatting -->
+      <trans-unit id="date.format">
+        <source>date.format</source>
+        <target>M/d/Y</target>
+        <note>Date format for English locale</note>
+      </trans-unit>
+      <trans-unit id="datetime.format">
+        <source>datetime.format</source>
+        <target>M/d/Y g:i A</target>
+        <note>DateTime format for English locale</note>
+      </trans-unit>
+
+      <!-- General UI Text -->
+      <trans-unit id="ui.ai">
+        <source>ui.ai</source>
+        <target>AI</target>
+        <note>Artificial Intelligence abbreviation</note>
+      </trans-unit>
+      <trans-unit id="ui.active">
+        <source>ui.active</source>
+        <target>Active</target>
+        <note>Active status indicator</note>
+      </trans-unit>
+      <trans-unit id="ui.account">
+        <source>ui.account</source>
+        <target>Account</target>
+        <note>Account menu label</note>
+      </trans-unit>
+      <trans-unit id="ui.dashboard">
+        <source>ui.dashboard</source>
+        <target>Dashboard</target>
+        <note>Dashboard page title</note>
+      </trans-unit>
+      <trans-unit id="ui.back_to_dashboard">
+        <source>ui.back_to_dashboard</source>
+        <target>Back to Dashboard</target>
+        <note>Link to go back to dashboard</note>
+      </trans-unit>
+
+      <!-- Empty States -->
+      <trans-unit id="empty.no_description">
+        <source>empty.no_description</source>
+        <target>No description available</target>
+        <note>Message when no description is provided</note>
+      </trans-unit>
+      <trans-unit id="empty.no_contacts_yet">
+        <source>empty.no_contacts_yet</source>
+        <target>No Contacts Yet</target>
+        <note>Empty state title for contacts</note>
+      </trans-unit>
+      <trans-unit id="empty.no_organizations_yet">
+        <source>empty.no_organizations_yet</source>
+        <target>No Organizations Yet</target>
+        <note>Empty state title for organizations</note>
+      </trans-unit>
+      <trans-unit id="empty.contact_description">
+        <source>empty.contact_description</source>
+        <target>Start building your network by adding your first contact. Our AI will help you manage relationships and provide valuable insights.</target>
+        <note>Empty state description for contacts</note>
+      </trans-unit>
+      <trans-unit id="empty.organization_description">
+        <source>empty.organization_description</source>
+        <target>Start building your business relationships by creating your first organization. Our AI will help you manage and grow these connections.</target>
+        <note>Empty state description for organizations</note>
+      </trans-unit>
+      <trans-unit id="empty.organization_contacts_description">
+        <source>empty.organization_contacts_description</source>
+        <target>Start building relationships by adding contacts to this organization.</target>
+        <note>Empty state description for organization contacts</note>
+      </trans-unit>
+
+      <!-- Buttons -->
+      <trans-unit id="button.add_organization">
+        <source>button.add_organization</source>
+        <target>Add Organization</target>
+        <note>Button to add new organization</note>
+      </trans-unit>
+      <trans-unit id="button.add_contact">
+        <source>button.add_contact</source>
+        <target>Add Contact</target>
+        <note>Button to add new contact</note>
+      </trans-unit>
+      <trans-unit id="button.add_first_contact">
+        <source>button.add_first_contact</source>
+        <target>Add First Contact</target>
+        <note>Button to add first contact</note>
+      </trans-unit>
+      <trans-unit id="button.create_first_organization">
+        <source>button.create_first_organization</source>
+        <target>Create First Organization</target>
+        <note>Button to create first organization</note>
+      </trans-unit>
+      <trans-unit id="button.edit_contact">
+        <source>button.edit_contact</source>
+        <target>Edit Contact</target>
+        <note>Button to edit contact</note>
+      </trans-unit>
+      <trans-unit id="button.send_email">
+        <source>button.send_email</source>
+        <target>Send Email</target>
+        <note>Button to send email</note>
+      </trans-unit>
+      <trans-unit id="button.send_message">
+        <source>button.send_message</source>
+        <target>Send Message</target>
+        <note>Button to send message</note>
+      </trans-unit>
+      <trans-unit id="button.call_contact">
+        <source>button.call_contact</source>
+        <target>Call Contact</target>
+        <note>Button to call contact</note>
+      </trans-unit>
+      <trans-unit id="button.schedule_meeting">
+        <source>button.schedule_meeting</source>
+        <target>Schedule Meeting</target>
+        <note>Button to schedule meeting</note>
+      </trans-unit>
+      <trans-unit id="button.share_contact">
+        <source>button.share_contact</source>
+        <target>Share Contact</target>
+        <note>Button to share contact</note>
+      </trans-unit>
+      <trans-unit id="button.start_ai_chat">
+        <source>button.start_ai_chat</source>
+        <target>Start AI Chat</target>
+        <note>Button to start AI chat</note>
+      </trans-unit>
+
+      <!-- Metrics and Statistics -->
+      <trans-unit id="metric.total_contacts">
+        <source>metric.total_contacts</source>
+        <target>Total Contacts</target>
+        <note>Label for total contacts metric</note>
+      </trans-unit>
+      <trans-unit id="metric.ai_interactions">
+        <source>metric.ai_interactions</source>
+        <target>AI Interactions</target>
+        <note>Label for AI interactions metric</note>
+      </trans-unit>
+      <trans-unit id="metric.uptime">
+        <source>metric.uptime</source>
+        <target>Uptime</target>
+        <note>System uptime metric</note>
+      </trans-unit>
+      <trans-unit id="metric.response_time">
+        <source>metric.response_time</source>
+        <target>Response Time</target>
+        <note>System response time metric</note>
+      </trans-unit>
+      <trans-unit id="metric.encryption">
+        <source>metric.encryption</source>
+        <target>Encryption</target>
+        <note>Security encryption metric</note>
+      </trans-unit>
+
+      <!-- Page Descriptions -->
+      <trans-unit id="page.user_description">
+        <source>page.user_description</source>
+        <target>AI-powered contact management and relationship insights</target>
+        <note>Users page description</note>
+      </trans-unit>
+      <trans-unit id="page.organization_description">
+        <source>page.organization_description</source>
+        <target>Manage your business relationships with AI insights</target>
+        <note>Organizations page description</note>
+      </trans-unit>
+      <trans-unit id="page.settings_description">
+        <source>page.settings_description</source>
+        <target>Customize your Infinity CRM experience</target>
+        <note>Settings page description</note>
+      </trans-unit>
+
+      <!-- AI Features -->
+      <trans-unit id="ai.insights">
+        <source>ai.insights</source>
+        <target>AI Insights</target>
+        <note>AI insights section title</note>
+      </trans-unit>
+      <trans-unit id="ai.assistant">
+        <source>ai.assistant</source>
+        <target>AI Assistant</target>
+        <note>AI assistant title</note>
+      </trans-unit>
+      <trans-unit id="ai.chat">
+        <source>ai.chat</source>
+        <target>AI Chat</target>
+        <note>AI chat feature</note>
+      </trans-unit>
+      <trans-unit id="ai.analytics">
+        <source>ai.analytics</source>
+        <target>Analytics</target>
+        <note>Analytics feature</note>
+      </trans-unit>
+      <trans-unit id="ai.quick_actions">
+        <source>ai.quick_actions</source>
+        <target>Quick Actions</target>
+        <note>Quick actions section</note>
+      </trans-unit>
+      <trans-unit id="ai.powered_crm">
+        <source>ai.powered_crm</source>
+        <target>AI-Powered CRM Features</target>
+        <note>AI-powered CRM features section</note>
+      </trans-unit>
+      <trans-unit id="ai.conversational">
+        <source>ai.conversational</source>
+        <target>Conversational AI</target>
+        <note>Conversational AI feature</note>
+      </trans-unit>
+      <trans-unit id="ai.conversational_description">
+        <source>ai.conversational_description</source>
+        <target>Voice commands, WhatsApp integration, and natural language processing</target>
+        <note>Conversational AI description</note>
+      </trans-unit>
+      <trans-unit id="ai.predictive_analytics">
+        <source>ai.predictive_analytics</source>
+        <target>Predictive Analytics</target>
+        <note>Predictive analytics feature</note>
+      </trans-unit>
+      <trans-unit id="ai.predictive_description">
+        <source>ai.predictive_description</source>
+        <target>AI-driven insights and customer behavior predictions</target>
+        <note>Predictive analytics description</note>
+      </trans-unit>
+      <trans-unit id="ai.smart_automation">
+        <source>ai.smart_automation</source>
+        <target>Smart Automation</target>
+        <note>Smart automation feature</note>
+      </trans-unit>
+      <trans-unit id="ai.automation_description">
+        <source>ai.automation_description</source>
+        <target>Intelligent workflows and automated customer interactions</target>
+        <note>Smart automation description</note>
+      </trans-unit>
+      <trans-unit id="ai.coming_soon">
+        <source>ai.coming_soon</source>
+        <target>AI Chat coming soon...</target>
+        <note>AI chat coming soon message</note>
+      </trans-unit>
+      <trans-unit id="ai.settings">
+        <source>ai.settings</source>
+        <target>AI Settings</target>
+        <note>AI settings section</note>
+      </trans-unit>
+      <trans-unit id="ai.settings_description">
+        <source>ai.settings_description</source>
+        <target>Configure AI assistant behavior and preferences</target>
+        <note>AI settings description</note>
+      </trans-unit>
+      <trans-unit id="ai.crm_question">
+        <source>ai.crm_question</source>
+        <target>Ask me anything about your CRM</target>
+        <note>AI assistant prompt</note>
+      </trans-unit>
+
+      <!-- Insights and Status -->
+      <trans-unit id="insight.high_engagement">
+        <source>insight.high_engagement</source>
+        <target>High engagement score</target>
+        <note>High engagement AI insight</note>
+      </trans-unit>
+      <trans-unit id="insight.active_communicator">
+        <source>insight.active_communicator</source>
+        <target>Active communicator</target>
+        <note>Active communicator AI insight</note>
+      </trans-unit>
+      <trans-unit id="insight.key_relationship">
+        <source>insight.key_relationship</source>
+        <target>Key relationship</target>
+        <note>Key relationship AI insight</note>
+      </trans-unit>
+      <trans-unit id="insight.strong_engagement">
+        <source>insight.strong_engagement</source>
+        <target>Strong engagement metrics</target>
+        <note>Strong engagement AI insight</note>
+      </trans-unit>
+      <trans-unit id="insight.growth_potential">
+        <source>insight.growth_potential</source>
+        <target>Growth potential identified</target>
+        <note>Growth potential AI insight</note>
+      </trans-unit>
+      <trans-unit id="insight.high_relationship_score">
+        <source>insight.high_relationship_score</source>
+        <target>High relationship score</target>
+        <note>High relationship score AI insight</note>
+      </trans-unit>
+      <trans-unit id="insight.active_organization">
+        <source>insight.active_organization</source>
+        <target>Active organization</target>
+        <note>Active organization status</note>
+      </trans-unit>
+
+      <!-- System Information -->
+      <trans-unit id="system.performance">
+        <source>system.performance</source>
+        <target>System Performance</target>
+        <note>System performance section</note>
+      </trans-unit>
+      <trans-unit id="system.information">
+        <source>system.information</source>
+        <target>System Information</target>
+        <note>System information section</note>
+      </trans-unit>
+      <trans-unit id="system.status">
+        <source>system.status</source>
+        <target>System Status</target>
+        <note>System status label</note>
+      </trans-unit>
+      <trans-unit id="system.security_status">
+        <source>system.security_status</source>
+        <target>Security Status:</target>
+        <note>Security status label</note>
+      </trans-unit>
+      <trans-unit id="system.security_message">
+        <source>system.security_message</source>
+        <target>All systems secure and up to date</target>
+        <note>Security status message</note>
+      </trans-unit>
+      <trans-unit id="system.version">
+        <source>system.version</source>
+        <target>Version</target>
+        <note>System version label</note>
+      </trans-unit>
+      <trans-unit id="system.runtime">
+        <source>system.runtime</source>
+        <target>Runtime</target>
+        <note>System runtime label</note>
+      </trans-unit>
+      <trans-unit id="system.framework">
+        <source>system.framework</source>
+        <target>Framework</target>
+        <note>System framework label</note>
+      </trans-unit>
+      <trans-unit id="system.database">
+        <source>system.database</source>
+        <target>Database</target>
+        <note>System database label</note>
+      </trans-unit>
+
+      <!-- Theme Settings -->
+      <trans-unit id="theme.settings">
+        <source>theme.settings</source>
+        <target>Theme Settings</target>
+        <note>Theme settings section</note>
+      </trans-unit>
+      <trans-unit id="theme.dark">
+        <source>theme.dark</source>
+        <target>Dark Theme</target>
+        <note>Dark theme option</note>
+      </trans-unit>
+      <trans-unit id="theme.light">
+        <source>theme.light</source>
+        <target>Light Theme</target>
+        <note>Light theme option</note>
+      </trans-unit>
+      <trans-unit id="theme.dark_description">
+        <source>theme.dark_description</source>
+        <target>Modern dark interface with neon accents</target>
+        <note>Dark theme description</note>
+      </trans-unit>
+      <trans-unit id="theme.light_description">
+        <source>theme.light_description</source>
+        <target>Clean light interface with vibrant colors</target>
+        <note>Light theme description</note>
+      </trans-unit>
+
+      <!-- Contact Information -->
+      <trans-unit id="contact.information">
+        <source>contact.information</source>
+        <target>Contact Information</target>
+        <note>Contact information section</note>
+      </trans-unit>
+      <trans-unit id="contact.last_activity">
+        <source>contact.last_activity</source>
+        <target>Last Activity</target>
+        <note>Last activity label</note>
+      </trans-unit>
+      <trans-unit id="contact.member_since">
+        <source>contact.member_since</source>
+        <target>Member Since</target>
+        <note>Member since label</note>
+      </trans-unit>
+      <trans-unit id="contact.active_user">
+        <source>contact.active_user</source>
+        <target>Active user</target>
+        <note>Active user status</note>
+      </trans-unit>
+
+      <!-- Misc UI Elements -->
+      <trans-unit id="misc.contacts_section">
+        <source>misc.contacts_section</source>
+        <target>Contacts</target>
+        <note>Contacts section title</note>
+      </trans-unit>
+      <trans-unit id="misc.coming_soon">
+        <source>misc.coming_soon</source>
+        <target>Coming Soon</target>
+        <note>Coming soon label</note>
+      </trans-unit>
+      <trans-unit id="misc.voice_commands">
+        <source>misc.voice_commands</source>
+        <target>Voice Commands</target>
+        <note>Voice commands tooltip</note>
+      </trans-unit>
+      <trans-unit id="misc.ai_insights_tooltip">
+        <source>misc.ai_insights_tooltip</source>
+        <target>AI Insights</target>
+        <note>AI insights tooltip</note>
+      </trans-unit>
+      <trans-unit id="misc.quick_actions_tooltip">
+        <source>misc.quick_actions_tooltip</source>
+        <target>Quick Actions</target>
+        <note>Quick actions tooltip</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
