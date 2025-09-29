@@ -1,6 +1,10 @@
 monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+        - app # Application-specific logs
+        - performance # Performance monitoring
+        - security # Security events
+        - business # Business logic events
 
 when@dev:
     monolog:
@@ -60,3 +64,42 @@ when@prod:
                 channels: [deprecation]
                 path: php://stderr
                 formatter: monolog.formatter.json
+
+            # Application-specific logs to file
+            app_file:
+                type: stream
+                path: "%kernel.logs_dir%/app.log"
+                level: info
+                channels: ['app']
+                formatter: monolog.formatter.json
+
+            # Performance monitoring logs
+            performance_file:
+                type: stream
+                path: "%kernel.logs_dir%/performance.log"
+                level: info
+                channels: ['performance']
+                formatter: monolog.formatter.json
+
+            # Security events logging
+            security_file:
+                type: stream
+                path: "%kernel.logs_dir%/security.log"
+                level: warning
+                channels: ['security']
+                formatter: monolog.formatter.json
+
+            # Business logic events
+            business_file:
+                type: stream
+                path: "%kernel.logs_dir%/business.log"
+                level: info
+                channels: ['business']
+                formatter: monolog.formatter.json
+
+            # Critical errors to syslog for monitoring systems
+            syslog_critical:
+                type: syslog
+                level: critical
+                facility: local0
+                ident: infinity_app

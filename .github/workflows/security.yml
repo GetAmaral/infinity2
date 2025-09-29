@@ -1,0 +1,138 @@
+name: Security Monitoring
+
+on:
+  schedule:
+    - cron: '0 2 * * 1' # Weekly on Monday at 2 AM UTC
+  workflow_dispatch:
+
+jobs:
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'
+        extensions: intl, opcache, pdo_pgsql
+        tools: composer:v2
+
+    - name: Install dependencies
+      working-directory: ./app
+      run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+    - name: Run security audit
+      working-directory: ./app
+      run: |
+        composer audit --format=json > security-audit.json
+        echo "## Security Audit Results" >> $GITHUB_STEP_SUMMARY
+        if [ $(cat security-audit.json | jq '.advisories | length') -gt 0 ]; then
+          echo "⚠️ Security vulnerabilities found!" >> $GITHUB_STEP_SUMMARY
+          cat security-audit.json | jq -r '.advisories[] | "- **\(.title)** in \(.packageName) \(.version)"' >> $GITHUB_STEP_SUMMARY
+        else
+          echo "✅ No security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Upload security audit results
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-audit-results
+        path: app/security-audit.json
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Dependency Review
+      uses: actions/dependency-review-action@v4
+      with:
+        fail-on-severity: moderate
+        allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
+
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'php', 'javascript' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Setup PHP (for PHP analysis)
+      if: matrix.language == 'php'
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'
+        extensions: intl, opcache, pdo_pgsql
+        tools: composer:v2
+
+    - name: Install PHP dependencies
+      if: matrix.language == 'php'
+      working-directory: ./app
+      run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
+
+  docker-security:
+    name: Docker Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      working-directory: ./app
+      run: docker build -t infinity-app:security-scan .
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'infinity-app:security-scan'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+    - name: Run Hadolint (Dockerfile linter)
+      uses: hadolint/hadolint-action@v3.1.0
+      with:
+        dockerfile: app/Dockerfile
+        format: sarif
+        output-file: hadolint-results.sarif
+        no-fail: true
+
+    - name: Upload Hadolint results
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: hadolint-results.sarif

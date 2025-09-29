@@ -1,0 +1,268 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  PHP_VERSION: '8.4'
+  NODE_VERSION: '20'
+  POSTGRES_VERSION: '18'
+
+jobs:
+  tests:
+    name: Tests (PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: ['8.4']
+        include:
+          - php-version: '8.4'
+            coverage: true
+
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: infinity_user
+          POSTGRES_PASSWORD: InfinitySecure2025!
+          POSTGRES_DB: infinity_test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP ${{ matrix.php-version }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: intl, opcache, pdo_pgsql, zip, gd
+        coverage: xdebug
+        tools: composer:v2, symfony
+
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache composer dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Install dependencies
+      working-directory: ./app
+      run: |
+        composer install --no-progress --prefer-dist --optimize-autoloader
+        composer validate --strict
+
+    - name: Verify PostgreSQL UUIDv7 support
+      run: |
+        PGPASSWORD=InfinitySecure2025! psql -h localhost -U infinity_user -d infinity_test_db -c "SELECT uuidv7();"
+
+    - name: Configure application
+      working-directory: ./app
+      run: |
+        cp .env .env.local
+        echo "DATABASE_URL=postgresql://infinity_user:InfinitySecure2025!@127.0.0.1:5432/infinity_test_db" >> .env.test.local
+        echo "APP_ENV=test" >> .env.test.local
+
+    - name: Create database and run migrations
+      working-directory: ./app
+      run: |
+        php bin/console doctrine:database:create --env=test --if-not-exists
+        php bin/console doctrine:migrations:migrate --env=test --no-interaction
+
+    - name: Load fixtures
+      working-directory: ./app
+      run: |
+        php bin/console doctrine:fixtures:load --env=test --no-interaction
+
+    - name: Run tests
+      working-directory: ./app
+      run: |
+        php bin/phpunit --coverage-text --coverage-clover=coverage.xml
+
+    - name: Upload coverage to Codecov
+      if: matrix.coverage
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./app/coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  security:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    needs: tests
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: intl, opcache, pdo_pgsql
+        tools: composer:v2
+
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache composer dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Install dependencies
+      working-directory: ./app
+      run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+    - name: Security Checker
+      working-directory: ./app
+      run: composer audit
+
+    - name: Run Psalm static analysis
+      working-directory: ./app
+      run: |
+        composer require --dev psalm/psalm
+        vendor/bin/psalm --init
+        vendor/bin/psalm --show-info=true
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    needs: tests
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: intl, opcache, pdo_pgsql
+        tools: composer:v2, cs2pr
+
+    - name: Install dependencies
+      working-directory: ./app
+      run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+    - name: Run PHP CS Fixer
+      working-directory: ./app
+      run: |
+        composer require --dev friendsofphp/php-cs-fixer
+        vendor/bin/php-cs-fixer fix --dry-run --diff --format=checkstyle | cs2pr
+
+    - name: Run PHPStan
+      working-directory: ./app
+      run: |
+        composer require --dev phpstan/phpstan phpstan/phpstan-symfony
+        vendor/bin/phpstan analyse src --level=8
+
+  docker-build:
+    name: Docker Build & Test
+    runs-on: ubuntu-latest
+    needs: [tests, security]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build application image
+      working-directory: ./app
+      run: |
+        docker build -t infinity-app:test .
+
+    - name: Test Docker image
+      run: |
+        # Start services with docker-compose
+        docker-compose up -d database
+        sleep 10
+
+        # Test database connection
+        docker-compose exec -T database pg_isready -U infinity_user -d infinity_db
+
+        # Build and test app container
+        docker-compose up --build -d app
+        sleep 15
+
+        # Test health endpoint
+        timeout 30 bash -c 'until docker-compose exec -T app wget --spider --quiet http://localhost:8000/health; do sleep 2; done'
+
+        # Run tests in container
+        docker-compose exec -T app php bin/console doctrine:database:create --if-not-exists
+        docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction
+        docker-compose exec -T app php bin/phpunit
+
+    - name: Cleanup
+      if: always()
+      run: docker-compose down -v
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [tests, security, code-quality, docker-build]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+
+    environment:
+      name: staging
+      url: https://staging.infinity.example.com
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to staging
+      run: |
+        echo "🚀 Deploying to staging environment..."
+        echo "This would typically:"
+        echo "  - Build and push Docker images to registry"
+        echo "  - Update Kubernetes/Docker Swarm deployments"
+        echo "  - Run database migrations"
+        echo "  - Update environment configuration"
+        echo "  - Run smoke tests"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [tests, security, code-quality, docker-build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    environment:
+      name: production
+      url: https://infinity.example.com
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to production
+      run: |
+        echo "🚀 Deploying to production environment..."
+        echo "This would typically:"
+        echo "  - Build and push Docker images to registry"
+        echo "  - Update production deployments with blue/green strategy"
+        echo "  - Run database migrations with backup"
+        echo "  - Update environment configuration"
+        echo "  - Run comprehensive smoke tests"
+        echo "  - Monitor deployment metrics"

@@ -1,0 +1,36 @@
+framework:
+    rate_limiter:
+        # API rate limiting - 100 requests per minute per IP
+        api:
+            policy: 'token_bucket'
+            limit: 100
+            interval: '1 minute'
+
+        # Authentication attempts - 5 attempts per 15 minutes per IP
+        auth:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '15 minutes'
+
+        # Heavy operations - 10 requests per hour per IP
+        heavy_operations:
+            policy: 'token_bucket'
+            limit: 10
+            interval: '1 hour'
+
+        # Search operations - 30 requests per minute per IP
+        search:
+            policy: 'token_bucket'
+            limit: 30
+            interval: '1 minute'
+
+when@prod:
+    framework:
+        rate_limiter:
+            # Stricter limits in production
+            api:
+                limit: 60
+                interval: '1 minute'
+            auth:
+                limit: 3
+                interval: '15 minutes'

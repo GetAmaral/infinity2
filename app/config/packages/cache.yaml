@@ -1,19 +1,62 @@
 framework:
     cache:
-        # Unique name of your app: used to compute stable namespaces for cache keys.
-        #prefix_seed: your_vendor_name/app_name
+        # Unique name for cache key namespacing
+        prefix_seed: infinity_app
 
-        # The "app" cache stores to the filesystem by default.
-        # The data in this cache should persist between deploys.
-        # Other options include:
+        # Development uses filesystem cache
+        app: cache.adapter.filesystem
+        system: cache.adapter.system
 
-        # Redis
-        #app: cache.adapter.redis
-        #default_redis_provider: redis://localhost
+        # Define specialized cache pools
+        pools:
+            # Application cache for business logic
+            app.cache:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 3600 # 1 hour
 
-        # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
-        #app: cache.adapter.apcu
+            # API response cache for better performance
+            api.cache:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 300 # 5 minutes
 
-        # Namespaced pools use the above "app" backend by default
-        #pools:
-            #my.dedicated.cache: null
+            # Long-term cache for rarely changing data
+            app.long_term:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 86400 # 24 hours
+
+when@prod:
+    framework:
+        cache:
+            # Use Redis in production for better performance and clustering
+            app: cache.adapter.redis
+            system: cache.adapter.redis
+            default_redis_provider: redis://redis:6379/0
+
+            pools:
+                app.cache:
+                    adapter: cache.adapter.redis
+                    provider: redis://redis:6379/1
+                    default_lifetime: 3600
+
+                api.cache:
+                    adapter: cache.adapter.redis
+                    provider: redis://redis:6379/2
+                    default_lifetime: 300
+
+                app.long_term:
+                    adapter: cache.adapter.redis
+                    provider: redis://redis:6379/3
+                    default_lifetime: 86400
+
+when@test:
+    framework:
+        cache:
+            app: cache.adapter.array
+            system: cache.adapter.array
+            pools:
+                app.cache:
+                    adapter: cache.adapter.array
+                api.cache:
+                    adapter: cache.adapter.array
+                app.long_term:
+                    adapter: cache.adapter.array
