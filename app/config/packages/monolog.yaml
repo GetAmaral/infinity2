@@ -5,6 +5,7 @@ monolog:
         - performance # Performance monitoring
         - security # Security events
         - business # Business logic events
+        - audit # Audit logging for entity changes
 
 when@dev:
     monolog:
@@ -103,3 +104,11 @@ when@prod:
                 level: critical
                 facility: local0
                 ident: infinity_app
+
+            # Audit events logging
+            audit_file:
+                type: stream
+                path: "%kernel.logs_dir%/audit.log"
+                level: info
+                channels: ['audit']
+                formatter: monolog.formatter.json

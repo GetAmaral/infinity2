@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'token.title'|trans }}{% endblock %}
+
+{% block body %}
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-key text-neon fs-2 me-3"></i>
+            <div>
+                <h1 class="text-gradient mb-1">{{ 'token.title'|trans }}</h1>
+                <p class="text-secondary mb-0">{{ 'token.description'|trans }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Current API Token -->
+        <div class="infinity-card p-4 mb-4">
+            <h5 class="text-white mb-3">
+                <i class="bi bi-shield-check me-2"></i>{{ 'token.current_token'|trans }}
+            </h5>
+
+            {% if user.apiToken and user.isApiTokenValid %}
+                <div class="alert alert-success border-0 rounded-3 mb-4" style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3) !important; color: #22c55e;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-check-circle me-2"></i>
+                            <strong>{{ 'token.active_token'|trans }}</strong>
+                        </div>
+                        <span class="badge" style="background: var(--infinity-ai-gradient);">
+                            <i class="bi bi-clock me-1"></i>{{ 'token.expires'|trans }}: {{ user.apiTokenExpiresAt|date('M d, Y') }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-white">{{ 'token.your_token'|trans }}</label>
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            class="form-control font-monospace"
+                            id="apiTokenValue"
+                            value="{{ user.apiToken }}"
+                            readonly
+                            style="background: var(--infinity-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
+                        >
+                        <button class="btn infinity-btn-ai" type="button" onclick="copyToken()">
+                            <i class="bi bi-clipboard me-1"></i>{{ 'token.copy'|trans }}
+                        </button>
+                    </div>
+                    <small class="text-muted">{{ 'token.copy_warning'|trans }}</small>
+                </div>
+
+                <form method="post" action="{{ path('api_token_revoke') }}" onsubmit="return confirm('{{ 'token.revoke_confirm'|trans }}')">
+                    <input type="hidden" name="_token" value="{{ csrf_token('revoke_token') }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-x-circle me-2"></i>{{ 'token.revoke'|trans }}
+                    </button>
+                </form>
+            {% else %}
+                <div class="alert alert-warning border-0 rounded-3 mb-4" style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3) !important; color: #fbbf24;">
+                    <i class="bi bi-exclamation-triangle me-2"></i>{{ 'token.no_active_token'|trans }}
+                </div>
+
+                <form method="post" action="{{ path('api_token_generate') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('generate_token') }}">
+                    <button type="submit" class="btn infinity-btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>{{ 'token.generate'|trans }}
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+
+        <!-- Usage Instructions -->
+        <div class="infinity-card p-4">
+            <h5 class="text-white mb-3">
+                <i class="bi bi-book me-2"></i>{{ 'token.usage_instructions'|trans }}
+            </h5>
+
+            <p class="text-secondary mb-3">{{ 'token.usage_description'|trans }}</p>
+
+            <div class="bg-dark p-3 rounded mb-3">
+                <code class="text-white">
+curl -H "Authorization: Bearer YOUR_API_TOKEN" \<br>
+     https://localhost/api/users
+                </code>
+            </div>
+
+            <h6 class="text-neon mb-2">{{ 'token.security_tips'|trans }}</h6>
+            <ul class="text-secondary">
+                <li>{{ 'token.tip_1'|trans }}</li>
+                <li>{{ 'token.tip_2'|trans }}</li>
+                <li>{{ 'token.tip_3'|trans }}</li>
+                <li>{{ 'token.tip_4'|trans }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Token Info Card -->
+    <div class="col-lg-4">
+        <div class="infinity-card ai-enhanced p-4 mb-4">
+            <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-info-circle text-neon me-2 fs-4"></i>
+                <h6 class="text-gradient mb-0">{{ 'token.info_title'|trans }}</h6>
+            </div>
+            <div class="text-secondary">
+                <p class="mb-2"><strong>{{ 'token.validity_period'|trans }}:</strong> {{ 'token.validity_30_days'|trans }}</p>
+                <p class="mb-2"><strong>{{ 'token.access_level'|trans }}:</strong> {{ 'token.full_api_access'|trans }}</p>
+                <p class="mb-0"><strong>{{ 'token.regeneration'|trans }}:</strong> {{ 'token.regeneration_description'|trans }}</p>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <i class="bi bi-shield-lock text-neon fs-1"></i>
+            <div class="metric-value">{% if user.apiToken %}1{% else %}0{% endif %}</div>
+            <div class="metric-label">{{ 'token.active_tokens'|trans }}</div>
+            <div class="metric-trend {% if user.apiToken %}trend-up{% endif %}">
+                {% if user.apiToken %}
+                    <i class="bi bi-check-circle"></i> {{ 'token.secure'|trans }}
+                {% else %}
+                    <i class="bi bi-dash-circle"></i> {{ 'token.no_token'|trans }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyToken() {
+    const tokenInput = document.getElementById('apiTokenValue');
+    tokenInput.select();
+    tokenInput.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(tokenInput.value);
+
+    const btn = event.target.closest('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="bi bi-check me-1"></i>{{ 'token.copied'|trans }}';
+    btn.classList.add('btn-success');
+    btn.classList.remove('infinity-btn-ai');
+
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('btn-success');
+        btn.classList.add('infinity-btn-ai');
+    }, 2000);
+}
+</script>
+{% endblock %}

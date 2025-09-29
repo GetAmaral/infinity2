@@ -654,6 +654,280 @@
         <target>Quick Actions</target>
         <note>Quick actions tooltip</note>
       </trans-unit>
+
+      <!-- Authentication -->
+      <trans-unit id="auth.login">
+        <source>auth.login</source>
+        <target>Login</target>
+        <note>Login page title</note>
+      </trans-unit>
+      <trans-unit id="auth.register">
+        <source>auth.register</source>
+        <target>Register</target>
+        <note>Registration page title</note>
+      </trans-unit>
+      <trans-unit id="auth.welcome_back">
+        <source>auth.welcome_back</source>
+        <target>Welcome Back</target>
+        <note>Login welcome message</note>
+      </trans-unit>
+      <trans-unit id="auth.login_to_continue">
+        <source>auth.login_to_continue</source>
+        <target>Sign in to continue to your account</target>
+        <note>Login instruction</note>
+      </trans-unit>
+      <trans-unit id="auth.email">
+        <source>auth.email</source>
+        <target>Email Address</target>
+        <note>Email field label</note>
+      </trans-unit>
+      <trans-unit id="auth.password">
+        <source>auth.password</source>
+        <target>Password</target>
+        <note>Password field label</note>
+      </trans-unit>
+      <trans-unit id="auth.remember_me">
+        <source>auth.remember_me</source>
+        <target>Remember me</target>
+        <note>Remember me checkbox</note>
+      </trans-unit>
+      <trans-unit id="auth.sign_in">
+        <source>auth.sign_in</source>
+        <target>Sign In</target>
+        <note>Sign in button</note>
+      </trans-unit>
+      <trans-unit id="auth.no_account">
+        <source>auth.no_account</source>
+        <target>Don't have an account?</target>
+        <note>Link to registration</note>
+      </trans-unit>
+      <trans-unit id="auth.register_now">
+        <source>auth.register_now</source>
+        <target>Register now</target>
+        <note>Register link text</note>
+      </trans-unit>
+      <trans-unit id="auth.create_account">
+        <source>auth.create_account</source>
+        <target>Create Account</target>
+        <note>Create account heading</note>
+      </trans-unit>
+      <trans-unit id="auth.join_infinity">
+        <source>auth.join_infinity</source>
+        <target>Join Infinity and start managing your data</target>
+        <note>Registration invitation</note>
+      </trans-unit>
+      <trans-unit id="auth.full_name">
+        <source>auth.full_name</source>
+        <target>Full Name</target>
+        <note>Full name field label</note>
+      </trans-unit>
+      <trans-unit id="auth.confirm_password">
+        <source>auth.confirm_password</source>
+        <target>Confirm Password</target>
+        <note>Confirm password field label</note>
+      </trans-unit>
+      <trans-unit id="auth.password_requirements">
+        <source>auth.password_requirements</source>
+        <target>Minimum 8 characters required</target>
+        <note>Password requirements hint</note>
+      </trans-unit>
+      <trans-unit id="auth.create_account_button">
+        <source>auth.create_account_button</source>
+        <target>Create Account</target>
+        <note>Create account button</note>
+      </trans-unit>
+      <trans-unit id="auth.already_have_account">
+        <source>auth.already_have_account</source>
+        <target>Already have an account?</target>
+        <note>Link to login</note>
+      </trans-unit>
+      <trans-unit id="auth.passwords_do_not_match">
+        <source>auth.passwords_do_not_match</source>
+        <target>Passwords do not match</target>
+        <note>Password mismatch error</note>
+      </trans-unit>
+      <trans-unit id="auth.registration_successful">
+        <source>auth.registration_successful</source>
+        <target>Registration successful! You can now log in.</target>
+        <note>Registration success message</note>
+      </trans-unit>
+      <trans-unit id="auth.registration_failed">
+        <source>auth.registration_failed</source>
+        <target>Registration failed. Please try again.</target>
+        <note>Registration error message</note>
+      </trans-unit>
+      <trans-unit id="auth.logout">
+        <source>auth.logout</source>
+        <target>Logout</target>
+        <note>Logout link</note>
+      </trans-unit>
+
+      <!-- API Tokens -->
+      <trans-unit id="token.title">
+        <source>token.title</source>
+        <target>API Tokens</target>
+        <note>API tokens page title</note>
+      </trans-unit>
+      <trans-unit id="token.description">
+        <source>token.description</source>
+        <target>Manage your API access tokens</target>
+        <note>API tokens page description</note>
+      </trans-unit>
+      <trans-unit id="token.current_token">
+        <source>token.current_token</source>
+        <target>Current API Token</target>
+        <note>Current token section heading</note>
+      </trans-unit>
+      <trans-unit id="token.active_token">
+        <source>token.active_token</source>
+        <target>Active Token</target>
+        <note>Active token label</note>
+      </trans-unit>
+      <trans-unit id="token.expires">
+        <source>token.expires</source>
+        <target>Expires</target>
+        <note>Token expiration label</note>
+      </trans-unit>
+      <trans-unit id="token.your_token">
+        <source>token.your_token</source>
+        <target>Your API Token</target>
+        <note>Token input label</note>
+      </trans-unit>
+      <trans-unit id="token.copy">
+        <source>token.copy</source>
+        <target>Copy</target>
+        <note>Copy button</note>
+      </trans-unit>
+      <trans-unit id="token.copied">
+        <source>token.copied</source>
+        <target>Copied</target>
+        <note>Copied confirmation</note>
+      </trans-unit>
+      <trans-unit id="token.copy_warning">
+        <source>token.copy_warning</source>
+        <target>Keep this token secure. It provides full access to your account via the API.</target>
+        <note>Token security warning</note>
+      </trans-unit>
+      <trans-unit id="token.revoke">
+        <source>token.revoke</source>
+        <target>Revoke Token</target>
+        <note>Revoke button</note>
+      </trans-unit>
+      <trans-unit id="token.revoke_confirm">
+        <source>token.revoke_confirm</source>
+        <target>Are you sure you want to revoke this token? Applications using it will lose access.</target>
+        <note>Revoke confirmation</note>
+      </trans-unit>
+      <trans-unit id="token.no_active_token">
+        <source>token.no_active_token</source>
+        <target>You don't have an active API token</target>
+        <note>No token message</note>
+      </trans-unit>
+      <trans-unit id="token.generate">
+        <source>token.generate</source>
+        <target>Generate New Token</target>
+        <note>Generate button</note>
+      </trans-unit>
+      <trans-unit id="token.usage_instructions">
+        <source>token.usage_instructions</source>
+        <target>Usage Instructions</target>
+        <note>Usage section heading</note>
+      </trans-unit>
+      <trans-unit id="token.usage_description">
+        <source>token.usage_description</source>
+        <target>Use your API token in the Authorization header of your requests:</target>
+        <note>Usage description</note>
+      </trans-unit>
+      <trans-unit id="token.security_tips">
+        <source>token.security_tips</source>
+        <target>Security Best Practices</target>
+        <note>Security tips heading</note>
+      </trans-unit>
+      <trans-unit id="token.tip_1">
+        <source>token.tip_1</source>
+        <target>Never share your API token publicly</target>
+        <note>Security tip 1</note>
+      </trans-unit>
+      <trans-unit id="token.tip_2">
+        <source>token.tip_2</source>
+        <target>Revoke tokens immediately if compromised</target>
+        <note>Security tip 2</note>
+      </trans-unit>
+      <trans-unit id="token.tip_3">
+        <source>token.tip_3</source>
+        <target>Use environment variables to store tokens in applications</target>
+        <note>Security tip 3</note>
+      </trans-unit>
+      <trans-unit id="token.tip_4">
+        <source>token.tip_4</source>
+        <target>Regenerate tokens periodically for better security</target>
+        <note>Security tip 4</note>
+      </trans-unit>
+      <trans-unit id="token.info_title">
+        <source>token.info_title</source>
+        <target>Token Information</target>
+        <note>Info card heading</note>
+      </trans-unit>
+      <trans-unit id="token.validity_period">
+        <source>token.validity_period</source>
+        <target>Validity Period</target>
+        <note>Validity period label</note>
+      </trans-unit>
+      <trans-unit id="token.validity_30_days">
+        <source>token.validity_30_days</source>
+        <target>30 days</target>
+        <note>30 days validity</note>
+      </trans-unit>
+      <trans-unit id="token.access_level">
+        <source>token.access_level</source>
+        <target>Access Level</target>
+        <note>Access level label</note>
+      </trans-unit>
+      <trans-unit id="token.full_api_access">
+        <source>token.full_api_access</source>
+        <target>Full API Access</target>
+        <note>Full access description</note>
+      </trans-unit>
+      <trans-unit id="token.regeneration">
+        <source>token.regeneration</source>
+        <target>Regeneration</target>
+        <note>Regeneration label</note>
+      </trans-unit>
+      <trans-unit id="token.regeneration_description">
+        <source>token.regeneration_description</source>
+        <target>Revoke old token before generating new one</target>
+        <note>Regeneration description</note>
+      </trans-unit>
+      <trans-unit id="token.active_tokens">
+        <source>token.active_tokens</source>
+        <target>Active Tokens</target>
+        <note>Active tokens metric</note>
+      </trans-unit>
+      <trans-unit id="token.secure">
+        <source>token.secure</source>
+        <target>Secured</target>
+        <note>Secure status</note>
+      </trans-unit>
+      <trans-unit id="token.no_token">
+        <source>token.no_token</source>
+        <target>No Token</target>
+        <note>No token status</note>
+      </trans-unit>
+      <trans-unit id="token.generated_successfully">
+        <source>token.generated_successfully</source>
+        <target>API token generated successfully!</target>
+        <note>Generation success message</note>
+      </trans-unit>
+      <trans-unit id="token.revoked_successfully">
+        <source>token.revoked_successfully</source>
+        <target>API token revoked successfully</target>
+        <note>Revocation success message</note>
+      </trans-unit>
+      <trans-unit id="token.csrf_invalid">
+        <source>token.csrf_invalid</source>
+        <target>Invalid security token</target>
+        <note>CSRF error message</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

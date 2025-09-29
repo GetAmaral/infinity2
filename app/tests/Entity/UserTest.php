@@ -41,7 +41,7 @@ class UserTest extends TestCase
 
     /**
      */
-    public function testPreUpdate(): void
+    public function testUpdateAuditTimestamp(): void
     {
         $user = new User();
         $originalUpdatedAt = $user->getUpdatedAt();
@@ -49,7 +49,7 @@ class UserTest extends TestCase
         // Simulate time passing
         usleep(1000); // 1ms
 
-        $user->preUpdate();
+        $user->updateAuditTimestamp();
         $newUpdatedAt = $user->getUpdatedAt();
 
         $this->assertGreaterThan($originalUpdatedAt, $newUpdatedAt);

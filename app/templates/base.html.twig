@@ -16,23 +16,56 @@
             <a class="navbar-brand text-white d-flex align-items-center" href="{{ path('app_home') }}">
                 <img src="/infinity_logo_sm.png" alt="Infinity" height="32" class="me-2">
                 <span class="fw-bold text-gradient">{{ 'nav.infinity'|trans }}</span>
-                <span class="badge ms-2" style="background: var(--infinity-ai-gradient); font-size: 0.6rem; padding: 0.2rem 0.5rem;">{{ 'ui.ai'|trans }}</span>
             </a>
 
-            <div class="d-flex align-items-center me-3">
-                <div class="ai-status-indicator me-3">
-                    {{ 'ui.ai'|trans }} {{ 'ui.active'|trans }}
-                </div>
-                <div class="real-time-badge">
-                    Live
+            <div class="d-flex align-items-center ms-auto">
+                <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- User Profile (Always Visible) -->
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px; background: var(--infinity-ai-gradient);">
+                            <i class="bi bi-person-fill text-white"></i>
+                        </div>
+                        <div class="d-none d-md-block">
+                            <div class="text-white" style="font-size: 0.875rem; line-height: 1.2; font-weight: 500;">
+                                {{ app.user ? app.user.name : 'Guest' }}
+                            </div>
+                            <div class="text-muted" style="font-size: 0.75rem; line-height: 1;">
+                                {{ app.user ? app.user.email : '' }}
+                            </div>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
+                        <li class="px-3 py-2 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 44px; height: 44px; background: var(--infinity-ai-gradient);">
+                                    <i class="bi bi-person-fill text-white fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="text-white fw-bold" style="font-size: 0.95rem;">{{ app.user ? app.user.name : 'Guest' }}</div>
+                                    <div class="text-muted" style="font-size: 0.8rem;">{{ app.user ? app.user.email : '' }}</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_settings') }}">
+                                <i class="bi bi-gear me-2"></i>{{ 'nav.settings'|trans }}
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">
+                                <i class="bi bi-box-arrow-right me-2"></i>{{ 'auth.logout'|trans }}
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ path('app_home') }}">
@@ -59,40 +92,10 @@
                             <i class="bi bi-activity me-1"></i>Analytics
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-translate me-1"></i>{{ 'nav.language'|trans }}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ path('api_token_index') }}">
+                            <i class="bi bi-key me-1"></i>{{ 'token.title'|trans }}
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="languageDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1);">
-                            <li>
-                                <form method="post" action="{{ path('app_settings_locale') }}" class="d-inline">
-                                    <input type="hidden" name="locale" value="en">
-                                    <button type="submit" class="dropdown-item {% if app.request.locale == 'en' %}active{% endif %}" style="border: none; background: none; width: 100%; text-align: left;">
-                                        <i class="bi bi-flag me-2"></i>{{ 'language.en'|trans }}
-                                    </button>
-                                </form>
-                            </li>
-                            <li>
-                                <form method="post" action="{{ path('app_settings_locale') }}" class="d-inline">
-                                    <input type="hidden" name="locale" value="pt_BR">
-                                    <button type="submit" class="dropdown-item {% if app.request.locale == 'pt_BR' %}active{% endif %}" style="border: none; background: none; width: 100%; text-align: left;">
-                                        <i class="bi bi-flag me-2"></i>{{ 'language.pt_BR'|trans }}
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle me-1"></i>{{ 'ui.account'|trans }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1);">
-                            <li>
-                                <a class="dropdown-item" href="{{ path('app_settings') }}">
-                                    <i class="bi bi-gear me-2"></i>{{ 'nav.settings'|trans }}
-                                </a>
-                            </li>
-                        </ul>
                     </li>
                 </ul>
             </div>
@@ -138,9 +141,10 @@
 
     {% block javascripts %}{% endblock %}
 
-    <script>
+    <script data-turbo-eval="false">
         // Global theme management
-        const GlobalTheme = {
+        if (typeof GlobalTheme === 'undefined') {
+            window.GlobalTheme = {
             current: 'dark',
 
             init() {
@@ -179,33 +183,298 @@
                     if (text) text.textContent = 'Switch to Light';
                 }
             }
-        };
+            };
 
-        // Global functions
-        function toggleThemeQuick() {
-            const newTheme = GlobalTheme.current === 'dark' ? 'light' : 'dark';
-            GlobalTheme.apply(newTheme);
-            GlobalTheme.updateNavbar();
+            // Global functions
+            window.toggleThemeQuick = function() {
+                const newTheme = GlobalTheme.current === 'dark' ? 'light' : 'dark';
+                GlobalTheme.apply(newTheme);
+                GlobalTheme.updateNavbar();
+            };
+
+            // Simple voice button interaction
+            document.getElementById('voiceBtn')?.addEventListener('click', function() {
+                this.classList.toggle('listening');
+                const icon = this.querySelector('i');
+
+                if (this.classList.contains('listening')) {
+                    icon.className = 'bi bi-mic-fill';
+                    setTimeout(() => {
+                        this.classList.remove('listening');
+                        icon.className = 'bi bi-mic';
+                    }, 3000);
+                }
+            });
+
+            // Close dropdowns on click outside or ESC key
+            document.addEventListener('click', function(event) {
+                // Check if click is outside any dropdown (user profile dropdown)
+                const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+                dropdowns.forEach(dropdown => {
+                    const parentDropdown = dropdown.closest('.dropdown');
+                    if (parentDropdown && !parentDropdown.contains(event.target)) {
+                        // Find the toggle button
+                        const toggle = parentDropdown.querySelector('[data-bs-toggle="dropdown"]');
+                        if (toggle) {
+                            const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
+                            if (bsDropdown) {
+                                bsDropdown.hide();
+                            }
+                        }
+                    }
+                });
+
+                // Close navbar collapse on click outside
+                const navbarCollapse = document.getElementById('navbarNav');
+                const navbarToggler = document.querySelector('.navbar-toggler');
+
+                if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                    // Check if click is outside both the collapse menu and the toggler button
+                    if (!navbarCollapse.contains(event.target) &&
+                        (!navbarToggler || !navbarToggler.contains(event.target))) {
+                        // Simply remove the show class and add collapsing class
+                        navbarCollapse.classList.remove('show');
+                        navbarCollapse.classList.add('collapsing');
+
+                        // Remove collapsing class after animation (350ms is Bootstrap default)
+                        setTimeout(() => {
+                            navbarCollapse.classList.remove('collapsing');
+                        }, 350);
+                    }
+                }
+            });
+
+            // Close dropdowns and navbar on ESC key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' || event.key === 'Esc') {
+                    // Close all open dropdowns
+                    const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+                    dropdowns.forEach(dropdown => {
+                        const parentDropdown = dropdown.closest('.dropdown');
+                        if (parentDropdown) {
+                            const toggle = parentDropdown.querySelector('[data-bs-toggle="dropdown"]');
+                            if (toggle) {
+                                const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
+                                if (bsDropdown) {
+                                    bsDropdown.hide();
+                                }
+                            }
+                        }
+                    });
+
+                    // Close navbar collapse
+                    const navbarCollapse = document.getElementById('navbarNav');
+                    if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                        // Simply remove the show class and add collapsing class
+                        navbarCollapse.classList.remove('show');
+                        navbarCollapse.classList.add('collapsing');
+
+                        // Remove collapsing class after animation
+                        setTimeout(() => {
+                            navbarCollapse.classList.remove('collapsing');
+                        }, 350);
+                    }
+                }
+            });
+
+            // Initialize theme on page load
+            document.addEventListener('DOMContentLoaded', () => {
+                GlobalTheme.init();
+                UserPreferences.init();
+            });
         }
 
-        // Simple voice button interaction
-        document.getElementById('voiceBtn')?.addEventListener('click', function() {
-            this.classList.toggle('listening');
-            const icon = this.querySelector('i');
+        // User Preferences Management
+        if (typeof UserPreferences === 'undefined') {
+            window.UserPreferences = {
+                preferences: {},
 
-            if (this.classList.contains('listening')) {
-                icon.className = 'bi bi-mic-fill';
-                setTimeout(() => {
-                    this.classList.remove('listening');
-                    icon.className = 'bi bi-mic';
-                }, 3000);
-            }
-        });
+                async init() {
+                    await this.loadPreferences();
+                    this.applyPreferences();
+                    this.setupEventListeners();
+                },
 
-        // Initialize theme on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            GlobalTheme.init();
-        });
+                async loadPreferences() {
+                    try {
+                        const response = await fetch('/settings/ajax/preferences', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.success) {
+                                this.preferences = data.preferences;
+                                console.log('User preferences loaded:', this.preferences);
+                            }
+                        }
+                    } catch (error) {
+                        console.warn('Failed to load user preferences:', error);
+                        // Use default preferences
+                        this.preferences = this.getDefaultPreferences();
+                    }
+                },
+
+                async savePreference(key, value) {
+                    try {
+                        const response = await fetch(`/settings/ajax/preference/${key}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ value: value })
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.success) {
+                                this.preferences[key] = value;
+                                console.log(`Preference saved: ${key} = ${value}`);
+                                return true;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Failed to save preference:', error);
+                    }
+                    return false;
+                },
+
+                async savePreferences(preferences) {
+                    try {
+                        const response = await fetch('/settings/ajax/preferences', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(preferences)
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.success) {
+                                Object.assign(this.preferences, preferences);
+                                console.log('Preferences saved:', preferences);
+                                return true;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Failed to save preferences:', error);
+                    }
+                    return false;
+                },
+
+                applyPreferences() {
+                    // Apply theme
+                    if (this.preferences.theme) {
+                        GlobalTheme.apply(this.preferences.theme);
+                    }
+
+                    // Apply animations
+                    if (this.preferences.animations_enabled === false) {
+                        document.body.classList.add('no-animations');
+                    }
+
+                    // Apply compact mode
+                    if (this.preferences.compact_mode === true) {
+                        document.body.classList.add('compact-mode');
+                    }
+
+                    // Apply other UI preferences
+                    this.applyCustomProperties();
+                },
+
+                applyCustomProperties() {
+                    const root = document.documentElement;
+
+                    // Apply sidebar collapsed state
+                    if (this.preferences.sidebar_collapsed) {
+                        root.style.setProperty('--sidebar-width', '60px');
+                    }
+
+                    // Apply items per page for pagination
+                    if (this.preferences.items_per_page) {
+                        root.style.setProperty('--items-per-page', this.preferences.items_per_page);
+                    }
+                },
+
+                setupEventListeners() {
+                    // Auto-save theme changes
+                    const originalApply = GlobalTheme.apply;
+                    GlobalTheme.apply = (theme) => {
+                        originalApply.call(GlobalTheme, theme);
+                        this.savePreference('theme', theme);
+                    };
+
+                    // Listen for form changes that should save preferences
+                    document.addEventListener('change', (event) => {
+                        if (event.target.matches('[data-preference]')) {
+                            const key = event.target.dataset.preference;
+                            const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+                            this.savePreference(key, value);
+                        }
+                    });
+
+                    // Listen for custom preference events
+                    document.addEventListener('preferenceChanged', (event) => {
+                        const { key, value } = event.detail;
+                        this.savePreference(key, value);
+                    });
+                },
+
+                getDefaultPreferences() {
+                    return {
+                        theme: 'dark',
+                        locale: 'en',
+                        sidebar_collapsed: false,
+                        notifications_enabled: true,
+                        auto_save: true,
+                        animations_enabled: true,
+                        dashboard_layout: 'grid',
+                        items_per_page: 25,
+                        timezone: 'UTC',
+                        sound_enabled: true,
+                        compact_mode: false
+                    };
+                },
+
+                // Utility methods
+                get(key, defaultValue = null) {
+                    return this.preferences[key] ?? defaultValue;
+                },
+
+                set(key, value) {
+                    this.preferences[key] = value;
+                    this.savePreference(key, value);
+                },
+
+                toggle(key) {
+                    const currentValue = this.get(key, false);
+                    this.set(key, !currentValue);
+                    return !currentValue;
+                },
+
+                // Dispatch custom event for other scripts to listen
+                dispatchChange(key, value) {
+                    document.dispatchEvent(new CustomEvent('preferenceChanged', {
+                        detail: { key, value }
+                    }));
+                }
+            };
+
+            // Global functions for easy access
+            window.savePreference = (key, value) => UserPreferences.set(key, value);
+            window.getPreference = (key, defaultValue) => UserPreferences.get(key, defaultValue);
+            window.togglePreference = (key) => UserPreferences.toggle(key);
+
+            // Initialize preferences on page load
+            document.addEventListener('DOMContentLoaded', () => {
+                GlobalTheme.init();
+                UserPreferences.init();
+            });
+        }
     </script>
 </body>
 </html>

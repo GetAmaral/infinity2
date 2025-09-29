@@ -19,7 +19,7 @@ class OrganizationTest extends TestCase
         $this->assertInstanceOf(\DateTimeImmutable::class, $organization->getUpdatedAt());
     }
 
-    public function testPreUpdate(): void
+    public function testUpdateAuditTimestamp(): void
     {
         $organization = new Organization();
         $originalUpdatedAt = $organization->getUpdatedAt();
@@ -27,7 +27,7 @@ class OrganizationTest extends TestCase
         // Simulate time passing
         usleep(1000); // 1ms
 
-        $organization->preUpdate();
+        $organization->updateAuditTimestamp();
         $newUpdatedAt = $organization->getUpdatedAt();
 
         $this->assertGreaterThan($originalUpdatedAt, $newUpdatedAt);
