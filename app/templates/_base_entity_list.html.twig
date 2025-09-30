@@ -1,0 +1,1130 @@
+{% extends 'base.html.twig' %}
+
+{# Base template for entity list pages (index views) #}
+{# Child templates should extend this and override specific blocks #}
+{#
+  Child templates should define their own entity-specific action macros
+  following this pattern for consistency across all views:
+
+  {% macro entityActions(entity, dropdownOnly) %}
+    - Desktop buttons (d-none d-lg-flex) for large screens
+    - Dropdown menu for mobile and when dropdownOnly=true
+  {% endmacro %}
+
+  The global dropdown system (#globalTableDropdown) will automatically
+  handle all dropdowns across grid, list, and table views.
+#}
+
+{% block title %}{{ block('page_title') }} - CRM{% endblock %}
+
+{% block body %}
+<!-- Page Header -->
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            {% block page_icon %}
+                <i class="{{ page_icon|default('bi bi-grid-3x3') }} text-neon fs-2 me-3"></i>
+            {% endblock %}
+            <div>
+                <h1 class="text-gradient mb-1">{% block page_title %}{{ (entity_name ~ '.title')|trans }}{% endblock %}</h1>
+                <p class="text-secondary mb-0">{% block page_description %}{{ ('page.' ~ entity_name ~ '_description')|trans }}{% endblock %}</p>
+            </div>
+        </div>
+        {% block header_actions %}
+            {% if enable_create_button|default(true) and is_granted(entity_name|upper ~ '_CREATE') %}
+                <button type="button"
+                        class="btn infinity-btn-primary"
+                        data-controller="modal-opener"
+                        data-modal-opener-url-value="{{ path(entity_name ~ '_new') }}"
+                        data-action="click->modal-opener#open">
+                    <i class="bi bi-plus-circle me-2"></i>{{ ('button.add_' ~ entity_name)|trans }}
+                </button>
+            {% endif %}
+        {% endblock %}
+    </div>
+</div>
+
+<!-- View Toggle Controller Wrapper -->
+<div data-controller="view-toggle" data-view-toggle-default-value="{{ default_view|default('grid') }}">
+    {% block search_and_controls %}
+        <!-- Search and Filters -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                {% block search_input %}
+                    {% if enable_search|default(true) %}
+                        <div class="input-group">
+                            <span class="input-group-text" style="background: var(--infinity-search-bg); border-color: var(--infinity-search-border); color: var(--infinity-text-secondary);">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text"
+                                   id="{{ entity_name }}SearchInput"
+                                   class="form-control"
+                                   placeholder="{{ (entity_name ~ '.search_placeholder')|trans }}"
+                                   data-controller="live-search"
+                                   data-live-search-url-value="{{ path(entity_name ~ '_api_search') }}"
+                                   data-live-search-target-value="#{{ entity_name_plural }}-grid"
+                                   style="background: var(--infinity-search-bg); border-color: var(--infinity-search-border); color: var(--infinity-search-text);">
+                            <button type="button"
+                                    id="clearSearchBtn"
+                                    class="btn btn-clear-search"
+                                    aria-label="{{ 'button.clear_search'|trans }}"
+                                    title="{{ 'button.clear_search'|trans }}">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endblock %}
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex gap-2 justify-content-end">
+                    {% block filter_controls %}
+                        {% if enable_filters|default(true) %}
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-funnel me-1"></i>{{ 'button.filter'|trans }}
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface);">
+                                    {% block filter_options %}
+                                        {# Child templates override this block with entity-specific filters #}
+                                    {% endblock %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+
+                    {% block view_toggle_buttons %}
+                        <div class="btn-group" role="group">
+                            {% if enable_grid_view|default(true) %}
+                                <button type="button"
+                                        class="btn btn-outline-secondary {{ default_view|default('grid') == 'grid' ? 'active' : '' }}"
+                                        data-view="grid"
+                                        data-action="view-toggle#setView"
+                                        data-view-toggle-target="gridButton"
+                                        title="{{ 'view.grid'|trans }}">
+                                    <i class="bi bi-grid-3x3-gap"></i>
+                                </button>
+                            {% endif %}
+                            {% if enable_list_view|default(true) %}
+                                <button type="button"
+                                        class="btn btn-outline-secondary {{ default_view|default('grid') == 'list' ? 'active' : '' }}"
+                                        data-view="list"
+                                        data-action="view-toggle#setView"
+                                        data-view-toggle-target="listButton"
+                                        title="{{ 'view.list'|trans }}">
+                                    <i class="bi bi-list-ul"></i>
+                                </button>
+                            {% endif %}
+                            {% if enable_table_view|default(true) %}
+                                <button type="button"
+                                        class="btn btn-outline-secondary {{ default_view|default('grid') == 'table' ? 'active' : '' }}"
+                                        data-view="table"
+                                        data-action="view-toggle#setView"
+                                        data-view-toggle-target="tableButton"
+                                        title="{{ 'view.table'|trans }}">
+                                    <i class="bi bi-table"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block grid_view %}
+        <!-- Grid/List View -->
+        <div id="{{ entity_name_plural }}-grid"
+             class="{% if default_view|default('grid') == 'list' %}list-view{% else %}bento-grid{% endif %}"
+             data-view-toggle-target="container"
+             style="{% if default_view|default('grid') == 'table' %}display: none;{% endif %}">
+            {% for entity in entities %}
+                {% block grid_item %}
+                    {# Child templates MUST override this block #}
+                    <div class="bento-item">
+                        <div class="infinity-card ai-enhanced p-4 h-100">
+                            <p class="text-muted">Override grid_item block in child template</p>
+                        </div>
+                    </div>
+                {% endblock %}
+            {% else %}
+                {% block empty_state %}
+                    <div class="bento-item large">
+                        <div class="infinity-card p-5 text-center">
+                            <div class="mb-4">
+                                <i class="{{ page_icon|default('bi bi-inbox') }}" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
+                            </div>
+                            <h4 class="text-white mb-3">{{ ('empty.no_' ~ entity_name_plural ~ '_yet')|trans }}</h4>
+                            <p class="text-secondary mb-4">{{ ('empty.' ~ entity_name ~ '_description')|trans }}</p>
+                            {% if is_granted(entity_name|upper ~ '_CREATE') %}
+                                <button class="btn infinity-btn-primary btn-lg"
+                                        data-controller="modal-opener"
+                                        data-modal-opener-url-value="{{ path(entity_name ~ '_new') }}"
+                                        data-action="click->modal-opener#open">
+                                    <i class="bi bi-plus-circle me-2"></i>{{ ('button.create_first_' ~ entity_name)|trans }}
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endblock %}
+            {% endfor %}
+        </div>
+    {% endblock %}
+
+    {% block table_view %}
+        <!-- Table View -->
+        <div id="{{ entity_name_plural }}-table"
+             class="table-view"
+             data-view-toggle-target="tableContainer"
+             style="{% if default_view|default('grid') != 'table' %}display: none;{% endif %}">
+            <div class="infinity-card table-card p-4">
+                <!-- Scroll hint for mobile -->
+                <div class="table-scroll-hint d-md-none">
+                    <i class="bi bi-arrow-left-right"></i>
+                    <span>{{ 'table.swipe_to_see_more'|trans }}</span>
+                </div>
+
+                <!-- Scrollable table wrapper with accessibility -->
+                <div class="table-scroll-wrapper"
+                     role="region"
+                     aria-label="{{ (entity_name_plural ~ ' table')|trans }}"
+                     tabindex="0">
+                    <table id="{{ entity_name_plural }}DataTable" class="table table-hover" style="width:100%">
+                        <thead>
+                            <tr>
+                                {% block table_headers %}
+                                    {# Child templates MUST override this block #}
+                                    <th>Override table_headers block</th>
+                                {% endblock %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entity in entities %}
+                                <tr>
+                                    {% block table_row %}
+                                        {# Child templates MUST override this block #}
+                                        <td>Override table_row block</td>
+                                    {% endblock %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <!-- Scroll fade indicators -->
+                    <div class="table-fade-left"></div>
+                    <div class="table-fade-right"></div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {# Global Dropdown Menu Container - Outside table structure #}
+    <div id="globalTableDropdown" class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="display: none; position: fixed; z-index: 99999; background: var(--infinity-dark-surface);"></div>
+
+    {# Global Pagination/Controls Card - Works for all views #}
+    <div class="infinity-card p-3 mt-3" id="globalViewControls">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-4">
+                <span class="text-secondary" style="font-size: 0.875rem;" id="viewInfo">
+                    Showing <strong id="itemsStart">1</strong> to <strong id="itemsEnd">10</strong> of <strong id="itemsTotal">{{ entities|length }}</strong> {{ entity_name_plural }}
+                </span>
+            </div>
+            <div class="col-12 col-md-4">
+                <nav aria-label="Page navigation" id="globalPagination">
+                    <ul class="pagination pagination-sm justify-content-center mb-0" id="paginationButtons">
+                        {# Pagination buttons will be generated by JavaScript #}
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="d-flex align-items-center gap-2 justify-content-end">
+                    <label for="itemsPerPageSelector" class="text-secondary mb-0" style="white-space: nowrap; font-size: 0.875rem;">
+                        Show
+                    </label>
+                    <select id="itemsPerPageSelector" class="form-select form-select-sm" style="width: auto; min-width: 80px;">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block entity_list_styles %}
+    <style>
+    {# Common styles for all entity list pages #}
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* List View Styles */
+    .list-view {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        overflow: visible !important;
+    }
+
+    .list-view .bento-item {
+        width: 100% !important;
+        max-width: none !important;
+        overflow: visible !important;
+    }
+
+    .bento-grid {
+        overflow: visible !important;
+    }
+
+    .bento-grid .bento-item,
+    .list-view .bento-item {
+        overflow: visible !important;
+    }
+
+    .list-view .infinity-card {
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* Dropdown overflow fix */
+    .bento-item {
+        overflow: visible !important;
+    }
+
+    .infinity-card {
+        overflow: visible !important;
+        position: relative;
+    }
+
+    /* Special handling for table cards to allow dropdowns to escape */
+    .infinity-card.table-card {
+        overflow: visible !important;
+    }
+
+    .infinity-card .dropdown {
+        position: static !important;
+    }
+
+    .infinity-card .dropdown-menu {
+        position: absolute !important;
+        z-index: 1060 !important;
+        will-change: transform;
+    }
+
+    /* Tooltip styling */
+    .tooltip-inner {
+        background: linear-gradient(135deg, #00f5ff 0%, #8a2be2 100%);
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 245, 255, 0.3);
+        font-weight: 500;
+    }
+
+    /* Clear Search Button - Always Visible with Light Red Styling */
+    .btn-clear-search {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .btn-clear-search:hover {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(220, 38, 38, 0.25) 100%);
+        border-color: rgba(239, 68, 68, 0.5);
+        color: #ef4444;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-clear-search:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15);
+    }
+
+    .btn-clear-search i {
+        font-size: 1.1rem;
+        transition: transform 0.2s ease;
+    }
+
+    .btn-clear-search:hover i {
+        transform: rotate(90deg);
+    }
+
+    [data-theme="light"] .btn-clear-search {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+        border-color: rgba(239, 68, 68, 0.25);
+        color: #dc2626;
+    }
+
+    [data-theme="light"] .btn-clear-search:hover {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+        border-color: rgba(239, 68, 68, 0.4);
+        color: #b91c1c;
+        transition: all 0.2s ease;
+    }
+
+    /* DataTables Custom Styling - Dark Theme */
+    .table-view {
+        width: 100%;
+    }
+
+    /* Table Scroll Wrapper with Horizontal Scroll */
+    .table-scroll-wrapper {
+        position: relative;
+        overflow-x: auto;
+        overflow-y: visible !important;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        scroll-behavior: smooth;
+        border-radius: 0.75rem;
+    }
+
+    /* Custom scrollbar for table wrapper */
+    .table-scroll-wrapper::-webkit-scrollbar {
+        height: 10px;
+    }
+
+    .table-scroll-wrapper::-webkit-scrollbar-track {
+        background: var(--infinity-dark-surface);
+        border-radius: 5px;
+    }
+
+    .table-scroll-wrapper::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--infinity-neon), var(--infinity-neon-purple));
+        border-radius: 5px;
+    }
+
+    .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, var(--infinity-neon-purple), var(--infinity-neon));
+    }
+
+    /* Focus outline for accessibility */
+    .table-scroll-wrapper:focus {
+        outline: 2px solid var(--infinity-neon);
+        outline-offset: 2px;
+    }
+
+    /* Scroll Fade Indicators - Dark Theme */
+    .table-fade-left,
+    .table-fade-right {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+        pointer-events: none;
+        z-index: 10;
+        transition: opacity 0.3s ease;
+    }
+
+    .table-fade-left {
+        left: 0;
+        background: linear-gradient(to right, var(--infinity-dark-surface), transparent);
+        opacity: 0;
+    }
+
+    .table-fade-right {
+        right: 0;
+        background: linear-gradient(to left, var(--infinity-dark-surface), transparent);
+        opacity: 1;
+    }
+
+    .table-scroll-wrapper.scrolled-left .table-fade-left {
+        opacity: 1;
+    }
+
+    .table-scroll-wrapper.scrolled-right .table-fade-right {
+        opacity: 0;
+    }
+
+    .table-scroll-wrapper.scrolled-middle .table-fade-left,
+    .table-scroll-wrapper.scrolled-middle .table-fade-right {
+        opacity: 1;
+    }
+
+    /* Scroll Hint for Mobile */
+    .table-scroll-hint {
+        text-align: center;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        background: rgba(0, 245, 255, 0.1);
+        border: 1px solid rgba(0, 245, 255, 0.3);
+        border-radius: 0.75rem;
+        color: var(--infinity-neon);
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        animation: pulseHint 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseHint {
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 1; }
+    }
+
+    .table-hover {
+        color: var(--infinity-text-primary) !important;
+        background: transparent !important;
+    }
+
+    .table-hover thead th {
+        background: var(--infinity-dark-surface) !important;
+        color: var(--infinity-text-primary) !important;
+        border-bottom: 2px solid rgba(0, 245, 255, 0.3) !important;
+        padding: 1rem !important;
+        font-weight: 600;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .table-hover thead th:hover {
+        background: rgba(0, 245, 255, 0.05) !important;
+    }
+
+    .table-hover tbody td {
+        background: transparent !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 1rem !important;
+        color: var(--infinity-text-primary) !important;
+        vertical-align: middle;
+    }
+
+    .table-hover tbody tr:hover {
+        background: rgba(0, 245, 255, 0.05) !important;
+    }
+
+    /* Sticky First Column (Actions) */
+    .table-hover thead th:first-child,
+    .table-hover tbody td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 10;
+        background: var(--infinity-dark-surface) !important;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .table-hover tbody td:first-child {
+        background: rgba(26, 26, 30, 0.98) !important;
+    }
+
+    .table-hover tbody tr:hover td:first-child {
+        background: rgba(0, 245, 255, 0.08) !important;
+    }
+
+    /* Hide ALL original dropdown menus in all views - they're cloned to global container */
+    .bento-grid .dropdown-menu,
+    .list-view .dropdown-menu,
+    .table-hover .dropdown-menu {
+        display: none !important;
+    }
+
+    /* Global table dropdown styling */
+    #globalTableDropdown {
+        min-width: 200px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+    }
+
+    #globalTableDropdown .dropdown-item {
+        color: var(--infinity-text-primary);
+        padding: 10px 16px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    #globalTableDropdown .dropdown-item:hover {
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
+        color: var(--infinity-text-primary);
+        transform: translateX(4px);
+    }
+
+    #globalTableDropdown .dropdown-divider {
+        border-color: rgba(255, 255, 255, 0.1);
+        margin: 8px 0;
+    }
+
+    #globalTableDropdown .text-danger {
+        color: #ef4444 !important;
+    }
+
+    #globalTableDropdown .text-danger:hover {
+        background: rgba(239, 68, 68, 0.1) !important;
+    }
+
+    /* DataTables Custom Styling - Light Theme */
+    [data-theme="light"] .table-hover {
+        color: #1a1a1a !important;
+    }
+
+    [data-theme="light"] .table-hover thead th {
+        background: #f8f9fa !important;
+        color: #1a1a1a !important;
+        border-bottom: 2px solid rgba(59, 130, 246, 0.3) !important;
+    }
+
+    [data-theme="light"] .table-hover thead th:hover {
+        background: rgba(59, 130, 246, 0.05) !important;
+    }
+
+    [data-theme="light"] .table-hover tbody td {
+        border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+        color: #1a1a1a !important;
+    }
+
+    [data-theme="light"] .table-hover tbody tr:hover {
+        background: rgba(59, 130, 246, 0.05) !important;
+    }
+
+    /* Light Theme - Sticky First Column */
+    [data-theme="light"] .table-hover thead th:first-child,
+    [data-theme="light"] .table-hover tbody td:first-child {
+        background: #f8f9fa !important;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="light"] .table-hover tbody td:first-child {
+        background: rgba(255, 255, 255, 0.98) !important;
+    }
+
+    [data-theme="light"] .table-hover tbody tr:hover td:first-child {
+        background: rgba(59, 130, 246, 0.08) !important;
+    }
+
+    /* Light Theme - Scroll Fade Indicators */
+    [data-theme="light"] .table-fade-left {
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.95), transparent);
+    }
+
+    [data-theme="light"] .table-fade-right {
+        background: linear-gradient(to left, rgba(255, 255, 255, 0.95), transparent);
+    }
+
+    /* Light Theme - Scroll Hint */
+    [data-theme="light"] .table-scroll-hint {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: #3b82f6;
+    }
+
+    /* Light Theme - Scrollbar */
+    [data-theme="light"] .table-scroll-wrapper::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+
+    [data-theme="light"] .table-scroll-wrapper::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    }
+
+    [data-theme="light"] .table-scroll-wrapper:focus {
+        outline-color: #3b82f6;
+    }
+
+    /* Light Theme - Global Dropdown */
+    [data-theme="light"] #globalTableDropdown {
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    [data-theme="light"] #globalTableDropdown .dropdown-item {
+        color: #1a1a1a !important;
+    }
+
+    [data-theme="light"] #globalTableDropdown .dropdown-item:hover {
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1)) !important;
+        color: #4f46e5 !important;
+    }
+
+    [data-theme="light"] #globalTableDropdown .dropdown-divider {
+        border-color: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    [data-theme="light"] #globalTableDropdown .text-danger {
+        color: #dc2626 !important;
+    }
+
+    [data-theme="light"] #globalTableDropdown .text-danger:hover {
+        background: rgba(220, 38, 38, 0.1) !important;
+        color: #b91c1c !important;
+    }
+
+    /* Global Controls Card Styling */
+    #globalViewControls {
+        background: var(--infinity-card-bg) !important;
+        border: 1px solid var(--infinity-border-color) !important;
+    }
+
+    [data-theme="light"] #globalViewControls {
+        background: rgba(255, 255, 255, 0.8) !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+
+    #globalViewControls select.form-select {
+        background: var(--infinity-dark-surface) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: var(--infinity-text-primary) !important;
+        cursor: pointer;
+    }
+
+    [data-theme="light"] #globalViewControls select.form-select {
+        background: white !important;
+        border: 1px solid rgba(0, 0, 0, 0.2) !important;
+        color: #1a1a1a !important;
+    }
+
+    #globalViewControls .pagination .page-link {
+        background: var(--infinity-dark-surface) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: var(--infinity-text-primary) !important;
+        border-radius: 0.375rem;
+        margin: 0 0.125rem;
+        padding: 0.375rem 0.75rem;
+    }
+
+    [data-theme="light"] #globalViewControls .pagination .page-link {
+        background: white !important;
+        border: 1px solid rgba(0, 0, 0, 0.2) !important;
+        color: #1a1a1a !important;
+    }
+
+    #globalViewControls .pagination .page-link:hover {
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(124, 58, 237, 0.3)) !important;
+        border-color: var(--infinity-neon) !important;
+        color: var(--infinity-neon) !important;
+    }
+
+    #globalViewControls .pagination .page-item.active .page-link {
+        background: var(--infinity-ai-gradient) !important;
+        border-color: var(--infinity-neon) !important;
+        color: white !important;
+    }
+
+    #globalViewControls .pagination .page-item.disabled .page-link {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    /* Fancy Tooltips for Pagination */
+    .tooltip-inner {
+        background: linear-gradient(135deg, #00f5ff 0%, #8a2be2 100%);
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 245, 255, 0.3);
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+
+    .tooltip.bs-tooltip-top .tooltip-arrow::before,
+    .tooltip.bs-tooltip-auto[data-popper-placement^="top"] .tooltip-arrow::before {
+        border-top-color: #00f5ff;
+    }
+
+    .tooltip.bs-tooltip-bottom .tooltip-arrow::before,
+    .tooltip.bs-tooltip-auto[data-popper-placement^="bottom"] .tooltip-arrow::before {
+        border-bottom-color: #00f5ff;
+    }
+
+    .tooltip.bs-tooltip-start .tooltip-arrow::before,
+    .tooltip.bs-tooltip-auto[data-popper-placement^="left"] .tooltip-arrow::before {
+        border-left-color: #00f5ff;
+    }
+
+    .tooltip.bs-tooltip-end .tooltip-arrow::before,
+    .tooltip.bs-tooltip-auto[data-popper-placement^="right"] .tooltip-arrow::before {
+        border-right-color: #00f5ff;
+    }
+
+    /* DataTables Pagination & Controls - Bottom aligned */
+    .dataTables_wrapper .row {
+        margin-top: 1rem;
+        margin-bottom: 0;
+    }
+
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_length {
+        color: var(--infinity-text-secondary) !important;
+        font-size: 0.875rem;
+        display: inline-block;
+        margin-right: 1rem;
+    }
+
+    [data-theme="light"] .dataTables_wrapper .dataTables_info,
+    [data-theme="light"] .dataTables_wrapper .dataTables_length {
+        color: #6b7280 !important;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        display: inline-block;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        text-align: right;
+    }
+
+    .dataTables_wrapper .col-sm-6 {
+        display: flex;
+        align-items: center;
+    }
+
+    .dataTables_wrapper .col-sm-6:last-child {
+        justify-content: flex-end;
+    }
+
+    /* DataTables Select Control - Theme Responsive */
+    .dataTables_wrapper .dataTables_length select {
+        background: var(--infinity-dark-surface) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: var(--infinity-text-primary) !important;
+        border-radius: 0.375rem;
+        padding: 0.375rem 0.75rem;
+        margin: 0 0.5rem;
+    }
+
+    [data-theme="light"] .dataTables_wrapper .dataTables_length select {
+        background: white !important;
+        border: 1px solid rgba(0, 0, 0, 0.2) !important;
+        color: #1a1a1a !important;
+    }
+
+    /* DataTables Pagination Buttons - Theme Responsive */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        color: var(--infinity-text-primary) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        background: var(--infinity-dark-surface) !important;
+        border-radius: 0.375rem !important;
+        padding: 0.375rem 0.75rem !important;
+        margin: 0 0.25rem !important;
+    }
+
+    [data-theme="light"] .dataTables_wrapper .dataTables_paginate .paginate_button {
+        color: #1a1a1a !important;
+        border: 1px solid rgba(0, 0, 0, 0.2) !important;
+        background: white !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(124, 58, 237, 0.3)) !important;
+        border-color: var(--infinity-neon) !important;
+        color: var(--infinity-neon) !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: var(--infinity-ai-gradient) !important;
+        border-color: var(--infinity-neon) !important;
+        color: white !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: var(--infinity-dark-surface) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: var(--infinity-text-muted) !important;
+    }
+
+    [data-theme="light"] .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    [data-theme="light"] .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+        background: rgba(0, 0, 0, 0.05) !important;
+        border-color: rgba(0, 0, 0, 0.1) !important;
+        color: rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* DataTables Column Filter Inputs - Dark Theme */
+    .table-hover thead tr.filters th {
+        padding: 0.5rem 1rem !important;
+        background: var(--infinity-dark-surface) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .table-hover thead tr.filters th input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: var(--infinity-text-primary) !important;
+        border-radius: 0.375rem;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .table-hover thead tr.filters th input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .table-hover thead tr.filters th input:focus {
+        outline: none;
+        border-color: var(--infinity-neon) !important;
+        box-shadow: 0 0 0 2px rgba(0, 245, 255, 0.1);
+    }
+
+    /* DataTables Column Filter Inputs - Light Theme */
+    [data-theme="light"] .table-hover thead tr.filters th {
+        background: #f8f9fa !important;
+        border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+
+    [data-theme="light"] .table-hover thead tr.filters th input {
+        background: white !important;
+        border: 1px solid rgba(0, 0, 0, 0.2) !important;
+        color: #1a1a1a !important;
+    }
+
+    [data-theme="light"] .table-hover thead tr.filters th input::placeholder {
+        color: rgba(0, 0, 0, 0.4);
+    }
+
+    [data-theme="light"] .table-hover thead tr.filters th input:focus {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    {% block additional_styles %}
+        {# Child templates can add entity-specific styles here #}
+    {% endblock %}
+    </style>
+{% endblock %}
+
+{% block entity_list_scripts %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('{{ entity_name }}SearchInput');
+        const clearBtn = document.getElementById('clearSearchBtn');
+        const originalContent = document.getElementById('{{ entity_name_plural }}-grid').innerHTML;
+        let isSearching = false;
+
+        // Table scroll fade indicators management
+        function setupTableScrollFade() {
+            const tableWrapper = document.querySelector('.table-scroll-wrapper');
+            if (!tableWrapper) return;
+
+            function updateFadeIndicators() {
+                const scrollLeft = tableWrapper.scrollLeft;
+                const scrollWidth = tableWrapper.scrollWidth;
+                const clientWidth = tableWrapper.clientWidth;
+                const maxScroll = scrollWidth - clientWidth;
+
+                // Remove all scroll classes
+                tableWrapper.classList.remove('scrolled-left', 'scrolled-right', 'scrolled-middle');
+
+                if (maxScroll <= 0) {
+                    // No scroll needed, hide both fades
+                    return;
+                }
+
+                if (scrollLeft <= 5) {
+                    // At the start
+                    tableWrapper.classList.add('scrolled-left');
+                } else if (scrollLeft >= maxScroll - 5) {
+                    // At the end
+                    tableWrapper.classList.add('scrolled-right');
+                } else {
+                    // In the middle
+                    tableWrapper.classList.add('scrolled-middle');
+                }
+            }
+
+            // Listen for scroll events
+            tableWrapper.addEventListener('scroll', updateFadeIndicators);
+
+            // Update on window resize
+            window.addEventListener('resize', updateFadeIndicators);
+
+            // Initial update
+            setTimeout(updateFadeIndicators, 100);
+
+            // Update when table view becomes visible
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.target.style.display !== 'none') {
+                        setTimeout(updateFadeIndicators, 100);
+                    }
+                });
+            });
+
+            const tableView = document.getElementById('{{ entity_name_plural }}-table');
+            if (tableView) {
+                observer.observe(tableView, { attributes: true, attributeFilter: ['style'] });
+            }
+        }
+
+        // Initialize table scroll fade
+        setupTableScrollFade();
+
+        // Handle ALL dropdowns (grid, list, table) with global dropdown container
+        function setupGlobalDropdowns() {
+            const globalDropdown = document.getElementById('globalTableDropdown');
+            if (!globalDropdown) return;
+
+            let currentToggle = null;
+
+            // Intercept all dropdown button clicks in all views
+            document.addEventListener('click', function(event) {
+                const dropdownButton = event.target.closest('[data-bs-toggle="dropdown"]');
+
+                // If clicking inside global dropdown, allow normal behavior
+                if (event.target.closest('#globalTableDropdown')) {
+                    return;
+                }
+
+                // If clicking dropdown button
+                if (dropdownButton) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    // Find the original dropdown menu
+                    const originalDropdown = dropdownButton.nextElementSibling;
+                    if (!originalDropdown || !originalDropdown.classList.contains('dropdown-menu')) return;
+
+                    // Toggle: if clicking same button, close
+                    if (currentToggle === dropdownButton && globalDropdown.style.display === 'block') {
+                        globalDropdown.style.display = 'none';
+                        currentToggle = null;
+                        return;
+                    }
+
+                    // Close any existing dropdown
+                    globalDropdown.style.display = 'none';
+
+                    // Clone the dropdown content
+                    globalDropdown.innerHTML = originalDropdown.innerHTML;
+
+                    // Get button position
+                    const rect = dropdownButton.getBoundingClientRect();
+
+                    // Position the global dropdown to the right of the button
+                    globalDropdown.style.top = rect.top + 'px';
+                    globalDropdown.style.left = (rect.right + 5) + 'px'; // 5px gap from button
+                    globalDropdown.style.display = 'block';
+
+                    currentToggle = dropdownButton;
+                } else {
+                    // Click outside - close dropdown
+                    globalDropdown.style.display = 'none';
+                    currentToggle = null;
+                }
+            });
+
+            // Close dropdown when scrolling (any container)
+            window.addEventListener('scroll', function() {
+                globalDropdown.style.display = 'none';
+                currentToggle = null;
+            }, true); // Use capture phase to catch all scroll events
+
+            // Close on ESC key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    globalDropdown.style.display = 'none';
+                    currentToggle = null;
+                }
+            });
+        }
+
+        // Initialize global dropdowns for all views
+        setupGlobalDropdowns();
+
+        if (searchInput && clearBtn) {
+            // Track search state
+            searchInput.addEventListener('input', function() {
+                if (this.value.trim().length > 0) {
+                    isSearching = true;
+                } else {
+                    if (isSearching) {
+                        restoreOriginalContent();
+                        isSearching = false;
+                    }
+                }
+            });
+
+            // Clear button click handler
+            clearBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchInput.value = '';
+                restoreOriginalContent();
+                searchInput.focus();
+
+                // Trigger input event to update view toggle controller
+                searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+
+            // ESC key handler
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' || e.key === 'Esc') {
+                    e.preventDefault();
+                    this.value = '';
+                    restoreOriginalContent();
+                    this.blur();
+
+                    // Trigger input event to update view toggle controller
+                    this.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            });
+        }
+
+        function initializeTooltips() {
+            if (typeof bootstrap === 'undefined' || typeof bootstrap.Tooltip === 'undefined') {
+                return;
+            }
+
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+                if (existingTooltip) {
+                    existingTooltip.dispose();
+                }
+                new bootstrap.Tooltip(tooltipTriggerEl, {
+                    trigger: 'hover',
+                    delay: { show: 300, hide: 100 }
+                });
+            });
+        }
+
+        function restoreOriginalContent() {
+            const container = document.getElementById('{{ entity_name_plural }}-grid');
+            container.innerHTML = originalContent;
+            initializeTooltips();
+        }
+
+        const observer = new MutationObserver(function() {
+            initializeTooltips();
+        });
+
+        const gridContainer = document.getElementById('{{ entity_name_plural }}-grid');
+        if (gridContainer) {
+            observer.observe(gridContainer, {
+                childList: true,
+                subtree: true
+            });
+        }
+
+        {% block additional_scripts %}
+            {# Child templates can add entity-specific JavaScript here #}
+        {% endblock %}
+    });
+    </script>
+{% endblock %}
+{% endblock %}

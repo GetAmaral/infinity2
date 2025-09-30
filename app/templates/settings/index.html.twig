@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <div class="theme-info p-3">
-                            <h6 class="text-white mb-2">
+                            <h6 class="theme-card-title mb-2">
                                 <i class="bi bi-moon-stars me-2"></i>{{ 'theme.dark'|trans }}
                             </h6>
                             <p class="text-secondary mb-0" style="font-size: 0.875rem;">{{ 'theme.dark_description'|trans }}</p>
@@ -66,7 +66,7 @@
                             </div>
                         </div>
                         <div class="theme-info p-3">
-                            <h6 class="text-white mb-2">
+                            <h6 class="theme-card-title mb-2">
                                 <i class="bi bi-sun me-2"></i>{{ 'theme.light'|trans }}
                             </h6>
                             <p class="text-secondary mb-0" style="font-size: 0.875rem;">{{ 'theme.light_description'|trans }}</p>
@@ -91,7 +91,7 @@
                     <div class="text-white fw-semibold">{{ ('language.' ~ current_locale)|trans }}</div>
                 </div>
 
-                <form method="post" action="{{ path('app_settings_locale') }}">
+                <form method="post" action="{{ path('app_settings_locale') }}" data-controller="form-navigation">
                     <div class="mb-3">
                         <label for="locale" class="form-label text-secondary">{{ 'settings.choose_language'|trans }}:</label>
                         <select name="locale" id="locale" class="form-select" data-preference="locale" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.2); color: white;" onchange="this.form.submit()">
@@ -164,7 +164,7 @@
     <div class="bento-item">
         <div class="infinity-card p-4 h-100">
             <div class="text-center mb-4">
-                <div class="p-3 rounded-circle mx-auto mb-3" style="background: linear-gradient(135deg, var(--infinity-primary), var(--infinity-secondary)); width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                <div class="p-3 rounded-3 mx-auto mb-3" style="background: linear-gradient(135deg, var(--infinity-primary), var(--infinity-secondary)); width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
                     <i class="bi bi-robot text-white fs-2"></i>
                 </div>
                 <h5 class="text-white mb-2">{{ 'ai.settings'|trans }}</h5>
@@ -231,6 +231,11 @@
 
 {% block javascripts %}
 <style>
+/* Theme Card Title - Always visible regardless of theme */
+.theme-card-title {
+    color: #ffffff !important;
+}
+
 /* Simple Theme Cards */
 .theme-card {
     background: var(--infinity-dark-surface);

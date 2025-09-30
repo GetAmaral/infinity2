@@ -201,6 +201,31 @@
         <target>Preferência de idioma salva com sucesso!</target>
         <note>Mensagem de sucesso após salvar o idioma</note>
       </trans-unit>
+      <trans-unit id="settings.ui_preferences">
+        <source>settings.ui_preferences</source>
+        <target>Preferências de Interface</target>
+        <note>Título da seção de preferências de interface</note>
+      </trans-unit>
+      <trans-unit id="settings.enable_animations">
+        <source>settings.enable_animations</source>
+        <target>Ativar Animações</target>
+        <note>Rótulo da opção de ativar animações</note>
+      </trans-unit>
+      <trans-unit id="settings.enable_sound">
+        <source>settings.enable_sound</source>
+        <target>Ativar Efeitos Sonoros</target>
+        <note>Rótulo da opção de ativar efeitos sonoros</note>
+      </trans-unit>
+      <trans-unit id="settings.compact_mode">
+        <source>settings.compact_mode</source>
+        <target>Modo Compacto</target>
+        <note>Rótulo da opção de modo compacto</note>
+      </trans-unit>
+      <trans-unit id="settings.items_per_page">
+        <source>settings.items_per_page</source>
+        <target>Itens Por Página</target>
+        <note>Rótulo de itens por página</note>
+      </trans-unit>
 
       <!-- Language Names -->
       <trans-unit id="language.en">
@@ -367,6 +392,36 @@
         <source>button.start_ai_chat</source>
         <target>Iniciar Chat IA</target>
         <note>Botão para iniciar chat IA</note>
+      </trans-unit>
+      <trans-unit id="button.clear_search">
+        <source>button.clear_search</source>
+        <target>Limpar busca</target>
+        <note>Botão para limpar campo de busca</note>
+      </trans-unit>
+      <trans-unit id="view.grid">
+        <source>view.grid</source>
+        <target>Visualização em Grade</target>
+        <note>Botão de visualização em grade</note>
+      </trans-unit>
+      <trans-unit id="view.list">
+        <source>view.list</source>
+        <target>Visualização em Lista</target>
+        <note>Botão de visualização em lista</note>
+      </trans-unit>
+      <trans-unit id="view.table">
+        <source>view.table</source>
+        <target>Visualização em Tabela</target>
+        <note>Botão de visualização em tabela</note>
+      </trans-unit>
+      <trans-unit id="table.actions">
+        <source>table.actions</source>
+        <target>Ações</target>
+        <note>Coluna de ações na tabela</note>
+      </trans-unit>
+      <trans-unit id="table.swipe_to_see_more">
+        <source>table.swipe_to_see_more</source>
+        <target>Deslize para ver mais</target>
+        <note>Dica para usuários móveis rolarem a tabela horizontalmente</note>
       </trans-unit>
 
       <!-- Metrics and Statistics -->

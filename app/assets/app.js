@@ -5,4 +5,7 @@ import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import './styles/app.css';
 
 // Start Stimulus application with automatic controller registration
-startStimulusApp();
+const app = startStimulusApp();
+
+// Disable verbose Stimulus debug logs in console
+app.debug = false;

@@ -42,4 +42,10 @@ return [
         'version' => '1.13.1',
         'type' => 'css',
     ],
+    'chart.js' => [
+        'version' => '3.9.1',
+    ],
+    '@symfony/ux-live-component' => [
+        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    ],
 ];

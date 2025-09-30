@@ -9,12 +9,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     {% block stylesheets %}{{ importmap('app') }}{% endblock %}
+
+    <!-- DataTables CSS for Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css">
 </head>
 <body>
     <nav class="navbar infinity-navbar">
         <div class="container">
             <a class="navbar-brand text-white d-flex align-items-center" href="{{ path('app_home') }}">
-                <img src="/infinity_logo_sm.png" alt="Infinity" height="32" class="me-2">
+                <img src="/infinity_logo_sm_light.png" alt="Infinity" height="32" class="me-2 logo-dark-theme">
+                <img src="/infinity_logo_sm.png" alt="Infinity" height="32" class="me-2 logo-light-theme">
                 <span class="fw-bold text-gradient">{{ 'nav.infinity'|trans }}</span>
             </a>
 
@@ -139,6 +143,17 @@
         </div>
     </div>
 
+    <!-- Global Modal Container -->
+    <div id="global-modal-container"></div>
+
+    <!-- DataTables JS for Bootstrap 5 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- List Preferences Manager -->
+    <script src="/list-preferences.js"></script>
+
     {% block javascripts %}{% endblock %}
 
     <script data-turbo-eval="false">
@@ -204,6 +219,35 @@
                         icon.className = 'bi bi-mic';
                     }, 3000);
                 }
+            });
+
+            // Helper function to safely initialize Bootstrap tooltips
+            function initGlobalTooltips() {
+                if (typeof bootstrap === 'undefined' || typeof bootstrap.Tooltip === 'undefined') {
+                    return; // Bootstrap not loaded yet
+                }
+
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                    // Dispose existing tooltip if any
+                    const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+                    if (existingTooltip) {
+                        existingTooltip.dispose();
+                    }
+                    // Create new tooltip
+                    new bootstrap.Tooltip(tooltipTriggerEl, {
+                        trigger: 'hover',
+                        delay: { show: 300, hide: 100 }
+                    });
+                });
+            }
+
+            // Initialize Bootstrap tooltips when ready
+            initGlobalTooltips();
+
+            // Re-initialize tooltips after dynamic content loads
+            document.addEventListener('turbo:load', function() {
+                initGlobalTooltips();
             });
 
             // Close dropdowns on click outside or ESC key
@@ -470,9 +514,14 @@
             window.togglePreference = (key) => UserPreferences.toggle(key);
 
             // Initialize preferences on page load
-            document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('DOMContentLoaded', async () => {
                 GlobalTheme.init();
-                UserPreferences.init();
+                await UserPreferences.init();
+
+                // Initialize list preferences after user preferences are loaded
+                if (window.ListPreferences) {
+                    await window.ListPreferences.init();
+                }
             });
         }
     </script>

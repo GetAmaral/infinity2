@@ -20,7 +20,7 @@
                 </div>
             {% endif %}
 
-            <form method="post" action="{{ path('app_login') }}">
+            <form method="post" action="{{ path('app_login') }}" data-controller="form-navigation">
                 <div class="mb-3">
                     <label for="email" class="form-label text-white">
                         <i class="bi bi-envelope me-1"></i>{{ 'auth.email'|trans }}
@@ -60,7 +60,7 @@
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                <button type="submit" class="btn infinity-btn-primary w-100 mb-3">
+                <button type="submit" class="btn infinity-btn-primary w-100 mb-3" data-allow-enter-submit>
                     <i class="bi bi-box-arrow-in-right me-2"></i>{{ 'auth.sign_in'|trans }}
                 </button>
 

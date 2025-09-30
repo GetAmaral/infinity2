@@ -5,7 +5,7 @@
       <!-- Navigation -->
       <trans-unit id="nav.infinity">
         <source>nav.infinity</source>
-        <target>🚀 Infinity</target>
+        <target>Infinity</target>
         <note>Application brand name in navigation</note>
       </trans-unit>
       <trans-unit id="nav.home">
@@ -118,6 +118,120 @@
         <note>Section title for users list in organization</note>
       </trans-unit>
 
+      <!-- Organization CRUD Forms -->
+      <trans-unit id="organization.form.name">
+        <source>organization.form.name</source>
+        <target>Organization Name</target>
+      </trans-unit>
+      <trans-unit id="organization.form.name_placeholder">
+        <source>organization.form.name_placeholder</source>
+        <target>Enter organization name</target>
+      </trans-unit>
+      <trans-unit id="organization.form.description">
+        <source>organization.form.description</source>
+        <target>Description</target>
+      </trans-unit>
+      <trans-unit id="organization.form.description_placeholder">
+        <source>organization.form.description_placeholder</source>
+        <target>Describe the organization's purpose and activities</target>
+      </trans-unit>
+      <trans-unit id="organization.form.preview">
+        <source>organization.form.preview</source>
+        <target>Live Preview</target>
+      </trans-unit>
+
+      <!-- Organization Modals -->
+      <trans-unit id="organization.modal.create_title">
+        <source>organization.modal.create_title</source>
+        <target>Create New Organization</target>
+      </trans-unit>
+      <trans-unit id="organization.modal.create_subtitle">
+        <source>organization.modal.create_subtitle</source>
+        <target>Add a new organization to your system</target>
+      </trans-unit>
+      <trans-unit id="organization.modal.edit_title">
+        <source>organization.modal.edit_title</source>
+        <target>Edit %name%</target>
+      </trans-unit>
+      <trans-unit id="organization.modal.edit_subtitle">
+        <source>organization.modal.edit_subtitle</source>
+        <target>Update organization details</target>
+      </trans-unit>
+      <trans-unit id="organization.modal.create_tip">
+        <source>organization.modal.create_tip</source>
+        <target>Organization names should be descriptive and unique within your system.</target>
+      </trans-unit>
+
+      <!-- Organization Actions -->
+      <trans-unit id="organization.manage_users">
+        <source>organization.manage_users</source>
+        <target>Manage Users</target>
+      </trans-unit>
+      <trans-unit id="organization.confirm_delete">
+        <source>organization.confirm_delete</source>
+        <target>Are you sure you want to delete "%name%"?</target>
+      </trans-unit>
+      <trans-unit id="organization.new_organization">
+        <source>organization.new_organization</source>
+        <target>New Organization</target>
+      </trans-unit>
+      <trans-unit id="organization.search_placeholder">
+        <source>organization.search_placeholder</source>
+        <target>Search organizations...</target>
+      </trans-unit>
+
+      <!-- Organization Flash Messages -->
+      <trans-unit id="organization.flash.created_successfully">
+        <source>organization.flash.created_successfully</source>
+        <target>Organization created successfully!</target>
+      </trans-unit>
+      <trans-unit id="organization.flash.updated_successfully">
+        <source>organization.flash.updated_successfully</source>
+        <target>Organization updated successfully!</target>
+      </trans-unit>
+      <trans-unit id="organization.flash.deleted_successfully">
+        <source>organization.flash.deleted_successfully</source>
+        <target>Organization deleted successfully!</target>
+      </trans-unit>
+      <trans-unit id="organization.flash.save_success">
+        <source>organization.flash.save_success</source>
+        <target>Changes saved successfully!</target>
+      </trans-unit>
+      <trans-unit id="organization.flash.save_success_description">
+        <source>organization.flash.save_success_description</source>
+        <target>The organization has been updated with your changes.</target>
+      </trans-unit>
+      <trans-unit id="organization.flash.save_error">
+        <source>organization.flash.save_error</source>
+        <target>Failed to save organization</target>
+      </trans-unit>
+      <trans-unit id="organization.flash.cannot_delete_has_users">
+        <source>organization.flash.cannot_delete_has_users</source>
+        <target>Cannot delete organization with assigned users</target>
+      </trans-unit>
+      <trans-unit id="organization.flash.invalid_csrf_token">
+        <source>organization.flash.invalid_csrf_token</source>
+        <target>Invalid security token. Please try again.</target>
+      </trans-unit>
+
+      <!-- Organization Validation -->
+      <trans-unit id="organization.validation.name_required">
+        <source>organization.validation.name_required</source>
+        <target>Organization name is required</target>
+      </trans-unit>
+      <trans-unit id="organization.validation.name_min_length">
+        <source>organization.validation.name_min_length</source>
+        <target>Organization name must be at least 2 characters long</target>
+      </trans-unit>
+      <trans-unit id="organization.validation.name_max_length">
+        <source>organization.validation.name_max_length</source>
+        <target>Organization name cannot exceed 255 characters</target>
+      </trans-unit>
+      <trans-unit id="organization.validation.description_max_length">
+        <source>organization.validation.description_max_length</source>
+        <target>Description cannot exceed 1000 characters</target>
+      </trans-unit>
+
       <!-- User Pages -->
       <trans-unit id="user.title">
         <source>user.title</source>
@@ -200,6 +314,31 @@
         <source>settings.language_saved</source>
         <target>Language preference saved successfully!</target>
         <note>Success message after saving language</note>
+      </trans-unit>
+      <trans-unit id="settings.ui_preferences">
+        <source>settings.ui_preferences</source>
+        <target>UI Preferences</target>
+        <note>UI preferences section title</note>
+      </trans-unit>
+      <trans-unit id="settings.enable_animations">
+        <source>settings.enable_animations</source>
+        <target>Enable Animations</target>
+        <note>Enable animations checkbox label</note>
+      </trans-unit>
+      <trans-unit id="settings.enable_sound">
+        <source>settings.enable_sound</source>
+        <target>Enable Sound Effects</target>
+        <note>Enable sound effects checkbox label</note>
+      </trans-unit>
+      <trans-unit id="settings.compact_mode">
+        <source>settings.compact_mode</source>
+        <target>Compact Mode</target>
+        <note>Compact mode checkbox label</note>
+      </trans-unit>
+      <trans-unit id="settings.items_per_page">
+        <source>settings.items_per_page</source>
+        <target>Items Per Page</target>
+        <note>Items per page label</note>
       </trans-unit>
 
       <!-- Language Names -->
@@ -332,6 +471,99 @@
         <source>button.create_first_organization</source>
         <target>Create First Organization</target>
         <note>Button to create first organization</note>
+      </trans-unit>
+
+      <!-- CRUD Buttons -->
+      <trans-unit id="button.edit">
+        <source>button.edit</source>
+        <target>Edit</target>
+      </trans-unit>
+      <trans-unit id="button.delete">
+        <source>button.delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="button.cancel">
+        <source>button.cancel</source>
+        <target>Cancel</target>
+      </trans-unit>
+      <trans-unit id="button.close">
+        <source>button.close</source>
+        <target>Close</target>
+      </trans-unit>
+      <trans-unit id="button.reset">
+        <source>button.reset</source>
+        <target>Reset</target>
+      </trans-unit>
+      <trans-unit id="button.reset_form">
+        <source>button.reset_form</source>
+        <target>Reset Form</target>
+      </trans-unit>
+      <trans-unit id="button.filter">
+        <source>button.filter</source>
+        <target>Filter</target>
+      </trans-unit>
+      <trans-unit id="button.clear_search">
+        <source>button.clear_search</source>
+        <target>Clear search</target>
+      </trans-unit>
+      <trans-unit id="button.create_organization">
+        <source>button.create_organization</source>
+        <target>Create Organization</target>
+      </trans-unit>
+      <trans-unit id="button.update_organization">
+        <source>button.update_organization</source>
+        <target>Update Organization</target>
+      </trans-unit>
+      <trans-unit id="button.creating">
+        <source>button.creating</source>
+        <target>Creating...</target>
+      </trans-unit>
+      <trans-unit id="button.updating">
+        <source>button.updating</source>
+        <target>Updating...</target>
+      </trans-unit>
+
+      <!-- Form and Validation -->
+      <trans-unit id="form.validation_errors">
+        <source>form.validation_errors</source>
+        <target>Please correct the errors below</target>
+      </trans-unit>
+
+      <!-- Filters -->
+      <trans-unit id="filter.active_organizations">
+        <source>filter.active_organizations</source>
+        <target>Active Organizations</target>
+      </trans-unit>
+      <trans-unit id="filter.empty_organizations">
+        <source>filter.empty_organizations</source>
+        <target>Organizations without Users</target>
+      </trans-unit>
+      <trans-unit id="filter.all">
+        <source>filter.all</source>
+        <target>All</target>
+      </trans-unit>
+
+      <!-- Views -->
+      <trans-unit id="view.grid">
+        <source>view.grid</source>
+        <target>Grid View</target>
+      </trans-unit>
+      <trans-unit id="view.list">
+        <source>view.list</source>
+        <target>List View</target>
+      </trans-unit>
+      <trans-unit id="view.table">
+        <source>view.table</source>
+        <target>Table View</target>
+      </trans-unit>
+      <trans-unit id="table.actions">
+        <source>table.actions</source>
+        <target>Actions</target>
+      </trans-unit>
+      <trans-unit id="table.swipe_to_see_more">
+        <source>table.swipe_to_see_more</source>
+        <target>Swipe to see more</target>
+        <note>Hint for mobile users to scroll table horizontally</note>
       </trans-unit>
       <trans-unit id="button.edit_contact">
         <source>button.edit_contact</source>

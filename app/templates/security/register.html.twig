@@ -14,7 +14,7 @@
                 <p class="text-secondary">{{ 'auth.join_infinity'|trans }}</p>
             </div>
 
-            <form method="post" action="{{ path('app_register') }}">
+            <form method="post" action="{{ path('app_register') }}" data-controller="form-navigation">
                 <div class="mb-3">
                     <label for="name" class="form-label text-white">
                         <i class="bi bi-person me-1"></i>{{ 'auth.full_name'|trans }}
@@ -79,7 +79,7 @@
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('register') }}">
 
-                <button type="submit" class="btn infinity-btn-primary w-100 mb-3">
+                <button type="submit" class="btn infinity-btn-primary w-100 mb-3" data-allow-enter-submit>
                     <i class="bi bi-person-check me-2"></i>{{ 'auth.create_account_button'|trans }}
                 </button>
 

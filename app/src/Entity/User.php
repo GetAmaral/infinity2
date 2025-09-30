@@ -93,6 +93,10 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[Groups(['user:read'])]
     protected ?array $uiSettings = null;
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['user:read'])]
+    protected ?array $listPreferences = null;
+
     public function __construct()
     {
         parent::__construct();
@@ -347,6 +351,40 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     public function setUiSettings(?array $uiSettings): self
     {
         $this->uiSettings = $uiSettings;
+        return $this;
+    }
+
+    public function getListPreferences(): ?array
+    {
+        return $this->listPreferences;
+    }
+
+    public function setListPreferences(?array $listPreferences): self
+    {
+        $this->listPreferences = $listPreferences;
+        return $this;
+    }
+
+    /**
+     * Get a specific list preference value
+     */
+    public function getListPreference(string $key, mixed $default = null): mixed
+    {
+        if ($this->listPreferences === null) {
+            return $default;
+        }
+        return $this->listPreferences[$key] ?? $default;
+    }
+
+    /**
+     * Set a specific list preference value
+     */
+    public function setListPreference(string $key, mixed $value): self
+    {
+        if ($this->listPreferences === null) {
+            $this->listPreferences = [];
+        }
+        $this->listPreferences[$key] = $value;
         return $this;
     }
 

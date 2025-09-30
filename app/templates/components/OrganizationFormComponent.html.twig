@@ -1,0 +1,162 @@
+<div {{ attributes.defaults({
+    'data-controller': 'live-form organization-form',
+    'data-live-form-success-action': 'organization-form#handleSave'
+}) }}>
+    {% if isSaved %}
+        <div class="alert alert-success border-0 rounded-3 mb-4"
+             style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3) !important; color: #22c55e;">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <div>
+                    <strong>{{ 'organization.flash.save_success'|trans }}</strong>
+                    <br><small>{{ 'organization.flash.save_success_description'|trans }}</small>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if hasValidationErrors() %}
+        <div class="alert alert-danger border-0 rounded-3 mb-4"
+             style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3) !important; color: #ef4444;">
+            <div class="d-flex align-items-start">
+                <i class="bi bi-exclamation-triangle-fill me-2 mt-1"></i>
+                <div>
+                    <strong>{{ 'form.validation_errors'|trans }}</strong>
+                    {% if getValidationError('general') %}
+                        <br><small>{{ getValidationError('general') }}</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {{ form_start(form, {
+        'attr': {
+            'data-action': 'live#action',
+            'data-live-action-param': 'save'
+        }
+    }) }}
+
+    <div class="mb-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.name, {
+                        'attr': {
+                            'class': (form.name.vars.valid ? 'form-control' : 'form-control is-invalid'),
+                            'placeholder': 'organization.form.name_placeholder'|trans
+                        }
+                    }) }}
+                    {{ form_label(form.name, null, {
+                        'label_attr': {'class': 'form-label text-secondary'}
+                    }) }}
+                    {% if getValidationError('name') %}
+                        <div class="invalid-feedback">
+                            <i class="bi bi-exclamation-circle me-1"></i>{{ getValidationError('name') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.description, {
+                        'attr': {
+                            'class': (form.description.vars.valid ? 'form-control' : 'form-control is-invalid'),
+                            'placeholder': 'organization.form.description_placeholder'|trans,
+                            'style': 'min-height: 120px;'
+                        }
+                    }) }}
+                    {{ form_label(form.description, null, {
+                        'label_attr': {'class': 'form-label text-secondary'}
+                    }) }}
+                    {% if getValidationError('description') %}
+                        <div class="invalid-feedback">
+                            <i class="bi bi-exclamation-circle me-1"></i>{{ getValidationError('description') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Preview Section -->
+    {% if form.name.vars.data or form.description.vars.data %}
+        <div class="mb-4 p-3 rounded-3" style="background: rgba(0, 245, 255, 0.05); border: 1px solid rgba(0, 245, 255, 0.2);">
+            <h6 class="text-neon mb-2">
+                <i class="bi bi-eye me-1"></i>{{ 'organization.form.preview'|trans }}
+            </h6>
+            <div class="infinity-card-mini p-3">
+                <div class="d-flex align-items-start">
+                    <div class="p-2 rounded-circle me-3" style="background: var(--infinity-ai-gradient);">
+                        <i class="bi bi-building text-white"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="text-white mb-1">
+                            {{ form.name.vars.data ?: 'organization.form.name_placeholder'|trans }}
+                        </h6>
+                        <p class="text-secondary mb-0" style="font-size: 0.875rem;">
+                            {{ form.description.vars.data ?: 'organization.form.description_placeholder'|trans }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Submit Button -->
+    <div class="d-grid gap-2">
+        {{ form_widget(form.submit, {
+            'attr': {
+                'class': 'btn infinity-btn-primary',
+                'data-action': 'click->live#action',
+                'data-live-action-param': 'save'
+            }
+        }) }}
+
+        {% if isEdit %}
+            <button type="button"
+                    class="btn btn-outline-secondary"
+                    data-action="click->live#action"
+                    data-live-action-param="reset">
+                <i class="bi bi-arrow-clockwise me-2"></i>{{ 'button.reset_form'|trans }}
+            </button>
+        {% endif %}
+    </div>
+
+    {{ form_end(form, {'render_rest': false}) }}
+</div>
+
+<style>
+.infinity-card-mini {
+    background: var(--infinity-card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: var(--infinity-neon);
+}
+
+.form-floating > .form-control {
+    background: var(--infinity-dark-surface);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.form-floating > .form-control:focus {
+    border-color: var(--infinity-neon);
+    box-shadow: 0 0 0 0.2rem rgba(0, 245, 255, 0.25);
+}
+
+.is-invalid {
+    border-color: #ef4444 !important;
+}
+
+.invalid-feedback {
+    display: block;
+}
+</style>
