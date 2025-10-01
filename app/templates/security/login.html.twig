@@ -4,11 +4,18 @@
 
 {% block body %}
 <div class="row justify-content-center mt-5">
-    <div class="col-md-5">
+    <div class="col-sm-10 col-md-8 col-lg-5">
         <div class="infinity-card p-4">
             <div class="text-center mb-4">
-                <div class="d-inline-block p-3 rounded-circle mb-3" style="background: var(--infinity-ai-gradient);">
-                    <i class="bi bi-shield-lock text-white" style="font-size: 2.5rem;"></i>
+                <div class="d-inline-block mb-3">
+                    <img src="/infinity_logo_sm_dark.png"
+                         alt="Infinity"
+                         class="login-logo-dark"
+                         style="height: 60px; width: auto;">
+                    <img src="/infinity_logo_sm_light.png"
+                         alt="Infinity"
+                         class="login-logo-light"
+                         style="height: 60px; width: auto;">
                 </div>
                 <h2 class="text-gradient mb-2">{{ 'auth.welcome_back'|trans }}</h2>
                 <p class="text-secondary">{{ 'auth.login_to_continue'|trans }}</p>
@@ -20,34 +27,32 @@
                 </div>
             {% endif %}
 
-            <form method="post" action="{{ path('app_login') }}" data-controller="form-navigation">
+            <form method="post" action="{{ path('app_login') }}" id="loginForm">
                 <div class="mb-3">
-                    <label for="email" class="form-label text-white">
+                    <label for="email" class="form-label auth-label">
                         <i class="bi bi-envelope me-1"></i>{{ 'auth.email'|trans }}
                     </label>
                     <input
                         type="email"
-                        class="form-control"
+                        class="form-control auth-input"
                         id="email"
                         name="email"
                         value="{{ last_username }}"
                         required
                         autofocus
-                        style="background: var(--infinity-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
                     >
                 </div>
 
                 <div class="mb-3">
-                    <label for="password" class="form-label text-white">
+                    <label for="password" class="form-label auth-label">
                         <i class="bi bi-lock me-1"></i>{{ 'auth.password'|trans }}
                     </label>
                     <input
                         type="password"
-                        class="form-control"
+                        class="form-control auth-input"
                         id="password"
                         name="password"
                         required
-                        style="background: var(--infinity-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
                     >
                 </div>
 
@@ -60,7 +65,7 @@
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                <button type="submit" class="btn infinity-btn-primary w-100 mb-3" data-allow-enter-submit>
+                <button type="submit" class="btn infinity-btn-primary w-100 mb-3">
                     <i class="bi bi-box-arrow-in-right me-2"></i>{{ 'auth.sign_in'|trans }}
                 </button>
 
@@ -76,4 +81,86 @@
         </div>
     </div>
 </div>
+
+<style>
+/* Logo theme switching */
+.login-logo-dark {
+    display: block;
+}
+
+.login-logo-light {
+    display: none;
+}
+
+[data-theme="light"] .login-logo-dark {
+    display: none;
+}
+
+[data-theme="light"] .login-logo-light {
+    display: block;
+}
+
+/* Auth form responsive styling */
+.auth-label {
+    color: var(--infinity-text-primary) !important;
+    font-weight: 500;
+}
+
+.auth-input {
+    background: var(--infinity-card-bg) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--infinity-text-primary) !important;
+    transition: all 0.3s ease;
+}
+
+.auth-input:focus {
+    background: var(--infinity-card-bg) !important;
+    border-color: var(--infinity-neon) !important;
+    color: var(--infinity-text-primary) !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 245, 255, 0.25) !important;
+}
+
+.auth-input::placeholder {
+    color: var(--infinity-text-muted) !important;
+}
+
+/* Light theme support */
+[data-theme="light"] .auth-label {
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] .auth-input {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #1a1a1a !important;
+}
+
+[data-theme="light"] .auth-input:focus {
+    background: #ffffff !important;
+    border-color: #3b82f6 !important;
+    color: #1a1a1a !important;
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25) !important;
+}
+
+[data-theme="light"] .auth-input::placeholder {
+    color: #9ca3af !important;
+}
+</style>
+
+<script>
+// Handle Enter key submission
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginForm');
+    const passwordInput = document.getElementById('password');
+
+    if (passwordInput && loginForm) {
+        passwordInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                loginForm.submit();
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

@@ -29,6 +29,10 @@ doctrine:
         dql:
             string_functions:
                 unaccent: App\Doctrine\DQL\UnaccentFunction
+        filters:
+            organization_filter:
+                class: App\Doctrine\Filter\OrganizationFilter
+                enabled: false
 
 when@test:
     doctrine:

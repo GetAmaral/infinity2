@@ -19,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -76,7 +77,7 @@ class UserFormType extends AbstractType
                         ->orderBy('o.name', 'ASC');
                 },
             ])
-            ->add('roles', EntityType::class, [
+            ->add('roleEntities', EntityType::class, [
                 'class' => Role::class,
                 'choice_label' => 'name',
                 'label' => 'user.form.roles',

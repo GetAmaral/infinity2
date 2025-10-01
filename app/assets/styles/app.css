@@ -780,6 +780,23 @@ main {
     color: #4f46e5;
 }
 
+/* Organization Switcher Styling */
+.org-switcher-title {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.org-switcher-subtitle {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="light"] .org-switcher-title {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="light"] .org-switcher-subtitle {
+    color: rgba(0, 0, 0, 0.5);
+}
+
 /* Light Theme - Modal Variables */
 [data-theme="light"] {
     --infinity-overlay-bg: rgba(0, 0, 0, 0.6);

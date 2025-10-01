@@ -5,30 +5,41 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use App\Service\ListPreferencesService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Security\Voter\UserVoter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class UserController extends AbstractController
+/**
+ * @extends BaseApiController<User>
+ */
+#[Route('/user')]
+final class UserController extends BaseApiController
 {
-    #[Route('/user', name: 'user_index')]
-    public function index(
-        UserRepository $repository,
-        ListPreferencesService $listPreferencesService
-    ): Response
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserRepository $repository,
+        private readonly ListPreferencesService $listPreferencesService,
+        private readonly UserPasswordHasherInterface $passwordHasher
+    ) {}
+
+    #[Route('', name: 'user_index', methods: ['GET'])]
+    public function index(): Response
     {
-        $users = $repository->findAll();
+        $this->denyAccessUnlessGranted(UserVoter::LIST);
 
         // Get saved view preference from list preferences
-        $preferences = $listPreferencesService->getEntityPreferences('users');
+        $preferences = $this->listPreferencesService->getEntityPreferences('users');
         $savedView = $preferences['view'] ?? 'grid';
 
         return $this->render('user/index.html.twig', [
             // Generic entity list variables for base template
-            'entities' => $users,
+            'entities' => [], // Empty - JS will load via API
             'entity_name' => 'user',
             'entity_name_plural' => 'users',
             'page_icon' => 'bi bi-people',
@@ -38,50 +49,172 @@ final class UserController extends AbstractController
             'enable_create_button' => true,
 
             // Backward compatibility: keep old variable name
-            'users' => $users,
+            'users' => [], // Empty - JS will load via API
         ]);
     }
 
-    #[Route('/user/{id}', name: 'user_show', requirements: ['id' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'])]
+    #[Route('/new', name: 'user_new', methods: ['GET', 'POST'])]
+    public function new(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted(UserVoter::CREATE);
+
+        $user = new User();
+        $form = $this->createForm(UserFormType::class, $user, [
+            'is_edit' => false,
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Hash password if provided
+            if ($form->has('plainPassword') && $plainPassword = $form->get('plainPassword')->getData()) {
+                $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
+            }
+
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'user.flash.created_successfully');
+
+            // Redirect back to referer if it's an organization users page
+            return $this->redirectToRefererOrRoute($request, 'user_index');
+        }
+
+        // Handle modal/AJAX requests
+        if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
+            return $this->render('user/_form_modal.html.twig', [
+                'user' => $user,
+                'form' => $form,
+                'is_edit' => false,
+            ]);
+        }
+
+        return $this->render('user/new.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'user_show', requirements: ['id' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['GET'])]
     public function show(User $user): Response
     {
+        $this->denyAccessUnlessGranted(UserVoter::VIEW, $user);
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
     }
 
-    #[Route('/api/search', name: 'user_api_search', methods: ['GET'])]
-    public function apiSearch(Request $request, UserRepository $repository): Response
+    #[Route('/{id}/edit', name: 'user_edit', requirements: ['id' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['GET', 'POST'])]
+    public function edit(Request $request, User $user): Response
     {
-        $query = $request->query->get('q', '');
-        $limit = min(10, max(1, (int) $request->query->get('limit', 10)));
+        $this->denyAccessUnlessGranted(UserVoter::EDIT, $user);
 
-        // For now, use findAll since UserRepository doesn't have searchByName yet
-        $allUsers = $repository->findAll();
+        $form = $this->createForm(UserFormType::class, $user, [
+            'is_edit' => true,
+        ]);
 
-        // Filter by name or email if query provided
-        if ($query) {
-            $query = strtolower($query);
-            $allUsers = array_filter($allUsers, function(User $user) use ($query) {
-                return str_contains(strtolower($user->getName()), $query) ||
-                       str_contains(strtolower($user->getEmail()), $query);
-            });
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Hash password if provided
+            if ($form->has('plainPassword') && $plainPassword = $form->get('plainPassword')->getData()) {
+                $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
+            }
+
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'user.flash.updated_successfully');
+
+            // Redirect back to referer if it's an organization users page
+            return $this->redirectToRefererOrRoute($request, 'user_index');
         }
 
-        // Limit results
-        $users = array_slice($allUsers, 0, $limit);
+        // Handle modal/AJAX requests
+        if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
+            return $this->render('user/_form_modal.html.twig', [
+                'user' => $user,
+                'form' => $form,
+                'is_edit' => true,
+            ]);
+        }
 
-        return $this->json([
-            'users' => array_map(function (User $user) {
-                return [
-                    'id' => $user->getId()->toString(),
-                    'name' => $user->getName(),
-                    'email' => $user->getEmail(),
-                    'organizationId' => $user->getOrganization()?->getId()->toString(),
-                    'organizationName' => $user->getOrganization()?->getName(),
-                    'createdAt' => $user->getCreatedAt()->format('c'),
-                ];
-            }, $users),
+        return $this->render('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
         ]);
+    }
+
+    #[Route('/{id}/delete', name: 'user_delete', requirements: ['id' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['POST', 'DELETE'])]
+    public function delete(Request $request, User $user): Response
+    {
+        $this->denyAccessUnlessGranted(UserVoter::DELETE, $user);
+
+        $userId = $user->getId()?->toString();
+        $userName = $user->getName();
+
+        if ($this->isCsrfTokenValid('delete-user-' . $userId, $request->request->get('_token'))) {
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'user.flash.deleted_successfully');
+
+            // Return Turbo Stream response for seamless UX
+            if ($request->headers->get('Accept') === 'text/vnd.turbo-stream.html') {
+                return $this->render('user/_turbo_stream_deleted.html.twig', [
+                    'userId' => $userId,
+                    'userName' => $userName,
+                ]);
+            }
+        } else {
+            $this->addFlash('error', 'user.flash.invalid_csrf_token');
+        }
+
+        return $this->redirectToRoute('user_index');
+    }
+
+    #[Route('/api/search', name: 'user_api_search', methods: ['GET'])]
+    public function apiSearch(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted(UserVoter::LIST);
+
+        // Use parent class implementation (BaseApiController)
+        // All logic delegated to UserRepository via BaseRepository
+        return $this->apiSearchAction($request);
+    }
+
+    /**
+     * Get repository for BaseApiController
+     */
+    protected function getRepository(): UserRepository
+    {
+        return $this->repository;
+    }
+
+    /**
+     * Get entity plural name for JSON response
+     */
+    protected function getEntityPluralName(): string
+    {
+        return 'users';
+    }
+
+    /**
+     * Transform User entity to array for JSON API response
+     */
+    protected function entityToArray(object $entity): array
+    {
+        assert($entity instanceof User);
+
+        return [
+            'id' => $entity->getId()?->toString() ?? '',
+            'name' => $entity->getName(),
+            'email' => $entity->getEmail(),
+            'organizationId' => $entity->getOrganization()?->getId()?->toString() ?? '',
+            'organizationName' => $entity->getOrganization()?->getName() ?? '',
+            'createdAt' => $entity->getCreatedAt()->format('c'),
+        ];
     }
 }

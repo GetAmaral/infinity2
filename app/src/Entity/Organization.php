@@ -31,6 +31,15 @@ class Organization extends EntityBase
     #[Groups(['organization:read', 'organization:write'])]
     protected string $name = '';
 
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(
+        pattern: '/^[a-z0-9\-]+$/',
+        message: 'The slug can only contain lowercase letters, numbers, and hyphens.'
+    )]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected string $slug = '';
+
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['organization:read', 'organization:write'])]
     protected ?string $description = null;
@@ -39,10 +48,15 @@ class Organization extends EntityBase
     #[Groups(['organization:read'])]
     protected Collection $users;
 
+    #[ORM\OneToMany(mappedBy: 'organization', targetEntity: Course::class)]
+    #[Groups(['organization:read'])]
+    protected Collection $courses;
+
     public function __construct()
     {
         parent::__construct();
         $this->users = new ArrayCollection();
+        $this->courses = new ArrayCollection();
     }
 
     public function getName(): string
@@ -53,7 +67,42 @@ class Organization extends EntityBase
     public function setName(string $name): self
     {
         $this->name = $name;
+        // Auto-generate slug if not set
+        if (empty($this->slug)) {
+            $this->slug = $this->generateSlugFromName($name);
+        }
         return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = strtolower($slug);
+        return $this;
+    }
+
+    /**
+     * Generate a URL-friendly slug from organization name
+     */
+    private function generateSlugFromName(string $name): string
+    {
+        // Convert to lowercase
+        $slug = strtolower($name);
+
+        // Replace spaces and special characters with hyphens
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+
+        // Remove leading/trailing hyphens
+        $slug = trim($slug, '-');
+
+        // Remove consecutive hyphens
+        $slug = preg_replace('/-+/', '-', $slug);
+
+        return $slug;
     }
 
     public function getDescription(): ?string
@@ -86,6 +135,33 @@ class Organization extends EntityBase
         if ($this->users->removeElement($user)) {
             if ($user->getOrganization() === $this) {
                 $user->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Course>
+     */
+    public function getCourses(): Collection
+    {
+        return $this->courses;
+    }
+
+    public function addCourse(Course $course): self
+    {
+        if (!$this->courses->contains($course)) {
+            $this->courses->add($course);
+            $course->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeCourse(Course $course): self
+    {
+        if ($this->courses->removeElement($course)) {
+            if ($course->getOrganization() === $this) {
+                $course->setOrganization(null);
             }
         }
         return $this;

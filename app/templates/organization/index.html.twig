@@ -26,21 +26,16 @@
                 </button>
             {% endif %}
             {% if is_granted('ORGANIZATION_DELETE', org) %}
-                <form method="post"
-                      action="{{ path('organization_delete', {id: org.id}) }}"
-                      class="d-inline"
-                      data-controller="confirm-delete"
-                      data-confirm-delete-message-value="{{ 'organization.confirm_delete'|trans({'%name%': org.name}) }}"
-                      data-confirm-delete-has-users-value="{{ org.users|length > 0 ? 'true' : 'false' }}">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete-organization-' ~ org.id) }}">
-                    <button type="submit"
-                            class="btn btn-sm btn-outline-danger"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            data-bs-title="{{ 'button.delete'|trans }}">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </form>
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger"
+                        data-delete-url="{{ path('organization_delete', {id: org.id}) }}"
+                        data-entity-name="{{ org.name }}"
+                        data-csrf-token="{{ csrf_token('delete-organization-' ~ org.id) }}"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="{{ 'button.delete'|trans }}">
+                    <i class="bi bi-trash"></i>
+                </button>
             {% endif %}
         </div>
     {% endif %}
@@ -74,17 +69,13 @@
             {% if is_granted('ORGANIZATION_DELETE', org) %}
             <li><hr class="dropdown-divider"></li>
             <li>
-                <form method="post"
-                      action="{{ path('organization_delete', {id: org.id}) }}"
-                      class="d-inline"
-                      data-controller="confirm-delete"
-                      data-confirm-delete-message-value="{{ 'organization.confirm_delete'|trans({'%name%': org.name}) }}"
-                      data-confirm-delete-has-users-value="{{ org.users|length > 0 ? 'true' : 'false' }}">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete-organization-' ~ org.id) }}">
-                    <button type="submit" class="dropdown-item text-danger">
-                        <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
-                    </button>
-                </form>
+                <button type="button"
+                        class="dropdown-item text-danger"
+                        data-delete-url="{{ path('organization_delete', {id: org.id}) }}"
+                        data-entity-name="{{ org.name }}"
+                        data-csrf-token="{{ csrf_token('delete-organization-' ~ org.id) }}">
+                    <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
+                </button>
             </li>
             {% endif %}
         </ul>

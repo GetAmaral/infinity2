@@ -1,0 +1,590 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ course.name }} - {{ 'course.singular'|trans }} - {{ 'page.infinity_suffix'|trans }}{% endblock %}
+
+{% block body %}
+<!-- Navigation -->
+<div class="mb-4">
+    <a href="{{ path('course_index') }}" class="btn infinity-btn-ai">
+        <i class="bi bi-arrow-left me-2"></i>{{ 'course.back_to_list'|trans }}
+    </a>
+</div>
+
+<!-- Course Header -->
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center">
+            <div class="p-3 rounded-3 me-4" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                <i class="bi bi-book text-white fs-2"></i>
+            </div>
+            <div>
+                <h1 class="text-gradient mb-2">{{ course.name }}</h1>
+                {% if course.description %}
+                    <p class="text-secondary mb-0 fs-5">{{ course.description }}</p>
+                {% else %}
+                    <p class="text-muted mb-0 fst-italic">{{ 'empty.no_description'|trans }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="ai-status-indicator" style="{{ course.active ? 'background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(22, 163, 74, 0.15)); border-color: rgba(34, 197, 94, 0.3); color: #22c55e;' : 'background: rgba(156, 163, 175, 0.15); border-color: rgba(156, 163, 175, 0.3); color: #9ca3af;' }}">
+                <i class="bi bi-{{ course.active ? 'check-circle-fill' : 'x-circle-fill' }}"></i> {{ course.active ? 'course.status.active'|trans : 'course.status.inactive'|trans }}
+            </div>
+            <div class="real-time-badge">
+                {% if lectures|length == 0 %}
+                    {{ 'course.no_lectures'|trans }}
+                {% else %}
+                    {{ lectures|length }} {{ 'course.lectures'|trans }}
+                {% endif %}
+            </div>
+            {% if is_granted('COURSE_EDIT', course) %}
+                <button type="button"
+                        class="btn infinity-btn-primary btn-sm"
+                        data-controller="modal-opener"
+                        data-modal-opener-url-value="{{ path('course_edit', {id: course.id}) }}"
+                        data-action="click->modal-opener#open">
+                    <i class="bi bi-pencil me-1"></i>{{ 'button.edit'|trans }}
+                </button>
+            {% endif %}
+            {% if is_granted('COURSE_DELETE', course) %}
+                <button type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        data-delete-url="{{ path('course_delete', {id: course.id}) }}"
+                        data-entity-name="{{ course.name }}"
+                        data-csrf-token="{{ csrf_token('delete-course-' ~ course.id) }}">
+                    <i class="bi bi-trash me-1"></i>{{ 'button.delete'|trans }}
+                </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Course Details Bento Grid -->
+<div class="bento-grid">
+    <!-- Quick Stats - Lectures Count -->
+    <div class="bento-item">
+        <div class="metric-card">
+            <i class="bi bi-collection-fill text-neon fs-1"></i>
+            <div class="metric-value">{{ lectures|length }}</div>
+            <div class="metric-label">{{ 'course.total_lectures'|trans }}</div>
+            <div class="metric-trend trend-up">
+                <i class="bi bi-arrow-up"></i> {{ course.active ? 'course.status.active'|trans : 'course.status.inactive'|trans }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats - Total Duration -->
+    <div class="bento-item">
+        <div class="metric-card">
+            <i class="bi bi-clock-fill text-neon fs-1"></i>
+            <div class="metric-value">{{ course.totalLengthFormatted }}</div>
+            <div class="metric-label">{{ 'course.total_duration'|trans }}</div>
+            <div class="metric-trend">
+                <i class="bi bi-calendar me-1"></i> {{ course.releaseDate ? course.releaseDate|date('M d, Y') : 'course.no_release_date'|trans }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Information -->
+    <div class="bento-item">
+        <div class="infinity-card ai-enhanced p-4 h-100">
+            <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-info-circle text-neon me-2"></i>
+                <h6 class="text-gradient mb-0">{{ 'course.information'|trans }}</h6>
+            </div>
+            <div class="text-secondary">
+                <p class="mb-2">
+                    <i class="bi bi-person text-success me-2"></i>
+                    <strong>{{ 'course.owner'|trans }}:</strong> {{ course.owner.name }}
+                </p>
+                <p class="mb-2">
+                    <i class="bi bi-building text-neon me-2"></i>
+                    <strong>{{ 'organization.singular'|trans }}:</strong> {{ course.organization.name }}
+                </p>
+                <p class="mb-0">
+                    <i class="bi bi-calendar-check text-info me-2"></i>
+                    <strong>{{ 'course.created_at'|trans }}:</strong> {{ course.createdAt|date('M d, Y') }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lectures Section -->
+    <div class="bento-item large">
+        <div class="infinity-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="text-neon mb-0">
+                    <i class="bi bi-collection me-2"></i>{{ 'course.lectures_in_course'|trans }} ({{ lectures|length }})
+                </h5>
+                {% if is_granted('COURSE_EDIT', course) %}
+                    <button type="button"
+                            class="btn infinity-btn-primary btn-sm"
+                            data-controller="modal-opener"
+                            data-modal-opener-url-value="{{ path('course_lecture_new', {courseId: course.id}) }}"
+                            data-action="click->modal-opener#open">
+                        <i class="bi bi-plus-circle me-1"></i>{{ 'button.add_lecture'|trans }}
+                    </button>
+                {% endif %}
+            </div>
+
+            {% if lectures is empty %}
+                <div class="text-center py-5">
+                    <i class="bi bi-collection" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
+                    <h5 class="text-white mt-3 mb-2">{{ 'empty.no_lectures_yet'|trans }}</h5>
+                    <p class="text-secondary mb-4">{{ 'empty.course_lectures_description'|trans }}</p>
+                    {% if is_granted('COURSE_EDIT', course) %}
+                        <button type="button"
+                                class="btn infinity-btn-primary"
+                                data-controller="modal-opener"
+                                data-modal-opener-url-value="{{ path('course_lecture_new', {courseId: course.id}) }}"
+                                data-action="click->modal-opener#open">
+                            <i class="bi bi-plus-circle me-2"></i>{{ 'button.add_first_lecture'|trans }}
+                        </button>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div data-controller="lecture-reorder"
+                     data-lecture-reorder-update-url-value="{{ path('course_lectures_reorder', {id: course.id}) }}"
+                     data-lecture-reorder-course-id-value="{{ course.id }}"
+                     data-lecture-reorder-target="container">
+                    {% for lecture in lectures %}
+                        <div class="mb-3"
+                             data-lecture-reorder-target="item"
+                             data-lecture-id="{{ lecture.id }}">
+                            <div class="infinity-card p-3 lecture-card">
+                                <div class="d-flex align-items-start mb-2">
+                                    <div class="drag-handle me-2" style="cursor: grab; color: var(--infinity-text-muted); font-size: 1.2rem;">
+                                        <i class="bi bi-grip-vertical"></i>
+                                    </div>
+                                    <div class="p-2 rounded-3 me-3 lecture-order-badge" style="background: linear-gradient(135deg, #3b82f6, #2563eb); min-width: 48px; display: flex; align-items: center; justify-content: center;">
+                                        <span class="text-white fw-bold">{{ lecture.viewOrder }}</span>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="text-white mb-1">{{ lecture.name }}</h6>
+                                        {% if lecture.description %}
+                                            <small class="text-secondary d-block mb-2">{{ lecture.description|length > 80 ? lecture.description|slice(0, 80) ~ '...' : lecture.description }}</small>
+                                        {% endif %}
+                                        <div class="d-flex gap-2 flex-wrap align-items-center">
+                                            {% if lecture.lengthSeconds > 0 %}
+                                                <span class="real-time-badge">
+                                                    <i class="bi bi-clock me-1"></i>
+                                                    {% if lecture.lengthSeconds < 60 %}
+                                                        {{ lecture.lengthSeconds }} sec
+                                                    {% else %}
+                                                        {{ (lecture.lengthSeconds / 60)|round }} min
+                                                    {% endif %}
+                                                </span>
+                                            {% endif %}
+
+                                            {# Processing Status with Real-time Updates #}
+                                            <div {% if lecture.processingStatus in ['processing', 'pending'] %}
+                                                     data-controller="lecture-processing"
+                                                     data-lecture-processing-course-id-value="{{ course.id }}"
+                                                     data-lecture-processing-lecture-id-value="{{ lecture.id }}"
+                                                     data-lecture-processing-status-url-value="{{ path('course_lecture_processing_status', {courseId: course.id, lectureId: lecture.id}) }}"
+                                                 {% endif %}
+                                                 class="d-flex gap-2 align-items-center flex-wrap">
+
+                                                {# Status Badge #}
+                                                <span data-lecture-processing-target="status" class="badge {% if lecture.processingStatus == 'completed' %}bg-success{% elseif lecture.processingStatus == 'processing' %}bg-warning text-dark{% elseif lecture.processingStatus == 'failed' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                                    {% if lecture.processingStatus == 'completed' %}
+                                                        <i class="bi bi-check-circle me-1"></i>{{ ('course.lecture.status.completed')|trans }}
+                                                    {% elseif lecture.processingStatus == 'processing' %}
+                                                        <i class="bi bi-hourglass-split me-1"></i>{{ ('course.lecture.status.processing')|trans }}
+                                                    {% elseif lecture.processingStatus == 'failed' %}
+                                                        <i class="bi bi-exclamation-triangle me-1"></i>{{ ('course.lecture.status.failed')|trans }}
+                                                    {% else %}
+                                                        <i class="bi bi-clock-history me-1"></i>{{ ('course.lecture.status.pending')|trans }}
+                                                    {% endif %}
+                                                </span>
+
+                                                {# Watch Button (only if completed) #}
+                                                <a href="{{ path('course_lecture_watch', {courseId: course.id, lectureId: lecture.id}) }}"
+                                                   data-lecture-processing-target="watchButton"
+                                                   class="real-time-badge"
+                                                   style="text-decoration: none; {{ lecture.processingStatus != 'completed' ? 'display: none;' : '' }}">
+                                                    <i class="bi bi-play-circle me-1"></i>{{ 'course.lecture.watch_video'|trans }}
+                                                </a>
+
+                                                {# Progress Bar (only if processing or pending) #}
+                                                {% if lecture.processingStatus in ['processing', 'pending'] %}
+                                                    <div style="width: 200px;">
+                                                        <div class="progress" style="height: 6px; background: rgba(255, 255, 255, 0.1);">
+                                                            <div data-lecture-processing-target="progressBar"
+                                                                 class="progress-bar bg-info progress-bar-striped progress-bar-animated"
+                                                                 role="progressbar"
+                                                                 style="width: {{ lecture.processingPercentage }}%"
+                                                                 aria-valuenow="{{ lecture.processingPercentage }}"
+                                                                 aria-valuemin="0"
+                                                                 aria-valuemax="100">
+                                                            </div>
+                                                        </div>
+                                                        <small class="text-muted d-flex justify-content-between mt-1">
+                                                            <span data-lecture-processing-target="step">{{ lecture.processingStep ?: 'Waiting...' }}</span>
+                                                            <span data-lecture-processing-target="percentage">{{ lecture.processingPercentage }}%</span>
+                                                        </small>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-1">
+                                        {% if is_granted('COURSE_EDIT', course) %}
+                                            <button type="button"
+                                                    class="btn btn-sm infinity-btn-ai"
+                                                    data-controller="modal-opener"
+                                                    data-modal-opener-url-value="{{ path('course_lecture_edit', {courseId: course.id, lectureId: lecture.id}) }}"
+                                                    data-action="click->modal-opener#open"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-title="{{ 'button.edit'|trans }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                        {% endif %}
+                                        {% if is_granted('COURSE_DELETE', course) %}
+                                            <button type="button"
+                                                    class="btn btn-sm infinity-btn-danger"
+                                                    data-delete-url="{{ path('course_lecture_delete', {courseId: course.id, lectureId: lecture.id}) }}"
+                                                    data-entity-name="{{ lecture.name }}"
+                                                    data-csrf-token="{{ csrf_token('delete-lecture-' ~ lecture.id) }}"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-title="{{ 'button.delete'|trans }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Enrolled Students Section (ADMIN ONLY) -->
+    {% if is_granted('ROLE_ADMIN') %}
+    <div class="bento-item large">
+        <div class="infinity-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="text-neon mb-0">
+                    <i class="bi bi-people me-2"></i>{{ 'course.enrolled_students'|trans }} ({{ course.studentCourses|length }})
+                </h5>
+                <button type="button"
+                        class="btn infinity-btn-primary btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#enrollStudentModal">
+                    <i class="bi bi-person-plus me-1"></i>{{ 'course.enroll_student'|trans }}
+                </button>
+            </div>
+
+            {% if course.studentCourses is empty %}
+                <div class="text-center py-5">
+                    <i class="bi bi-people" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
+                    <h5 class="text-white mt-3 mb-2">{{ 'empty.no_students_enrolled'|trans }}</h5>
+                    <p class="text-secondary mb-4">{{ 'empty.course_enrollment_description'|trans }}</p>
+                    <button type="button"
+                            class="btn infinity-btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#enrollStudentModal">
+                        <i class="bi bi-person-plus me-2"></i>{{ 'course.enroll_first_student'|trans }}
+                    </button>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr class="text-white">
+                                <th><i class="bi bi-person me-2"></i>{{ 'user.name'|trans }}</th>
+                                <th><i class="bi bi-envelope me-2"></i>{{ 'user.email'|trans }}</th>
+                                <th><i class="bi bi-calendar me-2"></i>{{ 'course.enrolled_at'|trans }}</th>
+                                <th><i class="bi bi-graph-up me-2"></i>{{ 'course.progress'|trans }}</th>
+                                <th><i class="bi bi-toggle-on me-2"></i>{{ 'course.status'|trans }}</th>
+                                <th class="text-end">{{ 'button.actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enrollment in course.studentCourses %}
+                            <tr class="text-secondary">
+                                <td class="text-white fw-bold">{{ enrollment.student.name }}</td>
+                                <td>{{ enrollment.student.email }}</td>
+                                <td>{{ enrollment.enrolledAt|date('M d, Y') }}</td>
+                                <td>
+                                    <div class="progress" style="height: 6px; width: 100px;">
+                                        <div class="progress-bar bg-success"
+                                             role="progressbar"
+                                             style="width: {{ enrollment.progressPercentage }}%"
+                                             aria-valuenow="{{ enrollment.progressPercentage }}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">{{ enrollment.progressPercentage|round }}%</small>
+                                </td>
+                                <td>
+                                    {% if enrollment.active %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i>{{ 'course.enrollment.active'|trans }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-x-circle me-1"></i>{{ 'course.enrollment.inactive'|trans }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <form method="post"
+                                          action="{{ path('course_enrollment_toggle', {courseId: course.id, enrollmentId: enrollment.id}) }}"
+                                          style="display: inline-block;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('toggle-enrollment-' ~ enrollment.id) }}">
+                                        <button type="submit"
+                                                class="btn btn-sm {{ enrollment.active ? 'btn-warning' : 'btn-success' }}"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-title="{{ enrollment.active ? 'course.enrollment.deactivate'|trans : 'course.enrollment.activate'|trans }}">
+                                            <i class="bi bi-{{ enrollment.active ? 'pause-circle' : 'play-circle' }}"></i>
+                                        </button>
+                                    </form>
+                                    <form method="post"
+                                          action="{{ path('course_enrollment_remove', {courseId: course.id, enrollmentId: enrollment.id}) }}"
+                                          style="display: inline-block;"
+                                          onsubmit="return confirm('{{ 'course.enrollment.confirm_remove'|trans({'%student%': enrollment.student.name}) }}');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('remove-enrollment-' ~ enrollment.id) }}">
+                                        <button type="submit"
+                                                class="btn btn-sm infinity-btn-danger"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-title="{{ 'button.remove'|trans }}">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Enroll Student Modal (ADMIN ONLY) -->
+{% if is_granted('ROLE_ADMIN') %}
+<div class="modal fade" id="enrollStudentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="background: var(--infinity-card-bg); border: 1px solid var(--infinity-border-color);"
+             data-controller="enrollment-switch"
+             data-enrollment-switch-course-id-value="{{ course.id }}"
+             data-enrollment-switch-enroll-url-value="{{ path('course_enrollment_add_multi', {courseId: course.id}) }}"
+             data-enrollment-switch-deactivate-url-value="{{ path('course_enrollment_deactivate_multi', {courseId: course.id}) }}">
+            <div class="modal-header" style="border-bottom: 1px solid var(--infinity-border-color);">
+                <h5 class="modal-title text-white">
+                    <i class="bi bi-people me-2"></i>{{ 'course.manage_enrollments'|trans }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <!-- Search Bar -->
+                <div class="p-3 sticky-top" style="background: var(--infinity-card-bg); border-bottom: 1px solid var(--infinity-border-color); z-index: 10;">
+                    <div class="input-group">
+                        <span class="input-group-text" style="background: var(--infinity-bg); border-color: var(--infinity-border-color);">
+                            <i class="bi bi-search text-white"></i>
+                        </span>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="{{ 'course.enrollment.search_by_name'|trans }}"
+                               data-enrollment-switch-target="searchInput"
+                               data-action="input->enrollment-switch#search"
+                               style="background: var(--infinity-bg); border-color: var(--infinity-border-color); color: white;">
+                    </div>
+                    <small class="text-muted d-block mt-2">
+                        <i class="bi bi-info-circle me-1"></i>{{ 'course.enrollment.switch_hint'|trans }}
+                    </small>
+                </div>
+
+                <!-- User List with Switches -->
+                <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+                    {% set enrolledUserIds = course.studentCourses|filter(sc => sc.active)|map(sc => sc.student.id.toString) %}
+                    {% for user in availableUsers %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center py-3"
+                         style="background: var(--infinity-card-bg); border-color: var(--infinity-border-color);"
+                         data-enrollment-switch-target="userRow"
+                         data-user-name="{{ user.name }}">
+                        <div class="d-flex align-items-center flex-grow-1">
+                            <div class="me-3">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                     style="width: 40px; height: 40px; background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                                    <i class="bi bi-person-fill text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 text-white" data-enrollment-switch-target="userName">{{ user.name }}</h6>
+                                <small class="text-muted">{{ user.email }}</small>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   role="switch"
+                                   id="switch-{{ user.id }}"
+                                   data-enrollment-switch-target="userSwitch"
+                                   data-user-id="{{ user.id }}"
+                                   {{ user.id.toString in enrolledUserIds ? 'checked' : '' }}
+                                   style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                            <label class="form-check-label text-white ms-2" for="switch-{{ user.id }}" style="cursor: pointer;">
+                                <span class="badge {{ user.id.toString in enrolledUserIds ? 'bg-success' : 'bg-secondary' }}">
+                                    {{ user.id.toString in enrolledUserIds ? 'course.enrollment.enrolled'|trans : 'course.enrollment.not_enrolled'|trans }}
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid var(--infinity-border-color);">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    {{ 'button.cancel'|trans }}
+                </button>
+                <button type="button"
+                        class="btn infinity-btn-primary"
+                        data-enrollment-switch-target="confirmButton"
+                        data-action="click->enrollment-switch#confirm">
+                    <i class="bi bi-check-circle me-2"></i>{{ 'button.confirm'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+/* Drag and Drop Styles */
+.lecture-card {
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.lecture-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.drag-handle {
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.lecture-card:hover .drag-handle {
+    opacity: 1;
+}
+
+.drag-handle:active {
+    cursor: grabbing !important;
+}
+
+/* Dragging state */
+[data-lecture-reorder-target="item"][draggable="true"] {
+    cursor: move;
+}
+
+[data-lecture-reorder-target="item"].dragging-placeholder {
+    pointer-events: none;
+}
+
+/* Drag over indicators */
+.drag-over-top {
+    border-top: 3px solid var(--infinity-neon) !important;
+    margin-top: -3px;
+}
+
+.drag-over-bottom {
+    border-bottom: 3px solid var(--infinity-neon) !important;
+    margin-bottom: -3px;
+}
+
+/* Reorder indicator */
+.lecture-reorder-indicator {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    animation: slideDown 0.3s ease-out;
+}
+
+.lecture-reorder-indicator.saving {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.15));
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #3b82f6;
+}
+
+.lecture-reorder-indicator.success {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(22, 163, 74, 0.15));
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+}
+
+.lecture-reorder-indicator.error {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Danger button matching infinity-btn-ai style */
+.infinity-btn-danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    font-weight: 500;
+    transition: all 0.2s;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.infinity-btn-danger:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.25));
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #ef4444;
+    transform: translateY(-1px);
+}
+
+/* Ensure edit button has same fixed size */
+.lecture-card .infinity-btn-ai {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+</style>
+{% endblock %}

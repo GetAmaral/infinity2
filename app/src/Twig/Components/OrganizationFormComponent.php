@@ -73,7 +73,7 @@ final class OrganizationFormComponent extends AbstractController
             // Emit a browser event for the parent to handle
             $this->emit('organization:saved', [
                 'organization' => [
-                    'id' => $organization->getId()->toString(),
+                    'id' => $organization->getId()?->toString() ?? '',
                     'name' => $organization->getName(),
                     'description' => $organization->getDescription(),
                     'isNew' => !$this->isEdit,

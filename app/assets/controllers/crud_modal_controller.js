@@ -7,9 +7,19 @@ export default class extends Controller {
         // Prevent body scroll
         document.body.style.overflow = 'hidden';
 
+        // Track if form has been modified
+        this.formModified = false;
+        this.initialFormData = null;
+
+        // Capture initial form state after a short delay
+        setTimeout(() => {
+            this.captureInitialFormState();
+            this.setupFormChangeTracking();
+        }, 200);
+
         // Focus first input
         setTimeout(() => {
-            const firstInput = this.formTarget?.querySelector('input:not([type=hidden]), textarea');
+            const firstInput = this.formTarget?.querySelector('input:not([type=hidden]), textarea, select');
             firstInput?.focus();
         }, 100);
 
@@ -23,8 +33,67 @@ export default class extends Controller {
         document.removeEventListener('keydown', this.boundHandleEscape);
     }
 
+    /**
+     * Capture the initial state of the form
+     */
+    captureInitialFormState() {
+        if (!this.hasFormTarget) return;
+
+        const formData = new FormData(this.formTarget);
+        this.initialFormData = {};
+
+        for (let [key, value] of formData.entries()) {
+            this.initialFormData[key] = value;
+        }
+    }
+
+    /**
+     * Setup form change tracking
+     */
+    setupFormChangeTracking() {
+        if (!this.hasFormTarget) return;
+
+        // Track changes on all inputs
+        const inputs = this.formTarget.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => this.checkFormChanges());
+            input.addEventListener('change', () => this.checkFormChanges());
+        });
+    }
+
+    /**
+     * Check if form has been modified
+     */
+    checkFormChanges() {
+        if (!this.hasFormTarget || !this.initialFormData) return;
+
+        const formData = new FormData(this.formTarget);
+        let hasChanges = false;
+
+        // Check if any field has changed
+        for (let [key, value] of formData.entries()) {
+            if (this.initialFormData[key] !== value) {
+                hasChanges = true;
+                break;
+            }
+        }
+
+        // Also check if fields were removed
+        for (let key in this.initialFormData) {
+            if (!formData.has(key)) {
+                hasChanges = true;
+                break;
+            }
+        }
+
+        this.formModified = hasChanges;
+    }
+
     async submit(event) {
         event.preventDefault();
+
+        // Mark as not modified since we're submitting
+        this.formModified = false;
 
         const submitBtn = this.hasSubmitButtonTarget ? this.submitButtonTarget : null;
         const originalContent = submitBtn?.innerHTML;
@@ -60,6 +129,8 @@ export default class extends Controller {
                 if (container) {
                     container.innerHTML = html;
                 }
+                // Mark as modified again since save failed
+                this.formModified = true;
             } else if (response.ok) {
                 // Success - redirect to index
                 window.location.href = '/organization';
@@ -67,6 +138,8 @@ export default class extends Controller {
         } catch (error) {
             console.error('Form submission error:', error);
             alert('An error occurred while saving. Please try again.');
+            // Mark as modified again since save failed
+            this.formModified = true;
         } finally {
             if (submitBtn && document.body.style.overflow === 'hidden') {
                 submitBtn.disabled = false;
@@ -75,9 +148,27 @@ export default class extends Controller {
         }
     }
 
-    close(event) {
+    async close(event) {
         event?.preventDefault();
+
+        // Check if form has unsaved changes
+        if (this.formModified) {
+            // Show inline confirmation in footer instead of another modal
+            this.showInlineConfirmation();
+            return; // Don't close yet
+        }
+
         // Clear the modal container
+        const container = document.getElementById('global-modal-container');
+        if (container) {
+            container.innerHTML = '';
+        }
+    }
+
+    /**
+     * Actually close the modal (called after user confirms)
+     */
+    forceClose() {
         const container = document.getElementById('global-modal-container');
         if (container) {
             container.innerHTML = '';
@@ -100,5 +191,97 @@ export default class extends Controller {
         if (event.key === 'Escape') {
             this.close();
         }
+    }
+
+    /**
+     * Show inline confirmation by replacing footer buttons
+     */
+    showInlineConfirmation() {
+        // Find the footer
+        const footer = this.element.querySelector('.modal-footer-bar');
+        if (!footer) return;
+
+        // Store original footer HTML
+        if (!this.originalFooterHTML) {
+            this.originalFooterHTML = footer.innerHTML;
+        }
+
+        // Replace with confirmation buttons
+        footer.innerHTML = `
+            <div class="w-100">
+                <div class="alert alert-warning d-flex align-items-center mb-3" style="background: rgba(251, 146, 60, 0.15); border: 1px solid rgba(251, 146, 60, 0.4); border-radius: 10px; padding: 0.875rem 1rem;">
+                    <i class="bi bi-exclamation-triangle me-2" style="font-size: 1.25rem; color: #f97316; flex-shrink: 0;"></i>
+                    <span style="color: #1a1a1a; font-weight: 600; line-height: 1.5;">You have unsaved changes. Are you sure you want to discard them?</span>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn-modal-secondary flex-fill" data-action="click->crud-modal#cancelClose">
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Continue Editing
+                    </button>
+                    <button type="button" class="btn-modal-danger flex-fill" data-action="click->crud-modal#confirmClose">
+                        <i class="bi bi-trash me-2"></i>
+                        Discard Changes
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Add danger button style
+        const style = document.createElement('style');
+        style.textContent = `
+            .btn-modal-danger {
+                padding: 0.75rem 1.75rem;
+                border-radius: 10px;
+                font-weight: 600;
+                font-size: 0.9375rem;
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            }
+
+            .btn-modal-danger:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+            }
+
+            .btn-modal-danger:active {
+                transform: translateY(0);
+            }
+        `;
+        if (!document.getElementById('modal-danger-style')) {
+            style.id = 'modal-danger-style';
+            document.head.appendChild(style);
+        }
+    }
+
+    /**
+     * Cancel close - restore original footer
+     */
+    cancelClose(event) {
+        event?.preventDefault();
+
+        const footer = this.element.querySelector('.modal-footer-bar');
+        if (footer && this.originalFooterHTML) {
+            footer.innerHTML = this.originalFooterHTML;
+        }
+    }
+
+    /**
+     * Confirm close - discard changes and close modal
+     */
+    confirmClose(event) {
+        event?.preventDefault();
+
+        // Mark as not modified so we don't show confirmation again
+        this.formModified = false;
+
+        // Close the modal
+        this.forceClose();
     }
 }

@@ -41,17 +41,14 @@ export default class extends Controller {
 
         this.showConfirmationModal(message, () => {
             // User confirmed - we need to allow this specific submission
-            console.log('User confirmed deletion, preparing to submit form');
             this.allowSubmit = true;
 
             // Use requestSubmit to trigger the form submission properly
             // This will re-trigger the submit event, but allowSubmit flag will let it through
             try {
                 if (typeof this.element.requestSubmit === 'function') {
-                    console.log('Using requestSubmit()');
                     this.element.requestSubmit();
                 } else {
-                    console.log('Using submit() fallback');
                     this.element.submit();
                 }
             } catch (error) {

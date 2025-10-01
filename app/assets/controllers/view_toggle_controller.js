@@ -18,6 +18,13 @@ export default class extends Controller {
     };
 
     connect() {
+        // Prevent duplicate initialization during Turbo navigation
+        if (this.element.dataset.viewToggleInitialized === 'true') {
+            console.log('🔄 View toggle already initialized, skipping...');
+            return;
+        }
+        this.element.dataset.viewToggleInitialized = 'true';
+
         this.entityName = this.getEntityNameFromPage();
         this.currentView = 'grid';
         this.searchTerm = '';
@@ -53,6 +60,13 @@ export default class extends Controller {
             // Fetch initial data from API
             this.fetchAndRender();
         });
+    }
+
+    disconnect() {
+        // Clean up initialization flag when controller disconnects
+        if (this.element) {
+            delete this.element.dataset.viewToggleInitialized;
+        }
     }
 
     /**
@@ -331,7 +345,9 @@ export default class extends Controller {
         });
 
         container.innerHTML = html;
-        this.initializeBootstrap();
+
+        // Trigger Bootstrap re-initialization via global function
+        this.triggerBootstrapInit();
     }
 
     /**
@@ -356,7 +372,9 @@ export default class extends Controller {
         });
 
         container.innerHTML = html;
-        this.initializeBootstrap();
+
+        // Trigger Bootstrap re-initialization via global function
+        this.triggerBootstrapInit();
     }
 
     /**
@@ -392,7 +410,9 @@ export default class extends Controller {
         });
 
         tbody.innerHTML = html;
-        this.initializeBootstrap();
+
+        // Trigger Bootstrap re-initialization via global function
+        this.triggerBootstrapInit();
     }
 
     /**
@@ -538,14 +558,6 @@ export default class extends Controller {
         return `
             <tr id="organization-row-${item.id}">
                 <td>
-                    <div class="d-none d-lg-flex gap-1">
-                        <a href="/organization/${item.id}" class="btn btn-sm btn-outline-light" data-bs-toggle="tooltip" title="View Details">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                        <button type="button" class="btn btn-sm btn-outline-light" data-controller="modal-opener" data-modal-opener-url-value="/organization/${item.id}/edit" data-action="click->modal-opener#open" data-bs-toggle="tooltip" title="Edit">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                    </div>
                     ${this.renderDropdown(item)}
                 </td>
                 <td>
@@ -567,6 +579,7 @@ export default class extends Controller {
      * Render actions dropdown
      */
     renderDropdown(item) {
+        const entitySingular = this.entityName.replace(/s$/, '');
         return `
             <div class="dropdown">
                 <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-expanded="false">
@@ -574,23 +587,23 @@ export default class extends Controller {
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="background: var(--infinity-dark-surface);">
                     <li>
-                        <a class="dropdown-item" href="/organization/${item.id}">
+                        <a class="dropdown-item" href="/${entitySingular}/${item.id}">
                             <i class="bi bi-eye me-2"></i>View Details
                         </a>
                     </li>
                     <li>
-                        <button type="button" class="dropdown-item" data-controller="modal-opener" data-modal-opener-url-value="/organization/${item.id}/edit" data-action="click->modal-opener#open">
+                        <button type="button" class="dropdown-item" data-controller="modal-opener" data-modal-opener-url-value="/${entitySingular}/${item.id}/edit" data-action="click->modal-opener#open">
                             <i class="bi bi-pencil me-2"></i>Edit
                         </button>
                     </li>
-                    <li>
-                        <a class="dropdown-item" href="/organization/${item.id}/users">
+                    ${entitySingular === 'organization' ? `<li>
+                        <a class="dropdown-item" href="/${entitySingular}/${item.id}/users">
                             <i class="bi bi-people me-2"></i>Manage Users
-                        </a>
+                        </a>` : ''}
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                        <form method="post" action="/organization/${item.id}/delete" class="d-inline" data-controller="confirm-delete" data-confirm-delete-message-value="Are you sure you want to delete ${this.escapeHtml(item.name)}?">
+                        <form method="post" action="/${entitySingular}/${item.id}/delete" class="d-inline" data-controller="confirm-delete" data-confirm-delete-message-value="Are you sure you want to delete ${this.escapeHtml(item.name)}?">
                             <input type="hidden" name="_token" value="">
                             <button type="submit" class="dropdown-item text-danger">
                                 <i class="bi bi-trash me-2"></i>Delete
@@ -630,20 +643,22 @@ export default class extends Controller {
     }
 
     /**
-     * Initialize Bootstrap components (tooltips, dropdowns)
+     * Trigger Bootstrap re-initialization using global functions
+     * Uses the global initGlobalTooltips and initGlobalDropdowns from base.html.twig
      */
-    initializeBootstrap() {
-        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
-            const tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltips.forEach(el => {
-                const existing = bootstrap.Tooltip.getInstance(el);
-                if (existing) existing.dispose();
-                new bootstrap.Tooltip(el);
-            });
-        }
+    triggerBootstrapInit() {
+        // Use requestAnimationFrame to ensure DOM is fully updated
+        requestAnimationFrame(async () => {
+            // Call global initialization functions if they exist
+            if (typeof window.initGlobalTooltips === 'function') {
+                await window.initGlobalTooltips();
+            }
+            if (typeof window.initGlobalDropdowns === 'function') {
+                await window.initGlobalDropdowns();
+            }
 
-        // Note: Stimulus controllers are auto-initialized by the framework
-        // No need to manually reload them
+            console.log('🔄 Bootstrap components re-initialized after view render');
+        });
     }
 
     disconnect() {

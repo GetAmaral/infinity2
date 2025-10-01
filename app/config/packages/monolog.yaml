@@ -6,6 +6,7 @@ monolog:
         - security # Security events
         - business # Business logic events
         - audit # Audit logging for entity changes
+        - video_processing # Video processing background jobs
 
 when@dev:
     monolog:
@@ -111,4 +112,12 @@ when@prod:
                 path: "%kernel.logs_dir%/audit.log"
                 level: info
                 channels: ['audit']
+                formatter: monolog.formatter.json
+
+            # Video processing logs
+            video_processing_file:
+                type: stream
+                path: "%kernel.logs_dir%/video_processing.log"
+                level: info
+                channels: ['video_processing']
                 formatter: monolog.formatter.json

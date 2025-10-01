@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ lecture.name }} - {{ course.name }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Back to course button -->
+            <div class="mb-4">
+                <a href="{{ path('course_show', {id: course.id}) }}" class="btn infinity-btn-ai">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Course
+                </a>
+            </div>
+
+            <!-- Video Player Card -->
+            <div class="card infinity-card mb-4">
+                <div class="card-body p-0">
+                    <!-- Video Player Container -->
+                    <div
+                        data-controller="student-video"
+                        data-student-video-video-url-value="{{ lecture.videoPath }}"
+                        data-student-video-lecture-id-value="{{ lecture.id }}"
+                        data-student-video-progress-url-value="{{ path('student_progress_update', {lectureId: lecture.id}) }}"
+                        style="background: #000; border-radius: 0.5rem 0.5rem 0 0;">
+
+                        <!-- Video element -->
+                        <video
+                            data-student-video-target="player"
+                            class="plyr-video"
+                            playsinline
+                            controls
+                            style="width: 100%; border-radius: 0.5rem 0.5rem 0 0;">
+                        </video>
+
+                        <!-- Error message container -->
+                        <div class="video-error-message alert alert-danger m-3" style="display: none;"></div>
+                    </div>
+
+                    <!-- Lecture Info -->
+                    <div class="p-4">
+                        <h2 class="h4 mb-2">{{ lecture.name }}</h2>
+
+                        {% if lecture.description %}
+                            <p class="text-muted mb-3">{{ lecture.description }}</p>
+                        {% endif %}
+
+                        <div class="d-flex gap-3 flex-wrap">
+                            <div class="badge bg-primary">
+                                <i class="bi bi-clock me-1"></i>
+                                {% if lecture.lengthSeconds < 60 %}
+                                    {{ lecture.lengthSeconds }} {{ lecture.lengthSeconds == 1 ? 'second' : 'seconds' }}
+                                {% else %}
+                                    {% set minutes = (lecture.lengthSeconds / 60)|round %}
+                                    {{ minutes }} {{ minutes == 1 ? 'minute' : 'minutes' }}
+                                {% endif %}
+                            </div>
+
+                            <div class="badge bg-info">
+                                <i class="bi bi-collection me-1"></i>
+                                Lecture {{ lecture.viewOrder }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course info -->
+            <div class="card infinity-card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-book me-2"></i>
+                        {{ course.name }}
+                    </h5>
+                    {% if course.description %}
+                        <p class="card-text text-muted">{{ course.description }}</p>
+                    {% endif %}
+
+                    <!-- All lectures list -->
+                    <h6 class="mt-4 mb-3">Course Content</h6>
+                    <div class="list-group">
+                        {% for courseLecture in course.lectures %}
+                            <a
+                                href="{{ path('course_lecture_watch', {courseId: course.id, lectureId: courseLecture.id}) }}"
+                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center
+                                    {{ courseLecture.id.toString == lecture.id.toString ? 'active' : '' }}">
+                                <div>
+                                    <i class="bi bi-{{ courseLecture.id.toString == lecture.id.toString ? 'play-circle-fill' : 'play-circle' }} me-2"></i>
+                                    <strong>{{ courseLecture.viewOrder }}.</strong>
+                                    {{ courseLecture.name }}
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if courseLecture.processingStatus == 'completed' %}
+                                        <span class="badge bg-success">Ready</span>
+                                    {% elseif courseLecture.processingStatus == 'processing' %}
+                                        <span class="badge bg-warning">Processing...</span>
+                                    {% elseif courseLecture.processingStatus == 'failed' %}
+                                        <span class="badge bg-danger">Failed</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Pending</span>
+                                    {% endif %}
+
+                                    {% if courseLecture.lengthSeconds < 60 %}
+                                        <small class="text-muted">{{ courseLecture.lengthSeconds }}sec</small>
+                                    {% else %}
+                                        {% set minutes = (courseLecture.lengthSeconds / 60)|round %}
+                                        <small class="text-muted">{{ minutes }}min</small>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

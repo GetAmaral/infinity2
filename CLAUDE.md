@@ -11,10 +11,18 @@
 - **Bootstrap + Stimulus** frontend
 
 ### **Key URLs**
-- Frontend: https://localhost
+- Frontend: https://localhost (root domain, admin access)
+- Organization Access: https://{slug}.localhost (tenant-isolated access)
 - API: https://localhost/api
 - Health: https://localhost/health/detailed
 - Metrics: https://localhost/health/metrics
+
+### **Multi-Tenant Architecture**
+- **Subdomain-based Isolation**: Each organization has unique subdomain (e.g., `acme-corporation.localhost`)
+- **Automatic Filtering**: Doctrine filter ensures data isolation by organization
+- **Secure Authentication**: Users can only login to their organization subdomain
+- **Admin Override**: ROLE_ADMIN/ROLE_SUPER_ADMIN can access all organizations via switcher
+- **Organization Slugs**: URL-friendly identifiers (e.g., "Acme Corporation" → "acme-corporation")
 
 ---
 
@@ -84,13 +92,17 @@ php bin/console importmap:install
 ├── database/init/                # PostgreSQL initialization
 └── app/                          # Symfony application
     ├── src/
-    │   ├── Controller/           # 4 controllers (Home, Organization, User, Health)
-    │   ├── Entity/               # 2 entities with UUIDv7
+    │   ├── Controller/           # Controllers (Home, Organization, User, Health, OrganizationSwitcher)
+    │   ├── Entity/               # Entities with UUIDv7 (Organization, User, Course, etc.)
     │   ├── Repository/           # Auto-generated repositories
-    │   ├── Doctrine/             # UuidV7Generator
-    │   ├── DataFixtures/         # Sample data (5 orgs, 20+ users)
-    │   ├── Service/              # Performance monitoring
-    │   └── EventSubscriber/      # Security & monitoring
+    │   ├── Doctrine/
+    │   │   ├── Filter/           # OrganizationFilter for tenant isolation
+    │   │   └── UuidV7Generator   # Custom ID generator
+    │   ├── DataFixtures/         # Sample data (5 orgs with slugs, 20+ users)
+    │   ├── Service/              # OrganizationContext, Performance monitoring
+    │   ├── Security/             # OrganizationAwareAuthenticator
+    │   ├── Twig/                 # OrganizationExtension
+    │   └── EventSubscriber/      # SubdomainOrganizationSubscriber, Security & monitoring
     ├── tests/                    # 9 test files (Entity, Controller, API, Doctrine)
     ├── templates/                # Twig templates
     ├── assets/                   # Frontend assets (Stimulus + Bootstrap)
@@ -531,6 +543,255 @@ composer audit
 - **PostgreSQL 18**: https://www.postgresql.org/docs/18/
 - **Redis 7**: https://redis.io/docs/
 - **Bootstrap 5**: https://getbootstrap.com/docs/5.3/
+
+---
+
+## 🏢 MULTI-TENANT ORGANIZATION ISOLATION
+
+### **Overview**
+Infinity implements complete tenant isolation using subdomain-based organization access with automatic Doctrine filtering.
+
+### **Architecture**
+
+**Subdomain Access Pattern:**
+- Root domain: `https://localhost` (admin access only)
+- Organization tenant: `https://acme-corporation.localhost` (tenant-isolated)
+- Wildcard SSL: Supports `*.localhost` for all organization subdomains
+
+**Components:**
+
+1. **OrganizationContext Service** (`src/Service/OrganizationContext.php`)
+   - Manages active organization in session
+   - Extracts organization slug from subdomain
+   - Provides organization ID for filtering
+
+2. **SubdomainOrganizationSubscriber** (`src/EventSubscriber/SubdomainOrganizationSubscriber.php`)
+   - Runs on every request (priority 32)
+   - Detects organization from subdomain
+   - Sets organization in context
+
+3. **OrganizationFilter** (`src/Doctrine/Filter/OrganizationFilter.php`)
+   - SQL filter for automatic data isolation
+   - Applies to all entities with `organization` relation
+   - Filters queries: `WHERE organization_id = :activeOrgId`
+
+4. **OrganizationFilterConfigurator** (`src/EventSubscriber/OrganizationFilterConfigurator.php`)
+   - Enables/disables filter based on context
+   - Runs after SubdomainOrganizationSubscriber (priority 7)
+   - Sets organization_id parameter
+
+5. **OrganizationAwareAuthenticator** (`src/Security/OrganizationAwareAuthenticator.php`)
+   - Custom authenticator for organization validation
+   - Non-admin users can only login to their org subdomain
+   - Admins can login to any org or root domain
+
+6. **OrganizationSwitcherController** (`src/Controller/OrganizationSwitcherController.php`)
+   - POST `/organization-switcher/switch/{id}` - Switch organization
+   - POST `/organization-switcher/clear` - Clear org (root access)
+   - Only accessible to ROLE_ADMIN/ROLE_SUPER_ADMIN
+
+7. **OrganizationExtension** (`src/Twig/OrganizationExtension.php`)
+   - `current_organization()` - Get active organization
+   - `has_active_organization()` - Check if org is active
+   - `can_switch_organization()` - Check admin permission
+   - `available_organizations()` - Get all orgs for switcher
+
+### **Database Schema**
+
+```sql
+-- Organization table with slug
+CREATE TABLE organization (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,  -- URL-friendly identifier
+    description TEXT,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
+
+-- Example organizations with slugs
+INSERT INTO organization (name, slug) VALUES
+    ('Acme Corporation', 'acme-corporation'),
+    ('Globex Corporation', 'globex-corporation'),
+    ('Wayne Enterprises', 'wayne-enterprises'),
+    ('Stark Industries', 'stark-industries'),
+    ('Umbrella Corporation', 'umbrella-corporation');
+
+-- Users belong to organizations
+CREATE TABLE "user" (
+    id UUID PRIMARY KEY,
+    organization_id UUID REFERENCES organization(id),
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    -- ... other fields
+);
+```
+
+### **Authentication Flow**
+
+1. User visits `https://acme-corporation.localhost/login`
+2. SubdomainOrganizationSubscriber extracts slug "acme-corporation"
+3. Loads organization from database and sets in OrganizationContext
+4. User submits login credentials
+5. OrganizationAwareAuthenticator validates:
+   - User exists with correct email/password
+   - User's organization matches subdomain organization
+   - OR user has ROLE_ADMIN/ROLE_SUPER_ADMIN
+6. If valid, login succeeds and session is created
+7. OrganizationFilterConfigurator enables Doctrine filter
+8. All subsequent queries automatically filtered by organization
+
+### **Data Isolation Examples**
+
+```php
+// Without filter: Returns all users
+$users = $userRepository->findAll();
+
+// With filter enabled (automatic via subdomain):
+// SQL: SELECT * FROM user WHERE organization_id = '019296b7-55be-72db-8cfd...'
+// Returns only users from active organization
+$users = $userRepository->findAll();
+
+// Filter applies to all entities with organization relation:
+$courses = $courseRepository->findAll(); // Only courses from active org
+$lectures = $lectureRepository->findAll(); // Only lectures from active org
+```
+
+### **Admin Organization Switcher**
+
+Admins and Super Admins see an organization dropdown in the navbar:
+
+```twig
+{% if can_switch_organization() %}
+<div class="dropdown">
+    <!-- Current organization display -->
+    <a href="#" data-bs-toggle="dropdown">
+        {{ current_organization() ? current_organization().name : 'All Organizations' }}
+    </a>
+    <ul class="dropdown-menu">
+        <!-- Clear organization (root access) -->
+        <form method="post" action="{{ path('app_organization_switcher_clear') }}">
+            <button>All Organizations (Root)</button>
+        </form>
+
+        <!-- Switch to specific organization -->
+        {% for org in available_organizations() %}
+        <form method="post" action="{{ path('app_organization_switcher_switch', {'id': org.id}) }}">
+            <button>{{ org.name }}</button>
+        </form>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+```
+
+### **Security Rules**
+
+**Regular Users (ROLE_USER):**
+- Can ONLY login to their organization subdomain
+- Login fails if they try wrong subdomain
+- Cannot access root domain
+- Cannot switch organizations
+- All data queries automatically filtered
+
+**Admins (ROLE_ADMIN, ROLE_SUPER_ADMIN):**
+- Can login to ANY organization subdomain
+- Can login to root domain (no organization)
+- Can switch organizations via dropdown
+- When no org selected, filter is disabled (see all data)
+- When org selected, filter applies (see only that org's data)
+
+### **Configuration**
+
+**Doctrine Filter Registration** (`config/packages/doctrine.yaml`):
+```yaml
+doctrine:
+    orm:
+        filters:
+            organization_filter:
+                class: App\Doctrine\Filter\OrganizationFilter
+                enabled: false  # Enabled dynamically by OrganizationFilterConfigurator
+```
+
+**Nginx Wildcard Subdomain** (`nginx/conf/default.conf`):
+```nginx
+server {
+    listen 443 ssl http2;
+    server_name localhost *.localhost;  # Wildcard for all subdomains
+    # ... SSL and proxy configuration
+}
+```
+
+**SSL Certificate with SAN** (`scripts/generate-ssl.sh`):
+```bash
+# Generate cert with Subject Alternative Names for wildcard
+[alt_names]
+DNS.1 = localhost
+DNS.2 = *.localhost
+```
+
+### **Testing Tenant Isolation**
+
+```php
+// Test subdomain extraction
+$context = new OrganizationContext($requestStack);
+$slug = $context->extractSlugFromHost('acme-corporation.localhost');
+$this->assertEquals('acme-corporation', $slug);
+
+// Test filter registration
+$filters = $entityManager->getFilters();
+$this->assertTrue($filters->has('organization_filter'));
+
+// Test filter parameter
+$filter = $filters->enable('organization_filter');
+$filter->setParameter('organization_id', $orgId, 'string');
+```
+
+### **Adding Organization to New Entity**
+
+When creating new entities that should be organization-scoped:
+
+```php
+#[ORM\Entity]
+class MyEntity extends EntityBase
+{
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private Organization $organization;
+
+    // The OrganizationFilter will automatically apply to this entity!
+    // No additional code needed - filtering happens at Doctrine level
+}
+```
+
+### **Troubleshooting**
+
+**Filter not working:**
+```bash
+# Check if filter is registered
+docker-compose exec app php bin/console debug:config doctrine orm filters
+
+# Check if filter is enabled in logs
+docker-compose logs -f app | grep "Organization filter"
+```
+
+**Subdomain not detected:**
+```bash
+# Verify nginx wildcard config
+cat nginx/conf/default.conf | grep server_name
+
+# Test SSL certificate SAN
+openssl x509 -in nginx/ssl/localhost.crt -text -noout | grep DNS
+```
+
+**User can't login:**
+```bash
+# Check organization slug
+docker-compose exec app php bin/console doctrine:query:sql "SELECT id, name, slug FROM organization"
+
+# Check user organization
+docker-compose exec app php bin/console doctrine:query:sql "SELECT u.email, o.slug FROM \"user\" u JOIN organization o ON u.organization_id = o.id"
+```
 
 ---
 

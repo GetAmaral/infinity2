@@ -11,11 +11,11 @@
     - Dropdown menu for mobile and when dropdownOnly=true
   {% endmacro %}
 
-  The global dropdown system (#globalTableDropdown) will automatically
-  handle all dropdowns across grid, list, and table views.
+  Dropdowns use standard Bootstrap functionality with Popper.js positioning
+  for optimal placement across grid, list, and table views.
 #}
 
-{% block title %}{{ block('page_title') }} - CRM{% endblock %}
+{% block title %}{{ block('page_title') }} - Infinity{% endblock %}
 
 {% block body %}
 <!-- Page Header -->
@@ -177,17 +177,7 @@
              data-view-toggle-target="tableContainer"
              style="{% if default_view|default('grid') != 'table' %}display: none;{% endif %}">
             <div class="infinity-card table-card p-4">
-                <!-- Scroll hint for mobile -->
-                <div class="table-scroll-hint d-md-none">
-                    <i class="bi bi-arrow-left-right"></i>
-                    <span>{{ 'table.swipe_to_see_more'|trans }}</span>
-                </div>
-
-                <!-- Scrollable table wrapper with accessibility -->
-                <div class="table-scroll-wrapper"
-                     role="region"
-                     aria-label="{{ (entity_name_plural ~ ' table')|trans }}"
-                     tabindex="0">
+                <div class="table-responsive">
                     <table id="{{ entity_name_plural }}DataTable" class="table table-hover" style="width:100%">
                         <thead>
                             <tr>
@@ -208,17 +198,10 @@
                             {% endfor %}
                         </tbody>
                     </table>
-
-                    <!-- Scroll fade indicators -->
-                    <div class="table-fade-left"></div>
-                    <div class="table-fade-right"></div>
                 </div>
             </div>
         </div>
     {% endblock %}
-
-    {# Global Dropdown Menu Container - Outside table structure #}
-    <div id="globalTableDropdown" class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="display: none; position: fixed; z-index: 99999; background: var(--infinity-dark-surface);"></div>
 
     {# Global Pagination/Controls Card - Works for all views #}
     <div class="infinity-card p-3 mt-3" id="globalViewControls">
@@ -307,14 +290,14 @@
         overflow: visible !important;
     }
 
-    .infinity-card .dropdown {
-        position: static !important;
+    /* Dropdown positioning - use Bootstrap's default Popper.js */
+    .dropdown {
+        position: relative;
     }
 
-    .infinity-card .dropdown-menu {
+    .dropdown-menu {
         position: absolute !important;
         z-index: 1060 !important;
-        will-change: transform;
     }
 
     /* Tooltip styling */
@@ -384,99 +367,9 @@
         width: 100%;
     }
 
-    /* Table Scroll Wrapper with Horizontal Scroll */
-    .table-scroll-wrapper {
-        position: relative;
-        overflow-x: auto;
-        overflow-y: visible !important;
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-        scroll-behavior: smooth;
+    /* Table Responsive Wrapper */
+    .table-responsive {
         border-radius: 0.75rem;
-    }
-
-    /* Custom scrollbar for table wrapper */
-    .table-scroll-wrapper::-webkit-scrollbar {
-        height: 10px;
-    }
-
-    .table-scroll-wrapper::-webkit-scrollbar-track {
-        background: var(--infinity-dark-surface);
-        border-radius: 5px;
-    }
-
-    .table-scroll-wrapper::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, var(--infinity-neon), var(--infinity-neon-purple));
-        border-radius: 5px;
-    }
-
-    .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, var(--infinity-neon-purple), var(--infinity-neon));
-    }
-
-    /* Focus outline for accessibility */
-    .table-scroll-wrapper:focus {
-        outline: 2px solid var(--infinity-neon);
-        outline-offset: 2px;
-    }
-
-    /* Scroll Fade Indicators - Dark Theme */
-    .table-fade-left,
-    .table-fade-right {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 40px;
-        pointer-events: none;
-        z-index: 10;
-        transition: opacity 0.3s ease;
-    }
-
-    .table-fade-left {
-        left: 0;
-        background: linear-gradient(to right, var(--infinity-dark-surface), transparent);
-        opacity: 0;
-    }
-
-    .table-fade-right {
-        right: 0;
-        background: linear-gradient(to left, var(--infinity-dark-surface), transparent);
-        opacity: 1;
-    }
-
-    .table-scroll-wrapper.scrolled-left .table-fade-left {
-        opacity: 1;
-    }
-
-    .table-scroll-wrapper.scrolled-right .table-fade-right {
-        opacity: 0;
-    }
-
-    .table-scroll-wrapper.scrolled-middle .table-fade-left,
-    .table-scroll-wrapper.scrolled-middle .table-fade-right {
-        opacity: 1;
-    }
-
-    /* Scroll Hint for Mobile */
-    .table-scroll-hint {
-        text-align: center;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-        background: rgba(0, 245, 255, 0.1);
-        border: 1px solid rgba(0, 245, 255, 0.3);
-        border-radius: 0.75rem;
-        color: var(--infinity-neon);
-        font-size: 0.875rem;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        animation: pulseHint 2s ease-in-out infinite;
-    }
-
-    @keyframes pulseHint {
-        0%, 100% { opacity: 0.8; }
-        50% { opacity: 1; }
     }
 
     .table-hover {
@@ -510,33 +403,8 @@
         background: rgba(0, 245, 255, 0.05) !important;
     }
 
-    /* Sticky First Column (Actions) */
-    .table-hover thead th:first-child,
-    .table-hover tbody td:first-child {
-        position: sticky;
-        left: 0;
-        z-index: 10;
-        background: var(--infinity-dark-surface) !important;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-    }
-
-    .table-hover tbody td:first-child {
-        background: rgba(26, 26, 30, 0.98) !important;
-    }
-
-    .table-hover tbody tr:hover td:first-child {
-        background: rgba(0, 245, 255, 0.08) !important;
-    }
-
-    /* Hide ALL original dropdown menus in all views - they're cloned to global container */
-    .bento-grid .dropdown-menu,
-    .list-view .dropdown-menu,
-    .table-hover .dropdown-menu {
-        display: none !important;
-    }
-
-    /* Global table dropdown styling */
-    #globalTableDropdown {
+    /* Dropdown menu styling for all views */
+    .dropdown-menu {
         min-width: 200px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
@@ -545,7 +413,7 @@
         backdrop-filter: blur(10px);
     }
 
-    #globalTableDropdown .dropdown-item {
+    .dropdown-menu .dropdown-item {
         color: var(--infinity-text-primary);
         padding: 10px 16px;
         border-radius: 8px;
@@ -555,22 +423,22 @@
         font-size: 0.9rem;
     }
 
-    #globalTableDropdown .dropdown-item:hover {
+    .dropdown-menu .dropdown-item:hover {
         background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
         color: var(--infinity-text-primary);
         transform: translateX(4px);
     }
 
-    #globalTableDropdown .dropdown-divider {
+    .dropdown-menu .dropdown-divider {
         border-color: rgba(255, 255, 255, 0.1);
         margin: 8px 0;
     }
 
-    #globalTableDropdown .text-danger {
+    .dropdown-menu .text-danger {
         color: #ef4444 !important;
     }
 
-    #globalTableDropdown .text-danger:hover {
+    .dropdown-menu .text-danger:hover {
         background: rgba(239, 68, 68, 0.1) !important;
     }
 
@@ -598,75 +466,31 @@
         background: rgba(59, 130, 246, 0.05) !important;
     }
 
-    /* Light Theme - Sticky First Column */
-    [data-theme="light"] .table-hover thead th:first-child,
-    [data-theme="light"] .table-hover tbody td:first-child {
-        background: #f8f9fa !important;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    [data-theme="light"] .table-hover tbody td:first-child {
-        background: rgba(255, 255, 255, 0.98) !important;
-    }
-
-    [data-theme="light"] .table-hover tbody tr:hover td:first-child {
-        background: rgba(59, 130, 246, 0.08) !important;
-    }
-
-    /* Light Theme - Scroll Fade Indicators */
-    [data-theme="light"] .table-fade-left {
-        background: linear-gradient(to right, rgba(255, 255, 255, 0.95), transparent);
-    }
-
-    [data-theme="light"] .table-fade-right {
-        background: linear-gradient(to left, rgba(255, 255, 255, 0.95), transparent);
-    }
-
-    /* Light Theme - Scroll Hint */
-    [data-theme="light"] .table-scroll-hint {
-        background: rgba(59, 130, 246, 0.1);
-        border: 1px solid rgba(59, 130, 246, 0.3);
-        color: #3b82f6;
-    }
-
-    /* Light Theme - Scrollbar */
-    [data-theme="light"] .table-scroll-wrapper::-webkit-scrollbar-track {
-        background: #f1f5f9;
-    }
-
-    [data-theme="light"] .table-scroll-wrapper::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-    }
-
-    [data-theme="light"] .table-scroll-wrapper:focus {
-        outline-color: #3b82f6;
-    }
-
-    /* Light Theme - Global Dropdown */
-    [data-theme="light"] #globalTableDropdown {
+    /* Light Theme - Dropdown Menus */
+    [data-theme="light"] .dropdown-menu {
         background: rgba(255, 255, 255, 0.95) !important;
         border: 1px solid rgba(0, 0, 0, 0.1) !important;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
     }
 
-    [data-theme="light"] #globalTableDropdown .dropdown-item {
+    [data-theme="light"] .dropdown-menu .dropdown-item {
         color: #1a1a1a !important;
     }
 
-    [data-theme="light"] #globalTableDropdown .dropdown-item:hover {
+    [data-theme="light"] .dropdown-menu .dropdown-item:hover {
         background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1)) !important;
         color: #4f46e5 !important;
     }
 
-    [data-theme="light"] #globalTableDropdown .dropdown-divider {
+    [data-theme="light"] .dropdown-menu .dropdown-divider {
         border-color: rgba(0, 0, 0, 0.1) !important;
     }
 
-    [data-theme="light"] #globalTableDropdown .text-danger {
+    [data-theme="light"] .dropdown-menu .text-danger {
         color: #dc2626 !important;
     }
 
-    [data-theme="light"] #globalTableDropdown .text-danger:hover {
+    [data-theme="light"] .dropdown-menu .text-danger:hover {
         background: rgba(220, 38, 38, 0.1) !important;
         color: #b91c1c !important;
     }
@@ -917,136 +741,6 @@
         const originalContent = document.getElementById('{{ entity_name_plural }}-grid').innerHTML;
         let isSearching = false;
 
-        // Table scroll fade indicators management
-        function setupTableScrollFade() {
-            const tableWrapper = document.querySelector('.table-scroll-wrapper');
-            if (!tableWrapper) return;
-
-            function updateFadeIndicators() {
-                const scrollLeft = tableWrapper.scrollLeft;
-                const scrollWidth = tableWrapper.scrollWidth;
-                const clientWidth = tableWrapper.clientWidth;
-                const maxScroll = scrollWidth - clientWidth;
-
-                // Remove all scroll classes
-                tableWrapper.classList.remove('scrolled-left', 'scrolled-right', 'scrolled-middle');
-
-                if (maxScroll <= 0) {
-                    // No scroll needed, hide both fades
-                    return;
-                }
-
-                if (scrollLeft <= 5) {
-                    // At the start
-                    tableWrapper.classList.add('scrolled-left');
-                } else if (scrollLeft >= maxScroll - 5) {
-                    // At the end
-                    tableWrapper.classList.add('scrolled-right');
-                } else {
-                    // In the middle
-                    tableWrapper.classList.add('scrolled-middle');
-                }
-            }
-
-            // Listen for scroll events
-            tableWrapper.addEventListener('scroll', updateFadeIndicators);
-
-            // Update on window resize
-            window.addEventListener('resize', updateFadeIndicators);
-
-            // Initial update
-            setTimeout(updateFadeIndicators, 100);
-
-            // Update when table view becomes visible
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.target.style.display !== 'none') {
-                        setTimeout(updateFadeIndicators, 100);
-                    }
-                });
-            });
-
-            const tableView = document.getElementById('{{ entity_name_plural }}-table');
-            if (tableView) {
-                observer.observe(tableView, { attributes: true, attributeFilter: ['style'] });
-            }
-        }
-
-        // Initialize table scroll fade
-        setupTableScrollFade();
-
-        // Handle ALL dropdowns (grid, list, table) with global dropdown container
-        function setupGlobalDropdowns() {
-            const globalDropdown = document.getElementById('globalTableDropdown');
-            if (!globalDropdown) return;
-
-            let currentToggle = null;
-
-            // Intercept all dropdown button clicks in all views
-            document.addEventListener('click', function(event) {
-                const dropdownButton = event.target.closest('[data-bs-toggle="dropdown"]');
-
-                // If clicking inside global dropdown, allow normal behavior
-                if (event.target.closest('#globalTableDropdown')) {
-                    return;
-                }
-
-                // If clicking dropdown button
-                if (dropdownButton) {
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    // Find the original dropdown menu
-                    const originalDropdown = dropdownButton.nextElementSibling;
-                    if (!originalDropdown || !originalDropdown.classList.contains('dropdown-menu')) return;
-
-                    // Toggle: if clicking same button, close
-                    if (currentToggle === dropdownButton && globalDropdown.style.display === 'block') {
-                        globalDropdown.style.display = 'none';
-                        currentToggle = null;
-                        return;
-                    }
-
-                    // Close any existing dropdown
-                    globalDropdown.style.display = 'none';
-
-                    // Clone the dropdown content
-                    globalDropdown.innerHTML = originalDropdown.innerHTML;
-
-                    // Get button position
-                    const rect = dropdownButton.getBoundingClientRect();
-
-                    // Position the global dropdown to the right of the button
-                    globalDropdown.style.top = rect.top + 'px';
-                    globalDropdown.style.left = (rect.right + 5) + 'px'; // 5px gap from button
-                    globalDropdown.style.display = 'block';
-
-                    currentToggle = dropdownButton;
-                } else {
-                    // Click outside - close dropdown
-                    globalDropdown.style.display = 'none';
-                    currentToggle = null;
-                }
-            });
-
-            // Close dropdown when scrolling (any container)
-            window.addEventListener('scroll', function() {
-                globalDropdown.style.display = 'none';
-                currentToggle = null;
-            }, true); // Use capture phase to catch all scroll events
-
-            // Close on ESC key
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
-                    globalDropdown.style.display = 'none';
-                    currentToggle = null;
-                }
-            });
-        }
-
-        // Initialize global dropdowns for all views
-        setupGlobalDropdowns();
-
         if (searchInput && clearBtn) {
             // Track search state
             searchInput.addEventListener('input', function() {
@@ -1085,7 +779,12 @@
             });
         }
 
-        function initializeTooltips() {
+        async function initializeTooltips() {
+            // Wait for Bootstrap to be ready
+            if (window.bootstrapReady) {
+                await window.bootstrapReady;
+            }
+
             if (typeof bootstrap === 'undefined' || typeof bootstrap.Tooltip === 'undefined') {
                 return;
             }

@@ -21,22 +21,17 @@ security:
 
         # API firewall for token-based authentication
         api:
-            pattern: ^/api
+            pattern: ^/api(?!/student/progress)
             stateless: true
             custom_authenticators:
                 - App\Security\ApiTokenAuthenticator
 
-        # Main firewall for web application
+        # Main firewall for web application with organization-aware authentication
         main:
             lazy: true
             provider: app_user_provider
-            form_login:
-                login_path: app_login
-                check_path: app_login
-                enable_csrf: true
-                default_target_path: app_home
-                username_parameter: email
-                password_parameter: password
+            custom_authenticators:
+                - App\Security\OrganizationAwareAuthenticator
             logout:
                 path: app_logout
                 target: app_home
@@ -59,10 +54,14 @@ security:
         # API routes require authentication
         - { path: ^/api, roles: ROLE_USER }
 
+        # Video streaming requires authentication
+        - { path: ^/videos, roles: ROLE_USER }
+
         # Protected routes
         - { path: ^/organization, roles: ROLE_USER }
         - { path: ^/user, roles: ROLE_USER }
         - { path: ^/settings, roles: ROLE_USER }
+        - { path: ^/course, roles: ROLE_USER }
         - { path: ^/, roles: ROLE_USER }
 
     # Role hierarchy

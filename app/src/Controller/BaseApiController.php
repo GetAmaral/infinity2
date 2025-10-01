@@ -108,4 +108,79 @@ abstract class BaseApiController extends AbstractController
             'message' => $message,
         ], $status);
     }
+
+    /**
+     * Get the singular entity name for routes (e.g., "user", "organization")
+     * Override in child controllers if needed
+     */
+    protected function getEntitySingularName(): string
+    {
+        // Default: remove trailing 's' from plural name
+        $plural = $this->getEntityPluralName();
+        return rtrim($plural, 's');
+    }
+
+    /**
+     * Smart redirect based on referer
+     * Supports multiple redirect patterns:
+     * - Entity show page: /entity/{id}
+     * - Organization users page: /organization/{id}/users
+     * - Default route fallback
+     *
+     * Child controllers can override getRedirectPatterns() to add custom patterns
+     */
+    protected function redirectToRefererOrRoute(Request $request, string $defaultRoute): Response
+    {
+        $referer = $request->headers->get('referer');
+
+        if (!$referer) {
+            return $this->redirectToRoute($defaultRoute, [], Response::HTTP_SEE_OTHER);
+        }
+
+        // Get entity-specific patterns
+        $patterns = $this->getRedirectPatterns();
+
+        // Check each pattern
+        foreach ($patterns as $pattern => $routeInfo) {
+            if (preg_match($pattern, $referer, $matches)) {
+                $params = [];
+                // Build parameters from matches
+                if (isset($routeInfo['params'])) {
+                    foreach ($routeInfo['params'] as $paramName => $matchIndex) {
+                        $params[$paramName] = $matches[$matchIndex];
+                    }
+                }
+                return $this->redirectToRoute($routeInfo['route'], $params, Response::HTTP_SEE_OTHER);
+            }
+        }
+
+        // Default redirect
+        return $this->redirectToRoute($defaultRoute, [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Get redirect patterns for referer-based routing
+     * Returns array of regex patterns => route config
+     *
+     * Override in child controllers to add custom patterns
+     *
+     * @return array<string, array{route: string, params?: array<string, int>}>
+     */
+    protected function getRedirectPatterns(): array
+    {
+        $entityName = $this->getEntitySingularName();
+
+        return [
+            // Entity show page: /entity/{id}
+            '#/' . $entityName . '/([0-9a-f-]+)$#' => [
+                'route' => $entityName . '_show',
+                'params' => ['id' => 1]
+            ],
+            // Organization users page: /organization/{id}/users
+            '#/organization/([0-9a-f-]+)/users#' => [
+                'route' => 'organization_users',
+                'params' => ['id' => 1]
+            ],
+        ];
+    }
 }

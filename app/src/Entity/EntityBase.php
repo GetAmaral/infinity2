@@ -45,9 +45,9 @@ abstract class EntityBase
         $this->initializeAuditFields();
     }
 
-    public function getId(): Uuid
+    public function getId(): ?Uuid
     {
-        return $this->id;
+        return $this->id ?? null;
     }
 
     /**

@@ -1,0 +1,220 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ course.name }} - {{ 'student.singular'|trans }} - {{ 'page.infinity_suffix'|trans }}{% endblock %}
+
+{% block body %}
+<!-- Navigation Breadcrumb -->
+<div class="mb-4">
+    <a href="{{ path('student_courses') }}" class="btn infinity-btn-ai">
+        <i class="bi bi-arrow-left me-2"></i>{{ 'student.back_to_courses'|trans }}
+    </a>
+</div>
+
+<!-- Course Header -->
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div class="d-flex align-items-center">
+            <div class="p-3 rounded-3 me-4" style="background: var(--infinity-ai-gradient);">
+                <i class="bi bi-book text-white fs-2"></i>
+            </div>
+            <div>
+                <h1 class="text-gradient mb-2">{{ course.name }}</h1>
+                {% if course.description %}
+                    <p class="text-secondary mb-0 fs-5">{{ course.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+            <div class="real-time-badge">
+                <i class="bi bi-collection me-1"></i>{{ lectures|length }} {{ 'course.lectures'|trans({'%count%': lectures|length}) }}
+            </div>
+            {% if course.totalLengthSeconds %}
+                <div class="real-time-badge">
+                    <i class="bi bi-clock me-1"></i>{{ (course.totalLengthSeconds / 60)|round }} {{ 'course.minutes'|trans }}
+                </div>
+            {% endif %}
+            <div class="ai-status-indicator">
+                <i class="bi bi-star-fill"></i> {{ enrollment.progressPercentage|round }}% {{ 'student.complete'|trans }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Overview -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="infinity-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="text-neon mb-0">
+                    <i class="bi bi-bar-chart me-2"></i>{{ 'student.your_progress'|trans }}
+                </h5>
+                {% if enrollment.completedAt %}
+                    <span class="badge bg-success fs-6">
+                        <i class="bi bi-check-circle me-1"></i>{{ 'student.course_completed'|trans }}!
+                    </span>
+                {% endif %}
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-white">{{ 'student.overall_completion'|trans }}</span>
+                    <span class="text-neon fw-bold fs-5">{{ enrollment.progressPercentage|round }}%</span>
+                </div>
+                <div class="progress" style="height: 20px; background: rgba(255, 255, 255, 0.1);">
+                    <div class="progress-bar"
+                         style="background: var(--infinity-ai-gradient); font-weight: bold;"
+                         role="progressbar"
+                         style="width: {{ enrollment.progressPercentage|round }}%"
+                         aria-valuenow="{{ enrollment.progressPercentage|round }}"
+                         aria-valuemin="0"
+                         aria-valuemax="100">
+                        {{ enrollment.progressPercentage|round }}%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Stats -->
+            <div class="row text-center mt-4">
+                <div class="col-4">
+                    <div class="text-muted small">{{ 'student.enrolled'|trans }}</div>
+                    <div class="text-white fw-bold">{{ enrollment.enrolledAt|date('M d, Y') }}</div>
+                </div>
+                <div class="col-4">
+                    <div class="text-muted small">{{ 'student.last_accessed'|trans }}</div>
+                    <div class="text-white fw-bold">
+                        {% if enrollment.lastDate %}
+                            {{ enrollment.lastDate|date('M d, Y') }}
+                        {% else %}
+                            {{ 'student.not_yet'|trans }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="text-muted small">{{ 'student.completed_lectures'|trans }}</div>
+                    <div class="text-white fw-bold">
+                        {{ lectureProgress|filter(p => p.completed)|length }} / {{ lectures|length }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lectures List -->
+<div class="row">
+    <div class="col-12">
+        <div class="infinity-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="text-neon mb-0">
+                    <i class="bi bi-collection me-2"></i>{{ 'course.lectures'|trans }}
+                </h5>
+            </div>
+
+            {% if lectures is empty %}
+                <div class="text-center py-5">
+                    <i class="bi bi-collection" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
+                    <h5 class="text-white mt-3 mb-2">{{ 'course.no_lectures'|trans }}</h5>
+                    <p class="text-secondary mb-0">{{ 'course.no_lectures_description'|trans }}</p>
+                </div>
+            {% else %}
+                <div class="list-group">
+                    {% for lecture in lectures %}
+                        {% set progress = lectureProgress[lecture.id.toString] ?? null %}
+                        {% set isCompleted = progress and progress.completed %}
+                        {% set progressPercent = progress ? progress.completionPercentage|round : 0 %}
+                        {% set isProcessed = lecture.processingStatus == 'completed' %}
+                        {% set isProcessing = lecture.processingStatus == 'processing' %}
+                        {% set isFailed = lecture.processingStatus == 'failed' %}
+
+                        <a href="{% if isProcessed %}{{ path('student_lecture', {courseId: course.id, lectureId: lecture.id}) }}{% else %}#{% endif %}"
+                           class="list-group-item list-group-item-action {% if not isProcessed %}disabled{% endif %}"
+                           style="background: var(--infinity-card-bg); border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 0.5rem; border-radius: 8px; {% if not isProcessed %}opacity: 0.6; cursor: not-allowed;{% endif %}">
+                            <div class="d-flex align-items-start">
+                                <!-- Lecture Number Badge -->
+                                <div class="me-3 d-flex align-items-center justify-content-center"
+                                     style="min-width: 40px; height: 40px; border-radius: 8px; {% if isCompleted %}background: linear-gradient(135deg, #10b981, #059669);{% else %}background: var(--infinity-ai-gradient);{% endif %}">
+                                    {% if isCompleted %}
+                                        <i class="bi bi-check-circle-fill text-white fs-5"></i>
+                                    {% else %}
+                                        <span class="text-white fw-bold">{{ lecture.viewOrder }}</span>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Lecture Info -->
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-start mb-1">
+                                        <h6 class="text-white mb-0">{{ lecture.name }}</h6>
+                                        {% if lecture.lengthSeconds %}
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-clock me-1"></i>
+                                                {% if lecture.lengthSeconds < 60 %}
+                                                    {{ lecture.lengthSeconds }} sec
+                                                {% else %}
+                                                    {{ (lecture.lengthSeconds / 60)|round }} min
+                                                {% endif %}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    {% if lecture.description %}
+                                        <p class="text-secondary small mb-2">{{ lecture.description|slice(0, 100) }}{% if lecture.description|length > 100 %}...{% endif %}</p>
+                                    {% endif %}
+
+                                    <!-- Progress & Status -->
+                                    <div class="d-flex gap-2 align-items-center flex-wrap">
+                                        {% if isProcessing %}
+                                            <span class="badge bg-warning">
+                                                <i class="bi bi-hourglass-split me-1"></i>{{ 'course.lecture.processing'|trans }}
+                                            </span>
+                                        {% elseif isFailed %}
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-exclamation-triangle me-1"></i>{{ 'course.lecture.failed'|trans }}
+                                            </span>
+                                        {% elseif isProcessed %}
+                                            {% if isCompleted %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle me-1"></i>{{ 'student.completed'|trans }}
+                                                </span>
+                                                {% if progress.completedAt %}
+                                                    <small class="text-muted">{{ progress.completedAt|date('M d, Y') }}</small>
+                                                {% endif %}
+                                            {% elseif progressPercent > 0 %}
+                                                <span class="badge bg-primary">
+                                                    {{ progressPercent }}% {{ 'student.watched'|trans }}
+                                                </span>
+                                                <div class="flex-grow-1" style="max-width: 150px;">
+                                                    <div class="progress" style="height: 6px; background: rgba(255, 255, 255, 0.1);">
+                                                        <div class="progress-bar bg-primary"
+                                                             role="progressbar"
+                                                             style="width: {{ progressPercent }}%"
+                                                             aria-valuenow="{{ progressPercent }}"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <span class="badge bg-secondary">
+                                                    <i class="bi bi-play-circle me-1"></i>{{ 'student.not_started'|trans }}
+                                                </span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Play Button -->
+                                {% if isProcessed %}
+                                    <div class="ms-3 d-flex align-items-center">
+                                        <i class="bi bi-play-circle-fill text-neon" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

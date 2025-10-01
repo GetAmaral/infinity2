@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'student.my_courses'|trans }} - {{ 'page.infinity_suffix'|trans }}{% endblock %}
+
+{% block body %}
+<!-- Page Header -->
+<div class="mb-4">
+    <div class="ai-dashboard-header">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex align-items-center">
+                <div class="p-3 rounded-3 me-4" style="background: var(--infinity-ai-gradient);">
+                    <i class="bi bi-book text-white fs-2"></i>
+                </div>
+                <div>
+                    <h1 class="text-gradient mb-2">{{ 'student.my_courses'|trans }}</h1>
+                    <p class="text-secondary mb-0 fs-5">{{ 'student.courses_subtitle'|trans }}</p>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <div class="ai-status-indicator">
+                    <i class="bi bi-star-fill"></i> {{ enrollments|length }} {{ 'student.enrolled'|trans }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if enrollments is empty %}
+    <!-- Empty State -->
+    <div class="infinity-card p-5 text-center">
+        <i class="bi bi-book" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
+        <h3 class="text-white mt-4 mb-3">{{ 'student.no_courses'|trans }}</h3>
+        <p class="text-secondary mb-4">{{ 'student.no_courses_description'|trans }}</p>
+    </div>
+{% else %}
+    <!-- Courses Grid -->
+    <div class="row">
+        {% for enrollment in enrollments %}
+            {% set course = enrollment.course %}
+            {% set progress = enrollment.progressPercentage|round %}
+            {% set isCompleted = enrollment.completedAt is not null %}
+            {% set totalLectures = course.lectures|length %}
+
+            <div class="col-xl-4 col-lg-6 mb-4">
+                <div class="infinity-card ai-enhanced p-4 h-100 d-flex flex-column">
+                    <!-- Course Header -->
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="p-2 rounded-3 me-3" style="background: var(--infinity-ai-gradient); background-size: 200% 200%; animation: gradientShift 4s ease infinite;">
+                            <i class="bi bi-book text-white fs-4"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="text-white mb-1">{{ course.name }}</h5>
+                            <div class="d-flex gap-2 align-items-center flex-wrap">
+                                <span class="real-time-badge">
+                                    <i class="bi bi-collection me-1"></i>{{ totalLectures }} {{ 'course.lectures'|trans({'%count%': totalLectures}) }}
+                                </span>
+                                {% if course.totalLengthSeconds %}
+                                    <span class="real-time-badge">
+                                        <i class="bi bi-clock me-1"></i>{{ (course.totalLengthSeconds / 60)|round }} {{ 'course.minutes'|trans }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Course Description -->
+                    {% if course.description %}
+                        <p class="text-secondary mb-3">
+                            {{ course.description|slice(0, 120) }}{% if course.description|length > 120 %}...{% endif %}
+                        </p>
+                    {% else %}
+                        <p class="text-muted mb-3 fst-italic">{{ 'empty.no_description'|trans }}</p>
+                    {% endif %}
+
+                    <!-- Progress Bar -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <small class="text-muted">{{ 'student.progress'|trans }}</small>
+                            <small class="text-neon fw-bold">{{ progress }}%</small>
+                        </div>
+                        <div class="progress" style="height: 8px; background: rgba(255, 255, 255, 0.1);">
+                            <div class="progress-bar"
+                                 style="background: var(--infinity-ai-gradient); width: {{ progress }}%;"
+                                 role="progressbar"
+                                 aria-valuenow="{{ progress }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Badges -->
+                    <div class="mb-3">
+                        {% if isCompleted %}
+                            <span class="badge bg-success">
+                                <i class="bi bi-check-circle me-1"></i>{{ 'student.completed'|trans }}
+                            </span>
+                            <small class="text-muted ms-2">{{ enrollment.completedAt|date('M d, Y') }}</small>
+                        {% elseif enrollment.startDate %}
+                            <span class="badge bg-primary">
+                                <i class="bi bi-play-circle me-1"></i>{{ 'student.in_progress'|trans }}
+                            </span>
+                            {% if enrollment.currentLecture %}
+                                <small class="text-muted ms-2">{{ 'student.current'|trans }}: {{ enrollment.currentLecture.name|slice(0, 30) }}</small>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-hourglass-split me-1"></i>{{ 'student.not_started'|trans }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Footer Actions -->
+                    <div class="mt-auto pt-3 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar me-1"></i>{{ 'student.enrolled_on'|trans }} {{ enrollment.enrolledAt|date('M d, Y') }}
+                            </small>
+                            <a href="{{ path('student_course', {id: course.id}) }}"
+                               class="btn infinity-btn-primary btn-sm">
+                                {% if isCompleted %}
+                                    <i class="bi bi-arrow-clockwise me-1"></i>{{ 'student.review'|trans }}
+                                {% elseif enrollment.currentLecture %}
+                                    <i class="bi bi-play-fill me-1"></i>{{ 'student.continue'|trans }}
+                                {% else %}
+                                    <i class="bi bi-play-circle me-1"></i>{{ 'student.start'|trans }}
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="metric-card">
+                <i class="bi bi-book-fill text-neon fs-1"></i>
+                <div class="metric-value">{{ enrollments|length }}</div>
+                <div class="metric-label">{{ 'student.total_courses'|trans }}</div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="metric-card">
+                <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                <div class="metric-value">{{ enrollments|filter(e => e.completedAt is not null)|length }}</div>
+                <div class="metric-label">{{ 'student.completed_courses'|trans }}</div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="metric-card">
+                <i class="bi bi-play-circle-fill text-primary fs-1"></i>
+                <div class="metric-value">{{ enrollments|filter(e => e.startDate is not null and e.completedAt is null)|length }}</div>
+                <div class="metric-label">{{ 'student.in_progress_courses'|trans }}</div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

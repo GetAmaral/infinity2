@@ -97,10 +97,18 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[Groups(['user:read'])]
     protected ?array $listPreferences = null;
 
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Course::class)]
+    protected Collection $ownedCourses;
+
+    #[ORM\OneToMany(mappedBy: 'student', targetEntity: StudentCourse::class)]
+    protected Collection $studentCourses;
+
     public function __construct()
     {
         parent::__construct();
         $this->roles = new ArrayCollection();
+        $this->ownedCourses = new ArrayCollection();
+        $this->studentCourses = new ArrayCollection();
     }
 
     public function getName(): string
@@ -445,6 +453,60 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     {
         if ($this->uiSettings === null) {
             $this->uiSettings = $this->getDefaultUiSettings();
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Course>
+     */
+    public function getOwnedCourses(): Collection
+    {
+        return $this->ownedCourses;
+    }
+
+    public function addOwnedCourse(Course $course): self
+    {
+        if (!$this->ownedCourses->contains($course)) {
+            $this->ownedCourses->add($course);
+            $course->setOwner($this);
+        }
+        return $this;
+    }
+
+    public function removeOwnedCourse(Course $course): self
+    {
+        if ($this->ownedCourses->removeElement($course)) {
+            if ($course->getOwner() === $this) {
+                $course->setOwner(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, StudentCourse>
+     */
+    public function getStudentCourses(): Collection
+    {
+        return $this->studentCourses;
+    }
+
+    public function addStudentCourse(StudentCourse $studentCourse): self
+    {
+        if (!$this->studentCourses->contains($studentCourse)) {
+            $this->studentCourses->add($studentCourse);
+            $studentCourse->setStudent($this);
+        }
+        return $this;
+    }
+
+    public function removeStudentCourse(StudentCourse $studentCourse): self
+    {
+        if ($this->studentCourses->removeElement($studentCourse)) {
+            if ($studentCourse->getStudent() === $this) {
+                $studentCourse->setStudent(null);
+            }
         }
         return $this;
     }

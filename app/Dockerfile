@@ -1,7 +1,9 @@
 FROM dunglas/frankenphp:1.9-php8.4-alpine
 
 # Install dependencies
-RUN apk add --no-cache postgresql-dev \
+RUN apk add --no-cache \
+    postgresql-dev \
+    ffmpeg \
     && docker-php-ext-install pdo_pgsql opcache
 
 # Install Composer
@@ -20,7 +22,7 @@ RUN composer install --optimize-autoloader --no-scripts --classmap-authoritative
 COPY . .
 
 # Create required directories and set permissions
-RUN mkdir -p var/cache var/log \
+RUN mkdir -p var/cache var/log var/videos/originals var/videos/hls \
     && chown -R www-data:www-data var/ \
     && chmod -R 775 var/ \
     && mkdir -p .phpunit \

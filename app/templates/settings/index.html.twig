@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'settings.title'|trans }} - CRM{% endblock %}
+{% block title %}{{ 'settings.title'|trans }} - Infinity{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
@@ -325,9 +325,12 @@
 <script>
 // Settings page theme management
 const SettingsTheme = {
-    init() {
-        // Update UI based on current theme
-        const current = localStorage.getItem('infinity-theme') || 'dark';
+    async init() {
+        // Wait for PreferenceManager to load
+        await window.PreferenceManager.waitForLoad();
+
+        // Update UI based on current theme from PreferenceManager
+        const current = window.PreferenceManager.getUserPreference('theme', 'dark');
         this.updateUI(current);
     },
 
@@ -347,7 +350,10 @@ const SettingsTheme = {
 };
 
 // Global theme switch function
-function switchTheme(theme) {
+async function switchTheme(theme) {
+    // Save via PreferenceManager (saves to localStorage + database)
+    await window.PreferenceManager.setUserPreference('theme', theme);
+
     // Apply theme globally
     if (typeof GlobalTheme !== 'undefined') {
         GlobalTheme.apply(theme);
@@ -355,7 +361,6 @@ function switchTheme(theme) {
     } else {
         // Fallback if GlobalTheme not available
         document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('infinity-theme', theme);
     }
 
     // Update local UI

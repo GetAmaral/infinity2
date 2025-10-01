@@ -12,22 +12,113 @@
 
     <!-- DataTables CSS for Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css">
+
+    <!-- Preference Manager - Load FIRST before any other scripts -->
+    <script src="/preference-manager.js" data-turbo-eval="false"></script>
 </head>
 <body>
     <nav class="navbar infinity-navbar">
         <div class="container">
             <a class="navbar-brand text-white d-flex align-items-center" href="{{ path('app_home') }}">
-                <img src="/infinity_logo_sm_light.png" alt="Infinity" height="32" class="me-2 logo-dark-theme">
-                <img src="/infinity_logo_sm.png" alt="Infinity" height="32" class="me-2 logo-light-theme">
+                <img src="/infinity_logo_sm_dark.png" alt="Infinity" height="32" class="me-2 logo-dark-theme">
+                <img src="/infinity_logo_sm_light.png" alt="Infinity" height="32" class="me-2 logo-light-theme">
                 <span class="fw-bold text-gradient">{{ 'nav.infinity'|trans }}</span>
             </a>
 
-            <div class="d-flex align-items-center ms-auto">
-                <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <div class="d-flex align-items-center ms-auto gap-2">
+                {% if app.user %}
+                <!-- Hamburger Menu Button -->
+                <div class="dropdown">
+                    <button class="nav-link text-white d-flex align-items-center navbar-menu-btn" type="button" id="navDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="bi bi-list fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 200px;">
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_home') }}">
+                                <i class="bi bi-house me-2"></i>{{ 'nav.home'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('student_courses') }}">
+                                <i class="bi bi-mortarboard me-2"></i>{{ 'nav.my_courses'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('organization_index') }}">
+                                <i class="bi bi-building me-2"></i>{{ 'nav.organizations'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('user_index') }}">
+                                <i class="bi bi-people me-2"></i>{{ 'nav.users'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('course_index') }}">
+                                <i class="bi bi-book me-2"></i>{{ 'nav.courses'|trans }}
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
+                        <li>
+                            <a class="dropdown-item" href="/api">
+                                <i class="bi bi-robot me-2"></i>AI Chat
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/health">
+                                <i class="bi bi-activity me-2"></i>Analytics
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('api_token_index') }}">
+                                <i class="bi bi-key me-2"></i>{{ 'token.title'|trans }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
 
-                <!-- User Profile (Always Visible) -->
+                {% if can_switch_organization() %}
+                {% set orgs = available_organizations() %}
+                <!-- Organization Switcher (Admin/Super Admin Only) -->
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="Change your organization">
+                        <i class="bi bi-building me-2"></i>
+                        <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'All Organizations' }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="orgDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
+                        <li class="px-3 py-2 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+                            <small class="org-switcher-title">{{ 'organization.switcher.title'|trans|upper }}</small>
+                            <div class="org-switcher-subtitle" style="font-size: 0.7rem; margin-top: 0.25rem;">{{ 'organization.switcher.subtitle'|trans }}</div>
+                        </li>
+                        {% if has_active_organization() %}
+                        <li>
+                            <form method="post" action="{{ path('app_organization_switcher_clear') }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('organization_clear') }}">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="bi bi-globe me-2"></i>All Organizations (Root)
+                                </button>
+                            </form>
+                        </li>
+                        <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
+                        {% endif %}
+                        {% for org in orgs %}
+                        <li>
+                            <form method="post" action="{{ path('app_organization_switcher_switch', {'id': org.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('organization_switch_' ~ org.id) }}">
+                                <button type="submit" class="dropdown-item {% if current_organization() and current_organization().id == org.id %}active{% endif %}">
+                                    <i class="bi bi-building me-2"></i>{{ org.name }}
+                                    <small class="text-muted d-block" style="font-size: 0.75rem; margin-left: 1.5rem;">{{ org.slug }}.localhost</small>
+                                </button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- User Profile (Authenticated Users Only) -->
+                {% if app.user %}
                 <div class="dropdown">
                     <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
                         <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px; background: var(--infinity-ai-gradient);">
@@ -35,10 +126,10 @@
                         </div>
                         <div class="d-none d-md-block">
                             <div class="text-white" style="font-size: 0.875rem; line-height: 1.2; font-weight: 500;">
-                                {{ app.user ? app.user.name : 'Guest' }}
+                                {{ app.user.name }}
                             </div>
                             <div class="text-muted" style="font-size: 0.75rem; line-height: 1;">
-                                {{ app.user ? app.user.email : '' }}
+                                {{ app.user.email }}
                             </div>
                         </div>
                     </a>
@@ -49,8 +140,13 @@
                                     <i class="bi bi-person-fill text-white fs-5"></i>
                                 </div>
                                 <div>
-                                    <div class="text-white fw-bold" style="font-size: 0.95rem;">{{ app.user ? app.user.name : 'Guest' }}</div>
-                                    <div class="text-muted" style="font-size: 0.8rem;">{{ app.user ? app.user.email : '' }}</div>
+                                    <div class="text-white fw-bold" style="font-size: 0.95rem;">{{ app.user.name }}</div>
+                                    <div class="text-muted" style="font-size: 0.8rem;">{{ app.user.email }}</div>
+                                    {% if current_organization() %}
+                                    <div class="text-muted" style="font-size: 0.7rem;">
+                                        <i class="bi bi-building" style="font-size: 0.65rem;"></i> {{ current_organization().name }}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </li>
@@ -61,47 +157,13 @@
                         </li>
                         <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
                         <li>
-                            <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">
+                            <a class="dropdown-item text-danger" href="{{ path('app_logout') }}" id="logoutLink">
                                 <i class="bi bi-box-arrow-right me-2"></i>{{ 'auth.logout'|trans }}
                             </a>
                         </li>
                     </ul>
                 </div>
-            </div>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ path('app_home') }}">
-                            <i class="bi bi-house me-1"></i>{{ 'nav.home'|trans }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ path('organization_index') }}">
-                            <i class="bi bi-building me-1"></i>{{ 'nav.organizations'|trans }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ path('user_index') }}">
-                            <i class="bi bi-people me-1"></i>{{ 'nav.users'|trans }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/api">
-                            <i class="bi bi-robot me-1"></i>AI Chat
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/health">
-                            <i class="bi bi-activity me-1"></i>Analytics
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ path('api_token_index') }}">
-                            <i class="bi bi-key me-1"></i>{{ 'token.title'|trans }}
-                        </a>
-                    </li>
-                </ul>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -151,12 +213,24 @@
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
 
-    <!-- List Preferences Manager -->
-    <script src="/list-preferences.js"></script>
-
     {% block javascripts %}{% endblock %}
 
     <script data-turbo-eval="false">
+        // Ensure Bootstrap is available globally before any initialization
+        if (typeof bootstrap === 'undefined') {
+            // Create a promise that resolves when Bootstrap is loaded
+            window.bootstrapReady = new Promise((resolve) => {
+                const checkBootstrap = setInterval(() => {
+                    if (typeof bootstrap !== 'undefined') {
+                        clearInterval(checkBootstrap);
+                        resolve();
+                    }
+                }, 50);
+            });
+        } else {
+            window.bootstrapReady = Promise.resolve();
+        }
+
         // Global theme management
         if (typeof GlobalTheme === 'undefined') {
             window.GlobalTheme = {
@@ -222,9 +296,12 @@
             });
 
             // Helper function to safely initialize Bootstrap tooltips
-            function initGlobalTooltips() {
+            async function initGlobalTooltips() {
+                // Wait for Bootstrap to be loaded
+                await window.bootstrapReady;
+
                 if (typeof bootstrap === 'undefined' || typeof bootstrap.Tooltip === 'undefined') {
-                    return; // Bootstrap not loaded yet
+                    return; // Bootstrap still not available
                 }
 
                 const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -242,16 +319,29 @@
                 });
             }
 
+            // Expose tooltip function globally for Stimulus controllers
+            window.initGlobalTooltips = initGlobalTooltips;
+
             // Initialize Bootstrap tooltips when ready
             initGlobalTooltips();
 
-            // Re-initialize tooltips after dynamic content loads
+            // Re-initialize tooltips after Turbo navigation
             document.addEventListener('turbo:load', function() {
+                initGlobalTooltips();
+            });
+
+            // Re-initialize tooltips after Turbo renders new content
+            document.addEventListener('turbo:render', function() {
                 initGlobalTooltips();
             });
 
             // Close dropdowns on click outside or ESC key
             document.addEventListener('click', function(event) {
+                // Check if Bootstrap is loaded
+                if (typeof bootstrap === 'undefined' || typeof bootstrap.Dropdown === 'undefined') {
+                    return;
+                }
+
                 // Check if click is outside any dropdown (user profile dropdown)
                 const dropdowns = document.querySelectorAll('.dropdown-menu.show');
                 dropdowns.forEach(dropdown => {
@@ -291,20 +381,23 @@
             // Close dropdowns and navbar on ESC key
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape' || event.key === 'Esc') {
-                    // Close all open dropdowns
-                    const dropdowns = document.querySelectorAll('.dropdown-menu.show');
-                    dropdowns.forEach(dropdown => {
-                        const parentDropdown = dropdown.closest('.dropdown');
-                        if (parentDropdown) {
-                            const toggle = parentDropdown.querySelector('[data-bs-toggle="dropdown"]');
-                            if (toggle) {
-                                const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
-                                if (bsDropdown) {
-                                    bsDropdown.hide();
+                    // Check if Bootstrap is loaded
+                    if (typeof bootstrap !== 'undefined' && typeof bootstrap.Dropdown !== 'undefined') {
+                        // Close all open dropdowns
+                        const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+                        dropdowns.forEach(dropdown => {
+                            const parentDropdown = dropdown.closest('.dropdown');
+                            if (parentDropdown) {
+                                const toggle = parentDropdown.querySelector('[data-bs-toggle="dropdown"]');
+                                if (toggle) {
+                                    const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
+                                    if (bsDropdown) {
+                                        bsDropdown.hide();
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
 
                     // Close navbar collapse
                     const navbarCollapse = document.getElementById('navbarNav');
@@ -322,208 +415,147 @@
             });
 
             // Initialize theme on page load
-            document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('DOMContentLoaded', async () => {
+                // Initialize PreferenceManager (full page load)
+                await window.PreferenceManager.init(false);
                 GlobalTheme.init();
-                UserPreferences.init();
+            });
+
+            // Initialize on Turbo navigation
+            document.addEventListener('turbo:load', async () => {
+                console.log('🔄 Turbo navigation - loading preferences from localStorage');
+                await window.PreferenceManager.init(true);
             });
         }
 
-        // User Preferences Management
+        // DEPRECATED: Keep UserPreferences wrapper for backward compatibility
         if (typeof UserPreferences === 'undefined') {
             window.UserPreferences = {
-                preferences: {},
-
                 async init() {
-                    await this.loadPreferences();
-                    this.applyPreferences();
-                    this.setupEventListeners();
+                    // Redirect to PreferenceManager
+                    await window.PreferenceManager.init(false);
                 },
 
-                async loadPreferences() {
-                    try {
-                        const response = await fetch('/settings/ajax/preferences', {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            }
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.success) {
-                                this.preferences = data.preferences;
-                                console.log('User preferences loaded:', this.preferences);
-                            }
-                        }
-                    } catch (error) {
-                        console.warn('Failed to load user preferences:', error);
-                        // Use default preferences
-                        this.preferences = this.getDefaultPreferences();
-                    }
+                async loadFromDatabase() {
+                    // Redirect to PreferenceManager
+                    await window.PreferenceManager.init(false);
                 },
 
-                async savePreference(key, value) {
-                    try {
-                        const response = await fetch(`/settings/ajax/preference/${key}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ value: value })
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.success) {
-                                this.preferences[key] = value;
-                                console.log(`Preference saved: ${key} = ${value}`);
-                                return true;
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Failed to save preference:', error);
-                    }
-                    return false;
+                isAuthenticated() {
+                    // Check if we're on a public page (login, register)
+                    const publicPaths = ['/login', '/register'];
+                    const currentPath = window.location.pathname;
+                    return !publicPaths.some(path => currentPath.startsWith(path));
                 },
 
-                async savePreferences(preferences) {
-                    try {
-                        const response = await fetch('/settings/ajax/preferences', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(preferences)
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.success) {
-                                Object.assign(this.preferences, preferences);
-                                console.log('Preferences saved:', preferences);
-                                return true;
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Failed to save preferences:', error);
-                    }
-                    return false;
+                getStorageKey() {
+                    // For compatibility
+                    return 'infinity_preferences';
                 },
 
-                applyPreferences() {
-                    // Apply theme
-                    if (this.preferences.theme) {
-                        GlobalTheme.apply(this.preferences.theme);
-                    }
-
-                    // Apply animations
-                    if (this.preferences.animations_enabled === false) {
-                        document.body.classList.add('no-animations');
-                    }
-
-                    // Apply compact mode
-                    if (this.preferences.compact_mode === true) {
-                        document.body.classList.add('compact-mode');
-                    }
-
-                    // Apply other UI preferences
-                    this.applyCustomProperties();
+                savePreference(key, value) {
+                    // Redirect to PreferenceManager
+                    return window.PreferenceManager.setUserPreference(key, value);
                 },
 
-                applyCustomProperties() {
-                    const root = document.documentElement;
-
-                    // Apply sidebar collapsed state
-                    if (this.preferences.sidebar_collapsed) {
-                        root.style.setProperty('--sidebar-width', '60px');
-                    }
-
-                    // Apply items per page for pagination
-                    if (this.preferences.items_per_page) {
-                        root.style.setProperty('--items-per-page', this.preferences.items_per_page);
-                    }
-                },
-
-                setupEventListeners() {
-                    // Auto-save theme changes
-                    const originalApply = GlobalTheme.apply;
-                    GlobalTheme.apply = (theme) => {
-                        originalApply.call(GlobalTheme, theme);
-                        this.savePreference('theme', theme);
-                    };
-
-                    // Listen for form changes that should save preferences
-                    document.addEventListener('change', (event) => {
-                        if (event.target.matches('[data-preference]')) {
-                            const key = event.target.dataset.preference;
-                            const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-                            this.savePreference(key, value);
-                        }
-                    });
-
-                    // Listen for custom preference events
-                    document.addEventListener('preferenceChanged', (event) => {
-                        const { key, value } = event.detail;
-                        this.savePreference(key, value);
-                    });
-                },
-
-                getDefaultPreferences() {
-                    return {
-                        theme: 'dark',
-                        locale: 'en',
-                        sidebar_collapsed: false,
-                        notifications_enabled: true,
-                        auto_save: true,
-                        animations_enabled: true,
-                        dashboard_layout: 'grid',
-                        items_per_page: 25,
-                        timezone: 'UTC',
-                        sound_enabled: true,
-                        compact_mode: false
-                    };
-                },
-
-                // Utility methods
                 get(key, defaultValue = null) {
-                    return this.preferences[key] ?? defaultValue;
+                    return window.PreferenceManager.getUserPreference(key, defaultValue);
                 },
 
                 set(key, value) {
-                    this.preferences[key] = value;
-                    this.savePreference(key, value);
+                    return window.PreferenceManager.setUserPreference(key, value);
                 },
 
                 toggle(key) {
                     const currentValue = this.get(key, false);
                     this.set(key, !currentValue);
                     return !currentValue;
-                },
-
-                // Dispatch custom event for other scripts to listen
-                dispatchChange(key, value) {
-                    document.dispatchEvent(new CustomEvent('preferenceChanged', {
-                        detail: { key, value }
-                    }));
                 }
             };
 
             // Global functions for easy access
-            window.savePreference = (key, value) => UserPreferences.set(key, value);
-            window.getPreference = (key, defaultValue) => UserPreferences.get(key, defaultValue);
+            window.savePreference = (key, value) => window.PreferenceManager.setUserPreference(key, value);
+            window.getPreference = (key, defaultValue) => window.PreferenceManager.getUserPreference(key, defaultValue);
             window.togglePreference = (key) => UserPreferences.toggle(key);
 
-            // Initialize preferences on page load
-            document.addEventListener('DOMContentLoaded', async () => {
-                GlobalTheme.init();
-                await UserPreferences.init();
-
-                // Initialize list preferences after user preferences are loaded
-                if (window.ListPreferences) {
-                    await window.ListPreferences.init();
+            // Setup event listeners for preferences
+            document.addEventListener('change', (event) => {
+                if (event.target.matches('[data-preference]')) {
+                    const key = event.target.dataset.preference;
+                    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+                    window.PreferenceManager.setUserPreference(key, value);
                 }
+            });
+
+            // Auto-save theme changes
+            document.addEventListener('DOMContentLoaded', () => {
+                const originalApply = GlobalTheme.apply;
+                GlobalTheme.apply = (theme) => {
+                    originalApply.call(GlobalTheme, theme);
+                    window.PreferenceManager.setUserPreference('theme', theme);
+                };
             });
         }
     </script>
+
+    <style>
+        /* Navbar Button Consistency */
+        .navbar-menu-btn {
+            background: transparent;
+            border: none;
+            padding: 0.375rem 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 0.375rem;
+        }
+
+        .navbar-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-menu-btn:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        /* Ensure consistent spacing between navbar buttons */
+        .navbar .dropdown > a,
+        .navbar .dropdown > button {
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .navbar .dropdown > a:hover,
+        .navbar .dropdown > button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Dropdown toggle arrow consistency */
+        .dropdown-toggle::after {
+            margin-left: 0.5rem;
+        }
+
+        /* Mobile: Full-width dropdowns on small screens */
+        @media (max-width: 767px) {
+            .navbar .dropdown-menu {
+                position: fixed !important;
+                left: 0 !important;
+                right: 0 !important;
+                top: auto !important;
+                transform: none !important;
+                width: 100% !important;
+                min-width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                border-left: none !important;
+                border-right: none !important;
+            }
+        }
+    </style>
 </body>
 </html>

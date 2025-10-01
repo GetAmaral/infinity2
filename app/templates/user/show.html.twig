@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ user.name }} - Contact Details{% endblock %}
+{% block title %}{{ user.name }} - {{ 'user.singular'|trans }} - {{ 'page.infinity_suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
@@ -45,7 +45,7 @@
     </div>
 </div>
 
-<!-- Contact Details Bento Grid -->
+<!-- User Details Bento Grid -->
 <div class="bento-grid">
     <!-- Contact Information -->
     <div class="bento-item large">
@@ -54,7 +54,11 @@
                 <h5 class="text-neon mb-0">
                     <i class="bi bi-person-lines-fill me-2"></i>{{ 'contact.information'|trans }}
                 </h5>
-                <button class="btn infinity-btn-primary btn-sm">
+                <button type="button"
+                        class="btn infinity-btn-primary btn-sm"
+                        data-controller="modal-opener"
+                        data-modal-opener-url-value="{{ path('user_edit', {id: user.id}) }}"
+                        data-action="click->modal-opener#open">
                     <i class="bi bi-pencil me-1"></i>{{ 'button.edit_contact'|trans }}
                 </button>
             </div>

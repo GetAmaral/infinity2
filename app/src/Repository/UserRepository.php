@@ -1,43 +1,104 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<User>
+ * @extends BaseRepository<User>
  */
-class UserRepository extends ServiceEntityRepository
+class UserRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Define searchable fields for User entity
+     * Used by BaseRepository for full-text search
+     */
+    protected function getSearchableFields(): array
+    {
+        return ['name', 'email'];
+    }
 
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Define sortable fields mapping
+     * API field name => Entity property
+     */
+    protected function getSortableFields(): array
+    {
+        return [
+            'name' => 'name',
+            'email' => 'email',
+            'organizationName' => 'organization.name',
+            'createdAt' => 'createdAt',
+        ];
+    }
+
+    /**
+     * Find all users with organization (eager loading)
+     * @return User[]
+     */
+    public function findAllWithOrganization(): array
+    {
+        return $this->findAllWithRelations(['organization']);
+    }
+
+    /**
+     * Find users by organization
+     * @return User[]
+     */
+    public function findByOrganization(int $organizationId): array
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.organization', 'o')
+            ->where('o.id = :organizationId')
+            ->setParameter('organizationId', $organizationId)
+            ->orderBy('u.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Find users without organization
+     * @return User[]
+     */
+    public function findWithoutOrganization(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.organization IS NULL')
+            ->orderBy('u.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Get users statistics
+     */
+    public function getStatistics(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.organization', 'o')
+            ->select('COUNT(DISTINCT u.id) as totalUsers')
+            ->addSelect('COUNT(DISTINCT o.id) as usersWithOrganization')
+            ->getQuery()
+            ->getSingleResult();
+    }
+
+    /**
+     * Find user by email
+     */
+    public function findOneByEmail(string $email): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

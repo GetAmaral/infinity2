@@ -114,7 +114,7 @@ final class OrganizationController extends BaseApiController
 
             $this->addFlash('success', 'organization.flash.updated_successfully');
 
-            return $this->redirectToRoute('organization_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRefererOrRoute($request, 'organization_index');
         }
 
         // Handle modal/AJAX requests
@@ -137,7 +137,7 @@ final class OrganizationController extends BaseApiController
     {
         $this->denyAccessUnlessGranted(OrganizationVoter::DELETE, $organization);
 
-        $organizationId = $organization->getId()->toString();
+        $organizationId = $organization->getId()?->toString();
         $organizationName = $organization->getName();
 
         // Check if organization has users
@@ -218,7 +218,7 @@ final class OrganizationController extends BaseApiController
         assert($entity instanceof Organization);
 
         return [
-            'id' => $entity->getId()->toString(),
+            'id' => $entity->getId()?->toString() ?? '',
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
             'userCount' => $entity->getUsers()->count(),

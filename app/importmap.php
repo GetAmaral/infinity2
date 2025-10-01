@@ -35,9 +35,6 @@ return [
         'version' => '5.3.8',
         'type' => 'css',
     ],
-    'bootstrap/dist/js/bootstrap.bundle.min.js' => [
-        'version' => '5.3.8',
-    ],
     'bootstrap-icons/font/bootstrap-icons.min.css' => [
         'version' => '1.13.1',
         'type' => 'css',
@@ -47,5 +44,22 @@ return [
     ],
     '@symfony/ux-live-component' => [
         'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    ],
+    'plyr' => [
+        'version' => '3.7.8',
+    ],
+    'plyr/dist/plyr.css' => [
+        'version' => '3.7.8',
+        'type' => 'css',
+    ],
+    'hls.js' => [
+        'version' => '1.5.14',
+    ],
+    'tom-select' => [
+        'version' => '2.3.1',
+    ],
+    'tom-select/dist/css/tom-select.bootstrap5.css' => [
+        'version' => '2.3.1',
+        'type' => 'css',
     ],
 ];

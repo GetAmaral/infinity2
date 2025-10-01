@@ -1,0 +1,253 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ lecture.name }} - {{ course.name }} - {{ 'student.singular'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb" style="background: transparent; padding: 0;">
+            <li class="breadcrumb-item">
+                <a href="{{ path('student_courses') }}" class="text-neon">
+                    <i class="bi bi-house-door me-1"></i>{{ 'student.my_courses'|trans }}
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ path('student_course', {id: course.id}) }}" class="text-neon">
+                    {{ course.name }}
+                </a>
+            </li>
+            <li class="breadcrumb-item active text-white">{{ lecture.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Video Player Column -->
+        <div class="col-lg-9">
+            <!-- Video Player Card -->
+            <div class="infinity-card p-0 mb-4" style="overflow: hidden;">
+                {% if lecture.processingStatus == 'completed' and lecture.videoPath %}
+                    <!-- Plyr Video Player with HLS -->
+                    <div style="position: relative; background: #000;">
+                        <video
+                            data-controller="student-video"
+                            data-student-video-target="player"
+                            data-student-video-video-url-value="{{ lecture.videoPath }}"
+                            data-student-video-lecture-id-value="{{ lecture.id }}"
+                            data-student-video-progress-url-value="{{ path('student_progress_update', {lectureId: lecture.id}) }}"
+                            data-student-video-current-position-value="{{ studentProgress ? studentProgress.lastPositionSeconds : 0 }}"
+                            data-student-video-completed-value="{{ studentProgress ? studentProgress.completed : false }}"
+                            playsinline
+                            crossorigin="anonymous"
+                            style="width: 100%; height: auto; display: block;">
+                        </video>
+                        <div class="video-error-message" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(220, 38, 38, 0.9); color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 1000;"></div>
+                    </div>
+                {% elseif lecture.processingStatus == 'processing' %}
+                    <div class="p-5 text-center" style="background: var(--infinity-card-bg);">
+                        <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">{{ 'course.lecture.processing'|trans }}...</span>
+                        </div>
+                        <h4 class="text-white mt-4">{{ 'course.lecture.processing'|trans }}...</h4>
+                        <p class="text-muted">{{ 'course.lecture.processing_description'|trans }}</p>
+                        <button class="btn btn-outline-light mt-3" onclick="window.location.reload()">
+                            <i class="bi bi-arrow-clockwise me-2"></i>{{ 'button.refresh'|trans }}
+                        </button>
+                    </div>
+                {% elseif lecture.processingStatus == 'failed' %}
+                    <div class="p-5 text-center" style="background: var(--infinity-card-bg);">
+                        <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                        <h4 class="text-white mt-3">{{ 'course.lecture.failed'|trans }}</h4>
+                        <p class="text-muted">{{ 'course.lecture.failed_description'|trans }}</p>
+                        {% if lecture.processingError %}
+                            <p class="text-danger small">{{ lecture.processingError }}</p>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="p-5 text-center" style="background: var(--infinity-card-bg);">
+                        <i class="bi bi-film text-muted" style="font-size: 4rem;"></i>
+                        <h4 class="text-white mt-3">{{ 'course.lecture.no_video'|trans }}</h4>
+                        <p class="text-muted">{{ 'course.lecture.no_video_description'|trans }}</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Lecture Info Card -->
+            <div class="infinity-card p-4">
+                <h2 class="text-gradient mb-3">{{ lecture.name }}</h2>
+
+                {% if lecture.description %}
+                    <p class="text-secondary mb-4">{{ lecture.description }}</p>
+                {% endif %}
+
+                <!-- Lecture Stats -->
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center p-3 rounded-3" style="background: rgba(79, 70, 229, 0.1);">
+                            <i class="bi bi-clock text-neon fs-3 me-3"></i>
+                            <div>
+                                <small class="text-muted d-block">{{ 'course.lecture.duration'|trans }}</small>
+                                <strong class="text-white">
+                                    {% if lecture.lengthSeconds %}
+                                        {% if lecture.lengthSeconds < 60 %}
+                                            {{ lecture.lengthSeconds }} sec
+                                        {% else %}
+                                            {{ (lecture.lengthSeconds / 60)|round }} {{ 'course.minutes'|trans }}
+                                        {% endif %}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center p-3 rounded-3" style="background: rgba(16, 185, 129, 0.1);">
+                            <i class="bi bi-bar-chart text-success fs-3 me-3"></i>
+                            <div>
+                                <small class="text-muted d-block">{{ 'student.your_progress'|trans }}</small>
+                                <strong class="text-white">
+                                    {{ studentProgress ? studentProgress.completionPercentage|round : 0 }}%
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center p-3 rounded-3" style="background: rgba(234, 179, 8, 0.1);">
+                            <i class="bi bi-{{ studentProgress and studentProgress.completed ? 'check-circle-fill text-success' : 'hourglass-split text-warning' }} fs-3 me-3"></i>
+                            <div>
+                                <small class="text-muted d-block">{{ 'student.status'|trans }}</small>
+                                <strong class="text-white">
+                                    {% if studentProgress and studentProgress.completed %}
+                                        {{ 'student.completed'|trans }}
+                                    {% elseif studentProgress and studentProgress.lastWatchedAt %}
+                                        {{ 'student.in_progress'|trans }}
+                                    {% else %}
+                                        {{ 'student.not_started'|trans }}
+                                    {% endif %}
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar (if watching) -->
+                {% if studentProgress and studentProgress.completionPercentage > 0 %}
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-white">{{ 'student.watch_progress'|trans }}</span>
+                        <span class="text-neon fw-bold">{{ studentProgress.completionPercentage|round }}%</span>
+                    </div>
+                    <div class="progress" style="height: 10px; background: rgba(255, 255, 255, 0.1);">
+                        <div class="progress-bar bg-success"
+                             role="progressbar"
+                             style="width: {{ studentProgress.completionPercentage|round }}%"
+                             aria-valuenow="{{ studentProgress.completionPercentage|round }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+
+                    <!-- Milestones -->
+                    {% if studentProgress %}
+                    <div class="d-flex gap-2 mt-3">
+                        <span class="badge {% if studentProgress.reached25Percent %}bg-success{% else %}bg-secondary{% endif %}">
+                            <i class="bi bi-{{ studentProgress.reached25Percent ? 'check-' : '' }}circle me-1"></i>25%
+                        </span>
+                        <span class="badge {% if studentProgress.reached50Percent %}bg-success{% else %}bg-secondary{% endif %}">
+                            <i class="bi bi-{{ studentProgress.reached50Percent ? 'check-' : '' }}circle me-1"></i>50%
+                        </span>
+                        <span class="badge {% if studentProgress.reached75Percent %}bg-success{% else %}bg-secondary{% endif %}">
+                            <i class="bi bi-{{ studentProgress.reached75Percent ? 'check-' : '' }}circle me-1"></i>75%
+                        </span>
+                        <span class="badge {% if studentProgress.completed %}bg-success{% else %}bg-secondary{% endif %}">
+                            <i class="bi bi-{{ studentProgress.completed ? 'check-' : '' }}circle me-1"></i>100%
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Course Navigation Sidebar -->
+        <div class="col-lg-3">
+            <div class="infinity-card p-3 sticky-top" style="top: 1rem;">
+                <h6 class="text-neon mb-3">
+                    <i class="bi bi-collection me-2"></i>{{ 'course.lectures'|trans }}
+                </h6>
+
+                <div class="list-group">
+                    {% for courseLecture in allLectures %}
+                        {% set isCurrentLecture = courseLecture.id.toString == lecture.id.toString %}
+                        {% set lectureProgress = allLectureProgress[courseLecture.id.toString] ?? null %}
+                        {% set isLectureCompleted = lectureProgress and lectureProgress.completed %}
+                        {% set canAccess = courseLecture.processingStatus == 'completed' %}
+
+                        <a href="{% if canAccess %}{{ path('student_lecture', {courseId: course.id, lectureId: courseLecture.id}) }}{% else %}#{% endif %}"
+                           class="list-group-item list-group-item-action {% if isCurrentLecture %}active{% endif %} {% if not canAccess %}disabled{% endif %}"
+                           style="background: {% if isCurrentLecture %}var(--infinity-ai-gradient){% else %}var(--infinity-card-bg){% endif %};
+                                  border: 1px solid rgba(255, 255, 255, 0.1);
+                                  margin-bottom: 0.5rem;
+                                  border-radius: 8px;
+                                  {% if not canAccess %}opacity: 0.5; cursor: not-allowed;{% endif %}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <small class="text-muted me-2">{{ courseLecture.viewOrder }}.</small>
+                                        <span class="{% if isCurrentLecture %}text-white fw-bold{% else %}text-white{% endif %}" style="font-size: 0.875rem;">
+                                            {{ courseLecture.name|slice(0, 30) }}{% if courseLecture.name|length > 30 %}...{% endif %}
+                                        </span>
+                                    </div>
+                                    {% if courseLecture.lengthSeconds %}
+                                        <small class="text-muted">
+                                            <i class="bi bi-clock me-1"></i>
+                                            {% if courseLecture.lengthSeconds < 60 %}
+                                                {{ courseLecture.lengthSeconds }} sec
+                                            {% else %}
+                                                {{ (courseLecture.lengthSeconds / 60)|round }} min
+                                            {% endif %}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                                <div class="ms-2">
+                                    {% if isLectureCompleted %}
+                                        <i class="bi bi-check-circle-fill text-success"></i>
+                                    {% elseif isCurrentLecture %}
+                                        <i class="bi bi-play-circle-fill text-white"></i>
+                                    {% elseif canAccess %}
+                                        <i class="bi bi-play-circle text-muted"></i>
+                                    {% else %}
+                                        <i class="bi bi-hourglass-split text-warning"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+
+                <!-- Course Progress Summary -->
+                <div class="mt-4 p-3 rounded-3" style="background: rgba(79, 70, 229, 0.1);">
+                    <small class="text-muted d-block mb-2">{{ 'course.overall_progress'|trans }}</small>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong class="text-neon">{{ enrollment.progressPercentage|round }}%</strong>
+                        <small class="text-muted">
+                            {{ allLectureProgress|filter(p => p.completed)|length }} / {{ allLectures|length }}
+                        </small>
+                    </div>
+                    <div class="progress mt-2" style="height: 6px; background: rgba(255, 255, 255, 0.1);">
+                        <div class="progress-bar"
+                             style="background: var(--infinity-ai-gradient);"
+                             role="progressbar"
+                             style="width: {{ enrollment.progressPercentage|round }}%"
+                             aria-valuenow="{{ enrollment.progressPercentage|round }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
