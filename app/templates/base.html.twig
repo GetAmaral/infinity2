@@ -267,16 +267,20 @@
             // Initialize Bootstrap tooltips when ready
             initGlobalTooltips();
 
-            // Re-initialize tooltips after Turbo navigation
+            // Re-initialize tooltips after Turbo navigation (with debounce)
             if (!window.__turboTooltipsRegistered) {
                 window.__turboTooltipsRegistered = true;
+                let tooltipLoadTimeout, tooltipRenderTimeout;
+
                 document.addEventListener('turbo:load', function() {
-                    initGlobalTooltips();
+                    clearTimeout(tooltipLoadTimeout);
+                    tooltipLoadTimeout = setTimeout(() => initGlobalTooltips(), 50);
                 });
 
                 // Re-initialize tooltips after Turbo renders new content
                 document.addEventListener('turbo:render', function() {
-                    initGlobalTooltips();
+                    clearTimeout(tooltipRenderTimeout);
+                    tooltipRenderTimeout = setTimeout(() => initGlobalTooltips(), 50);
                 });
             }
 
@@ -366,12 +370,17 @@
                 GlobalTheme.init();
             });
 
-            // Initialize on Turbo navigation
+            // Initialize on Turbo navigation (with debounce to prevent duplicate calls)
             if (!window.__turboPreferencesRegistered) {
                 window.__turboPreferencesRegistered = true;
+                let turboLoadTimeout;
                 document.addEventListener('turbo:load', async () => {
-                    console.log('🔄 Turbo navigation - loading preferences from localStorage');
-                    await window.PreferenceManager.init(true);
+                    // Debounce: only execute if no other turbo:load fired in the last 50ms
+                    clearTimeout(turboLoadTimeout);
+                    turboLoadTimeout = setTimeout(async () => {
+                        console.log('🔄 Turbo navigation - loading preferences from localStorage');
+                        await window.PreferenceManager.init(true);
+                    }, 50);
                 });
             }
         }
