@@ -179,3 +179,4 @@ id_rsa.pub
 known_hosts
 ###< Security ###
 /app/migrations/
+/app/public/uploads/

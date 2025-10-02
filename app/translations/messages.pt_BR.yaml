@@ -43,6 +43,9 @@ organization.users_in_organization: Usuários nesta Organização
 # ========================================
 organization.form.name: Nome da Organização
 organization.form.name_placeholder: Digite o nome da organização
+organization.form.slug: Slug
+organization.form.slug_placeholder: slug-url-organizacao
+organization.form.slug_help: Identificador amigável para URL (apenas letras minúsculas, números e hífens)
 organization.form.description: Descrição
 organization.form.description_placeholder: Descreva o propósito e atividades da organização
 organization.form.preview: Pré-visualização em Tempo Real
@@ -82,6 +85,10 @@ organization.flash.invalid_csrf_token: Token de segurança inválido. Por favor,
 organization.validation.name_required: O nome da organização é obrigatório
 organization.validation.name_min_length: O nome da organização deve ter pelo menos 2 caracteres
 organization.validation.name_max_length: O nome da organização não pode exceder 255 caracteres
+organization.validation.slug_required: O slug da organização é obrigatório
+organization.validation.slug_min_length: O slug deve ter pelo menos 2 caracteres
+organization.validation.slug_max_length: O slug não pode exceder 255 caracteres
+organization.validation.slug_format: O slug pode conter apenas letras minúsculas, números e hífens
 organization.validation.description_max_length: A descrição não pode exceder 1000 caracteres
 
 # ========================================

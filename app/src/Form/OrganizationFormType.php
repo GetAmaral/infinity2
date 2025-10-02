@@ -40,6 +40,30 @@ class OrganizationFormType extends AbstractType
                     ),
                 ],
             ])
+            ->add('slug', TextType::class, [
+                'label' => 'organization.form.slug',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'organization.form.slug_placeholder',
+                    'pattern' => '[a-z0-9]+(?:-[a-z0-9]+)*',
+                    'data-live-name-value' => 'slug',
+                    'data-action' => 'live#update',
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(message: 'organization.validation.slug_required'),
+                    new Assert\Length(
+                        min: 2,
+                        max: 255,
+                        minMessage: 'organization.validation.slug_min_length',
+                        maxMessage: 'organization.validation.slug_max_length'
+                    ),
+                    new Assert\Regex(
+                        pattern: '/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
+                        message: 'organization.validation.slug_format'
+                    ),
+                ],
+                'help' => 'organization.form.slug_help',
+            ])
             ->add('description', TextareaType::class, [
                 'label' => 'organization.form.description',
                 'required' => false,

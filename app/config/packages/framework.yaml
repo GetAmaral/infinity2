@@ -5,8 +5,8 @@ framework:
     # Locale configuration
     enabled_locales: ['en', 'pt_BR']
 
-    # Trust proxy headers for HTTPS detection
-    trusted_proxies: '127.0.0.1,::1,nginx'
+    # Trust proxy headers for HTTPS detection (Docker bridge network)
+    trusted_proxies: '127.0.0.1,::1,172.16.0.0/12,10.0.0.0/8'
     trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
 
     # CSRF protection enabled

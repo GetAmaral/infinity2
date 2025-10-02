@@ -68,6 +68,20 @@
                 </div>
 
                 <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.slug) }}</label>
+                    {{ form_widget(form.slug, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.slug.vars.errors|length > 0 ? ' input-error' : ''),
+                            'placeholder': 'organization.form.slug.placeholder'|trans
+                        }
+                    }) }}
+                    {% if form.slug.vars.help %}
+                        <small class="form-help-text">{{ form.slug.vars.help|trans }}</small>
+                    {% endif %}
+                    {{ form_errors(form.slug) }}
+                </div>
+
+                <div class="form-group-modern">
                     <label class="form-label-modern">{{ form_label(form.description) }}</label>
                     {{ form_widget(form.description, {
                         'attr': {

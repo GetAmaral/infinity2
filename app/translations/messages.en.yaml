@@ -67,6 +67,9 @@ organization.users_in_organization: Users in this Organization
 # ========================================
 organization.form.name: Organization Name
 organization.form.name_placeholder: Enter organization name
+organization.form.slug: Slug
+organization.form.slug_placeholder: organization-url-slug
+organization.form.slug_help: URL-friendly identifier (lowercase letters, numbers, and hyphens only)
 organization.form.description: Description
 organization.form.description_placeholder: Describe the organization's purpose and activities
 organization.form.preview: Live Preview
@@ -106,6 +109,10 @@ organization.flash.invalid_csrf_token: Invalid security token. Please try again.
 organization.validation.name_required: Organization name is required
 organization.validation.name_min_length: Organization name must be at least 2 characters long
 organization.validation.name_max_length: Organization name cannot exceed 255 characters
+organization.validation.slug_required: Organization slug is required
+organization.validation.slug_min_length: Slug must be at least 2 characters long
+organization.validation.slug_max_length: Slug cannot exceed 255 characters
+organization.validation.slug_format: Slug can only contain lowercase letters, numbers, and hyphens
 organization.validation.description_max_length: Description cannot exceed 1000 characters
 
 # ========================================
