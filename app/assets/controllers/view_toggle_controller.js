@@ -1,31 +1,49 @@
 import { Controller } from "@hotwired/stimulus";
 
 /**
- * View Toggle Controller - Pure Server-Side Data
+ * Generic View Toggle Controller - Template-Based Rendering
  *
- * All filtering, sorting, and pagination happen on the server.
- * This controller only:
- * 1. Fetches JSON from API with query params
- * 2. Renders data in 3 different visual formats (grid/list/table)
- * 3. Maintains state (view, search, sort, page) across view switches
+ * This controller is completely entity-agnostic. It:
+ * 1. Fetches JSON data from API
+ * 2. Clones HTML templates defined in Twig
+ * 3. Populates templates using data-bind-* attributes
+ * 4. Manages view state (grid/list/table)
+ *
+ * Each entity defines its own templates in Twig using <template> elements.
  */
 export default class extends Controller {
-    static targets = ["container", "gridButton", "listButton", "tableButton", "tableContainer"];
+    static targets = [
+        "container",
+        "gridButton",
+        "listButton",
+        "tableButton",
+        "tableContainer",
+        "gridTemplate",
+        "listTemplate",
+        "tableRowTemplate"
+    ];
 
     static values = {
         default: { type: String, default: "grid" },
-        storageKey: { type: String, default: "organization-view-preference" }
+        filterAll: { type: String, default: "All" },
+        filterYes: { type: String, default: "Yes" },
+        filterNo: { type: String, default: "No" }
     };
 
     connect() {
-        // Prevent duplicate initialization during Turbo navigation
-        if (this.element.dataset.viewToggleInitialized === 'true') {
-            console.log('🔄 View toggle already initialized, skipping...');
+        this.entityName = this.getEntityNameFromPage();
+
+        // Use global flag per entity to prevent duplicate initialization across Turbo navigations
+        if (!window.__viewToggleInitialized) {
+            window.__viewToggleInitialized = {};
+        }
+
+        if (window.__viewToggleInitialized[this.entityName]) {
+            console.log('🔄 View toggle already initialized, skipping...', this.entityName);
             return;
         }
-        this.element.dataset.viewToggleInitialized = 'true';
+        window.__viewToggleInitialized[this.entityName] = true;
 
-        this.entityName = this.getEntityNameFromPage();
         this.currentView = 'grid';
         this.searchTerm = '';
         this.sortBy = 'name';
@@ -34,13 +52,11 @@ export default class extends Controller {
         this.itemsPerPage = 10;
         this.totalPages = 1;
         this.isLoading = false;
+        this.columnFilters = {};
 
-        // Show loading state immediately
         this.showLoading();
 
-        // Wait for ListPreferences to be loaded
         this.waitForListPreferences().then(() => {
-            // Load saved preferences
             const prefs = this.getEntityPreferences();
             this.currentView = prefs.view || 'grid';
             this.sortBy = prefs.sortBy || 'name';
@@ -48,43 +64,33 @@ export default class extends Controller {
             this.currentPage = prefs.currentPage || 1;
             this.itemsPerPage = prefs.itemsPerPage || 10;
             this.searchTerm = prefs.searchTerm || '';
+            this.columnFilters = prefs.columnFilters || {};
 
-            console.log(`📋 Loaded preferences:`, prefs);
-
-            // Apply saved view
             this.applyViewUI(this.currentView);
-
-            // Setup event listeners
             this.setupSearchHandler();
-
-            // Fetch initial data from API
             this.fetchAndRender();
         });
     }
 
     disconnect() {
-        // Clean up initialization flag when controller disconnects
-        if (this.element) {
-            delete this.element.dataset.viewToggleInitialized;
-        }
+        // Don't clean up the flag here - let Turbo before-cache handle it
+        // This prevents duplicate initialization when controller reconnects during same page load
     }
 
-    /**
-     * Extract entity name from page
-     */
     getEntityNameFromPage() {
         const tableElement = this.element.querySelector('table[id$="DataTable"]');
         if (tableElement) {
             return tableElement.id.replace('DataTable', '');
         }
         const path = window.location.pathname;
-        const match = path.match(/\/(organization|user)s?/);
-        return match ? match[1] + 's' : 'organizations';
+        const match = path.match(/\/(organization|user|course)s?/);
+        if (match) {
+            const entity = match[1];
+            return entity === 'course' ? 'courses' : entity + 's';
+        }
+        return 'organizations';
     }
 
-    /**
-     * Wait for ListPreferences to be loaded
-     */
     async waitForListPreferences() {
         for (let i = 0; i < 30; i++) {
             if (window.ListPreferences && window.ListPreferences.loaded) {
@@ -92,12 +98,8 @@ export default class extends Controller {
             }
             await new Promise(resolve => setTimeout(resolve, 100));
         }
-        console.warn('⚠️ ListPreferences not loaded after 3 seconds');
     }
 
-    /**
-     * Get entity preferences from ListPreferences
-     */
     getEntityPreferences() {
         if (window.ListPreferences && window.ListPreferences.loaded) {
             return window.ListPreferences.getEntityPreferences(this.entityName);
@@ -109,21 +111,16 @@ export default class extends Controller {
             searchTerm: '',
             currentPage: 1,
             itemsPerPage: 10,
+            columnFilters: {},
         };
     }
 
-    /**
-     * Save entity preference
-     */
     async savePreference(key, value) {
         if (window.ListPreferences && window.ListPreferences.loaded) {
             await window.ListPreferences.savePreference(this.entityName, key, value);
         }
     }
 
-    /**
-     * Setup search input handler
-     */
     setupSearchHandler() {
         const searchInput = document.getElementById(`${this.entityName.replace(/s$/, '')}SearchInput`);
         const clearBtn = document.getElementById('clearSearchBtn');
@@ -134,11 +131,10 @@ export default class extends Controller {
 
         searchInput.addEventListener('input', (e) => {
             const value = e.target.value.trim();
-
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 this.searchTerm = value;
-                this.currentPage = 1; // Reset to first page on new search
+                this.currentPage = 1;
                 this.savePreference('searchTerm', value);
                 this.fetchAndRender();
             }, 400);
@@ -166,34 +162,23 @@ export default class extends Controller {
             }
         });
 
-        // Set initial value
         if (this.searchTerm) {
             searchInput.value = this.searchTerm;
         }
     }
 
-    /**
-     * User clicked view button (grid/list/table)
-     */
     setView(event) {
         const view = event.currentTarget.dataset.view;
         if (!['grid', 'list', 'table'].includes(view)) {
-            console.error('Invalid view:', view);
             return;
         }
 
-        console.log(`🔄 Switching to ${view} view`);
         this.currentView = view;
         this.savePreference('view', view);
-
-        // Update UI and render with current data
         this.applyViewUI(view);
         this.fetchAndRender();
     }
 
-    /**
-     * Apply view UI changes (show/hide containers, update buttons)
-     */
     applyViewUI(view) {
         const container = this.containerTarget;
         const tableContainer = this.hasTableContainerTarget ? this.tableContainerTarget : null;
@@ -201,10 +186,8 @@ export default class extends Controller {
         if (view === 'grid' || view === 'list') {
             container.style.display = '';
             if (tableContainer) tableContainer.style.display = 'none';
-
             container.classList.remove('bento-grid', 'list-view');
             container.classList.add(view === 'grid' ? 'bento-grid' : 'list-view');
-
         } else if (view === 'table') {
             container.style.display = 'none';
             if (tableContainer) tableContainer.style.display = 'block';
@@ -213,9 +196,6 @@ export default class extends Controller {
         this.updateButtonStates(view);
     }
 
-    /**
-     * Update active state of toggle buttons
-     */
     updateButtonStates(activeView) {
         if (this.hasGridButtonTarget) {
             this.gridButtonTarget.classList.toggle('active', activeView === 'grid');
@@ -228,15 +208,11 @@ export default class extends Controller {
         }
     }
 
-    /**
-     * Fetch data from API and render in current view
-     */
     async fetchAndRender() {
         if (this.isLoading) return;
         this.isLoading = true;
 
         try {
-            // Build API URL with all params
             const params = new URLSearchParams({
                 q: this.searchTerm,
                 page: this.currentPage,
@@ -245,10 +221,16 @@ export default class extends Controller {
                 sortDir: this.sortDir,
             });
 
-            const url = `/${this.entityName.replace(/s$/, '')}/api/search?${params}`;
-            console.log(`🌐 Fetching: ${url}`);
+            // Add column filters to params
+            Object.entries(this.columnFilters).forEach(([field, value]) => {
+                if (value) {
+                    params.append(`filter[${field}]`, value);
+                }
+            });
 
+            const url = `/${this.entityName.replace(/s$/, '')}/api/search?${params}`;
             const response = await fetch(url);
+
             if (!response.ok) {
                 throw new Error(`API returned ${response.status}`);
             }
@@ -256,15 +238,12 @@ export default class extends Controller {
             const data = await response.json();
             const items = data[this.entityName] || [];
 
-            // Update pagination state
             if (data.pagination) {
                 this.currentPage = data.pagination.page;
                 this.totalPages = data.pagination.totalPages;
+                this.updatePaginationInfo(data.pagination, items.length);
             }
 
-            console.log(`📦 Received ${items.length} items (page ${this.currentPage}/${this.totalPages})`);
-
-            // Render in current view
             this.renderView(items);
 
         } catch (error) {
@@ -275,9 +254,6 @@ export default class extends Controller {
         }
     }
 
-    /**
-     * Show loading state
-     */
     showLoading() {
         const loadingHtml = `
             <div class="text-center py-5">
@@ -288,7 +264,6 @@ export default class extends Controller {
             </div>
         `;
 
-        // Show loading in both possible containers
         if (this.hasContainerTarget) {
             this.containerTarget.innerHTML = loadingHtml;
         }
@@ -297,11 +272,8 @@ export default class extends Controller {
             if (tbody) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" class="text-center py-5">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="text-muted mt-3">Loading data...</p>
+                        <td colspan="10" class="text-center py-5">
+                            ${loadingHtml}
                         </td>
                     </tr>
                 `;
@@ -309,9 +281,6 @@ export default class extends Controller {
         }
     }
 
-    /**
-     * Render items in current view
-     */
     renderView(items) {
         if (this.currentView === 'table') {
             this.renderTableView(items);
@@ -322,65 +291,60 @@ export default class extends Controller {
         }
     }
 
-    /**
-     * Render grid view
-     */
     renderGridView(items) {
-        const container = this.containerTarget;
-
-        if (items.length === 0) {
-            container.innerHTML = `
-                <div class="col-12 text-center py-5">
-                    <i class="bi bi-search fs-1 text-muted"></i>
-                    <p class="text-muted mt-3">No results found</p>
-                </div>
-            `;
+        if (!this.hasGridTemplateTarget) {
+            console.error('Grid template not found');
             return;
         }
 
-        let html = '';
+        const container = this.containerTarget;
+
+        if (items.length === 0) {
+            container.innerHTML = this.getEmptyStateHtml();
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
         items.forEach((item, index) => {
-            const isLarge = index % 3 === 0 ? 'large' : '';
-            html += this.renderCard(item, isLarge, 'grid');
+            const clone = this.populateTemplate(this.gridTemplateTarget, item, index);
+            fragment.appendChild(clone);
         });
 
-        container.innerHTML = html;
-
-        // Trigger Bootstrap re-initialization via global function
+        container.innerHTML = '';
+        container.appendChild(fragment);
         this.triggerBootstrapInit();
     }
 
-    /**
-     * Render list view
-     */
     renderListView(items) {
-        const container = this.containerTarget;
-
-        if (items.length === 0) {
-            container.innerHTML = `
-                <div class="col-12 text-center py-5">
-                    <i class="bi bi-search fs-1 text-muted"></i>
-                    <p class="text-muted mt-3">No results found</p>
-                </div>
-            `;
+        if (!this.hasListTemplateTarget) {
+            console.error('List template not found');
             return;
         }
 
-        let html = '';
-        items.forEach(item => {
-            html += this.renderCard(item, '', 'list');
+        const container = this.containerTarget;
+
+        if (items.length === 0) {
+            container.innerHTML = this.getEmptyStateHtml();
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        items.forEach((item, index) => {
+            const clone = this.populateTemplate(this.listTemplateTarget, item, index);
+            fragment.appendChild(clone);
         });
 
-        container.innerHTML = html;
-
-        // Trigger Bootstrap re-initialization via global function
+        container.innerHTML = '';
+        container.appendChild(fragment);
         this.triggerBootstrapInit();
     }
 
-    /**
-     * Render table view
-     */
     renderTableView(items) {
+        if (!this.hasTableRowTemplateTarget) {
+            console.error('Table row template not found');
+            return;
+        }
+
         const tableContainer = this.tableContainerTarget;
         const tbody = tableContainer.querySelector('tbody');
 
@@ -389,67 +353,134 @@ export default class extends Controller {
             return;
         }
 
-        // Setup sortable headers (only once)
         this.setupTableHeaders();
 
         if (items.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="text-center py-5">
-                        <i class="bi bi-search fs-1 text-muted"></i>
-                        <p class="text-muted mt-3">No results found</p>
+                    <td colspan="10" class="text-center py-5">
+                        ${this.getEmptyStateHtml()}
                     </td>
                 </tr>
             `;
             return;
         }
 
-        let html = '';
-        items.forEach(item => {
-            html += this.renderTableRow(item);
+        const fragment = document.createDocumentFragment();
+        items.forEach((item, index) => {
+            const clone = this.populateTemplate(this.tableRowTemplateTarget, item, index);
+            fragment.appendChild(clone);
         });
 
-        tbody.innerHTML = html;
-
-        // Trigger Bootstrap re-initialization via global function
+        tbody.innerHTML = '';
+        tbody.appendChild(fragment);
         this.triggerBootstrapInit();
     }
 
     /**
-     * Setup clickable sortable table headers
-     * Reads sort field names from data-sort-field attributes
+     * Populate template with data using data-bind-* attributes
      */
+    populateTemplate(template, item, index) {
+        const clone = template.content.cloneNode(true);
+
+        // Find all elements with data-bind OR data-bind-if attributes
+        const bindElements = clone.querySelectorAll('[data-bind], [data-bind-if]');
+
+        bindElements.forEach(el => {
+            // Handle conditional rendering first (data-bind-if)
+            if (el.hasAttribute('data-bind-if')) {
+                const condition = el.getAttribute('data-bind-if');
+                if (!this.evaluateCondition(item, condition)) {
+                    el.remove();
+                    return; // Skip further processing for removed elements
+                }
+            }
+
+            // Then handle data binding
+            const bindKey = el.getAttribute('data-bind');
+            if (!bindKey) return; // No data-bind, only had data-bind-if
+
+            const value = this.getNestedValue(item, bindKey);
+
+            // Handle different binding types
+            if (el.hasAttribute('data-bind-text')) {
+                el.textContent = value || '';
+            } else if (el.hasAttribute('data-bind-html')) {
+                el.innerHTML = value || '';
+            } else if (el.hasAttribute('data-bind-attr')) {
+                const attr = el.getAttribute('data-bind-attr');
+                el.setAttribute(attr, value || '');
+            } else if (el.hasAttribute('data-bind-href')) {
+                el.href = value || '#';
+            } else if (el.hasAttribute('data-bind-src')) {
+                el.src = value || '';
+            } else if (el.hasAttribute('data-bind-class')) {
+                const classes = el.getAttribute('data-bind-class').split('|');
+                el.classList.add(...classes);
+            } else {
+                // Default: set text content
+                el.textContent = value || '';
+            }
+        });
+
+        // Handle data-entity-id for the root element
+        const rootEl = clone.firstElementChild;
+        if (rootEl && item.id) {
+            rootEl.setAttribute('data-entity-id', item.id);
+        }
+
+        return clone;
+    }
+
+    /**
+     * Get nested value from object using dot notation
+     */
+    getNestedValue(obj, path) {
+        return path.split('.').reduce((curr, key) => curr?.[key], obj);
+    }
+
+    /**
+     * Evaluate simple conditions
+     */
+    evaluateCondition(item, condition) {
+        // Handle simple conditions like "active", "!active", "count>0"
+        if (condition.startsWith('!')) {
+            return !item[condition.slice(1)];
+        }
+        if (condition.includes('>')) {
+            const [key, val] = condition.split('>');
+            return (item[key.trim()] || 0) > parseInt(val.trim());
+        }
+        if (condition.includes('<')) {
+            const [key, val] = condition.split('<');
+            return (item[key.trim()] || 0) < parseInt(val.trim());
+        }
+        return !!item[condition];
+    }
+
     setupTableHeaders() {
         const tableContainer = this.tableContainerTarget;
         const thead = tableContainer.querySelector('thead tr');
 
         if (!thead || thead.dataset.sortSetup) {
-            return; // Already setup
+            return;
         }
 
         thead.dataset.sortSetup = 'true';
 
         thead.querySelectorAll('th').forEach((th) => {
-            // Read sort field from data attribute
             const sortField = th.dataset.sortField;
+            if (!sortField) return;
 
-            if (!sortField) {
-                return; // Not sortable (like actions column)
-            }
-
-            // Make header clickable
             th.style.cursor = 'pointer';
             th.style.userSelect = 'none';
 
-            // Add sort indicator
             const sortIcon = document.createElement('i');
             sortIcon.className = 'bi bi-arrow-down-up ms-2 sort-indicator';
             sortIcon.style.fontSize = '0.8em';
             th.appendChild(sortIcon);
 
-            // Click handler for sorting
             th.addEventListener('click', () => {
-                // Toggle direction if same column
                 if (this.sortBy === sortField) {
                     this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
                 } else {
@@ -457,25 +488,172 @@ export default class extends Controller {
                     this.sortDir = 'asc';
                 }
 
-                // Save preferences
                 this.savePreference('sortBy', this.sortBy);
                 this.savePreference('sortDir', this.sortDir);
-
-                // Update UI
                 this.updateSortIndicators(thead);
-
-                // Fetch with new sort
                 this.fetchAndRender();
             });
         });
 
-        // Set initial sort indicators
         this.updateSortIndicators(thead);
+        this.setupColumnFilters();
     }
 
-    /**
-     * Update sort direction indicators on headers
-     */
+    setupColumnFilters() {
+        const tableContainer = this.tableContainerTarget;
+        const thead = tableContainer.querySelector('thead');
+        const filterRow = thead.querySelector('tr.filters');
+
+        if (!filterRow || filterRow.dataset.filtersSetup) {
+            return;
+        }
+
+        filterRow.dataset.filtersSetup = 'true';
+
+        // Get all header cells from the first row
+        const headerRow = thead.querySelector('tr:first-child');
+        const headers = headerRow.querySelectorAll('th');
+
+        // Create filter inputs for each column
+        headers.forEach((th, index) => {
+            const filterCell = document.createElement('th');
+            const sortField = th.dataset.sortField;
+            const fieldType = th.dataset.fieldType; // 'boolean', 'date', 'text', etc.
+
+            // Only add input for sortable columns (those with data-sort-field)
+            if (sortField) {
+                let filterElement;
+
+                // Create select dropdown for boolean fields
+                if (fieldType === 'boolean') {
+                    filterElement = document.createElement('select');
+                    filterElement.className = 'form-select form-select-sm';
+                    filterElement.dataset.filterField = sortField;
+
+                    // Add options
+                    const options = [
+                        { value: '', label: this.filterAllValue },
+                        { value: 'true', label: this.filterYesValue },
+                        { value: 'false', label: this.filterNoValue }
+                    ];
+
+                    options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt.value;
+                        option.textContent = opt.label;
+                        filterElement.appendChild(option);
+                    });
+
+                    // Restore saved filter value
+                    if (this.columnFilters[sortField]) {
+                        filterElement.value = this.columnFilters[sortField];
+                    }
+
+                    // Add change event listener (no debounce needed for select)
+                    filterElement.addEventListener('change', (e) => {
+                        const value = e.target.value;
+                        if (value) {
+                            this.columnFilters[sortField] = value;
+                        } else {
+                            delete this.columnFilters[sortField];
+                        }
+                        this.currentPage = 1;
+                        this.savePreference('columnFilters', this.columnFilters);
+                        this.fetchAndRender();
+                    });
+                } else if (fieldType === 'date') {
+                    // Create daterange container with two date inputs
+                    const dateRangeContainer = document.createElement('div');
+                    dateRangeContainer.className = 'd-flex gap-1';
+
+                    const fromDate = document.createElement('input');
+                    fromDate.type = 'date';
+                    fromDate.className = 'form-control form-control-sm';
+                    fromDate.placeholder = 'From';
+                    fromDate.style.fontSize = '0.75rem';
+                    fromDate.dataset.filterField = sortField;
+                    fromDate.dataset.rangeType = 'from';
+
+                    const toDate = document.createElement('input');
+                    toDate.type = 'date';
+                    toDate.className = 'form-control form-control-sm';
+                    toDate.placeholder = 'To';
+                    toDate.style.fontSize = '0.75rem';
+                    toDate.dataset.filterField = sortField;
+                    toDate.dataset.rangeType = 'to';
+
+                    // Restore saved filter value (format: "from:to")
+                    if (this.columnFilters[sortField]) {
+                        const [from, to] = this.columnFilters[sortField].split(':');
+                        if (from) fromDate.value = from;
+                        if (to) toDate.value = to;
+                    }
+
+                    // Add change event listener with debounce
+                    let debounceTimer = null;
+                    const handleDateChange = () => {
+                        clearTimeout(debounceTimer);
+                        debounceTimer = setTimeout(() => {
+                            const fromValue = fromDate.value;
+                            const toValue = toDate.value;
+
+                            if (fromValue || toValue) {
+                                this.columnFilters[sortField] = `${fromValue}:${toValue}`;
+                            } else {
+                                delete this.columnFilters[sortField];
+                            }
+                            this.currentPage = 1;
+                            this.savePreference('columnFilters', this.columnFilters);
+                            this.fetchAndRender();
+                        }, 400);
+                    };
+
+                    fromDate.addEventListener('change', handleDateChange);
+                    toDate.addEventListener('change', handleDateChange);
+
+                    dateRangeContainer.appendChild(fromDate);
+                    dateRangeContainer.appendChild(toDate);
+                    filterCell.appendChild(dateRangeContainer);
+                } else {
+                    // Create text input for text fields
+                    filterElement = document.createElement('input');
+                    filterElement.type = 'text';
+                    filterElement.className = 'form-control form-control-sm';
+                    filterElement.placeholder = `Filter...`;
+                    filterElement.dataset.filterField = sortField;
+
+                    // Restore saved filter value
+                    if (this.columnFilters[sortField]) {
+                        filterElement.value = this.columnFilters[sortField];
+                    }
+
+                    // Add debounced event listener
+                    let debounceTimer = null;
+                    filterElement.addEventListener('input', (e) => {
+                        clearTimeout(debounceTimer);
+                        debounceTimer = setTimeout(() => {
+                            const value = e.target.value.trim();
+                            if (value) {
+                                this.columnFilters[sortField] = value;
+                            } else {
+                                delete this.columnFilters[sortField];
+                            }
+                            this.currentPage = 1;
+                            this.savePreference('columnFilters', this.columnFilters);
+                            this.fetchAndRender();
+                        }, 400);
+                    });
+                }
+
+                if (filterElement) {
+                    filterCell.appendChild(filterElement);
+                }
+            }
+
+            filterRow.appendChild(filterCell);
+        });
+    }
+
     updateSortIndicators(thead) {
         thead.querySelectorAll('th').forEach((th) => {
             const sortField = th.dataset.sortField;
@@ -483,7 +661,6 @@ export default class extends Controller {
 
             if (!sortIcon || !sortField) return;
 
-            // Update icon and style based on current sort
             if (sortField === this.sortBy) {
                 sortIcon.className = this.sortDir === 'asc'
                     ? 'bi bi-arrow-up ms-2 sort-indicator'
@@ -496,128 +673,15 @@ export default class extends Controller {
         });
     }
 
-    /**
-     * Render a single card (grid or list)
-     */
-    renderCard(item, sizeClass, viewType) {
-        const userCount = item.userCount || 0;
-        const description = item.description || '';
-        const descriptionPreview = viewType === 'grid' && description.length > 100
-            ? description.slice(0, 100) + '...'
-            : description;
-        const createdAt = new Date(item.createdAt || Date.now()).toLocaleDateString('en-US', {
-            month: 'short', day: 'numeric', year: 'numeric'
-        });
-
+    getEmptyStateHtml() {
         return `
-            <div class="bento-item ${sizeClass}" id="organization-${item.id}">
-                <div class="infinity-card ai-enhanced p-4 h-100">
-                    <div class="d-flex align-items-start mb-3">
-                        <div class="org-actions me-3">
-                            ${this.renderDropdown(item)}
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex align-items-center mb-2">
-                                <div class="p-2 rounded-3 me-3" style="background: var(--infinity-ai-gradient); background-size: 200% 200%; animation: gradientShift 4s ease infinite;">
-                                    <i class="bi bi-building text-white fs-4"></i>
-                                </div>
-                                <div>
-                                    <h5 class="text-white mb-1">${this.escapeHtml(item.name)}</h5>
-                                    <div class="d-flex gap-2 align-items-center">
-                                        <span class="real-time-badge">
-                                            ${userCount === 0 ? 'No users' : `${userCount} user${userCount > 1 ? 's' : ''}`}
-                                        </span>
-                                        ${userCount > 5 ? '<span class="ai-status-indicator" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;"><i class="bi bi-star-fill"></i> Active</span>' : ''}
-                                    </div>
-                                </div>
-                            </div>
-                            ${description ? `<p class="text-secondary mb-3 org-description">${this.escapeHtml(descriptionPreview)}</p>` : '<p class="text-muted mb-3 fst-italic org-description">No description</p>'}
-                            <div class="d-flex justify-content-between align-items-center mt-auto org-footer">
-                                <small class="text-muted d-flex align-items-center">
-                                    <i class="bi bi-calendar me-1"></i>${createdAt}
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-search fs-1 text-muted"></i>
+                <p class="text-muted mt-3">No results found</p>
             </div>
         `;
     }
 
-    /**
-     * Render table row
-     */
-    renderTableRow(item) {
-        const userCount = item.userCount || 0;
-        const description = item.description || '';
-        const descriptionPreview = description.length > 80 ? description.slice(0, 80) + '...' : description;
-        const createdAt = new Date(item.createdAt || Date.now()).toLocaleDateString('en-US', {
-            month: 'short', day: 'numeric', year: 'numeric'
-        });
-
-        return `
-            <tr id="organization-row-${item.id}">
-                <td>
-                    ${this.renderDropdown(item)}
-                </td>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <div class="p-2 rounded-3 me-3" style="background: var(--infinity-ai-gradient); background-size: 200% 200%; animation: gradientShift 4s ease infinite;">
-                            <i class="bi bi-building text-white"></i>
-                        </div>
-                        <strong>${this.escapeHtml(item.name)}</strong>
-                    </div>
-                </td>
-                <td>${description ? this.escapeHtml(descriptionPreview) : '<span class="text-muted fst-italic">No description</span>'}</td>
-                <td><span class="badge" style="background: var(--infinity-ai-gradient); color: white;">${userCount}</span></td>
-                <td>${createdAt}</td>
-            </tr>
-        `;
-    }
-
-    /**
-     * Render actions dropdown
-     */
-    renderDropdown(item) {
-        const entitySingular = this.entityName.replace(/s$/, '');
-        return `
-            <div class="dropdown">
-                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="background: var(--infinity-dark-surface);">
-                    <li>
-                        <a class="dropdown-item" href="/${entitySingular}/${item.id}">
-                            <i class="bi bi-eye me-2"></i>View Details
-                        </a>
-                    </li>
-                    <li>
-                        <button type="button" class="dropdown-item" data-controller="modal-opener" data-modal-opener-url-value="/${entitySingular}/${item.id}/edit" data-action="click->modal-opener#open">
-                            <i class="bi bi-pencil me-2"></i>Edit
-                        </button>
-                    </li>
-                    ${entitySingular === 'organization' ? `<li>
-                        <a class="dropdown-item" href="/${entitySingular}/${item.id}/users">
-                            <i class="bi bi-people me-2"></i>Manage Users
-                        </a>` : ''}
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <form method="post" action="/${entitySingular}/${item.id}/delete" class="d-inline" data-controller="confirm-delete" data-confirm-delete-message-value="Are you sure you want to delete ${this.escapeHtml(item.name)}?">
-                            <input type="hidden" name="_token" value="">
-                            <button type="submit" class="dropdown-item text-danger">
-                                <i class="bi bi-trash me-2"></i>Delete
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        `;
-    }
-
-    /**
-     * Render error message
-     */
     renderError(message) {
         const container = this.currentView === 'table' ? this.tableContainerTarget : this.containerTarget;
         container.innerHTML = `
@@ -628,9 +692,6 @@ export default class extends Controller {
         `;
     }
 
-    /**
-     * Escape HTML to prevent XSS
-     */
     escapeHtml(text) {
         const map = {
             '&': '&amp;',
@@ -642,26 +703,31 @@ export default class extends Controller {
         return String(text).replace(/[&<>"']/g, m => map[m]);
     }
 
-    /**
-     * Trigger Bootstrap re-initialization using global functions
-     * Uses the global initGlobalTooltips and initGlobalDropdowns from base.html.twig
-     */
+    updatePaginationInfo(pagination, itemsCount) {
+        const itemsStartEl = document.getElementById('itemsStart');
+        const itemsEndEl = document.getElementById('itemsEnd');
+        const itemsTotalEl = document.getElementById('itemsTotal');
+
+        if (!itemsStartEl || !itemsEndEl || !itemsTotalEl) {
+            return;
+        }
+
+        const start = pagination.total === 0 ? 0 : ((pagination.page - 1) * pagination.limit) + 1;
+        const end = Math.min(pagination.page * pagination.limit, pagination.total);
+
+        itemsStartEl.textContent = start;
+        itemsEndEl.textContent = end;
+        itemsTotalEl.textContent = pagination.total;
+    }
+
     triggerBootstrapInit() {
-        // Use requestAnimationFrame to ensure DOM is fully updated
         requestAnimationFrame(async () => {
-            // Call global initialization functions if they exist
             if (typeof window.initGlobalTooltips === 'function') {
                 await window.initGlobalTooltips();
             }
             if (typeof window.initGlobalDropdowns === 'function') {
                 await window.initGlobalDropdowns();
             }
-
-            console.log('🔄 Bootstrap components re-initialized after view render');
         });
-    }
-
-    disconnect() {
-        // Cleanup if needed
     }
 }

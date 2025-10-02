@@ -1,3 +1,4 @@
+{% import '_macros/organization_logo.html.twig' as org_logo %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -64,7 +65,11 @@
                 <!-- Organization Switcher (Admin/Super Admin Only) -->
                 <div class="dropdown">
                     <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher_title'|trans }}">
-                        <i class="bi bi-building me-2"></i>
+                        {% if current_organization() %}
+                            {{ org_logo.logo(current_organization(), 'xs', 'me-2') }}
+                        {% else %}
+                            <i class="bi bi-globe me-2"></i>
+                        {% endif %}
                         <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'organization.all_organizations'|trans }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="orgDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
@@ -87,9 +92,14 @@
                         <li>
                             <form method="post" action="{{ path('app_organization_switcher_switch', {'id': org.id}) }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token('organization_switch_' ~ org.id) }}">
-                                <button type="submit" class="dropdown-item {% if current_organization() and current_organization().id == org.id %}active{% endif %}">
-                                    <i class="bi bi-building me-2"></i>{{ org.name }}
-                                    <small class="text-muted d-block" style="font-size: 0.75rem; margin-left: 1.5rem;">{{ org.slug }}.localhost</small>
+                                <button type="submit" class="dropdown-item d-flex align-items-start gap-2 {% if current_organization() and current_organization().id == org.id %}active{% endif %}">
+                                    <div class="flex-shrink-0 mt-1">
+                                        {{ org_logo.logo(org, 'xs') }}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        {{ org.name }}
+                                        <small class="text-muted d-block" style="font-size: 0.75rem;">{{ org.slug }}.localhost</small>
+                                    </div>
                                 </button>
                             </form>
                         </li>
@@ -124,8 +134,11 @@
                                     <div class="text-white fw-bold" style="font-size: 0.95rem;">{{ app.user.name }}</div>
                                     <div class="text-muted" style="font-size: 0.8rem;">{{ app.user.email }}</div>
                                     {% if current_organization() %}
-                                    <div class="text-muted" style="font-size: 0.7rem;">
-                                        <i class="bi bi-building" style="font-size: 0.65rem;"></i> {{ current_organization().name }}
+                                    <div class="text-muted d-flex align-items-center gap-1" style="font-size: 0.7rem;">
+                                        <div style="width: 12px; height: 12px;">
+                                            {{ org_logo.logo(current_organization(), 'xs') }}
+                                        </div>
+                                        {{ current_organization().name }}
                                     </div>
                                     {% endif %}
                                 </div>
@@ -385,9 +398,10 @@
 
                 // Clean up initialization flags before Turbo caches the page
                 document.addEventListener('turbo:before-cache', () => {
-                    document.querySelectorAll('[data-view-toggle-initialized]').forEach(el => {
-                        delete el.dataset.viewToggleInitialized;
-                    });
+                    // Clean up global view toggle flags
+                    if (window.__viewToggleInitialized) {
+                        window.__viewToggleInitialized = {};
+                    }
                 });
             }
         }
