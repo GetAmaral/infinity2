@@ -481,6 +481,7 @@ final class CourseController extends BaseApiController
             $enrollment = new StudentCourse();
             $enrollment->setCourse($course);
             $enrollment->setStudent($student);
+            $enrollment->setOrganization($course->getOrganization());
             $enrollment->setActive($active);
 
             $this->entityManager->persist($enrollment);
@@ -604,6 +605,7 @@ final class CourseController extends BaseApiController
             $enrollment = new StudentCourse();
             $enrollment->setCourse($course);
             $enrollment->setStudent($student);
+            $enrollment->setOrganization($course->getOrganization());
             $enrollment->setActive($active);
 
             $this->entityManager->persist($enrollment);

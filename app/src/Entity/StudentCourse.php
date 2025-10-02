@@ -59,6 +59,11 @@ class StudentCourse extends EntityBase
     #[Groups(['student_course:read', 'student_course:write'])]
     protected ?\DateTimeImmutable $completedAt = null;
 
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'studentCourses')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['student_course:read'])]
+    protected Organization $organization;
+
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'studentCourses')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['student_course:read'])]
@@ -165,6 +170,17 @@ class StudentCourse extends EntityBase
     public function isCompleted(): bool
     {
         return $this->completedAt !== null;
+    }
+
+    public function getOrganization(): Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getStudent(): User

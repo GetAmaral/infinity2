@@ -64,11 +64,16 @@ class Organization extends EntityBase
     #[Groups(['organization:read'])]
     protected Collection $courses;
 
+    #[ORM\OneToMany(mappedBy: 'organization', targetEntity: StudentCourse::class)]
+    #[Groups(['organization:read'])]
+    protected Collection $studentCourses;
+
     public function __construct()
     {
         parent::__construct();
         $this->users = new ArrayCollection();
         $this->courses = new ArrayCollection();
+        $this->studentCourses = new ArrayCollection();
     }
 
     public function getName(): string
@@ -196,6 +201,33 @@ class Organization extends EntityBase
         if ($this->courses->removeElement($course)) {
             if ($course->getOrganization() === $this) {
                 $course->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, StudentCourse>
+     */
+    public function getStudentCourses(): Collection
+    {
+        return $this->studentCourses;
+    }
+
+    public function addStudentCourse(StudentCourse $studentCourse): self
+    {
+        if (!$this->studentCourses->contains($studentCourse)) {
+            $this->studentCourses->add($studentCourse);
+            $studentCourse->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeStudentCourse(StudentCourse $studentCourse): self
+    {
+        if ($this->studentCourses->removeElement($studentCourse)) {
+            if ($studentCourse->getOrganization() === $this) {
+                $studentCourse->setOrganization(null);
             }
         }
         return $this;
