@@ -38,6 +38,7 @@ RUN mkdir -p var/cache var/log var/videos/originals var/videos/hls \
 
 # Copy FrankenPHP configuration
 COPY docker/frankenphp/Caddyfile /etc/frankenphp/Caddyfile
+COPY docker/frankenphp/conf.d/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
 
 # Run final composer scripts
 RUN composer run-script post-install-cmd
