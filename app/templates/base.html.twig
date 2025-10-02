@@ -2,16 +2,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Infinity CRM{% endblock %}</title>
+    <title>{% block title %}{{ 'branding.infinity_crm'|trans }}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     {% block stylesheets %}{{ importmap('app') }}{% endblock %}
-
-    <!-- DataTables CSS for Bootstrap 5 -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css">
 
     <!-- Preference Manager - Load FIRST before any other scripts -->
     <script src="/preference-manager.js" data-turbo-eval="false"></script>
@@ -20,8 +17,8 @@
     <nav class="navbar infinity-navbar">
         <div class="container">
             <a class="navbar-brand text-white d-flex align-items-center" href="{{ path('app_home') }}">
-                <img src="/infinity_logo_sm_dark.png" alt="Infinity" height="32" class="me-2 logo-dark-theme">
-                <img src="/infinity_logo_sm_light.png" alt="Infinity" height="32" class="me-2 logo-light-theme">
+                <img src="/infinity_logo_sm_dark.png" alt="{{ 'misc.infinity_alt'|trans }}" height="32" class="me-2 logo-dark-theme">
+                <img src="/infinity_logo_sm_light.png" alt="{{ 'misc.infinity_alt'|trans }}" height="32" class="me-2 logo-light-theme">
                 <span class="fw-bold text-gradient">{{ 'nav.infinity'|trans }}</span>
             </a>
 
@@ -29,7 +26,7 @@
                 {% if app.user %}
                 <!-- Hamburger Menu Button -->
                 <div class="dropdown">
-                    <button class="nav-link text-white d-flex align-items-center navbar-menu-btn" type="button" id="navDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="nav-link text-white d-flex align-items-center navbar-menu-btn" type="button" id="navDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'nav.toggle_navigation'|trans }}">
                         <i class="bi bi-list fs-4"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 200px;">
@@ -58,22 +55,6 @@
                                 <i class="bi bi-book me-2"></i>{{ 'nav.courses'|trans }}
                             </a>
                         </li>
-                        <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
-                        <li>
-                            <a class="dropdown-item" href="/api">
-                                <i class="bi bi-robot me-2"></i>AI Chat
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/health">
-                                <i class="bi bi-activity me-2"></i>Analytics
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ path('api_token_index') }}">
-                                <i class="bi bi-key me-2"></i>{{ 'token.title'|trans }}
-                            </a>
-                        </li>
                     </ul>
                 </div>
                 {% endif %}
@@ -82,9 +63,9 @@
                 {% set orgs = available_organizations() %}
                 <!-- Organization Switcher (Admin/Super Admin Only) -->
                 <div class="dropdown">
-                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="Change your organization">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher_title'|trans }}">
                         <i class="bi bi-building me-2"></i>
-                        <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'All Organizations' }}</span>
+                        <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'organization.all_organizations'|trans }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="orgDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
                         <li class="px-3 py-2 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
@@ -96,7 +77,7 @@
                             <form method="post" action="{{ path('app_organization_switcher_clear') }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token('organization_clear') }}">
                                 <button type="submit" class="dropdown-item">
-                                    <i class="bi bi-globe me-2"></i>All Organizations (Root)
+                                    <i class="bi bi-globe me-2"></i>{{ 'organization.all_organizations_root'|trans }}
                                 </button>
                             </form>
                         </li>
@@ -184,34 +165,9 @@
         {% block body %}{% endblock %}
     </main>
 
-    <!-- Voice Command Interface -->
-    <div class="voice-command-zone">
-        <button class="voice-btn" id="voiceBtn" title="{{ 'misc.voice_commands'|trans }}">
-            <i class="bi bi-mic"></i>
-        </button>
-    </div>
-
-    <!-- AI Chat Panel (Hidden by default) -->
-    <div class="chat-panel" id="chatPanel">
-        <div class="p-3 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
-            <h6 class="text-gradient mb-0">{{ 'ai.assistant'|trans }}</h6>
-            <small class="text-muted">{{ 'ai.crm_question'|trans }}</small>
-        </div>
-        <div class="p-3">
-            <div class="text-center text-muted py-5">
-                <i class="bi bi-robot" style="font-size: 3rem; opacity: 0.5;"></i>
-                <p class="mt-3">{{ 'ai.coming_soon'|trans }}</p>
-            </div>
-        </div>
-    </div>
 
     <!-- Global Modal Container -->
     <div id="global-modal-container"></div>
-
-    <!-- DataTables JS for Bootstrap 5 -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
 
     {% block javascripts %}{% endblock %}
 
@@ -266,10 +222,10 @@
 
                 if (this.current === 'light') {
                     if (icon) icon.className = 'bi bi-moon-stars me-2';
-                    if (text) text.textContent = 'Switch to Dark';
+                    if (text) text.textContent = '{{ 'theme.switch_to_dark'|trans }}';
                 } else {
                     if (icon) icon.className = 'bi bi-sun me-2';
-                    if (text) text.textContent = 'Switch to Light';
+                    if (text) text.textContent = '{{ 'theme.switch_to_light'|trans }}';
                 }
             }
             };
@@ -280,20 +236,6 @@
                 GlobalTheme.apply(newTheme);
                 GlobalTheme.updateNavbar();
             };
-
-            // Simple voice button interaction
-            document.getElementById('voiceBtn')?.addEventListener('click', function() {
-                this.classList.toggle('listening');
-                const icon = this.querySelector('i');
-
-                if (this.classList.contains('listening')) {
-                    icon.className = 'bi bi-mic-fill';
-                    setTimeout(() => {
-                        this.classList.remove('listening');
-                        icon.className = 'bi bi-mic';
-                    }, 3000);
-                }
-            });
 
             // Helper function to safely initialize Bootstrap tooltips
             async function initGlobalTooltips() {
@@ -326,14 +268,17 @@
             initGlobalTooltips();
 
             // Re-initialize tooltips after Turbo navigation
-            document.addEventListener('turbo:load', function() {
-                initGlobalTooltips();
-            });
+            if (!window.__turboTooltipsRegistered) {
+                window.__turboTooltipsRegistered = true;
+                document.addEventListener('turbo:load', function() {
+                    initGlobalTooltips();
+                });
 
-            // Re-initialize tooltips after Turbo renders new content
-            document.addEventListener('turbo:render', function() {
-                initGlobalTooltips();
-            });
+                // Re-initialize tooltips after Turbo renders new content
+                document.addEventListener('turbo:render', function() {
+                    initGlobalTooltips();
+                });
+            }
 
             // Close dropdowns on click outside or ESC key
             document.addEventListener('click', function(event) {
@@ -422,10 +367,13 @@
             });
 
             // Initialize on Turbo navigation
-            document.addEventListener('turbo:load', async () => {
-                console.log('🔄 Turbo navigation - loading preferences from localStorage');
-                await window.PreferenceManager.init(true);
-            });
+            if (!window.__turboPreferencesRegistered) {
+                window.__turboPreferencesRegistered = true;
+                document.addEventListener('turbo:load', async () => {
+                    console.log('🔄 Turbo navigation - loading preferences from localStorage');
+                    await window.PreferenceManager.init(true);
+                });
+            }
         }
 
         // DEPRECATED: Keep UserPreferences wrapper for backward compatibility
