@@ -382,6 +382,13 @@
                         await window.PreferenceManager.init(true);
                     }, 50);
                 });
+
+                // Clean up initialization flags before Turbo caches the page
+                document.addEventListener('turbo:before-cache', () => {
+                    document.querySelectorAll('[data-view-toggle-initialized]').forEach(el => {
+                        delete el.dataset.viewToggleInitialized;
+                    });
+                });
             }
         }
 
