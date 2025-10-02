@@ -45,7 +45,12 @@
 </div>
 
 <!-- View Toggle Controller Wrapper -->
-<div data-controller="view-toggle" data-view-toggle-default-value="{{ default_view|default('grid') }}">
+<div data-controller="view-toggle"
+     data-turbo-cache="false"
+     data-view-toggle-default-value="{{ default_view|default('grid') }}"
+     data-view-toggle-filter-all-value="{{ 'filter.all'|trans }}"
+     data-view-toggle-filter-yes-value="{{ 'filter.yes'|trans }}"
+     data-view-toggle-filter-no-value="{{ 'filter.no'|trans }}">
     {% block search_and_controls %}
         <!-- Search and Filters -->
         <div class="row mb-4">
@@ -131,6 +136,36 @@
         </div>
     {% endblock %}
 
+    {# Hidden Templates for JavaScript Rendering #}
+    {# Grid View Template - Child templates override this #}
+    <template data-view-toggle-target="gridTemplate">
+        {% block grid_view_item_template %}
+            <div class="col">
+                <div class="infinity-card p-4">
+                    <p class="text-warning">Override grid_view_item_template block in {{ entity_name }}/index.html.twig</p>
+                </div>
+            </div>
+        {% endblock %}
+    </template>
+
+    {# List View Template - Child templates override this #}
+    <template data-view-toggle-target="listTemplate">
+        {% block list_view_item_template %}
+            <div class="infinity-card mb-3 p-3">
+                <p class="text-warning">Override list_view_item_template block in {{ entity_name }}/index.html.twig</p>
+            </div>
+        {% endblock %}
+    </template>
+
+    {# Table Row Template - Child templates override this #}
+    <template data-view-toggle-target="tableRowTemplate">
+        {% block table_view_row_template %}
+            <tr>
+                <td colspan="10" class="text-warning">Override table_view_row_template block in {{ entity_name }}/index.html.twig</td>
+            </tr>
+        {% endblock %}
+    </template>
+
     {% block grid_view %}
         <!-- Grid/List View -->
         <div id="{{ entity_name_plural }}-grid"
@@ -186,6 +221,8 @@
                                     <th>Override table_headers block</th>
                                 {% endblock %}
                             </tr>
+                            {# Filter row - dynamically populated by JavaScript #}
+                            <tr class="filters"></tr>
                         </thead>
                         <tbody>
                             {% for entity in entities %}
@@ -208,7 +245,7 @@
         <div class="row align-items-center">
             <div class="col-12 col-md-4">
                 <span class="text-secondary" style="font-size: 0.875rem;" id="viewInfo">
-                    Showing <strong id="itemsStart">1</strong> to <strong id="itemsEnd">10</strong> of <strong id="itemsTotal">{{ entities|length }}</strong> {{ entity_name_plural }}
+                    {{ 'pagination.showing'|trans }} <strong id="itemsStart">1</strong> {{ 'pagination.to'|trans }} <strong id="itemsEnd">10</strong> {{ 'pagination.of'|trans }} <strong id="itemsTotal">{{ entities|length }}</strong> {{ ('entity.' ~ entity_name_plural)|trans }}
                 </span>
             </div>
             <div class="col-12 col-md-4">
@@ -221,7 +258,7 @@
             <div class="col-12 col-md-4">
                 <div class="d-flex align-items-center gap-2 justify-content-end">
                     <label for="itemsPerPageSelector" class="text-secondary mb-0" style="white-space: nowrap; font-size: 0.875rem;">
-                        Show
+                        {{ 'pagination.show'|trans }}
                     </label>
                     <select id="itemsPerPageSelector" class="form-select form-select-sm" style="width: auto; min-width: 80px;">
                         <option value="10">10</option>
@@ -686,7 +723,8 @@
         border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
-    .table-hover thead tr.filters th input {
+    .table-hover thead tr.filters th input,
+    .table-hover thead tr.filters th select {
         width: 100%;
         background: rgba(255, 255, 255, 0.05) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -700,7 +738,13 @@
         color: rgba(255, 255, 255, 0.4);
     }
 
-    .table-hover thead tr.filters th input:focus {
+    .table-hover thead tr.filters th select option {
+        background: var(--infinity-dark-surface) !important;
+        color: var(--infinity-text-primary) !important;
+    }
+
+    .table-hover thead tr.filters th input:focus,
+    .table-hover thead tr.filters th select:focus {
         outline: none;
         border-color: var(--infinity-neon) !important;
         box-shadow: 0 0 0 2px rgba(0, 245, 255, 0.1);
@@ -712,7 +756,8 @@
         border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
     }
 
-    [data-theme="light"] .table-hover thead tr.filters th input {
+    [data-theme="light"] .table-hover thead tr.filters th input,
+    [data-theme="light"] .table-hover thead tr.filters th select {
         background: white !important;
         border: 1px solid rgba(0, 0, 0, 0.2) !important;
         color: #1a1a1a !important;
@@ -722,7 +767,13 @@
         color: rgba(0, 0, 0, 0.4);
     }
 
-    [data-theme="light"] .table-hover thead tr.filters th input:focus {
+    [data-theme="light"] .table-hover thead tr.filters th select option {
+        background: white !important;
+        color: #1a1a1a !important;
+    }
+
+    [data-theme="light"] .table-hover thead tr.filters th input:focus,
+    [data-theme="light"] .table-hover thead tr.filters th select:focus {
         border-color: #3b82f6 !important;
         box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
     }

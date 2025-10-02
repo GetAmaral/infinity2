@@ -32,6 +32,7 @@ export default class extends Controller {
 
     connect() {
         this.entityName = this.getEntityNameFromPage();
+        this.isActive = true; // Track if this instance is active
 
         // Use global flag per entity to prevent duplicate initialization across Turbo navigations
         if (!window.__viewToggleInitialized) {
@@ -40,6 +41,7 @@ export default class extends Controller {
 
         if (window.__viewToggleInitialized[this.entityName]) {
             console.log('🔄 View toggle already initialized, skipping...', this.entityName);
+            this.isActive = false;
             return;
         }
         window.__viewToggleInitialized[this.entityName] = true;
@@ -57,6 +59,12 @@ export default class extends Controller {
         this.showLoading();
 
         this.waitForListPreferences().then(() => {
+            // Check if still active before proceeding
+            if (!this.isActive) {
+                console.log('⏭️ Controller disconnected, skipping fetch');
+                return;
+            }
+
             const prefs = this.getEntityPreferences();
             this.currentView = prefs.view || 'grid';
             this.sortBy = prefs.sortBy || 'name';
@@ -73,8 +81,13 @@ export default class extends Controller {
     }
 
     disconnect() {
-        // Don't clean up the flag here - let Turbo before-cache handle it
-        // This prevents duplicate initialization when controller reconnects during same page load
+        // Mark this instance as inactive to cancel any pending operations
+        this.isActive = false;
+
+        // Clean up the global flag so next visit can initialize fresh
+        if (this.entityName && window.__viewToggleInitialized) {
+            delete window.__viewToggleInitialized[this.entityName];
+        }
     }
 
     getEntityNameFromPage() {
