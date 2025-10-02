@@ -33,6 +33,9 @@ export default class extends Controller {
     connect() {
         this.entityName = this.getEntityNameFromPage();
         this.isActive = true; // Track if this instance is active
+        this.instanceId = Math.random().toString(36).substr(2, 9); // Unique ID for debugging
+
+        console.log(`🔌 Controller CONNECT: ${this.entityName} [${this.instanceId}]`);
 
         // Use global flag per entity to prevent duplicate initialization across Turbo navigations
         if (!window.__viewToggleInitialized) {
@@ -40,10 +43,11 @@ export default class extends Controller {
         }
 
         if (window.__viewToggleInitialized[this.entityName]) {
-            console.log('🔄 View toggle already initialized, skipping...', this.entityName);
+            console.log(`🔄 View toggle already initialized, skipping... ${this.entityName} [${this.instanceId}]`);
             this.isActive = false;
             return;
         }
+        console.log(`✨ Initializing view toggle: ${this.entityName} [${this.instanceId}]`);
         window.__viewToggleInitialized[this.entityName] = true;
 
         this.currentView = 'grid';
@@ -81,11 +85,14 @@ export default class extends Controller {
     }
 
     disconnect() {
+        console.log(`🔌 Controller DISCONNECT: ${this.entityName} [${this.instanceId}]`);
+
         // Mark this instance as inactive to cancel any pending operations
         this.isActive = false;
 
         // Clean up the global flag so next visit can initialize fresh
         if (this.entityName && window.__viewToggleInitialized) {
+            console.log(`🧹 Cleaning up global flag for: ${this.entityName} [${this.instanceId}]`);
             delete window.__viewToggleInitialized[this.entityName];
         }
     }
@@ -222,8 +229,18 @@ export default class extends Controller {
     }
 
     async fetchAndRender() {
-        if (this.isLoading) return;
+        if (this.isLoading) {
+            console.log(`⏸️ Already loading, skipping: ${this.entityName} [${this.instanceId}]`);
+            return;
+        }
+
+        if (!this.isActive) {
+            console.log(`❌ Not active, skipping fetch: ${this.entityName} [${this.instanceId}]`);
+            return;
+        }
+
         this.isLoading = true;
+        console.log(`🌐 Starting fetch: ${this.entityName} [${this.instanceId}]`);
 
         try {
             const params = new URLSearchParams({
@@ -242,6 +259,7 @@ export default class extends Controller {
             });
 
             const url = `/${this.entityName.replace(/s$/, '')}/api/search?${params}`;
+            console.log(`📡 Fetching URL: ${url} [${this.instanceId}]`);
             const response = await fetch(url);
 
             if (!response.ok) {
