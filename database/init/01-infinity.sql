@@ -3,6 +3,7 @@
 
 -- Enable required extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "unaccent";
 
 -- Verify UUIDv7 support (PostgreSQL 18 feature)
 DO $$
