@@ -29,8 +29,9 @@ COPY . .
 
 # Create required directories and set permissions
 RUN mkdir -p var/cache var/log var/videos/originals var/videos/hls \
-    && chown -R www-data:www-data var/ \
-    && chmod -R 775 var/ \
+    && mkdir -p public/uploads/logos \
+    && chown -R www-data:www-data var/ public/uploads/ \
+    && chmod -R 775 var/ public/uploads/ \
     && mkdir -p .phpunit \
     && chown -R www-data:www-data .phpunit \
     && chmod -R 775 .phpunit \
