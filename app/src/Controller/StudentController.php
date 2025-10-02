@@ -179,6 +179,27 @@ final class StudentController extends AbstractController
             }
         }
 
+        // Find next and previous lectures
+        $previousLecture = null;
+        $nextLecture = null;
+        $currentIndex = null;
+
+        foreach ($allLectures as $index => $courseLecture) {
+            if ($courseLecture->getId()->toString() === $lectureId) {
+                $currentIndex = $index;
+                break;
+            }
+        }
+
+        if ($currentIndex !== null) {
+            if ($currentIndex > 0) {
+                $previousLecture = $allLectures[$currentIndex - 1];
+            }
+            if ($currentIndex < count($allLectures) - 1) {
+                $nextLecture = $allLectures[$currentIndex + 1];
+            }
+        }
+
         // Update enrollment's current lecture and startDate if first access
         if (!$enrollment->getStartDate()) {
             $enrollment->setStartDate(new \DateTimeImmutable());
@@ -192,6 +213,8 @@ final class StudentController extends AbstractController
             'lecture' => $lecture,
             'enrollment' => $enrollment,
             'studentProgress' => $studentProgress,
+            'previousLecture' => $previousLecture,
+            'nextLecture' => $nextLecture,
             'allLectures' => $allLectures,
             'allLectureProgress' => $allLectureProgress,
         ]);

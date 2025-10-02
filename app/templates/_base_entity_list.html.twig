@@ -27,7 +27,7 @@
             {% endblock %}
             <div>
                 <h1 class="text-gradient mb-1">{% block page_title %}{{ (entity_name ~ '.title')|trans }}{% endblock %}</h1>
-                <p class="text-secondary mb-0">{% block page_description %}{{ ('page.' ~ entity_name ~ '_description')|trans }}{% endblock %}</p>
+                <p class="text-secondary mb-0">{% block page_description %}{{ ('page.' ~ entity_name ~ '.description')|trans }}{% endblock %}</p>
             </div>
         </div>
         {% block header_actions %}
@@ -37,7 +37,7 @@
                         data-controller="modal-opener"
                         data-modal-opener-url-value="{{ path(entity_name ~ '_new') }}"
                         data-action="click->modal-opener#open">
-                    <i class="bi bi-plus-circle me-2"></i>{{ ('button.add_' ~ entity_name)|trans }}
+                    <i class="bi bi-plus-circle me-2"></i>{{ ('button.add.' ~ entity_name)|trans }}
                 </button>
             {% endif %}
         {% endblock %}
@@ -64,7 +64,7 @@
                             <input type="text"
                                    id="{{ entity_name }}SearchInput"
                                    class="form-control"
-                                   placeholder="{{ (entity_name ~ '.search_placeholder')|trans }}"
+                                   placeholder="{{ (entity_name ~ '.search.placeholder')|trans }}"
                                    data-controller="live-search"
                                    data-live-search-url-value="{{ path(entity_name ~ '_api_search') }}"
                                    data-live-search-target-value="#{{ entity_name_plural }}-grid"
@@ -72,8 +72,8 @@
                             <button type="button"
                                     id="clearSearchBtn"
                                     class="btn btn-clear-search"
-                                    aria-label="{{ 'button.clear_search'|trans }}"
-                                    title="{{ 'button.clear_search'|trans }}">
+                                    aria-label="{{ 'button.clear.search'|trans }}"
+                                    title="{{ 'button.clear.search'|trans }}">
                                 <i class="bi bi-x-lg"></i>
                             </button>
                         </div>
@@ -188,14 +188,14 @@
                             <div class="mb-4">
                                 <i class="{{ page_icon|default('bi bi-inbox') }}" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
                             </div>
-                            <h4 class="text-white mb-3">{{ ('empty.no_' ~ entity_name_plural ~ '_yet')|trans }}</h4>
-                            <p class="text-secondary mb-4">{{ ('empty.' ~ entity_name ~ '_description')|trans }}</p>
+                            <h4 class="text-white mb-3">{{ ('empty.no.' ~ entity_name_plural ~ '.yet')|trans }}</h4>
+                            <p class="text-secondary mb-4">{{ ('empty.' ~ entity_name ~ '.description')|trans }}</p>
                             {% if is_granted(entity_name|upper ~ '_CREATE') %}
                                 <button class="btn infinity-btn-primary btn-lg"
                                         data-controller="modal-opener"
                                         data-modal-opener-url-value="{{ path(entity_name ~ '_new') }}"
                                         data-action="click->modal-opener#open">
-                                    <i class="bi bi-plus-circle me-2"></i>{{ ('button.create_first_' ~ entity_name)|trans }}
+                                    <i class="bi bi-plus-circle me-2"></i>{{ ('button.create.first.' ~ entity_name)|trans }}
                                 </button>
                             {% endif %}
                         </div>

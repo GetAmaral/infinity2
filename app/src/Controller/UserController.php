@@ -208,13 +208,28 @@ final class UserController extends BaseApiController
     {
         assert($entity instanceof User);
 
+        // Get role names - getRoles() returns array of strings like ['ROLE_USER', 'ROLE_ADMIN']
+        $roles = $entity->getRoles();
+        $rolesDisplay = !empty($roles) ? implode(', ', array_map(fn($r) => ucfirst(strtolower(str_replace('ROLE_', '', $r))), $roles)) : 'User';
+
+        // Check if user is currently locked
+        $isLocked = $entity->getLockedUntil() && $entity->getLockedUntil() > new \DateTimeImmutable();
+
         return [
             'id' => $entity->getId()?->toString() ?? '',
             'name' => $entity->getName(),
             'email' => $entity->getEmail(),
             'organizationId' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
+            'roles' => $rolesDisplay,
+            'isVerified' => $entity->isVerified(),
+            'isLocked' => $isLocked,
+            'lastLoginAt' => $entity->getLastLoginAt()?->format('c'),
+            'lastLoginFormatted' => $entity->getLastLoginAt()?->format('M d, Y H:i'),
+            'ownedCoursesCount' => $entity->getOwnedCourses()->count(),
+            'enrolledCoursesCount' => $entity->getStudentCourses()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
+            'createdAtFormatted' => $entity->getCreatedAt()->format('M d, Y'),
         ];
     }
 }

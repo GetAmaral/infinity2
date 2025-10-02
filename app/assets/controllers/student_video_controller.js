@@ -25,12 +25,7 @@ export default class extends Controller {
         this.hls = null;
         this.progressInterval = null;
         this.lastSavedPosition = 0;
-        this.milestones = {
-            25: false,
-            50: false,
-            75: false,
-            100: false
-        };
+        this.positionRestored = false; // Flag to prevent multiple restorations
 
         this.initializePlayer();
     }
@@ -178,19 +173,11 @@ export default class extends Controller {
             keyboard: { focused: true, global: false },
             tooltips: { controls: true, seek: true },
             hideControls: true,
-            resetOnEnd: false
+            resetOnEnd: false,
+            blankVideo: '' // Disable external blank video to avoid CORS
         });
 
         console.log('[Plyr] Player initialized successfully');
-
-        // Restore saved position if not completed
-        if (this.hasCurrentPositionValue && this.currentPositionValue > 0 && !this.completedValue) {
-            console.log('[Plyr] Will restore position to:', this.currentPositionValue);
-            this.player.on('loadeddata', () => {
-                console.log('[Plyr] Video data loaded, restoring position');
-                this.player.currentTime = this.currentPositionValue;
-            });
-        }
 
         // Setup event listeners
         this.player.on('ready', () => {
@@ -207,6 +194,13 @@ export default class extends Controller {
 
         this.player.on('canplay', () => {
             console.log('[Plyr] Can play event fired');
+
+            // Restore saved position when video is ready to play
+            if (!this.positionRestored && this.hasCurrentPositionValue && this.currentPositionValue > 0) {
+                console.log('[Plyr] Restoring position to:', this.currentPositionValue, 'seconds');
+                this.player.currentTime = this.currentPositionValue;
+                this.positionRestored = true; // Prevent multiple restorations
+            }
         });
 
         this.player.on('play', () => {
@@ -216,15 +210,14 @@ export default class extends Controller {
 
         this.player.on('pause', () => {
             console.log('[Plyr] Pause event fired');
-            this.saveProgress();
+            this.saveProgressAndUpdateUI(true); // Force save on pause
+            this.stopProgressTracking();
         });
 
         this.player.on('ended', () => {
             console.log('[Plyr] Ended event fired');
             this.handleVideoEnd();
         });
-
-        this.player.on('timeupdate', () => this.checkMilestones());
 
         this.player.on('error', (event) => {
             const videoError = videoElement.error;
@@ -256,24 +249,31 @@ export default class extends Controller {
             clearInterval(this.progressInterval);
         }
 
-        // Save progress every 5 seconds during playback
+        // Send progress every 5 seconds during playback
         this.progressInterval = setInterval(() => {
-            this.saveProgress();
+            this.saveProgressAndUpdateUI();
         }, 5000);
     }
 
-    async saveProgress() {
+    stopProgressTracking() {
+        if (this.progressInterval) {
+            clearInterval(this.progressInterval);
+            this.progressInterval = null;
+        }
+    }
+
+    async saveProgressAndUpdateUI(force = false) {
         if (!this.player || !this.hasProgressUrlValue) return;
 
         const currentTime = Math.floor(this.player.currentTime);
         const duration = Math.floor(this.player.duration);
 
-        // Don't save if position hasn't changed significantly
-        if (Math.abs(currentTime - this.lastSavedPosition) < 2) return;
+        // Don't save if position hasn't changed significantly (unless forced)
+        if (!force && Math.abs(currentTime - this.lastSavedPosition) < 2) return;
 
         this.lastSavedPosition = currentTime;
 
-        const completionPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
+        console.log('[Progress] Sending position:', currentTime, 'seconds');
 
         try {
             const response = await fetch(this.progressUrlValue, {
@@ -284,66 +284,71 @@ export default class extends Controller {
                 },
                 body: JSON.stringify({
                     position: currentTime,
-                    duration: duration,
-                    completion: completionPercentage
+                    duration: duration
                 })
             });
 
             if (!response.ok) {
-                console.error('Failed to save progress:', response.statusText);
+                console.error('[Progress] Failed to save:', response.statusText);
+                return;
             }
+
+            const data = await response.json();
+            console.log('[Progress] Response:', data);
+
+            // Update UI based on backend response
+            this.updateProgressUI(data.completion, data.completed);
+
         } catch (error) {
-            console.error('Error saving progress:', error);
+            console.error('[Progress] Error saving:', error);
         }
     }
 
-    checkMilestones() {
-        if (!this.player) return;
+    updateProgressUI(completionPercentage, isCompleted) {
+        const roundedPercentage = Math.round(completionPercentage);
 
-        const currentTime = this.player.currentTime;
-        const duration = this.player.duration;
-        const percentage = (currentTime / duration) * 100;
+        // Update all progress percentage displays (multiple elements may exist)
+        const progressTexts = document.querySelectorAll('.lecture-progress-text');
+        progressTexts.forEach(el => {
+            el.textContent = `${roundedPercentage}%`;
+        });
 
-        // Check and report milestones
-        for (const [milestone, reached] of Object.entries(this.milestones)) {
-            if (!reached && percentage >= parseInt(milestone)) {
-                this.milestones[milestone] = true;
-                this.reportMilestone(parseInt(milestone));
+        // Update progress bar (if element exists in template)
+        const progressBar = document.querySelector('.lecture-progress-bar');
+        if (progressBar) {
+            progressBar.style.width = `${completionPercentage}%`;
+            progressBar.setAttribute('aria-valuenow', roundedPercentage);
+
+            // Show progress bar container if progress > 0
+            const progressContainer = progressBar.closest('.mt-4');
+            if (progressContainer && completionPercentage > 0) {
+                progressContainer.style.display = 'block';
             }
         }
-    }
 
-    async reportMilestone(percentage) {
-        if (!this.hasProgressUrlValue) return;
-
-        console.log(`Milestone reached: ${percentage}%`);
-
-        try {
-            await fetch(`${this.progressUrlValue}/milestone`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    milestone: percentage
-                })
-            });
-        } catch (error) {
-            console.error('Error reporting milestone:', error);
+        // Update completion badge (if element exists in template)
+        const completionBadge = document.querySelector('.lecture-completion-badge');
+        if (completionBadge) {
+            if (isCompleted) {
+                completionBadge.textContent = 'Completed';
+                completionBadge.classList.remove('bg-secondary', 'bg-primary');
+                completionBadge.classList.add('bg-success');
+            } else if (completionPercentage > 0) {
+                completionBadge.textContent = 'In Progress';
+                completionBadge.classList.remove('bg-secondary', 'bg-success');
+                completionBadge.classList.add('bg-primary');
+            }
         }
+
+        console.log('[Progress] UI updated:', roundedPercentage + '%', isCompleted ? '(Completed)' : '');
     }
 
     async handleVideoEnd() {
-        // Mark as 100% complete
-        this.milestones[100] = true;
-        await this.saveProgress();
-        await this.reportMilestone(100);
+        // Send final progress update (forced)
+        await this.saveProgressAndUpdateUI(true);
 
         // Stop progress tracking
-        if (this.progressInterval) {
-            clearInterval(this.progressInterval);
-        }
+        this.stopProgressTracking();
     }
 
     showError(message) {
@@ -357,16 +362,33 @@ export default class extends Controller {
     }
 
     cleanup() {
+        // Clear progress tracking interval
         if (this.progressInterval) {
             clearInterval(this.progressInterval);
+            this.progressInterval = null;
         }
 
+        // Destroy Plyr player first
         if (this.player) {
-            this.player.destroy();
+            try {
+                this.player.destroy();
+            } catch (error) {
+                console.warn('[Plyr] Error during player cleanup:', error);
+            }
+            this.player = null;
         }
 
+        // Then destroy HLS instance
         if (this.hls) {
-            this.hls.destroy();
+            try {
+                this.hls.destroy();
+            } catch (error) {
+                console.warn('[HLS] Error during HLS cleanup:', error);
+            }
+            this.hls = null;
         }
+
+        // Reset flags
+        this.positionRestored = false;
     }
 }

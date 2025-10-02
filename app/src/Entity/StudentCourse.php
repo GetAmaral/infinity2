@@ -7,6 +7,8 @@ namespace App\Entity;
 use App\Repository\StudentCourseRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -25,6 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class StudentCourse extends EntityBase
 {
+    public const MIN_COMPLETED = 95.0;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Groups(['student_course:read', 'student_course:write'])]
@@ -71,10 +74,15 @@ class StudentCourse extends EntityBase
     #[Groups(['student_course:read'])]
     protected ?CourseLecture $currentLecture = null;
 
+    #[ORM\OneToMany(mappedBy: 'studentCourse', targetEntity: StudentLecture::class, cascade: ['persist', 'remove'])]
+    #[Groups(['student_course:read'])]
+    protected Collection $studentLectures;
+
     public function __construct()
     {
         parent::__construct();
         $this->enrolledAt = new \DateTimeImmutable();
+        $this->studentLectures = new ArrayCollection();
     }
 
     public function getEnrolledAt(): \DateTimeImmutable
@@ -154,6 +162,11 @@ class StudentCourse extends EntityBase
         return $this;
     }
 
+    public function isCompleted(): bool
+    {
+        return $this->completedAt !== null;
+    }
+
     public function getStudent(): User
     {
         return $this->student;
@@ -185,6 +198,68 @@ class StudentCourse extends EntityBase
     {
         $this->currentLecture = $currentLecture;
         return $this;
+    }
+
+    /**
+     * @return Collection<int, StudentLecture>
+     */
+    public function getStudentLectures(): Collection
+    {
+        return $this->studentLectures;
+    }
+
+    public function addStudentLecture(StudentLecture $studentLecture): self
+    {
+        if (!$this->studentLectures->contains($studentLecture)) {
+            $this->studentLectures->add($studentLecture);
+            $studentLecture->setStudentCourse($this);
+        }
+        return $this;
+    }
+
+    public function removeStudentLecture(StudentLecture $studentLecture): self
+    {
+        if ($this->studentLectures->removeElement($studentLecture)) {
+            if ($studentLecture->getStudentCourse() === $this) {
+                $studentLecture->setStudentCourse(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Recalculate progress based on all child StudentLectures.
+     * Sums watchedSeconds and calculates percentage.
+     */
+    public function recalculateProgress(): void
+    {
+        $totalWatchedSeconds = 0;
+
+        foreach ($this->studentLectures as $studentLecture) {
+            $totalWatchedSeconds += $studentLecture->getWatchedSeconds();
+        }
+
+        $this->progressSeconds = (float) $totalWatchedSeconds;
+
+        // Calculate percentage
+        $courseTotalSeconds = $this->course->getTotalLengthSeconds();
+        if ($courseTotalSeconds > 0) {
+            $percentage = ($this->progressSeconds / $courseTotalSeconds) * 100;
+            $this->progressPercentage = min($percentage, 100.0); // Max 100%
+        } else {
+            $this->progressPercentage = 0.0;
+        }
+
+        // Update lastDate
+        $this->lastDate = new \DateTimeImmutable();
+
+        // Check if completed (MIN_COMPLETED threshold)
+        if ($this->progressPercentage >= self::MIN_COMPLETED && $this->completedAt === null) {
+            $this->completedAt = new \DateTimeImmutable();
+        } elseif ($this->progressPercentage < self::MIN_COMPLETED && $this->completedAt !== null) {
+            // Reset completion if progress drops below threshold
+            $this->completedAt = null;
+        }
     }
 
     public function __toString(): string

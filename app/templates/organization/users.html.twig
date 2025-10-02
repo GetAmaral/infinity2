@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import '_macros/organization_logo.html.twig' as org_logo %}
 
 {# Macro for user action buttons #}
 {% macro userActions(user, dropdownOnly) %}
@@ -10,7 +11,7 @@
                class="btn btn-sm btn-outline-light"
                data-bs-toggle="tooltip"
                data-bs-placement="top"
-               data-bs-title="{{ 'user.view_details'|trans }}">
+               data-bs-title="{{ 'user.view.details'|trans }}">
                 <i class="bi bi-eye"></i>
             </a>
             {% if is_granted('USER_EDIT', user) %}
@@ -47,7 +48,7 @@
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="background: var(--infinity-dark-surface);">
             <li>
                 <a class="dropdown-item" href="{{ path('user_show', {id: user.id}) }}">
-                    <i class="bi bi-eye me-2"></i>{{ 'user.view_details'|trans }}
+                    <i class="bi bi-eye me-2"></i>{{ 'user.view.details'|trans }}
                 </a>
             </li>
             {% if is_granted('USER_EDIT', user) %}
@@ -79,13 +80,13 @@
 
 {% import _self as macros %}
 
-{% block title %}{{ organization.name }} - Manage Users - Infinity{% endblock %}
+{% block title %}{{ organization.name }} - {{ 'organization.users.page.title'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
 <div class="mb-4">
     <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn infinity-btn-ai">
-        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back_to_organization'|trans }}
+        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.organization'|trans }}
     </a>
 </div>
 
@@ -93,12 +94,10 @@
 <div class="ai-dashboard-header mb-4">
     <div class="d-flex justify-content-between align-items-start">
         <div class="d-flex align-items-center">
-            <div class="p-3 rounded-3 me-4" style="background: var(--infinity-ai-gradient);">
-                <i class="bi bi-building text-white fs-2"></i>
-            </div>
+            {{ org_logo.logo(organization, 'lg', 'me-4') }}
             <div>
                 <h1 class="text-gradient mb-2">{{ organization.name }}</h1>
-                <p class="text-secondary mb-0 fs-5">{{ 'organization.manage_users'|trans }} ({{ users|length }})</p>
+                <p class="text-secondary mb-0 fs-5">{{ 'organization.manage.users'|trans }} ({{ users|length }})</p>
             </div>
         </div>
         <div class="d-flex gap-2">
@@ -108,7 +107,7 @@
                         data-controller="modal-opener"
                         data-modal-opener-url-value="{{ path('user_new') }}"
                         data-action="click->modal-opener#open">
-                    <i class="bi bi-person-plus me-2"></i>{{ 'button.add_user'|trans }}
+                    <i class="bi bi-person-plus me-2"></i>{{ 'button.add.user'|trans }}
                 </button>
             {% endif %}
         </div>
@@ -185,15 +184,15 @@
             <div class="bento-item large">
                 <div class="infinity-card p-5 text-center">
                     <i class="bi bi-person-plus" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
-                    <h3 class="text-white mt-4 mb-3">{{ 'empty.no_users_yet'|trans }}</h3>
-                    <p class="text-secondary mb-4">{{ 'empty.organization_users_description'|trans }}</p>
+                    <h3 class="text-white mt-4 mb-3">{{ 'empty.no.users.yet'|trans }}</h3>
+                    <p class="text-secondary mb-4">{{ 'empty.organization.users.description'|trans }}</p>
                     {% if is_granted('USER_CREATE') %}
                         <button type="button"
                                 class="btn infinity-btn-primary"
                                 data-controller="modal-opener"
                                 data-modal-opener-url-value="{{ path('user_new') }}"
                                 data-action="click->modal-opener#open">
-                            <i class="bi bi-person-plus me-2"></i>{{ 'button.add_first_user'|trans }}
+                            <i class="bi bi-person-plus me-2"></i>{{ 'button.add.first.user'|trans }}
                         </button>
                     {% endif %}
                 </div>
@@ -213,7 +212,7 @@
                             <th>{{ 'table.actions'|trans }}</th>
                             <th data-sort-field="name">{{ 'user.name'|trans }}</th>
                             <th data-sort-field="email">{{ 'user.email'|trans }}</th>
-                            <th data-sort-field="createdAt">{{ 'user.created_at'|trans }}</th>
+                            <th data-sort-field="createdAt">{{ 'user.created.at'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -252,12 +251,12 @@
                 <div class="d-flex gap-4">
                     <div>
                         <div class="text-white fs-4 fw-bold">{{ users|length }}</div>
-                        <div class="text-secondary small">{{ 'organization.total_users'|trans }}</div>
+                        <div class="text-secondary small">{{ 'organization.total.users'|trans }}</div>
                     </div>
                 </div>
             </div>
             <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn infinity-btn-ai">
-                <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back_to_details'|trans }}
+                <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.details'|trans }}
             </a>
         </div>
     </div>

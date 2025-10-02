@@ -1,141 +1,102 @@
 {% extends '_base_entity_list.html.twig' %}
+{% import '_macros/organization_logo.html.twig' as org_logo %}
 
-{# Macro for organization action buttons - reusable for grid, list and table views #}
-{% macro organizationActions(org, dropdownOnly) %}
-    {% set dropdownOnly = dropdownOnly|default(false) %}
+{#
+ # Data-Bind Template System for Organizations
+ # ============================================
+ # Example API response for Organization:
+ # {
+ #   "id": "uuid-here",
+ #   "name": "Acme Corporation",
+ #   "slug": "acme-corporation",
+ #   "description": "Leading tech company",
+ #   "userCount": 45,
+ #   "verifiedUserCount": 40,
+ #   "courseCount": 12,
+ #   "activeCourseCount": 8,
+ #   "isActive": true,
+ #   "createdAt": "2025-01-01T00:00:00+00:00",
+ #   "createdAtFormatted": "Jan 01, 2025",
+ #   "updatedAt": "2025-01-15T00:00:00+00:00",
+ #   "updatedAtFormatted": "Jan 15, 2025",
+ #   "createdByName": "John Doe",
+ #   "updatedByName": "Jane Smith"
+ # }
+#}
 
-    {% if not dropdownOnly %}
-        <div class="d-none d-lg-flex gap-1 align-items-center">
-            <a href="{{ path('organization_show', {id: org.id}) }}"
-               class="btn btn-sm btn-outline-light"
-               data-bs-toggle="tooltip"
-               data-bs-placement="top"
-               data-bs-title="{{ 'organization.view_details'|trans }}">
-                <i class="bi bi-eye"></i>
-            </a>
-            {% if is_granted('ORGANIZATION_EDIT', org) %}
-                <button type="button"
-                        class="btn btn-sm btn-outline-light"
-                        data-controller="modal-opener"
-                        data-modal-opener-url-value="{{ path('organization_edit', {id: org.id}) }}"
-                        data-action="click->modal-opener#open"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        data-bs-title="{{ 'button.edit'|trans }}">
-                    <i class="bi bi-pencil"></i>
-                </button>
-            {% endif %}
-            {% if is_granted('ORGANIZATION_DELETE', org) %}
-                <button type="button"
-                        class="btn btn-sm btn-outline-danger"
-                        data-delete-url="{{ path('organization_delete', {id: org.id}) }}"
-                        data-entity-name="{{ org.name }}"
-                        data-csrf-token="{{ csrf_token('delete-organization-' ~ org.id) }}"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        data-bs-title="{{ 'button.delete'|trans }}">
-                    <i class="bi bi-trash"></i>
-                </button>
-            {% endif %}
-        </div>
-    {% endif %}
-
-    <div class="dropdown {{ dropdownOnly ? '' : 'd-lg-none' }}">
-        <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-three-dots-vertical"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="background: var(--infinity-dark-surface);">
-            <li>
-                <a class="dropdown-item" href="{{ path('organization_show', {id: org.id}) }}">
-                    <i class="bi bi-eye me-2"></i>{{ 'organization.view_details'|trans }}
-                </a>
-            </li>
-            {% if is_granted('ORGANIZATION_EDIT', org) %}
-            <li>
-                <button type="button"
-                        class="dropdown-item"
-                        data-controller="modal-opener"
-                        data-modal-opener-url-value="{{ path('organization_edit', {id: org.id}) }}"
-                        data-action="click->modal-opener#open">
-                    <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
-                </button>
-            </li>
-            <li>
-                <a class="dropdown-item" href="{{ path('organization_users', {id: org.id}) }}">
-                    <i class="bi bi-people me-2"></i>{{ 'organization.manage_users'|trans }}
-                </a>
-            </li>
-            {% endif %}
-            {% if is_granted('ORGANIZATION_DELETE', org) %}
-            <li><hr class="dropdown-divider"></li>
-            <li>
-                <button type="button"
-                        class="dropdown-item text-danger"
-                        data-delete-url="{{ path('organization_delete', {id: org.id}) }}"
-                        data-entity-name="{{ org.name }}"
-                        data-csrf-token="{{ csrf_token('delete-organization-' ~ org.id) }}">
-                    <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
-                </button>
-            </li>
-            {% endif %}
-        </ul>
-    </div>
-{% endmacro %}
-
-{% import _self as macros %}
-
-{# Customize page appearance #}
+{# Customize page icon #}
 {% block page_icon %}<i class="bi bi-building text-neon fs-2 me-3"></i>{% endblock %}
 
-{# Customize filter options #}
-{% block filter_options %}
-    <li><a class="dropdown-item" href="?filter=active">{{ 'filter.active_organizations'|trans }}</a></li>
-    <li><a class="dropdown-item" href="?filter=empty">{{ 'filter.empty_organizations'|trans }}</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="{{ path('organization_index') }}">{{ 'filter.all'|trans }}</a></li>
-{% endblock %}
-
-{# Customize grid item display #}
-{% block grid_item %}
-    {% set org = entity %}
-    <div class="bento-item {% if loop.index0 % 3 == 0 %}large{% endif %}" id="organization-{{ org.id }}">
-        <div class="infinity-card ai-enhanced p-4 h-100">
-            <div class="d-flex align-items-start mb-3">
-                <div class="org-actions me-3">
-                    {{ macros.organizationActions(org, true) }}
+{# Grid View Template #}
+{% block grid_view_item_template %}
+    <div class="col">
+        <div class="infinity-card h-100 p-4" style="cursor: pointer;" onclick="window.location.href='/organization/' + this.closest('[data-entity-id]').dataset.entityId">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div onclick="event.stopPropagation();" class="dropdown card-dropdown me-3">
+                    <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                        <li><a class="dropdown-item" onclick="window.location.href='/organization/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'organization.view.details'|trans }}</a></li>
+                        <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/organization/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                        <li><a class="dropdown-item" onclick="window.location.href='/organization/'+this.closest('[data-entity-id]').dataset.entityId+'/users'"><i class="bi bi-people me-2"></i>{{ 'organization.manage.users'|trans }}</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/organization/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                    </ul>
                 </div>
-
-                <div class="flex-grow-1">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="p-2 rounded-3 me-3" style="background: var(--infinity-ai-gradient); background-size: 200% 200%; animation: gradientShift 4s ease infinite;">
-                            <i class="bi bi-building text-white fs-4"></i>
+                <div class="d-flex align-items-center flex-grow-1">
+                    {# Logo container - show if has logo #}
+                    <div class="org-logo-container me-3" style="width: 48px; height: 48px;" data-bind-if="logoPath">
+                        <img data-bind="logoPath" data-bind-src class="org-logo-light" alt="Organization logo" style="width: 100%; height: 100%; object-fit: contain;" data-bind-if="logoPath">
+                        <img data-bind="logoPathDark" data-bind-src class="org-logo-dark" alt="Organization logo" style="width: 100%; height: 100%; object-fit: contain;" data-bind-if="logoPathDark">
+                    </div>
+                    {# Fallback icon - show if no logo #}
+                    <div class="org-icon-fallback me-3" style="width: 48px; height: 48px;" data-bind-if="!logoPath">
+                        <i class="bi bi-building fs-5"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <h5 class="mb-0 text-white" data-bind="name" data-bind-text></h5>
+                            <span class="badge bg-success" data-bind-if="isActive">
+                                <i class="bi bi-check-circle-fill me-1"></i>{{ 'organization.active'|trans }}
+                            </span>
+                            <span class="badge bg-secondary" data-bind-if="!isActive">
+                                <i class="bi bi-pause-circle me-1"></i>{{ 'organization.inactive'|trans }}
+                            </span>
                         </div>
-                        <div>
-                            <h5 class="text-white mb-1">{{ org.name }}</h5>
-                            <div class="d-flex gap-2 align-items-center">
-                                <span class="real-time-badge">
-                                    {% if org.users|length == 0 %}
-                                        {{ 'organization.no_users'|trans }}
-                                    {% else %}
-                                        {{ 'organization.users_count'|trans({'%count%': org.users|length}, 'messages', null, org.users|length) }}
-                                    {% endif %}
-                                </span>
-                                {% if org.users|length > 5 %}
-                                    <span class="ai-status-indicator" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;">
-                                        <i class="bi bi-star-fill"></i> Active
-                                    </span>
-                                {% endif %}
-                            </div>
+                        <p class="text-muted mb-2" style="font-size: 0.75rem;">
+                            <i class="bi bi-link-45deg me-1"></i><span data-bind="slug" data-bind-text></span>
+                        </p>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <span class="badge bg-info">
+                                <i class="bi bi-people me-1"></i><span data-bind="userCount" data-bind-text></span> {{ 'organization.users'|trans }}
+                            </span>
+                            <span class="badge bg-primary" data-bind-if="courseCount>0">
+                                <i class="bi bi-book me-1"></i><span data-bind="courseCount" data-bind-text></span> {{ 'organization.courses'|trans }}
+                            </span>
                         </div>
                     </div>
-                    {% if org.description %}
-                        <p class="text-secondary mb-3 org-description">{{ org.description|slice(0, 100) }}{% if org.description|length > 100 %}...{% endif %}</p>
-                    {% else %}
-                        <p class="text-muted mb-3 fst-italic org-description">{{ 'empty.no_description'|trans }}</p>
-                    {% endif %}
-                    <div class="d-flex justify-content-between align-items-center mt-auto org-footer">
-                        <small class="text-muted d-flex align-items-center">
-                            <i class="bi bi-calendar me-1"></i>{{ org.createdAt|date('M d, Y') }}
+                </div>
+            </div>
+            <p class="text-muted mb-3" style="font-size: 0.9rem;" data-bind-if="description">
+                <span data-bind="description" data-bind-text></span>
+            </p>
+            <p class="text-muted fst-italic mb-3" style="font-size: 0.9rem;" data-bind-if="!description">
+                {{ 'empty.no.description'|trans }}
+            </p>
+            <div class="mt-auto">
+                <div class="d-flex justify-content-between align-items-center mb-2" data-bind-if="createdByName">
+                    <small class="text-muted">
+                        <i class="bi bi-person-plus me-1"></i>{{ 'organization.created.by'|trans }}: <span data-bind="createdByName" data-bind-text></span>
+                    </small>
+                </div>
+                <div class="pt-2 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar-plus me-1"></i><span data-bind="createdAtFormatted" data-bind-text></span>
+                        </small>
+                        <small class="text-muted">
+                            <i class="bi bi-clock-history me-1"></i><span data-bind="updatedAtFormatted" data-bind-text></span>
                         </small>
                     </div>
                 </div>
@@ -144,82 +105,129 @@
     </div>
 {% endblock %}
 
-{# Customize table headers #}
-{% block table_headers %}
-    <th>{{ 'table.actions'|trans }}</th>
-    <th data-sort-field="name">{{ 'organization.name'|trans }}</th>
-    <th data-sort-field="description">{{ 'organization.description'|trans }}</th>
-    <th data-sort-field="userCount">{{ 'organization.users_count'|trans({'%count%': 0}) }}</th>
-    <th data-sort-field="createdAt">{{ 'organization.created_at'|trans }}</th>
-{% endblock %}
-
-{# Customize table row display #}
-{% block table_row %}
-    {% set org = entity %}
-    <td>
-        {{ macros.organizationActions(org) }}
-    </td>
-    <td>
+{# List View Template #}
+{% block list_view_item_template %}
+    <div class="infinity-card mb-3 p-3">
         <div class="d-flex align-items-center">
-            <div class="p-2 rounded-3 me-3" style="background: var(--infinity-ai-gradient); background-size: 200% 200%; animation: gradientShift 4s ease infinite;">
-                <i class="bi bi-building text-white"></i>
+            <div onclick="event.stopPropagation();" class="dropdown card-dropdown me-3">
+                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                    <li><a class="dropdown-item" onclick="window.location.href='/organization/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'organization.view.details'|trans }}</a></li>
+                    <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/organization/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                    <li><a class="dropdown-item" onclick="window.location.href='/organization/'+this.closest('[data-entity-id]').dataset.entityId+'/users'"><i class="bi bi-people me-2"></i>{{ 'organization.manage.users'|trans }}</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/organization/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                </ul>
             </div>
-            <strong>{{ org.name }}</strong>
+            <div class="d-flex align-items-center flex-grow-1" style="cursor: pointer;" onclick="window.location.href='/organization/' + this.closest('[data-entity-id]').dataset.entityId">
+                {# Logo container - show if has logo #}
+                <div class="org-logo-container me-3" style="width: 40px; height: 40px;" data-bind-if="logoPath">
+                    <img data-bind="logoPath" data-bind-src class="org-logo-light" alt="Organization logo" style="width: 100%; height: 100%; object-fit: contain;" data-bind-if="logoPath">
+                    <img data-bind="logoPathDark" data-bind-src class="org-logo-dark" alt="Organization logo" style="width: 100%; height: 100%; object-fit: contain;" data-bind-if="logoPathDark">
+                </div>
+                {# Fallback icon - show if no logo #}
+                <div class="org-icon-fallback me-3" style="width: 40px; height: 40px;" data-bind-if="!logoPath">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                        <h6 class="mb-0 text-white" data-bind="name" data-bind-text></h6>
+                        <span class="badge bg-success" data-bind-if="isActive"><i class="bi bi-check-circle-fill"></i></span>
+                        <span class="badge bg-secondary" data-bind-if="!isActive"><i class="bi bi-pause-circle"></i></span>
+                        <span class="badge bg-info">
+                            <i class="bi bi-people me-1"></i><span data-bind="userCount" data-bind-text></span>
+                        </span>
+                        <span class="badge bg-primary" data-bind-if="courseCount>0">
+                            <i class="bi bi-book me-1"></i><span data-bind="courseCount" data-bind-text></span>
+                        </span>
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        <i class="bi bi-link-45deg me-1"></i><span data-bind="slug" data-bind-text></span>
+                        <span class="mx-2" data-bind-if="createdByName">•</span>
+                        <span data-bind-if="createdByName">
+                            <i class="bi bi-person-plus me-1"></i><span data-bind="createdByName" data-bind-text></span>
+                        </span>
+                        <span class="mx-2">•</span>
+                        <i class="bi bi-clock-history me-1"></i><span data-bind="updatedAtFormatted" data-bind-text></span>
+                    </div>
+                </div>
+            </div>
         </div>
-    </td>
-    <td>
-        {% if org.description %}
-            {{ org.description|slice(0, 80) }}{% if org.description|length > 80 %}...{% endif %}
-        {% else %}
-            <span class="text-muted fst-italic">{{ 'empty.no_description'|trans }}</span>
-        {% endif %}
-    </td>
-    <td>
-        <span class="badge" style="background: var(--infinity-ai-gradient); color: white;">
-            {{ org.users|length }}
-        </span>
-    </td>
-    <td>{{ org.createdAt|date('M d, Y') }}</td>
+    </div>
 {% endblock %}
 
-{# Add organization-specific styles #}
-{% block additional_styles %}
-.list-view .org-description,
-.list-view .org-footer {
-    display: none;
-}
+{# Table Headers #}
+{% block table_headers %}
+    <th style="width: 60px;">{{ 'table.actions'|trans }}</th>
+    <th data-sort-field="name">{{ 'organization.name'|trans }}</th>
+    <th class="text-center" data-sort-field="isActive" data-field-type="boolean">{{ 'organization.status'|trans }}</th>
+    <th class="text-center" data-sort-field="userCount">{{ 'organization.users'|trans }}</th>
+    <th class="text-center" data-sort-field="courseCount">{{ 'organization.courses'|trans }}</th>
+    <th class="d-none d-xl-table-cell" data-sort-field="createdByName">{{ 'organization.created.by'|trans }}</th>
+{% endblock %}
 
-.org-actions {
-    flex-shrink: 0;
-    position: relative;
-    z-index: 100;
-}
-
-@media (max-width: 991px) {
-    .bento-item:has(.dropdown-menu.show) {
-        z-index: 1055;
-    }
-}
-
-/* Organization badge in table - Theme responsive */
-#organizationsDataTable .badge {
-    background: var(--infinity-ai-gradient) !important;
-    color: white !important;
-}
-
-[data-theme="light"] #organizationsDataTable .badge {
-    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
-}
-
-/* Organization icon gradient - Theme responsive */
-#organizationsDataTable .p-2.rounded-3 {
-    background: var(--infinity-ai-gradient) !important;
-    background-size: 200% 200% !important;
-    animation: gradientShift 4s ease infinite !important;
-}
-
-[data-theme="light"] #organizationsDataTable .p-2.rounded-3 {
-    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
-    background-size: 200% 200% !important;
-}
+{# Table Row Template #}
+{% block table_view_row_template %}
+    <tr style="cursor: pointer;" onclick="window.location.href='/organization/' + this.closest('[data-entity-id]').dataset.entityId">
+        <td onclick="event.stopPropagation();">
+            <div class="dropdown card-dropdown">
+                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                    <li><a class="dropdown-item" onclick="window.location.href='/organization/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'organization.view.details'|trans }}</a></li>
+                    <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/organization/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                    <li><a class="dropdown-item" onclick="window.location.href='/organization/'+this.closest('[data-entity-id]').dataset.entityId+'/users'"><i class="bi bi-people me-2"></i>{{ 'organization.manage.users'|trans }}</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/organization/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                </ul>
+            </div>
+        </td>
+        <td>
+            <div class="d-flex align-items-center gap-2">
+                {# Logo container - show if has logo #}
+                <div class="org-logo-container" style="width: 32px; height: 32px;" data-bind-if="logoPath">
+                    <img data-bind="logoPath" data-bind-src class="org-logo-light" alt="Organization logo" style="width: 100%; height: 100%; object-fit: contain;" data-bind-if="logoPath">
+                    <img data-bind="logoPathDark" data-bind-src class="org-logo-dark" alt="Organization logo" style="width: 100%; height: 100%; object-fit: contain;" data-bind-if="logoPathDark">
+                </div>
+                {# Fallback icon - show if no logo #}
+                <div class="org-icon-fallback" style="width: 32px; height: 32px;" data-bind-if="!logoPath">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div>
+                    <div class="text-white" data-bind="name" data-bind-text></div>
+                    <div class="text-muted" style="font-size: 0.75rem;">
+                        <i class="bi bi-link-45deg me-1"></i><span data-bind="slug" data-bind-text></span>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td class="text-center">
+            <span class="badge bg-success" data-bind-if="isActive">
+                <i class="bi bi-check-circle-fill me-1"></i>{{ 'organization.active'|trans }}
+            </span>
+            <span class="badge bg-secondary" data-bind-if="!isActive">
+                <i class="bi bi-pause-circle me-1"></i>{{ 'organization.inactive'|trans }}
+            </span>
+        </td>
+        <td class="text-center">
+            <span class="badge bg-info">
+                <i class="bi bi-people me-1"></i><span data-bind="userCount" data-bind-text></span>
+            </span>
+        </td>
+        <td class="text-center">
+            <span class="badge bg-primary" data-bind-if="courseCount>0">
+                <i class="bi bi-book me-1"></i><span data-bind="courseCount" data-bind-text></span>
+            </span>
+            <span class="text-muted" data-bind-if="courseCount<1">-</span>
+        </td>
+        <td class="d-none d-xl-table-cell text-muted" style="font-size: 0.85rem;">
+            <span data-bind-if="createdByName">
+                <i class="bi bi-person-plus me-1"></i><span data-bind="createdByName" data-bind-text></span>
+            </span>
+            <span data-bind-if="!createdByName" class="fst-italic">-</span>
+        </td>
+    </tr>
 {% endblock %}

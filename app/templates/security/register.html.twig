@@ -10,14 +10,14 @@
                 <div class="d-inline-block p-3 rounded-circle mb-3" style="background: var(--infinity-ai-gradient);">
                     <i class="bi bi-person-plus text-white" style="font-size: 2.5rem;"></i>
                 </div>
-                <h2 class="text-gradient mb-2">{{ 'auth.create_account'|trans }}</h2>
-                <p class="text-secondary">{{ 'auth.join_infinity'|trans }}</p>
+                <h2 class="text-gradient mb-2">{{ 'auth.create.account'|trans }}</h2>
+                <p class="text-secondary">{{ 'auth.join.infinity'|trans }}</p>
             </div>
 
             <form method="post" action="{{ path('app_register') }}" data-controller="form-navigation">
                 <div class="mb-3">
                     <label for="name" class="form-label text-white">
-                        <i class="bi bi-person me-1"></i>{{ 'auth.full_name'|trans }}
+                        <i class="bi bi-person me-1"></i>{{ 'auth.full.name'|trans }}
                     </label>
                     <input
                         type="text"
@@ -59,12 +59,12 @@
                         minlength="8"
                         style="background: var(--infinity-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
                     >
-                    <small class="text-muted">{{ 'auth.password_requirements'|trans }}</small>
+                    <small class="text-muted">{{ 'auth.password.requirements'|trans }}</small>
                 </div>
 
                 <div class="mb-3">
                     <label for="confirm_password" class="form-label text-white">
-                        <i class="bi bi-lock-fill me-1"></i>{{ 'auth.confirm_password'|trans }}
+                        <i class="bi bi-lock-fill me-1"></i>{{ 'auth.confirm.password'|trans }}
                     </label>
                     <input
                         type="password"
@@ -80,14 +80,14 @@
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('register') }}">
 
                 <button type="submit" class="btn infinity-btn-primary w-100 mb-3" data-allow-enter-submit>
-                    <i class="bi bi-person-check me-2"></i>{{ 'auth.create_account_button'|trans }}
+                    <i class="bi bi-person-check me-2"></i>{{ 'auth.create.account.button'|trans }}
                 </button>
 
                 <div class="text-center">
                     <p class="text-secondary mb-0">
-                        {{ 'auth.already_have_account'|trans }}
+                        {{ 'auth.already.have.account'|trans }}
                         <a href="{{ path('app_login') }}" class="text-neon text-decoration-none">
-                            {{ 'auth.sign_in'|trans }}
+                            {{ 'auth.sign.in'|trans }}
                         </a>
                     </p>
                 </div>

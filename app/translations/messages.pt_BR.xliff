@@ -2424,7 +2424,131 @@
             <trans-unit id="vsM4tSv" resname="There is already an account with this email">
               <source>There is already an account with this email</source>
               <target>__There is already an account with this email</target>
-            </trans-unit>
+            </trans-unit>      <trans-unit id="student.completed.courses">
+        <source>student.completed.courses</source>
+        <target>Concluídos</target>
+      </trans-unit>
+      <trans-unit id="student.continue">
+        <source>student.continue</source>
+        <target>Continuar</target>
+      </trans-unit>
+      <trans-unit id="student.courses.subtitle">
+        <source>student.courses.subtitle</source>
+        <target>Acesse seus cursos inscritos e continue aprendendo</target>
+      </trans-unit>
+      <trans-unit id="student.current">
+        <source>student.current</source>
+        <target>Atual</target>
+      </trans-unit>
+      <trans-unit id="student.enrolled.on">
+        <source>student.enrolled.on</source>
+        <target>Inscrito em</target>
+      </trans-unit>
+      <trans-unit id="student.in.progress">
+        <source>student.in.progress</source>
+        <target>Em Progresso</target>
+      </trans-unit>
+      <trans-unit id="student.in.progress.courses">
+        <source>student.in.progress.courses</source>
+        <target>Em Progresso</target>
+      </trans-unit>
+      <trans-unit id="student.no.courses">
+        <source>student.no.courses</source>
+        <target>Nenhum Curso Ainda</target>
+      </trans-unit>
+      <trans-unit id="student.no.courses.description">
+        <source>student.no.courses.description</source>
+        <target>Você ainda não foi inscrito em nenhum curso. Entre em contato com seu administrador para obter acesso.</target>
+      </trans-unit>
+      <trans-unit id="student.not.started">
+        <source>student.not.started</source>
+        <target>Não Iniciado</target>
+      </trans-unit>
+      <trans-unit id="student.progress">
+        <source>student.progress</source>
+        <target>Progresso</target>
+      </trans-unit>
+      <trans-unit id="student.restart">
+        <source>student.restart</source>
+        <target>Reiniciar</target>
+      </trans-unit>
+      <trans-unit id="student.review">
+        <source>student.review</source>
+        <target>Revisar</target>
+      </trans-unit>
+      <trans-unit id="student.start">
+        <source>student.start</source>
+        <target>Iniciar Curso</target>
+      </trans-unit>
+      <trans-unit id="student.total.courses">
+        <source>student.total.courses</source>
+        <target>Total de Cursos</target>
+      </trans-unit>
+      <trans-unit id="student.watch.progress">
+        <source>student.watch.progress</source>
+        <target>Progresso de Visualização</target>
+      </trans-unit>      <trans-unit id="student.back.to.courses">
+        <source>student.back.to.courses</source>
+        <target>Voltar para Meus Cursos</target>
+      </trans-unit>
+      <trans-unit id="student.complete">
+        <source>student.complete</source>
+        <target>Completo</target>
+      </trans-unit>
+      <trans-unit id="student.completed">
+        <source>student.completed</source>
+        <target>Concluído</target>
+      </trans-unit>
+      <trans-unit id="student.completed.lectures">
+        <source>student.completed.lectures</source>
+        <target>Aulas Concluídas</target>
+      </trans-unit>
+      <trans-unit id="student.course.completed">
+        <source>student.course.completed</source>
+        <target>Curso Concluído</target>
+      </trans-unit>
+      <trans-unit id="student.end.course">
+        <source>student.end.course</source>
+        <target>Encerrar Curso</target>
+      </trans-unit>
+      <trans-unit id="student.enrolled">
+        <source>student.enrolled</source>
+        <target>Inscrito em</target>
+      </trans-unit>
+      <trans-unit id="student.last.accessed">
+        <source>student.last.accessed</source>
+        <target>Último Acesso</target>
+      </trans-unit>
+      <trans-unit id="student.my.courses">
+        <source>student.my.courses</source>
+        <target>Meus Cursos</target>
+      </trans-unit>
+      <trans-unit id="student.not.yet">
+        <source>student.not.yet</source>
+        <target>Ainda não</target>
+      </trans-unit>
+      <trans-unit id="student.overall.completion">
+        <source>student.overall.completion</source>
+        <target>Conclusão Geral</target>
+      </trans-unit>
+      <trans-unit id="student.singular">
+        <source>student.singular</source>
+        <target>Estudante</target>
+      </trans-unit>
+      <trans-unit id="student.status">
+        <source>student.status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="student.watched">
+        <source>student.watched</source>
+        <target>Assistido</target>
+      </trans-unit>
+      <trans-unit id="student.your.progress">
+        <source>student.your.progress</source>
+        <target>Seu Progresso</target>
+      </trans-unit>
+
+
     </body>
   </file>
 </xliff>

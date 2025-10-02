@@ -44,6 +44,18 @@ class Organization extends EntityBase
     #[Groups(['organization:read', 'organization:write'])]
     protected ?string $description = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $logoPath = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $logoPathDark = null;
+
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected bool $isActive = true;
+
     #[ORM\OneToMany(mappedBy: 'organization', targetEntity: User::class)]
     #[Groups(['organization:read'])]
     protected Collection $users;
@@ -116,6 +128,28 @@ class Organization extends EntityBase
         return $this;
     }
 
+    public function getLogoPath(): ?string
+    {
+        return $this->logoPath;
+    }
+
+    public function setLogoPath(?string $logoPath): self
+    {
+        $this->logoPath = $logoPath;
+        return $this;
+    }
+
+    public function getLogoPathDark(): ?string
+    {
+        return $this->logoPathDark;
+    }
+
+    public function setLogoPathDark(?string $logoPathDark): self
+    {
+        $this->logoPathDark = $logoPathDark;
+        return $this;
+    }
+
     public function getUsers(): Collection
     {
         return $this->users;
@@ -164,6 +198,17 @@ class Organization extends EntityBase
                 $course->setOrganization(null);
             }
         }
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
         return $this;
     }
 

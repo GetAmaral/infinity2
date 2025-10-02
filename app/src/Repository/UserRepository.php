@@ -35,9 +35,42 @@ class UserRepository extends BaseRepository
         return [
             'name' => 'name',
             'email' => 'email',
-            'organizationName' => 'organization.name',
+            'roles' => 'roles',
+            'isVerified' => 'isVerified',
+            'organizationName' => 'organization.name', // Relationship field - sortable but not filterable
+            'lastLoginAt' => 'lastLoginAt',
             'createdAt' => 'createdAt',
         ];
+    }
+
+    /**
+     * Define filterable fields (exclude relationship fields)
+     */
+    protected function getFilterableFields(): array
+    {
+        return [
+            'name' => 'name',
+            'email' => 'email',
+            'isVerified' => 'isVerified',
+            'lastLoginAt' => 'lastLoginAt',
+            'createdAt' => 'createdAt',
+        ];
+    }
+
+    /**
+     * Define boolean fields for proper filtering
+     */
+    protected function getBooleanFilterFields(): array
+    {
+        return ['isVerified'];
+    }
+
+    /**
+     * Define date fields for range filtering
+     */
+    protected function getDateFilterFields(): array
+    {
+        return ['lastLoginAt', 'createdAt'];
     }
 
     /**

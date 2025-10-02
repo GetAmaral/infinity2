@@ -55,6 +55,42 @@
     display: none;
 }
 
+/* Organization Logo Theme Switching */
+.org-logo-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.org-logo-light {
+    display: none;
+}
+
+.org-logo-dark {
+    display: inline-block;
+}
+
+[data-theme="light"] .org-logo-light {
+    display: inline-block;
+}
+
+[data-theme="light"] .org-logo-dark {
+    display: none;
+}
+
+.org-icon-fallback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--infinity-ai-gradient);
+}
+
+.org-icon-fallback i {
+    color: white;
+}
+
 /* Three Dots Button - Theme Aware */
 .btn-outline-light {
     border-color: rgba(255, 255, 255, 0.5);
@@ -348,7 +384,13 @@ body::before {
     box-shadow: var(--infinity-glass-shadow);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+    z-index: 1;
+}
+
+/* Ensure dropdown menu always appears on top */
+.dropdown-menu {
+    z-index: 9999 !important;
 }
 
 .infinity-card::before {
@@ -390,10 +432,16 @@ body::before {
     transform: translateY(-4px) scale(1.02);
     box-shadow: 0 20px 64px rgba(0, 0, 0, 0.4), 0 0 20px rgba(79, 70, 229, 0.2);
     border-color: rgba(255, 255, 255, 0.2);
+    z-index: 10;
 }
 
 .infinity-card:hover::before {
     opacity: 1;
+}
+
+/* Card with open dropdown must stay above hovered cards */
+.infinity-card:has(.dropdown.show) {
+    z-index: 9999 !important;
 }
 
 .infinity-btn-primary {
@@ -539,59 +587,6 @@ body::before {
     animation: aiPulse 2s ease-in-out infinite;
 }
 
-/* Voice Command Interface */
-.voice-command-zone {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    z-index: 1000;
-}
-
-.voice-btn {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--infinity-ai-gradient);
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 32px rgba(0, 245, 255, 0.3);
-}
-
-.voice-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 12px 48px rgba(0, 245, 255, 0.5);
-}
-
-.voice-btn.listening {
-    animation: voicePulse 1s ease-in-out infinite;
-}
-
-@keyframes voicePulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-}
-
-/* Chat Interface Placeholder */
-.chat-panel {
-    position: fixed;
-    right: -400px;
-    top: 0;
-    width: 400px;
-    height: 100vh;
-    background: var(--infinity-dark-surface);
-    backdrop-filter: blur(20px);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 999;
-}
-
-.chat-panel.open {
-    right: 0;
-}
-
 /* Modern Typography */
 .text-gradient {
     background: var(--infinity-ai-gradient);
@@ -696,11 +691,6 @@ main {
 
     .bento-item.large {
         grid-column: span 1;
-    }
-
-    .voice-command-zone {
-        bottom: 1rem;
-        right: 1rem;
     }
 }
 

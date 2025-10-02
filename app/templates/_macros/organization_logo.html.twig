@@ -1,0 +1,54 @@
+{% macro logo(organization, size = 'md', classes = '') %}
+    {% set sizeMap = {
+        'xs': '24px',
+        'sm': '32px',
+        'md': '48px',
+        'lg': '64px',
+        'xl': '80px'
+    } %}
+    {% set iconSizeMap = {
+        'xs': 'fs-6',
+        'sm': 'fs-5',
+        'md': 'fs-4',
+        'lg': 'fs-2',
+        'xl': 'fs-1'
+    } %}
+    {% set logoSize = sizeMap[size] ?? sizeMap['md'] %}
+    {% set iconSize = iconSizeMap[size] ?? iconSizeMap['md'] %}
+
+    {% set hasLightLogo = organization.logoPath is not empty %}
+    {% set hasDarkLogo = organization.logoPathDark is not empty %}
+
+    {% if hasLightLogo or hasDarkLogo %}
+        <div class="org-logo-container {{ classes }}" style="width: {{ logoSize }}; height: {{ logoSize }};">
+            {% if hasLightLogo and hasDarkLogo %}
+                {# Theme-responsive: show light logo in light mode, dark logo in dark mode #}
+                <img src="{{ organization.logoPath }}"
+                     alt="{{ organization.name }}"
+                     class="org-logo org-logo-light"
+                     style="width: 100%; height: 100%; object-fit: contain;">
+                <img src="{{ organization.logoPathDark }}"
+                     alt="{{ organization.name }}"
+                     class="org-logo org-logo-dark"
+                     style="width: 100%; height: 100%; object-fit: contain;">
+            {% elseif hasLightLogo %}
+                {# Only light logo available #}
+                <img src="{{ organization.logoPath }}"
+                     alt="{{ organization.name }}"
+                     class="org-logo"
+                     style="width: 100%; height: 100%; object-fit: contain;">
+            {% else %}
+                {# Only dark logo available #}
+                <img src="{{ organization.logoPathDark }}"
+                     alt="{{ organization.name }}"
+                     class="org-logo"
+                     style="width: 100%; height: 100%; object-fit: contain;">
+            {% endif %}
+        </div>
+    {% else %}
+        {# No logo: fallback to building icon #}
+        <div class="org-icon-fallback {{ classes }}" style="width: {{ logoSize }}; height: {{ logoSize }};">
+            <i class="bi bi-building {{ iconSize }}"></i>
+        </div>
+    {% endif %}
+{% endmacro %}

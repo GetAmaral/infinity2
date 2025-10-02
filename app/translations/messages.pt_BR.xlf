@@ -1,0 +1,3798 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="pt-BR" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="LJQ916o" resname="nav.infinity">
+        <source>nav.infinity</source>
+        <target>Infinity</target>
+      </trans-unit>
+      <trans-unit id="LboHGOB" resname="nav.home">
+        <source>nav.home</source>
+        <target>Início</target>
+      </trans-unit>
+      <trans-unit id="trLgViq" resname="nav.organizations">
+        <source>nav.organizations</source>
+        <target>Organizações</target>
+      </trans-unit>
+      <trans-unit id="9GoKnnR" resname="nav.users">
+        <source>nav.users</source>
+        <target>Usuários</target>
+      </trans-unit>
+      <trans-unit id="CyYxsZy" resname="nav.courses">
+        <source>nav.courses</source>
+        <target>Cursos</target>
+      </trans-unit>
+      <trans-unit id="O5mBcbk" resname="nav.settings">
+        <source>nav.settings</source>
+        <target>Configurações</target>
+      </trans-unit>
+      <trans-unit id="8ZO8E2O" resname="nav.language">
+        <source>nav.language</source>
+        <target>Idioma</target>
+      </trans-unit>
+      <trans-unit id="LBBvQZY" resname="home.title">
+        <source>home.title</source>
+        <target>Bem-vindo ao Infinity</target>
+      </trans-unit>
+      <trans-unit id="rgcX7UI" resname="home.subtitle">
+        <source>home.subtitle</source>
+        <target>Aplicação Symfony Moderna</target>
+      </trans-unit>
+      <trans-unit id="PFLcQgu" resname="home.description">
+        <source>home.description</source>
+        <target>Uma aplicação Symfony 7.3 completa e pronta para empresas, com PostgreSQL 18, Redis 7, FrankenPHP 1.9 e práticas modernas de desenvolvimento.</target>
+      </trans-unit>
+      <trans-unit id="VsFL9MB" resname="home.view_organizations">
+        <source>home.view_organizations</source>
+        <target>Ver Organizações</target>
+      </trans-unit>
+      <trans-unit id="AesWixS" resname="home.view_users">
+        <source>home.view_users</source>
+        <target>Ver Usuários</target>
+      </trans-unit>
+      <trans-unit id="bEAIf5c" resname="organization.title">
+        <source>organization.title</source>
+        <target>Organizações</target>
+      </trans-unit>
+      <trans-unit id="jmGfqJu" resname="organization.singular">
+        <source>organization.singular</source>
+        <target>Organização</target>
+      </trans-unit>
+      <trans-unit id="You1QPR" resname="organization.name">
+        <source>organization.name</source>
+        <target>Nome</target>
+      </trans-unit>
+      <trans-unit id="SVBq1SM" resname="organization.description">
+        <source>organization.description</source>
+        <target>Descrição</target>
+      </trans-unit>
+      <trans-unit id="06zAmyz" resname="organization.users_count">
+        <source>organization.users_count</source>
+        <target>%count% usuário|%count% usuários</target>
+      </trans-unit>
+      <trans-unit id="p09utof" resname="organization.no_users">
+        <source>organization.no_users</source>
+        <target>Nenhum usuário</target>
+      </trans-unit>
+      <trans-unit id="vUZSpfx" resname="organization.view_details">
+        <source>organization.view_details</source>
+        <target>Ver Detalhes</target>
+      </trans-unit>
+      <trans-unit id="F8UwW6D" resname="organization.api_link">
+        <source>organization.api_link</source>
+        <target>API</target>
+      </trans-unit>
+      <trans-unit id="7It1IJw" resname="organization.back_to_list">
+        <source>organization.back_to_list</source>
+        <target>Voltar às Organizações</target>
+      </trans-unit>
+      <trans-unit id="UCoMZ3G" resname="organization.created_at">
+        <source>organization.created_at</source>
+        <target>Criado</target>
+      </trans-unit>
+      <trans-unit id="p2VP01o" resname="organization.updated_at">
+        <source>organization.updated_at</source>
+        <target>Atualizado</target>
+      </trans-unit>
+      <trans-unit id="SMLAE37" resname="organization.users_in_organization">
+        <source>organization.users_in_organization</source>
+        <target>Usuários nesta Organização</target>
+      </trans-unit>
+      <trans-unit id="1DCzzcg" resname="organization.form.name">
+        <source>organization.form.name</source>
+        <target>Nome da Organização</target>
+      </trans-unit>
+      <trans-unit id="rEAN1Vd" resname="organization.form.name_placeholder">
+        <source>organization.form.name_placeholder</source>
+        <target>Digite o nome da organização</target>
+      </trans-unit>
+      <trans-unit id="6WXM_ct" resname="organization.form.description">
+        <source>organization.form.description</source>
+        <target>Descrição</target>
+      </trans-unit>
+      <trans-unit id="eVwip9x" resname="organization.form.description_placeholder">
+        <source>organization.form.description_placeholder</source>
+        <target>Descreva o propósito e atividades da organização</target>
+      </trans-unit>
+      <trans-unit id="zpPj2tU" resname="organization.form.preview">
+        <source>organization.form.preview</source>
+        <target>Pré-visualização em Tempo Real</target>
+      </trans-unit>
+      <trans-unit id="LM_ZkGO" resname="organization.modal.create_title">
+        <source>organization.modal.create_title</source>
+        <target>Criar Nova Organização</target>
+      </trans-unit>
+      <trans-unit id="b8cHFcz" resname="organization.modal.create_subtitle">
+        <source>organization.modal.create_subtitle</source>
+        <target>Adicione uma nova organização ao sistema</target>
+      </trans-unit>
+      <trans-unit id="h2iaH_M" resname="organization.modal.edit_title">
+        <source>organization.modal.edit_title</source>
+        <target>Editar %name%</target>
+      </trans-unit>
+      <trans-unit id="wSsaWNL" resname="organization.modal.edit_subtitle">
+        <source>organization.modal.edit_subtitle</source>
+        <target>Atualizar detalhes da organização</target>
+      </trans-unit>
+      <trans-unit id="q7qqe6J" resname="organization.modal.create_tip">
+        <source>organization.modal.create_tip</source>
+        <target>Os nomes de organizações devem ser descritivos e únicos no sistema.</target>
+      </trans-unit>
+      <trans-unit id="Pv23b1Q" resname="organization.manage_users">
+        <source>organization.manage_users</source>
+        <target>Gerenciar Usuários</target>
+      </trans-unit>
+      <trans-unit id="hGCX6XI" resname="organization.confirm_delete">
+        <source>organization.confirm_delete</source>
+        <target>Tem certeza de que deseja excluir "%name%"?</target>
+      </trans-unit>
+      <trans-unit id="BQqS.Zy" resname="organization.new_organization">
+        <source>organization.new_organization</source>
+        <target>Nova Organização</target>
+      </trans-unit>
+      <trans-unit id="TX8Po7x" resname="organization.search_placeholder">
+        <source>organization.search_placeholder</source>
+        <target>Pesquisar organizações...</target>
+      </trans-unit>
+      <trans-unit id="GKgO6EU" resname="organization.flash.created_successfully">
+        <source>organization.flash.created_successfully</source>
+        <target>Organização criada com sucesso!</target>
+      </trans-unit>
+      <trans-unit id="AiWLFdE" resname="organization.flash.updated_successfully">
+        <source>organization.flash.updated_successfully</source>
+        <target>Organização atualizada com sucesso!</target>
+      </trans-unit>
+      <trans-unit id="OVc6XaS" resname="organization.flash.deleted_successfully">
+        <source>organization.flash.deleted_successfully</source>
+        <target>Organização excluída com sucesso!</target>
+      </trans-unit>
+      <trans-unit id="lNfoqSx" resname="organization.flash.save_success">
+        <source>organization.flash.save_success</source>
+        <target>Alterações salvas com sucesso!</target>
+      </trans-unit>
+      <trans-unit id="UBxbCwD" resname="organization.flash.save_success_description">
+        <source>organization.flash.save_success_description</source>
+        <target>A organização foi atualizada com suas alterações.</target>
+      </trans-unit>
+      <trans-unit id="B7ZIwn1" resname="organization.flash.save_error">
+        <source>organization.flash.save_error</source>
+        <target>Falha ao salvar organização</target>
+      </trans-unit>
+      <trans-unit id="TCxRhFG" resname="organization.flash.cannot_delete_has_users">
+        <source>organization.flash.cannot_delete_has_users</source>
+        <target>Não é possível excluir organização com usuários atribuídos</target>
+      </trans-unit>
+      <trans-unit id="v9kGt2Q" resname="organization.flash.invalid_csrf_token">
+        <source>organization.flash.invalid_csrf_token</source>
+        <target>Token de segurança inválido. Por favor, tente novamente.</target>
+      </trans-unit>
+      <trans-unit id="M7IJXPA" resname="organization.validation.name_required">
+        <source>organization.validation.name_required</source>
+        <target>__organization.validation.name_required</target>
+      </trans-unit>
+      <trans-unit id="Ov577jX" resname="organization.validation.name_min_length">
+        <source>organization.validation.name_min_length</source>
+        <target>__organization.validation.name_min_length</target>
+      </trans-unit>
+      <trans-unit id=".z6UIh_" resname="organization.validation.name_max_length">
+        <source>organization.validation.name_max_length</source>
+        <target>__organization.validation.name_max_length</target>
+      </trans-unit>
+      <trans-unit id="WL7_zf8" resname="organization.validation.description_max_length">
+        <source>organization.validation.description_max_length</source>
+        <target>__organization.validation.description_max_length</target>
+      </trans-unit>
+      <trans-unit id="0iEtF8s" resname="user.title">
+        <source>user.title</source>
+        <target>Usuários</target>
+      </trans-unit>
+      <trans-unit id="ksGzBnS" resname="user.singular">
+        <source>user.singular</source>
+        <target>Usuário</target>
+      </trans-unit>
+      <trans-unit id="9bYkts3" resname="user.name">
+        <source>user.name</source>
+        <target>Nome</target>
+      </trans-unit>
+      <trans-unit id="lTY8bfM" resname="user.email">
+        <source>user.email</source>
+        <target>E-mail</target>
+      </trans-unit>
+      <trans-unit id="kn4xDAb" resname="user.organization">
+        <source>user.organization</source>
+        <target>Organização</target>
+      </trans-unit>
+      <trans-unit id="9OL9Hhe" resname="user.view_details">
+        <source>user.view_details</source>
+        <target>Ver Detalhes</target>
+      </trans-unit>
+      <trans-unit id="EXC_RU4" resname="user.api_link">
+        <source>user.api_link</source>
+        <target>API</target>
+      </trans-unit>
+      <trans-unit id="RK9x4ZM" resname="user.back_to_list">
+        <source>user.back_to_list</source>
+        <target>Voltar aos Usuários</target>
+      </trans-unit>
+      <trans-unit id="Q_5FXji" resname="user.created_at">
+        <source>user.created_at</source>
+        <target>Criado</target>
+      </trans-unit>
+      <trans-unit id="i_3Kgd6" resname="user.updated_at">
+        <source>user.updated_at</source>
+        <target>Atualizado</target>
+      </trans-unit>
+      <trans-unit id="eOKk3Ox" resname="user.view_organization">
+        <source>user.view_organization</source>
+        <target>Ver Organização</target>
+      </trans-unit>
+      <trans-unit id="TVAVZUl" resname="settings.title">
+        <source>settings.title</source>
+        <target>Configurações</target>
+      </trans-unit>
+      <trans-unit id="0VGVxb4" resname="settings.language_preferences">
+        <source>settings.language_preferences</source>
+        <target>Preferências de Idioma</target>
+      </trans-unit>
+      <trans-unit id="xbDOrEm" resname="settings.current_language">
+        <source>settings.current_language</source>
+        <target>Idioma Atual</target>
+      </trans-unit>
+      <trans-unit id="_Nbmbqn" resname="settings.choose_language">
+        <source>settings.choose_language</source>
+        <target>Escolher Idioma</target>
+      </trans-unit>
+      <trans-unit id="hAszaal" resname="settings.save_changes">
+        <source>settings.save_changes</source>
+        <target>Salvar Alterações</target>
+      </trans-unit>
+      <trans-unit id="TJJIYcW" resname="settings.language_saved">
+        <source>settings.language_saved</source>
+        <target>Preferência de idioma salva com sucesso!</target>
+      </trans-unit>
+      <trans-unit id="Fj3K_bn" resname="settings.ui_preferences">
+        <source>settings.ui_preferences</source>
+        <target>Preferências de Interface</target>
+      </trans-unit>
+      <trans-unit id="s6HmGy3" resname="settings.enable_animations">
+        <source>settings.enable_animations</source>
+        <target>Ativar Animações</target>
+      </trans-unit>
+      <trans-unit id="O1lrDsv" resname="settings.enable_sound">
+        <source>settings.enable_sound</source>
+        <target>Ativar Efeitos Sonoros</target>
+      </trans-unit>
+      <trans-unit id="12jui.k" resname="settings.compact_mode">
+        <source>settings.compact_mode</source>
+        <target>Modo Compacto</target>
+      </trans-unit>
+      <trans-unit id="XOJJPxW" resname="settings.items_per_page">
+        <source>settings.items_per_page</source>
+        <target>Itens Por Página</target>
+      </trans-unit>
+      <trans-unit id="XkPAxa7" resname="language.en">
+        <source>language.en</source>
+        <target>English</target>
+      </trans-unit>
+      <trans-unit id="Q27FZDZ" resname="language.pt_BR">
+        <source>language.pt_BR</source>
+        <target>Português (Brasil)</target>
+      </trans-unit>
+      <trans-unit id="80bO76v" resname="action.save">
+        <source>action.save</source>
+        <target>Salvar</target>
+      </trans-unit>
+      <trans-unit id="wPEuKmL" resname="action.cancel">
+        <source>action.cancel</source>
+        <target>Cancelar</target>
+      </trans-unit>
+      <trans-unit id="SFB94SX" resname="action.edit">
+        <source>action.edit</source>
+        <target>Editar</target>
+      </trans-unit>
+      <trans-unit id="Cd4XVNn" resname="action.delete">
+        <source>action.delete</source>
+        <target>Excluir</target>
+      </trans-unit>
+      <trans-unit id="zRmLECl" resname="action.view">
+        <source>action.view</source>
+        <target>Visualizar</target>
+      </trans-unit>
+      <trans-unit id="uAQPVcs" resname="date.format">
+        <source>date.format</source>
+        <target>d/m/Y</target>
+      </trans-unit>
+      <trans-unit id="hd9wIOT" resname="datetime.format">
+        <source>datetime.format</source>
+        <target>d/m/Y H:i</target>
+      </trans-unit>
+      <trans-unit id="E98fZAo" resname="ui.ai">
+        <source>ui.ai</source>
+        <target>IA</target>
+      </trans-unit>
+      <trans-unit id="Mv07Yat" resname="ui.active">
+        <source>ui.active</source>
+        <target>Ativo</target>
+      </trans-unit>
+      <trans-unit id="qu2ff6n" resname="ui.account">
+        <source>ui.account</source>
+        <target>Conta</target>
+      </trans-unit>
+      <trans-unit id="HFrnvIB" resname="ui.dashboard">
+        <source>ui.dashboard</source>
+        <target>Painel</target>
+      </trans-unit>
+      <trans-unit id="sDDSN.M" resname="ui.back_to_dashboard">
+        <source>ui.back_to_dashboard</source>
+        <target>Voltar ao Painel</target>
+      </trans-unit>
+      <trans-unit id="eMWl3dI" resname="empty.no_description">
+        <source>empty.no_description</source>
+        <target>Sem descrição disponível</target>
+      </trans-unit>
+      <trans-unit id="Evh5P9n" resname="empty.no_contacts_yet">
+        <source>empty.no_contacts_yet</source>
+        <target>Ainda Não Há Contatos</target>
+      </trans-unit>
+      <trans-unit id="5fWxazD" resname="empty.no_organizations_yet">
+        <source>empty.no_organizations_yet</source>
+        <target>Ainda Não Há Organizações</target>
+      </trans-unit>
+      <trans-unit id="e85pNaT" resname="empty.contact_description">
+        <source>empty.contact_description</source>
+        <target>Comece a construir sua rede adicionando seu primeiro contato. Nossa IA ajudará você a gerenciar relacionamentos e fornecer insights valiosos.</target>
+      </trans-unit>
+      <trans-unit id="RYl0ppM" resname="empty.organization_description">
+        <source>empty.organization_description</source>
+        <target>Comece a construir seus relacionamentos empresariais criando sua primeira organização. Nossa IA ajudará você a gerenciar e expandir essas conexões.</target>
+      </trans-unit>
+      <trans-unit id="FS_wAaA" resname="empty.organization_contacts_description">
+        <source>empty.organization_contacts_description</source>
+        <target>Comece a construir relacionamentos adicionando contatos a esta organização.</target>
+      </trans-unit>
+      <trans-unit id="UN2cv3O" resname="empty.course_lectures_description">
+        <source>empty.course_lectures_description</source>
+        <target>Comece a construir seu curso adicionando a primeira aula.</target>
+      </trans-unit>
+      <trans-unit id="Nv0pWD0" resname="button.add_organization">
+        <source>button.add_organization</source>
+        <target>Adicionar Organização</target>
+      </trans-unit>
+      <trans-unit id="POHZE71" resname="button.add_contact">
+        <source>button.add_contact</source>
+        <target>Adicionar Contato</target>
+      </trans-unit>
+      <trans-unit id="8svw0VL" resname="button.add_first_contact">
+        <source>button.add_first_contact</source>
+        <target>Adicionar Primeiro Contato</target>
+      </trans-unit>
+      <trans-unit id="g2s7RJc" resname="button.create_first_organization">
+        <source>button.create_first_organization</source>
+        <target>Criar Primeira Organização</target>
+      </trans-unit>
+      <trans-unit id="ih0w8zy" resname="button.edit">
+        <source>button.edit</source>
+        <target>Editar</target>
+      </trans-unit>
+      <trans-unit id="oU4d7P9" resname="button.delete">
+        <source>button.delete</source>
+        <target>Excluir</target>
+      </trans-unit>
+      <trans-unit id="CCFmJ7h" resname="button.cancel">
+        <source>button.cancel</source>
+        <target>Cancelar</target>
+      </trans-unit>
+      <trans-unit id="Io8NFA9" resname="button.close">
+        <source>button.close</source>
+        <target>Fechar</target>
+      </trans-unit>
+      <trans-unit id="N_s5whG" resname="button.reset">
+        <source>button.reset</source>
+        <target>Redefinir</target>
+      </trans-unit>
+      <trans-unit id="k.QePe1" resname="button.reset_form">
+        <source>button.reset_form</source>
+        <target>Redefinir Formulário</target>
+      </trans-unit>
+      <trans-unit id="9mqRMOZ" resname="button.filter">
+        <source>button.filter</source>
+        <target>Filtrar</target>
+      </trans-unit>
+      <trans-unit id="2QIWY15" resname="button.clear_search">
+        <source>button.clear_search</source>
+        <target>Limpar pesquisa</target>
+      </trans-unit>
+      <trans-unit id="wm42OtL" resname="button.create_organization">
+        <source>button.create_organization</source>
+        <target>Criar Organização</target>
+      </trans-unit>
+      <trans-unit id="_o1Smh1" resname="button.update_organization">
+        <source>button.update_organization</source>
+        <target>Atualizar Organização</target>
+      </trans-unit>
+      <trans-unit id="c061aos" resname="button.creating">
+        <source>button.creating</source>
+        <target>Criando...</target>
+      </trans-unit>
+      <trans-unit id="UTiq5Rt" resname="button.updating">
+        <source>button.updating</source>
+        <target>Atualizando...</target>
+      </trans-unit>
+      <trans-unit id="gvknbbT" resname="form.validation_errors">
+        <source>form.validation_errors</source>
+        <target>Por favor, corrija os erros abaixo</target>
+      </trans-unit>
+      <trans-unit id="5naAxfv" resname="filter.active_organizations">
+        <source>filter.active_organizations</source>
+        <target>Organizações Ativas</target>
+      </trans-unit>
+      <trans-unit id="FW_1lOr" resname="filter.empty_organizations">
+        <source>filter.empty_organizations</source>
+        <target>Organizações sem Usuários</target>
+      </trans-unit>
+      <trans-unit id="MJ6qjci" resname="filter.all">
+        <source>filter.all</source>
+        <target>Todos</target>
+      </trans-unit>
+      <trans-unit id="apLoxEa" resname="view.grid">
+        <source>view.grid</source>
+        <target>Visualização em Grade</target>
+      </trans-unit>
+      <trans-unit id="MHdpOEV" resname="view.list">
+        <source>view.list</source>
+        <target>Visualização em Lista</target>
+      </trans-unit>
+      <trans-unit id="DIGES3H" resname="view.table">
+        <source>view.table</source>
+        <target>Visualização em Tabela</target>
+      </trans-unit>
+      <trans-unit id="i3UVjgh" resname="table.actions">
+        <source>table.actions</source>
+        <target>Ações</target>
+      </trans-unit>
+      <trans-unit id="f98VtMi" resname="table.swipe_to_see_more">
+        <source>table.swipe_to_see_more</source>
+        <target>Deslize para ver mais</target>
+      </trans-unit>
+      <trans-unit id="U5VOOIp" resname="button.edit_contact">
+        <source>button.edit_contact</source>
+        <target>Editar Contato</target>
+      </trans-unit>
+      <trans-unit id="ysopdTt" resname="button.send_email">
+        <source>button.send_email</source>
+        <target>Enviar E-mail</target>
+      </trans-unit>
+      <trans-unit id="i4sfPLt" resname="button.send_message">
+        <source>button.send_message</source>
+        <target>Enviar Mensagem</target>
+      </trans-unit>
+      <trans-unit id="JGrIpoK" resname="button.call_contact">
+        <source>button.call_contact</source>
+        <target>Ligar para Contato</target>
+      </trans-unit>
+      <trans-unit id="ymfv7jl" resname="button.schedule_meeting">
+        <source>button.schedule_meeting</source>
+        <target>Agendar Reunião</target>
+      </trans-unit>
+      <trans-unit id="fFsD_c6" resname="button.share_contact">
+        <source>button.share_contact</source>
+        <target>Compartilhar Contato</target>
+      </trans-unit>
+      <trans-unit id="emXqStg" resname="button.start_ai_chat">
+        <source>button.start_ai_chat</source>
+        <target>Iniciar Chat com IA</target>
+      </trans-unit>
+      <trans-unit id="ve1REFp" resname="metric.total_contacts">
+        <source>metric.total_contacts</source>
+        <target>Total de Contatos</target>
+      </trans-unit>
+      <trans-unit id="Dbv_Qoe" resname="metric.ai_interactions">
+        <source>metric.ai_interactions</source>
+        <target>Interações com IA</target>
+      </trans-unit>
+      <trans-unit id="ax0JtvJ" resname="metric.uptime">
+        <source>metric.uptime</source>
+        <target>Tempo de Atividade</target>
+      </trans-unit>
+      <trans-unit id="r8mMc8d" resname="metric.response_time">
+        <source>metric.response_time</source>
+        <target>Tempo de Resposta</target>
+      </trans-unit>
+      <trans-unit id="bhBxSym" resname="metric.encryption">
+        <source>metric.encryption</source>
+        <target>Criptografia</target>
+      </trans-unit>
+      <trans-unit id="h25Nibj" resname="page.user_description">
+        <source>page.user_description</source>
+        <target>Gerenciamento de contatos com IA e insights de relacionamento</target>
+      </trans-unit>
+      <trans-unit id="2puFQRU" resname="page.organization_description">
+        <source>page.organization_description</source>
+        <target>Gerencie seus relacionamentos empresariais com insights de IA</target>
+      </trans-unit>
+      <trans-unit id="bUHFG0i" resname="page.settings_description">
+        <source>page.settings_description</source>
+        <target>Personalize sua experiência no Infinity CRM</target>
+      </trans-unit>
+      <trans-unit id="IT83lXU" resname="ai.insights">
+        <source>ai.insights</source>
+        <target>Insights de IA</target>
+      </trans-unit>
+      <trans-unit id="4uvSREz" resname="ai.assistant">
+        <source>ai.assistant</source>
+        <target>Assistente de IA</target>
+      </trans-unit>
+      <trans-unit id="NYYurvj" resname="ai.chat">
+        <source>ai.chat</source>
+        <target>Chat com IA</target>
+      </trans-unit>
+      <trans-unit id="hpIHzSI" resname="ai.analytics">
+        <source>ai.analytics</source>
+        <target>Análises</target>
+      </trans-unit>
+      <trans-unit id="_W9KBHl" resname="ai.quick_actions">
+        <source>ai.quick_actions</source>
+        <target>Ações Rápidas</target>
+      </trans-unit>
+      <trans-unit id="PHxugOv" resname="ai.powered_crm">
+        <source>ai.powered_crm</source>
+        <target>Recursos de CRM com IA</target>
+      </trans-unit>
+      <trans-unit id=".P1PpHQ" resname="ai.conversational">
+        <source>ai.conversational</source>
+        <target>IA Conversacional</target>
+      </trans-unit>
+      <trans-unit id="L.Awm2U" resname="ai.conversational_description">
+        <source>ai.conversational_description</source>
+        <target>Comandos de voz, integração WhatsApp e processamento de linguagem natural</target>
+      </trans-unit>
+      <trans-unit id="2gm_QNQ" resname="ai.predictive_analytics">
+        <source>ai.predictive_analytics</source>
+        <target>Análises Preditivas</target>
+      </trans-unit>
+      <trans-unit id="1pOm1P6" resname="ai.predictive_description">
+        <source>ai.predictive_description</source>
+        <target>Insights impulsionados por IA e previsões de comportamento do cliente</target>
+      </trans-unit>
+      <trans-unit id="sKrVxhJ" resname="ai.smart_automation">
+        <source>ai.smart_automation</source>
+        <target>Automação Inteligente</target>
+      </trans-unit>
+      <trans-unit id="3NwT3Ky" resname="ai.automation_description">
+        <source>ai.automation_description</source>
+        <target>Fluxos de trabalho inteligentes e interações automatizadas com clientes</target>
+      </trans-unit>
+      <trans-unit id=".W6PF2P" resname="ai.coming_soon">
+        <source>ai.coming_soon</source>
+        <target>Chat com IA em breve...</target>
+      </trans-unit>
+      <trans-unit id="MosKcFG" resname="ai.settings">
+        <source>ai.settings</source>
+        <target>Configurações de IA</target>
+      </trans-unit>
+      <trans-unit id="LYulH2G" resname="ai.settings_description">
+        <source>ai.settings_description</source>
+        <target>Configure o comportamento e preferências do assistente de IA</target>
+      </trans-unit>
+      <trans-unit id="SCtvRZD" resname="ai.crm_question">
+        <source>ai.crm_question</source>
+        <target>Pergunte-me qualquer coisa sobre seu CRM</target>
+      </trans-unit>
+      <trans-unit id="jd4PBd3" resname="insight.high_engagement">
+        <source>insight.high_engagement</source>
+        <target>Pontuação de engajamento alta</target>
+      </trans-unit>
+      <trans-unit id="hleihnS" resname="insight.active_communicator">
+        <source>insight.active_communicator</source>
+        <target>Comunicador ativo</target>
+      </trans-unit>
+      <trans-unit id="lcpmxbg" resname="insight.key_relationship">
+        <source>insight.key_relationship</source>
+        <target>Relacionamento chave</target>
+      </trans-unit>
+      <trans-unit id="Oa5sXYW" resname="insight.strong_engagement">
+        <source>insight.strong_engagement</source>
+        <target>Métricas de engajamento forte</target>
+      </trans-unit>
+      <trans-unit id="4MVyTll" resname="insight.growth_potential">
+        <source>insight.growth_potential</source>
+        <target>Potencial de crescimento identificado</target>
+      </trans-unit>
+      <trans-unit id="KJ96e6G" resname="insight.high_relationship_score">
+        <source>insight.high_relationship_score</source>
+        <target>Pontuação de relacionamento alta</target>
+      </trans-unit>
+      <trans-unit id="Z0mZwLT" resname="insight.active_organization">
+        <source>insight.active_organization</source>
+        <target>Organização ativa</target>
+      </trans-unit>
+      <trans-unit id="Z8daCWf" resname="system.performance">
+        <source>system.performance</source>
+        <target>Desempenho do Sistema</target>
+      </trans-unit>
+      <trans-unit id="TM.Xs7b" resname="system.information">
+        <source>system.information</source>
+        <target>Informações do Sistema</target>
+      </trans-unit>
+      <trans-unit id="bc3dVNT" resname="system.status">
+        <source>system.status</source>
+        <target>Status do Sistema</target>
+      </trans-unit>
+      <trans-unit id="mToR9Bs" resname="system.security_status">
+        <source>system.security_status</source>
+        <target>Status de Segurança:</target>
+      </trans-unit>
+      <trans-unit id="4Lmibnf" resname="system.security_message">
+        <source>system.security_message</source>
+        <target>Todos os sistemas seguros e atualizados</target>
+      </trans-unit>
+      <trans-unit id="ET6gepl" resname="system.version">
+        <source>system.version</source>
+        <target>Versão</target>
+      </trans-unit>
+      <trans-unit id="9zdn7YI" resname="system.runtime">
+        <source>system.runtime</source>
+        <target>Tempo de Execução</target>
+      </trans-unit>
+      <trans-unit id="6Z5SGlR" resname="system.framework">
+        <source>system.framework</source>
+        <target>Framework</target>
+      </trans-unit>
+      <trans-unit id="m54tmlv" resname="system.database">
+        <source>system.database</source>
+        <target>Banco de Dados</target>
+      </trans-unit>
+      <trans-unit id="HJHSARW" resname="theme.settings">
+        <source>theme.settings</source>
+        <target>Configurações de Tema</target>
+      </trans-unit>
+      <trans-unit id="5ZYx62e" resname="theme.dark">
+        <source>theme.dark</source>
+        <target>Tema Escuro</target>
+      </trans-unit>
+      <trans-unit id="8z17OnR" resname="theme.light">
+        <source>theme.light</source>
+        <target>Tema Claro</target>
+      </trans-unit>
+      <trans-unit id="4PJwpcW" resname="theme.dark_description">
+        <source>theme.dark_description</source>
+        <target>Interface escura moderna com acentos neon</target>
+      </trans-unit>
+      <trans-unit id="onSfyfQ" resname="theme.light_description">
+        <source>theme.light_description</source>
+        <target>Interface clara e limpa com cores vibrantes</target>
+      </trans-unit>
+      <trans-unit id="0VLHzK5" resname="contact.information">
+        <source>contact.information</source>
+        <target>Informações de Contato</target>
+      </trans-unit>
+      <trans-unit id="nrYiq_j" resname="contact.last_activity">
+        <source>contact.last_activity</source>
+        <target>Última Atividade</target>
+      </trans-unit>
+      <trans-unit id="7qAtsG." resname="contact.member_since">
+        <source>contact.member_since</source>
+        <target>Membro Desde</target>
+      </trans-unit>
+      <trans-unit id="_kpRQlj" resname="contact.active_user">
+        <source>contact.active_user</source>
+        <target>Usuário ativo</target>
+      </trans-unit>
+      <trans-unit id="7.cItDc" resname="misc.contacts_section">
+        <source>misc.contacts_section</source>
+        <target>Contatos</target>
+      </trans-unit>
+      <trans-unit id="rRASzFy" resname="misc.coming_soon">
+        <source>misc.coming_soon</source>
+        <target>Em Breve</target>
+      </trans-unit>
+      <trans-unit id=".XRuzFV" resname="misc.voice_commands">
+        <source>misc.voice_commands</source>
+        <target>Comandos de Voz</target>
+      </trans-unit>
+      <trans-unit id="EVqSSnW" resname="misc.ai_insights_tooltip">
+        <source>misc.ai_insights_tooltip</source>
+        <target>Insights de IA</target>
+      </trans-unit>
+      <trans-unit id="C_JDuO4" resname="misc.quick_actions_tooltip">
+        <source>misc.quick_actions_tooltip</source>
+        <target>Ações Rápidas</target>
+      </trans-unit>
+      <trans-unit id="kGa.Ppj" resname="auth.login">
+        <source>auth.login</source>
+        <target>Login</target>
+      </trans-unit>
+      <trans-unit id="I1cUD63" resname="auth.register">
+        <source>auth.register</source>
+        <target>Registrar</target>
+      </trans-unit>
+      <trans-unit id="so7Yvtt" resname="auth.welcome_back">
+        <source>auth.welcome_back</source>
+        <target>Bem-vindo de Volta</target>
+      </trans-unit>
+      <trans-unit id="soJCzrT" resname="auth.login_to_continue">
+        <source>auth.login_to_continue</source>
+        <target>Faça login para continuar em sua conta</target>
+      </trans-unit>
+      <trans-unit id="4xo3i8m" resname="auth.email">
+        <source>auth.email</source>
+        <target>Endereço de E-mail</target>
+      </trans-unit>
+      <trans-unit id="nC1jfQs" resname="auth.password">
+        <source>auth.password</source>
+        <target>Senha</target>
+      </trans-unit>
+      <trans-unit id="gdqwDa0" resname="auth.remember_me">
+        <source>auth.remember_me</source>
+        <target>Lembrar-me</target>
+      </trans-unit>
+      <trans-unit id="TSU3G57" resname="auth.sign_in">
+        <source>auth.sign_in</source>
+        <target>Entrar</target>
+      </trans-unit>
+      <trans-unit id="KXmq0Fm" resname="auth.no_account">
+        <source>auth.no_account</source>
+        <target>Não tem uma conta?</target>
+      </trans-unit>
+      <trans-unit id="QEpDLuB" resname="auth.register_now">
+        <source>auth.register_now</source>
+        <target>Registre-se agora</target>
+      </trans-unit>
+      <trans-unit id="x_C43L9" resname="auth.create_account">
+        <source>auth.create_account</source>
+        <target>Criar Conta</target>
+      </trans-unit>
+      <trans-unit id="4Kc6CKD" resname="auth.join_infinity">
+        <source>auth.join_infinity</source>
+        <target>Junte-se ao Infinity e comece a gerenciar seus dados</target>
+      </trans-unit>
+      <trans-unit id="28fBEl7" resname="auth.full_name">
+        <source>auth.full_name</source>
+        <target>Nome Completo</target>
+      </trans-unit>
+      <trans-unit id="_NYtM6T" resname="auth.confirm_password">
+        <source>auth.confirm_password</source>
+        <target>Confirmar Senha</target>
+      </trans-unit>
+      <trans-unit id="3p3vMxB" resname="auth.password_requirements">
+        <source>auth.password_requirements</source>
+        <target>Mínimo de 8 caracteres obrigatórios</target>
+      </trans-unit>
+      <trans-unit id="xG5oHM5" resname="auth.create_account_button">
+        <source>auth.create_account_button</source>
+        <target>Criar Conta</target>
+      </trans-unit>
+      <trans-unit id="dWHzmv5" resname="auth.already_have_account">
+        <source>auth.already_have_account</source>
+        <target>Já tem uma conta?</target>
+      </trans-unit>
+      <trans-unit id="kzYbf96" resname="auth.passwords_do_not_match">
+        <source>auth.passwords_do_not_match</source>
+        <target>As senhas não coincidem</target>
+      </trans-unit>
+      <trans-unit id="P4UBOAh" resname="auth.registration_successful">
+        <source>auth.registration_successful</source>
+        <target>Registro bem-sucedido! Você já pode fazer login.</target>
+      </trans-unit>
+      <trans-unit id="s8ahPT3" resname="auth.registration_failed">
+        <source>auth.registration_failed</source>
+        <target>Falha no registro. Por favor, tente novamente.</target>
+      </trans-unit>
+      <trans-unit id="E7gA3ag" resname="auth.logout">
+        <source>auth.logout</source>
+        <target>Sair</target>
+      </trans-unit>
+      <trans-unit id="XZhAg6q" resname="token.title">
+        <source>token.title</source>
+        <target>Tokens de API</target>
+      </trans-unit>
+      <trans-unit id="6GYMpYY" resname="token.description">
+        <source>token.description</source>
+        <target>Gerencie seus tokens de acesso à API</target>
+      </trans-unit>
+      <trans-unit id="Tv1cXUo" resname="token.current_token">
+        <source>token.current_token</source>
+        <target>Token de API Atual</target>
+      </trans-unit>
+      <trans-unit id="iX8tcDt" resname="token.active_token">
+        <source>token.active_token</source>
+        <target>Token Ativo</target>
+      </trans-unit>
+      <trans-unit id="azvdM0o" resname="token.expires">
+        <source>token.expires</source>
+        <target>Expira</target>
+      </trans-unit>
+      <trans-unit id="wrHnd.I" resname="token.your_token">
+        <source>token.your_token</source>
+        <target>Seu Token de API</target>
+      </trans-unit>
+      <trans-unit id="B2A.7vr" resname="token.copy">
+        <source>token.copy</source>
+        <target>Copiar</target>
+      </trans-unit>
+      <trans-unit id="L2PkXnv" resname="token.copied">
+        <source>token.copied</source>
+        <target>Copiado</target>
+      </trans-unit>
+      <trans-unit id="Yq8sQd8" resname="token.copy_warning">
+        <source>token.copy_warning</source>
+        <target>Mantenha este token seguro. Ele fornece acesso total à sua conta via API.</target>
+      </trans-unit>
+      <trans-unit id="7pd76SI" resname="token.revoke">
+        <source>token.revoke</source>
+        <target>Revogar Token</target>
+      </trans-unit>
+      <trans-unit id="eMzgT1G" resname="token.revoke_confirm">
+        <source>token.revoke_confirm</source>
+        <target>Tem certeza de que deseja revogar este token? Aplicativos que o utilizam perderão o acesso.</target>
+      </trans-unit>
+      <trans-unit id="4jtGXtw" resname="token.no_active_token">
+        <source>token.no_active_token</source>
+        <target>Você não possui um token de API ativo</target>
+      </trans-unit>
+      <trans-unit id="b5256j5" resname="token.generate">
+        <source>token.generate</source>
+        <target>Gerar Novo Token</target>
+      </trans-unit>
+      <trans-unit id="cDCMc0K" resname="token.usage_instructions">
+        <source>token.usage_instructions</source>
+        <target>Instruções de Uso</target>
+      </trans-unit>
+      <trans-unit id="9h5hucJ" resname="token.usage_description">
+        <source>token.usage_description</source>
+        <target>Use seu token de API no cabeçalho Authorization de suas requisições:</target>
+      </trans-unit>
+      <trans-unit id="ltcuTDj" resname="token.security_tips">
+        <source>token.security_tips</source>
+        <target>Melhores Práticas de Segurança</target>
+      </trans-unit>
+      <trans-unit id="X9EQP9k" resname="token.tip_1">
+        <source>token.tip_1</source>
+        <target>Nunca compartilhe seu token de API publicamente</target>
+      </trans-unit>
+      <trans-unit id="7g7SfLq" resname="token.tip_2">
+        <source>token.tip_2</source>
+        <target>Revogue tokens imediatamente se comprometidos</target>
+      </trans-unit>
+      <trans-unit id="PZ_iTBU" resname="token.tip_3">
+        <source>token.tip_3</source>
+        <target>Use variáveis de ambiente para armazenar tokens em aplicações</target>
+      </trans-unit>
+      <trans-unit id="W.te3uX" resname="token.tip_4">
+        <source>token.tip_4</source>
+        <target>Regenere tokens periodicamente para maior segurança</target>
+      </trans-unit>
+      <trans-unit id="dUKFkqJ" resname="token.info_title">
+        <source>token.info_title</source>
+        <target>Informações do Token</target>
+      </trans-unit>
+      <trans-unit id="LlRA5Dm" resname="token.validity_period">
+        <source>token.validity_period</source>
+        <target>Período de Validade</target>
+      </trans-unit>
+      <trans-unit id="bfDp0De" resname="token.validity_30_days">
+        <source>token.validity_30_days</source>
+        <target>30 dias</target>
+      </trans-unit>
+      <trans-unit id="OufhBuO" resname="token.access_level">
+        <source>token.access_level</source>
+        <target>Nível de Acesso</target>
+      </trans-unit>
+      <trans-unit id="Fmt47IQ" resname="token.full_api_access">
+        <source>token.full_api_access</source>
+        <target>Acesso Completo à API</target>
+      </trans-unit>
+      <trans-unit id="ADx6dNP" resname="token.regeneration">
+        <source>token.regeneration</source>
+        <target>Regeneração</target>
+      </trans-unit>
+      <trans-unit id="kb8zKw6" resname="token.regeneration_description">
+        <source>token.regeneration_description</source>
+        <target>Revogue o token antigo antes de gerar um novo</target>
+      </trans-unit>
+      <trans-unit id="wlUHX8N" resname="token.active_tokens">
+        <source>token.active_tokens</source>
+        <target>Tokens Ativos</target>
+      </trans-unit>
+      <trans-unit id="B9cKcMC" resname="token.secure">
+        <source>token.secure</source>
+        <target>Protegido</target>
+      </trans-unit>
+      <trans-unit id="EmLb0ae" resname="token.no_token">
+        <source>token.no_token</source>
+        <target>Sem Token</target>
+      </trans-unit>
+      <trans-unit id="yPCQ1X7" resname="token.generated_successfully">
+        <source>token.generated_successfully</source>
+        <target>Token de API gerado com sucesso!</target>
+      </trans-unit>
+      <trans-unit id="2rFpZpk" resname="token.revoked_successfully">
+        <source>token.revoked_successfully</source>
+        <target>Token de API revogado com sucesso</target>
+      </trans-unit>
+      <trans-unit id="hW3UiWO" resname="token.csrf_invalid">
+        <source>token.csrf_invalid</source>
+        <target>Token de segurança inválido</target>
+      </trans-unit>
+      <trans-unit id="HZxuW0n" resname="button.add_user">
+        <source>button.add_user</source>
+        <target>Adicionar Usuário</target>
+      </trans-unit>
+      <trans-unit id="ssAXjYF" resname="button.add_first_user">
+        <source>button.add_first_user</source>
+        <target>Adicionar Primeiro Usuário</target>
+      </trans-unit>
+      <trans-unit id="iAyopyg" resname="button.update_user">
+        <source>button.update_user</source>
+        <target>Atualizar Usuário</target>
+      </trans-unit>
+      <trans-unit id="n2cJzC6" resname="button.create_user">
+        <source>button.create_user</source>
+        <target>Criar Usuário</target>
+      </trans-unit>
+      <trans-unit id="vsEUr7h" resname="course.button.create_course">
+        <source>course.button.create_course</source>
+        <target>Criar Curso</target>
+      </trans-unit>
+      <trans-unit id="zp5WCI2" resname="course.lecture.button.add_lecture">
+        <source>course.lecture.button.add_lecture</source>
+        <target>Adicionar Aula</target>
+      </trans-unit>
+      <trans-unit id="TeeszCz" resname="user.new_user">
+        <source>user.new_user</source>
+        <target>Novo Usuário</target>
+      </trans-unit>
+      <trans-unit id="RZ_4gw_" resname="user.confirm_delete">
+        <source>user.confirm_delete</source>
+        <target>Tem certeza de que deseja excluir %name%?</target>
+      </trans-unit>
+      <trans-unit id="NCeIQdU" resname="user.modal.edit_subtitle">
+        <source>user.modal.edit_subtitle</source>
+        <target>Atualizar informações e permissões do usuário</target>
+      </trans-unit>
+      <trans-unit id="pP4JnsN" resname="user.modal.create_subtitle">
+        <source>user.modal.create_subtitle</source>
+        <target>Adicionar um novo usuário ao sistema</target>
+      </trans-unit>
+      <trans-unit id="8f3g8sX" resname="user.form.name_placeholder">
+        <source>user.form.name_placeholder</source>
+        <target>Digite o nome completo</target>
+      </trans-unit>
+      <trans-unit id="2bZvqJv" resname="user.form.email_placeholder">
+        <source>user.form.email_placeholder</source>
+        <target>Digite o endereço de e-mail</target>
+      </trans-unit>
+      <trans-unit id="orbzXcP" resname="user.form.password_placeholder">
+        <source>user.form.password_placeholder</source>
+        <target>Digite a senha</target>
+      </trans-unit>
+      <trans-unit id="ze00N_H" resname="user.form.password_confirm_placeholder">
+        <source>user.form.password_confirm_placeholder</source>
+        <target>Confirme a senha</target>
+      </trans-unit>
+      <trans-unit id="i7POqso" resname="organization.back_to_organization">
+        <source>organization.back_to_organization</source>
+        <target>Voltar à Organização</target>
+      </trans-unit>
+      <trans-unit id="se.fUJT" resname="organization.back_to_details">
+        <source>organization.back_to_details</source>
+        <target>Voltar aos Detalhes</target>
+      </trans-unit>
+      <trans-unit id="_0_zE8A" resname="organization.statistics">
+        <source>organization.statistics</source>
+        <target>Estatísticas</target>
+      </trans-unit>
+      <trans-unit id="182EZWR" resname="organization.total_users">
+        <source>organization.total_users</source>
+        <target>Total de Usuários</target>
+      </trans-unit>
+      <trans-unit id="z8Yt8oK" resname="organization.switcher.title">
+        <source>organization.switcher.title</source>
+        <target>Alterar Sua Organização</target>
+      </trans-unit>
+      <trans-unit id="SIUG0CN" resname="organization.switcher.subtitle">
+        <source>organization.switcher.subtitle</source>
+        <target>Isto atualizará sua conta</target>
+      </trans-unit>
+      <trans-unit id="._bMdPY" resname="filter.active_users">
+        <source>filter.active_users</source>
+        <target>Usuários Ativos</target>
+      </trans-unit>
+      <trans-unit id="kvOeJ0R" resname="filter.by_organization">
+        <source>filter.by_organization</source>
+        <target>Por Organização</target>
+      </trans-unit>
+      <trans-unit id="zsw.s_S" resname="empty.no_users_yet">
+        <source>empty.no_users_yet</source>
+        <target>Ainda não há usuários</target>
+      </trans-unit>
+      <trans-unit id="hEk32o3" resname="empty.organization_users_description">
+        <source>empty.organization_users_description</source>
+        <target>Comece a construir sua equipe adicionando o primeiro usuário</target>
+      </trans-unit>
+      <trans-unit id="7L2bM3i" resname="empty.no_organization">
+        <source>empty.no_organization</source>
+        <target>Sem organização</target>
+      </trans-unit>
+      <trans-unit id="cbZpZDw" resname="page.ai_powered_crm">
+        <source>page.ai_powered_crm</source>
+        <target>CRM Alimentado por IA</target>
+      </trans-unit>
+      <trans-unit id="Yu7.kC5" resname="page.organization_details">
+        <source>page.organization_details</source>
+        <target>Detalhes da Organização</target>
+      </trans-unit>
+      <trans-unit id="QeWOcnp" resname="page.manage_users">
+        <source>page.manage_users</source>
+        <target>Gerenciar Usuários</target>
+      </trans-unit>
+      <trans-unit id="s2gUFoy" resname="page.infinity_suffix">
+        <source>page.infinity_suffix</source>
+        <target>Infinity</target>
+      </trans-unit>
+      <trans-unit id="bJy_xKD" resname="badge.ai_enhanced">
+        <source>badge.ai_enhanced</source>
+        <target>IA Aprimorada</target>
+      </trans-unit>
+      <trans-unit id="41Orx4b" resname="badge.real_time">
+        <source>badge.real_time</source>
+        <target>Tempo Real</target>
+      </trans-unit>
+      <trans-unit id="zdDjU7D" resname="badge.organization">
+        <source>badge.organization</source>
+        <target>Organização</target>
+      </trans-unit>
+      <trans-unit id="FNuYdwZ" resname="metric.trend.this_month">
+        <source>metric.trend.this_month</source>
+        <target>+12% este mês</target>
+      </trans-unit>
+      <trans-unit id="YcfGa6t" resname="metric.trend.new_count">
+        <source>metric.trend.new_count</source>
+        <target>+3 novos</target>
+      </trans-unit>
+      <trans-unit id="LQcz4Q5" resname="metric.trend.today">
+        <source>metric.trend.today</source>
+        <target>+15% hoje</target>
+      </trans-unit>
+      <trans-unit id="GjyayVX" resname="metric.response_time_value">
+        <source>metric.response_time_value</source>
+        <target><![CDATA[< 200ms]]></target>
+      </trans-unit>
+      <trans-unit id="CRRJSXm" resname="pagination.showing">
+        <source>pagination.showing</source>
+        <target>Mostrando</target>
+      </trans-unit>
+      <trans-unit id="7ELnme5" resname="pagination.to">
+        <source>pagination.to</source>
+        <target>a</target>
+      </trans-unit>
+      <trans-unit id="gQFSFJC" resname="pagination.of">
+        <source>pagination.of</source>
+        <target>de</target>
+      </trans-unit>
+      <trans-unit id="VETz.F_" resname="pagination.show_label">
+        <source>pagination.show_label</source>
+        <target>Mostrar</target>
+      </trans-unit>
+      <trans-unit id="DF37WYx" resname="table.aria_label">
+        <source>table.aria_label</source>
+        <target>tabela de usuários</target>
+      </trans-unit>
+      <trans-unit id="8K5E7.H" resname="confirm.delete_item">
+        <source>confirm.delete_item</source>
+        <target>Tem certeza de que deseja excluir este item?</target>
+      </trans-unit>
+      <trans-unit id="cUG3kbT" resname="modal.delete.title">
+        <source>modal.delete.title</source>
+        <target>Confirmar Exclusão</target>
+      </trans-unit>
+      <trans-unit id="J8sbwXF" resname="modal.delete.cannot_undo">
+        <source>modal.delete.cannot_undo</source>
+        <target>Esta ação não pode ser desfeita.</target>
+      </trans-unit>
+      <trans-unit id="wAibeWt" resname="modal.delete.confirm_message">
+        <source>modal.delete.confirm_message</source>
+        <target>Tem certeza de que deseja excluir</target>
+      </trans-unit>
+      <trans-unit id="KaQnpzx" resname="modal.delete.cancel">
+        <source>modal.delete.cancel</source>
+        <target>Cancelar</target>
+      </trans-unit>
+      <trans-unit id="52A5jOV" resname="modal.delete.yes_delete">
+        <source>modal.delete.yes_delete</source>
+        <target>Sim, Excluir</target>
+      </trans-unit>
+      <trans-unit id="Lm1PDB3" resname="modal.delete.deleting">
+        <source>modal.delete.deleting</source>
+        <target>Excluindo...</target>
+      </trans-unit>
+      <trans-unit id="50EECTK" resname="modal.delete.success">
+        <source>modal.delete.success</source>
+        <target>Item excluído com sucesso</target>
+      </trans-unit>
+      <trans-unit id="4BL2EL8" resname="modal.delete.failed">
+        <source>modal.delete.failed</source>
+        <target>Falha ao excluir item</target>
+      </trans-unit>
+      <trans-unit id="Kl6.gUH" resname="modal.delete.network_error">
+        <source>modal.delete.network_error</source>
+        <target>Ocorreu um erro de rede</target>
+      </trans-unit>
+      <trans-unit id="RDGoapv" resname="modal.crud.saving">
+        <source>modal.crud.saving</source>
+        <target>Salvando...</target>
+      </trans-unit>
+      <trans-unit id="5hSmL2c" resname="modal.crud.unsaved_changes">
+        <source>modal.crud.unsaved_changes</source>
+        <target>Você tem alterações não salvas. Tem certeza de que deseja descartá-las?</target>
+      </trans-unit>
+      <trans-unit id="Fpg6Pof" resname="modal.crud.continue_editing">
+        <source>modal.crud.continue_editing</source>
+        <target>Continuar Editando</target>
+      </trans-unit>
+      <trans-unit id="CM8zSU2" resname="modal.crud.discard_changes">
+        <source>modal.crud.discard_changes</source>
+        <target>Descartar Alterações</target>
+      </trans-unit>
+      <trans-unit id="eRzrWn8" resname="modal.crud.error_saving">
+        <source>modal.crud.error_saving</source>
+        <target>Ocorreu um erro ao salvar. Por favor, tente novamente.</target>
+      </trans-unit>
+      <trans-unit id="PLPEjWO" resname="modal.error.failed_to_open">
+        <source>modal.error.failed_to_open</source>
+        <target>Falha ao abrir o formulário. Por favor, tente novamente.</target>
+      </trans-unit>
+      <trans-unit id="nGAiBxp" resname="search.error.failed">
+        <source>search.error.failed</source>
+        <target>Falha na pesquisa. Por favor, tente novamente.</target>
+      </trans-unit>
+      <trans-unit id="S3db2lK" resname="search.error.failed_to_load">
+        <source>search.error.failed_to_load</source>
+        <target>Falha ao carregar dados</target>
+      </trans-unit>
+      <trans-unit id="O.7YvwM" resname="course.title">
+        <source>course.title</source>
+        <target>Cursos</target>
+      </trans-unit>
+      <trans-unit id="nr30YC2" resname="course.singular">
+        <source>course.singular</source>
+        <target>Curso</target>
+      </trans-unit>
+      <trans-unit id="IGGmgJU" resname="course.name">
+        <source>course.name</source>
+        <target>Nome do Curso</target>
+      </trans-unit>
+      <trans-unit id="o31NgG5" resname="course.description">
+        <source>course.description</source>
+        <target>Descrição</target>
+      </trans-unit>
+      <trans-unit id="0CRnOqh" resname="course.status">
+        <source>course.status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="Rjm66Pl" resname="course.status.active">
+        <source>course.status.active</source>
+        <target>Ativo</target>
+      </trans-unit>
+      <trans-unit id="3oIjmDW" resname="course.status.inactive">
+        <source>course.status.inactive</source>
+        <target>Inativo</target>
+      </trans-unit>
+      <trans-unit id="1pC9efC" resname="course.owner">
+        <source>course.owner</source>
+        <target>Proprietário</target>
+      </trans-unit>
+      <trans-unit id="oM.XfyY" resname="course.lectures">
+        <source>course.lectures</source>
+        <target>Aulas</target>
+      </trans-unit>
+      <trans-unit id="tIuius4" resname="course.lecture.singular">
+        <source>course.lecture.singular</source>
+        <target>Aula</target>
+      </trans-unit>
+      <trans-unit id="v1iOQ85" resname="course.lectures_count">
+        <source>course.lectures_count</source>
+        <target>Aulas</target>
+      </trans-unit>
+      <trans-unit id="erJmxyM" resname="course.students">
+        <source>course.students</source>
+        <target>Alunos</target>
+        <note>Número de alunos matriculados</note>
+      </trans-unit>
+      <trans-unit id="1aV6W6R" resname="course.duration">
+        <source>course.duration</source>
+        <target>Duração</target>
+        <note>Duração do curso</note>
+      </trans-unit>
+      <trans-unit id="yZT0DoP" resname="course.date">
+        <source>course.date</source>
+        <target>Data</target>
+        <note>Data do curso (lançamento ou criação)</note>
+      </trans-unit>
+      <trans-unit id="_SJ0Qdr" resname="course.release_date">
+        <source>course.release_date</source>
+        <target>Data de Lançamento</target>
+      </trans-unit>
+      <trans-unit id="DwhAfhl" resname="course.total_length">
+        <source>course.total_length</source>
+        <target>Duração Total</target>
+      </trans-unit>
+      <trans-unit id="UUqEzsZ" resname="course.hours">
+        <source>course.hours</source>
+        <target>horas</target>
+      </trans-unit>
+      <trans-unit id="4vS8MzG" resname="course.information">
+        <source>course.information</source>
+        <target>Informações do Curso</target>
+      </trans-unit>
+      <trans-unit id="7cWiIMM" resname="course.created_at">
+        <source>course.created_at</source>
+        <target>Criado Em</target>
+      </trans-unit>
+      <trans-unit id="UmLJ6bB" resname="course.updated_at">
+        <source>course.updated_at</source>
+        <target>Atualizado Em</target>
+      </trans-unit>
+      <trans-unit id="n23dKd5" resname="course.view_details">
+        <source>course.view_details</source>
+        <target>Ver Detalhes</target>
+      </trans-unit>
+      <trans-unit id="0u5nHO4" resname="course.back_to_list">
+        <source>course.back_to_list</source>
+        <target>Voltar aos Cursos</target>
+      </trans-unit>
+      <trans-unit id="9e5ZWKj" resname="course.manage_lectures">
+        <source>course.manage_lectures</source>
+        <target>Gerenciar Aulas</target>
+      </trans-unit>
+      <trans-unit id="U2DPzw_" resname="course.no_lectures">
+        <source>course.no_lectures</source>
+        <target>Sem aulas</target>
+      </trans-unit>
+      <trans-unit id="t.C8BkU" resname="course.lectures_in_course">
+        <source>course.lectures_in_course</source>
+        <target>Aulas do Curso</target>
+      </trans-unit>
+      <trans-unit id="POgvydT" resname="course.total_duration">
+        <source>course.total_duration</source>
+        <target>Duração Total</target>
+      </trans-unit>
+      <trans-unit id="lY.wyZo" resname="course.total_lectures">
+        <source>course.total_lectures</source>
+        <target>Total de Aulas</target>
+      </trans-unit>
+      <trans-unit id="Ft.R61o" resname="course.no_release_date">
+        <source>course.no_release_date</source>
+        <target>Sem data de lançamento</target>
+      </trans-unit>
+      <trans-unit id="14HRBX_" resname="course.form.name">
+        <source>course.form.name</source>
+        <target>Nome do Curso</target>
+      </trans-unit>
+      <trans-unit id="YBGx8bH" resname="course.form.name_placeholder">
+        <source>course.form.name_placeholder</source>
+        <target>Digite o nome do curso</target>
+      </trans-unit>
+      <trans-unit id="JUj5xRx" resname="course.form.description">
+        <source>course.form.description</source>
+        <target>Descrição</target>
+      </trans-unit>
+      <trans-unit id="lXeFfB2" resname="course.form.description_placeholder">
+        <source>course.form.description_placeholder</source>
+        <target>Digite a descrição do curso</target>
+      </trans-unit>
+      <trans-unit id="aCiMf9j" resname="course.form.active">
+        <source>course.form.active</source>
+        <target>Curso Ativo</target>
+      </trans-unit>
+      <trans-unit id="9ciJvRY" resname="course.form.release_date">
+        <source>course.form.release_date</source>
+        <target>Data de Lançamento</target>
+      </trans-unit>
+      <trans-unit id="w89mwL6" resname="course.form.total_length">
+        <source>course.form.total_length</source>
+        <target>Duração Total (horas)</target>
+      </trans-unit>
+      <trans-unit id="nkwdpsK" resname="course.form.total_length_placeholder">
+        <source>course.form.total_length_placeholder</source>
+        <target>0.0</target>
+      </trans-unit>
+      <trans-unit id="I.b5Y8r" resname="course.validation.name_required">
+        <source>course.validation.name_required</source>
+        <target>O nome do curso é obrigatório</target>
+      </trans-unit>
+      <trans-unit id="W8FbsyP" resname="course.validation.name_min_length">
+        <source>course.validation.name_min_length</source>
+        <target>O nome do curso deve ter pelo menos 2 caracteres</target>
+      </trans-unit>
+      <trans-unit id="oWsvlra" resname="course.validation.name_max_length">
+        <source>course.validation.name_max_length</source>
+        <target>O nome do curso não pode exceder 255 caracteres</target>
+      </trans-unit>
+      <trans-unit id="OvK3DdC" resname="course.validation.description_max_length">
+        <source>course.validation.description_max_length</source>
+        <target>A descrição não pode exceder 5000 caracteres</target>
+      </trans-unit>
+      <trans-unit id="HW2H0hL" resname="course.validation.total_length_positive">
+        <source>course.validation.total_length_positive</source>
+        <target>A duração total deve ser zero ou positiva</target>
+      </trans-unit>
+      <trans-unit id="IM3vJTE" resname="course.flash.created_successfully">
+        <source>course.flash.created_successfully</source>
+        <target>Curso criado com sucesso</target>
+      </trans-unit>
+      <trans-unit id="tuZjQpR" resname="course.flash.updated_successfully">
+        <source>course.flash.updated_successfully</source>
+        <target>Curso atualizado com sucesso</target>
+      </trans-unit>
+      <trans-unit id="bYtfCWT" resname="course.flash.deleted_successfully">
+        <source>course.flash.deleted_successfully</source>
+        <target>Curso excluído com sucesso</target>
+      </trans-unit>
+      <trans-unit id="ZNrF2uC" resname="course.flash.invalid_csrf_token">
+        <source>course.flash.invalid_csrf_token</source>
+        <target>Token de segurança inválido</target>
+      </trans-unit>
+      <trans-unit id="eDekmnW" resname="course.modal.create_title">
+        <source>course.modal.create_title</source>
+        <target>Criar Novo Curso</target>
+      </trans-unit>
+      <trans-unit id="2MqPCT5" resname="course.modal.create_subtitle">
+        <source>course.modal.create_subtitle</source>
+        <target>Criar um novo curso</target>
+      </trans-unit>
+      <trans-unit id="58Sw5n." resname="course.modal.create_tip">
+        <source>course.modal.create_tip</source>
+        <target>Preencha os detalhes do curso abaixo. Você pode adicionar aulas após criar o curso.</target>
+      </trans-unit>
+      <trans-unit id="coM1n2." resname="course.modal.edit_title">
+        <source>course.modal.edit_title</source>
+        <target>Editar Curso</target>
+      </trans-unit>
+      <trans-unit id="C5TnBL2" resname="course.modal.edit_subtitle">
+        <source>course.modal.edit_subtitle</source>
+        <target>Atualizar informações do curso</target>
+      </trans-unit>
+      <trans-unit id="clEkw9p" resname="course.lecture.form.name">
+        <source>course.lecture.form.name</source>
+        <target>Nome da Aula</target>
+      </trans-unit>
+      <trans-unit id="YNPu8Oo" resname="course.lecture.form.name_placeholder">
+        <source>course.lecture.form.name_placeholder</source>
+        <target>Digite o nome da aula</target>
+      </trans-unit>
+      <trans-unit id="zVDk1r7" resname="course.lecture.form.description">
+        <source>course.lecture.form.description</source>
+        <target>Descrição</target>
+      </trans-unit>
+      <trans-unit id="lTKlLh6" resname="course.lecture.form.description_placeholder">
+        <source>course.lecture.form.description_placeholder</source>
+        <target>Digite a descrição da aula</target>
+      </trans-unit>
+      <trans-unit id="59O_OF1" resname="course.lecture.form.video_file">
+        <source>course.lecture.form.video_file</source>
+        <target>Arquivo de Vídeo</target>
+      </trans-unit>
+      <trans-unit id="wMCFhHj" resname="course.lecture.form.view_order">
+        <source>course.lecture.form.view_order</source>
+        <target>Ordem</target>
+      </trans-unit>
+      <trans-unit id="r94br1A" resname="course.lecture.form.view_order_placeholder">
+        <source>course.lecture.form.view_order_placeholder</source>
+        <target>1</target>
+      </trans-unit>
+      <trans-unit id="QUDOKNf" resname="course.lecture.watch_video">
+        <source>course.lecture.watch_video</source>
+        <target>Assistir Vídeo</target>
+      </trans-unit>
+      <trans-unit id="Iq__dwn" resname="course.lecture.validation.name_required">
+        <source>course.lecture.validation.name_required</source>
+        <target>O nome da aula é obrigatório</target>
+      </trans-unit>
+      <trans-unit id="9jzTnOw" resname="course.lecture.validation.name_min_length">
+        <source>course.lecture.validation.name_min_length</source>
+        <target>O nome da aula deve ter pelo menos 2 caracteres</target>
+      </trans-unit>
+      <trans-unit id="ypDlSFL" resname="course.lecture.validation.name_max_length">
+        <source>course.lecture.validation.name_max_length</source>
+        <target>O nome da aula não pode exceder 255 caracteres</target>
+      </trans-unit>
+      <trans-unit id="rd1gKon" resname="course.lecture.validation.description_max_length">
+        <source>course.lecture.validation.description_max_length</source>
+        <target>A descrição não pode exceder 5000 caracteres</target>
+      </trans-unit>
+      <trans-unit id="oKvuIbQ" resname="course.lecture.validation.invalid_video_format">
+        <source>course.lecture.validation.invalid_video_format</source>
+        <target>Por favor, envie um arquivo de vídeo válido (MP4, WebM, OGG, MOV)</target>
+      </trans-unit>
+      <trans-unit id="Iix3vil" resname="course.lecture.validation.view_order_positive">
+        <source>course.lecture.validation.view_order_positive</source>
+        <target>A ordem deve ser zero ou positiva</target>
+      </trans-unit>
+      <trans-unit id="m9PpY5g" resname="course.lecture.status.pending">
+        <source>course.lecture.status.pending</source>
+        <target>Aguardando Processamento</target>
+      </trans-unit>
+      <trans-unit id="_2wyXxF" resname="course.lecture.status.processing">
+        <source>course.lecture.status.processing</source>
+        <target>Processando...</target>
+      </trans-unit>
+      <trans-unit id="gC8LwDc" resname="course.lecture.status.completed">
+        <source>course.lecture.status.completed</source>
+        <target>Pronto</target>
+      </trans-unit>
+      <trans-unit id="FoLgdND" resname="course.lecture.status.failed">
+        <source>course.lecture.status.failed</source>
+        <target>Falha no Processamento</target>
+      </trans-unit>
+      <trans-unit id="cpx1uY4" resname="course.lecture.flash.created_successfully">
+        <source>course.lecture.flash.created_successfully</source>
+        <target>Aula criada com sucesso</target>
+      </trans-unit>
+      <trans-unit id="E7HbYpX" resname="course.lecture.flash.updated_successfully">
+        <source>course.lecture.flash.updated_successfully</source>
+        <target>Aula atualizada com sucesso</target>
+      </trans-unit>
+      <trans-unit id="mXQfG12" resname="course.lecture.flash.deleted_successfully">
+        <source>course.lecture.flash.deleted_successfully</source>
+        <target>Aula excluída com sucesso</target>
+      </trans-unit>
+      <trans-unit id="Hn6gFkB" resname="course.lecture.flash.invalid_csrf_token">
+        <source>course.lecture.flash.invalid_csrf_token</source>
+        <target>Token de segurança inválido</target>
+      </trans-unit>
+      <trans-unit id="oilk1Q6" resname="course.lecture.modal.create_title">
+        <source>course.lecture.modal.create_title</source>
+        <target>Adicionar Nova Aula</target>
+      </trans-unit>
+      <trans-unit id="8KaYxkR" resname="course.lecture.modal.create_subtitle">
+        <source>course.lecture.modal.create_subtitle</source>
+        <target>Adicionar uma nova aula ao curso</target>
+      </trans-unit>
+      <trans-unit id="2a4UVOv" resname="course.lecture.modal.create_tip">
+        <source>course.lecture.modal.create_tip</source>
+        <target>Preencha os detalhes da aula abaixo. A ordem determina a sequência no curso.</target>
+      </trans-unit>
+      <trans-unit id="9Qm7z4N" resname="course.lecture.modal.edit_title">
+        <source>course.lecture.modal.edit_title</source>
+        <target>Editar Aula</target>
+      </trans-unit>
+      <trans-unit id="pdpAOHt" resname="course.lecture.modal.edit_subtitle">
+        <source>course.lecture.modal.edit_subtitle</source>
+        <target>Atualizar informações da aula</target>
+      </trans-unit>
+      <trans-unit id="12iAv.D" resname="empty.no_lectures_yet">
+        <source>empty.no_lectures_yet</source>
+        <target>Ainda não há aulas</target>
+      </trans-unit>
+      <trans-unit id="NLwN_0e" resname="button.add_lecture">
+        <source>button.add_lecture</source>
+        <target>Adicionar Aula</target>
+      </trans-unit>
+      <trans-unit id="dGBj4Q4" resname="button.add_first_lecture">
+        <source>button.add_first_lecture</source>
+        <target>Adicionar Primeira Aula</target>
+      </trans-unit>
+      <trans-unit id="RKyL18G" resname="button.create_course">
+        <source>button.create_course</source>
+        <target>Criar Curso</target>
+      </trans-unit>
+      <trans-unit id="wqkGPYL" resname="button.update_course">
+        <source>button.update_course</source>
+        <target>Atualizar Curso</target>
+      </trans-unit>
+      <trans-unit id="PUtepjq" resname="button.create_lecture">
+        <source>button.create_lecture</source>
+        <target>Criar Aula</target>
+      </trans-unit>
+      <trans-unit id="i8PdRt5" resname="button.update_lecture">
+        <source>button.update_lecture</source>
+        <target>Atualizar Aula</target>
+      </trans-unit>
+      <trans-unit id="I8sRJlo" resname="page.course_details">
+        <source>page.course_details</source>
+        <target>Detalhes do Curso</target>
+      </trans-unit>
+      <trans-unit id="z.a8zTE" resname="security.auth_exception">
+        <source>security.auth_exception</source>
+        <target>Ocorreu uma exceção de autenticação.</target>
+      </trans-unit>
+      <trans-unit id="bK_nspJ" resname="security.credentials_not_found">
+        <source>security.credentials_not_found</source>
+        <target>As credenciais de autenticação não foram encontradas.</target>
+      </trans-unit>
+      <trans-unit id="Knlk6eP" resname="security.system_problem">
+        <source>security.system_problem</source>
+        <target>A solicitação de autenticação não pôde ser processada devido a um problema no sistema.</target>
+      </trans-unit>
+      <trans-unit id="e2YW8e3" resname="security.invalid_credentials">
+        <source>security.invalid_credentials</source>
+        <target>Credenciais inválidas.</target>
+      </trans-unit>
+      <trans-unit id="Q9m_eDL" resname="security.cookie_used">
+        <source>security.cookie_used</source>
+        <target>O cookie já foi usado por outra pessoa.</target>
+      </trans-unit>
+      <trans-unit id="qlcKYFJ" resname="security.not_privileged">
+        <source>security.not_privileged</source>
+        <target>Sem privilégios para acessar o recurso.</target>
+      </trans-unit>
+      <trans-unit id="RNs1cDb" resname="security.invalid_csrf">
+        <source>security.invalid_csrf</source>
+        <target>Token CSRF inválido.</target>
+      </trans-unit>
+      <trans-unit id="MOmFF60" resname="security.no_auth_provider">
+        <source>security.no_auth_provider</source>
+        <target>Nenhum provedor de autenticação encontrado para suportar o token de autenticação.</target>
+      </trans-unit>
+      <trans-unit id="aBRpJQr" resname="security.no_session">
+        <source>security.no_session</source>
+        <target>Nenhuma sessão disponível, ou expirou ou os cookies não estão habilitados.</target>
+      </trans-unit>
+      <trans-unit id="BG8LZv0" resname="security.no_token">
+        <source>security.no_token</source>
+        <target>Nenhum token foi encontrado.</target>
+      </trans-unit>
+      <trans-unit id="FgisNAr" resname="security.username_not_found">
+        <source>security.username_not_found</source>
+        <target>Nome de usuário não foi encontrado.</target>
+      </trans-unit>
+      <trans-unit id="Gesu.Ct" resname="security.account_expired">
+        <source>security.account_expired</source>
+        <target>A conta expirou.</target>
+      </trans-unit>
+      <trans-unit id="bTeMOyf" resname="security.credentials_expired">
+        <source>security.credentials_expired</source>
+        <target>As credenciais expiraram.</target>
+      </trans-unit>
+      <trans-unit id="0cERBM3" resname="security.account_disabled">
+        <source>security.account_disabled</source>
+        <target>A conta está desativada.</target>
+      </trans-unit>
+      <trans-unit id="c7IGn0E" resname="security.account_locked">
+        <source>security.account_locked</source>
+        <target>A conta está bloqueada.</target>
+      </trans-unit>
+      <trans-unit id="fiQ0IsW" resname="security.too_many_attempts">
+        <source>security.too_many_attempts</source>
+        <target>Muitas tentativas de login falhadas, tente novamente mais tarde.</target>
+      </trans-unit>
+      <trans-unit id="pyM1miE" resname="security.invalid_login_link">
+        <source>security.invalid_login_link</source>
+        <target>Link de login inválido ou expirado.</target>
+      </trans-unit>
+      <trans-unit id="AoCdY01" resname="security.too_many_attempts_minute">
+        <source>security.too_many_attempts_minute</source>
+        <target>Muitas tentativas de login falhadas, tente novamente em %minutes% minuto.</target>
+      </trans-unit>
+      <trans-unit id="xcOIQjC" resname="security.too_many_attempts_minutes">
+        <source>security.too_many_attempts_minutes</source>
+        <target>Muitas tentativas de login falhadas, tente novamente em %minutes% minutos.</target>
+      </trans-unit>
+      <trans-unit id="0g9k_K3" resname="jysioaA">
+        <source>jysioaA</source>
+        <target>Este valor deve ser falso.</target>
+      </trans-unit>
+      <trans-unit id=".MME.Qh" resname="1zVPJo4">
+        <source>1zVPJo4</source>
+        <target>Este valor deve ser verdadeiro.</target>
+      </trans-unit>
+      <trans-unit id="OOZJvYF" resname="HL55su4">
+        <source>HL55su4</source>
+        <target>Este valor deve ser do tipo {{ type }}.</target>
+      </trans-unit>
+      <trans-unit id="Z89PiEe" resname="K5oLZkw">
+        <source>K5oLZkw</source>
+        <target>Este valor deve estar em branco.</target>
+      </trans-unit>
+      <trans-unit id="Brc5saz" resname="KaWXEsW">
+        <source>KaWXEsW</source>
+        <target>O valor selecionado não é uma escolha válida.</target>
+      </trans-unit>
+      <trans-unit id="H66.LQc" resname="4xOpbwN">
+        <source>4xOpbwN</source>
+        <target>Você deve selecionar pelo menos {{ limit }} choice.|You must select at least {{ limit }} choices.</target>
+      </trans-unit>
+      <trans-unit id="4FPTk9N" resname="65n9dGQ">
+        <source>65n9dGQ</source>
+        <target>Você deve selecionar no máximo {{ limit }} choice.|You must select at most {{ limit }} choices.</target>
+      </trans-unit>
+      <trans-unit id="gIhdkSx" resname="bV9ETHe">
+        <source>bV9ETHe</source>
+        <target>Um ou mais dos valores fornecidos são inválidos.</target>
+      </trans-unit>
+      <trans-unit id="I21a2Dh" resname="hzMv9Ky">
+        <source>hzMv9Ky</source>
+        <target>Este campo não era esperado.</target>
+      </trans-unit>
+      <trans-unit id="laFyVTc" resname="m5HGv6j">
+        <source>m5HGv6j</source>
+        <target>Este campo está faltando.</target>
+      </trans-unit>
+      <trans-unit id="I38YI.W" resname="ccjuUaj">
+        <source>ccjuUaj</source>
+        <target>Este valor não é uma data válida.</target>
+      </trans-unit>
+      <trans-unit id="XLM9WuR" resname="4jAy6GT">
+        <source>4jAy6GT</source>
+        <target>This value is not a valid datetime.</target>
+      </trans-unit>
+      <trans-unit id="zVZg190" resname="J8MwqDW">
+        <source>J8MwqDW</source>
+        <target>This value is not a valid email address.</target>
+      </trans-unit>
+      <trans-unit id="xrQUUHC" resname="OW6NCiE">
+        <source>OW6NCiE</source>
+        <target>The file could not be found.</target>
+      </trans-unit>
+      <trans-unit id="oAPyHuw" resname="uuuT8w4">
+        <source>uuuT8w4</source>
+        <target>The file is not readable.</target>
+      </trans-unit>
+      <trans-unit id="J1DbAUp" resname="xmVWVqA">
+        <source>xmVWVqA</source>
+        <target>The file is too large ({{ size }} {{ suffix }}). Allowed maximum size is {{ limit }} {{ suffix }}.</target>
+      </trans-unit>
+      <trans-unit id="vjRKIeN" resname="COERTaP">
+        <source>COERTaP</source>
+        <target>The mime type of the file is invalid ({{ type }}). Allowed mime types are {{ types }}.</target>
+      </trans-unit>
+      <trans-unit id="KRkSl58" resname="xJV2eT8">
+        <source>xJV2eT8</source>
+        <target>This value should be {{ limit }} or less.</target>
+      </trans-unit>
+      <trans-unit id="X6abiMI" resname="Zuairxy">
+        <source>Zuairxy</source>
+        <target>This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.</target>
+      </trans-unit>
+      <trans-unit id="HQs0Kbb" resname="3bh29vT">
+        <source>3bh29vT</source>
+        <target>This value should be {{ limit }} or more.</target>
+      </trans-unit>
+      <trans-unit id="Ze3.Ozu" resname="Muq3W.6">
+        <source>Muq3W.6</source>
+        <target>This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.</target>
+      </trans-unit>
+      <trans-unit id="IuXgfeG" resname="vLBiKCD">
+        <source>vLBiKCD</source>
+        <target>This value should not be blank.</target>
+      </trans-unit>
+      <trans-unit id="ZnDTb6H" resname="FUEH3cZ">
+        <source>FUEH3cZ</source>
+        <target>This value should not be null.</target>
+      </trans-unit>
+      <trans-unit id="Nb_qWcF" resname="yIMqPF6">
+        <source>yIMqPF6</source>
+        <target>This value should be null.</target>
+      </trans-unit>
+      <trans-unit id="lTAV2n6" resname="TZg2uqx">
+        <source>TZg2uqx</source>
+        <target>This value is not valid.</target>
+      </trans-unit>
+      <trans-unit id="R7BnYzn" resname="Uu2fZ7m">
+        <source>Uu2fZ7m</source>
+        <target>This value is not a valid time.</target>
+      </trans-unit>
+      <trans-unit id="lN7bcCw" resname="X5msM9I">
+        <source>X5msM9I</source>
+        <target>This value is not a valid URL.</target>
+      </trans-unit>
+      <trans-unit id="FYghC8D" resname="yShl.HD">
+        <source>yShl.HD</source>
+        <target>The two values should be equal.</target>
+      </trans-unit>
+      <trans-unit id="yG_VN_L" resname="UPTnJIu">
+        <source>UPTnJIu</source>
+        <target>The file is too large. Allowed maximum size is {{ limit }} {{ suffix }}.</target>
+      </trans-unit>
+      <trans-unit id="k6UBNjN" resname="OEeVt7G">
+        <source>OEeVt7G</source>
+        <target>The file is too large.</target>
+      </trans-unit>
+      <trans-unit id="QaK441c" resname="DAd59Rr">
+        <source>DAd59Rr</source>
+        <target>The file could not be uploaded.</target>
+      </trans-unit>
+      <trans-unit id="mLxcftO" resname="jpVY2B5">
+        <source>jpVY2B5</source>
+        <target>This value should be a valid number.</target>
+      </trans-unit>
+      <trans-unit id="wGygtye" resname="aeFJJFS">
+        <source>aeFJJFS</source>
+        <target>This file is not a valid image.</target>
+      </trans-unit>
+      <trans-unit id="LVWKNBK" resname="r9nOjqT">
+        <source>r9nOjqT</source>
+        <target>This value is not a valid IP address.</target>
+      </trans-unit>
+      <trans-unit id="u7bFP2J" resname="izWIhKR">
+        <source>izWIhKR</source>
+        <target>This value is not a valid language.</target>
+      </trans-unit>
+      <trans-unit id="RYWEL7o" resname="gBF5fE7">
+        <source>gBF5fE7</source>
+        <target>This value is not a valid locale.</target>
+      </trans-unit>
+      <trans-unit id="ON0NCoa" resname="QUviSFS">
+        <source>QUviSFS</source>
+        <target>This value is not a valid country.</target>
+      </trans-unit>
+      <trans-unit id="vKdGVYt" resname="nmXj9fT">
+        <source>nmXj9fT</source>
+        <target>This value is already used.</target>
+      </trans-unit>
+      <trans-unit id="3qFFaxF" resname="LAGu_iq">
+        <source>LAGu_iq</source>
+        <target>The size of the image could not be detected.</target>
+      </trans-unit>
+      <trans-unit id="GCn_hPt" resname="YD_yE46">
+        <source>YD_yE46</source>
+        <target>The image width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.</target>
+      </trans-unit>
+      <trans-unit id="5VABcLR" resname="pfL2.fo">
+        <source>pfL2.fo</source>
+        <target>The image width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.</target>
+      </trans-unit>
+      <trans-unit id="GGAR36w" resname="zV9L7pv">
+        <source>zV9L7pv</source>
+        <target>The image height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.</target>
+      </trans-unit>
+      <trans-unit id="yYC5aG0" resname="A7vLGPA">
+        <source>A7vLGPA</source>
+        <target>The image height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.</target>
+      </trans-unit>
+      <trans-unit id="towjM.T" resname="hbSSYMh">
+        <source>hbSSYMh</source>
+        <target>This value should be the user's current password.</target>
+      </trans-unit>
+      <trans-unit id="_gwTsSZ" resname="A1Hv7nv">
+        <source>A1Hv7nv</source>
+        <target>This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.</target>
+      </trans-unit>
+      <trans-unit id="9hJ0pBw" resname="H.ZNP57">
+        <source>H.ZNP57</source>
+        <target>The file was only partially uploaded.</target>
+      </trans-unit>
+      <trans-unit id="Xxa9.L8" resname="qUKi9W_">
+        <source>qUKi9W_</source>
+        <target>No file was uploaded.</target>
+      </trans-unit>
+      <trans-unit id="RuROL.V" resname="MRZ.kUM">
+        <source>MRZ.kUM</source>
+        <target>No temporary folder was configured in php.ini, or the configured folder does not exist.</target>
+      </trans-unit>
+      <trans-unit id="jg55oCL" resname="ivltd6_">
+        <source>ivltd6_</source>
+        <target>Cannot write temporary file to disk.</target>
+      </trans-unit>
+      <trans-unit id="cDuSjSW" resname="_x64C6y">
+        <source>_x64C6y</source>
+        <target>A PHP extension caused the upload to fail.</target>
+      </trans-unit>
+      <trans-unit id="T.SxXiT" resname=".K7ySMo">
+        <source>.K7ySMo</source>
+        <target>This collection should contain {{ limit }} element or more.|This collection should contain {{ limit }} elements or more.</target>
+      </trans-unit>
+      <trans-unit id="dseqmaC" resname="aSvx2eb">
+        <source>aSvx2eb</source>
+        <target>This collection should contain {{ limit }} element or less.|This collection should contain {{ limit }} elements or less.</target>
+      </trans-unit>
+      <trans-unit id="G88sekt" resname="d4HuxpA">
+        <source>d4HuxpA</source>
+        <target>This collection should contain exactly {{ limit }} element.|This collection should contain exactly {{ limit }} elements.</target>
+      </trans-unit>
+      <trans-unit id="mdS8mo7" resname="Ia5ts7h">
+        <source>Ia5ts7h</source>
+        <target>Invalid card number.</target>
+      </trans-unit>
+      <trans-unit id="8PBmZzk" resname="Y8YNvWG">
+        <source>Y8YNvWG</source>
+        <target>Unsupported card type or invalid card number.</target>
+      </trans-unit>
+      <trans-unit id="y.wWNfI" resname="Bp_BiDs">
+        <source>Bp_BiDs</source>
+        <target>This value is not a valid International Bank Account Number (IBAN).</target>
+      </trans-unit>
+      <trans-unit id="HXVqMn2" resname="HqngxWf">
+        <source>HqngxWf</source>
+        <target>This value is not a valid ISBN-10.</target>
+      </trans-unit>
+      <trans-unit id="w25zE71" resname="Pm2IygX">
+        <source>Pm2IygX</source>
+        <target>This value is not a valid ISBN-13.</target>
+      </trans-unit>
+      <trans-unit id="nWSTbJc" resname="w8oSYvN">
+        <source>w8oSYvN</source>
+        <target>This value is neither a valid ISBN-10 nor a valid ISBN-13.</target>
+      </trans-unit>
+      <trans-unit id="WxTjv0K" resname="aEf2fyJ">
+        <source>aEf2fyJ</source>
+        <target>This value is not a valid ISSN.</target>
+      </trans-unit>
+      <trans-unit id="QKA85hL" resname="OeFZFII">
+        <source>OeFZFII</source>
+        <target>This value is not a valid currency.</target>
+      </trans-unit>
+      <trans-unit id="FxfTmhs" resname="G8HNxQM">
+        <source>G8HNxQM</source>
+        <target>This value should be equal to {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="j871qsX" resname="Xgf_Y8C">
+        <source>Xgf_Y8C</source>
+        <target>This value should be greater than {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="ZdveMp8" resname="OrsJXWO">
+        <source>OrsJXWO</source>
+        <target>This value should be greater than or equal to {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="Pa9xNq1" resname="wni8iKB">
+        <source>wni8iKB</source>
+        <target>This value should be identical to {{ compared_value_type }} {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="Kze8Ovi" resname="EgRc_Qq">
+        <source>EgRc_Qq</source>
+        <target>This value should be less than {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="D6OWx4V" resname="vNn72MQ">
+        <source>vNn72MQ</source>
+        <target>This value should be less than or equal to {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="Jyri2Zk" resname="N4F464Y">
+        <source>N4F464Y</source>
+        <target>This value should not be equal to {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="mS_HgIo" resname="T8lYq4L">
+        <source>T8lYq4L</source>
+        <target>This value should not be identical to {{ compared_value_type }} {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="pqW4cp8" resname="x5xpcfK">
+        <source>x5xpcfK</source>
+        <target>The image ratio is too big ({{ ratio }}). Allowed maximum ratio is {{ max_ratio }}.</target>
+      </trans-unit>
+      <trans-unit id="YWmzEHj" resname="5cB4RCN">
+        <source>5cB4RCN</source>
+        <target>The image ratio is too small ({{ ratio }}). Minimum ratio expected is {{ min_ratio }}.</target>
+      </trans-unit>
+      <trans-unit id="HOL6NJM" resname="SVgw5SP">
+        <source>SVgw5SP</source>
+        <target>The image is square ({{ width }}x{{ height }}px). Square images are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="K5DkG.c" resname="wpV7oxR">
+        <source>wpV7oxR</source>
+        <target>The image is landscape oriented ({{ width }}x{{ height }}px). Landscape oriented images are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="pFSM0d7" resname="t7f5lY9">
+        <source>t7f5lY9</source>
+        <target>The image is portrait oriented ({{ width }}x{{ height }}px). Portrait oriented images are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="b_CwDKr" resname="L9tKe2y">
+        <source>L9tKe2y</source>
+        <target>An empty file is not allowed.</target>
+      </trans-unit>
+      <trans-unit id="TTGJ1F2" resname="4421dQm">
+        <source>4421dQm</source>
+        <target>The host could not be resolved.</target>
+      </trans-unit>
+      <trans-unit id="bOHbPHB" resname="tD.RkRe">
+        <source>tD.RkRe</source>
+        <target>This value does not match the expected {{ charset }} charset.</target>
+      </trans-unit>
+      <trans-unit id="KzSIUL1" resname="w2dRFcU">
+        <source>w2dRFcU</source>
+        <target>This value is not a valid Business Identifier Code (BIC).</target>
+      </trans-unit>
+      <trans-unit id="ghnAtS0" resname="B9r0Hn5">
+        <source>B9r0Hn5</source>
+        <target>Error</target>
+      </trans-unit>
+      <trans-unit id="gltPw.j" resname="GO8.wou">
+        <source>GO8.wou</source>
+        <target>This value is not a valid UUID.</target>
+      </trans-unit>
+      <trans-unit id="6D6V4T0" resname="BmDYW0B">
+        <source>BmDYW0B</source>
+        <target>This value should be a multiple of {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="QCMN_Cc" resname="7urGdp4">
+        <source>7urGdp4</source>
+        <target>This Business Identifier Code (BIC) is not associated with IBAN {{ iban }}.</target>
+      </trans-unit>
+      <trans-unit id="FDkmsYT" resname="NpIt6EV">
+        <source>NpIt6EV</source>
+        <target>This value should be valid JSON.</target>
+      </trans-unit>
+      <trans-unit id="L7tbbsj" resname="NAJHeXU">
+        <source>NAJHeXU</source>
+        <target>This collection should contain only unique elements.</target>
+      </trans-unit>
+      <trans-unit id="Z9fOlPB" resname="mBNZ2p4">
+        <source>mBNZ2p4</source>
+        <target>This value should be positive.</target>
+      </trans-unit>
+      <trans-unit id="iiTg_6w" resname="Q07tS4h">
+        <source>Q07tS4h</source>
+        <target>This value should be either positive or zero.</target>
+      </trans-unit>
+      <trans-unit id="KeWVBaK" resname="cwaFWZt">
+        <source>cwaFWZt</source>
+        <target>This value should be negative.</target>
+      </trans-unit>
+      <trans-unit id="LR7hya2" resname="INgX870">
+        <source>INgX870</source>
+        <target>This value should be either negative or zero.</target>
+      </trans-unit>
+      <trans-unit id="WRk7G8i" resname="0bSR5cp">
+        <source>0bSR5cp</source>
+        <target>This value is not a valid timezone.</target>
+      </trans-unit>
+      <trans-unit id="znk3QpU" resname="o0vqbDQ">
+        <source>o0vqbDQ</source>
+        <target>This password has been leaked in a data breach, it must not be used. Please use another password.</target>
+      </trans-unit>
+      <trans-unit id="aHuLHXG" resname="nNegxai">
+        <source>nNegxai</source>
+        <target>This value should be between {{ min }} and {{ max }}.</target>
+      </trans-unit>
+      <trans-unit id="dLQZMtf" resname="q0JXpA2">
+        <source>q0JXpA2</source>
+        <target>This value is not a valid hostname.</target>
+      </trans-unit>
+      <trans-unit id="Yne2E7y" resname="Co_98pi">
+        <source>Co_98pi</source>
+        <target>The number of elements in this collection should be a multiple of {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="G9fw45Q" resname="rfebLrY">
+        <source>rfebLrY</source>
+        <target>This value should satisfy at least one of the following constraints:</target>
+      </trans-unit>
+      <trans-unit id="7zwAt.Q" resname="lxL.CBF">
+        <source>lxL.CBF</source>
+        <target>Each element of this collection should satisfy its own set of constraints.</target>
+      </trans-unit>
+      <trans-unit id="hRXh6Wy" resname="1nUIbF0">
+        <source>1nUIbF0</source>
+        <target>This value is not a valid International Securities Identification Number (ISIN).</target>
+      </trans-unit>
+      <trans-unit id="l2fQVd0" resname="kG_VGA1">
+        <source>kG_VGA1</source>
+        <target>This value should be a valid expression.</target>
+      </trans-unit>
+      <trans-unit id="xf27HxF" resname="2_9V4lo">
+        <source>2_9V4lo</source>
+        <target>This value is not a valid CSS color.</target>
+      </trans-unit>
+      <trans-unit id="1eHg7PY" resname="fye9wG1">
+        <source>fye9wG1</source>
+        <target>This value is not a valid CIDR notation.</target>
+      </trans-unit>
+      <trans-unit id="Z5YA47F" resname="ERGRJhK">
+        <source>ERGRJhK</source>
+        <target>The value of the netmask should be between {{ min }} and {{ max }}.</target>
+      </trans-unit>
+      <trans-unit id="thJjRSc" resname="7db7kQD">
+        <source>7db7kQD</source>
+        <target>The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.</target>
+      </trans-unit>
+      <trans-unit id=".kXREHI" resname="7JLHuYX">
+        <source>7JLHuYX</source>
+        <target>The password strength is too low. Please use a stronger password.</target>
+      </trans-unit>
+      <trans-unit id="U6OzCo8" resname="Pgo2CSS">
+        <source>Pgo2CSS</source>
+        <target>This value contains characters that are not allowed by the current restriction-level.</target>
+      </trans-unit>
+      <trans-unit id="ks7BL9c" resname="7hhZedg">
+        <source>7hhZedg</source>
+        <target>Using invisible characters is not allowed.</target>
+      </trans-unit>
+      <trans-unit id="hc57qGQ" resname="DpnrQ0a">
+        <source>DpnrQ0a</source>
+        <target>Mixing numbers from different scripts is not allowed.</target>
+      </trans-unit>
+      <trans-unit id="FJqxj7k" resname="Z4taMVn">
+        <source>Z4taMVn</source>
+        <target>Using hidden overlay characters is not allowed.</target>
+      </trans-unit>
+      <trans-unit id="Q6_y6VW" resname="1seErdG">
+        <source>1seErdG</source>
+        <target>The extension of the file is invalid ({{ extension }}). Allowed extensions are {{ extensions }}.</target>
+      </trans-unit>
+      <trans-unit id="Lg_C8xX" resname="uyl6nQ7">
+        <source>uyl6nQ7</source>
+        <target>The detected character encoding is invalid ({{ detected }}). Allowed encodings are {{ encodings }}.</target>
+      </trans-unit>
+      <trans-unit id="5bdp.nL" resname="65jFl8b">
+        <source>65jFl8b</source>
+        <target>This value is not a valid MAC address.</target>
+      </trans-unit>
+      <trans-unit id="Cqniwhc" resname="Pm0aj_f">
+        <source>Pm0aj_f</source>
+        <target>This URL is missing a top-level domain.</target>
+      </trans-unit>
+      <trans-unit id="q1NC0iC" resname="gbpWGsC">
+        <source>gbpWGsC</source>
+        <target>This value is too short. It should contain at least one word.|This value is too short. It should contain at least {{ min }} words.</target>
+      </trans-unit>
+      <trans-unit id="FGaPxa0" resname="1WpHUSt">
+        <source>1WpHUSt</source>
+        <target>This value is too long. It should contain one word.|This value is too long. It should contain {{ max }} words or less.</target>
+      </trans-unit>
+      <trans-unit id="6bzq4m2" resname="egUw40j">
+        <source>egUw40j</source>
+        <target>This value does not represent a valid week in the ISO 8601 format.</target>
+      </trans-unit>
+      <trans-unit id="28_ubAN" resname="qj68TOe">
+        <source>qj68TOe</source>
+        <target>This value is not a valid week.</target>
+      </trans-unit>
+      <trans-unit id="Hj0._fq" resname="RX1vHSU">
+        <source>RX1vHSU</source>
+        <target>This value should not be before week "{{ min }}".</target>
+      </trans-unit>
+      <trans-unit id="psy3ZUe" resname="pOcsUec">
+        <source>pOcsUec</source>
+        <target>This value should not be after week "{{ max }}".</target>
+      </trans-unit>
+      <trans-unit id="k6kvhh4" resname="3QNCFgi">
+        <source>3QNCFgi</source>
+        <target>This value is not a valid Twig template.</target>
+      </trans-unit>
+      <trans-unit id="d5kSX6d" resname="ZuGpyhA">
+        <source>ZuGpyhA</source>
+        <target>This file is not a valid video.</target>
+      </trans-unit>
+      <trans-unit id="Rngpu72" resname="7ZjICRC">
+        <source>7ZjICRC</source>
+        <target>The size of the video could not be detected.</target>
+      </trans-unit>
+      <trans-unit id="ULL5l.r" resname="WS2rIIU">
+        <source>WS2rIIU</source>
+        <target>The video width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.</target>
+      </trans-unit>
+      <trans-unit id="TPtWgqd" resname="Ey8lNRo">
+        <source>Ey8lNRo</source>
+        <target>The video width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.</target>
+      </trans-unit>
+      <trans-unit id=".BDN1wa" resname="Liu7sjp">
+        <source>Liu7sjp</source>
+        <target>The video height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.</target>
+      </trans-unit>
+      <trans-unit id="ksR.Ll8" resname="2FkdfHN">
+        <source>2FkdfHN</source>
+        <target>The video height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.</target>
+      </trans-unit>
+      <trans-unit id="U_6almt" resname="Dp2k5ge">
+        <source>Dp2k5ge</source>
+        <target>The video has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.</target>
+      </trans-unit>
+      <trans-unit id="n4iMJgu" resname="IDGrrj_">
+        <source>IDGrrj_</source>
+        <target>The video has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.</target>
+      </trans-unit>
+      <trans-unit id="ixdONVj" resname="J1cZmuA">
+        <source>J1cZmuA</source>
+        <target>The video ratio is too big ({{ ratio }}). Allowed maximum ratio is {{ max_ratio }}.</target>
+      </trans-unit>
+      <trans-unit id="tps8qAo" resname="WQTwvFh">
+        <source>WQTwvFh</source>
+        <target>The video ratio is too small ({{ ratio }}). Minimum ratio expected is {{ min_ratio }}.</target>
+      </trans-unit>
+      <trans-unit id="GzNM0xv" resname="OT6Evve">
+        <source>OT6Evve</source>
+        <target>The video is square ({{ width }}x{{ height }}px). Square videos are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="YouG4Qr" resname="mXgOwd4">
+        <source>mXgOwd4</source>
+        <target>The video is landscape oriented ({{ width }}x{{ height }}px). Landscape oriented videos are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="K3ahAgd" resname="VrsdBNF">
+        <source>VrsdBNF</source>
+        <target>The video is portrait oriented ({{ width }}x{{ height }}px). Portrait oriented videos are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="jCtW1Ah" resname="x8fsjeI">
+        <source>x8fsjeI</source>
+        <target>The video file is corrupted.</target>
+      </trans-unit>
+      <trans-unit id="KADy0Ou" resname="nzXY1iu">
+        <source>nzXY1iu</source>
+        <target>The video contains multiple streams. Only one stream is allowed.</target>
+      </trans-unit>
+      <trans-unit id="hPky_9w" resname="hCzL7Mv">
+        <source>hCzL7Mv</source>
+        <target>Unsupported video codec "{{ codec }}".</target>
+      </trans-unit>
+      <trans-unit id="Vo8e5Hc" resname="nTnX6nj">
+        <source>nTnX6nj</source>
+        <target>Unsupported video container "{{ container }}".</target>
+      </trans-unit>
+      <trans-unit id="bRpaeqn" resname="jAJTV_I">
+        <source>jAJTV_I</source>
+        <target>The image file is corrupted.</target>
+      </trans-unit>
+      <trans-unit id="BmnB8Hk" resname="aw1rRIE">
+        <source>aw1rRIE</source>
+        <target>The image has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.</target>
+      </trans-unit>
+      <trans-unit id="LG0sDoT" resname="KbWb1FD">
+        <source>KbWb1FD</source>
+        <target>The image has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.</target>
+      </trans-unit>
+      <trans-unit id="EfF0q2h" resname="tPeCNvN">
+        <source>tPeCNvN</source>
+        <target>This filename does not match the expected charset.</target>
+      </trans-unit>
+      <trans-unit id="CTyQ.v3" resname="tDkL4Jc">
+        <source>tDkL4Jc</source>
+        <target>This form should not contain extra fields.</target>
+      </trans-unit>
+      <trans-unit id="icNdhyR" resname="SlPljy.">
+        <source>SlPljy.</source>
+        <target>The uploaded file was too large. Please try to upload a smaller file.</target>
+      </trans-unit>
+      <trans-unit id="xlXU2Yd" resname="b_5.52u">
+        <source>b_5.52u</source>
+        <target>The CSRF token is invalid. Please try to resubmit the form.</target>
+      </trans-unit>
+      <trans-unit id="NKGzIVa" resname="wlGn1pP">
+        <source>wlGn1pP</source>
+        <target>This value is not a valid HTML5 color.</target>
+      </trans-unit>
+      <trans-unit id="vTxRsUz" resname="e_2ZUCK">
+        <source>e_2ZUCK</source>
+        <target>Please enter a valid birthdate.</target>
+      </trans-unit>
+      <trans-unit id="cUgBKuS" resname="TPma293">
+        <source>TPma293</source>
+        <target>The selected choice is invalid.</target>
+      </trans-unit>
+      <trans-unit id="R2WH.LM" resname="Fkuy1Kw">
+        <source>Fkuy1Kw</source>
+        <target>The collection is invalid.</target>
+      </trans-unit>
+      <trans-unit id="eMwMqG3" resname="qiPYgGj">
+        <source>qiPYgGj</source>
+        <target>Please select a valid color.</target>
+      </trans-unit>
+      <trans-unit id="Y.xmBb7" resname="qf.GaaJ">
+        <source>qf.GaaJ</source>
+        <target>Please select a valid country.</target>
+      </trans-unit>
+      <trans-unit id="eI9bZtz" resname="WtFFCQ8">
+        <source>WtFFCQ8</source>
+        <target>Please select a valid currency.</target>
+      </trans-unit>
+      <trans-unit id="p5N7THW" resname="gwI.OzY">
+        <source>gwI.OzY</source>
+        <target>Please choose a valid date interval.</target>
+      </trans-unit>
+      <trans-unit id="QMcxafh" resname="yeUbmWc">
+        <source>yeUbmWc</source>
+        <target>Please enter a valid date and time.</target>
+      </trans-unit>
+      <trans-unit id="OfWGGxn" resname="eC1bGok">
+        <source>eC1bGok</source>
+        <target>Please enter a valid date.</target>
+      </trans-unit>
+      <trans-unit id="HeORTfT" resname=".3DoUU.">
+        <source>.3DoUU.</source>
+        <target>Please select a valid file.</target>
+      </trans-unit>
+      <trans-unit id="C.xQani" resname="wwjjKAn">
+        <source>wwjjKAn</source>
+        <target>The hidden field is invalid.</target>
+      </trans-unit>
+      <trans-unit id="vjh1GoZ" resname="o.y86J1">
+        <source>o.y86J1</source>
+        <target>Please enter an integer.</target>
+      </trans-unit>
+      <trans-unit id="5b4yYK5" resname="MhFFYoK">
+        <source>MhFFYoK</source>
+        <target>Please select a valid language.</target>
+      </trans-unit>
+      <trans-unit id="LweFyb7" resname="LKAkY.h">
+        <source>LKAkY.h</source>
+        <target>Please select a valid locale.</target>
+      </trans-unit>
+      <trans-unit id="K2f_2l6" resname="GoIKSyM">
+        <source>GoIKSyM</source>
+        <target>Please enter a valid money amount.</target>
+      </trans-unit>
+      <trans-unit id="XR_7sNj" resname="c5ToMGG">
+        <source>c5ToMGG</source>
+        <target>Please enter a number.</target>
+      </trans-unit>
+      <trans-unit id="tLczPE7" resname="AKUMRqn">
+        <source>AKUMRqn</source>
+        <target>The password is invalid.</target>
+      </trans-unit>
+      <trans-unit id="h8Qyb7e" resname="HviZ2Cc">
+        <source>HviZ2Cc</source>
+        <target>Please enter a percentage value.</target>
+      </trans-unit>
+      <trans-unit id="t3rmGUv" resname="u4rxsHj">
+        <source>u4rxsHj</source>
+        <target>The values do not match.</target>
+      </trans-unit>
+      <trans-unit id="cIi5_OK" resname="beHTTAG">
+        <source>beHTTAG</source>
+        <target>Please enter a valid time.</target>
+      </trans-unit>
+      <trans-unit id="XjBwfAO" resname="MDu2tNQ">
+        <source>MDu2tNQ</source>
+        <target>Please select a valid timezone.</target>
+      </trans-unit>
+      <trans-unit id="cTfswoz" resname="ywSABzT">
+        <source>ywSABzT</source>
+        <target>Please enter a valid URL.</target>
+      </trans-unit>
+      <trans-unit id="YOJQmV3" resname="58j92KU">
+        <source>58j92KU</source>
+        <target>Please enter a valid search term.</target>
+      </trans-unit>
+      <trans-unit id="kfOeoMa" resname="9RtYCIm">
+        <source>9RtYCIm</source>
+        <target>Please provide a valid phone number.</target>
+      </trans-unit>
+      <trans-unit id="6lsSUHv" resname="eXUouzq">
+        <source>eXUouzq</source>
+        <target>The checkbox has an invalid value.</target>
+      </trans-unit>
+      <trans-unit id="ShVpDi3" resname="sv_zo_u">
+        <source>sv_zo_u</source>
+        <target>Please enter a valid email address.</target>
+      </trans-unit>
+      <trans-unit id=".Q6nTGP" resname="WGMBjaJ">
+        <source>WGMBjaJ</source>
+        <target>Please select a valid option.</target>
+      </trans-unit>
+      <trans-unit id="tfPaqP7" resname="X1pJkwv">
+        <source>X1pJkwv</source>
+        <target>Please select a valid range.</target>
+      </trans-unit>
+      <trans-unit id="6SJ3EGq" resname="2MEQpjY">
+        <source>2MEQpjY</source>
+        <target>Please enter a valid week.</target>
+      </trans-unit>
+      <trans-unit id="OrQS2QP" resname="M7IJXPA">
+        <source>M7IJXPA</source>
+        <target>__organization.validation.name_required</target>
+      </trans-unit>
+      <trans-unit id="dOAjYyC" resname="Ov577jX">
+        <source>Ov577jX</source>
+        <target>__organization.validation.name_min_length</target>
+      </trans-unit>
+      <trans-unit id="NIsVilq" resname=".z6UIh_">
+        <source>.z6UIh_</source>
+        <target>__organization.validation.name_max_length</target>
+      </trans-unit>
+      <trans-unit id="E36g0P7" resname="WL7_zf8">
+        <source>WL7_zf8</source>
+        <target>__organization.validation.description_max_length</target>
+      </trans-unit>
+      <trans-unit id="d4LKUff" resname="nnpDp2E">
+        <source>nnpDp2E</source>
+        <target>__user.validation.name_required</target>
+      </trans-unit>
+      <trans-unit id="atMjfGL" resname="5iT.fNg">
+        <source>5iT.fNg</source>
+        <target>__user.validation.name_min_length</target>
+      </trans-unit>
+      <trans-unit id="4IkTb1A" resname="9cugrVY">
+        <source>9cugrVY</source>
+        <target>__user.validation.name_max_length</target>
+      </trans-unit>
+      <trans-unit id="fGwLnEZ" resname="pIrIYB7">
+        <source>pIrIYB7</source>
+        <target>__user.validation.email_required</target>
+      </trans-unit>
+      <trans-unit id="SysPJDU" resname="68NHVXV">
+        <source>68NHVXV</source>
+        <target>__user.validation.email_invalid</target>
+      </trans-unit>
+      <trans-unit id="bqHAH98" resname="OVQY6k4">
+        <source>OVQY6k4</source>
+        <target>__user.validation.password_required</target>
+      </trans-unit>
+      <trans-unit id="ieYB.MI" resname="mah_225">
+        <source>mah_225</source>
+        <target>__user.validation.password_min_length</target>
+      </trans-unit>
+      <trans-unit id="p_SPpz7" resname="wf4wXUZ">
+        <source>wf4wXUZ</source>
+        <target>__The slug can only contain lowercase letters, numbers, and hyphens.</target>
+      </trans-unit>
+      <trans-unit id="tCD5kFp" resname="vsM4tSv">
+        <source>vsM4tSv</source>
+        <target>__There is already an account with this email</target>
+      </trans-unit>
+      <trans-unit id="m.eNPh2" resname="status.active">
+        <source>status.active</source>
+        <target>Ativo</target>
+        <note>Active status indicator</note>
+      </trans-unit>
+      <trans-unit id="FtjLbbK" resname="status.ai_enhanced">
+        <source>status.ai_enhanced</source>
+        <target>IA Aprimorado</target>
+        <note>AI enhanced feature badge</note>
+      </trans-unit>
+      <trans-unit id="tfE4NVP" resname="status.real_time">
+        <source>status.real_time</source>
+        <target>Tempo real</target>
+        <note>Real-time status indicator</note>
+      </trans-unit>
+      <trans-unit id="clagT66" resname="status.ready">
+        <source>status.ready</source>
+        <target>Pronto</target>
+        <note>Ready status</note>
+      </trans-unit>
+      <trans-unit id="Str895z" resname="status.processing">
+        <source>status.processing</source>
+        <target>Processando...</target>
+        <note>Processing status with ellipsis</note>
+      </trans-unit>
+      <trans-unit id="Fxl3J4F" resname="status.failed">
+        <source>status.failed</source>
+        <target>Falhou</target>
+        <note>Failed status</note>
+      </trans-unit>
+      <trans-unit id=".Y_eGJj" resname="status.pending">
+        <source>status.pending</source>
+        <target>Pendente</target>
+        <note>Pending status</note>
+      </trans-unit>
+      <trans-unit id="2MnMuGc" resname="time.today">
+        <source>time.today</source>
+        <target>Hoje</target>
+        <note>Today time reference</note>
+      </trans-unit>
+      <trans-unit id="XWysnWJ" resname="time.yesterday">
+        <source>time.yesterday</source>
+        <target>Ontem</target>
+        <note>Yesterday time reference</note>
+      </trans-unit>
+      <trans-unit id="Gs0dj_6" resname="time.days_ago">
+        <source>time.days_ago</source>
+        <target>%count% dia atrás|%count% dias atrás</target>
+        <note>Days ago with pluralization</note>
+      </trans-unit>
+      <trans-unit id="Vr.prud" resname="time.d_ago">
+        <source>time.d_ago</source>
+        <target>%count%d atrás</target>
+        <note>Abbreviated days ago (e.g., "3d atrás")</note>
+      </trans-unit>
+      <trans-unit id="r.zkVPX" resname="time.week_ago">
+        <source>time.week_ago</source>
+        <target>1 semana atrás</target>
+        <note>One week ago time reference</note>
+      </trans-unit>
+      <trans-unit id="GY0Oz87" resname="metric.month_growth">
+        <source>metric.month_growth</source>
+        <target>+%percent%% este mês</target>
+        <note>Monthly growth percentage</note>
+      </trans-unit>
+      <trans-unit id="wDk7Nu0" resname="metric.new_count">
+        <source>metric.new_count</source>
+        <target>+%count% novos</target>
+        <note>New items count</note>
+      </trans-unit>
+      <trans-unit id="1EG972u" resname="metric.today_growth">
+        <source>metric.today_growth</source>
+        <target>+%percent%% hoje</target>
+        <note>Today's growth percentage</note>
+      </trans-unit>
+      <trans-unit id="pIfv8jd" resname="unit.minute">
+        <source>unit.minute</source>
+        <target>minuto</target>
+        <note>Singular: minute time unit</note>
+      </trans-unit>
+      <trans-unit id=".u29bEC" resname="unit.minutes">
+        <source>unit.minutes</source>
+        <target>minutos</target>
+        <note>Plural: minutes time unit</note>
+      </trans-unit>
+      <trans-unit id="WBSyAhX" resname="unit.min">
+        <source>unit.min</source>
+        <target>min</target>
+        <note>Abbreviated: minute/minutes</note>
+      </trans-unit>
+      <trans-unit id="jOThC28" resname="pagination.show">
+        <source>pagination.show</source>
+        <target>Mostrar</target>
+        <note>Pagination: "Show X entries"</note>
+      </trans-unit>
+      <trans-unit id="yNx5WRM" resname="upload.video_hint">
+        <source>upload.video_hint</source>
+        <target>Tamanho máx: 4GB. Formatos: MP4, WebM, OGG, MOV. Duração calculada após upload.</target>
+        <note>Video upload format and size hint</note>
+      </trans-unit>
+      <trans-unit id="oWzw.aI" resname="branding.infinity_crm">
+        <source>branding.infinity_crm</source>
+        <target>Infinity CRM</target>
+        <note>Full product name with CRM</note>
+      </trans-unit>
+      <trans-unit id="6YxwsVQ" resname="branding.ai_dashboard">
+        <source>branding.ai_dashboard</source>
+        <target>Painel CRM com IA</target>
+        <note>Full dashboard title with AI branding</note>
+      </trans-unit>
+      <trans-unit id="sqzvgdk" resname="nav.ai_chat">
+        <source>nav.ai_chat</source>
+        <target>Chat IA</target>
+        <note>AI Chat navigation link</note>
+      </trans-unit>
+      <trans-unit id="xCUrhw3" resname="nav.analytics">
+        <source>nav.analytics</source>
+        <target>Análises</target>
+        <note>Analytics navigation link</note>
+      </trans-unit>
+      <trans-unit id="vtreMof" resname="nav.toggle_navigation">
+        <source>nav.toggle_navigation</source>
+        <target>Alternar navegação</target>
+        <note>Aria label for mobile nav toggle</note>
+      </trans-unit>
+      <trans-unit id="RgUOUJZ" resname="organization.switcher_title">
+        <source>organization.switcher_title</source>
+        <target>Mudar sua organização</target>
+        <note>Tooltip for organization switcher</note>
+      </trans-unit>
+      <trans-unit id="I_hYTDj" resname="organization.all_organizations">
+        <source>organization.all_organizations</source>
+        <target>Todas as Organizações</target>
+        <note>All organizations option in switcher</note>
+      </trans-unit>
+      <trans-unit id="vCMx44l" resname="organization.all_organizations_root">
+        <source>organization.all_organizations_root</source>
+        <target>Todas as Organizações (Root)</target>
+        <note>Root access option in switcher</note>
+      </trans-unit>
+      <trans-unit id="WOq6Pq0" resname="organization.users_page_title">
+        <source>organization.users_page_title</source>
+        <target>Gerenciar Usuários - Infinity</target>
+        <note>Page title for organization users management</note>
+      </trans-unit>
+      <trans-unit id="ML9tkBs" resname="course.back_to_course">
+        <source>course.back_to_course</source>
+        <target>Voltar ao Curso</target>
+        <note>Link to return to course overview</note>
+      </trans-unit>
+      <trans-unit id="x55CKdi" resname="course.lecture_number">
+        <source>course.lecture_number</source>
+        <target>Aula %number%</target>
+        <note>Lecture number label</note>
+      </trans-unit>
+      <trans-unit id="RoHvo6O" resname="course.content">
+        <source>course.content</source>
+        <target>Conteúdo do Curso</target>
+        <note>Course content section heading</note>
+      </trans-unit>
+      <trans-unit id="2_oJ5I2" resname="theme.switch_to_dark">
+        <source>theme.switch_to_dark</source>
+        <target>Mudar para Escuro</target>
+        <note>Button to switch to dark theme</note>
+      </trans-unit>
+      <trans-unit id="PPNwZzl" resname="theme.switch_to_light">
+        <source>theme.switch_to_light</source>
+        <target>Mudar para Claro</target>
+        <note>Button to switch to light theme</note>
+      </trans-unit>
+      <trans-unit id="Big.BTf" resname="misc.na">
+        <source>misc.na</source>
+        <target>N/D</target>
+        <note>Not available abbreviation</note>
+      </trans-unit>
+      <trans-unit id="j5gpsJS" resname="misc.infinity_alt">
+        <source>misc.infinity_alt</source>
+        <target>Infinity</target>
+        <note>Alt text for Infinity logo</note>
+      </trans-unit>
+      <trans-unit id="S39meu3" resname="insight.recent_activity">
+        <source>insight.recent_activity</source>
+        <target>Aumento de atividade recente</target>
+        <note>AI insight: recent activity spike</note>
+      </trans-unit>
+      <trans-unit id="WSMmbJ1" resname="insight.upsell_opportunity">
+        <source>insight.upsell_opportunity</source>
+        <target>Potencial oportunidade de upsell</target>
+        <note>AI insight: sales opportunity</note>
+      </trans-unit>
+      <trans-unit id="lHiHz9L" resname="insight.strong_relationship">
+        <source>insight.strong_relationship</source>
+        <target>Forte pontuação de relacionamento</target>
+        <note>AI insight: good relationship</note>
+      </trans-unit>
+      <trans-unit id="T2yB0np" resname="insight.last_interaction">
+        <source>insight.last_interaction</source>
+        <target>Última interação: %days%d atrás</target>
+        <note>Last interaction time (days ago)</note>
+      </trans-unit>
+      <trans-unit id="8x6R9h7" resname="button.actions">
+        <source>button.actions</source>
+        <target>Ações</target>
+        <note>Generic actions button/label</note>
+      </trans-unit>
+      <trans-unit id="Y7WOKy5" resname="button.remove">
+        <source>button.remove</source>
+        <target>Remover</target>
+        <note>Remove button</note>
+      </trans-unit>
+      <trans-unit id="iAqBui5" resname="button.confirm">
+        <source>button.confirm</source>
+        <target>Confirmar</target>
+        <note>Confirm button</note>
+      </trans-unit>
+      <trans-unit id="SwBfY5w" resname="course.minutes">
+        <source>course.minutes</source>
+        <target>minutos</target>
+        <note>Time unit for course duration</note>
+      </trans-unit>
+      <trans-unit id="su4kVAP" resname="course.no_lectures_description">
+        <source>course.no_lectures_description</source>
+        <target>Este curso ainda não possui aulas</target>
+        <note>Empty state message for courses without lectures</note>
+      </trans-unit>
+      <trans-unit id="hnUYmIm" resname="misc.waiting">
+        <source>misc.waiting</source>
+        <target>Aguardando...</target>
+        <note>Waiting status message</note>
+      </trans-unit>
+      <trans-unit id="qUp7V2D" resname="nav.my_courses">
+        <source>nav.my_courses</source>
+        <target>Meus Cursos</target>
+      </trans-unit>
+      <trans-unit id="rSBpkgD" resname="user.verified">
+        <source>user.verified</source>
+        <target>Verificado</target>
+      </trans-unit>
+      <trans-unit id="xH.Efcr" resname="user.unverified">
+        <source>user.unverified</source>
+        <target>Não Verificado</target>
+      </trans-unit>
+      <trans-unit id="v0Y_Jf_" resname="organization_switcher.error.invalid_token">
+        <source>organization_switcher.error.invalid_token</source>
+        <target>Token de segurança inválido.</target>
+      </trans-unit>
+      <trans-unit id="V2fTuT2" resname="organization_switcher.error.not_logged_in">
+        <source>organization_switcher.error.not_logged_in</source>
+        <target>Você deve estar logado para trocar de organização.</target>
+      </trans-unit>
+      <trans-unit id="Nw2q5.g" resname="organization_switcher.error.not_found">
+        <source>organization_switcher.error.not_found</source>
+        <target>Organização não encontrada.</target>
+      </trans-unit>
+      <trans-unit id="CBs6K30" resname="organization_switcher.success.switched">
+        <source>organization_switcher.success.switched</source>
+        <target>Sua organização foi alterada para: %name%</target>
+      </trans-unit>
+      <trans-unit id="u.NklRA" resname="organization_switcher.success.cleared">
+        <source>organization_switcher.success.cleared</source>
+        <target>Contexto de organização limpo. Você está acessando como administrador.</target>
+      </trans-unit>
+      <trans-unit id="feB1SzC" resname="filter.yes">
+        <source>filter.yes</source>
+        <target>Sim</target>
+      </trans-unit>
+      <trans-unit id="WTSgwaE" resname="filter.no">
+        <source>filter.no</source>
+        <target>Não</target>
+      </trans-unit>
+      <trans-unit id="c5DAm2V" resname="page.course_description">
+        <source>page.course_description</source>
+        <target>Crie e gerencie cursos com aulas e matrículas de alunos</target>
+      </trans-unit>
+      <trans-unit id="F8GccE3" resname="button.add_course">
+        <source>button.add_course</source>
+        <target>Adicionar Curso</target>
+      </trans-unit>
+      <trans-unit id="wpz3tDV" resname="course.search_placeholder">
+        <source>course.search_placeholder</source>
+        <target>Pesquisar cursos...</target>
+      </trans-unit>
+      <trans-unit id="6t_jr8e" resname="course.enrolled_students">
+        <source>course.enrolled_students</source>
+        <target>Alunos Matriculados</target>
+      </trans-unit>
+      <trans-unit id="b37BeC3" resname="course.enroll_student">
+        <source>course.enroll_student</source>
+        <target>Matricular Aluno</target>
+      </trans-unit>
+      <trans-unit id="_3u.gtM" resname="course.enroll_first_student">
+        <source>course.enroll_first_student</source>
+        <target>Matricular Primeiro Aluno</target>
+      </trans-unit>
+      <trans-unit id="nPayjVR" resname="course.enrolled_at">
+        <source>course.enrolled_at</source>
+        <target>Matriculado em</target>
+      </trans-unit>
+      <trans-unit id="ldI7j1N" resname="course.progress">
+        <source>course.progress</source>
+        <target>Progresso</target>
+      </trans-unit>
+      <trans-unit id="BS5379S" resname="course.enrollment.active">
+        <source>course.enrollment.active</source>
+        <target>Ativo</target>
+      </trans-unit>
+      <trans-unit id="CQNYkpr" resname="course.enrollment.inactive">
+        <source>course.enrollment.inactive</source>
+        <target>Inativo</target>
+      </trans-unit>
+      <trans-unit id="IRuKi2L" resname="course.enrollment.activate">
+        <source>course.enrollment.activate</source>
+        <target>Ativar</target>
+      </trans-unit>
+      <trans-unit id="._8JUDQ" resname="course.enrollment.deactivate">
+        <source>course.enrollment.deactivate</source>
+        <target>Desativar</target>
+      </trans-unit>
+      <trans-unit id="6kcWMd1" resname="course.enrollment.confirm_remove">
+        <source>course.enrollment.confirm_remove</source>
+        <target>Tem certeza que deseja remover %student% deste curso?</target>
+      </trans-unit>
+      <trans-unit id="WfNWK6Q" resname="course.enrollment.search_by_name">
+        <source>course.enrollment.search_by_name</source>
+        <target>Pesquisar por nome...</target>
+      </trans-unit>
+      <trans-unit id="WUUwHst" resname="course.enrollment.switch_hint">
+        <source>course.enrollment.switch_hint</source>
+        <target>Alterne os botões para matricular/desativar alunos. Clique em Confirmar para salvar as alterações.</target>
+      </trans-unit>
+      <trans-unit id="qyzUioD" resname="course.enrollment.enrolled">
+        <source>course.enrollment.enrolled</source>
+        <target>Matriculado</target>
+      </trans-unit>
+      <trans-unit id="2tlqboG" resname="course.enrollment.not_enrolled">
+        <source>course.enrollment.not_enrolled</source>
+        <target>Não Matriculado</target>
+      </trans-unit>
+      <trans-unit id="V3XW7Fj" resname="course.manage_enrollments">
+        <source>course.manage_enrollments</source>
+        <target>Gerenciar Matrículas</target>
+      </trans-unit>
+      <trans-unit id="AIcEK_Q" resname="empty.course_enrollment_description">
+        <source>empty.course_enrollment_description</source>
+        <target>Comece a montar sua turma matriculando alunos da sua organização</target>
+      </trans-unit>
+      <trans-unit id="lDjpeYu" resname="An authentication exception occurred.">
+        <source>An authentication exception occurred.</source>
+        <target>Ocorreu uma exceção de autenticação.</target>
+      </trans-unit>
+      <trans-unit id="AJOf7xb" resname="Authentication credentials could not be found.">
+        <source>Authentication credentials could not be found.</source>
+        <target>As credenciais de autenticação não foram encontradas.</target>
+      </trans-unit>
+      <trans-unit id="DPttBWR" resname="Authentication request could not be processed due to a system problem.">
+        <source>Authentication request could not be processed due to a system problem.</source>
+        <target>A solicitação de autenticação não pôde ser processada devido a um problema no sistema.</target>
+      </trans-unit>
+      <trans-unit id="6ZX9PdF" resname="Invalid credentials.">
+        <source>Invalid credentials.</source>
+        <target>Credenciais inválidas.</target>
+      </trans-unit>
+      <trans-unit id="D8oD9D6" resname="Cookie has already been used by someone else.">
+        <source>Cookie has already been used by someone else.</source>
+        <target>O cookie já foi usado por outra pessoa.</target>
+      </trans-unit>
+      <trans-unit id="6rEex5P" resname="Not privileged to request the resource.">
+        <source>Not privileged to request the resource.</source>
+        <target>Sem privilégios para acessar o recurso.</target>
+      </trans-unit>
+      <trans-unit id="bbMNxJD" resname="Invalid CSRF token.">
+        <source>Invalid CSRF token.</source>
+        <target>Token CSRF inválido.</target>
+      </trans-unit>
+      <trans-unit id="V6vcZYp" resname="No authentication provider found to support the authentication token.">
+        <source>No authentication provider found to support the authentication token.</source>
+        <target>Nenhum provedor de autenticação encontrado para suportar o token de autenticação.</target>
+      </trans-unit>
+      <trans-unit id="mvKBTGQ" resname="No session available, it either timed out or cookies are not enabled.">
+        <source>No session available, it either timed out or cookies are not enabled.</source>
+        <target>Nenhuma sessão disponível, ou expirou ou os cookies não estão habilitados.</target>
+      </trans-unit>
+      <trans-unit id="BMgfoWp" resname="No token could be found.">
+        <source>No token could be found.</source>
+        <target>Nenhum token foi encontrado.</target>
+      </trans-unit>
+      <trans-unit id="VZija00" resname="Username could not be found.">
+        <source>Username could not be found.</source>
+        <target>Nome de usuário não foi encontrado.</target>
+      </trans-unit>
+      <trans-unit id="Sjc.F3G" resname="Account has expired.">
+        <source>Account has expired.</source>
+        <target>A conta expirou.</target>
+      </trans-unit>
+      <trans-unit id="99yINK3" resname="Credentials have expired.">
+        <source>Credentials have expired.</source>
+        <target>As credenciais expiraram.</target>
+      </trans-unit>
+      <trans-unit id=".WYXRk3" resname="Account is disabled.">
+        <source>Account is disabled.</source>
+        <target>A conta está desativada.</target>
+      </trans-unit>
+      <trans-unit id="Gp85C7l" resname="Account is locked.">
+        <source>Account is locked.</source>
+        <target>A conta está bloqueada.</target>
+      </trans-unit>
+      <trans-unit id="PvhvanK" resname="Too many failed login attempts, please try again later.">
+        <source>Too many failed login attempts, please try again later.</source>
+        <target>Muitas tentativas de login falhadas, tente novamente mais tarde.</target>
+      </trans-unit>
+      <trans-unit id="Tz4Owtv" resname="Invalid or expired login link.">
+        <source>Invalid or expired login link.</source>
+        <target>Link de login inválido ou expirado.</target>
+      </trans-unit>
+      <trans-unit id="CPhXNYL" resname="Too many failed login attempts, please try again in %minutes% minute.">
+        <source>Too many failed login attempts, please try again in %minutes% minute.</source>
+        <target>Muitas tentativas de login falhadas, tente novamente em %minutes% minuto.</target>
+      </trans-unit>
+      <trans-unit id="KpyCIMn" resname="Too many failed login attempts, please try again in %minutes% minutes.">
+        <source>Too many failed login attempts, please try again in %minutes% minutes.</source>
+        <target>Muitas tentativas de login falhadas, tente novamente em %minutes% minutos.</target>
+      </trans-unit>
+      <trans-unit id="uSRbHhj" resname="Este valor deve ser falso.">
+        <source>Este valor deve ser falso.</source>
+        <target>Este valor deve ser falso.</target>
+      </trans-unit>
+      <trans-unit id="64vA0ZA" resname="Este valor deve ser verdadeiro.">
+        <source>Este valor deve ser verdadeiro.</source>
+        <target>Este valor deve ser verdadeiro.</target>
+      </trans-unit>
+      <trans-unit id="pQGYkNo" resname="Este valor deve ser do tipo {{ type }}.">
+        <source>Este valor deve ser do tipo {{ type }}.</source>
+        <target>Este valor deve ser do tipo {{ type }}.</target>
+      </trans-unit>
+      <trans-unit id="f7Qdra4" resname="Este valor deve estar em branco.">
+        <source>Este valor deve estar em branco.</source>
+        <target>Este valor deve estar em branco.</target>
+      </trans-unit>
+      <trans-unit id="h5hdyjm" resname="O valor selecionado não é uma escolha válida.">
+        <source>O valor selecionado não é uma escolha válida.</source>
+        <target>O valor selecionado não é uma escolha válida.</target>
+      </trans-unit>
+      <trans-unit id="fHa8Tl1" resname="Você deve selecionar pelo menos {{ limit }} choice.|You must select at least {{ limit }} choices.">
+        <source>Você deve selecionar pelo menos {{ limit }} choice.|You must select at least {{ limit }} choices.</source>
+        <target>Você deve selecionar pelo menos {{ limit }} choice.|You must select at least {{ limit }} choices.</target>
+      </trans-unit>
+      <trans-unit id="BbBzlam" resname="Você deve selecionar no máximo {{ limit }} choice.|You must select at most {{ limit }} choices.">
+        <source>Você deve selecionar no máximo {{ limit }} choice.|You must select at most {{ limit }} choices.</source>
+        <target>Você deve selecionar no máximo {{ limit }} choice.|You must select at most {{ limit }} choices.</target>
+      </trans-unit>
+      <trans-unit id="JhX19oZ" resname="Um ou mais dos valores fornecidos são inválidos.">
+        <source>Um ou mais dos valores fornecidos são inválidos.</source>
+        <target>Um ou mais dos valores fornecidos são inválidos.</target>
+      </trans-unit>
+      <trans-unit id="EVo7HNy" resname="Este campo não era esperado.">
+        <source>Este campo não era esperado.</source>
+        <target>Este campo não era esperado.</target>
+      </trans-unit>
+      <trans-unit id="Gb2KdMG" resname="Este campo está faltando.">
+        <source>Este campo está faltando.</source>
+        <target>Este campo está faltando.</target>
+      </trans-unit>
+      <trans-unit id="jYhHtbE" resname="Este valor não é uma data válida.">
+        <source>Este valor não é uma data válida.</source>
+        <target>Este valor não é uma data válida.</target>
+      </trans-unit>
+      <trans-unit id="4jAy6GT" resname="This value is not a valid datetime.">
+        <source>This value is not a valid datetime.</source>
+        <target>This value is not a valid datetime.</target>
+      </trans-unit>
+      <trans-unit id="J8MwqDW" resname="This value is not a valid email address.">
+        <source>This value is not a valid email address.</source>
+        <target>This value is not a valid email address.</target>
+      </trans-unit>
+      <trans-unit id="OW6NCiE" resname="The file could not be found.">
+        <source>The file could not be found.</source>
+        <target>The file could not be found.</target>
+      </trans-unit>
+      <trans-unit id="uuuT8w4" resname="The file is not readable.">
+        <source>The file is not readable.</source>
+        <target>The file is not readable.</target>
+      </trans-unit>
+      <trans-unit id="xmVWVqA" resname="The file is too large ({{ size }} {{ suffix }}). Allowed maximum size is {{ limit }} {{ suffix }}.">
+        <source>The file is too large ({{ size }} {{ suffix }}). Allowed maximum size is {{ limit }} {{ suffix }}.</source>
+        <target>The file is too large ({{ size }} {{ suffix }}). Allowed maximum size is {{ limit }} {{ suffix }}.</target>
+      </trans-unit>
+      <trans-unit id="COERTaP" resname="The mime type of the file is invalid ({{ type }}). Allowed mime types are {{ types }}.">
+        <source>The mime type of the file is invalid ({{ type }}). Allowed mime types are {{ types }}.</source>
+        <target>The mime type of the file is invalid ({{ type }}). Allowed mime types are {{ types }}.</target>
+      </trans-unit>
+      <trans-unit id="xJV2eT8" resname="This value should be {{ limit }} or less.">
+        <source>This value should be {{ limit }} or less.</source>
+        <target>This value should be {{ limit }} or less.</target>
+      </trans-unit>
+      <trans-unit id="Zuairxy" resname="This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.">
+        <source>This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.</source>
+        <target>This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.</target>
+      </trans-unit>
+      <trans-unit id="3bh29vT" resname="This value should be {{ limit }} or more.">
+        <source>This value should be {{ limit }} or more.</source>
+        <target>This value should be {{ limit }} or more.</target>
+      </trans-unit>
+      <trans-unit id="Muq3W.6" resname="This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.">
+        <source>This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.</source>
+        <target>This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.</target>
+      </trans-unit>
+      <trans-unit id="vLBiKCD" resname="This value should not be blank.">
+        <source>This value should not be blank.</source>
+        <target>This value should not be blank.</target>
+      </trans-unit>
+      <trans-unit id="FUEH3cZ" resname="This value should not be null.">
+        <source>This value should not be null.</source>
+        <target>This value should not be null.</target>
+      </trans-unit>
+      <trans-unit id="yIMqPF6" resname="This value should be null.">
+        <source>This value should be null.</source>
+        <target>This value should be null.</target>
+      </trans-unit>
+      <trans-unit id="TZg2uqx" resname="This value is not valid.">
+        <source>This value is not valid.</source>
+        <target>This value is not valid.</target>
+      </trans-unit>
+      <trans-unit id="Uu2fZ7m" resname="This value is not a valid time.">
+        <source>This value is not a valid time.</source>
+        <target>This value is not a valid time.</target>
+      </trans-unit>
+      <trans-unit id="X5msM9I" resname="This value is not a valid URL.">
+        <source>This value is not a valid URL.</source>
+        <target>This value is not a valid URL.</target>
+      </trans-unit>
+      <trans-unit id="yShl.HD" resname="The two values should be equal.">
+        <source>The two values should be equal.</source>
+        <target>The two values should be equal.</target>
+      </trans-unit>
+      <trans-unit id="UPTnJIu" resname="The file is too large. Allowed maximum size is {{ limit }} {{ suffix }}.">
+        <source>The file is too large. Allowed maximum size is {{ limit }} {{ suffix }}.</source>
+        <target>The file is too large. Allowed maximum size is {{ limit }} {{ suffix }}.</target>
+      </trans-unit>
+      <trans-unit id="OEeVt7G" resname="The file is too large.">
+        <source>The file is too large.</source>
+        <target>The file is too large.</target>
+      </trans-unit>
+      <trans-unit id="DAd59Rr" resname="The file could not be uploaded.">
+        <source>The file could not be uploaded.</source>
+        <target>The file could not be uploaded.</target>
+      </trans-unit>
+      <trans-unit id="jpVY2B5" resname="This value should be a valid number.">
+        <source>This value should be a valid number.</source>
+        <target>This value should be a valid number.</target>
+      </trans-unit>
+      <trans-unit id="aeFJJFS" resname="This file is not a valid image.">
+        <source>This file is not a valid image.</source>
+        <target>This file is not a valid image.</target>
+      </trans-unit>
+      <trans-unit id="r9nOjqT" resname="This is not a valid IP address.">
+        <source>This is not a valid IP address.</source>
+        <target>This value is not a valid IP address.</target>
+      </trans-unit>
+      <trans-unit id="izWIhKR" resname="This value is not a valid language.">
+        <source>This value is not a valid language.</source>
+        <target>This value is not a valid language.</target>
+      </trans-unit>
+      <trans-unit id="gBF5fE7" resname="This value is not a valid locale.">
+        <source>This value is not a valid locale.</source>
+        <target>This value is not a valid locale.</target>
+      </trans-unit>
+      <trans-unit id="QUviSFS" resname="This value is not a valid country.">
+        <source>This value is not a valid country.</source>
+        <target>This value is not a valid country.</target>
+      </trans-unit>
+      <trans-unit id="nmXj9fT" resname="This value is already used.">
+        <source>This value is already used.</source>
+        <target>This value is already used.</target>
+      </trans-unit>
+      <trans-unit id="LAGu_iq" resname="The size of the image could not be detected.">
+        <source>The size of the image could not be detected.</source>
+        <target>The size of the image could not be detected.</target>
+      </trans-unit>
+      <trans-unit id="YD_yE46" resname="The image width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.">
+        <source>The image width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.</source>
+        <target>The image width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.</target>
+      </trans-unit>
+      <trans-unit id="pfL2.fo" resname="The image width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.">
+        <source>The image width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.</source>
+        <target>The image width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.</target>
+      </trans-unit>
+      <trans-unit id="zV9L7pv" resname="The image height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.">
+        <source>The image height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.</source>
+        <target>The image height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.</target>
+      </trans-unit>
+      <trans-unit id="A7vLGPA" resname="The image height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.">
+        <source>The image height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.</source>
+        <target>The image height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.</target>
+      </trans-unit>
+      <trans-unit id="hbSSYMh" resname="This value should be the user's current password.">
+        <source>This value should be the user's current password.</source>
+        <target>This value should be the user's current password.</target>
+      </trans-unit>
+      <trans-unit id="A1Hv7nv" resname="This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.">
+        <source>This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.</source>
+        <target>This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.</target>
+      </trans-unit>
+      <trans-unit id="H.ZNP57" resname="The file was only partially uploaded.">
+        <source>The file was only partially uploaded.</source>
+        <target>The file was only partially uploaded.</target>
+      </trans-unit>
+      <trans-unit id="qUKi9W_" resname="No file was uploaded.">
+        <source>No file was uploaded.</source>
+        <target>No file was uploaded.</target>
+      </trans-unit>
+      <trans-unit id="MRZ.kUM" resname="No temporary folder was configured in php.ini.">
+        <source>No temporary folder was configured in php.ini.</source>
+        <target>No temporary folder was configured in php.ini, or the configured folder does not exist.</target>
+      </trans-unit>
+      <trans-unit id="ivltd6_" resname="Cannot write temporary file to disk.">
+        <source>Cannot write temporary file to disk.</source>
+        <target>Cannot write temporary file to disk.</target>
+      </trans-unit>
+      <trans-unit id="_x64C6y" resname="A PHP extension caused the upload to fail.">
+        <source>A PHP extension caused the upload to fail.</source>
+        <target>A PHP extension caused the upload to fail.</target>
+      </trans-unit>
+      <trans-unit id=".K7ySMo" resname="This collection should contain {{ limit }} element or more.|This collection should contain {{ limit }} elements or more.">
+        <source>This collection should contain {{ limit }} element or more.|This collection should contain {{ limit }} elements or more.</source>
+        <target>This collection should contain {{ limit }} element or more.|This collection should contain {{ limit }} elements or more.</target>
+      </trans-unit>
+      <trans-unit id="aSvx2eb" resname="This collection should contain {{ limit }} element or less.|This collection should contain {{ limit }} elements or less.">
+        <source>This collection should contain {{ limit }} element or less.|This collection should contain {{ limit }} elements or less.</source>
+        <target>This collection should contain {{ limit }} element or less.|This collection should contain {{ limit }} elements or less.</target>
+      </trans-unit>
+      <trans-unit id="d4HuxpA" resname="This collection should contain exactly {{ limit }} element.|This collection should contain exactly {{ limit }} elements.">
+        <source>This collection should contain exactly {{ limit }} element.|This collection should contain exactly {{ limit }} elements.</source>
+        <target>This collection should contain exactly {{ limit }} element.|This collection should contain exactly {{ limit }} elements.</target>
+      </trans-unit>
+      <trans-unit id="Ia5ts7h" resname="Invalid card number.">
+        <source>Invalid card number.</source>
+        <target>Invalid card number.</target>
+      </trans-unit>
+      <trans-unit id="Y8YNvWG" resname="Unsupported card type or invalid card number.">
+        <source>Unsupported card type or invalid card number.</source>
+        <target>Unsupported card type or invalid card number.</target>
+      </trans-unit>
+      <trans-unit id="Bp_BiDs" resname="This is not a valid International Bank Account Number (IBAN).">
+        <source>This is not a valid International Bank Account Number (IBAN).</source>
+        <target>This value is not a valid International Bank Account Number (IBAN).</target>
+      </trans-unit>
+      <trans-unit id="HqngxWf" resname="This value is not a valid ISBN-10.">
+        <source>This value is not a valid ISBN-10.</source>
+        <target>This value is not a valid ISBN-10.</target>
+      </trans-unit>
+      <trans-unit id="Pm2IygX" resname="This value is not a valid ISBN-13.">
+        <source>This value is not a valid ISBN-13.</source>
+        <target>This value is not a valid ISBN-13.</target>
+      </trans-unit>
+      <trans-unit id="w8oSYvN" resname="This value is neither a valid ISBN-10 nor a valid ISBN-13.">
+        <source>This value is neither a valid ISBN-10 nor a valid ISBN-13.</source>
+        <target>This value is neither a valid ISBN-10 nor a valid ISBN-13.</target>
+      </trans-unit>
+      <trans-unit id="aEf2fyJ" resname="This value is not a valid ISSN.">
+        <source>This value is not a valid ISSN.</source>
+        <target>This value is not a valid ISSN.</target>
+      </trans-unit>
+      <trans-unit id="OeFZFII" resname="This value is not a valid currency.">
+        <source>This value is not a valid currency.</source>
+        <target>This value is not a valid currency.</target>
+      </trans-unit>
+      <trans-unit id="G8HNxQM" resname="This value should be equal to {{ compared_value }}.">
+        <source>This value should be equal to {{ compared_value }}.</source>
+        <target>This value should be equal to {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="Xgf_Y8C" resname="This value should be greater than {{ compared_value }}.">
+        <source>This value should be greater than {{ compared_value }}.</source>
+        <target>This value should be greater than {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="OrsJXWO" resname="This value should be greater than or equal to {{ compared_value }}.">
+        <source>This value should be greater than or equal to {{ compared_value }}.</source>
+        <target>This value should be greater than or equal to {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="wni8iKB" resname="This value should be identical to {{ compared_value_type }} {{ compared_value }}.">
+        <source>This value should be identical to {{ compared_value_type }} {{ compared_value }}.</source>
+        <target>This value should be identical to {{ compared_value_type }} {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="EgRc_Qq" resname="This value should be less than {{ compared_value }}.">
+        <source>This value should be less than {{ compared_value }}.</source>
+        <target>This value should be less than {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="vNn72MQ" resname="This value should be less than or equal to {{ compared_value }}.">
+        <source>This value should be less than or equal to {{ compared_value }}.</source>
+        <target>This value should be less than or equal to {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="N4F464Y" resname="This value should not be equal to {{ compared_value }}.">
+        <source>This value should not be equal to {{ compared_value }}.</source>
+        <target>This value should not be equal to {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="T8lYq4L" resname="This value should not be identical to {{ compared_value_type }} {{ compared_value }}.">
+        <source>This value should not be identical to {{ compared_value_type }} {{ compared_value }}.</source>
+        <target>This value should not be identical to {{ compared_value_type }} {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="x5xpcfK" resname="The image ratio is too big ({{ ratio }}). Allowed maximum ratio is {{ max_ratio }}.">
+        <source>The image ratio is too big ({{ ratio }}). Allowed maximum ratio is {{ max_ratio }}.</source>
+        <target>The image ratio is too big ({{ ratio }}). Allowed maximum ratio is {{ max_ratio }}.</target>
+      </trans-unit>
+      <trans-unit id="5cB4RCN" resname="The image ratio is too small ({{ ratio }}). Minimum ratio expected is {{ min_ratio }}.">
+        <source>The image ratio is too small ({{ ratio }}). Minimum ratio expected is {{ min_ratio }}.</source>
+        <target>The image ratio is too small ({{ ratio }}). Minimum ratio expected is {{ min_ratio }}.</target>
+      </trans-unit>
+      <trans-unit id="SVgw5SP" resname="The image is square ({{ width }}x{{ height }}px). Square images are not allowed.">
+        <source>The image is square ({{ width }}x{{ height }}px). Square images are not allowed.</source>
+        <target>The image is square ({{ width }}x{{ height }}px). Square images are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="wpV7oxR" resname="The image is landscape oriented ({{ width }}x{{ height }}px). Landscape oriented images are not allowed.">
+        <source>The image is landscape oriented ({{ width }}x{{ height }}px). Landscape oriented images are not allowed.</source>
+        <target>The image is landscape oriented ({{ width }}x{{ height }}px). Landscape oriented images are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="t7f5lY9" resname="The image is portrait oriented ({{ width }}x{{ height }}px). Portrait oriented images are not allowed.">
+        <source>The image is portrait oriented ({{ width }}x{{ height }}px). Portrait oriented images are not allowed.</source>
+        <target>The image is portrait oriented ({{ width }}x{{ height }}px). Portrait oriented images are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="L9tKe2y" resname="An empty file is not allowed.">
+        <source>An empty file is not allowed.</source>
+        <target>An empty file is not allowed.</target>
+      </trans-unit>
+      <trans-unit id="4421dQm" resname="The host could not be resolved.">
+        <source>The host could not be resolved.</source>
+        <target>The host could not be resolved.</target>
+      </trans-unit>
+      <trans-unit id="tD.RkRe" resname="This value does not match the expected {{ charset }} charset.">
+        <source>This value does not match the expected {{ charset }} charset.</source>
+        <target>This value does not match the expected {{ charset }} charset.</target>
+      </trans-unit>
+      <trans-unit id="w2dRFcU" resname="This is not a valid Business Identifier Code (BIC).">
+        <source>This is not a valid Business Identifier Code (BIC).</source>
+        <target>This value is not a valid Business Identifier Code (BIC).</target>
+      </trans-unit>
+      <trans-unit id="B9r0Hn5" resname="Error">
+        <source>Error</source>
+        <target>Error</target>
+      </trans-unit>
+      <trans-unit id="GO8.wou" resname="This is not a valid UUID.">
+        <source>This is not a valid UUID.</source>
+        <target>This value is not a valid UUID.</target>
+      </trans-unit>
+      <trans-unit id="BmDYW0B" resname="This value should be a multiple of {{ compared_value }}.">
+        <source>This value should be a multiple of {{ compared_value }}.</source>
+        <target>This value should be a multiple of {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="7urGdp4" resname="This Business Identifier Code (BIC) is not associated with IBAN {{ iban }}.">
+        <source>This Business Identifier Code (BIC) is not associated with IBAN {{ iban }}.</source>
+        <target>This Business Identifier Code (BIC) is not associated with IBAN {{ iban }}.</target>
+      </trans-unit>
+      <trans-unit id="NpIt6EV" resname="This value should be valid JSON.">
+        <source>This value should be valid JSON.</source>
+        <target>This value should be valid JSON.</target>
+      </trans-unit>
+      <trans-unit id="NAJHeXU" resname="This collection should contain only unique elements.">
+        <source>This collection should contain only unique elements.</source>
+        <target>This collection should contain only unique elements.</target>
+      </trans-unit>
+      <trans-unit id="mBNZ2p4" resname="This value should be positive.">
+        <source>This value should be positive.</source>
+        <target>This value should be positive.</target>
+      </trans-unit>
+      <trans-unit id="Q07tS4h" resname="This value should be either positive or zero.">
+        <source>This value should be either positive or zero.</source>
+        <target>This value should be either positive or zero.</target>
+      </trans-unit>
+      <trans-unit id="cwaFWZt" resname="This value should be negative.">
+        <source>This value should be negative.</source>
+        <target>This value should be negative.</target>
+      </trans-unit>
+      <trans-unit id="INgX870" resname="This value should be either negative or zero.">
+        <source>This value should be either negative or zero.</source>
+        <target>This value should be either negative or zero.</target>
+      </trans-unit>
+      <trans-unit id="0bSR5cp" resname="This value is not a valid timezone.">
+        <source>This value is not a valid timezone.</source>
+        <target>This value is not a valid timezone.</target>
+      </trans-unit>
+      <trans-unit id="o0vqbDQ" resname="This password has been leaked in a data breach, it must not be used. Please use another password.">
+        <source>This password has been leaked in a data breach, it must not be used. Please use another password.</source>
+        <target>This password has been leaked in a data breach, it must not be used. Please use another password.</target>
+      </trans-unit>
+      <trans-unit id="nNegxai" resname="This value should be between {{ min }} and {{ max }}.">
+        <source>This value should be between {{ min }} and {{ max }}.</source>
+        <target>This value should be between {{ min }} and {{ max }}.</target>
+      </trans-unit>
+      <trans-unit id="q0JXpA2" resname="This value is not a valid hostname.">
+        <source>This value is not a valid hostname.</source>
+        <target>This value is not a valid hostname.</target>
+      </trans-unit>
+      <trans-unit id="Co_98pi" resname="The number of elements in this collection should be a multiple of {{ compared_value }}.">
+        <source>The number of elements in this collection should be a multiple of {{ compared_value }}.</source>
+        <target>The number of elements in this collection should be a multiple of {{ compared_value }}.</target>
+      </trans-unit>
+      <trans-unit id="rfebLrY" resname="This value should satisfy at least one of the following constraints:">
+        <source>This value should satisfy at least one of the following constraints:</source>
+        <target>This value should satisfy at least one of the following constraints:</target>
+      </trans-unit>
+      <trans-unit id="lxL.CBF" resname="Each element of this collection should satisfy its own set of constraints.">
+        <source>Each element of this collection should satisfy its own set of constraints.</source>
+        <target>Each element of this collection should satisfy its own set of constraints.</target>
+      </trans-unit>
+      <trans-unit id="1nUIbF0" resname="This value is not a valid International Securities Identification Number (ISIN).">
+        <source>This value is not a valid International Securities Identification Number (ISIN).</source>
+        <target>This value is not a valid International Securities Identification Number (ISIN).</target>
+      </trans-unit>
+      <trans-unit id="kG_VGA1" resname="This value should be a valid expression.">
+        <source>This value should be a valid expression.</source>
+        <target>This value should be a valid expression.</target>
+      </trans-unit>
+      <trans-unit id="2_9V4lo" resname="This value is not a valid CSS color.">
+        <source>This value is not a valid CSS color.</source>
+        <target>This value is not a valid CSS color.</target>
+      </trans-unit>
+      <trans-unit id="fye9wG1" resname="This value is not a valid CIDR notation.">
+        <source>This value is not a valid CIDR notation.</source>
+        <target>This value is not a valid CIDR notation.</target>
+      </trans-unit>
+      <trans-unit id="ERGRJhK" resname="The value of the netmask should be between {{ min }} and {{ max }}.">
+        <source>The value of the netmask should be between {{ min }} and {{ max }}.</source>
+        <target>The value of the netmask should be between {{ min }} and {{ max }}.</target>
+      </trans-unit>
+      <trans-unit id="7db7kQD" resname="The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.">
+        <source>The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.</source>
+        <target>The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.</target>
+      </trans-unit>
+      <trans-unit id="7JLHuYX" resname="The password strength is too low. Please use a stronger password.">
+        <source>The password strength is too low. Please use a stronger password.</source>
+        <target>The password strength is too low. Please use a stronger password.</target>
+      </trans-unit>
+      <trans-unit id="Pgo2CSS" resname="This value contains characters that are not allowed by the current restriction-level.">
+        <source>This value contains characters that are not allowed by the current restriction-level.</source>
+        <target>This value contains characters that are not allowed by the current restriction-level.</target>
+      </trans-unit>
+      <trans-unit id="7hhZedg" resname="Using invisible characters is not allowed.">
+        <source>Using invisible characters is not allowed.</source>
+        <target>Using invisible characters is not allowed.</target>
+      </trans-unit>
+      <trans-unit id="DpnrQ0a" resname="Mixing numbers from different scripts is not allowed.">
+        <source>Mixing numbers from different scripts is not allowed.</source>
+        <target>Mixing numbers from different scripts is not allowed.</target>
+      </trans-unit>
+      <trans-unit id="Z4taMVn" resname="Using hidden overlay characters is not allowed.">
+        <source>Using hidden overlay characters is not allowed.</source>
+        <target>Using hidden overlay characters is not allowed.</target>
+      </trans-unit>
+      <trans-unit id="1seErdG" resname="The extension of the file is invalid ({{ extension }}). Allowed extensions are {{ extensions }}.">
+        <source>The extension of the file is invalid ({{ extension }}). Allowed extensions are {{ extensions }}.</source>
+        <target>The extension of the file is invalid ({{ extension }}). Allowed extensions are {{ extensions }}.</target>
+      </trans-unit>
+      <trans-unit id="uyl6nQ7" resname="The detected character encoding is invalid ({{ detected }}). Allowed encodings are {{ encodings }}.">
+        <source>The detected character encoding is invalid ({{ detected }}). Allowed encodings are {{ encodings }}.</source>
+        <target>The detected character encoding is invalid ({{ detected }}). Allowed encodings are {{ encodings }}.</target>
+      </trans-unit>
+      <trans-unit id="65jFl8b" resname="This value is not a valid MAC address.">
+        <source>This value is not a valid MAC address.</source>
+        <target>This value is not a valid MAC address.</target>
+      </trans-unit>
+      <trans-unit id="Pm0aj_f" resname="This URL is missing a top-level domain.">
+        <source>This URL is missing a top-level domain.</source>
+        <target>This URL is missing a top-level domain.</target>
+      </trans-unit>
+      <trans-unit id="gbpWGsC" resname="This value is too short. It should contain at least one word.|This value is too short. It should contain at least {{ min }} words.">
+        <source>This value is too short. It should contain at least one word.|This value is too short. It should contain at least {{ min }} words.</source>
+        <target>This value is too short. It should contain at least one word.|This value is too short. It should contain at least {{ min }} words.</target>
+      </trans-unit>
+      <trans-unit id="1WpHUSt" resname="This value is too long. It should contain one word.|This value is too long. It should contain {{ max }} words or less.">
+        <source>This value is too long. It should contain one word.|This value is too long. It should contain {{ max }} words or less.</source>
+        <target>This value is too long. It should contain one word.|This value is too long. It should contain {{ max }} words or less.</target>
+      </trans-unit>
+      <trans-unit id="egUw40j" resname="This value does not represent a valid week in the ISO 8601 format.">
+        <source>This value does not represent a valid week in the ISO 8601 format.</source>
+        <target>This value does not represent a valid week in the ISO 8601 format.</target>
+      </trans-unit>
+      <trans-unit id="qj68TOe" resname="This value is not a valid week.">
+        <source>This value is not a valid week.</source>
+        <target>This value is not a valid week.</target>
+      </trans-unit>
+      <trans-unit id="RX1vHSU" resname="This value should not be before week &quot;{{ min }}&quot;.">
+        <source>This value should not be before week "{{ min }}".</source>
+        <target>This value should not be before week "{{ min }}".</target>
+      </trans-unit>
+      <trans-unit id="pOcsUec" resname="This value should not be after week &quot;{{ max }}&quot;.">
+        <source>This value should not be after week "{{ max }}".</source>
+        <target>This value should not be after week "{{ max }}".</target>
+      </trans-unit>
+      <trans-unit id="3QNCFgi" resname="This value is not a valid Twig template.">
+        <source>This value is not a valid Twig template.</source>
+        <target>This value is not a valid Twig template.</target>
+      </trans-unit>
+      <trans-unit id="ZuGpyhA" resname="This file is not a valid video.">
+        <source>This file is not a valid video.</source>
+        <target>This file is not a valid video.</target>
+      </trans-unit>
+      <trans-unit id="7ZjICRC" resname="The size of the video could not be detected.">
+        <source>The size of the video could not be detected.</source>
+        <target>The size of the video could not be detected.</target>
+      </trans-unit>
+      <trans-unit id="WS2rIIU" resname="The video width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.">
+        <source>The video width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.</source>
+        <target>The video width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.</target>
+      </trans-unit>
+      <trans-unit id="Ey8lNRo" resname="The video width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.">
+        <source>The video width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.</source>
+        <target>The video width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.</target>
+      </trans-unit>
+      <trans-unit id="Liu7sjp" resname="The video height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.">
+        <source>The video height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.</source>
+        <target>The video height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.</target>
+      </trans-unit>
+      <trans-unit id="2FkdfHN" resname="The video height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.">
+        <source>The video height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.</source>
+        <target>The video height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.</target>
+      </trans-unit>
+      <trans-unit id="Dp2k5ge" resname="The video has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.">
+        <source>The video has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.</source>
+        <target>The video has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.</target>
+      </trans-unit>
+      <trans-unit id="IDGrrj_" resname="The video has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.">
+        <source>The video has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.</source>
+        <target>The video has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.</target>
+      </trans-unit>
+      <trans-unit id="J1cZmuA" resname="The video ratio is too big ({{ ratio }}). Allowed maximum ratio is {{ max_ratio }}.">
+        <source>The video ratio is too big ({{ ratio }}). Allowed maximum ratio is {{ max_ratio }}.</source>
+        <target>The video ratio is too big ({{ ratio }}). Allowed maximum ratio is {{ max_ratio }}.</target>
+      </trans-unit>
+      <trans-unit id="WQTwvFh" resname="The video ratio is too small ({{ ratio }}). Minimum ratio expected is {{ min_ratio }}.">
+        <source>The video ratio is too small ({{ ratio }}). Minimum ratio expected is {{ min_ratio }}.</source>
+        <target>The video ratio is too small ({{ ratio }}). Minimum ratio expected is {{ min_ratio }}.</target>
+      </trans-unit>
+      <trans-unit id="OT6Evve" resname="The video is square ({{ width }}x{{ height }}px). Square videos are not allowed.">
+        <source>The video is square ({{ width }}x{{ height }}px). Square videos are not allowed.</source>
+        <target>The video is square ({{ width }}x{{ height }}px). Square videos are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="mXgOwd4" resname="The video is landscape oriented ({{ width }}x{{ height }}px). Landscape oriented videos are not allowed.">
+        <source>The video is landscape oriented ({{ width }}x{{ height }}px). Landscape oriented videos are not allowed.</source>
+        <target>The video is landscape oriented ({{ width }}x{{ height }}px). Landscape oriented videos are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="VrsdBNF" resname="The video is portrait oriented ({{ width }}x{{ height }}px). Portrait oriented videos are not allowed.">
+        <source>The video is portrait oriented ({{ width }}x{{ height }}px). Portrait oriented videos are not allowed.</source>
+        <target>The video is portrait oriented ({{ width }}x{{ height }}px). Portrait oriented videos are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="x8fsjeI" resname="The video file is corrupted.">
+        <source>The video file is corrupted.</source>
+        <target>The video file is corrupted.</target>
+      </trans-unit>
+      <trans-unit id="nzXY1iu" resname="The video contains multiple streams. Only one stream is allowed.">
+        <source>The video contains multiple streams. Only one stream is allowed.</source>
+        <target>The video contains multiple streams. Only one stream is allowed.</target>
+      </trans-unit>
+      <trans-unit id="hCzL7Mv" resname="Unsupported video codec &quot;{{ codec }}&quot;.">
+        <source>Unsupported video codec "{{ codec }}".</source>
+        <target>Unsupported video codec "{{ codec }}".</target>
+      </trans-unit>
+      <trans-unit id="nTnX6nj" resname="Unsupported video container &quot;{{ container }}&quot;.">
+        <source>Unsupported video container "{{ container }}".</source>
+        <target>Unsupported video container "{{ container }}".</target>
+      </trans-unit>
+      <trans-unit id="jAJTV_I" resname="The image file is corrupted.">
+        <source>The image file is corrupted.</source>
+        <target>The image file is corrupted.</target>
+      </trans-unit>
+      <trans-unit id="aw1rRIE" resname="The image has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.">
+        <source>The image has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.</source>
+        <target>The image has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.</target>
+      </trans-unit>
+      <trans-unit id="KbWb1FD" resname="The image has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.">
+        <source>The image has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.</source>
+        <target>The image has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.</target>
+      </trans-unit>
+      <trans-unit id="tPeCNvN" resname="This filename does not match the expected charset.">
+        <source>This filename does not match the expected charset.</source>
+        <target>This filename does not match the expected charset.</target>
+      </trans-unit>
+      <trans-unit id="tDkL4Jc" resname="This form should not contain extra fields.">
+        <source>This form should not contain extra fields.</source>
+        <target>This form should not contain extra fields.</target>
+      </trans-unit>
+      <trans-unit id="SlPljy." resname="The uploaded file was too large. Please try to upload a smaller file.">
+        <source>The uploaded file was too large. Please try to upload a smaller file.</source>
+        <target>The uploaded file was too large. Please try to upload a smaller file.</target>
+      </trans-unit>
+      <trans-unit id="b_5.52u" resname="The CSRF token is invalid. Please try to resubmit the form.">
+        <source>The CSRF token is invalid. Please try to resubmit the form.</source>
+        <target>The CSRF token is invalid. Please try to resubmit the form.</target>
+      </trans-unit>
+      <trans-unit id="wlGn1pP" resname="This value is not a valid HTML5 color.">
+        <source>This value is not a valid HTML5 color.</source>
+        <target>This value is not a valid HTML5 color.</target>
+      </trans-unit>
+      <trans-unit id="e_2ZUCK" resname="Please enter a valid birthdate.">
+        <source>Please enter a valid birthdate.</source>
+        <target>Please enter a valid birthdate.</target>
+      </trans-unit>
+      <trans-unit id="TPma293" resname="The selected choice is invalid.">
+        <source>The selected choice is invalid.</source>
+        <target>The selected choice is invalid.</target>
+      </trans-unit>
+      <trans-unit id="Fkuy1Kw" resname="The collection is invalid.">
+        <source>The collection is invalid.</source>
+        <target>The collection is invalid.</target>
+      </trans-unit>
+      <trans-unit id="qiPYgGj" resname="Please select a valid color.">
+        <source>Please select a valid color.</source>
+        <target>Please select a valid color.</target>
+      </trans-unit>
+      <trans-unit id="qf.GaaJ" resname="Please select a valid country.">
+        <source>Please select a valid country.</source>
+        <target>Please select a valid country.</target>
+      </trans-unit>
+      <trans-unit id="WtFFCQ8" resname="Please select a valid currency.">
+        <source>Please select a valid currency.</source>
+        <target>Please select a valid currency.</target>
+      </trans-unit>
+      <trans-unit id="gwI.OzY" resname="Please choose a valid date interval.">
+        <source>Please choose a valid date interval.</source>
+        <target>Please choose a valid date interval.</target>
+      </trans-unit>
+      <trans-unit id="yeUbmWc" resname="Please enter a valid date and time.">
+        <source>Please enter a valid date and time.</source>
+        <target>Please enter a valid date and time.</target>
+      </trans-unit>
+      <trans-unit id="eC1bGok" resname="Please enter a valid date.">
+        <source>Please enter a valid date.</source>
+        <target>Please enter a valid date.</target>
+      </trans-unit>
+      <trans-unit id=".3DoUU." resname="Please select a valid file.">
+        <source>Please select a valid file.</source>
+        <target>Please select a valid file.</target>
+      </trans-unit>
+      <trans-unit id="wwjjKAn" resname="The hidden field is invalid.">
+        <source>The hidden field is invalid.</source>
+        <target>The hidden field is invalid.</target>
+      </trans-unit>
+      <trans-unit id="o.y86J1" resname="Please enter an integer.">
+        <source>Please enter an integer.</source>
+        <target>Please enter an integer.</target>
+      </trans-unit>
+      <trans-unit id="MhFFYoK" resname="Please select a valid language.">
+        <source>Please select a valid language.</source>
+        <target>Please select a valid language.</target>
+      </trans-unit>
+      <trans-unit id="LKAkY.h" resname="Please select a valid locale.">
+        <source>Please select a valid locale.</source>
+        <target>Please select a valid locale.</target>
+      </trans-unit>
+      <trans-unit id="GoIKSyM" resname="Please enter a valid money amount.">
+        <source>Please enter a valid money amount.</source>
+        <target>Please enter a valid money amount.</target>
+      </trans-unit>
+      <trans-unit id="c5ToMGG" resname="Please enter a number.">
+        <source>Please enter a number.</source>
+        <target>Please enter a number.</target>
+      </trans-unit>
+      <trans-unit id="AKUMRqn" resname="The password is invalid.">
+        <source>The password is invalid.</source>
+        <target>The password is invalid.</target>
+      </trans-unit>
+      <trans-unit id="HviZ2Cc" resname="Please enter a percentage value.">
+        <source>Please enter a percentage value.</source>
+        <target>Please enter a percentage value.</target>
+      </trans-unit>
+      <trans-unit id="u4rxsHj" resname="The values do not match.">
+        <source>The values do not match.</source>
+        <target>The values do not match.</target>
+      </trans-unit>
+      <trans-unit id="beHTTAG" resname="Please enter a valid time.">
+        <source>Please enter a valid time.</source>
+        <target>Please enter a valid time.</target>
+      </trans-unit>
+      <trans-unit id="MDu2tNQ" resname="Please select a valid timezone.">
+        <source>Please select a valid timezone.</source>
+        <target>Please select a valid timezone.</target>
+      </trans-unit>
+      <trans-unit id="ywSABzT" resname="Please enter a valid URL.">
+        <source>Please enter a valid URL.</source>
+        <target>Please enter a valid URL.</target>
+      </trans-unit>
+      <trans-unit id="58j92KU" resname="Please enter a valid search term.">
+        <source>Please enter a valid search term.</source>
+        <target>Please enter a valid search term.</target>
+      </trans-unit>
+      <trans-unit id="9RtYCIm" resname="Please provide a valid phone number.">
+        <source>Please provide a valid phone number.</source>
+        <target>Please provide a valid phone number.</target>
+      </trans-unit>
+      <trans-unit id="eXUouzq" resname="The checkbox has an invalid value.">
+        <source>The checkbox has an invalid value.</source>
+        <target>The checkbox has an invalid value.</target>
+      </trans-unit>
+      <trans-unit id="sv_zo_u" resname="Please enter a valid email address.">
+        <source>Please enter a valid email address.</source>
+        <target>Please enter a valid email address.</target>
+      </trans-unit>
+      <trans-unit id="WGMBjaJ" resname="Please select a valid option.">
+        <source>Please select a valid option.</source>
+        <target>Please select a valid option.</target>
+      </trans-unit>
+      <trans-unit id="X1pJkwv" resname="Please select a valid range.">
+        <source>Please select a valid range.</source>
+        <target>Please select a valid range.</target>
+      </trans-unit>
+      <trans-unit id="2MEQpjY" resname="Please enter a valid week.">
+        <source>Please enter a valid week.</source>
+        <target>Please enter a valid week.</target>
+      </trans-unit>
+      <trans-unit id="nnpDp2E" resname="user.validation.name_required">
+        <source>user.validation.name_required</source>
+        <target>__user.validation.name_required</target>
+      </trans-unit>
+      <trans-unit id="5iT.fNg" resname="user.validation.name_min_length">
+        <source>user.validation.name_min_length</source>
+        <target>__user.validation.name_min_length</target>
+      </trans-unit>
+      <trans-unit id="9cugrVY" resname="user.validation.name_max_length">
+        <source>user.validation.name_max_length</source>
+        <target>__user.validation.name_max_length</target>
+      </trans-unit>
+      <trans-unit id="pIrIYB7" resname="user.validation.email_required">
+        <source>user.validation.email_required</source>
+        <target>__user.validation.email_required</target>
+      </trans-unit>
+      <trans-unit id="68NHVXV" resname="user.validation.email_invalid">
+        <source>user.validation.email_invalid</source>
+        <target>__user.validation.email_invalid</target>
+      </trans-unit>
+      <trans-unit id="OVQY6k4" resname="user.validation.password_required">
+        <source>user.validation.password_required</source>
+        <target>__user.validation.password_required</target>
+      </trans-unit>
+      <trans-unit id="mah_225" resname="user.validation.password_min_length">
+        <source>user.validation.password_min_length</source>
+        <target>__user.validation.password_min_length</target>
+      </trans-unit>
+      <trans-unit id="wf4wXUZ" resname="The slug can only contain lowercase letters, numbers, and hyphens.">
+        <source>The slug can only contain lowercase letters, numbers, and hyphens.</source>
+        <target>__The slug can only contain lowercase letters, numbers, and hyphens.</target>
+      </trans-unit>
+      <trans-unit id="vsM4tSv" resname="There is already an account with this email">
+        <source>There is already an account with this email</source>
+        <target>__There is already an account with this email</target>
+      </trans-unit>
+      <trans-unit id="GJqJL4c" resname="student.mark_complete">
+        <source>student.mark_complete</source>
+        <target>Marcar como Completo</target>
+      </trans-unit>
+      <trans-unit id="19UPkQz" resname="student.end_course">
+        <source>student.end_course</source>
+        <target>Encerrar Curso</target>
+      </trans-unit>
+      <trans-unit id="iLabrI9" resname="student.your_progress">
+        <source>student.your_progress</source>
+        <target>Seu Progresso</target>
+      </trans-unit>
+      <trans-unit id="l3vivbq" resname="student.course_completed">
+        <source>student.course_completed</source>
+        <target>Curso Concluído</target>
+      </trans-unit>
+      <trans-unit id=".vnpa0G" resname="student.overall_completion">
+        <source>student.overall_completion</source>
+        <target>Conclusão Geral</target>
+      </trans-unit>
+      <trans-unit id="E3CdreQ" resname="student.enrolled">
+        <source>student.enrolled</source>
+        <target>Inscrito em</target>
+      </trans-unit>
+      <trans-unit id="p13GOZa" resname="student.last_accessed">
+        <source>student.last_accessed</source>
+        <target>Último Acesso</target>
+      </trans-unit>
+      <trans-unit id="JqnAUl0" resname="student.not_yet">
+        <source>student.not_yet</source>
+        <target>Ainda não</target>
+      </trans-unit>
+      <trans-unit id="i3qpuHZ" resname="student.completed_lectures">
+        <source>student.completed_lectures</source>
+        <target>Aulas Concluídas</target>
+      </trans-unit>
+      <trans-unit id="4xo1GKv" resname="student.watched">
+        <source>student.watched</source>
+        <target>Assistido</target>
+      </trans-unit>
+      <trans-unit id="sZgypO." resname="student.status">
+        <source>student.status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="dNMryfY" resname="student.singular">
+        <source>student.singular</source>
+        <target>Estudante</target>
+      </trans-unit>
+      <trans-unit id="QwPiY45" resname="student.my_courses">
+        <source>student.my_courses</source>
+        <target>Meus Cursos</target>
+      </trans-unit>
+      <trans-unit id="RRbciat" resname="student.back_to_courses">
+        <source>student.back_to_courses</source>
+        <target>Voltar para Meus Cursos</target>
+      </trans-unit>
+      <trans-unit id="dZ.YXcp" resname="student.complete">
+        <source>student.complete</source>
+        <target>Completo</target>
+      </trans-unit>
+      <trans-unit id="JeHij1V" resname="student.completed">
+        <source>student.completed</source>
+        <target>Concluído</target>
+      </trans-unit>
+      <trans-unit id="2iTTUsf" resname="certificate.title">
+        <source>certificate.title</source>
+        <target>Certificado</target>
+      </trans-unit>
+      <trans-unit id="XLSGFU." resname="certificate.view_certificate">
+        <source>certificate.view_certificate</source>
+        <target>Ver Certificado</target>
+      </trans-unit>
+      <trans-unit id="WVGIKac" resname="certificate.print">
+        <source>certificate.print</source>
+        <target>Imprimir Certificado</target>
+      </trans-unit>
+      <trans-unit id="W1O5Io6" resname="certificate.download_pdf">
+        <source>certificate.download_pdf</source>
+        <target>Baixar PDF</target>
+      </trans-unit>
+      <trans-unit id="QElPf9w" resname="certificate.back_to_course">
+        <source>certificate.back_to_course</source>
+        <target>Voltar ao Curso</target>
+      </trans-unit>
+      <trans-unit id="9GYAeqy" resname="certificate.text.this_certifies">
+        <source>certificate.text.this_certifies</source>
+        <target>Certifica-se que</target>
+      </trans-unit>
+      <trans-unit id="v2r5wN7" resname="certificate.text.has_successfully_completed">
+        <source>certificate.text.has_successfully_completed</source>
+        <target>concluiu com êxito o curso</target>
+      </trans-unit>
+      <trans-unit id="ZHo9BqW" resname="certificate.completion_date">
+        <source>certificate.completion_date</source>
+        <target>Data de Conclusão</target>
+      </trans-unit>
+      <trans-unit id="yi_Ao1C" resname="certificate.course_duration">
+        <source>certificate.course_duration</source>
+        <target>Duração Total</target>
+      </trans-unit>
+      <trans-unit id="H8Mml5O" resname="certificate.certificate_id">
+        <source>certificate.certificate_id</source>
+        <target>ID do Certificado</target>
+      </trans-unit>
+      <trans-unit id="_Dfs5XK" resname="certificate.hours">
+        <source>certificate.hours</source>
+        <target>horas</target>
+      </trans-unit>
+      <trans-unit id="IkIqRzW" resname="certificate.footer">
+        <source>certificate.footer</source>
+        <target>Este certificado é concedido em reconhecimento à conclusão bem-sucedida do curso acima mencionado e demonstra proficiência no assunto.</target>
+      </trans-unit>
+      <trans-unit id="5LtZkpW" resname="certificate.presented_to">
+        <source>certificate.presented_to</source>
+        <target>Apresentado a</target>
+      </trans-unit>
+      <trans-unit id="ycxK_dB" resname="certificate.credential_verification">
+        <source>certificate.credential_verification</source>
+        <target>Verificação de Credencial</target>
+      </trans-unit>
+      <trans-unit id="D_Gnfm2" resname="certificate.error.not_completed">
+        <source>certificate.error.not_completed</source>
+        <target>Você deve concluir o curso antes de acessar o certificado.</target>
+      </trans-unit>
+      <trans-unit id="ICAiDwV" resname="organization.form.logo">
+        <source>organization.form.logo</source>
+        <target>Logo da Organização</target>
+      </trans-unit>
+      <trans-unit id="w5y7IJG" resname="organization.form.logo_help">
+        <source>organization.form.logo_help</source>
+        <target>Envie uma imagem de logo (PNG, JPG - máx 2MB). Isso aparecerá nos certificados.</target>
+      </trans-unit>
+      <trans-unit id="YnKxTu9" resname="organization.validation.logo_mime_type">
+        <source>organization.validation.logo_mime_type</source>
+        <target>Por favor, envie um arquivo de imagem válido (PNG ou JPG).</target>
+      </trans-unit>
+      <trans-unit id="ctZsxEA" resname="entity.courses">
+        <source>entity.courses</source>
+        <target>cursos</target>
+        <note>Plural name for courses entity</note>
+      </trans-unit>
+      <trans-unit id="fXjh_ca" resname="entity.users">
+        <source>entity.users</source>
+        <target>usuários</target>
+        <note>Plural name for users entity</note>
+      </trans-unit>
+      <trans-unit id="I4QscXs" resname="entity.organizations">
+        <source>entity.organizations</source>
+        <target>organizações</target>
+        <note>Plural name for organizations entity</note>
+      </trans-unit>
+      <trans-unit id="8ze75e1" resname="empty.no_students_enrolled">
+        <source>empty.no_students_enrolled</source>
+        <target>__empty.no_students_enrolled</target>
+      </trans-unit>
+      <trans-unit id="54R4drR" resname="course.lecture.modal.new_title">
+        <source>course.lecture.modal.new_title</source>
+        <target>__course.lecture.modal.new_title</target>
+      </trans-unit>
+      <trans-unit id="9uzGajR" resname="button.save_changes">
+        <source>button.save_changes</source>
+        <target>__button.save_changes</target>
+      </trans-unit>
+      <trans-unit id="aWB0Z6q" resname="confirm.delete_entity">
+        <source>confirm.delete_entity</source>
+        <target>__confirm.delete_entity</target>
+      </trans-unit>
+      <trans-unit id="MlKDvIG" resname="organization.active">
+        <source>organization.active</source>
+        <target>Ativa</target>
+      </trans-unit>
+      <trans-unit id="OQRkk5f" resname="organization.inactive">
+        <source>organization.inactive</source>
+        <target>Inativa</target>
+      </trans-unit>
+      <trans-unit id="organization.status" resname="organization.status">
+        <source>organization.status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="HHpiMgn" resname="organization.users">
+        <source>organization.users</source>
+        <target>Usuários</target>
+      </trans-unit>
+      <trans-unit id="organization.courses" resname="organization.courses">
+        <source>organization.courses</source>
+        <target>Cursos</target>
+      </trans-unit>
+      <trans-unit id="organization.created_by" resname="organization.created_by">
+        <source>organization.created_by</source>
+        <target>Criado Por</target>
+      </trans-unit>
+      <trans-unit id="AtmFGaY" resname="organization.by">
+        <source>organization.by</source>
+        <target>__organization.by</target>
+      </trans-unit>
+      <trans-unit id="Uu6lJP5" resname="user.locked">
+        <source>user.locked</source>
+        <target>__user.locked</target>
+      </trans-unit>
+      <trans-unit id="PJ7NBc0" resname="user.courses_owned">
+        <source>user.courses_owned</source>
+        <target>__user.courses_owned</target>
+      </trans-unit>
+      <trans-unit id="gaRbJiz" resname="user.courses_enrolled">
+        <source>user.courses_enrolled</source>
+        <target>__user.courses_enrolled</target>
+      </trans-unit>
+      <trans-unit id="3bbjNSU" resname="user.courses_label">
+        <source>user.courses_label</source>
+        <target>__user.courses_label</target>
+      </trans-unit>
+      <trans-unit id="iIkrEK7" resname="user.roles">
+        <source>user.roles</source>
+        <target>__user.roles</target>
+      </trans-unit>
+      <trans-unit id="evu_of7" resname="user.courses">
+        <source>user.courses</source>
+        <target>__user.courses</target>
+      </trans-unit>
+      <trans-unit id="qIM3nMY" resname="user.last_login">
+        <source>user.last_login</source>
+        <target>__user.last_login</target>
+      </trans-unit>
+      <trans-unit id="g0bR3Mx" resname="user.never_logged_in">
+        <source>user.never_logged_in</source>
+        <target>__user.never_logged_in</target>
+      </trans-unit>
+      <trans-unit id="Ch0BwH3" resname="course.lecture.processing">
+        <source>course.lecture.processing</source>
+        <target>__course.lecture.processing</target>
+      </trans-unit>
+      <trans-unit id="GEU2cBS" resname="course.lecture.processing_description">
+        <source>course.lecture.processing_description</source>
+        <target>__course.lecture.processing_description</target>
+      </trans-unit>
+      <trans-unit id="QdP3hDC" resname="button.refresh">
+        <source>button.refresh</source>
+        <target>__button.refresh</target>
+      </trans-unit>
+      <trans-unit id="ichBmUZ" resname="course.lecture.failed">
+        <source>course.lecture.failed</source>
+        <target>__course.lecture.failed</target>
+      </trans-unit>
+      <trans-unit id="XjDv5G4" resname="course.lecture.failed_description">
+        <source>course.lecture.failed_description</source>
+        <target>__course.lecture.failed_description</target>
+      </trans-unit>
+      <trans-unit id="8pmE91h" resname="course.lecture.no_video">
+        <source>course.lecture.no_video</source>
+        <target>__course.lecture.no_video</target>
+      </trans-unit>
+      <trans-unit id="pTLJTcS" resname="course.lecture.no_video_description">
+        <source>course.lecture.no_video_description</source>
+        <target>__course.lecture.no_video_description</target>
+      </trans-unit>
+      <trans-unit id="MjBM_P6" resname="course.lecture.duration">
+        <source>course.lecture.duration</source>
+        <target>__course.lecture.duration</target>
+      </trans-unit>
+      <trans-unit id="IuWdwGc" resname="student.in_progress">
+        <source>student.in_progress</source>
+        <target>__student.in_progress</target>
+      </trans-unit>
+      <trans-unit id="qZ7pzxw" resname="student.not_started">
+        <source>student.not_started</source>
+        <target>__student.not_started</target>
+      </trans-unit>
+      <trans-unit id="pJCu5.C" resname="student.watch_progress">
+        <source>student.watch_progress</source>
+        <target>__student.watch_progress</target>
+      </trans-unit>
+      <trans-unit id="kF.ua_z" resname="course.overall_progress">
+        <source>course.overall_progress</source>
+        <target>__course.overall_progress</target>
+      </trans-unit>
+      <trans-unit id="6UOHozQ" resname="student.courses_subtitle">
+        <source>student.courses_subtitle</source>
+        <target>__student.courses_subtitle</target>
+      </trans-unit>
+      <trans-unit id="893aZY." resname="student.no_courses">
+        <source>student.no_courses</source>
+        <target>__student.no_courses</target>
+      </trans-unit>
+      <trans-unit id="CuVwr7Y" resname="student.no_courses_description">
+        <source>student.no_courses_description</source>
+        <target>__student.no_courses_description</target>
+      </trans-unit>
+      <trans-unit id="5PLKzOV" resname="student.progress">
+        <source>student.progress</source>
+        <target>__student.progress</target>
+      </trans-unit>
+      <trans-unit id="nuCk8Iy" resname="student.current">
+        <source>student.current</source>
+        <target>__student.current</target>
+      </trans-unit>
+      <trans-unit id="CqnUDWq" resname="student.enrolled_on">
+        <source>student.enrolled_on</source>
+        <target>__student.enrolled_on</target>
+      </trans-unit>
+      <trans-unit id="1KfxDYb" resname="student.continue">
+        <source>student.continue</source>
+        <target>__student.continue</target>
+      </trans-unit>
+      <trans-unit id="U1vi9w3" resname="student.review">
+        <source>student.review</source>
+        <target>__student.review</target>
+      </trans-unit>
+      <trans-unit id="ElgzKTx" resname="student.start">
+        <source>student.start</source>
+        <target>__student.start</target>
+      </trans-unit>
+      <trans-unit id="AHphh_D" resname="student.total_courses">
+        <source>student.total_courses</source>
+        <target>__student.total_courses</target>
+      </trans-unit>
+      <trans-unit id="K3B6LVr" resname="student.completed_courses">
+        <source>student.completed_courses</source>
+        <target>__student.completed_courses</target>
+      </trans-unit>
+      <trans-unit id="C2pgcDs" resname="student.in_progress_courses">
+        <source>student.in_progress_courses</source>
+        <target>__student.in_progress_courses</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

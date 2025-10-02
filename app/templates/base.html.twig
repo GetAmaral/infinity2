@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{{ 'branding.infinity_crm'|trans }}{% endblock %}</title>
+    <title>{% block title %}{{ 'branding.infinity.crm'|trans }}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,8 +18,8 @@
     <nav class="navbar infinity-navbar">
         <div class="container">
             <a class="navbar-brand text-white d-flex align-items-center" href="{{ path('app_home') }}">
-                <img src="/infinity_logo_sm_dark.png" alt="{{ 'misc.infinity_alt'|trans }}" height="32" class="me-2 logo-dark-theme">
-                <img src="/infinity_logo_sm_light.png" alt="{{ 'misc.infinity_alt'|trans }}" height="32" class="me-2 logo-light-theme">
+                <img src="/infinity_logo_sm_dark.png" alt="{{ 'misc.infinity.alt'|trans }}" height="32" class="me-2 logo-dark-theme">
+                <img src="/infinity_logo_sm_light.png" alt="{{ 'misc.infinity.alt'|trans }}" height="32" class="me-2 logo-light-theme">
                 <span class="fw-bold text-gradient">{{ 'nav.infinity'|trans }}</span>
             </a>
 
@@ -27,7 +27,7 @@
                 {% if app.user %}
                 <!-- Hamburger Menu Button -->
                 <div class="dropdown">
-                    <button class="nav-link text-white d-flex align-items-center navbar-menu-btn" type="button" id="navDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'nav.toggle_navigation'|trans }}">
+                    <button class="nav-link text-white d-flex align-items-center navbar-menu-btn" type="button" id="navDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'nav.toggle.navigation'|trans }}">
                         <i class="bi bi-list fs-4"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 200px;">
@@ -38,7 +38,7 @@
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ path('student_courses') }}">
-                                <i class="bi bi-mortarboard me-2"></i>{{ 'nav.my_courses'|trans }}
+                                <i class="bi bi-mortarboard me-2"></i>{{ 'nav.my.courses'|trans }}
                             </a>
                         </li>
                         <li>
@@ -64,13 +64,15 @@
                 {% set orgs = available_organizations() %}
                 <!-- Organization Switcher (Admin/Super Admin Only) -->
                 <div class="dropdown">
-                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher_title'|trans }}">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher.title'|trans }}">
                         {% if current_organization() %}
-                            {{ org_logo.logo(current_organization(), 'xs', 'me-2') }}
+                            <div class="me-2">
+                                {{ org_logo.logo(current_organization(), 'xs') }}
+                            </div>
                         {% else %}
                             <i class="bi bi-globe me-2"></i>
                         {% endif %}
-                        <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'organization.all_organizations'|trans }}</span>
+                        <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'organization.all.organizations'|trans }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="orgDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
                         <li class="px-3 py-2 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
@@ -82,7 +84,7 @@
                             <form method="post" action="{{ path('app_organization_switcher_clear') }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token('organization_clear') }}">
                                 <button type="submit" class="dropdown-item">
-                                    <i class="bi bi-globe me-2"></i>{{ 'organization.all_organizations_root'|trans }}
+                                    <i class="bi bi-globe me-2"></i>{{ 'organization.all.organizations.root'|trans }}
                                 </button>
                             </form>
                         </li>
@@ -92,9 +94,9 @@
                         <li>
                             <form method="post" action="{{ path('app_organization_switcher_switch', {'id': org.id}) }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token('organization_switch_' ~ org.id) }}">
-                                <button type="submit" class="dropdown-item d-flex align-items-start gap-2 {% if current_organization() and current_organization().id == org.id %}active{% endif %}">
-                                    <div class="flex-shrink-0 mt-1">
-                                        {{ org_logo.logo(org, 'xs') }}
+                                <button type="submit" class="dropdown-item d-flex align-items-center gap-2 {% if current_organization() and current_organization().id == org.id %}active{% endif %}">
+                                    <div class="flex-shrink-0">
+                                        {{ org_logo.logo(org, 'sm') }}
                                     </div>
                                     <div class="flex-grow-1">
                                         {{ org.name }}
@@ -134,10 +136,8 @@
                                     <div class="text-white fw-bold" style="font-size: 0.95rem;">{{ app.user.name }}</div>
                                     <div class="text-muted" style="font-size: 0.8rem;">{{ app.user.email }}</div>
                                     {% if current_organization() %}
-                                    <div class="text-muted d-flex align-items-center gap-1" style="font-size: 0.7rem;">
-                                        <div style="width: 12px; height: 12px;">
-                                            {{ org_logo.logo(current_organization(), 'xs') }}
-                                        </div>
+                                    <div class="text-muted d-flex align-items-center gap-2" style="font-size: 0.7rem;">
+                                        {{ org_logo.logo(current_organization(), 'xs') }}
                                         {{ current_organization().name }}
                                     </div>
                                     {% endif %}
@@ -235,10 +235,10 @@
 
                 if (this.current === 'light') {
                     if (icon) icon.className = 'bi bi-moon-stars me-2';
-                    if (text) text.textContent = '{{ 'theme.switch_to_dark'|trans }}';
+                    if (text) text.textContent = '{{ 'theme.switch.to.dark'|trans }}';
                 } else {
                     if (icon) icon.className = 'bi bi-sun me-2';
-                    if (text) text.textContent = '{{ 'theme.switch_to_light'|trans }}';
+                    if (text) text.textContent = '{{ 'theme.switch.to.light'|trans }}';
                 }
             }
             };

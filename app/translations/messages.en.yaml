@@ -1,0 +1,1238 @@
+# Symfony Translation File
+# Converted from XLIFF on 2025-10-01 08:17:28
+# Format: YAML with preserved structure and sections
+
+# ========================================
+# Navigation
+# ========================================
+# Application brand name in navigation
+nav.infinity: Infinity
+# Home navigation link
+nav.home: Home
+# Organizations navigation link
+nav.organizations: Organizations
+# Users navigation link
+nav.users: Users
+# Courses navigation link
+nav.courses: Courses
+# Settings navigation link
+nav.settings: Settings
+# Language selector in navigation
+nav.language: Language
+
+# ========================================
+# Home Page
+# ========================================
+# Main title on home page
+home.title: Welcome to Infinity
+# Subtitle on home page
+home.subtitle: Modern Symfony Application
+# Main description on home page
+home.description: A complete enterprise-ready Symfony 7.3 application featuring PostgreSQL 18, Redis 7, FrankenPHP 1.9, and modern development practices.
+# Button text for viewing organizations
+home.view_organizations: View Organizations
+# Button text for viewing users
+home.view_users: View Users
+
+# ========================================
+# Organization Pages
+# ========================================
+# Plural form - organizations list/page title
+organization.title: Organizations
+# Singular form - single organization reference
+organization.singular: Organization
+# Organization name field label
+organization.name: Name
+# Organization description field label
+organization.description: Description
+# Users count with pluralization
+organization.users_count: '%count% user|%count% users'
+# Zero users message
+organization.no_users: No users
+# Button text to view organization details
+organization.view_details: View Details
+# Link to organization API endpoint
+organization.api_link: API
+# Link to go back to organizations list
+organization.back_to_list: Back to Organizations
+# Organization creation date label
+organization.created_at: Created
+# Organization last update date label
+organization.updated_at: Updated
+# Section title for users list in organization
+organization.users_in_organization: Users in this Organization
+
+# ========================================
+# Organization CRUD Forms
+# ========================================
+organization.form.name: Organization Name
+organization.form.name_placeholder: Enter organization name
+organization.form.description: Description
+organization.form.description_placeholder: Describe the organization's purpose and activities
+organization.form.preview: Live Preview
+
+# ========================================
+# Organization Modals
+# ========================================
+organization.modal.create_title: Create New Organization
+organization.modal.create_subtitle: Add a new organization to your system
+organization.modal.edit_title: Edit %name%
+organization.modal.edit_subtitle: Update organization details
+organization.modal.create_tip: Organization names should be descriptive and unique within your system.
+
+# ========================================
+# Organization Actions
+# ========================================
+organization.manage_users: Manage Users
+organization.confirm_delete: 'Are you sure you want to delete "%name%"?'
+organization.new_organization: New Organization
+organization.search_placeholder: Search organizations...
+
+# ========================================
+# Organization Flash Messages
+# ========================================
+organization.flash.created_successfully: 'Organization created successfully!'
+organization.flash.updated_successfully: 'Organization updated successfully!'
+organization.flash.deleted_successfully: 'Organization deleted successfully!'
+organization.flash.save_success: 'Changes saved successfully!'
+organization.flash.save_success_description: The organization has been updated with your changes.
+organization.flash.save_error: Failed to save organization
+organization.flash.cannot_delete_has_users: Cannot delete organization with assigned users
+organization.flash.invalid_csrf_token: Invalid security token. Please try again.
+
+# ========================================
+# Organization Validation
+# ========================================
+organization.validation.name_required: Organization name is required
+organization.validation.name_min_length: Organization name must be at least 2 characters long
+organization.validation.name_max_length: Organization name cannot exceed 255 characters
+organization.validation.description_max_length: Description cannot exceed 1000 characters
+
+# ========================================
+# User Pages
+# ========================================
+# Plural form - users list/page title
+user.title: Users
+# Singular form - single user reference
+user.singular: User
+# User name field label
+user.name: Name
+# User email field label
+user.email: Email
+# User organization field label
+user.organization: Organization
+# Button text to view user details
+user.view_details: View Details
+# Link to user API endpoint
+user.api_link: API
+# Link to go back to users list
+user.back_to_list: Back to Users
+# User creation date label
+user.created_at: Created
+# User last update date label
+user.updated_at: Updated
+# Link to view user's organization
+user.view_organization: View Organization
+
+# ========================================
+# Settings Page
+# ========================================
+# Settings page title
+settings.title: Settings
+# Language preferences section title
+settings.language_preferences: Language Preferences
+# Current language label
+settings.current_language: Current Language
+# Language selection label
+settings.choose_language: Choose Language
+# Save button text
+settings.save_changes: Save Changes
+# Success message after saving language
+settings.language_saved: 'Language preference saved successfully!'
+# UI preferences section title
+settings.ui_preferences: UI Preferences
+# Enable animations checkbox label
+settings.enable_animations: Enable Animations
+# Enable sound effects checkbox label
+settings.enable_sound: Enable Sound Effects
+# Compact mode checkbox label
+settings.compact_mode: Compact Mode
+# Items per page label
+settings.items_per_page: Items Per Page
+
+# ========================================
+# Language Names
+# ========================================
+# English language name
+language.en: English
+# Portuguese (Brazil) language name
+language.pt_BR: Português (Brasil)
+
+# ========================================
+# Common Actions
+# ========================================
+# Generic save action
+action.save: Save
+# Generic cancel action
+action.cancel: Cancel
+# Generic edit action
+action.edit: Edit
+# Generic delete action
+action.delete: Delete
+# Generic view action
+action.view: View
+
+# ========================================
+# Date/Time Formatting
+# ========================================
+# Date format for English locale
+date.format: M/d/Y
+# DateTime format for English locale
+datetime.format: 'M/d/Y g:i A'
+
+# ========================================
+# General UI Text
+# ========================================
+# Artificial Intelligence abbreviation
+ui.ai: AI
+# Active status indicator
+ui.active: Active
+# Account menu label
+ui.account: Account
+# Dashboard page title
+ui.dashboard: Dashboard
+# Link to go back to dashboard
+ui.back_to_dashboard: Back to Dashboard
+
+# ========================================
+# Empty States
+# ========================================
+# Message when no description is provided
+empty.no_description: No description available
+# Empty state title for contacts
+empty.no_contacts_yet: No Contacts Yet
+# Empty state title for organizations
+empty.no_organizations_yet: No Organizations Yet
+# Empty state description for contacts
+empty.contact_description: Start building your network by adding your first contact. Our AI will help you manage relationships and provide valuable insights.
+# Empty state description for organizations
+empty.organization_description: Start building your business relationships by creating your first organization. Our AI will help you manage and grow these connections.
+# Empty state description for organization contacts
+empty.organization_contacts_description: Start building relationships by adding contacts to this organization.
+# Empty state description for course lectures
+empty.course_lectures_description: Start building your course by adding the first lecture.
+
+# ========================================
+# Buttons
+# ========================================
+# Button to add new organization
+button.add_organization: Add Organization
+# Button to add new contact
+button.add_contact: Add Contact
+# Button to add first contact
+button.add_first_contact: Add First Contact
+# Button to create first organization
+button.create_first_organization: Create First Organization
+
+# ========================================
+# CRUD Buttons
+# ========================================
+button.edit: Edit
+button.delete: Delete
+button.cancel: Cancel
+button.close: Close
+button.reset: Reset
+button.reset_form: Reset Form
+button.filter: Filter
+button.clear_search: Clear search
+button.create_organization: Create Organization
+button.update_organization: Update Organization
+button.creating: Creating...
+button.updating: Updating...
+
+# ========================================
+# Form and Validation
+# ========================================
+form.validation_errors: Please correct the errors below
+
+# ========================================
+# Filters
+# ========================================
+filter.active_organizations: Active Organizations
+filter.empty_organizations: Organizations without Users
+filter.all: All
+
+# ========================================
+# Views
+# ========================================
+view.grid: Grid View
+view.list: List View
+view.table: Table View
+table.actions: Actions
+# Hint for mobile users to scroll table horizontally
+table.swipe_to_see_more: Swipe to see more
+# Button to edit contact
+button.edit_contact: Edit Contact
+# Button to send email
+button.send_email: Send Email
+# Button to send message
+button.send_message: Send Message
+# Button to call contact
+button.call_contact: Call Contact
+# Button to schedule meeting
+button.schedule_meeting: Schedule Meeting
+# Button to share contact
+button.share_contact: Share Contact
+# Button to start AI chat
+button.start_ai_chat: Start AI Chat
+
+# ========================================
+# Metrics and Statistics
+# ========================================
+# Label for total contacts metric
+metric.total_contacts: Total Contacts
+# Label for AI interactions metric
+metric.ai_interactions: AI Interactions
+# System uptime metric
+metric.uptime: Uptime
+# System response time metric
+metric.response_time: Response Time
+# Security encryption metric
+metric.encryption: Encryption
+
+# ========================================
+# Page Descriptions
+# ========================================
+# Users page description
+page.user_description: AI-powered contact management and relationship insights
+# Organizations page description
+page.organization_description: Manage your business relationships with AI insights
+# Settings page description
+page.settings_description: Customize your Infinity CRM experience
+
+# ========================================
+# AI Features
+# ========================================
+# AI insights section title
+ai.insights: AI Insights
+# AI assistant title
+ai.assistant: AI Assistant
+# AI chat feature
+ai.chat: AI Chat
+# Analytics feature
+ai.analytics: Analytics
+# Quick actions section
+ai.quick_actions: Quick Actions
+# AI-powered CRM features section
+ai.powered_crm: AI-Powered CRM Features
+# Conversational AI feature
+ai.conversational: Conversational AI
+# Conversational AI description
+ai.conversational_description: Voice commands, WhatsApp integration, and natural language processing
+# Predictive analytics feature
+ai.predictive_analytics: Predictive Analytics
+# Predictive analytics description
+ai.predictive_description: AI-driven insights and customer behavior predictions
+# Smart automation feature
+ai.smart_automation: Smart Automation
+# Smart automation description
+ai.automation_description: Intelligent workflows and automated customer interactions
+# AI chat coming soon message
+ai.coming_soon: AI Chat coming soon...
+# AI settings section
+ai.settings: AI Settings
+# AI settings description
+ai.settings_description: Configure AI assistant behavior and preferences
+# AI assistant prompt
+ai.crm_question: Ask me anything about your CRM
+
+# ========================================
+# Insights and Status
+# ========================================
+# High engagement AI insight
+insight.high_engagement: High engagement score
+# Active communicator AI insight
+insight.active_communicator: Active communicator
+# Key relationship AI insight
+insight.key_relationship: Key relationship
+# Strong engagement AI insight
+insight.strong_engagement: Strong engagement metrics
+# Growth potential AI insight
+insight.growth_potential: Growth potential identified
+# High relationship score AI insight
+insight.high_relationship_score: High relationship score
+# Active organization status
+insight.active_organization: Active organization
+
+# ========================================
+# System Information
+# ========================================
+# System performance section
+system.performance: System Performance
+# System information section
+system.information: System Information
+# System status label
+system.status: System Status
+# Security status label
+system.security_status: 'Security Status:'
+# Security status message
+system.security_message: All systems secure and up to date
+# System version label
+system.version: Version
+# System runtime label
+system.runtime: Runtime
+# System framework label
+system.framework: Framework
+# System database label
+system.database: Database
+
+# ========================================
+# Theme Settings
+# ========================================
+# Theme settings section
+theme.settings: Theme Settings
+# Dark theme option
+theme.dark: Dark Theme
+# Light theme option
+theme.light: Light Theme
+# Dark theme description
+theme.dark_description: Modern dark interface with neon accents
+# Light theme description
+theme.light_description: Clean light interface with vibrant colors
+
+# ========================================
+# Contact Information
+# ========================================
+# Contact information section
+contact.information: Contact Information
+# Last activity label
+contact.last_activity: Last Activity
+# Member since label
+contact.member_since: Member Since
+# Active user status
+contact.active_user: Active user
+
+# ========================================
+# Misc UI Elements
+# ========================================
+# Contacts section title
+misc.contacts_section: Contacts
+# Coming soon label
+misc.coming_soon: Coming Soon
+# Voice commands tooltip
+misc.voice_commands: Voice Commands
+# AI insights tooltip
+misc.ai_insights_tooltip: AI Insights
+# Quick actions tooltip
+misc.quick_actions_tooltip: Quick Actions
+
+# ========================================
+# Authentication
+# ========================================
+# Login page title
+auth.login: Login
+# Registration page title
+auth.register: Register
+# Login welcome message
+auth.welcome_back: Welcome Back
+# Login instruction
+auth.login_to_continue: Sign in to continue to your account
+# Email field label
+auth.email: Email Address
+# Password field label
+auth.password: Password
+# Remember me checkbox
+auth.remember_me: Remember me
+# Sign in button
+auth.sign_in: Sign In
+# Link to registration
+auth.no_account: 'Don''t have an account?'
+# Register link text
+auth.register_now: Register now
+# Create account heading
+auth.create_account: Create Account
+# Registration invitation
+auth.join_infinity: Join Infinity and start managing your data
+# Full name field label
+auth.full_name: Full Name
+# Confirm password field label
+auth.confirm_password: Confirm Password
+# Password requirements hint
+auth.password_requirements: Minimum 8 characters required
+# Create account button
+auth.create_account_button: Create Account
+# Link to login
+auth.already_have_account: 'Already have an account?'
+# Password mismatch error
+auth.passwords_do_not_match: Passwords do not match
+# Registration success message
+auth.registration_successful: 'Registration successful! You can now log in.'
+# Registration error message
+auth.registration_failed: Registration failed. Please try again.
+# Logout link
+auth.logout: Logout
+
+# ========================================
+# API Tokens
+# ========================================
+# API tokens page title
+token.title: API Tokens
+# API tokens page description
+token.description: Manage your API access tokens
+# Current token section heading
+token.current_token: Current API Token
+# Active token label
+token.active_token: Active Token
+# Token expiration label
+token.expires: Expires
+# Token input label
+token.your_token: Your API Token
+# Copy button
+token.copy: Copy
+# Copied confirmation
+token.copied: Copied
+# Token security warning
+token.copy_warning: Keep this token secure. It provides full access to your account via the API.
+# Revoke button
+token.revoke: Revoke Token
+# Revoke confirmation
+token.revoke_confirm: 'Are you sure you want to revoke this token? Applications using it will lose access.'
+# No token message
+token.no_active_token: You don't have an active API token
+# Generate button
+token.generate: Generate New Token
+# Usage section heading
+token.usage_instructions: Usage Instructions
+# Usage description
+token.usage_description: 'Use your API token in the Authorization header of your requests:'
+# Security tips heading
+token.security_tips: Security Best Practices
+# Security tip 1
+token.tip_1: Never share your API token publicly
+# Security tip 2
+token.tip_2: Revoke tokens immediately if compromised
+# Security tip 3
+token.tip_3: Use environment variables to store tokens in applications
+# Security tip 4
+token.tip_4: Regenerate tokens periodically for better security
+# Info card heading
+token.info_title: Token Information
+# Validity period label
+token.validity_period: Validity Period
+# 30 days validity
+token.validity_30_days: 30 days
+# Access level label
+token.access_level: Access Level
+# Full access description
+token.full_api_access: Full API Access
+# Regeneration label
+token.regeneration: Regeneration
+# Regeneration description
+token.regeneration_description: Revoke old token before generating new one
+# Active tokens metric
+token.active_tokens: Active Tokens
+# Secure status
+token.secure: Secured
+# No token status
+token.no_token: No Token
+# Generation success message
+token.generated_successfully: 'API token generated successfully!'
+# Revocation success message
+token.revoked_successfully: API token revoked successfully
+# CSRF error message
+token.csrf_invalid: Invalid security token
+
+# ========================================
+# Missing User Translations
+# ========================================
+button.add_user: Add User
+button.add_first_user: Add First User
+button.update_user: Update User
+button.create_user: Create User
+course.button.create_course: Create Course
+course.lecture.button.add_lecture: Add Lecture
+user.new_user: New User
+user.confirm_delete: 'Are you sure you want to delete %name%?'
+user.modal.edit_subtitle: Update user information and permissions
+user.modal.create_subtitle: Add a new user to the system
+user.form.name_placeholder: Enter full name
+user.form.email_placeholder: Enter email address
+user.form.password_placeholder: Enter password
+user.form.password_confirm_placeholder: Confirm password
+
+# ========================================
+# Missing Organization Translations
+# ========================================
+organization.back_to_organization: Back to Organization
+organization.back_to_details: Back to Details
+organization.statistics: Statistics
+organization.total_users: Total Users
+organization.switcher.title: Change Your Organization
+organization.switcher.subtitle: This will update your account
+
+# ========================================
+# Missing Filter Translations
+# ========================================
+filter.active_users: Active Users
+filter.by_organization: By Organization
+
+# ========================================
+# Missing Empty State Translations
+# ========================================
+empty.no_users_yet: No users yet
+empty.organization_users_description: Start building your team by adding the first user
+empty.no_organization: No organization
+
+# ========================================
+# Page Titles & Descriptions
+# ========================================
+page.ai_powered_crm: AI-Powered CRM Dashboard
+page.organization_details: Organization Details
+page.manage_users: Manage Users
+page.infinity_suffix: Infinity
+
+# ========================================
+# Status Badges
+# ========================================
+badge.ai_enhanced: AI Enhanced
+badge.real_time: Real-time
+badge.organization: Organization
+
+# ========================================
+# Metric Trends
+# ========================================
+metric.trend.this_month: +12% this month
+metric.trend.new_count: +3 new
+metric.trend.today: +15% today
+metric.response_time_value: '< 200ms'
+
+# ========================================
+# Pagination & Table
+# ========================================
+pagination.showing: Showing
+pagination.to: to
+pagination.of: of
+pagination.show_label: Show
+table.aria_label: users table
+
+# ========================================
+# Confirmation Messages
+# ========================================
+confirm.delete_item: 'Are you sure you want to delete this item?'
+
+# ========================================
+# Delete Modal
+# ========================================
+modal.delete.title: Confirm Deletion
+modal.delete.cannot_undo: This action cannot be undone.
+modal.delete.confirm_message: Are you sure you want to delete
+modal.delete.cancel: Cancel
+modal.delete.yes_delete: Yes, Delete It
+modal.delete.deleting: Deleting...
+modal.delete.success: Item deleted successfully
+modal.delete.failed: Failed to delete item
+modal.delete.network_error: Network error occurred
+
+# ========================================
+# CRUD Modal
+# ========================================
+modal.crud.saving: Saving...
+modal.crud.unsaved_changes: 'You have unsaved changes. Are you sure you want to discard them?'
+modal.crud.continue_editing: Continue Editing
+modal.crud.discard_changes: Discard Changes
+modal.crud.error_saving: An error occurred while saving. Please try again.
+
+# ========================================
+# Modal Opener Errors
+# ========================================
+modal.error.failed_to_open: Failed to open form. Please try again.
+
+# ========================================
+# Search Errors
+# ========================================
+search.error.failed: Search failed. Please try again.
+search.error.failed_to_load: Failed to load data
+
+# ========================================
+# Course Translations
+# ========================================
+# Plural form - courses list/page title
+course.title: Courses
+# Singular form - single course reference
+course.singular: Course
+course.name: Course Name
+course.description: Description
+course.status: Status
+course.status.active: Active
+course.status.inactive: Inactive
+course.owner: Owner
+# Plural form - multiple lectures
+course.lectures: Lectures
+# Singular form - single lecture reference
+course.lecture.singular: Lecture
+course.lectures_count: Lectures
+# Number of enrolled students
+course.students: Students
+# Course duration/length
+course.duration: Duration
+# Course date (release or created)
+course.date: Date
+course.release_date: Release Date
+course.total_length: Total Length
+course.hours: hours
+course.information: Course Information
+course.created_at: Created At
+course.updated_at: Updated At
+course.view_details: View Details
+course.back_to_list: Back to Courses
+course.manage_lectures: Manage Lectures
+course.no_lectures: No lectures
+course.lectures_in_course: Lectures in Course
+course.total_duration: Total Duration
+course.total_lectures: Total Lectures
+course.no_release_date: No release date
+
+# ========================================
+# Course Form
+# ========================================
+course.form.name: Course Name
+course.form.name_placeholder: Enter course name
+course.form.description: Description
+course.form.description_placeholder: Enter course description
+course.form.active: Active Course
+course.form.release_date: Release Date
+course.form.total_length: Total Length (hours)
+course.form.total_length_placeholder: 0.0
+
+# ========================================
+# Course Validation
+# ========================================
+course.validation.name_required: Course name is required
+course.validation.name_min_length: Course name must be at least 2 characters
+course.validation.name_max_length: Course name cannot exceed 255 characters
+course.validation.description_max_length: Description cannot exceed 5000 characters
+course.validation.total_length_positive: Total length must be zero or positive
+
+# ========================================
+# Course Flash Messages
+# ========================================
+course.flash.created_successfully: Course created successfully
+course.flash.updated_successfully: Course updated successfully
+course.flash.deleted_successfully: Course deleted successfully
+course.flash.invalid_csrf_token: Invalid security token
+
+# ========================================
+# Course Modal
+# ========================================
+course.modal.create_title: Create New Course
+course.modal.create_subtitle: Create a new course
+course.modal.create_tip: Fill in the course details below. You can add lectures after creating the course.
+course.modal.edit_title: Edit Course
+course.modal.edit_subtitle: Update course information
+
+# ========================================
+# Course Lecture Translations
+# ========================================
+course.lecture.form.name: Lecture Name
+course.lecture.form.name_placeholder: Enter lecture name
+course.lecture.form.description: Description
+course.lecture.form.description_placeholder: Enter lecture description
+course.lecture.form.video_file: Video File
+course.lecture.form.view_order: Order
+course.lecture.form.view_order_placeholder: 1
+course.lecture.watch_video: Watch Video
+
+# ========================================
+# Course Lecture Validation
+# ========================================
+course.lecture.validation.name_required: Lecture name is required
+course.lecture.validation.name_min_length: Lecture name must be at least 2 characters
+course.lecture.validation.name_max_length: Lecture name cannot exceed 255 characters
+course.lecture.validation.description_max_length: Description cannot exceed 5000 characters
+course.lecture.validation.invalid_video_format: Please upload a valid video file (MP4, WebM, OGG, MOV)
+course.lecture.validation.view_order_positive: Order must be zero or positive
+
+# ========================================
+# Course Lecture Status
+# ========================================
+course.lecture.status.pending: Pending Processing
+course.lecture.status.processing: Processing...
+course.lecture.status.completed: Ready
+course.lecture.status.failed: Processing Failed
+
+# ========================================
+# Course Lecture Flash Messages
+# ========================================
+course.lecture.flash.created_successfully: Lecture created successfully
+course.lecture.flash.updated_successfully: Lecture updated successfully
+course.lecture.flash.deleted_successfully: Lecture deleted successfully
+course.lecture.flash.invalid_csrf_token: Invalid security token
+
+# ========================================
+# Course Lecture Modal
+# ========================================
+course.lecture.modal.create_title: Add New Lecture
+course.lecture.modal.create_subtitle: Add a new lecture to the course
+course.lecture.modal.create_tip: Fill in the lecture details below. The order determines the sequence in the course.
+course.lecture.modal.edit_title: Edit Lecture
+course.lecture.modal.edit_subtitle: Update lecture information
+
+# ========================================
+# Course Empty States
+# ========================================
+empty.no_lectures_yet: No lectures yet
+
+# ========================================
+# Course Buttons
+# ========================================
+button.add_lecture: Add Lecture
+button.add_first_lecture: Add First Lecture
+button.create_course: Create Course
+button.update_course: Update Course
+button.create_lecture: Create Lecture
+button.update_lecture: Update Lecture
+
+# ========================================
+# Course Enrollment
+# ========================================
+course.enrolled_students: Enrolled Students
+course.enroll_student: Enroll Student
+course.enroll_first_student: Enroll First Student
+course.enrolled_at: Enrolled At
+course.progress: Progress
+course.enrollment.active: Active
+course.enrollment.inactive: Inactive
+course.enrollment.activate: Activate
+course.enrollment.deactivate: Deactivate
+course.enrollment.confirm_remove: 'Are you sure you want to remove %student% from this course?'
+course.enrollment.select_hint: Only users from the same organization who are not yet enrolled will be shown
+course.enrollment.active_immediately: Activate enrollment immediately
+course.enrollment.flash.enrolled_successfully: Student enrolled successfully
+course.enrollment.flash.already_enrolled: This student is already enrolled in this course
+course.enrollment.flash.student_not_found: Student not found
+course.enrollment.flash.activated_successfully: Enrollment activated successfully
+course.enrollment.flash.deactivated_successfully: Enrollment deactivated successfully
+course.enrollment.flash.removed_successfully: Student removed from course successfully
+user.select_student: Select Student
+user.select_student_placeholder: '-- Select a student --'
+empty.no_students_enrolled: No students enrolled yet
+empty.course_enrollment_description: Start building your class by enrolling students from your organization
+course.manage_enrollments: Manage Enrollments
+course.enrollment.select_students: Select Students
+course.enrollment.enroll_selected: Enroll Selected Students
+course.enrollment.save_changes: Save Changes
+course.enrollment.multi_select_hint: Select multiple students to enroll at once
+course.enrollment.auto_deactivate_hint: Unselecting a student will automatically deactivate their enrollment (not delete)
+course.enrollment.search_hint: Type to search by name or email
+course.enrollment.deactivate_warning: Removing a student from selection will deactivate (not delete) their enrollment. They will lose access to the course but their progress will be preserved.
+course.enrollment.search_by_name: Search by name...
+course.enrollment.switch_hint: Toggle switches to enroll/deactivate students. Click Confirm to save changes.
+course.enrollment.enrolled: Enrolled
+course.enrollment.not_enrolled: Not Enrolled
+
+# ========================================
+# Course Page Titles
+# ========================================
+page.course_details: Course Details
+
+# ========================================
+# Security Messages
+# ========================================
+lDjpeYu: An authentication exception occurred.
+AJOf7xb: Authentication credentials could not be found.
+DPttBWR: Authentication request could not be processed due to a system problem.
+6ZX9PdF: Invalid credentials.
+D8oD9D6: Cookie has already been used by someone else.
+6rEex5P: Not privileged to request the resource.
+bbMNxJD: Invalid CSRF token.
+V6vcZYp: No authentication provider found to support the authentication token.
+mvKBTGQ: No session available, it either timed out or cookies are not enabled.
+BMgfoWp: No token could be found.
+VZija00: Username could not be found.
+Sjc.F3G: Account has expired.
+99yINK3: Credentials have expired.
+.WYXRk3: Account is disabled.
+Gp85C7l: Account is locked.
+PvhvanK: Too many failed login attempts, please try again later.
+Tz4Owtv: Invalid or expired login link.
+CPhXNYL: Too many failed login attempts, please try again in %minutes% minute.
+KpyCIMn: Too many failed login attempts, please try again in %minutes% minutes.
+
+# ========================================
+# Validation Messages (Symfony Core)
+# ========================================
+jysioaA: This value should be false.
+1zVPJo4: This value should be true.
+HL55su4: 'This value should be of type {{ type }}.'
+K5oLZkw: This value should be blank.
+KaWXEsW: The value you selected is not a valid choice.
+4xOpbwN: 'You must select at least {{ limit }} choice.|You must select at least {{ limit }} choices.'
+65n9dGQ: 'You must select at most {{ limit }} choice.|You must select at most {{ limit }} choices.'
+bV9ETHe: One or more of the given values is invalid.
+hzMv9Ky: This field was not expected.
+m5HGv6j: This field is missing.
+ccjuUaj: This value is not a valid date.
+4jAy6GT: This value is not a valid datetime.
+J8MwqDW: This value is not a valid email address.
+OW6NCiE: The file could not be found.
+uuuT8w4: The file is not readable.
+xmVWVqA: 'The file is too large ({{ size }} {{ suffix }}). Allowed maximum size is {{ limit }} {{ suffix }}.'
+COERTaP: 'The mime type of the file is invalid ({{ type }}). Allowed mime types are {{ types }}.'
+xJV2eT8: 'This value should be {{ limit }} or less.'
+Zuairxy: 'This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.'
+3bh29vT: 'This value should be {{ limit }} or more.'
+Muq3W.6: 'This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.'
+vLBiKCD: This value should not be blank.
+FUEH3cZ: This value should not be null.
+yIMqPF6: This value should be null.
+TZg2uqx: This value is not valid.
+Uu2fZ7m: This value is not a valid time.
+X5msM9I: This value is not a valid URL.
+yShl.HD: The two values should be equal.
+UPTnJIu: 'The file is too large. Allowed maximum size is {{ limit }} {{ suffix }}.'
+OEeVt7G: The file is too large.
+DAd59Rr: The file could not be uploaded.
+jpVY2B5: This value should be a valid number.
+aeFJJFS: This file is not a valid image.
+r9nOjqT: This value is not a valid IP address.
+izWIhKR: This value is not a valid language.
+gBF5fE7: This value is not a valid locale.
+QUviSFS: This value is not a valid country.
+nmXj9fT: This value is already used.
+LAGu_iq: The size of the image could not be detected.
+YD_yE46: 'The image width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.'
+pfL2.fo: 'The image width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.'
+zV9L7pv: 'The image height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.'
+A7vLGPA: 'The image height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.'
+hbSSYMh: This value should be the user's current password.
+A1Hv7nv: 'This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.'
+H.ZNP57: The file was only partially uploaded.
+qUKi9W_: No file was uploaded.
+MRZ.kUM: No temporary folder was configured in php.ini, or the configured folder does not exist.
+ivltd6_: Cannot write temporary file to disk.
+_x64C6y: A PHP extension caused the upload to fail.
+.K7ySMo: 'This collection should contain {{ limit }} element or more.|This collection should contain {{ limit }} elements or more.'
+aSvx2eb: 'This collection should contain {{ limit }} element or less.|This collection should contain {{ limit }} elements or less.'
+d4HuxpA: 'This collection should contain exactly {{ limit }} element.|This collection should contain exactly {{ limit }} elements.'
+Ia5ts7h: Invalid card number.
+Y8YNvWG: Unsupported card type or invalid card number.
+Bp_BiDs: This value is not a valid International Bank Account Number (IBAN).
+HqngxWf: This value is not a valid ISBN-10.
+Pm2IygX: This value is not a valid ISBN-13.
+w8oSYvN: This value is neither a valid ISBN-10 nor a valid ISBN-13.
+aEf2fyJ: This value is not a valid ISSN.
+OeFZFII: This value is not a valid currency.
+G8HNxQM: 'This value should be equal to {{ compared_value }}.'
+Xgf_Y8C: 'This value should be greater than {{ compared_value }}.'
+OrsJXWO: 'This value should be greater than or equal to {{ compared_value }}.'
+wni8iKB: 'This value should be identical to {{ compared_value_type }} {{ compared_value }}.'
+EgRc_Qq: 'This value should be less than {{ compared_value }}.'
+vNn72MQ: 'This value should be less than or equal to {{ compared_value }}.'
+N4F464Y: 'This value should not be equal to {{ compared_value }}.'
+T8lYq4L: 'This value should not be identical to {{ compared_value_type }} {{ compared_value }}.'
+x5xpcfK: 'The image ratio is too big ({{ ratio }}). Allowed maximum ratio is {{ max_ratio }}.'
+5cB4RCN: 'The image ratio is too small ({{ ratio }}). Minimum ratio expected is {{ min_ratio }}.'
+SVgw5SP: 'The image is square ({{ width }}x{{ height }}px). Square images are not allowed.'
+wpV7oxR: 'The image is landscape oriented ({{ width }}x{{ height }}px). Landscape oriented images are not allowed.'
+t7f5lY9: 'The image is portrait oriented ({{ width }}x{{ height }}px). Portrait oriented images are not allowed.'
+L9tKe2y: An empty file is not allowed.
+4421dQm: The host could not be resolved.
+tD.RkRe: 'This value does not match the expected {{ charset }} charset.'
+w2dRFcU: This value is not a valid Business Identifier Code (BIC).
+B9r0Hn5: Error
+GO8.wou: This value is not a valid UUID.
+BmDYW0B: 'This value should be a multiple of {{ compared_value }}.'
+7urGdp4: 'This Business Identifier Code (BIC) is not associated with IBAN {{ iban }}.'
+NpIt6EV: This value should be valid JSON.
+NAJHeXU: This collection should contain only unique elements.
+mBNZ2p4: This value should be positive.
+Q07tS4h: This value should be either positive or zero.
+cwaFWZt: This value should be negative.
+INgX870: This value should be either negative or zero.
+0bSR5cp: This value is not a valid timezone.
+o0vqbDQ: This password has been leaked in a data breach, it must not be used. Please use another password.
+nNegxai: 'This value should be between {{ min }} and {{ max }}.'
+q0JXpA2: This value is not a valid hostname.
+Co_98pi: 'The number of elements in this collection should be a multiple of {{ compared_value }}.'
+rfebLrY: 'This value should satisfy at least one of the following constraints:'
+lxL.CBF: Each element of this collection should satisfy its own set of constraints.
+1nUIbF0: This value is not a valid International Securities Identification Number (ISIN).
+kG_VGA1: This value should be a valid expression.
+2_9V4lo: This value is not a valid CSS color.
+fye9wG1: This value is not a valid CIDR notation.
+ERGRJhK: 'The value of the netmask should be between {{ min }} and {{ max }}.'
+7db7kQD: 'The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.'
+7JLHuYX: The password strength is too low. Please use a stronger password.
+Pgo2CSS: This value contains characters that are not allowed by the current restriction-level.
+7hhZedg: Using invisible characters is not allowed.
+DpnrQ0a: Mixing numbers from different scripts is not allowed.
+Z4taMVn: Using hidden overlay characters is not allowed.
+1seErdG: 'The extension of the file is invalid ({{ extension }}). Allowed extensions are {{ extensions }}.'
+uyl6nQ7: 'The detected character encoding is invalid ({{ detected }}). Allowed encodings are {{ encodings }}.'
+65jFl8b: This value is not a valid MAC address.
+Pm0aj_f: This URL is missing a top-level domain.
+gbpWGsC: 'This value is too short. It should contain at least one word.|This value is too short. It should contain at least {{ min }} words.'
+1WpHUSt: 'This value is too long. It should contain one word.|This value is too long. It should contain {{ max }} words or less.'
+egUw40j: This value does not represent a valid week in the ISO 8601 format.
+qj68TOe: This value is not a valid week.
+RX1vHSU: 'This value should not be before week "{{ min }}".'
+pOcsUec: 'This value should not be after week "{{ max }}".'
+3QNCFgi: This value is not a valid Twig template.
+ZuGpyhA: This file is not a valid video.
+7ZjICRC: The size of the video could not be detected.
+WS2rIIU: 'The video width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.'
+Ey8lNRo: 'The video width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.'
+Liu7sjp: 'The video height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.'
+2FkdfHN: 'The video height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.'
+Dp2k5ge: 'The video has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.'
+IDGrrj_: 'The video has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.'
+J1cZmuA: 'The video ratio is too big ({{ ratio }}). Allowed maximum ratio is {{ max_ratio }}.'
+WQTwvFh: 'The video ratio is too small ({{ ratio }}). Minimum ratio expected is {{ min_ratio }}.'
+OT6Evve: 'The video is square ({{ width }}x{{ height }}px). Square videos are not allowed.'
+mXgOwd4: 'The video is landscape oriented ({{ width }}x{{ height }}px). Landscape oriented videos are not allowed.'
+VrsdBNF: 'The video is portrait oriented ({{ width }}x{{ height }}px). Portrait oriented videos are not allowed.'
+x8fsjeI: The video file is corrupted.
+nzXY1iu: The video contains multiple streams. Only one stream is allowed.
+hCzL7Mv: 'Unsupported video codec "{{ codec }}".'
+nTnX6nj: 'Unsupported video container "{{ container }}".'
+jAJTV_I: The image file is corrupted.
+aw1rRIE: 'The image has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.'
+KbWb1FD: 'The image has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.'
+tPeCNvN: This filename does not match the expected charset.
+tDkL4Jc: This form should not contain extra fields.
+SlPljy.: The uploaded file was too large. Please try to upload a smaller file.
+b_5.52u: The CSRF token is invalid. Please try to resubmit the form.
+wlGn1pP: This value is not a valid HTML5 color.
+e_2ZUCK: Please enter a valid birthdate.
+TPma293: The selected choice is invalid.
+Fkuy1Kw: The collection is invalid.
+qiPYgGj: Please select a valid color.
+qf.GaaJ: Please select a valid country.
+WtFFCQ8: Please select a valid currency.
+gwI.OzY: Please choose a valid date interval.
+yeUbmWc: Please enter a valid date and time.
+eC1bGok: Please enter a valid date.
+.3DoUU.: Please select a valid file.
+wwjjKAn: The hidden field is invalid.
+o.y86J1: Please enter an integer.
+MhFFYoK: Please select a valid language.
+LKAkY.h: Please select a valid locale.
+GoIKSyM: Please enter a valid money amount.
+c5ToMGG: Please enter a number.
+AKUMRqn: The password is invalid.
+HviZ2Cc: Please enter a percentage value.
+u4rxsHj: The values do not match.
+beHTTAG: Please enter a valid time.
+MDu2tNQ: Please select a valid timezone.
+ywSABzT: Please enter a valid URL.
+58j92KU: Please enter a valid search term.
+9RtYCIm: Please provide a valid phone number.
+eXUouzq: The checkbox has an invalid value.
+sv_zo_u: Please enter a valid email address.
+WGMBjaJ: Please select a valid option.
+X1pJkwv: Please select a valid range.
+2MEQpjY: Please enter a valid week.
+M7IJXPA: __organization.validation.name_required
+Ov577jX: __organization.validation.name_min_length
+.z6UIh_: __organization.validation.name_max_length
+WL7_zf8: __organization.validation.description_max_length
+nnpDp2E: __user.validation.name_required
+5iT.fNg: __user.validation.name_min_length
+9cugrVY: __user.validation.name_max_length
+pIrIYB7: __user.validation.email_required
+68NHVXV: __user.validation.email_invalid
+OVQY6k4: __user.validation.password_required
+mah_225: __user.validation.password_min_length
+wf4wXUZ: __The slug can only contain lowercase letters, numbers, and hyphens.
+vsM4tSv: __There is already an account with this email
+
+# ========================================
+# Student Portal Translations
+# ========================================
+nav.my_courses: My Courses
+student.singular: Student
+student.my_courses: My Courses
+student.courses_subtitle: Access your enrolled courses and continue learning
+student.enrolled: Enrolled
+student.no_courses: No Courses Yet
+student.no_courses_description: You haven't been enrolled in any courses yet. Contact your administrator for access.
+student.progress: Progress
+student.completed: Completed
+student.in_progress: In Progress
+student.not_started: Not Started
+student.current: Current
+student.enrolled_on: Enrolled on
+student.review: Review
+student.continue: Continue
+student.start: Start Course
+student.restart: Restart
+student.total_courses: Total Courses
+student.completed_courses: Completed
+student.in_progress_courses: In Progress
+student.back_to_courses: Back to My Courses
+student.complete: Complete
+student.your_progress: Your Progress
+student.course_completed: Course Completed
+student.overall_completion: Overall Completion
+student.last_accessed: Last Accessed
+student.not_yet: Not yet
+student.completed_lectures: Completed Lectures
+student.watched: Watched
+student.status: Status
+student.watch_progress: Watch Progress
+course.overall_progress: Overall Progress
+course.lecture.processing_description: This video is being processed and will be available shortly. Please check back in a few minutes.
+button.refresh: Refresh Page
+course.lecture.failed_description: There was an error processing this video. Please contact support.
+course.lecture.no_video_description: This lecture does not have a video uploaded yet.
+course.lecture.duration: Duration
+
+# ========================================
+# Status
+# ========================================
+# Active status indicator
+status.active: Active
+# AI enhanced feature badge
+status.ai_enhanced: AI Enhanced
+# Real-time status indicator
+status.real_time: Real-time
+# Ready status
+status.ready: Ready
+# Processing status with ellipsis
+status.processing: Processing...
+# Failed status
+status.failed: Failed
+# Pending status
+status.pending: Pending
+
+# ========================================
+# Time/Date
+# ========================================
+# Today time reference
+time.today: Today
+# Yesterday time reference
+time.yesterday: Yesterday
+# Days ago with pluralization
+time.days_ago: '%count% day ago|%count% days ago'
+# Abbreviated days ago (e.g., "3d ago")
+time.d_ago: '%count%d ago'
+# One week ago time reference
+time.week_ago: 1 week ago
+# Monthly growth percentage
+metric.month_growth: +%percent%% this month
+# New items count
+metric.new_count: +%count% new
+# Today's growth percentage
+metric.today_growth: +%percent%% today
+
+# ========================================
+# Units
+# ========================================
+# Singular: minute time unit
+unit.minute: minute
+# Plural: minutes time unit
+unit.minutes: minutes
+# Abbreviated: minute/minutes
+unit.min: min
+
+# ========================================
+# Pagination (additional)
+# ========================================
+# Pagination: "Show X entries"
+pagination.show: Show
+
+# ========================================
+# Upload
+# ========================================
+# Video upload format and size hint
+upload.video_hint: 'Max size: 4GB. Formats: MP4, WebM, OGG, MOV. Duration auto-calculated after upload.'
+
+# ========================================
+# Branding/Navigation
+# ========================================
+# Full product name with CRM
+branding.infinity_crm: Infinity CRM
+# Full dashboard title with AI branding
+branding.ai_dashboard: AI-Powered CRM Dashboard
+# AI Chat navigation link
+nav.ai_chat: AI Chat
+# Analytics navigation link
+nav.analytics: Analytics
+# Aria label for mobile nav toggle
+nav.toggle_navigation: Toggle navigation
+
+# ========================================
+# Organization Switcher
+# ========================================
+# Tooltip for organization switcher
+organization.switcher_title: Change your organization
+# All organizations option in switcher
+organization.all_organizations: All Organizations
+# Root access option in switcher
+organization.all_organizations_root: All Organizations (Root)
+# Page title for organization users management
+organization.users_page_title: Manage Users - Infinity
+
+# ========================================
+# Course/Lecture
+# ========================================
+# Link to return to course overview
+course.back_to_course: Back to Course
+# Lecture number label
+course.lecture_number: Lecture %number%
+# Course content section heading
+course.content: Course Content
+
+# ========================================
+# Theme
+# ========================================
+# Button to switch to dark theme
+theme.switch_to_dark: Switch to Dark
+# Button to switch to light theme
+theme.switch_to_light: Switch to Light
+
+# ========================================
+# Misc
+# ========================================
+# Not available abbreviation
+misc.na: N/A
+# Alt text for Infinity logo
+misc.infinity_alt: Infinity
+
+# ========================================
+# User Insights (Random Messages)
+# ========================================
+# AI insight: recent activity spike
+insight.recent_activity: Recent activity increase
+# AI insight: sales opportunity
+insight.upsell_opportunity: Potential upsell opportunity
+# AI insight: good relationship
+insight.strong_relationship: Strong relationship score
+# Last interaction time (days ago)
+insight.last_interaction: 'Last interaction: %days%d ago'
+
+# ========================================
+# Missing Button Translations
+# ========================================
+# Generic actions button/label
+button.actions: Actions
+# Remove button
+button.remove: Remove
+# Confirm button
+button.confirm: Confirm
+
+# ========================================
+# Missing Course Translations
+# ========================================
+# Time unit for course duration
+course.minutes: minutes
+# Empty state message for courses without lectures
+course.no_lectures_description: This course doesn't have any lectures yet
+
+# ========================================
+# Missing Misc Translations
+# ========================================
+# Waiting status message
+misc.waiting: Waiting...
+
+# Total translations: 696

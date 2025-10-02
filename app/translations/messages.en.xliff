@@ -55,13 +55,13 @@
         <target>A complete enterprise-ready Symfony 7.3 application featuring PostgreSQL 18, Redis 7, FrankenPHP 1.9, and modern development practices.</target>
         <note>Main description on home page</note>
       </trans-unit>
-      <trans-unit id="home.view_organizations">
-        <source>home.view_organizations</source>
+      <trans-unit id="home.view.organizations">
+        <source>home.view.organizations</source>
         <target>View Organizations</target>
         <note>Button text for viewing organizations</note>
       </trans-unit>
-      <trans-unit id="home.view_users">
-        <source>home.view_users</source>
+      <trans-unit id="home.view.users">
+        <source>home.view.users</source>
         <target>View Users</target>
         <note>Button text for viewing users</note>
       </trans-unit>
@@ -87,43 +87,73 @@
         <target>Description</target>
         <note>Organization description field label</note>
       </trans-unit>
-      <trans-unit id="organization.users_count">
-        <source>organization.users_count</source>
+      <trans-unit id="organization.users.count">
+        <source>organization.users.count</source>
         <target>%count% user|%count% users</target>
         <note>Users count with pluralization</note>
       </trans-unit>
-      <trans-unit id="organization.no_users">
-        <source>organization.no_users</source>
+      <trans-unit id="organization.no.users">
+        <source>organization.no.users</source>
         <target>No users</target>
         <note>Zero users message</note>
       </trans-unit>
-      <trans-unit id="organization.view_details">
-        <source>organization.view_details</source>
+      <trans-unit id="organization.view.details">
+        <source>organization.view.details</source>
         <target>View Details</target>
         <note>Button text to view organization details</note>
       </trans-unit>
-      <trans-unit id="organization.api_link">
-        <source>organization.api_link</source>
+      <trans-unit id="organization.api.link">
+        <source>organization.api.link</source>
         <target>API</target>
         <note>Link to organization API endpoint</note>
       </trans-unit>
-      <trans-unit id="organization.back_to_list">
-        <source>organization.back_to_list</source>
+      <trans-unit id="organization.back.to.list">
+        <source>organization.back.to.list</source>
         <target>Back to Organizations</target>
         <note>Link to go back to organizations list</note>
       </trans-unit>
-      <trans-unit id="organization.created_at">
-        <source>organization.created_at</source>
+      <trans-unit id="organization.created.at">
+        <source>organization.created.at</source>
         <target>Created</target>
         <note>Organization creation date label</note>
       </trans-unit>
-      <trans-unit id="organization.updated_at">
-        <source>organization.updated_at</source>
+      <trans-unit id="organization.updated.at">
+        <source>organization.updated.at</source>
         <target>Updated</target>
         <note>Organization last update date label</note>
       </trans-unit>
-      <trans-unit id="organization.users_in_organization">
-        <source>organization.users_in_organization</source>
+      <trans-unit id="organization.active">
+        <source>organization.active</source>
+        <target>Active</target>
+        <note>Organization active status</note>
+      </trans-unit>
+      <trans-unit id="organization.inactive">
+        <source>organization.inactive</source>
+        <target>Inactive</target>
+        <note>Organization inactive status</note>
+      </trans-unit>
+      <trans-unit id="organization.status">
+        <source>organization.status</source>
+        <target>Status</target>
+        <note>Organization status column header</note>
+      </trans-unit>
+      <trans-unit id="organization.users">
+        <source>organization.users</source>
+        <target>Users</target>
+        <note>Organization users column header</note>
+      </trans-unit>
+      <trans-unit id="organization.courses">
+        <source>organization.courses</source>
+        <target>Courses</target>
+        <note>Organization courses column header</note>
+      </trans-unit>
+      <trans-unit id="organization.created.by">
+        <source>organization.created.by</source>
+        <target>Created By</target>
+        <note>Organization created by column header</note>
+      </trans-unit>
+      <trans-unit id="organization.users.in.organization">
+        <source>organization.users.in.organization</source>
         <target>Users in this Organization</target>
         <note>Section title for users list in organization</note>
       </trans-unit>
@@ -133,16 +163,16 @@
         <source>organization.form.name</source>
         <target>Organization Name</target>
       </trans-unit>
-      <trans-unit id="organization.form.name_placeholder">
-        <source>organization.form.name_placeholder</source>
+      <trans-unit id="organization.form.name.placeholder">
+        <source>organization.form.name.placeholder</source>
         <target>Enter organization name</target>
       </trans-unit>
       <trans-unit id="organization.form.description">
         <source>organization.form.description</source>
         <target>Description</target>
       </trans-unit>
-      <trans-unit id="organization.form.description_placeholder">
-        <source>organization.form.description_placeholder</source>
+      <trans-unit id="organization.form.description.placeholder">
+        <source>organization.form.description.placeholder</source>
         <target>Describe the organization's purpose and activities</target>
       </trans-unit>
       <trans-unit id="organization.form.preview">
@@ -151,94 +181,94 @@
       </trans-unit>
 
       <!-- Organization Modals -->
-      <trans-unit id="organization.modal.create_title">
-        <source>organization.modal.create_title</source>
+      <trans-unit id="organization.modal.create.title">
+        <source>organization.modal.create.title</source>
         <target>Create New Organization</target>
       </trans-unit>
-      <trans-unit id="organization.modal.create_subtitle">
-        <source>organization.modal.create_subtitle</source>
+      <trans-unit id="organization.modal.create.subtitle">
+        <source>organization.modal.create.subtitle</source>
         <target>Add a new organization to your system</target>
       </trans-unit>
-      <trans-unit id="organization.modal.edit_title">
-        <source>organization.modal.edit_title</source>
+      <trans-unit id="organization.modal.edit.title">
+        <source>organization.modal.edit.title</source>
         <target>Edit %name%</target>
       </trans-unit>
-      <trans-unit id="organization.modal.edit_subtitle">
-        <source>organization.modal.edit_subtitle</source>
+      <trans-unit id="organization.modal.edit.subtitle">
+        <source>organization.modal.edit.subtitle</source>
         <target>Update organization details</target>
       </trans-unit>
-      <trans-unit id="organization.modal.create_tip">
-        <source>organization.modal.create_tip</source>
+      <trans-unit id="organization.modal.create.tip">
+        <source>organization.modal.create.tip</source>
         <target>Organization names should be descriptive and unique within your system.</target>
       </trans-unit>
 
       <!-- Organization Actions -->
-      <trans-unit id="organization.manage_users">
-        <source>organization.manage_users</source>
+      <trans-unit id="organization.manage.users">
+        <source>organization.manage.users</source>
         <target>Manage Users</target>
       </trans-unit>
-      <trans-unit id="organization.confirm_delete">
-        <source>organization.confirm_delete</source>
+      <trans-unit id="organization.confirm.delete">
+        <source>organization.confirm.delete</source>
         <target>Are you sure you want to delete "%name%"?</target>
       </trans-unit>
-      <trans-unit id="organization.new_organization">
-        <source>organization.new_organization</source>
+      <trans-unit id="organization.new.organization">
+        <source>organization.new.organization</source>
         <target>New Organization</target>
       </trans-unit>
-      <trans-unit id="organization.search_placeholder">
-        <source>organization.search_placeholder</source>
+      <trans-unit id="organization.search.placeholder">
+        <source>organization.search.placeholder</source>
         <target>Search organizations...</target>
       </trans-unit>
 
       <!-- Organization Flash Messages -->
-      <trans-unit id="organization.flash.created_successfully">
-        <source>organization.flash.created_successfully</source>
+      <trans-unit id="organization.flash.created.successfully">
+        <source>organization.flash.created.successfully</source>
         <target>Organization created successfully!</target>
       </trans-unit>
-      <trans-unit id="organization.flash.updated_successfully">
-        <source>organization.flash.updated_successfully</source>
+      <trans-unit id="organization.flash.updated.successfully">
+        <source>organization.flash.updated.successfully</source>
         <target>Organization updated successfully!</target>
       </trans-unit>
-      <trans-unit id="organization.flash.deleted_successfully">
-        <source>organization.flash.deleted_successfully</source>
+      <trans-unit id="organization.flash.deleted.successfully">
+        <source>organization.flash.deleted.successfully</source>
         <target>Organization deleted successfully!</target>
       </trans-unit>
-      <trans-unit id="organization.flash.save_success">
-        <source>organization.flash.save_success</source>
+      <trans-unit id="organization.flash.save.success">
+        <source>organization.flash.save.success</source>
         <target>Changes saved successfully!</target>
       </trans-unit>
-      <trans-unit id="organization.flash.save_success_description">
-        <source>organization.flash.save_success_description</source>
+      <trans-unit id="organization.flash.save.success.description">
+        <source>organization.flash.save.success.description</source>
         <target>The organization has been updated with your changes.</target>
       </trans-unit>
-      <trans-unit id="organization.flash.save_error">
-        <source>organization.flash.save_error</source>
+      <trans-unit id="organization.flash.save.error">
+        <source>organization.flash.save.error</source>
         <target>Failed to save organization</target>
       </trans-unit>
-      <trans-unit id="organization.flash.cannot_delete_has_users">
-        <source>organization.flash.cannot_delete_has_users</source>
+      <trans-unit id="organization.flash.cannot.delete.has.users">
+        <source>organization.flash.cannot.delete.has.users</source>
         <target>Cannot delete organization with assigned users</target>
       </trans-unit>
-      <trans-unit id="organization.flash.invalid_csrf_token">
-        <source>organization.flash.invalid_csrf_token</source>
+      <trans-unit id="organization.flash.invalid.csrf.token">
+        <source>organization.flash.invalid.csrf.token</source>
         <target>Invalid security token. Please try again.</target>
       </trans-unit>
 
       <!-- Organization Validation -->
-      <trans-unit id="organization.validation.name_required">
-        <source>organization.validation.name_required</source>
+      <trans-unit id="organization.validation.name.required">
+        <source>organization.validation.name.required</source>
         <target>Organization name is required</target>
       </trans-unit>
-      <trans-unit id="organization.validation.name_min_length">
-        <source>organization.validation.name_min_length</source>
+      <trans-unit id="organization.validation.name.min.length">
+        <source>organization.validation.name.min.length</source>
         <target>Organization name must be at least 2 characters long</target>
       </trans-unit>
-      <trans-unit id="organization.validation.name_max_length">
-        <source>organization.validation.name_max_length</source>
+      <trans-unit id="organization.validation.name.max.length">
+        <source>organization.validation.name.max.length</source>
         <target>Organization name cannot exceed 255 characters</target>
       </trans-unit>
-      <trans-unit id="organization.validation.description_max_length">
-        <source>organization.validation.description_max_length</source>
+      <trans-unit id="organization.validation.description.max.length">
+        <source>organization.validation.description.max.length</source>
         <target>Description cannot exceed 1000 characters</target>
       </trans-unit>
 
@@ -263,40 +293,99 @@
         <target>Email</target>
         <note>User email field label</note>
       </trans-unit>
+      <trans-unit id="user.verified">
+        <source>user.verified</source>
+        <target>Verified</target>
+        <note>User verified status label</note>
+      </trans-unit>
+      <trans-unit id="user.unverified">
+        <source>user.unverified</source>
+        <target>Unverified</target>
+        <note>User unverified status label</note>
+      </trans-unit>
+      <trans-unit id="organization.switcher.error.invalid.token">
+        <source>organization.switcher.error.invalid.token</source>
+        <target>Invalid security token.</target>
+        <note>Error when CSRF token is invalid</note>
+      </trans-unit>
+      <trans-unit id="organization.switcher.error.not.logged.in">
+        <source>organization.switcher.error.not.logged.in</source>
+        <target>You must be logged in to switch organizations.</target>
+        <note>Error when user is not authenticated</note>
+      </trans-unit>
+      <trans-unit id="organization.switcher.error.not.found">
+        <source>organization.switcher.error.not.found</source>
+        <target>Organization not found.</target>
+        <note>Error when organization does not exist</note>
+      </trans-unit>
+      <trans-unit id="organization.switcher.success.switched">
+        <source>organization.switcher.success.switched</source>
+        <target>Your organization has been changed to: %name%</target>
+        <note>Success message when organization is switched</note>
+      </trans-unit>
+      <trans-unit id="organization.switcher.success.cleared">
+        <source>organization.switcher.success.cleared</source>
+        <target>Organization context cleared. You are now accessing as admin.</target>
+        <note>Success message when organization context is cleared</note>
+      </trans-unit>
       <trans-unit id="user.organization">
         <source>user.organization</source>
         <target>Organization</target>
         <note>User organization field label</note>
       </trans-unit>
-      <trans-unit id="user.view_details">
-        <source>user.view_details</source>
+      <trans-unit id="user.view.details">
+        <source>user.view.details</source>
         <target>View Details</target>
         <note>Button text to view user details</note>
       </trans-unit>
-      <trans-unit id="user.api_link">
-        <source>user.api_link</source>
+      <trans-unit id="user.api.link">
+        <source>user.api.link</source>
         <target>API</target>
         <note>Link to user API endpoint</note>
       </trans-unit>
-      <trans-unit id="user.back_to_list">
-        <source>user.back_to_list</source>
+      <trans-unit id="user.back.to.list">
+        <source>user.back.to.list</source>
         <target>Back to Users</target>
         <note>Link to go back to users list</note>
       </trans-unit>
-      <trans-unit id="user.created_at">
-        <source>user.created_at</source>
+      <trans-unit id="user.created.at">
+        <source>user.created.at</source>
         <target>Created</target>
         <note>User creation date label</note>
       </trans-unit>
-      <trans-unit id="user.updated_at">
-        <source>user.updated_at</source>
+      <trans-unit id="user.updated.at">
+        <source>user.updated.at</source>
         <target>Updated</target>
         <note>User last update date label</note>
       </trans-unit>
-      <trans-unit id="user.view_organization">
-        <source>user.view_organization</source>
+      <trans-unit id="user.view.organization">
+        <source>user.view.organization</source>
         <target>View Organization</target>
         <note>Link to view user's organization</note>
+      </trans-unit>
+      <trans-unit id="user.courses">
+        <source>user.courses</source>
+        <target>Courses</target>
+      </trans-unit>
+      <trans-unit id="user.courses.label">
+        <source>user.courses.label</source>
+        <target>Courses</target>
+      </trans-unit>
+      <trans-unit id="user.courses.owned">
+        <source>user.courses.owned</source>
+        <target>Owned</target>
+      </trans-unit>
+      <trans-unit id="user.courses.enrolled">
+        <source>user.courses.enrolled</source>
+        <target>Enrolled</target>
+      </trans-unit>
+      <trans-unit id="user.never.logged.in">
+        <source>user.never.logged.in</source>
+        <target>Never logged in</target>
+      </trans-unit>
+      <trans-unit id="user.last.login">
+        <source>user.last.login</source>
+        <target>Last Login</target>
       </trans-unit>
 
       <!-- Settings Page -->
@@ -305,53 +394,53 @@
         <target>Settings</target>
         <note>Settings page title</note>
       </trans-unit>
-      <trans-unit id="settings.language_preferences">
-        <source>settings.language_preferences</source>
+      <trans-unit id="settings.language.preferences">
+        <source>settings.language.preferences</source>
         <target>Language Preferences</target>
         <note>Language preferences section title</note>
       </trans-unit>
-      <trans-unit id="settings.current_language">
-        <source>settings.current_language</source>
+      <trans-unit id="settings.current.language">
+        <source>settings.current.language</source>
         <target>Current Language</target>
         <note>Current language label</note>
       </trans-unit>
-      <trans-unit id="settings.choose_language">
-        <source>settings.choose_language</source>
+      <trans-unit id="settings.choose.language">
+        <source>settings.choose.language</source>
         <target>Choose Language</target>
         <note>Language selection label</note>
       </trans-unit>
-      <trans-unit id="settings.save_changes">
-        <source>settings.save_changes</source>
+      <trans-unit id="settings.save.changes">
+        <source>settings.save.changes</source>
         <target>Save Changes</target>
         <note>Save button text</note>
       </trans-unit>
-      <trans-unit id="settings.language_saved">
-        <source>settings.language_saved</source>
+      <trans-unit id="settings.language.saved">
+        <source>settings.language.saved</source>
         <target>Language preference saved successfully!</target>
         <note>Success message after saving language</note>
       </trans-unit>
-      <trans-unit id="settings.ui_preferences">
-        <source>settings.ui_preferences</source>
+      <trans-unit id="settings.ui.preferences">
+        <source>settings.ui.preferences</source>
         <target>UI Preferences</target>
         <note>UI preferences section title</note>
       </trans-unit>
-      <trans-unit id="settings.enable_animations">
-        <source>settings.enable_animations</source>
+      <trans-unit id="settings.enable.animations">
+        <source>settings.enable.animations</source>
         <target>Enable Animations</target>
         <note>Enable animations checkbox label</note>
       </trans-unit>
-      <trans-unit id="settings.enable_sound">
-        <source>settings.enable_sound</source>
+      <trans-unit id="settings.enable.sound">
+        <source>settings.enable.sound</source>
         <target>Enable Sound Effects</target>
         <note>Enable sound effects checkbox label</note>
       </trans-unit>
-      <trans-unit id="settings.compact_mode">
-        <source>settings.compact_mode</source>
+      <trans-unit id="settings.compact.mode">
+        <source>settings.compact.mode</source>
         <target>Compact Mode</target>
         <note>Compact mode checkbox label</note>
       </trans-unit>
-      <trans-unit id="settings.items_per_page">
-        <source>settings.items_per_page</source>
+      <trans-unit id="settings.items.per.page">
+        <source>settings.items.per.page</source>
         <target>Items Per Page</target>
         <note>Items per page label</note>
       </trans-unit>
@@ -362,8 +451,8 @@
         <target>English</target>
         <note>English language name</note>
       </trans-unit>
-      <trans-unit id="language.pt_BR">
-        <source>language.pt_BR</source>
+      <trans-unit id="language.pt.BR">
+        <source>language.pt.BR</source>
         <target>Português (Brasil)</target>
         <note>Portuguese (Brazil) language name</note>
       </trans-unit>
@@ -428,67 +517,67 @@
         <target>Dashboard</target>
         <note>Dashboard page title</note>
       </trans-unit>
-      <trans-unit id="ui.back_to_dashboard">
-        <source>ui.back_to_dashboard</source>
+      <trans-unit id="ui.back.to.dashboard">
+        <source>ui.back.to.dashboard</source>
         <target>Back to Dashboard</target>
         <note>Link to go back to dashboard</note>
       </trans-unit>
 
       <!-- Empty States -->
-      <trans-unit id="empty.no_description">
-        <source>empty.no_description</source>
+      <trans-unit id="empty.no.description">
+        <source>empty.no.description</source>
         <target>No description available</target>
         <note>Message when no description is provided</note>
       </trans-unit>
-      <trans-unit id="empty.no_contacts_yet">
-        <source>empty.no_contacts_yet</source>
+      <trans-unit id="empty.no.contacts.yet">
+        <source>empty.no.contacts.yet</source>
         <target>No Contacts Yet</target>
         <note>Empty state title for contacts</note>
       </trans-unit>
-      <trans-unit id="empty.no_organizations_yet">
-        <source>empty.no_organizations_yet</source>
+      <trans-unit id="empty.no.organizations.yet">
+        <source>empty.no.organizations.yet</source>
         <target>No Organizations Yet</target>
         <note>Empty state title for organizations</note>
       </trans-unit>
-      <trans-unit id="empty.contact_description">
-        <source>empty.contact_description</source>
+      <trans-unit id="empty.contact.description">
+        <source>empty.contact.description</source>
         <target>Start building your network by adding your first contact. Our AI will help you manage relationships and provide valuable insights.</target>
         <note>Empty state description for contacts</note>
       </trans-unit>
-      <trans-unit id="empty.organization_description">
-        <source>empty.organization_description</source>
+      <trans-unit id="empty.organization.description">
+        <source>empty.organization.description</source>
         <target>Start building your business relationships by creating your first organization. Our AI will help you manage and grow these connections.</target>
         <note>Empty state description for organizations</note>
       </trans-unit>
-      <trans-unit id="empty.organization_contacts_description">
-        <source>empty.organization_contacts_description</source>
+      <trans-unit id="empty.organization.contacts.description">
+        <source>empty.organization.contacts.description</source>
         <target>Start building relationships by adding contacts to this organization.</target>
         <note>Empty state description for organization contacts</note>
       </trans-unit>
-      <trans-unit id="empty.course_lectures_description">
-        <source>empty.course_lectures_description</source>
+      <trans-unit id="empty.course.lectures.description">
+        <source>empty.course.lectures.description</source>
         <target>Start building your course by adding the first lecture.</target>
         <note>Empty state description for course lectures</note>
       </trans-unit>
 
       <!-- Buttons -->
-      <trans-unit id="button.add_organization">
-        <source>button.add_organization</source>
+      <trans-unit id="button.add.organization">
+        <source>button.add.organization</source>
         <target>Add Organization</target>
         <note>Button to add new organization</note>
       </trans-unit>
-      <trans-unit id="button.add_contact">
-        <source>button.add_contact</source>
+      <trans-unit id="button.add.contact">
+        <source>button.add.contact</source>
         <target>Add Contact</target>
         <note>Button to add new contact</note>
       </trans-unit>
-      <trans-unit id="button.add_first_contact">
-        <source>button.add_first_contact</source>
+      <trans-unit id="button.add.first.contact">
+        <source>button.add.first.contact</source>
         <target>Add First Contact</target>
         <note>Button to add first contact</note>
       </trans-unit>
-      <trans-unit id="button.create_first_organization">
-        <source>button.create_first_organization</source>
+      <trans-unit id="button.create.first.organization">
+        <source>button.create.first.organization</source>
         <target>Create First Organization</target>
         <note>Button to create first organization</note>
       </trans-unit>
@@ -514,24 +603,24 @@
         <source>button.reset</source>
         <target>Reset</target>
       </trans-unit>
-      <trans-unit id="button.reset_form">
-        <source>button.reset_form</source>
+      <trans-unit id="button.reset.form">
+        <source>button.reset.form</source>
         <target>Reset Form</target>
       </trans-unit>
       <trans-unit id="button.filter">
         <source>button.filter</source>
         <target>Filter</target>
       </trans-unit>
-      <trans-unit id="button.clear_search">
-        <source>button.clear_search</source>
+      <trans-unit id="button.clear.search">
+        <source>button.clear.search</source>
         <target>Clear search</target>
       </trans-unit>
-      <trans-unit id="button.create_organization">
-        <source>button.create_organization</source>
+      <trans-unit id="button.create.organization">
+        <source>button.create.organization</source>
         <target>Create Organization</target>
       </trans-unit>
-      <trans-unit id="button.update_organization">
-        <source>button.update_organization</source>
+      <trans-unit id="button.update.organization">
+        <source>button.update.organization</source>
         <target>Update Organization</target>
       </trans-unit>
       <trans-unit id="button.creating">
@@ -544,23 +633,31 @@
       </trans-unit>
 
       <!-- Form and Validation -->
-      <trans-unit id="form.validation_errors">
-        <source>form.validation_errors</source>
+      <trans-unit id="form.validation.errors">
+        <source>form.validation.errors</source>
         <target>Please correct the errors below</target>
       </trans-unit>
 
       <!-- Filters -->
-      <trans-unit id="filter.active_organizations">
-        <source>filter.active_organizations</source>
+      <trans-unit id="filter.active.organizations">
+        <source>filter.active.organizations</source>
         <target>Active Organizations</target>
       </trans-unit>
-      <trans-unit id="filter.empty_organizations">
-        <source>filter.empty_organizations</source>
+      <trans-unit id="filter.empty.organizations">
+        <source>filter.empty.organizations</source>
         <target>Organizations without Users</target>
       </trans-unit>
       <trans-unit id="filter.all">
         <source>filter.all</source>
         <target>All</target>
+      </trans-unit>
+      <trans-unit id="filter.yes">
+        <source>filter.yes</source>
+        <target>Yes</target>
+      </trans-unit>
+      <trans-unit id="filter.no">
+        <source>filter.no</source>
+        <target>No</target>
       </trans-unit>
 
       <!-- Views -->
@@ -580,55 +677,55 @@
         <source>table.actions</source>
         <target>Actions</target>
       </trans-unit>
-      <trans-unit id="table.swipe_to_see_more">
-        <source>table.swipe_to_see_more</source>
+      <trans-unit id="table.swipe.to.see.more">
+        <source>table.swipe.to.see.more</source>
         <target>Swipe to see more</target>
         <note>Hint for mobile users to scroll table horizontally</note>
       </trans-unit>
-      <trans-unit id="button.edit_contact">
-        <source>button.edit_contact</source>
+      <trans-unit id="button.edit.contact">
+        <source>button.edit.contact</source>
         <target>Edit Contact</target>
         <note>Button to edit contact</note>
       </trans-unit>
-      <trans-unit id="button.send_email">
-        <source>button.send_email</source>
+      <trans-unit id="button.send.email">
+        <source>button.send.email</source>
         <target>Send Email</target>
         <note>Button to send email</note>
       </trans-unit>
-      <trans-unit id="button.send_message">
-        <source>button.send_message</source>
+      <trans-unit id="button.send.message">
+        <source>button.send.message</source>
         <target>Send Message</target>
         <note>Button to send message</note>
       </trans-unit>
-      <trans-unit id="button.call_contact">
-        <source>button.call_contact</source>
+      <trans-unit id="button.call.contact">
+        <source>button.call.contact</source>
         <target>Call Contact</target>
         <note>Button to call contact</note>
       </trans-unit>
-      <trans-unit id="button.schedule_meeting">
-        <source>button.schedule_meeting</source>
+      <trans-unit id="button.schedule.meeting">
+        <source>button.schedule.meeting</source>
         <target>Schedule Meeting</target>
         <note>Button to schedule meeting</note>
       </trans-unit>
-      <trans-unit id="button.share_contact">
-        <source>button.share_contact</source>
+      <trans-unit id="button.share.contact">
+        <source>button.share.contact</source>
         <target>Share Contact</target>
         <note>Button to share contact</note>
       </trans-unit>
-      <trans-unit id="button.start_ai_chat">
-        <source>button.start_ai_chat</source>
+      <trans-unit id="button.start.ai.chat">
+        <source>button.start.ai.chat</source>
         <target>Start AI Chat</target>
         <note>Button to start AI chat</note>
       </trans-unit>
 
       <!-- Metrics and Statistics -->
-      <trans-unit id="metric.total_contacts">
-        <source>metric.total_contacts</source>
+      <trans-unit id="metric.total.contacts">
+        <source>metric.total.contacts</source>
         <target>Total Contacts</target>
         <note>Label for total contacts metric</note>
       </trans-unit>
-      <trans-unit id="metric.ai_interactions">
-        <source>metric.ai_interactions</source>
+      <trans-unit id="metric.ai.interactions">
+        <source>metric.ai.interactions</source>
         <target>AI Interactions</target>
         <note>Label for AI interactions metric</note>
       </trans-unit>
@@ -637,8 +734,8 @@
         <target>Uptime</target>
         <note>System uptime metric</note>
       </trans-unit>
-      <trans-unit id="metric.response_time">
-        <source>metric.response_time</source>
+      <trans-unit id="metric.response.time">
+        <source>metric.response.time</source>
         <target>Response Time</target>
         <note>System response time metric</note>
       </trans-unit>
@@ -649,18 +746,23 @@
       </trans-unit>
 
       <!-- Page Descriptions -->
-      <trans-unit id="page.user_description">
-        <source>page.user_description</source>
+      <trans-unit id="page.user.description">
+        <source>page.user.description</source>
         <target>AI-powered contact management and relationship insights</target>
         <note>Users page description</note>
       </trans-unit>
-      <trans-unit id="page.organization_description">
-        <source>page.organization_description</source>
+      <trans-unit id="page.organization.description">
+        <source>page.organization.description</source>
         <target>Manage your business relationships with AI insights</target>
         <note>Organizations page description</note>
       </trans-unit>
-      <trans-unit id="page.settings_description">
-        <source>page.settings_description</source>
+      <trans-unit id="page.course.description">
+        <source>page.course.description</source>
+        <target>Create and manage courses with lectures and student enrollments</target>
+        <note>Courses page description</note>
+      </trans-unit>
+      <trans-unit id="page.settings.description">
+        <source>page.settings.description</source>
         <target>Customize your Infinity CRM experience</target>
         <note>Settings page description</note>
       </trans-unit>
@@ -686,13 +788,13 @@
         <target>Analytics</target>
         <note>Analytics feature</note>
       </trans-unit>
-      <trans-unit id="ai.quick_actions">
-        <source>ai.quick_actions</source>
+      <trans-unit id="ai.quick.actions">
+        <source>ai.quick.actions</source>
         <target>Quick Actions</target>
         <note>Quick actions section</note>
       </trans-unit>
-      <trans-unit id="ai.powered_crm">
-        <source>ai.powered_crm</source>
+      <trans-unit id="ai.powered.crm">
+        <source>ai.powered.crm</source>
         <target>AI-Powered CRM Features</target>
         <note>AI-powered CRM features section</note>
       </trans-unit>
@@ -701,33 +803,33 @@
         <target>Conversational AI</target>
         <note>Conversational AI feature</note>
       </trans-unit>
-      <trans-unit id="ai.conversational_description">
-        <source>ai.conversational_description</source>
+      <trans-unit id="ai.conversational.description">
+        <source>ai.conversational.description</source>
         <target>Voice commands, WhatsApp integration, and natural language processing</target>
         <note>Conversational AI description</note>
       </trans-unit>
-      <trans-unit id="ai.predictive_analytics">
-        <source>ai.predictive_analytics</source>
+      <trans-unit id="ai.predictive.analytics">
+        <source>ai.predictive.analytics</source>
         <target>Predictive Analytics</target>
         <note>Predictive analytics feature</note>
       </trans-unit>
-      <trans-unit id="ai.predictive_description">
-        <source>ai.predictive_description</source>
+      <trans-unit id="ai.predictive.description">
+        <source>ai.predictive.description</source>
         <target>AI-driven insights and customer behavior predictions</target>
         <note>Predictive analytics description</note>
       </trans-unit>
-      <trans-unit id="ai.smart_automation">
-        <source>ai.smart_automation</source>
+      <trans-unit id="ai.smart.automation">
+        <source>ai.smart.automation</source>
         <target>Smart Automation</target>
         <note>Smart automation feature</note>
       </trans-unit>
-      <trans-unit id="ai.automation_description">
-        <source>ai.automation_description</source>
+      <trans-unit id="ai.automation.description">
+        <source>ai.automation.description</source>
         <target>Intelligent workflows and automated customer interactions</target>
         <note>Smart automation description</note>
       </trans-unit>
-      <trans-unit id="ai.coming_soon">
-        <source>ai.coming_soon</source>
+      <trans-unit id="ai.coming.soon">
+        <source>ai.coming.soon</source>
         <target>AI Chat coming soon...</target>
         <note>AI chat coming soon message</note>
       </trans-unit>
@@ -736,50 +838,50 @@
         <target>AI Settings</target>
         <note>AI settings section</note>
       </trans-unit>
-      <trans-unit id="ai.settings_description">
-        <source>ai.settings_description</source>
+      <trans-unit id="ai.settings.description">
+        <source>ai.settings.description</source>
         <target>Configure AI assistant behavior and preferences</target>
         <note>AI settings description</note>
       </trans-unit>
-      <trans-unit id="ai.crm_question">
-        <source>ai.crm_question</source>
+      <trans-unit id="ai.crm.question">
+        <source>ai.crm.question</source>
         <target>Ask me anything about your CRM</target>
         <note>AI assistant prompt</note>
       </trans-unit>
 
       <!-- Insights and Status -->
-      <trans-unit id="insight.high_engagement">
-        <source>insight.high_engagement</source>
+      <trans-unit id="insight.high.engagement">
+        <source>insight.high.engagement</source>
         <target>High engagement score</target>
         <note>High engagement AI insight</note>
       </trans-unit>
-      <trans-unit id="insight.active_communicator">
-        <source>insight.active_communicator</source>
+      <trans-unit id="insight.active.communicator">
+        <source>insight.active.communicator</source>
         <target>Active communicator</target>
         <note>Active communicator AI insight</note>
       </trans-unit>
-      <trans-unit id="insight.key_relationship">
-        <source>insight.key_relationship</source>
+      <trans-unit id="insight.key.relationship">
+        <source>insight.key.relationship</source>
         <target>Key relationship</target>
         <note>Key relationship AI insight</note>
       </trans-unit>
-      <trans-unit id="insight.strong_engagement">
-        <source>insight.strong_engagement</source>
+      <trans-unit id="insight.strong.engagement">
+        <source>insight.strong.engagement</source>
         <target>Strong engagement metrics</target>
         <note>Strong engagement AI insight</note>
       </trans-unit>
-      <trans-unit id="insight.growth_potential">
-        <source>insight.growth_potential</source>
+      <trans-unit id="insight.growth.potential">
+        <source>insight.growth.potential</source>
         <target>Growth potential identified</target>
         <note>Growth potential AI insight</note>
       </trans-unit>
-      <trans-unit id="insight.high_relationship_score">
-        <source>insight.high_relationship_score</source>
+      <trans-unit id="insight.high.relationship.score">
+        <source>insight.high.relationship.score</source>
         <target>High relationship score</target>
         <note>High relationship score AI insight</note>
       </trans-unit>
-      <trans-unit id="insight.active_organization">
-        <source>insight.active_organization</source>
+      <trans-unit id="insight.active.organization">
+        <source>insight.active.organization</source>
         <target>Active organization</target>
         <note>Active organization status</note>
       </trans-unit>
@@ -800,13 +902,13 @@
         <target>System Status</target>
         <note>System status label</note>
       </trans-unit>
-      <trans-unit id="system.security_status">
-        <source>system.security_status</source>
+      <trans-unit id="system.security.status">
+        <source>system.security.status</source>
         <target>Security Status:</target>
         <note>Security status label</note>
       </trans-unit>
-      <trans-unit id="system.security_message">
-        <source>system.security_message</source>
+      <trans-unit id="system.security.message">
+        <source>system.security.message</source>
         <target>All systems secure and up to date</target>
         <note>Security status message</note>
       </trans-unit>
@@ -847,13 +949,13 @@
         <target>Light Theme</target>
         <note>Light theme option</note>
       </trans-unit>
-      <trans-unit id="theme.dark_description">
-        <source>theme.dark_description</source>
+      <trans-unit id="theme.dark.description">
+        <source>theme.dark.description</source>
         <target>Modern dark interface with neon accents</target>
         <note>Dark theme description</note>
       </trans-unit>
-      <trans-unit id="theme.light_description">
-        <source>theme.light_description</source>
+      <trans-unit id="theme.light.description">
+        <source>theme.light.description</source>
         <target>Clean light interface with vibrant colors</target>
         <note>Light theme description</note>
       </trans-unit>
@@ -864,45 +966,45 @@
         <target>Contact Information</target>
         <note>Contact information section</note>
       </trans-unit>
-      <trans-unit id="contact.last_activity">
-        <source>contact.last_activity</source>
+      <trans-unit id="contact.last.activity">
+        <source>contact.last.activity</source>
         <target>Last Activity</target>
         <note>Last activity label</note>
       </trans-unit>
-      <trans-unit id="contact.member_since">
-        <source>contact.member_since</source>
+      <trans-unit id="contact.member.since">
+        <source>contact.member.since</source>
         <target>Member Since</target>
         <note>Member since label</note>
       </trans-unit>
-      <trans-unit id="contact.active_user">
-        <source>contact.active_user</source>
+      <trans-unit id="contact.active.user">
+        <source>contact.active.user</source>
         <target>Active user</target>
         <note>Active user status</note>
       </trans-unit>
 
       <!-- Misc UI Elements -->
-      <trans-unit id="misc.contacts_section">
-        <source>misc.contacts_section</source>
+      <trans-unit id="misc.contacts.section">
+        <source>misc.contacts.section</source>
         <target>Contacts</target>
         <note>Contacts section title</note>
       </trans-unit>
-      <trans-unit id="misc.coming_soon">
-        <source>misc.coming_soon</source>
+      <trans-unit id="misc.coming.soon">
+        <source>misc.coming.soon</source>
         <target>Coming Soon</target>
         <note>Coming soon label</note>
       </trans-unit>
-      <trans-unit id="misc.voice_commands">
-        <source>misc.voice_commands</source>
+      <trans-unit id="misc.voice.commands">
+        <source>misc.voice.commands</source>
         <target>Voice Commands</target>
         <note>Voice commands tooltip</note>
       </trans-unit>
-      <trans-unit id="misc.ai_insights_tooltip">
-        <source>misc.ai_insights_tooltip</source>
+      <trans-unit id="misc.ai.insights.tooltip">
+        <source>misc.ai.insights.tooltip</source>
         <target>AI Insights</target>
         <note>AI insights tooltip</note>
       </trans-unit>
-      <trans-unit id="misc.quick_actions_tooltip">
-        <source>misc.quick_actions_tooltip</source>
+      <trans-unit id="misc.quick.actions.tooltip">
+        <source>misc.quick.actions.tooltip</source>
         <target>Quick Actions</target>
         <note>Quick actions tooltip</note>
       </trans-unit>
@@ -918,13 +1020,13 @@
         <target>Register</target>
         <note>Registration page title</note>
       </trans-unit>
-      <trans-unit id="auth.welcome_back">
-        <source>auth.welcome_back</source>
+      <trans-unit id="auth.welcome.back">
+        <source>auth.welcome.back</source>
         <target>Welcome Back</target>
         <note>Login welcome message</note>
       </trans-unit>
-      <trans-unit id="auth.login_to_continue">
-        <source>auth.login_to_continue</source>
+      <trans-unit id="auth.login.to.continue">
+        <source>auth.login.to.continue</source>
         <target>Sign in to continue to your account</target>
         <note>Login instruction</note>
       </trans-unit>
@@ -938,73 +1040,73 @@
         <target>Password</target>
         <note>Password field label</note>
       </trans-unit>
-      <trans-unit id="auth.remember_me">
-        <source>auth.remember_me</source>
+      <trans-unit id="auth.remember.me">
+        <source>auth.remember.me</source>
         <target>Remember me</target>
         <note>Remember me checkbox</note>
       </trans-unit>
-      <trans-unit id="auth.sign_in">
-        <source>auth.sign_in</source>
+      <trans-unit id="auth.sign.in">
+        <source>auth.sign.in</source>
         <target>Sign In</target>
         <note>Sign in button</note>
       </trans-unit>
-      <trans-unit id="auth.no_account">
-        <source>auth.no_account</source>
+      <trans-unit id="auth.no.account">
+        <source>auth.no.account</source>
         <target>Don't have an account?</target>
         <note>Link to registration</note>
       </trans-unit>
-      <trans-unit id="auth.register_now">
-        <source>auth.register_now</source>
+      <trans-unit id="auth.register.now">
+        <source>auth.register.now</source>
         <target>Register now</target>
         <note>Register link text</note>
       </trans-unit>
-      <trans-unit id="auth.create_account">
-        <source>auth.create_account</source>
+      <trans-unit id="auth.create.account">
+        <source>auth.create.account</source>
         <target>Create Account</target>
         <note>Create account heading</note>
       </trans-unit>
-      <trans-unit id="auth.join_infinity">
-        <source>auth.join_infinity</source>
+      <trans-unit id="auth.join.infinity">
+        <source>auth.join.infinity</source>
         <target>Join Infinity and start managing your data</target>
         <note>Registration invitation</note>
       </trans-unit>
-      <trans-unit id="auth.full_name">
-        <source>auth.full_name</source>
+      <trans-unit id="auth.full.name">
+        <source>auth.full.name</source>
         <target>Full Name</target>
         <note>Full name field label</note>
       </trans-unit>
-      <trans-unit id="auth.confirm_password">
-        <source>auth.confirm_password</source>
+      <trans-unit id="auth.confirm.password">
+        <source>auth.confirm.password</source>
         <target>Confirm Password</target>
         <note>Confirm password field label</note>
       </trans-unit>
-      <trans-unit id="auth.password_requirements">
-        <source>auth.password_requirements</source>
+      <trans-unit id="auth.password.requirements">
+        <source>auth.password.requirements</source>
         <target>Minimum 8 characters required</target>
         <note>Password requirements hint</note>
       </trans-unit>
-      <trans-unit id="auth.create_account_button">
-        <source>auth.create_account_button</source>
+      <trans-unit id="auth.create.account.button">
+        <source>auth.create.account.button</source>
         <target>Create Account</target>
         <note>Create account button</note>
       </trans-unit>
-      <trans-unit id="auth.already_have_account">
-        <source>auth.already_have_account</source>
+      <trans-unit id="auth.already.have.account">
+        <source>auth.already.have.account</source>
         <target>Already have an account?</target>
         <note>Link to login</note>
       </trans-unit>
-      <trans-unit id="auth.passwords_do_not_match">
-        <source>auth.passwords_do_not_match</source>
+      <trans-unit id="auth.passwords.do.not.match">
+        <source>auth.passwords.do.not.match</source>
         <target>Passwords do not match</target>
         <note>Password mismatch error</note>
       </trans-unit>
-      <trans-unit id="auth.registration_successful">
-        <source>auth.registration_successful</source>
+      <trans-unit id="auth.registration.successful">
+        <source>auth.registration.successful</source>
         <target>Registration successful! You can now log in.</target>
         <note>Registration success message</note>
       </trans-unit>
-      <trans-unit id="auth.registration_failed">
-        <source>auth.registration_failed</source>
+      <trans-unit id="auth.registration.failed">
+        <source>auth.registration.failed</source>
         <target>Registration failed. Please try again.</target>
         <note>Registration error message</note>
       </trans-unit>
@@ -1025,13 +1127,13 @@
         <target>Manage your API access tokens</target>
         <note>API tokens page description</note>
       </trans-unit>
-      <trans-unit id="token.current_token">
-        <source>token.current_token</source>
+      <trans-unit id="token.current.token">
+        <source>token.current.token</source>
         <target>Current API Token</target>
         <note>Current token section heading</note>
       </trans-unit>
-      <trans-unit id="token.active_token">
-        <source>token.active_token</source>
+      <trans-unit id="token.active.token">
+        <source>token.active.token</source>
         <target>Active Token</target>
         <note>Active token label</note>
       </trans-unit>
@@ -1040,8 +1142,8 @@
         <target>Expires</target>
         <note>Token expiration label</note>
       </trans-unit>
-      <trans-unit id="token.your_token">
-        <source>token.your_token</source>
+      <trans-unit id="token.your.token">
+        <source>token.your.token</source>
         <target>Your API Token</target>
         <note>Token input label</note>
       </trans-unit>
@@ -1055,8 +1157,8 @@
         <target>Copied</target>
         <note>Copied confirmation</note>
       </trans-unit>
-      <trans-unit id="token.copy_warning">
-        <source>token.copy_warning</source>
+      <trans-unit id="token.copy.warning">
+        <source>token.copy.warning</source>
         <target>Keep this token secure. It provides full access to your account via the API.</target>
         <note>Token security warning</note>
       </trans-unit>
@@ -1065,13 +1167,13 @@
         <target>Revoke Token</target>
         <note>Revoke button</note>
       </trans-unit>
-      <trans-unit id="token.revoke_confirm">
-        <source>token.revoke_confirm</source>
+      <trans-unit id="token.revoke.confirm">
+        <source>token.revoke.confirm</source>
         <target>Are you sure you want to revoke this token? Applications using it will lose access.</target>
         <note>Revoke confirmation</note>
       </trans-unit>
-      <trans-unit id="token.no_active_token">
-        <source>token.no_active_token</source>
+      <trans-unit id="token.no.active.token">
+        <source>token.no.active.token</source>
         <target>You don't have an active API token</target>
         <note>No token message</note>
       </trans-unit>
@@ -1080,63 +1182,63 @@
         <target>Generate New Token</target>
         <note>Generate button</note>
       </trans-unit>
-      <trans-unit id="token.usage_instructions">
-        <source>token.usage_instructions</source>
+      <trans-unit id="token.usage.instructions">
+        <source>token.usage.instructions</source>
         <target>Usage Instructions</target>
         <note>Usage section heading</note>
       </trans-unit>
-      <trans-unit id="token.usage_description">
-        <source>token.usage_description</source>
+      <trans-unit id="token.usage.description">
+        <source>token.usage.description</source>
         <target>Use your API token in the Authorization header of your requests:</target>
         <note>Usage description</note>
       </trans-unit>
-      <trans-unit id="token.security_tips">
-        <source>token.security_tips</source>
+      <trans-unit id="token.security.tips">
+        <source>token.security.tips</source>
         <target>Security Best Practices</target>
         <note>Security tips heading</note>
       </trans-unit>
-      <trans-unit id="token.tip_1">
-        <source>token.tip_1</source>
+      <trans-unit id="token.tip.1">
+        <source>token.tip.1</source>
         <target>Never share your API token publicly</target>
         <note>Security tip 1</note>
       </trans-unit>
-      <trans-unit id="token.tip_2">
-        <source>token.tip_2</source>
+      <trans-unit id="token.tip.2">
+        <source>token.tip.2</source>
         <target>Revoke tokens immediately if compromised</target>
         <note>Security tip 2</note>
       </trans-unit>
-      <trans-unit id="token.tip_3">
-        <source>token.tip_3</source>
+      <trans-unit id="token.tip.3">
+        <source>token.tip.3</source>
         <target>Use environment variables to store tokens in applications</target>
         <note>Security tip 3</note>
       </trans-unit>
-      <trans-unit id="token.tip_4">
-        <source>token.tip_4</source>
+      <trans-unit id="token.tip.4">
+        <source>token.tip.4</source>
         <target>Regenerate tokens periodically for better security</target>
         <note>Security tip 4</note>
       </trans-unit>
-      <trans-unit id="token.info_title">
-        <source>token.info_title</source>
+      <trans-unit id="token.info.title">
+        <source>token.info.title</source>
         <target>Token Information</target>
         <note>Info card heading</note>
       </trans-unit>
-      <trans-unit id="token.validity_period">
-        <source>token.validity_period</source>
+      <trans-unit id="token.validity.period">
+        <source>token.validity.period</source>
         <target>Validity Period</target>
         <note>Validity period label</note>
       </trans-unit>
-      <trans-unit id="token.validity_30_days">
-        <source>token.validity_30_days</source>
+      <trans-unit id="token.validity.30.days">
+        <source>token.validity.30.days</source>
         <target>30 days</target>
         <note>30 days validity</note>
       </trans-unit>
-      <trans-unit id="token.access_level">
-        <source>token.access_level</source>
+      <trans-unit id="token.access.level">
+        <source>token.access.level</source>
         <target>Access Level</target>
         <note>Access level label</note>
       </trans-unit>
-      <trans-unit id="token.full_api_access">
-        <source>token.full_api_access</source>
+      <trans-unit id="token.full.api.access">
+        <source>token.full.api.access</source>
         <target>Full API Access</target>
         <note>Full access description</note>
       </trans-unit>
@@ -1145,13 +1247,13 @@
         <target>Regeneration</target>
         <note>Regeneration label</note>
       </trans-unit>
-      <trans-unit id="token.regeneration_description">
-        <source>token.regeneration_description</source>
+      <trans-unit id="token.regeneration.description">
+        <source>token.regeneration.description</source>
         <target>Revoke old token before generating new one</target>
         <note>Regeneration description</note>
       </trans-unit>
-      <trans-unit id="token.active_tokens">
-        <source>token.active_tokens</source>
+      <trans-unit id="token.active.tokens">
+        <source>token.active.tokens</source>
         <target>Active Tokens</target>
         <note>Active tokens metric</note>
       </trans-unit>
@@ -1160,105 +1262,105 @@
         <target>Secured</target>
         <note>Secure status</note>
       </trans-unit>
-      <trans-unit id="token.no_token">
-        <source>token.no_token</source>
+      <trans-unit id="token.no.token">
+        <source>token.no.token</source>
         <target>No Token</target>
         <note>No token status</note>
       </trans-unit>
-      <trans-unit id="token.generated_successfully">
-        <source>token.generated_successfully</source>
+      <trans-unit id="token.generated.successfully">
+        <source>token.generated.successfully</source>
         <target>API token generated successfully!</target>
         <note>Generation success message</note>
       </trans-unit>
-      <trans-unit id="token.revoked_successfully">
-        <source>token.revoked_successfully</source>
+      <trans-unit id="token.revoked.successfully">
+        <source>token.revoked.successfully</source>
         <target>API token revoked successfully</target>
         <note>Revocation success message</note>
       </trans-unit>
-      <trans-unit id="token.csrf_invalid">
-        <source>token.csrf_invalid</source>
+      <trans-unit id="token.csrf.invalid">
+        <source>token.csrf.invalid</source>
         <target>Invalid security token</target>
         <note>CSRF error message</note>
       </trans-unit>
 
       <!-- Missing User Translations -->
-      <trans-unit id="button.add_user">
-        <source>button.add_user</source>
+      <trans-unit id="button.add.user">
+        <source>button.add.user</source>
         <target>Add User</target>
       </trans-unit>
-      <trans-unit id="button.add_first_user">
-        <source>button.add_first_user</source>
+      <trans-unit id="button.add.first.user">
+        <source>button.add.first.user</source>
         <target>Add First User</target>
       </trans-unit>
-      <trans-unit id="button.update_user">
-        <source>button.update_user</source>
+      <trans-unit id="button.update.user">
+        <source>button.update.user</source>
         <target>Update User</target>
       </trans-unit>
-      <trans-unit id="button.create_user">
-        <source>button.create_user</source>
+      <trans-unit id="button.create.user">
+        <source>button.create.user</source>
         <target>Create User</target>
       </trans-unit>
-      <trans-unit id="course.button.create_course">
-        <source>course.button.create_course</source>
+      <trans-unit id="button.add.course">
+        <source>button.add.course</source>
+        <target>Add Course</target>
+      </trans-unit>
+      <trans-unit id="course.button.create.course">
+        <source>course.button.create.course</source>
         <target>Create Course</target>
       </trans-unit>
-      <trans-unit id="course.lecture.button.add_lecture">
-        <source>course.lecture.button.add_lecture</source>
+      <trans-unit id="course.lecture.button.add.lecture">
+        <source>course.lecture.button.add.lecture</source>
         <target>Add Lecture</target>
       </trans-unit>
-      <trans-unit id="user.new_user">
-        <source>user.new_user</source>
+      <trans-unit id="user.new.user">
+        <source>user.new.user</source>
         <target>New User</target>
       </trans-unit>
-      <trans-unit id="user.confirm_delete">
-        <source>user.confirm_delete</source>
+      <trans-unit id="user.confirm.delete">
+        <source>user.confirm.delete</source>
         <target>Are you sure you want to delete %name%?</target>
       </trans-unit>
-      <trans-unit id="user.modal.edit_subtitle">
-        <source>user.modal.edit_subtitle</source>
+      <trans-unit id="user.modal.edit.subtitle">
+        <source>user.modal.edit.subtitle</source>
         <target>Update user information and permissions</target>
       </trans-unit>
-      <trans-unit id="user.modal.create_subtitle">
-        <source>user.modal.create_subtitle</source>
+      <trans-unit id="user.modal.create.subtitle">
+        <source>user.modal.create.subtitle</source>
         <target>Add a new user to the system</target>
       </trans-unit>
-      <trans-unit id="user.form.name_placeholder">
-        <source>user.form.name_placeholder</source>
+      <trans-unit id="user.form.name.placeholder">
+        <source>user.form.name.placeholder</source>
         <target>Enter full name</target>
       </trans-unit>
-      <trans-unit id="user.form.email_placeholder">
-        <source>user.form.email_placeholder</source>
+      <trans-unit id="user.form.email.placeholder">
+        <source>user.form.email.placeholder</source>
         <target>Enter email address</target>
       </trans-unit>
-      <trans-unit id="user.form.password_placeholder">
-        <source>user.form.password_placeholder</source>
+      <trans-unit id="user.form.password.placeholder">
+        <source>user.form.password.placeholder</source>
         <target>Enter password</target>
       </trans-unit>
-      <trans-unit id="user.form.password_confirm_placeholder">
-        <source>user.form.password_confirm_placeholder</source>
+      <trans-unit id="user.form.password.confirm.placeholder">
+        <source>user.form.password.confirm.placeholder</source>
         <target>Confirm password</target>
       </trans-unit>
 
       <!-- Missing Organization Translations -->
-      <trans-unit id="organization.back_to_organization">
-        <source>organization.back_to_organization</source>
+      <trans-unit id="organization.back.to.organization">
+        <source>organization.back.to.organization</source>
         <target>Back to Organization</target>
       </trans-unit>
-      <trans-unit id="organization.back_to_details">
-        <source>organization.back_to_details</source>
+      <trans-unit id="organization.back.to.details">
+        <source>organization.back.to.details</source>
         <target>Back to Details</target>
       </trans-unit>
       <trans-unit id="organization.statistics">
         <source>organization.statistics</source>
         <target>Statistics</target>
       </trans-unit>
-      <trans-unit id="organization.total_users">
-        <source>organization.total_users</source>
+      <trans-unit id="organization.total.users">
+        <source>organization.total.users</source>
         <target>Total Users</target>
-      </trans-unit>
-      <trans-unit id="organization.switcher.title">
-        <source>organization.switcher.title</source>
-        <target>Change Your Organization</target>
       </trans-unit>
       <trans-unit id="organization.switcher.subtitle">
         <source>organization.switcher.subtitle</source>
@@ -1266,54 +1368,54 @@
       </trans-unit>
 
       <!-- Missing Filter Translations -->
-      <trans-unit id="filter.active_users">
-        <source>filter.active_users</source>
+      <trans-unit id="filter.active.users">
+        <source>filter.active.users</source>
         <target>Active Users</target>
       </trans-unit>
-      <trans-unit id="filter.by_organization">
-        <source>filter.by_organization</source>
+      <trans-unit id="filter.by.organization">
+        <source>filter.by.organization</source>
         <target>By Organization</target>
       </trans-unit>
 
       <!-- Missing Empty State Translations -->
-      <trans-unit id="empty.no_users_yet">
-        <source>empty.no_users_yet</source>
+      <trans-unit id="empty.no.users.yet">
+        <source>empty.no.users.yet</source>
         <target>No users yet</target>
       </trans-unit>
-      <trans-unit id="empty.organization_users_description">
-        <source>empty.organization_users_description</source>
+      <trans-unit id="empty.organization.users.description">
+        <source>empty.organization.users.description</source>
         <target>Start building your team by adding the first user</target>
       </trans-unit>
-      <trans-unit id="empty.no_organization">
-        <source>empty.no_organization</source>
+      <trans-unit id="empty.no.organization">
+        <source>empty.no.organization</source>
         <target>No organization</target>
       </trans-unit>
 
       <!-- Page Titles & Descriptions -->
-      <trans-unit id="page.ai_powered_crm">
-        <source>page.ai_powered_crm</source>
+      <trans-unit id="page.ai.powered.crm">
+        <source>page.ai.powered.crm</source>
         <target>AI-Powered CRM Dashboard</target>
       </trans-unit>
-      <trans-unit id="page.organization_details">
-        <source>page.organization_details</source>
+      <trans-unit id="page.organization.details">
+        <source>page.organization.details</source>
         <target>Organization Details</target>
       </trans-unit>
-      <trans-unit id="page.manage_users">
-        <source>page.manage_users</source>
+      <trans-unit id="page.manage.users">
+        <source>page.manage.users</source>
         <target>Manage Users</target>
       </trans-unit>
-      <trans-unit id="page.infinity_suffix">
-        <source>page.infinity_suffix</source>
+      <trans-unit id="page.infinity.suffix">
+        <source>page.infinity.suffix</source>
         <target>Infinity</target>
       </trans-unit>
 
       <!-- Status Badges -->
-      <trans-unit id="badge.ai_enhanced">
-        <source>badge.ai_enhanced</source>
+      <trans-unit id="badge.ai.enhanced">
+        <source>badge.ai.enhanced</source>
         <target>AI Enhanced</target>
       </trans-unit>
-      <trans-unit id="badge.real_time">
-        <source>badge.real_time</source>
+      <trans-unit id="badge.real.time">
+        <source>badge.real.time</source>
         <target>Real-time</target>
       </trans-unit>
       <trans-unit id="badge.organization">
@@ -1322,20 +1424,20 @@
       </trans-unit>
 
       <!-- Metric Trends -->
-      <trans-unit id="metric.trend.this_month">
-        <source>metric.trend.this_month</source>
+      <trans-unit id="metric.trend.this.month">
+        <source>metric.trend.this.month</source>
         <target>+12% this month</target>
       </trans-unit>
-      <trans-unit id="metric.trend.new_count">
-        <source>metric.trend.new_count</source>
+      <trans-unit id="metric.trend.new.count">
+        <source>metric.trend.new.count</source>
         <target>+3 new</target>
       </trans-unit>
       <trans-unit id="metric.trend.today">
         <source>metric.trend.today</source>
         <target>+15% today</target>
       </trans-unit>
-      <trans-unit id="metric.response_time_value">
-        <source>metric.response_time_value</source>
+      <trans-unit id="metric.response.time.value">
+        <source>metric.response.time.value</source>
         <target>&lt; 200ms</target>
       </trans-unit>
 
@@ -1352,18 +1454,18 @@
         <source>pagination.of</source>
         <target>of</target>
       </trans-unit>
-      <trans-unit id="pagination.show_label">
-        <source>pagination.show_label</source>
+      <trans-unit id="pagination.show.label">
+        <source>pagination.show.label</source>
         <target>Show</target>
       </trans-unit>
-      <trans-unit id="table.aria_label">
-        <source>table.aria_label</source>
+      <trans-unit id="table.aria.label">
+        <source>table.aria.label</source>
         <target>users table</target>
       </trans-unit>
 
       <!-- Confirmation Messages -->
-      <trans-unit id="confirm.delete_item">
-        <source>confirm.delete_item</source>
+      <trans-unit id="confirm.delete.item">
+        <source>confirm.delete.item</source>
         <target>Are you sure you want to delete this item?</target>
       </trans-unit>
 
@@ -1372,20 +1474,20 @@
         <source>modal.delete.title</source>
         <target>Confirm Deletion</target>
       </trans-unit>
-      <trans-unit id="modal.delete.cannot_undo">
-        <source>modal.delete.cannot_undo</source>
+      <trans-unit id="modal.delete.cannot.undo">
+        <source>modal.delete.cannot.undo</source>
         <target>This action cannot be undone.</target>
       </trans-unit>
-      <trans-unit id="modal.delete.confirm_message">
-        <source>modal.delete.confirm_message</source>
+      <trans-unit id="modal.delete.confirm.message">
+        <source>modal.delete.confirm.message</source>
         <target>Are you sure you want to delete</target>
       </trans-unit>
       <trans-unit id="modal.delete.cancel">
         <source>modal.delete.cancel</source>
         <target>Cancel</target>
       </trans-unit>
-      <trans-unit id="modal.delete.yes_delete">
-        <source>modal.delete.yes_delete</source>
+      <trans-unit id="modal.delete.yes.delete">
+        <source>modal.delete.yes.delete</source>
         <target>Yes, Delete It</target>
       </trans-unit>
       <trans-unit id="modal.delete.deleting">
@@ -1400,8 +1502,8 @@
         <source>modal.delete.failed</source>
         <target>Failed to delete item</target>
       </trans-unit>
-      <trans-unit id="modal.delete.network_error">
-        <source>modal.delete.network_error</source>
+      <trans-unit id="modal.delete.network.error">
+        <source>modal.delete.network.error</source>
         <target>Network error occurred</target>
       </trans-unit>
 
@@ -1410,26 +1512,26 @@
         <source>modal.crud.saving</source>
         <target>Saving...</target>
       </trans-unit>
-      <trans-unit id="modal.crud.unsaved_changes">
-        <source>modal.crud.unsaved_changes</source>
+      <trans-unit id="modal.crud.unsaved.changes">
+        <source>modal.crud.unsaved.changes</source>
         <target>You have unsaved changes. Are you sure you want to discard them?</target>
       </trans-unit>
-      <trans-unit id="modal.crud.continue_editing">
-        <source>modal.crud.continue_editing</source>
+      <trans-unit id="modal.crud.continue.editing">
+        <source>modal.crud.continue.editing</source>
         <target>Continue Editing</target>
       </trans-unit>
-      <trans-unit id="modal.crud.discard_changes">
-        <source>modal.crud.discard_changes</source>
+      <trans-unit id="modal.crud.discard.changes">
+        <source>modal.crud.discard.changes</source>
         <target>Discard Changes</target>
       </trans-unit>
-      <trans-unit id="modal.crud.error_saving">
-        <source>modal.crud.error_saving</source>
+      <trans-unit id="modal.crud.error.saving">
+        <source>modal.crud.error.saving</source>
         <target>An error occurred while saving. Please try again.</target>
       </trans-unit>
 
       <!-- Modal Opener Errors -->
-      <trans-unit id="modal.error.failed_to_open">
-        <source>modal.error.failed_to_open</source>
+      <trans-unit id="modal.error.failed.to.open">
+        <source>modal.error.failed.to.open</source>
         <target>Failed to open form. Please try again.</target>
       </trans-unit>
 
@@ -1438,8 +1540,8 @@
         <source>search.error.failed</source>
         <target>Search failed. Please try again.</target>
       </trans-unit>
-      <trans-unit id="search.error.failed_to_load">
-        <source>search.error.failed_to_load</source>
+      <trans-unit id="search.error.failed.to.load">
+        <source>search.error.failed.to.load</source>
         <target>Failed to load data</target>
       </trans-unit>
 
@@ -1453,6 +1555,11 @@
         <source>course.singular</source>
         <target>Course</target>
         <note>Singular form - single course reference</note>
+      </trans-unit>
+      <trans-unit id="course.search.placeholder">
+        <source>course.search.placeholder</source>
+        <target>Search courses...</target>
+        <note>Search input placeholder for courses list</note>
       </trans-unit>
       <trans-unit id="course.name">
         <source>course.name</source>
@@ -1488,16 +1595,31 @@
         <target>Lecture</target>
         <note>Singular form - single lecture reference</note>
       </trans-unit>
-      <trans-unit id="course.lectures_count">
-        <source>course.lectures_count</source>
+      <trans-unit id="course.lectures.count">
+        <source>course.lectures.count</source>
         <target>Lectures</target>
       </trans-unit>
-      <trans-unit id="course.release_date">
-        <source>course.release_date</source>
+      <trans-unit id="course.students">
+        <source>course.students</source>
+        <target>Students</target>
+        <note>Number of enrolled students</note>
+      </trans-unit>
+      <trans-unit id="course.duration">
+        <source>course.duration</source>
+        <target>Duration</target>
+        <note>Course duration/length</note>
+      </trans-unit>
+      <trans-unit id="course.date">
+        <source>course.date</source>
+        <target>Date</target>
+        <note>Course date (release or created)</note>
+      </trans-unit>
+      <trans-unit id="course.release.date">
+        <source>course.release.date</source>
         <target>Release Date</target>
       </trans-unit>
-      <trans-unit id="course.total_length">
-        <source>course.total_length</source>
+      <trans-unit id="course.total.length">
+        <source>course.total.length</source>
         <target>Total Length</target>
       </trans-unit>
       <trans-unit id="course.hours">
@@ -1508,44 +1630,44 @@
         <source>course.information</source>
         <target>Course Information</target>
       </trans-unit>
-      <trans-unit id="course.created_at">
-        <source>course.created_at</source>
+      <trans-unit id="course.created.at">
+        <source>course.created.at</source>
         <target>Created At</target>
       </trans-unit>
-      <trans-unit id="course.updated_at">
-        <source>course.updated_at</source>
+      <trans-unit id="course.updated.at">
+        <source>course.updated.at</source>
         <target>Updated At</target>
       </trans-unit>
-      <trans-unit id="course.view_details">
-        <source>course.view_details</source>
+      <trans-unit id="course.view.details">
+        <source>course.view.details</source>
         <target>View Details</target>
       </trans-unit>
-      <trans-unit id="course.back_to_list">
-        <source>course.back_to_list</source>
+      <trans-unit id="course.back.to.list">
+        <source>course.back.to.list</source>
         <target>Back to Courses</target>
       </trans-unit>
-      <trans-unit id="course.manage_lectures">
-        <source>course.manage_lectures</source>
+      <trans-unit id="course.manage.lectures">
+        <source>course.manage.lectures</source>
         <target>Manage Lectures</target>
       </trans-unit>
-      <trans-unit id="course.no_lectures">
-        <source>course.no_lectures</source>
+      <trans-unit id="course.no.lectures">
+        <source>course.no.lectures</source>
         <target>No lectures</target>
       </trans-unit>
-      <trans-unit id="course.lectures_in_course">
-        <source>course.lectures_in_course</source>
+      <trans-unit id="course.lectures.in.course">
+        <source>course.lectures.in.course</source>
         <target>Lectures in Course</target>
       </trans-unit>
-      <trans-unit id="course.total_duration">
-        <source>course.total_duration</source>
+      <trans-unit id="course.total.duration">
+        <source>course.total.duration</source>
         <target>Total Duration</target>
       </trans-unit>
-      <trans-unit id="course.total_lectures">
-        <source>course.total_lectures</source>
+      <trans-unit id="course.total.lectures">
+        <source>course.total.lectures</source>
         <target>Total Lectures</target>
       </trans-unit>
-      <trans-unit id="course.no_release_date">
-        <source>course.no_release_date</source>
+      <trans-unit id="course.no.release.date">
+        <source>course.no.release.date</source>
         <target>No release date</target>
       </trans-unit>
 
@@ -1554,94 +1676,94 @@
         <source>course.form.name</source>
         <target>Course Name</target>
       </trans-unit>
-      <trans-unit id="course.form.name_placeholder">
-        <source>course.form.name_placeholder</source>
+      <trans-unit id="course.form.name.placeholder">
+        <source>course.form.name.placeholder</source>
         <target>Enter course name</target>
       </trans-unit>
       <trans-unit id="course.form.description">
         <source>course.form.description</source>
         <target>Description</target>
       </trans-unit>
-      <trans-unit id="course.form.description_placeholder">
-        <source>course.form.description_placeholder</source>
+      <trans-unit id="course.form.description.placeholder">
+        <source>course.form.description.placeholder</source>
         <target>Enter course description</target>
       </trans-unit>
       <trans-unit id="course.form.active">
         <source>course.form.active</source>
         <target>Active Course</target>
       </trans-unit>
-      <trans-unit id="course.form.release_date">
-        <source>course.form.release_date</source>
+      <trans-unit id="course.form.release.date">
+        <source>course.form.release.date</source>
         <target>Release Date</target>
       </trans-unit>
-      <trans-unit id="course.form.total_length">
-        <source>course.form.total_length</source>
+      <trans-unit id="course.form.total.length">
+        <source>course.form.total.length</source>
         <target>Total Length (hours)</target>
       </trans-unit>
-      <trans-unit id="course.form.total_length_placeholder">
-        <source>course.form.total_length_placeholder</source>
+      <trans-unit id="course.form.total.length.placeholder">
+        <source>course.form.total.length.placeholder</source>
         <target>0.0</target>
       </trans-unit>
 
       <!-- Course Validation -->
-      <trans-unit id="course.validation.name_required">
-        <source>course.validation.name_required</source>
+      <trans-unit id="course.validation.name.required">
+        <source>course.validation.name.required</source>
         <target>Course name is required</target>
       </trans-unit>
-      <trans-unit id="course.validation.name_min_length">
-        <source>course.validation.name_min_length</source>
+      <trans-unit id="course.validation.name.min.length">
+        <source>course.validation.name.min.length</source>
         <target>Course name must be at least 2 characters</target>
       </trans-unit>
-      <trans-unit id="course.validation.name_max_length">
-        <source>course.validation.name_max_length</source>
+      <trans-unit id="course.validation.name.max.length">
+        <source>course.validation.name.max.length</source>
         <target>Course name cannot exceed 255 characters</target>
       </trans-unit>
-      <trans-unit id="course.validation.description_max_length">
-        <source>course.validation.description_max_length</source>
+      <trans-unit id="course.validation.description.max.length">
+        <source>course.validation.description.max.length</source>
         <target>Description cannot exceed 5000 characters</target>
       </trans-unit>
-      <trans-unit id="course.validation.total_length_positive">
-        <source>course.validation.total_length_positive</source>
+      <trans-unit id="course.validation.total.length.positive">
+        <source>course.validation.total.length.positive</source>
         <target>Total length must be zero or positive</target>
       </trans-unit>
 
       <!-- Course Flash Messages -->
-      <trans-unit id="course.flash.created_successfully">
-        <source>course.flash.created_successfully</source>
+      <trans-unit id="course.flash.created.successfully">
+        <source>course.flash.created.successfully</source>
         <target>Course created successfully</target>
       </trans-unit>
-      <trans-unit id="course.flash.updated_successfully">
-        <source>course.flash.updated_successfully</source>
+      <trans-unit id="course.flash.updated.successfully">
+        <source>course.flash.updated.successfully</source>
         <target>Course updated successfully</target>
       </trans-unit>
-      <trans-unit id="course.flash.deleted_successfully">
-        <source>course.flash.deleted_successfully</source>
+      <trans-unit id="course.flash.deleted.successfully">
+        <source>course.flash.deleted.successfully</source>
         <target>Course deleted successfully</target>
       </trans-unit>
-      <trans-unit id="course.flash.invalid_csrf_token">
-        <source>course.flash.invalid_csrf_token</source>
+      <trans-unit id="course.flash.invalid.csrf.token">
+        <source>course.flash.invalid.csrf.token</source>
         <target>Invalid security token</target>
       </trans-unit>
 
       <!-- Course Modal -->
-      <trans-unit id="course.modal.create_title">
-        <source>course.modal.create_title</source>
+      <trans-unit id="course.modal.create.title">
+        <source>course.modal.create.title</source>
         <target>Create New Course</target>
       </trans-unit>
-      <trans-unit id="course.modal.create_subtitle">
-        <source>course.modal.create_subtitle</source>
+      <trans-unit id="course.modal.create.subtitle">
+        <source>course.modal.create.subtitle</source>
         <target>Create a new course</target>
       </trans-unit>
-      <trans-unit id="course.modal.create_tip">
-        <source>course.modal.create_tip</source>
+      <trans-unit id="course.modal.create.tip">
+        <source>course.modal.create.tip</source>
         <target>Fill in the course details below. You can add lectures after creating the course.</target>
       </trans-unit>
-      <trans-unit id="course.modal.edit_title">
-        <source>course.modal.edit_title</source>
+      <trans-unit id="course.modal.edit.title">
+        <source>course.modal.edit.title</source>
         <target>Edit Course</target>
       </trans-unit>
-      <trans-unit id="course.modal.edit_subtitle">
-        <source>course.modal.edit_subtitle</source>
+      <trans-unit id="course.modal.edit.subtitle">
+        <source>course.modal.edit.subtitle</source>
         <target>Update course information</target>
       </trans-unit>
 
@@ -1650,58 +1772,58 @@
         <source>course.lecture.form.name</source>
         <target>Lecture Name</target>
       </trans-unit>
-      <trans-unit id="course.lecture.form.name_placeholder">
-        <source>course.lecture.form.name_placeholder</source>
+      <trans-unit id="course.lecture.form.name.placeholder">
+        <source>course.lecture.form.name.placeholder</source>
         <target>Enter lecture name</target>
       </trans-unit>
       <trans-unit id="course.lecture.form.description">
         <source>course.lecture.form.description</source>
         <target>Description</target>
       </trans-unit>
-      <trans-unit id="course.lecture.form.description_placeholder">
-        <source>course.lecture.form.description_placeholder</source>
+      <trans-unit id="course.lecture.form.description.placeholder">
+        <source>course.lecture.form.description.placeholder</source>
         <target>Enter lecture description</target>
       </trans-unit>
-      <trans-unit id="course.lecture.form.video_file">
-        <source>course.lecture.form.video_file</source>
+      <trans-unit id="course.lecture.form.video.file">
+        <source>course.lecture.form.video.file</source>
         <target>Video File</target>
       </trans-unit>
-      <trans-unit id="course.lecture.form.view_order">
-        <source>course.lecture.form.view_order</source>
+      <trans-unit id="course.lecture.form.view.order">
+        <source>course.lecture.form.view.order</source>
         <target>Order</target>
       </trans-unit>
-      <trans-unit id="course.lecture.form.view_order_placeholder">
-        <source>course.lecture.form.view_order_placeholder</source>
+      <trans-unit id="course.lecture.form.view.order.placeholder">
+        <source>course.lecture.form.view.order.placeholder</source>
         <target>1</target>
       </trans-unit>
-      <trans-unit id="course.lecture.watch_video">
-        <source>course.lecture.watch_video</source>
+      <trans-unit id="course.lecture.watch.video">
+        <source>course.lecture.watch.video</source>
         <target>Watch Video</target>
       </trans-unit>
 
       <!-- Course Lecture Validation -->
-      <trans-unit id="course.lecture.validation.name_required">
-        <source>course.lecture.validation.name_required</source>
+      <trans-unit id="course.lecture.validation.name.required">
+        <source>course.lecture.validation.name.required</source>
         <target>Lecture name is required</target>
       </trans-unit>
-      <trans-unit id="course.lecture.validation.name_min_length">
-        <source>course.lecture.validation.name_min_length</source>
+      <trans-unit id="course.lecture.validation.name.min.length">
+        <source>course.lecture.validation.name.min.length</source>
         <target>Lecture name must be at least 2 characters</target>
       </trans-unit>
-      <trans-unit id="course.lecture.validation.name_max_length">
-        <source>course.lecture.validation.name_max_length</source>
+      <trans-unit id="course.lecture.validation.name.max.length">
+        <source>course.lecture.validation.name.max.length</source>
         <target>Lecture name cannot exceed 255 characters</target>
       </trans-unit>
-      <trans-unit id="course.lecture.validation.description_max_length">
-        <source>course.lecture.validation.description_max_length</source>
+      <trans-unit id="course.lecture.validation.description.max.length">
+        <source>course.lecture.validation.description.max.length</source>
         <target>Description cannot exceed 5000 characters</target>
       </trans-unit>
-      <trans-unit id="course.lecture.validation.invalid_video_format">
-        <source>course.lecture.validation.invalid_video_format</source>
+      <trans-unit id="course.lecture.validation.invalid.video.format">
+        <source>course.lecture.validation.invalid.video.format</source>
         <target>Please upload a valid video file (MP4, WebM, OGG, MOV)</target>
       </trans-unit>
-      <trans-unit id="course.lecture.validation.view_order_positive">
-        <source>course.lecture.validation.view_order_positive</source>
+      <trans-unit id="course.lecture.validation.view.order.positive">
+        <source>course.lecture.validation.view.order.positive</source>
         <target>Order must be zero or positive</target>
       </trans-unit>
 
@@ -1724,92 +1846,92 @@
       </trans-unit>
 
       <!-- Course Lecture Flash Messages -->
-      <trans-unit id="course.lecture.flash.created_successfully">
-        <source>course.lecture.flash.created_successfully</source>
+      <trans-unit id="course.lecture.flash.created.successfully">
+        <source>course.lecture.flash.created.successfully</source>
         <target>Lecture created successfully</target>
       </trans-unit>
-      <trans-unit id="course.lecture.flash.updated_successfully">
-        <source>course.lecture.flash.updated_successfully</source>
+      <trans-unit id="course.lecture.flash.updated.successfully">
+        <source>course.lecture.flash.updated.successfully</source>
         <target>Lecture updated successfully</target>
       </trans-unit>
-      <trans-unit id="course.lecture.flash.deleted_successfully">
-        <source>course.lecture.flash.deleted_successfully</source>
+      <trans-unit id="course.lecture.flash.deleted.successfully">
+        <source>course.lecture.flash.deleted.successfully</source>
         <target>Lecture deleted successfully</target>
       </trans-unit>
-      <trans-unit id="course.lecture.flash.invalid_csrf_token">
-        <source>course.lecture.flash.invalid_csrf_token</source>
+      <trans-unit id="course.lecture.flash.invalid.csrf.token">
+        <source>course.lecture.flash.invalid.csrf.token</source>
         <target>Invalid security token</target>
       </trans-unit>
 
       <!-- Course Lecture Modal -->
-      <trans-unit id="course.lecture.modal.create_title">
-        <source>course.lecture.modal.create_title</source>
+      <trans-unit id="course.lecture.modal.create.title">
+        <source>course.lecture.modal.create.title</source>
         <target>Add New Lecture</target>
       </trans-unit>
-      <trans-unit id="course.lecture.modal.create_subtitle">
-        <source>course.lecture.modal.create_subtitle</source>
+      <trans-unit id="course.lecture.modal.create.subtitle">
+        <source>course.lecture.modal.create.subtitle</source>
         <target>Add a new lecture to the course</target>
       </trans-unit>
-      <trans-unit id="course.lecture.modal.create_tip">
-        <source>course.lecture.modal.create_tip</source>
+      <trans-unit id="course.lecture.modal.create.tip">
+        <source>course.lecture.modal.create.tip</source>
         <target>Fill in the lecture details below. The order determines the sequence in the course.</target>
       </trans-unit>
-      <trans-unit id="course.lecture.modal.edit_title">
-        <source>course.lecture.modal.edit_title</source>
+      <trans-unit id="course.lecture.modal.edit.title">
+        <source>course.lecture.modal.edit.title</source>
         <target>Edit Lecture</target>
       </trans-unit>
-      <trans-unit id="course.lecture.modal.edit_subtitle">
-        <source>course.lecture.modal.edit_subtitle</source>
+      <trans-unit id="course.lecture.modal.edit.subtitle">
+        <source>course.lecture.modal.edit.subtitle</source>
         <target>Update lecture information</target>
       </trans-unit>
 
       <!-- Course Empty States -->
-      <trans-unit id="empty.no_lectures_yet">
-        <source>empty.no_lectures_yet</source>
+      <trans-unit id="empty.no.lectures.yet">
+        <source>empty.no.lectures.yet</source>
         <target>No lectures yet</target>
       </trans-unit>
 
       <!-- Course Buttons -->
-      <trans-unit id="button.add_lecture">
-        <source>button.add_lecture</source>
+      <trans-unit id="button.add.lecture">
+        <source>button.add.lecture</source>
         <target>Add Lecture</target>
       </trans-unit>
-      <trans-unit id="button.add_first_lecture">
-        <source>button.add_first_lecture</source>
+      <trans-unit id="button.add.first.lecture">
+        <source>button.add.first.lecture</source>
         <target>Add First Lecture</target>
       </trans-unit>
-      <trans-unit id="button.create_course">
-        <source>button.create_course</source>
+      <trans-unit id="button.create.course">
+        <source>button.create.course</source>
         <target>Create Course</target>
       </trans-unit>
-      <trans-unit id="button.update_course">
-        <source>button.update_course</source>
+      <trans-unit id="button.update.course">
+        <source>button.update.course</source>
         <target>Update Course</target>
       </trans-unit>
-      <trans-unit id="button.create_lecture">
-        <source>button.create_lecture</source>
+      <trans-unit id="button.create.lecture">
+        <source>button.create.lecture</source>
         <target>Create Lecture</target>
       </trans-unit>
-      <trans-unit id="button.update_lecture">
-        <source>button.update_lecture</source>
+      <trans-unit id="button.update.lecture">
+        <source>button.update.lecture</source>
         <target>Update Lecture</target>
       </trans-unit>
 
       <!-- Course Enrollment -->
-      <trans-unit id="course.enrolled_students">
-        <source>course.enrolled_students</source>
+      <trans-unit id="course.enrolled.students">
+        <source>course.enrolled.students</source>
         <target>Enrolled Students</target>
       </trans-unit>
-      <trans-unit id="course.enroll_student">
-        <source>course.enroll_student</source>
+      <trans-unit id="course.enroll.student">
+        <source>course.enroll.student</source>
         <target>Enroll Student</target>
       </trans-unit>
-      <trans-unit id="course.enroll_first_student">
-        <source>course.enroll_first_student</source>
+      <trans-unit id="course.enroll.first.student">
+        <source>course.enroll.first.student</source>
         <target>Enroll First Student</target>
       </trans-unit>
-      <trans-unit id="course.enrolled_at">
-        <source>course.enrolled_at</source>
+      <trans-unit id="course.enrolled.at">
+        <source>course.enrolled.at</source>
         <target>Enrolled At</target>
       </trans-unit>
       <trans-unit id="course.progress">
@@ -1832,110 +1954,110 @@
         <source>course.enrollment.deactivate</source>
         <target>Deactivate</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.confirm_remove">
-        <source>course.enrollment.confirm_remove</source>
+      <trans-unit id="course.enrollment.confirm.remove">
+        <source>course.enrollment.confirm.remove</source>
         <target>Are you sure you want to remove %student% from this course?</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.select_hint">
-        <source>course.enrollment.select_hint</source>
+      <trans-unit id="course.enrollment.select.hint">
+        <source>course.enrollment.select.hint</source>
         <target>Only users from the same organization who are not yet enrolled will be shown</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.active_immediately">
-        <source>course.enrollment.active_immediately</source>
+      <trans-unit id="course.enrollment.active.immediately">
+        <source>course.enrollment.active.immediately</source>
         <target>Activate enrollment immediately</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.flash.enrolled_successfully">
-        <source>course.enrollment.flash.enrolled_successfully</source>
+      <trans-unit id="course.enrollment.flash.enrolled.successfully">
+        <source>course.enrollment.flash.enrolled.successfully</source>
         <target>Student enrolled successfully</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.flash.already_enrolled">
-        <source>course.enrollment.flash.already_enrolled</source>
+      <trans-unit id="course.enrollment.flash.already.enrolled">
+        <source>course.enrollment.flash.already.enrolled</source>
         <target>This student is already enrolled in this course</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.flash.student_not_found">
-        <source>course.enrollment.flash.student_not_found</source>
+      <trans-unit id="course.enrollment.flash.student.not.found">
+        <source>course.enrollment.flash.student.not.found</source>
         <target>Student not found</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.flash.activated_successfully">
-        <source>course.enrollment.flash.activated_successfully</source>
+      <trans-unit id="course.enrollment.flash.activated.successfully">
+        <source>course.enrollment.flash.activated.successfully</source>
         <target>Enrollment activated successfully</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.flash.deactivated_successfully">
-        <source>course.enrollment.flash.deactivated_successfully</source>
+      <trans-unit id="course.enrollment.flash.deactivated.successfully">
+        <source>course.enrollment.flash.deactivated.successfully</source>
         <target>Enrollment deactivated successfully</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.flash.removed_successfully">
-        <source>course.enrollment.flash.removed_successfully</source>
+      <trans-unit id="course.enrollment.flash.removed.successfully">
+        <source>course.enrollment.flash.removed.successfully</source>
         <target>Student removed from course successfully</target>
       </trans-unit>
-      <trans-unit id="user.select_student">
-        <source>user.select_student</source>
+      <trans-unit id="user.select.student">
+        <source>user.select.student</source>
         <target>Select Student</target>
       </trans-unit>
-      <trans-unit id="user.select_student_placeholder">
-        <source>user.select_student_placeholder</source>
+      <trans-unit id="user.select.student.placeholder">
+        <source>user.select.student.placeholder</source>
         <target>-- Select a student --</target>
       </trans-unit>
-      <trans-unit id="empty.no_students_enrolled">
-        <source>empty.no_students_enrolled</source>
+      <trans-unit id="empty.no.students.enrolled">
+        <source>empty.no.students.enrolled</source>
         <target>No students enrolled yet</target>
       </trans-unit>
-      <trans-unit id="empty.course_enrollment_description">
-        <source>empty.course_enrollment_description</source>
+      <trans-unit id="empty.course.enrollment.description">
+        <source>empty.course.enrollment.description</source>
         <target>Start building your class by enrolling students from your organization</target>
       </trans-unit>
-      <trans-unit id="course.manage_enrollments">
-        <source>course.manage_enrollments</source>
+      <trans-unit id="course.manage.enrollments">
+        <source>course.manage.enrollments</source>
         <target>Manage Enrollments</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.select_students">
-        <source>course.enrollment.select_students</source>
+      <trans-unit id="course.enrollment.select.students">
+        <source>course.enrollment.select.students</source>
         <target>Select Students</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.enroll_selected">
-        <source>course.enrollment.enroll_selected</source>
+      <trans-unit id="course.enrollment.enroll.selected">
+        <source>course.enrollment.enroll.selected</source>
         <target>Enroll Selected Students</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.save_changes">
-        <source>course.enrollment.save_changes</source>
+      <trans-unit id="course.enrollment.save.changes">
+        <source>course.enrollment.save.changes</source>
         <target>Save Changes</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.multi_select_hint">
-        <source>course.enrollment.multi_select_hint</source>
+      <trans-unit id="course.enrollment.multi.select.hint">
+        <source>course.enrollment.multi.select.hint</source>
         <target>Select multiple students to enroll at once</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.auto_deactivate_hint">
-        <source>course.enrollment.auto_deactivate_hint</source>
+      <trans-unit id="course.enrollment.auto.deactivate.hint">
+        <source>course.enrollment.auto.deactivate.hint</source>
         <target>Unselecting a student will automatically deactivate their enrollment (not delete)</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.search_hint">
-        <source>course.enrollment.search_hint</source>
+      <trans-unit id="course.enrollment.search.hint">
+        <source>course.enrollment.search.hint</source>
         <target>Type to search by name or email</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.deactivate_warning">
-        <source>course.enrollment.deactivate_warning</source>
+      <trans-unit id="course.enrollment.deactivate.warning">
+        <source>course.enrollment.deactivate.warning</source>
         <target>Removing a student from selection will deactivate (not delete) their enrollment. They will lose access to the course but their progress will be preserved.</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.search_by_name">
-        <source>course.enrollment.search_by_name</source>
+      <trans-unit id="course.enrollment.search.by.name">
+        <source>course.enrollment.search.by.name</source>
         <target>Search by name...</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.switch_hint">
-        <source>course.enrollment.switch_hint</source>
+      <trans-unit id="course.enrollment.switch.hint">
+        <source>course.enrollment.switch.hint</source>
         <target>Toggle switches to enroll/deactivate students. Click Confirm to save changes.</target>
       </trans-unit>
       <trans-unit id="course.enrollment.enrolled">
         <source>course.enrollment.enrolled</source>
         <target>Enrolled</target>
       </trans-unit>
-      <trans-unit id="course.enrollment.not_enrolled">
-        <source>course.enrollment.not_enrolled</source>
+      <trans-unit id="course.enrollment.not.enrolled">
+        <source>course.enrollment.not.enrolled</source>
         <target>Not Enrolled</target>
       </trans-unit>
 
       <!-- Course Page Titles -->
-      <trans-unit id="page.course_details">
-        <source>page.course_details</source>
+      <trans-unit id="page.course.details">
+        <source>page.course.details</source>
         <target>Course Details</target>
       </trans-unit>
 
@@ -2170,11 +2292,11 @@
               <source>This value is already used.</source>
               <target>This value is already used.</target>
             </trans-unit>
-            <trans-unit id="LAGu_iq" resname="The size of the image could not be detected.">
+            <trans-unit id="LAGu.iq" resname="The size of the image could not be detected.">
               <source>The size of the image could not be detected.</source>
               <target>The size of the image could not be detected.</target>
             </trans-unit>
-            <trans-unit id="YD_yE46" resname="The image width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.">
+            <trans-unit id="YD.yE46" resname="The image width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.">
               <source>The image width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.</source>
               <target>The image width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.</target>
             </trans-unit>
@@ -2202,7 +2324,7 @@
               <source>The file was only partially uploaded.</source>
               <target>The file was only partially uploaded.</target>
             </trans-unit>
-            <trans-unit id="qUKi9W_" resname="No file was uploaded.">
+            <trans-unit id="qUKi9W." resname="No file was uploaded.">
               <source>No file was uploaded.</source>
               <target>No file was uploaded.</target>
             </trans-unit>
@@ -2210,11 +2332,11 @@
               <source>No temporary folder was configured in php.ini.</source>
               <target>No temporary folder was configured in php.ini, or the configured folder does not exist.</target>
             </trans-unit>
-            <trans-unit id="ivltd6_" resname="Cannot write temporary file to disk.">
+            <trans-unit id="ivltd6." resname="Cannot write temporary file to disk.">
               <source>Cannot write temporary file to disk.</source>
               <target>Cannot write temporary file to disk.</target>
             </trans-unit>
-            <trans-unit id="_x64C6y" resname="A PHP extension caused the upload to fail.">
+            <trans-unit id=".x64C6y" resname="A PHP extension caused the upload to fail.">
               <source>A PHP extension caused the upload to fail.</source>
               <target>A PHP extension caused the upload to fail.</target>
             </trans-unit>
@@ -2238,7 +2360,7 @@
               <source>Unsupported card type or invalid card number.</source>
               <target>Unsupported card type or invalid card number.</target>
             </trans-unit>
-            <trans-unit id="Bp_BiDs" resname="This is not a valid International Bank Account Number (IBAN).">
+            <trans-unit id="Bp.BiDs" resname="This is not a valid International Bank Account Number (IBAN).">
               <source>This is not a valid International Bank Account Number (IBAN).</source>
               <target>This value is not a valid International Bank Account Number (IBAN).</target>
             </trans-unit>
@@ -2266,7 +2388,7 @@
               <source>This value should be equal to {{ compared_value }}.</source>
               <target>This value should be equal to {{ compared_value }}.</target>
             </trans-unit>
-            <trans-unit id="Xgf_Y8C" resname="This value should be greater than {{ compared_value }}.">
+            <trans-unit id="Xgf.Y8C" resname="This value should be greater than {{ compared_value }}.">
               <source>This value should be greater than {{ compared_value }}.</source>
               <target>This value should be greater than {{ compared_value }}.</target>
             </trans-unit>
@@ -2278,7 +2400,7 @@
               <source>This value should be identical to {{ compared_value_type }} {{ compared_value }}.</source>
               <target>This value should be identical to {{ compared_value_type }} {{ compared_value }}.</target>
             </trans-unit>
-            <trans-unit id="EgRc_Qq" resname="This value should be less than {{ compared_value }}.">
+            <trans-unit id="EgRc.Qq" resname="This value should be less than {{ compared_value }}.">
               <source>This value should be less than {{ compared_value }}.</source>
               <target>This value should be less than {{ compared_value }}.</target>
             </trans-unit>
@@ -2386,7 +2508,7 @@
               <source>This value is not a valid hostname.</source>
               <target>This value is not a valid hostname.</target>
             </trans-unit>
-            <trans-unit id="Co_98pi" resname="The number of elements in this collection should be a multiple of {{ compared_value }}.">
+            <trans-unit id="Co.98pi" resname="The number of elements in this collection should be a multiple of {{ compared_value }}.">
               <source>The number of elements in this collection should be a multiple of {{ compared_value }}.</source>
               <target>The number of elements in this collection should be a multiple of {{ compared_value }}.</target>
             </trans-unit>
@@ -2402,11 +2524,11 @@
               <source>This value is not a valid International Securities Identification Number (ISIN).</source>
               <target>This value is not a valid International Securities Identification Number (ISIN).</target>
             </trans-unit>
-            <trans-unit id="kG_VGA1" resname="This value should be a valid expression.">
+            <trans-unit id="kG.VGA1" resname="This value should be a valid expression.">
               <source>This value should be a valid expression.</source>
               <target>This value should be a valid expression.</target>
             </trans-unit>
-            <trans-unit id="2_9V4lo" resname="This value is not a valid CSS color.">
+            <trans-unit id="2.9V4lo" resname="This value is not a valid CSS color.">
               <source>This value is not a valid CSS color.</source>
               <target>This value is not a valid CSS color.</target>
             </trans-unit>
@@ -2454,7 +2576,7 @@
               <source>This value is not a valid MAC address.</source>
               <target>This value is not a valid MAC address.</target>
             </trans-unit>
-            <trans-unit id="Pm0aj_f" resname="This URL is missing a top-level domain.">
+            <trans-unit id="Pm0aj.f" resname="This URL is missing a top-level domain.">
               <source>This URL is missing a top-level domain.</source>
               <target>This URL is missing a top-level domain.</target>
             </trans-unit>
@@ -2514,7 +2636,7 @@
               <source>The video has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.</source>
               <target>The video has too few pixels ({{ pixels }} pixels). Minimum amount expected is {{ min_pixels }} pixels.</target>
             </trans-unit>
-            <trans-unit id="IDGrrj_" resname="The video has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.">
+            <trans-unit id="IDGrrj." resname="The video has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.">
               <source>The video has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.</source>
               <target>The video has too many pixels ({{ pixels }} pixels). Maximum amount expected is {{ max_pixels }} pixels.</target>
             </trans-unit>
@@ -2554,7 +2676,7 @@
               <source>Unsupported video container "{{ container }}".</source>
               <target>Unsupported video container "{{ container }}".</target>
             </trans-unit>
-            <trans-unit id="jAJTV_I" resname="The image file is corrupted.">
+            <trans-unit id="jAJTV.I" resname="The image file is corrupted.">
               <source>The image file is corrupted.</source>
               <target>The image file is corrupted.</target>
             </trans-unit>
@@ -2578,7 +2700,7 @@
               <source>The uploaded file was too large. Please try to upload a smaller file.</source>
               <target>The uploaded file was too large. Please try to upload a smaller file.</target>
             </trans-unit>
-            <trans-unit id="b_5.52u" resname="The CSRF token is invalid. Please try to resubmit the form.">
+            <trans-unit id="b.5.52u" resname="The CSRF token is invalid. Please try to resubmit the form.">
               <source>The CSRF token is invalid. Please try to resubmit the form.</source>
               <target>The CSRF token is invalid. Please try to resubmit the form.</target>
             </trans-unit>
@@ -2586,7 +2708,7 @@
               <source>This value is not a valid HTML5 color.</source>
               <target>This value is not a valid HTML5 color.</target>
             </trans-unit>
-            <trans-unit id="e_2ZUCK" resname="Please enter a valid birthdate.">
+            <trans-unit id="e.2ZUCK" resname="Please enter a valid birthdate.">
               <source>Please enter a valid birthdate.</source>
               <target>Please enter a valid birthdate.</target>
             </trans-unit>
@@ -2686,7 +2808,7 @@
               <source>The checkbox has an invalid value.</source>
               <target>The checkbox has an invalid value.</target>
             </trans-unit>
-            <trans-unit id="sv_zo_u" resname="Please enter a valid email address.">
+            <trans-unit id="sv.zo.u" resname="Please enter a valid email address.">
               <source>Please enter a valid email address.</source>
               <target>Please enter a valid email address.</target>
             </trans-unit>
@@ -2703,19 +2825,19 @@
               <target>Please enter a valid week.</target>
             </trans-unit>
             <trans-unit id="M7IJXPA" resname="organization.validation.name_required">
-              <source>organization.validation.name_required</source>
+              <source>organization.validation.name.required</source>
               <target>__organization.validation.name_required</target>
             </trans-unit>
             <trans-unit id="Ov577jX" resname="organization.validation.name_min_length">
-              <source>organization.validation.name_min_length</source>
+              <source>organization.validation.name.min.length</source>
               <target>__organization.validation.name_min_length</target>
             </trans-unit>
-            <trans-unit id=".z6UIh_" resname="organization.validation.name_max_length">
-              <source>organization.validation.name_max_length</source>
+            <trans-unit id=".z6UIh." resname="organization.validation.name_max_length">
+              <source>organization.validation.name.max.length</source>
               <target>__organization.validation.name_max_length</target>
             </trans-unit>
-            <trans-unit id="WL7_zf8" resname="organization.validation.description_max_length">
-              <source>organization.validation.description_max_length</source>
+            <trans-unit id="WL7.zf8" resname="organization.validation.description_max_length">
+              <source>organization.validation.description.max.length</source>
               <target>__organization.validation.description_max_length</target>
             </trans-unit>
             <trans-unit id="nnpDp2E" resname="user.validation.name_required">
@@ -2742,7 +2864,7 @@
               <source>user.validation.password_required</source>
               <target>__user.validation.password_required</target>
             </trans-unit>
-            <trans-unit id="mah_225" resname="user.validation.password_min_length">
+            <trans-unit id="mah.225" resname="user.validation.password_min_length">
               <source>user.validation.password_min_length</source>
               <target>__user.validation.password_min_length</target>
             </trans-unit>
@@ -2755,32 +2877,32 @@
               <target>__There is already an account with this email</target>
             </trans-unit>
             <!-- Student Portal Translations -->
-            <trans-unit id="nav.my_courses">
-              <source>nav.my_courses</source>
+            <trans-unit id="nav.my.courses">
+              <source>nav.my.courses</source>
               <target>My Courses</target>
             </trans-unit>
             <trans-unit id="student.singular">
               <source>student.singular</source>
               <target>Student</target>
             </trans-unit>
-            <trans-unit id="student.my_courses">
-              <source>student.my_courses</source>
+            <trans-unit id="student.my.courses">
+              <source>student.my.courses</source>
               <target>My Courses</target>
             </trans-unit>
-            <trans-unit id="student.courses_subtitle">
-              <source>student.courses_subtitle</source>
+            <trans-unit id="student.courses.subtitle">
+              <source>student.courses.subtitle</source>
               <target>Access your enrolled courses and continue learning</target>
             </trans-unit>
             <trans-unit id="student.enrolled">
               <source>student.enrolled</source>
               <target>Enrolled</target>
             </trans-unit>
-            <trans-unit id="student.no_courses">
-              <source>student.no_courses</source>
+            <trans-unit id="student.no.courses">
+              <source>student.no.courses</source>
               <target>No Courses Yet</target>
             </trans-unit>
-            <trans-unit id="student.no_courses_description">
-              <source>student.no_courses_description</source>
+            <trans-unit id="student.no.courses.description">
+              <source>student.no.courses.description</source>
               <target>You haven't been enrolled in any courses yet. Contact your administrator for access.</target>
             </trans-unit>
             <trans-unit id="student.progress">
@@ -2791,20 +2913,20 @@
               <source>student.completed</source>
               <target>Completed</target>
             </trans-unit>
-            <trans-unit id="student.in_progress">
-              <source>student.in_progress</source>
+            <trans-unit id="student.in.progress">
+              <source>student.in.progress</source>
               <target>In Progress</target>
             </trans-unit>
-            <trans-unit id="student.not_started">
-              <source>student.not_started</source>
+            <trans-unit id="student.not.started">
+              <source>student.not.started</source>
               <target>Not Started</target>
             </trans-unit>
             <trans-unit id="student.current">
               <source>student.current</source>
               <target>Current</target>
             </trans-unit>
-            <trans-unit id="student.enrolled_on">
-              <source>student.enrolled_on</source>
+            <trans-unit id="student.enrolled.on">
+              <source>student.enrolled.on</source>
               <target>Enrolled on</target>
             </trans-unit>
             <trans-unit id="student.review">
@@ -2815,52 +2937,64 @@
               <source>student.continue</source>
               <target>Continue</target>
             </trans-unit>
+            <trans-unit id="student.restart">
+              <source>student.restart</source>
+              <target>Restart</target>
+            </trans-unit>
             <trans-unit id="student.start">
               <source>student.start</source>
               <target>Start Course</target>
             </trans-unit>
-            <trans-unit id="student.total_courses">
-              <source>student.total_courses</source>
+            <trans-unit id="student.total.courses">
+              <source>student.total.courses</source>
               <target>Total Courses</target>
             </trans-unit>
-            <trans-unit id="student.completed_courses">
-              <source>student.completed_courses</source>
+            <trans-unit id="student.completed.courses">
+              <source>student.completed.courses</source>
               <target>Completed</target>
             </trans-unit>
-            <trans-unit id="student.in_progress_courses">
-              <source>student.in_progress_courses</source>
+            <trans-unit id="student.in.progress.courses">
+              <source>student.in.progress.courses</source>
               <target>In Progress</target>
             </trans-unit>
-            <trans-unit id="student.back_to_courses">
-              <source>student.back_to_courses</source>
+            <trans-unit id="student.back.to.courses">
+              <source>student.back.to.courses</source>
               <target>Back to My Courses</target>
+            </trans-unit>
+            <trans-unit id="student.end.course">
+              <source>student.end.course</source>
+              <target>End Course</target>
             </trans-unit>
             <trans-unit id="student.complete">
               <source>student.complete</source>
               <target>Complete</target>
             </trans-unit>
-            <trans-unit id="student.your_progress">
-              <source>student.your_progress</source>
+            <trans-unit id="student.mark.complete">
+              <source>student.mark.complete</source>
+              <target>Mark as Complete</target>
+            </trans-unit>
+            <trans-unit id="student.your.progress">
+              <source>student.your.progress</source>
               <target>Your Progress</target>
             </trans-unit>
-            <trans-unit id="student.course_completed">
-              <source>student.course_completed</source>
+            <trans-unit id="student.course.completed">
+              <source>student.course.completed</source>
               <target>Course Completed</target>
             </trans-unit>
-            <trans-unit id="student.overall_completion">
-              <source>student.overall_completion</source>
+            <trans-unit id="student.overall.completion">
+              <source>student.overall.completion</source>
               <target>Overall Completion</target>
             </trans-unit>
-            <trans-unit id="student.last_accessed">
-              <source>student.last_accessed</source>
+            <trans-unit id="student.last.accessed">
+              <source>student.last.accessed</source>
               <target>Last Accessed</target>
             </trans-unit>
-            <trans-unit id="student.not_yet">
-              <source>student.not_yet</source>
+            <trans-unit id="student.not.yet">
+              <source>student.not.yet</source>
               <target>Not yet</target>
             </trans-unit>
-            <trans-unit id="student.completed_lectures">
-              <source>student.completed_lectures</source>
+            <trans-unit id="student.completed.lectures">
+              <source>student.completed.lectures</source>
               <target>Completed Lectures</target>
             </trans-unit>
             <trans-unit id="student.watched">
@@ -2871,34 +3005,401 @@
               <source>student.status</source>
               <target>Status</target>
             </trans-unit>
-            <trans-unit id="student.watch_progress">
-              <source>student.watch_progress</source>
+            <trans-unit id="student.watch.progress">
+              <source>student.watch.progress</source>
               <target>Watch Progress</target>
             </trans-unit>
-            <trans-unit id="course.overall_progress">
-              <source>course.overall_progress</source>
+            <trans-unit id="certificate.title">
+              <source>certificate.title</source>
+              <target>Certificate of Completion</target>
+            </trans-unit>
+            <trans-unit id="certificate.view.certificate">
+              <source>certificate.view.certificate</source>
+              <target>View Certificate</target>
+            </trans-unit>
+            <trans-unit id="certificate.print">
+              <source>certificate.print</source>
+              <target>Print Certificate</target>
+            </trans-unit>
+            <trans-unit id="certificate.download.pdf">
+              <source>certificate.download.pdf</source>
+              <target>Download PDF</target>
+            </trans-unit>
+            <trans-unit id="certificate.back.to.course">
+              <source>certificate.back.to.course</source>
+              <target>Back to Course</target>
+            </trans-unit>
+            <trans-unit id="certificate.text.this.certifies">
+              <source>certificate.text.this.certifies</source>
+              <target>This is to certify that</target>
+            </trans-unit>
+            <trans-unit id="certificate.text.has.successfully.completed">
+              <source>certificate.text.has.successfully.completed</source>
+              <target>has successfully completed</target>
+            </trans-unit>
+            <trans-unit id="certificate.completion.date">
+              <source>certificate.completion.date</source>
+              <target>Date of Completion</target>
+            </trans-unit>
+            <trans-unit id="certificate.course.duration">
+              <source>certificate.course.duration</source>
+              <target>Total Duration</target>
+            </trans-unit>
+            <trans-unit id="certificate.certificate.id">
+              <source>certificate.certificate.id</source>
+              <target>Certificate ID</target>
+            </trans-unit>
+            <trans-unit id="certificate.hours">
+              <source>certificate.hours</source>
+              <target>hours</target>
+            </trans-unit>
+            <trans-unit id="certificate.footer">
+              <source>certificate.footer</source>
+              <target>This certificate is awarded in recognition of successful completion of the above-mentioned course and demonstrates proficiency in the subject matter.</target>
+            </trans-unit>
+            <trans-unit id="certificate.presented.to">
+              <source>certificate.presented.to</source>
+              <target>Presented to</target>
+            </trans-unit>
+            <trans-unit id="certificate.credential.verification">
+              <source>certificate.credential.verification</source>
+              <target>Credential Verification</target>
+            </trans-unit>
+            <trans-unit id="certificate.error.not.completed">
+              <source>certificate.error.not.completed</source>
+              <target>You must complete the course before accessing the certificate.</target>
+            </trans-unit>
+            <trans-unit id="organization.form.logo">
+              <source>organization.form.logo</source>
+              <target>Organization Logo</target>
+            </trans-unit>
+            <trans-unit id="organization.form.logo.help">
+              <source>organization.form.logo.help</source>
+              <target>Upload a logo image (PNG, JPG - max 2MB). This will appear on certificates.</target>
+            </trans-unit>
+            <trans-unit id="organization.form.logo.light">
+              <source>organization.form.logo.light</source>
+              <target>Logo (Light Theme)</target>
+            </trans-unit>
+            <trans-unit id="organization.form.logo.light.help">
+              <source>organization.form.logo.light.help</source>
+              <target>Upload logo for light theme (PNG, JPG, SVG - max 2MB)</target>
+            </trans-unit>
+            <trans-unit id="organization.form.logo.dark">
+              <source>organization.form.logo.dark</source>
+              <target>Logo (Dark Theme)</target>
+            </trans-unit>
+            <trans-unit id="organization.form.logo.dark.help">
+              <source>organization.form.logo.dark.help</source>
+              <target>Upload logo for dark theme (PNG, JPG, SVG - max 2MB)</target>
+            </trans-unit>
+            <trans-unit id="organization.form.current.logo">
+              <source>organization.form.current.logo</source>
+              <target>Current Logo:</target>
+            </trans-unit>
+            <trans-unit id="organization.validation.logo.mime.type">
+              <source>organization.validation.logo.mime.type</source>
+              <target>Please upload a valid image file (PNG or JPG).</target>
+            </trans-unit>
+            <trans-unit id="course.overall.progress">
+              <source>course.overall.progress</source>
               <target>Overall Progress</target>
             </trans-unit>
-            <trans-unit id="course.lecture.processing_description">
-              <source>course.lecture.processing_description</source>
+            <trans-unit id="course.lecture.processing.description">
+              <source>course.lecture.processing.description</source>
               <target>This video is being processed and will be available shortly. Please check back in a few minutes.</target>
             </trans-unit>
             <trans-unit id="button.refresh">
               <source>button.refresh</source>
               <target>Refresh Page</target>
             </trans-unit>
-            <trans-unit id="course.lecture.failed_description">
-              <source>course.lecture.failed_description</source>
+            <trans-unit id="course.lecture.failed.description">
+              <source>course.lecture.failed.description</source>
               <target>There was an error processing this video. Please contact support.</target>
             </trans-unit>
-            <trans-unit id="course.lecture.no_video_description">
-              <source>course.lecture.no_video_description</source>
+            <trans-unit id="course.lecture.no.video.description">
+              <source>course.lecture.no.video.description</source>
               <target>This lecture does not have a video uploaded yet.</target>
             </trans-unit>
             <trans-unit id="course.lecture.duration">
               <source>course.lecture.duration</source>
               <target>Duration</target>
             </trans-unit>
+
+      <!-- Status -->
+      <trans-unit id="status.active">
+        <source>status.active</source>
+        <target>Active</target>
+        <note>Active status indicator</note>
+      </trans-unit>
+      <trans-unit id="status.ai.enhanced">
+        <source>status.ai.enhanced</source>
+        <target>AI Enhanced</target>
+        <note>AI enhanced feature badge</note>
+      </trans-unit>
+      <trans-unit id="status.real.time">
+        <source>status.real.time</source>
+        <target>Real-time</target>
+        <note>Real-time status indicator</note>
+      </trans-unit>
+      <trans-unit id="status.ready">
+        <source>status.ready</source>
+        <target>Ready</target>
+        <note>Ready status</note>
+      </trans-unit>
+      <trans-unit id="status.processing">
+        <source>status.processing</source>
+        <target>Processing...</target>
+        <note>Processing status with ellipsis</note>
+      </trans-unit>
+      <trans-unit id="status.failed">
+        <source>status.failed</source>
+        <target>Failed</target>
+        <note>Failed status</note>
+      </trans-unit>
+      <trans-unit id="status.pending">
+        <source>status.pending</source>
+        <target>Pending</target>
+        <note>Pending status</note>
+      </trans-unit>
+
+      <!-- Time/Date -->
+      <trans-unit id="time.today">
+        <source>time.today</source>
+        <target>Today</target>
+        <note>Today time reference</note>
+      </trans-unit>
+      <trans-unit id="time.yesterday">
+        <source>time.yesterday</source>
+        <target>Yesterday</target>
+        <note>Yesterday time reference</note>
+      </trans-unit>
+      <trans-unit id="time.days.ago">
+        <source>time.days.ago</source>
+        <target>%count% day ago|%count% days ago</target>
+        <note>Days ago with pluralization</note>
+      </trans-unit>
+      <trans-unit id="time.d.ago">
+        <source>time.d.ago</source>
+        <target>%count%d ago</target>
+        <note>Abbreviated days ago (e.g., "3d ago")</note>
+      </trans-unit>
+      <trans-unit id="time.week.ago">
+        <source>time.week.ago</source>
+        <target>1 week ago</target>
+        <note>One week ago time reference</note>
+      </trans-unit>
+      <trans-unit id="metric.month.growth">
+        <source>metric.month.growth</source>
+        <target>+%percent%% this month</target>
+        <note>Monthly growth percentage</note>
+      </trans-unit>
+      <trans-unit id="metric.new.count">
+        <source>metric.new.count</source>
+        <target>+%count% new</target>
+        <note>New items count</note>
+      </trans-unit>
+      <trans-unit id="metric.today.growth">
+        <source>metric.today.growth</source>
+        <target>+%percent%% today</target>
+        <note>Today's growth percentage</note>
+      </trans-unit>
+
+      <!-- Units -->
+      <trans-unit id="unit.minute">
+        <source>unit.minute</source>
+        <target>minute</target>
+        <note>Singular: minute time unit</note>
+      </trans-unit>
+      <trans-unit id="unit.minutes">
+        <source>unit.minutes</source>
+        <target>minutes</target>
+        <note>Plural: minutes time unit</note>
+      </trans-unit>
+      <trans-unit id="unit.min">
+        <source>unit.min</source>
+        <target>min</target>
+        <note>Abbreviated: minute/minutes</note>
+      </trans-unit>
+
+      <!-- Pagination (additional) -->
+      <trans-unit id="pagination.show">
+        <source>pagination.show</source>
+        <target>Show</target>
+        <note>Pagination: "Show X entries"</note>
+      </trans-unit>
+
+      <!-- Upload -->
+      <trans-unit id="upload.video.hint">
+        <source>upload.video.hint</source>
+        <target>Max size: 4GB. Formats: MP4, WebM, OGG, MOV. Duration auto-calculated after upload.</target>
+        <note>Video upload format and size hint</note>
+      </trans-unit>
+
+      <!-- Branding/Navigation -->
+      <trans-unit id="branding.infinity.crm">
+        <source>branding.infinity.crm</source>
+        <target>Infinity CRM</target>
+        <note>Full product name with CRM</note>
+      </trans-unit>
+      <trans-unit id="branding.ai.dashboard">
+        <source>branding.ai.dashboard</source>
+        <target>AI-Powered CRM Dashboard</target>
+        <note>Full dashboard title with AI branding</note>
+      </trans-unit>
+      <trans-unit id="nav.ai.chat">
+        <source>nav.ai.chat</source>
+        <target>AI Chat</target>
+        <note>AI Chat navigation link</note>
+      </trans-unit>
+      <trans-unit id="nav.analytics">
+        <source>nav.analytics</source>
+        <target>Analytics</target>
+        <note>Analytics navigation link</note>
+      </trans-unit>
+      <trans-unit id="nav.toggle.navigation">
+        <source>nav.toggle.navigation</source>
+        <target>Toggle navigation</target>
+        <note>Aria label for mobile nav toggle</note>
+      </trans-unit>
+
+      <!-- Organization Switcher -->
+      <trans-unit id="organization.switcher.title">
+        <source>organization.switcher.title</source>
+        <target>Change your organization</target>
+        <note>Tooltip for organization switcher</note>
+      </trans-unit>
+      <trans-unit id="organization.all.organizations">
+        <source>organization.all.organizations</source>
+        <target>All Organizations</target>
+        <note>All organizations option in switcher</note>
+      </trans-unit>
+      <trans-unit id="organization.all.organizations.root">
+        <source>organization.all.organizations.root</source>
+        <target>All Organizations (Root)</target>
+        <note>Root access option in switcher</note>
+      </trans-unit>
+      <trans-unit id="organization.users.page.title">
+        <source>organization.users.page.title</source>
+        <target>Manage Users - Infinity</target>
+        <note>Page title for organization users management</note>
+      </trans-unit>
+
+      <!-- Course/Lecture -->
+      <trans-unit id="course.back.to.course">
+        <source>course.back.to.course</source>
+        <target>Back to Course</target>
+        <note>Link to return to course overview</note>
+      </trans-unit>
+      <trans-unit id="course.lecture.number">
+        <source>course.lecture.number</source>
+        <target>Lecture %number%</target>
+        <note>Lecture number label</note>
+      </trans-unit>
+      <trans-unit id="course.content">
+        <source>course.content</source>
+        <target>Course Content</target>
+        <note>Course content section heading</note>
+      </trans-unit>
+
+      <!-- Theme -->
+      <trans-unit id="theme.switch.to.dark">
+        <source>theme.switch.to.dark</source>
+        <target>Switch to Dark</target>
+        <note>Button to switch to dark theme</note>
+      </trans-unit>
+      <trans-unit id="theme.switch.to.light">
+        <source>theme.switch.to.light</source>
+        <target>Switch to Light</target>
+        <note>Button to switch to light theme</note>
+      </trans-unit>
+
+      <!-- Misc -->
+      <trans-unit id="misc.na">
+        <source>misc.na</source>
+        <target>N/A</target>
+        <note>Not available abbreviation</note>
+      </trans-unit>
+      <trans-unit id="misc.infinity.alt">
+        <source>misc.infinity.alt</source>
+        <target>Infinity</target>
+        <note>Alt text for Infinity logo</note>
+      </trans-unit>
+
+      <!-- User Insights (Random Messages) -->
+      <trans-unit id="insight.recent.activity">
+        <source>insight.recent.activity</source>
+        <target>Recent activity increase</target>
+        <note>AI insight: recent activity spike</note>
+      </trans-unit>
+      <trans-unit id="insight.upsell.opportunity">
+        <source>insight.upsell.opportunity</source>
+        <target>Potential upsell opportunity</target>
+        <note>AI insight: sales opportunity</note>
+      </trans-unit>
+      <trans-unit id="insight.strong.relationship">
+        <source>insight.strong.relationship</source>
+        <target>Strong relationship score</target>
+        <note>AI insight: good relationship</note>
+      </trans-unit>
+      <trans-unit id="insight.last.interaction">
+        <source>insight.last.interaction</source>
+        <target>Last interaction: %days%d ago</target>
+        <note>Last interaction time (days ago)</note>
+      </trans-unit>
+
+      <!-- Missing Button Translations -->
+      <trans-unit id="button.actions">
+        <source>button.actions</source>
+        <target>Actions</target>
+        <note>Generic actions button/label</note>
+      </trans-unit>
+      <trans-unit id="button.remove">
+        <source>button.remove</source>
+        <target>Remove</target>
+        <note>Remove button</note>
+      </trans-unit>
+      <trans-unit id="button.confirm">
+        <source>button.confirm</source>
+        <target>Confirm</target>
+        <note>Confirm button</note>
+      </trans-unit>
+
+      <!-- Missing Course Translations -->
+      <trans-unit id="course.minutes">
+        <source>course.minutes</source>
+        <target>minutes</target>
+        <note>Time unit for course duration</note>
+      </trans-unit>
+      <trans-unit id="course.no.lectures.description">
+        <source>course.no.lectures.description</source>
+        <target>This course doesn't have any lectures yet</target>
+        <note>Empty state message for courses without lectures</note>
+      </trans-unit>
+
+      <!-- Missing Misc Translations -->
+      <trans-unit id="misc.waiting">
+        <source>misc.waiting</source>
+        <target>Waiting...</target>
+        <note>Waiting status message</note>
+      </trans-unit>
+
+      <!-- Entity Plural Names -->
+      <trans-unit id="entity.courses">
+        <source>entity.courses</source>
+        <target>courses</target>
+        <note>Plural name for courses entity</note>
+      </trans-unit>
+      <trans-unit id="entity.users">
+        <source>entity.users</source>
+        <target>users</target>
+        <note>Plural name for users entity</note>
+      </trans-unit>
+      <trans-unit id="entity.organizations">
+        <source>entity.organizations</source>
+        <target>organizations</target>
+        <note>Plural name for organizations entity</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

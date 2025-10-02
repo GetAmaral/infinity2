@@ -1,116 +1,103 @@
 {% extends '_base_entity_list.html.twig' %}
 
-{# Macro for course action buttons - reusable for grid, list and table views #}
-{% macro courseActions(course, dropdownOnly) %}
-    {% set dropdownOnly = dropdownOnly|default(false) %}
-
-    {% if not dropdownOnly %}
-        <div class="d-none d-lg-flex gap-1 align-items-center">
-            <a href="{{ path('course_show', {id: course.id}) }}"
-               class="btn btn-sm btn-outline-light"
-               data-bs-toggle="tooltip"
-               data-bs-placement="top"
-               data-bs-title="{{ 'course.view_details'|trans }}">
-                <i class="bi bi-eye"></i>
-            </a>
-            {% if is_granted('COURSE_EDIT', course) %}
-                <button type="button"
-                        class="btn btn-sm btn-outline-light"
-                        data-controller="modal-opener"
-                        data-modal-opener-url-value="{{ path('course_edit', {id: course.id}) }}"
-                        data-action="click->modal-opener#open"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        data-bs-title="{{ 'button.edit'|trans }}">
-                    <i class="bi bi-pencil"></i>
-                </button>
-            {% endif %}
-            {% if is_granted('COURSE_DELETE', course) %}
-                <button type="button"
-                        class="btn btn-sm btn-outline-danger"
-                        data-delete-url="{{ path('course_delete', {id: course.id}) }}"
-                        data-entity-name="{{ course.name }}"
-                        data-csrf-token="{{ csrf_token('delete-course-' ~ course.id) }}"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        data-bs-title="{{ 'button.delete'|trans }}">
-                    <i class="bi bi-trash"></i>
-                </button>
-            {% endif %}
-        </div>
-    {% endif %}
-
-    <div class="dropdown {{ dropdownOnly ? '' : 'd-lg-none' }}">
-        <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-three-dots-vertical"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1050;">
-            <li>
-                <a class="dropdown-item" href="{{ path('course_show', {id: course.id}) }}">
-                    <i class="bi bi-eye me-2"></i>{{ 'course.view_details'|trans }}
-                </a>
-            </li>
-            {% if is_granted('COURSE_EDIT', course) %}
-            <li>
-                <button type="button"
-                        class="dropdown-item"
-                        data-controller="modal-opener"
-                        data-modal-opener-url-value="{{ path('course_edit', {id: course.id}) }}"
-                        data-action="click->modal-opener#open">
-                    <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
-                </button>
-            </li>
-            {% endif %}
-            {% if is_granted('COURSE_DELETE', course) %}
-            <li><hr class="dropdown-divider"></li>
-            <li>
-                <button type="button"
-                        class="dropdown-item text-danger"
-                        data-delete-url="{{ path('course_delete', {id: course.id}) }}"
-                        data-entity-name="{{ course.name }}"
-                        data-csrf-token="{{ csrf_token('delete-course-' ~ course.id) }}">
-                    <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
-                </button>
-            </li>
-            {% endif %}
-        </ul>
-    </div>
-{% endmacro %}
-
-{% import _self as macros %}
+{#
+ # Data-Bind Template System
+ # =======================
+ # Templates use data-bind-* attributes to populate content from API JSON.
+ #
+ # Available data-bind types:
+ # - data-bind="field" data-bind-text          → Sets textContent
+ # - data-bind="field" data-bind-html          → Sets innerHTML
+ # - data-bind="field" data-bind-href          → Sets href attribute
+ # - data-bind="field" data-bind-src           → Sets src attribute
+ # - data-bind="field" data-bind-attr="name"   → Sets custom attribute
+ # - data-bind="field" data-bind-if="condition" → Conditionally shows element
+ #
+ # Conditional expressions:
+ # - data-bind-if="active"         → Show if active is truthy
+ # - data-bind-if="!active"        → Show if active is falsy
+ # - data-bind-if="count>0"        → Show if count > 0
+ # - data-bind-if="count<10"       → Show if count < 10
+ #
+ # Nested properties use dot notation:
+ # - data-bind="organization.name"
+ #
+ # Example API response for Course:
+ # {
+ #   "id": "uuid-here",
+ #   "name": "Introduction to PHP",
+ #   "description": "Learn PHP basics",
+ #   "active": true,
+ #   "totalLengthSeconds": 3600,
+ #   "totalLengthFormatted": "01:00",
+ #   "lecturesCount": 12,
+ #   "enrolledStudentsCount": 45,
+ #   "ownerName": "John Doe",
+ #   "releaseDateFormatted": "Jan 15, 2025",
+ #   "createdAtFormatted": "Dec 10, 2024"
+ # }
+#}
 
 {# Grid View Template #}
-{% block grid_view_item %}
-    <div class="col" data-entity-id="{{ entity.id }}">
-        <div class="infinity-card h-100 p-4" style="cursor: pointer;" onclick="window.location.href='{{ path('course_show', {id: entity.id}) }}'">
+{% block grid_view_item_template %}
+    <div class="col">
+        <div class="infinity-card h-100 p-4" style="cursor: pointer;" onclick="window.location.href='/course/' + this.closest('[data-entity-id]').dataset.entityId">
             <div class="d-flex justify-content-between align-items-start mb-3">
-                <div class="d-flex align-items-center">
+                <div onclick="event.stopPropagation();" class="dropdown me-3">
+                    <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                        <li><a class="dropdown-item" onclick="window.location.href='/course/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'course.view.details'|trans }}</a></li>
+                        <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/course/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/course/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                    </ul>
+                </div>
+                <div class="d-flex align-items-center flex-grow-1">
                     <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
                          style="width: 48px; height: 48px; background: var(--infinity-ai-gradient);">
                         <i class="bi bi-book text-white fs-5"></i>
                     </div>
-                    <div>
-                        <h5 class="mb-0 text-white">{{ entity.name }}</h5>
-                        <div class="text-muted" style="font-size: 0.85rem;">
-                            <span class="badge {{ entity.active ? 'bg-success' : 'bg-secondary' }} me-1">
-                                {{ entity.active ? 'course.status.active'|trans : 'course.status.inactive'|trans }}
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1 text-white" data-bind="name" data-bind-text></h5>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <span class="badge bg-success" data-bind-if="active">{{ 'course.status.active'|trans }}</span>
+                            <span class="badge bg-secondary" data-bind-if="!active">{{ 'course.status.inactive'|trans }}</span>
+                            <span class="badge bg-info" data-bind-if="totalLengthSeconds>0">
+                                <i class="bi bi-clock me-1"></i><span data-bind="totalLengthFormatted" data-bind-text></span>
                             </span>
                         </div>
                     </div>
                 </div>
-                <div onclick="event.stopPropagation();">
-                    {{ macros.courseActions(entity, true) }}
-                </div>
             </div>
-            {% if entity.description %}
-                <p class="text-muted mb-3" style="font-size: 0.9rem;">{{ entity.description|length > 100 ? entity.description|slice(0, 100) ~ '...' : entity.description }}</p>
-            {% endif %}
-            <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
-                <div class="text-muted" style="font-size: 0.85rem;">
-                    <i class="bi bi-collection me-1"></i>{{ entity.lecturesCount }} {{ 'course.lectures'|trans }}
+            <p class="text-muted mb-3" style="font-size: 0.9rem;" data-bind="description" data-bind-if="description">
+                <span data-bind="description" data-bind-text></span>
+            </p>
+            <p class="text-muted fst-italic mb-3" style="font-size: 0.9rem;" data-bind="description" data-bind-if="!description">
+                {{ 'empty.no.description'|trans }}
+            </p>
+            <div class="mt-auto">
+                <div class="d-flex gap-3 mb-2">
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        <i class="bi bi-collection me-1 text-neon"></i><span data-bind="lecturesCount" data-bind-text></span> {{ 'course.lectures'|trans }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        <i class="bi bi-people me-1 text-success"></i><span data-bind="enrolledStudentsCount" data-bind-text></span> {{ 'course.students'|trans }}
+                    </div>
                 </div>
-                <div class="text-muted" style="font-size: 0.85rem;">
-                    <i class="bi bi-person me-1"></i>{{ entity.ownerName }}
+                <div class="d-flex justify-content-between align-items-center pt-2 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important; font-size: 0.8rem;">
+                    <span class="text-muted">
+                        <i class="bi bi-person me-1"></i><span data-bind="ownerName" data-bind-text></span>
+                    </span>
+                    <span class="text-muted">
+                        <span data-bind="releaseDateFormatted" data-bind-if="releaseDateFormatted">
+                            <i class="bi bi-calendar-event me-1"></i><span data-bind="releaseDateFormatted" data-bind-text></span>
+                        </span>
+                        <span data-bind="createdAtFormatted" data-bind-if="!releaseDateFormatted">
+                            <i class="bi bi-calendar-plus me-1"></i><span data-bind="createdAtFormatted" data-bind-text></span>
+                        </span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -118,68 +105,112 @@
 {% endblock %}
 
 {# List View Template #}
-{% block list_view_item %}
-    <div class="infinity-card mb-3 p-3" data-entity-id="{{ entity.id }}">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center flex-grow-1" style="cursor: pointer;" onclick="window.location.href='{{ path('course_show', {id: entity.id}) }}'">
+{% block list_view_item_template %}
+    <div class="infinity-card mb-3 p-3">
+        <div class="d-flex align-items-center">
+            <div onclick="event.stopPropagation();" class="dropdown me-3">
+                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                    <li><a class="dropdown-item" onclick="window.location.href='/course/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'course.view.details'|trans }}</a></li>
+                    <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/course/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/course/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                </ul>
+            </div>
+            <div class="d-flex align-items-center flex-grow-1" style="cursor: pointer;" onclick="window.location.href='/course/' + this.closest('[data-entity-id]').dataset.entityId">
                 <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
                      style="width: 40px; height: 40px; background: var(--infinity-ai-gradient);">
                     <i class="bi bi-book text-white"></i>
                 </div>
                 <div class="flex-grow-1">
-                    <div class="d-flex align-items-center mb-1">
-                        <h6 class="mb-0 text-white me-2">{{ entity.name }}</h6>
-                        <span class="badge {{ entity.active ? 'bg-success' : 'bg-secondary' }} me-2">
-                            {{ entity.active ? 'course.status.active'|trans : 'course.status.inactive'|trans }}
+                    <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                        <h6 class="mb-0 text-white" data-bind="name" data-bind-text></h6>
+                        <span class="badge bg-success" data-bind-if="active">{{ 'course.status.active'|trans }}</span>
+                        <span class="badge bg-secondary" data-bind-if="!active">{{ 'course.status.inactive'|trans }}</span>
+                        <span class="badge bg-info" data-bind-if="totalLengthSeconds>0">
+                            <i class="bi bi-clock me-1"></i><span data-bind="totalLengthFormatted" data-bind-text></span>
                         </span>
                     </div>
-                    <div class="text-muted" style="font-size: 0.85rem;">
-                        <i class="bi bi-collection me-1"></i>{{ entity.lecturesCount }} {{ 'course.lectures'|trans }}
-                        <span class="mx-2">•</span>
-                        <i class="bi bi-person me-1"></i>{{ entity.ownerName }}
+                    <div class="text-muted d-flex gap-3 flex-wrap" style="font-size: 0.85rem;">
+                        <span><i class="bi bi-collection me-1 text-neon"></i><span data-bind="lecturesCount" data-bind-text></span> {{ 'course.lectures'|trans }}</span>
+                        <span><i class="bi bi-people me-1 text-success"></i><span data-bind="enrolledStudentsCount" data-bind-text></span> {{ 'course.students'|trans }}</span>
+                        <span><i class="bi bi-person me-1"></i><span data-bind="ownerName" data-bind-text></span></span>
+                        <span data-bind="releaseDateFormatted" data-bind-if="releaseDateFormatted">
+                            <i class="bi bi-calendar-event me-1"></i><span data-bind="releaseDateFormatted" data-bind-text></span>
+                        </span>
+                        <span data-bind="createdAtFormatted" data-bind-if="!releaseDateFormatted">
+                            <i class="bi bi-calendar-plus me-1"></i><span data-bind="createdAtFormatted" data-bind-text></span>
+                        </span>
                     </div>
                 </div>
-            </div>
-            <div onclick="event.stopPropagation();">
-                {{ macros.courseActions(entity, false) }}
             </div>
         </div>
     </div>
 {% endblock %}
 
-{# Table View Template #}
-{% block table_view_headers %}
-    <th>{{ 'course.name'|trans }}</th>
-    <th class="d-none d-md-table-cell">{{ 'course.status'|trans }}</th>
-    <th class="d-none d-lg-table-cell">{{ 'course.lectures_count'|trans }}</th>
-    <th class="d-none d-lg-table-cell">{{ 'course.owner'|trans }}</th>
-    <th class="text-end">{{ 'table.actions'|trans }}</th>
+{# Table Headers #}
+{% block table_headers %}
+    <th style="width: 60px;">{{ 'table.actions'|trans }}</th>
+    <th data-sort-field="name">{{ 'course.name'|trans }}</th>
+    <th class="text-center" data-sort-field="active" data-field-type="boolean">{{ 'course.status'|trans }}</th>
+    <th class="text-center" data-sort-field="totalLengthSeconds">{{ 'course.duration'|trans }}</th>
+    <th class="text-center" data-sort-field="lecturesCount">{{ 'course.lectures.count'|trans }}</th>
+    <th class="text-center" data-sort-field="enrolledStudentsCount">{{ 'course.students'|trans }}</th>
+    <th data-sort-field="ownerName">{{ 'course.owner'|trans }}</th>
+    <th data-sort-field="releaseDate" data-field-type="date">{{ 'course.date'|trans }}</th>
 {% endblock %}
 
-{% block table_view_row %}
-    <tr data-entity-id="{{ entity.id }}" style="cursor: pointer;" onclick="window.location.href='{{ path('course_show', {id: entity.id}) }}'">
+{# Table Row Template #}
+{% block table_view_row_template %}
+    <tr style="cursor: pointer;" onclick="window.location.href='/course/' + this.closest('[data-entity-id]').dataset.entityId">
+        <td onclick="event.stopPropagation();">
+            <div class="dropdown">
+                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                    <li><a class="dropdown-item" onclick="window.location.href='/course/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'course.view.details'|trans }}</a></li>
+                    <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/course/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/course/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                </ul>
+            </div>
+        </td>
         <td>
             <div class="d-flex align-items-center">
                 <div class="rounded-circle d-flex align-items-center justify-content-center me-2"
                      style="width: 32px; height: 32px; background: var(--infinity-ai-gradient);">
                     <i class="bi bi-book text-white"></i>
                 </div>
-                <span class="text-white">{{ entity.name }}</span>
+                <span class="text-white" data-bind="name" data-bind-text></span>
             </div>
         </td>
-        <td class="d-none d-md-table-cell">
-            <span class="badge {{ entity.active ? 'bg-success' : 'bg-secondary' }}">
-                {{ entity.active ? 'course.status.active'|trans : 'course.status.inactive'|trans }}
+        <td class="text-center">
+            <span class="badge bg-success" data-bind-if="active">{{ 'course.status.active'|trans }}</span>
+            <span class="badge bg-secondary" data-bind-if="!active">{{ 'course.status.inactive'|trans }}</span>
+        </td>
+        <td class="text-center">
+            <span class="badge bg-info" data-bind-if="totalLengthSeconds>0">
+                <i class="bi bi-clock me-1"></i><span data-bind="totalLengthFormatted" data-bind-text></span>
             </span>
+            <span class="text-muted" data-bind-if="totalLengthSeconds<1">-</span>
         </td>
-        <td class="d-none d-lg-table-cell text-muted">
-            <i class="bi bi-collection me-1"></i>{{ entity.lecturesCount }}
+        <td class="text-center text-muted">
+            <i class="bi bi-collection me-1 text-neon"></i><span data-bind="lecturesCount" data-bind-text></span>
         </td>
-        <td class="d-none d-lg-table-cell text-muted">
-            {{ entity.ownerName }}
+        <td class="text-center text-muted">
+            <i class="bi bi-people me-1 text-success"></i><span data-bind="enrolledStudentsCount" data-bind-text></span>
         </td>
-        <td class="text-end" onclick="event.stopPropagation();">
-            {{ macros.courseActions(entity, false) }}
+        <td class="text-muted" data-bind="ownerName" data-bind-text></td>
+        <td class="text-muted" style="font-size: 0.85rem;">
+            <span data-bind="releaseDateFormatted" data-bind-if="releaseDateFormatted">
+                <i class="bi bi-calendar-event me-1"></i><span data-bind="releaseDateFormatted" data-bind-text></span>
+            </span>
+            <span data-bind="createdAtFormatted" data-bind-if="!releaseDateFormatted">
+                <i class="bi bi-calendar-plus me-1"></i><span data-bind="createdAtFormatted" data-bind-text></span>
+            </span>
         </td>
     </tr>
 {% endblock %}

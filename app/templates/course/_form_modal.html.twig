@@ -27,14 +27,14 @@
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ course.name }}
                             {% else %}
-                                {{ 'course.modal.create_title'|trans }}
+                                {{ 'course.modal.create.title'|trans }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'course.modal.edit_subtitle'|trans }}
+                                {{ 'course.modal.edit.subtitle'|trans }}
                             {% else %}
-                                {{ 'course.modal.create_subtitle'|trans }}
+                                {{ 'course.modal.create.subtitle'|trans }}
                             {% endif %}
                         </p>
                     </div>
@@ -54,7 +54,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.form.name_placeholder'|trans,
+                            'placeholder': 'course.form.name.placeholder'|trans,
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -66,7 +66,7 @@
                     {{ form_widget(form.description, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.form.description_placeholder'|trans,
+                            'placeholder': 'course.form.description.placeholder'|trans,
                             'rows': 4
                         }
                     }) }}
@@ -114,9 +114,9 @@
                         style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
                     <i class="bi bi-{{ is_edit ? 'check2' : 'plus-lg' }} me-2"></i>
                     {% if is_edit %}
-                        {{ 'button.save_changes'|trans }}
+                        {{ 'button.save.changes'|trans }}
                     {% else %}
-                        {{ 'course.button.create_course'|trans }}
+                        {{ 'course.button.create.course'|trans }}
                     {% endif %}
                 </button>
             </div>

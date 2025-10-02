@@ -134,6 +134,15 @@ class Course extends EntityBase
 
     public function getTotalLengthFormatted(): string
     {
+        if ($this->totalLengthSeconds < 60) {
+            return $this->totalLengthSeconds . ' s';
+        }
+
+        if ($this->totalLengthSeconds < 3600) {
+            $minutes = (int)floor($this->totalLengthSeconds / 60);
+            return $minutes . ' m';
+        }
+
         $hours = (int)floor($this->totalLengthSeconds / 3600);
         $minutes = (int)floor(($this->totalLengthSeconds % 3600) / 60);
         return sprintf('%02d:%02d', $hours, $minutes);

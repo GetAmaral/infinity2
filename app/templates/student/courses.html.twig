@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'student.my_courses'|trans }} - {{ 'page.infinity_suffix'|trans }}{% endblock %}
+{% block title %}{{ 'student.my.courses'|trans }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Page Header -->
@@ -12,8 +12,8 @@
                     <i class="bi bi-book text-white fs-2"></i>
                 </div>
                 <div>
-                    <h1 class="text-gradient mb-2">{{ 'student.my_courses'|trans }}</h1>
-                    <p class="text-secondary mb-0 fs-5">{{ 'student.courses_subtitle'|trans }}</p>
+                    <h1 class="text-gradient mb-2">{{ 'student.my.courses'|trans }}</h1>
+                    <p class="text-secondary mb-0 fs-5">{{ 'student.courses.subtitle'|trans }}</p>
                 </div>
             </div>
             <div class="d-flex gap-2">
@@ -29,8 +29,8 @@
     <!-- Empty State -->
     <div class="infinity-card p-5 text-center">
         <i class="bi bi-book" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
-        <h3 class="text-white mt-4 mb-3">{{ 'student.no_courses'|trans }}</h3>
-        <p class="text-secondary mb-4">{{ 'student.no_courses_description'|trans }}</p>
+        <h3 class="text-white mt-4 mb-3">{{ 'student.no.courses'|trans }}</h3>
+        <p class="text-secondary mb-4">{{ 'student.no.courses.description'|trans }}</p>
     </div>
 {% else %}
     <!-- Courses Grid -->
@@ -54,9 +54,9 @@
                                 <span class="real-time-badge">
                                     <i class="bi bi-collection me-1"></i>{{ totalLectures }} {{ 'course.lectures'|trans({'%count%': totalLectures}) }}
                                 </span>
-                                {% if course.totalLengthSeconds %}
+                                {% if course.totalLengthSeconds > 0 %}
                                     <span class="real-time-badge">
-                                        <i class="bi bi-clock me-1"></i>{{ (course.totalLengthSeconds / 60)|round }} {{ 'course.minutes'|trans }}
+                                        <i class="bi bi-clock me-1"></i>{{ course.totalLengthFormatted }}
                                     </span>
                                 {% endif %}
                             </div>
@@ -69,7 +69,7 @@
                             {{ course.description|slice(0, 120) }}{% if course.description|length > 120 %}...{% endif %}
                         </p>
                     {% else %}
-                        <p class="text-muted mb-3 fst-italic">{{ 'empty.no_description'|trans }}</p>
+                        <p class="text-muted mb-3 fst-italic">{{ 'empty.no.description'|trans }}</p>
                     {% endif %}
 
                     <!-- Progress Bar -->
@@ -95,17 +95,17 @@
                             <span class="badge bg-success">
                                 <i class="bi bi-check-circle me-1"></i>{{ 'student.completed'|trans }}
                             </span>
-                            <small class="text-muted ms-2">{{ enrollment.completedAt|date('M d, Y') }}</small>
+                            <small class="text-muted ms-2">{{ enrollment.completedAt|format_date('medium') }}</small>
                         {% elseif enrollment.startDate %}
                             <span class="badge bg-primary">
-                                <i class="bi bi-play-circle me-1"></i>{{ 'student.in_progress'|trans }}
+                                <i class="bi bi-play-circle me-1"></i>{{ 'student.in.progress'|trans }}
                             </span>
                             {% if enrollment.currentLecture %}
                                 <small class="text-muted ms-2">{{ 'student.current'|trans }}: {{ enrollment.currentLecture.name|slice(0, 30) }}</small>
                             {% endif %}
                         {% else %}
                             <span class="badge bg-secondary">
-                                <i class="bi bi-hourglass-split me-1"></i>{{ 'student.not_started'|trans }}
+                                <i class="bi bi-hourglass-split me-1"></i>{{ 'student.not.started'|trans }}
                             </span>
                         {% endif %}
                     </div>
@@ -114,18 +114,36 @@
                     <div class="mt-auto pt-3 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
                         <div class="d-flex justify-content-between align-items-center">
                             <small class="text-muted">
-                                <i class="bi bi-calendar me-1"></i>{{ 'student.enrolled_on'|trans }} {{ enrollment.enrolledAt|date('M d, Y') }}
+                                <i class="bi bi-calendar me-1"></i>{{ 'student.enrolled.on'|trans }} {{ enrollment.enrolledAt|format_date('medium') }}
                             </small>
-                            <a href="{{ path('student_course', {id: course.id}) }}"
-                               class="btn infinity-btn-primary btn-sm">
+                            <div class="d-flex gap-2">
                                 {% if isCompleted %}
-                                    <i class="bi bi-arrow-clockwise me-1"></i>{{ 'student.review'|trans }}
-                                {% elseif enrollment.currentLecture %}
-                                    <i class="bi bi-play-fill me-1"></i>{{ 'student.continue'|trans }}
-                                {% else %}
-                                    <i class="bi bi-play-circle me-1"></i>{{ 'student.start'|trans }}
+                                    <a href="{{ path('certificate_course', {id: course.id}) }}"
+                                       class="btn btn-success btn-sm"
+                                       target="_blank">
+                                        <i class="bi bi-award me-1"></i>{{ 'certificate.view.certificate'|trans }}
+                                    </a>
                                 {% endif %}
-                            </a>
+                            {% if isCompleted %}
+                                {# Completed course - Restart #}
+                                <a href="{{ path('student_course', {id: course.id}) }}"
+                                   class="btn infinity-btn-primary btn-sm">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>{{ 'student.restart'|trans }}
+                                </a>
+                            {% elseif enrollment.currentLecture %}
+                                {# In progress - Continue #}
+                                <a href="{{ path('student_lecture', {courseId: course.id, lectureId: enrollment.currentLecture.id}) }}"
+                                   class="btn infinity-btn-primary btn-sm">
+                                    <i class="bi bi-play-fill me-1"></i>{{ 'student.continue'|trans }}
+                                </a>
+                            {% else %}
+                                {# Not started - Start #}
+                                <a href="{{ path('student_course', {id: course.id}) }}"
+                                   class="btn infinity-btn-primary btn-sm">
+                                    <i class="bi bi-play-circle me-1"></i>{{ 'student.start'|trans }}
+                                </a>
+                            {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -139,21 +157,21 @@
             <div class="metric-card">
                 <i class="bi bi-book-fill text-neon fs-1"></i>
                 <div class="metric-value">{{ enrollments|length }}</div>
-                <div class="metric-label">{{ 'student.total_courses'|trans }}</div>
+                <div class="metric-label">{{ 'student.total.courses'|trans }}</div>
             </div>
         </div>
         <div class="col-md-4 mb-3">
             <div class="metric-card">
                 <i class="bi bi-check-circle-fill text-success fs-1"></i>
                 <div class="metric-value">{{ enrollments|filter(e => e.completedAt is not null)|length }}</div>
-                <div class="metric-label">{{ 'student.completed_courses'|trans }}</div>
+                <div class="metric-label">{{ 'student.completed.courses'|trans }}</div>
             </div>
         </div>
         <div class="col-md-4 mb-3">
             <div class="metric-card">
                 <i class="bi bi-play-circle-fill text-primary fs-1"></i>
                 <div class="metric-value">{{ enrollments|filter(e => e.startDate is not null and e.completedAt is null)|length }}</div>
-                <div class="metric-label">{{ 'student.in_progress_courses'|trans }}</div>
+                <div class="metric-label">{{ 'student.in.progress.courses'|trans }}</div>
             </div>
         </div>
     </div>

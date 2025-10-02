@@ -10,7 +10,8 @@ framework:
     trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
 
     # CSRF protection enabled
-    csrf_protection: true
+    csrf_protection:
+        enabled: true
 
     # Session configuration with security features
     session:

@@ -28,14 +28,14 @@
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ lecture.name }}
                             {% else %}
-                                {{ 'course.lecture.modal.new_title'|trans }}
+                                {{ 'course.lecture.modal.new.title'|trans }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'course.lecture.modal.edit_subtitle'|trans }}
+                                {{ 'course.lecture.modal.edit.subtitle'|trans }}
                             {% else %}
-                                {{ 'course.lecture.modal.create_subtitle'|trans }}
+                                {{ 'course.lecture.modal.create.subtitle'|trans }}
                             {% endif %}
                         </p>
                     </div>
@@ -55,7 +55,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.lecture.form.name_placeholder'|trans,
+                            'placeholder': 'course.lecture.form.name.placeholder'|trans,
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -67,7 +67,7 @@
                     {{ form_widget(form.description, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.lecture.form.description_placeholder'|trans,
+                            'placeholder': 'course.lecture.form.description.placeholder'|trans,
                             'rows': 3
                         }
                     }) }}
@@ -84,7 +84,7 @@
                     {{ form_errors(form.videoFile) }}
                     <small class="form-text text-muted mt-2 d-block">
                         <i class="bi bi-info-circle me-1"></i>
-                        Max size: 4GB. Formats: MP4, WebM, OGG, MOV. Duration auto-calculated after upload.
+                        {{ 'upload.video.hint'|trans }}
                     </small>
 
                     {% if is_edit and lecture.processingStatus %}
@@ -101,7 +101,7 @@
                     {{ form_widget(form.viewOrder, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.viewOrder.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.lecture.form.view_order_placeholder'|trans
+                            'placeholder': 'course.lecture.form.view.order.placeholder'|trans
                         }
                     }) }}
                     {{ form_errors(form.viewOrder) }}
@@ -123,9 +123,9 @@
                         style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
                     <i class="bi bi-{{ is_edit ? 'check2' : 'plus-lg' }} me-2"></i>
                     {% if is_edit %}
-                        {{ 'button.save_changes'|trans }}
+                        {{ 'button.save.changes'|trans }}
                     {% else %}
-                        {{ 'course.lecture.button.add_lecture'|trans }}
+                        {{ 'course.lecture.button.add.lecture'|trans }}
                     {% endif %}
                 </button>
             </div>

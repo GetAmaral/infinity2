@@ -35,8 +35,55 @@ class OrganizationRepository extends BaseRepository
         return [
             'name' => 'name',
             'description' => 'description',
-            'userCount' => 'id', // Will need custom handling for computed fields
+            'isActive' => 'isActive',
+            'userCount' => 'id', // Computed field - sortable but not filterable
+            'courseCount' => 'id', // Computed field - sortable but not filterable
+            'createdByName' => 'createdBy.name', // Relationship field - sortable and filterable
             'createdAt' => 'createdAt',
+            'updatedAt' => 'updatedAt',
+        ];
+    }
+
+    /**
+     * Define filterable fields (exclude computed fields like userCount, courseCount)
+     */
+    protected function getFilterableFields(): array
+    {
+        return [
+            'name' => 'name',
+            'description' => 'description',
+            'isActive' => 'isActive',
+            'createdAt' => 'createdAt',
+            'updatedAt' => 'updatedAt',
+        ];
+    }
+
+    /**
+     * Define boolean fields for proper filtering
+     */
+    protected function getBooleanFilterFields(): array
+    {
+        return ['isActive'];
+    }
+
+    /**
+     * Define date fields for range filtering
+     */
+    protected function getDateFilterFields(): array
+    {
+        return ['updatedAt', 'createdAt'];
+    }
+
+    /**
+     * Define relationship filter mappings
+     * When filtering by userCount or courseCount, search in the related entity's name
+     */
+    protected function getRelationshipFilterFields(): array
+    {
+        return [
+            'userCount' => ['relation' => 'users', 'field' => 'name'],
+            'courseCount' => ['relation' => 'courses', 'field' => 'name'],
+            'createdByName' => ['relation' => 'createdBy', 'field' => 'name'],
         ];
     }
 

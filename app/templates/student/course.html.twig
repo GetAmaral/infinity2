@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ course.name }} - {{ 'student.singular'|trans }} - {{ 'page.infinity_suffix'|trans }}{% endblock %}
+{% block title %}{{ course.name }} - {{ 'student.singular'|trans }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation Breadcrumb -->
 <div class="mb-4">
     <a href="{{ path('student_courses') }}" class="btn infinity-btn-ai">
-        <i class="bi bi-arrow-left me-2"></i>{{ 'student.back_to_courses'|trans }}
+        <i class="bi bi-arrow-left me-2"></i>{{ 'student.back.to.courses'|trans }}
     </a>
 </div>
 
@@ -28,9 +28,9 @@
             <div class="real-time-badge">
                 <i class="bi bi-collection me-1"></i>{{ lectures|length }} {{ 'course.lectures'|trans({'%count%': lectures|length}) }}
             </div>
-            {% if course.totalLengthSeconds %}
+            {% if course.totalLengthSeconds > 0 %}
                 <div class="real-time-badge">
-                    <i class="bi bi-clock me-1"></i>{{ (course.totalLengthSeconds / 60)|round }} {{ 'course.minutes'|trans }}
+                    <i class="bi bi-clock me-1"></i>{{ course.totalLengthFormatted }}
                 </div>
             {% endif %}
             <div class="ai-status-indicator">
@@ -46,26 +46,32 @@
         <div class="infinity-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="text-neon mb-0">
-                    <i class="bi bi-bar-chart me-2"></i>{{ 'student.your_progress'|trans }}
+                    <i class="bi bi-bar-chart me-2"></i>{{ 'student.your.progress'|trans }}
                 </h5>
-                {% if enrollment.completedAt %}
-                    <span class="badge bg-success fs-6">
-                        <i class="bi bi-check-circle me-1"></i>{{ 'student.course_completed'|trans }}!
-                    </span>
-                {% endif %}
+                <div class="d-flex gap-2 align-items-center">
+                    {% if enrollment.completedAt %}
+                        <span class="badge bg-success fs-6">
+                            <i class="bi bi-check-circle me-1"></i>{{ 'student.course.completed'|trans }}!
+                        </span>
+                        <a href="{{ path('certificate_course', {id: course.id}) }}"
+                           class="btn btn-success btn-sm"
+                           target="_blank">
+                            <i class="bi bi-award me-1"></i>{{ 'certificate.view.certificate'|trans }}
+                        </a>
+                    {% endif %}
+                </div>
             </div>
 
             <!-- Progress Bar -->
             <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-white">{{ 'student.overall_completion'|trans }}</span>
+                    <span class="text-white">{{ 'student.overall.completion'|trans }}</span>
                     <span class="text-neon fw-bold fs-5">{{ enrollment.progressPercentage|round }}%</span>
                 </div>
                 <div class="progress" style="height: 20px; background: rgba(255, 255, 255, 0.1);">
                     <div class="progress-bar"
-                         style="background: var(--infinity-ai-gradient); font-weight: bold;"
                          role="progressbar"
-                         style="width: {{ enrollment.progressPercentage|round }}%"
+                         style="background: var(--infinity-ai-gradient); font-weight: bold; width: {{ enrollment.progressPercentage|round }}%;"
                          aria-valuenow="{{ enrollment.progressPercentage|round }}"
                          aria-valuemin="0"
                          aria-valuemax="100">
@@ -78,20 +84,20 @@
             <div class="row text-center mt-4">
                 <div class="col-4">
                     <div class="text-muted small">{{ 'student.enrolled'|trans }}</div>
-                    <div class="text-white fw-bold">{{ enrollment.enrolledAt|date('M d, Y') }}</div>
+                    <div class="text-white fw-bold">{{ enrollment.enrolledAt|format_date('medium') }}</div>
                 </div>
                 <div class="col-4">
-                    <div class="text-muted small">{{ 'student.last_accessed'|trans }}</div>
+                    <div class="text-muted small">{{ 'student.last.accessed'|trans }}</div>
                     <div class="text-white fw-bold">
                         {% if enrollment.lastDate %}
-                            {{ enrollment.lastDate|date('M d, Y') }}
+                            {{ enrollment.lastDate|format_date('medium') }}
                         {% else %}
-                            {{ 'student.not_yet'|trans }}
+                            {{ 'student.not.yet'|trans }}
                         {% endif %}
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="text-muted small">{{ 'student.completed_lectures'|trans }}</div>
+                    <div class="text-muted small">{{ 'student.completed.lectures'|trans }}</div>
                     <div class="text-white fw-bold">
                         {{ lectureProgress|filter(p => p.completed)|length }} / {{ lectures|length }}
                     </div>
@@ -114,8 +120,8 @@
             {% if lectures is empty %}
                 <div class="text-center py-5">
                     <i class="bi bi-collection" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
-                    <h5 class="text-white mt-3 mb-2">{{ 'course.no_lectures'|trans }}</h5>
-                    <p class="text-secondary mb-0">{{ 'course.no_lectures_description'|trans }}</p>
+                    <h5 class="text-white mt-3 mb-2">{{ 'course.no.lectures'|trans }}</h5>
+                    <p class="text-secondary mb-0">{{ 'course.no.lectures.description'|trans }}</p>
                 </div>
             {% else %}
                 <div class="list-group">
@@ -147,12 +153,7 @@
                                         <h6 class="text-white mb-0">{{ lecture.name }}</h6>
                                         {% if lecture.lengthSeconds %}
                                             <span class="badge bg-secondary">
-                                                <i class="bi bi-clock me-1"></i>
-                                                {% if lecture.lengthSeconds < 60 %}
-                                                    {{ lecture.lengthSeconds }} sec
-                                                {% else %}
-                                                    {{ (lecture.lengthSeconds / 60)|round }} min
-                                                {% endif %}
+                                                <i class="bi bi-clock me-1"></i>{{ lecture.lengthFormatted }}
                                             </span>
                                         {% endif %}
                                     </div>
@@ -177,7 +178,7 @@
                                                     <i class="bi bi-check-circle me-1"></i>{{ 'student.completed'|trans }}
                                                 </span>
                                                 {% if progress.completedAt %}
-                                                    <small class="text-muted">{{ progress.completedAt|date('M d, Y') }}</small>
+                                                    <small class="text-muted">{{ progress.completedAt|format_date('medium') }}</small>
                                                 {% endif %}
                                             {% elseif progressPercent > 0 %}
                                                 <span class="badge bg-primary">
@@ -196,7 +197,7 @@
                                                 </div>
                                             {% else %}
                                                 <span class="badge bg-secondary">
-                                                    <i class="bi bi-play-circle me-1"></i>{{ 'student.not_started'|trans }}
+                                                    <i class="bi bi-play-circle me-1"></i>{{ 'student.not.started'|trans }}
                                                 </span>
                                             {% endif %}
                                         {% endif %}

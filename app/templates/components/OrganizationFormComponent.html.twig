@@ -8,8 +8,8 @@
             <div class="d-flex align-items-center">
                 <i class="bi bi-check-circle-fill me-2"></i>
                 <div>
-                    <strong>{{ 'organization.flash.save_success'|trans }}</strong>
-                    <br><small>{{ 'organization.flash.save_success_description'|trans }}</small>
+                    <strong>{{ 'organization.flash.save.success'|trans }}</strong>
+                    <br><small>{{ 'organization.flash.save.success.description'|trans }}</small>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
             <div class="d-flex align-items-start">
                 <i class="bi bi-exclamation-triangle-fill me-2 mt-1"></i>
                 <div>
-                    <strong>{{ 'form.validation_errors'|trans }}</strong>
+                    <strong>{{ 'form.validation.errors'|trans }}</strong>
                     {% if getValidationError('general') %}
                         <br><small>{{ getValidationError('general') }}</small>
                     {% endif %}
@@ -44,7 +44,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': (form.name.vars.valid ? 'form-control' : 'form-control is-invalid'),
-                            'placeholder': 'organization.form.name_placeholder'|trans
+                            'placeholder': 'organization.form.name.placeholder'|trans
                         }
                     }) }}
                     {{ form_label(form.name, null, {
@@ -65,7 +65,7 @@
                     {{ form_widget(form.description, {
                         'attr': {
                             'class': (form.description.vars.valid ? 'form-control' : 'form-control is-invalid'),
-                            'placeholder': 'organization.form.description_placeholder'|trans,
+                            'placeholder': 'organization.form.description.placeholder'|trans,
                             'style': 'min-height: 120px;'
                         }
                     }) }}
@@ -95,10 +95,10 @@
                     </div>
                     <div class="flex-grow-1">
                         <h6 class="text-white mb-1">
-                            {{ form.name.vars.data ?: 'organization.form.name_placeholder'|trans }}
+                            {{ form.name.vars.data ?: 'organization.form.name.placeholder'|trans }}
                         </h6>
                         <p class="text-secondary mb-0" style="font-size: 0.875rem;">
-                            {{ form.description.vars.data ?: 'organization.form.description_placeholder'|trans }}
+                            {{ form.description.vars.data ?: 'organization.form.description.placeholder'|trans }}
                         </p>
                     </div>
                 </div>
@@ -121,7 +121,7 @@
                     class="btn btn-outline-secondary"
                     data-action="click->live#action"
                     data-live-action-param="reset">
-                <i class="bi bi-arrow-clockwise me-2"></i>{{ 'button.reset_form'|trans }}
+                <i class="bi bi-arrow-clockwise me-2"></i>{{ 'button.reset.form'|trans }}
             </button>
         {% endif %}
     </div>

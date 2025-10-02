@@ -9,7 +9,7 @@
             <!-- Back to course button -->
             <div class="mb-4">
                 <a href="{{ path('course_show', {id: course.id}) }}" class="btn infinity-btn-ai">
-                    <i class="bi bi-arrow-left me-2"></i>Back to Course
+                    <i class="bi bi-arrow-left me-2"></i>{{ 'course.back.to.course'|trans }}
                 </a>
             </div>
 
@@ -47,18 +47,12 @@
 
                         <div class="d-flex gap-3 flex-wrap">
                             <div class="badge bg-primary">
-                                <i class="bi bi-clock me-1"></i>
-                                {% if lecture.lengthSeconds < 60 %}
-                                    {{ lecture.lengthSeconds }} {{ lecture.lengthSeconds == 1 ? 'second' : 'seconds' }}
-                                {% else %}
-                                    {% set minutes = (lecture.lengthSeconds / 60)|round %}
-                                    {{ minutes }} {{ minutes == 1 ? 'minute' : 'minutes' }}
-                                {% endif %}
+                                <i class="bi bi-clock me-1"></i>{{ lecture.lengthFormatted }}
                             </div>
 
                             <div class="badge bg-info">
                                 <i class="bi bi-collection me-1"></i>
-                                Lecture {{ lecture.viewOrder }}
+                                {{ 'course.lecture.number'|trans({'%number%': lecture.viewOrder}) }}
                             </div>
                         </div>
                     </div>
@@ -77,7 +71,7 @@
                     {% endif %}
 
                     <!-- All lectures list -->
-                    <h6 class="mt-4 mb-3">Course Content</h6>
+                    <h6 class="mt-4 mb-3">{{ 'course.content'|trans }}</h6>
                     <div class="list-group">
                         {% for courseLecture in course.lectures %}
                             <a
@@ -91,21 +85,16 @@
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
                                     {% if courseLecture.processingStatus == 'completed' %}
-                                        <span class="badge bg-success">Ready</span>
+                                        <span class="badge bg-success">{{ 'status.ready'|trans }}</span>
                                     {% elseif courseLecture.processingStatus == 'processing' %}
-                                        <span class="badge bg-warning">Processing...</span>
+                                        <span class="badge bg-warning">{{ 'status.processing'|trans }}</span>
                                     {% elseif courseLecture.processingStatus == 'failed' %}
-                                        <span class="badge bg-danger">Failed</span>
+                                        <span class="badge bg-danger">{{ 'status.failed'|trans }}</span>
                                     {% else %}
-                                        <span class="badge bg-secondary">Pending</span>
+                                        <span class="badge bg-secondary">{{ 'status.pending'|trans }}</span>
                                     {% endif %}
 
-                                    {% if courseLecture.lengthSeconds < 60 %}
-                                        <small class="text-muted">{{ courseLecture.lengthSeconds }}sec</small>
-                                    {% else %}
-                                        {% set minutes = (courseLecture.lengthSeconds / 60)|round %}
-                                        <small class="text-muted">{{ minutes }}min</small>
-                                    {% endif %}
+                                    <small class="text-muted">{{ courseLecture.lengthFormatted }}</small>
                                 </div>
                             </a>
                         {% endfor %}

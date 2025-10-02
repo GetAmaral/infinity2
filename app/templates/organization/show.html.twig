@@ -1,28 +1,34 @@
 {% extends 'base.html.twig' %}
+{% import '_macros/organization_logo.html.twig' as org_logo %}
 
-{% block title %}{{ organization.name }} - {{ 'organization.singular'|trans }} - {{ 'page.infinity_suffix'|trans }}{% endblock %}
+{% block title %}{{ organization.name }} - {{ 'organization.singular'|trans }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
-<div class="mb-4">
+<div class="mb-4 d-flex gap-2">
     <a href="{{ path('organization_index') }}" class="btn infinity-btn-ai">
-        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back_to_list'|trans }}
+        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.list'|trans }}
     </a>
+    <button type="button"
+            class="btn infinity-btn-ai"
+            data-controller="modal-opener"
+            data-modal-opener-url-value="{{ path('organization_edit', {id: organization.id}) }}"
+            data-action="click->modal-opener#open">
+        <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
+    </button>
 </div>
 
 <!-- Organization Header -->
 <div class="ai-dashboard-header mb-4">
     <div class="d-flex justify-content-between align-items-start">
         <div class="d-flex align-items-center">
-            <div class="p-3 rounded-3 me-4" style="background: var(--infinity-ai-gradient);">
-                <i class="bi bi-building text-white fs-2"></i>
-            </div>
+            {{ org_logo.logo(organization, 'lg', 'me-4') }}
             <div>
                 <h1 class="text-gradient mb-2">{{ organization.name }}</h1>
                 {% if organization.description %}
                     <p class="text-secondary mb-0 fs-5">{{ organization.description }}</p>
                 {% else %}
-                    <p class="text-muted mb-0 fst-italic">{{ 'empty.no_description'|trans }}</p>
+                    <p class="text-muted mb-0 fst-italic">{{ 'empty.no.description'|trans }}</p>
                 {% endif %}
             </div>
         </div>
@@ -32,9 +38,9 @@
             </div>
             <div class="real-time-badge">
                 {% if organization.users|length == 0 %}
-                    {{ 'organization.no_users'|trans }}
+                    {{ 'organization.no.users'|trans }}
                 {% else %}
-                    {{ 'organization.users_count'|trans({'%count%': organization.users|length}, 'messages', null, organization.users|length) }}
+                    {{ 'organization.users.count'|trans({'%count%': organization.users|length}, 'messages', null, organization.users|length) }}
                 {% endif %}
             </div>
         </div>
@@ -48,9 +54,9 @@
         <div class="metric-card">
             <i class="bi bi-people-fill text-neon fs-1"></i>
             <div class="metric-value">{{ organization.users|length }}</div>
-            <div class="metric-label">{{ 'metric.total_contacts'|trans }}</div>
+            <div class="metric-label">{{ 'metric.total.contacts'|trans }}</div>
             <div class="metric-trend trend-up">
-                <i class="bi bi-arrow-up"></i> {{ 'insight.active_organization'|trans }}
+                <i class="bi bi-arrow-up"></i> {{ 'insight.active.organization'|trans }}
             </div>
         </div>
     </div>
@@ -63,9 +69,9 @@
                 <h6 class="text-gradient mb-0">{{ 'ai.insights'|trans }}</h6>
             </div>
             <div class="text-secondary">
-                <p class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>{{ 'insight.strong_engagement'|trans }}</p>
-                <p class="mb-2"><i class="bi bi-trending-up text-neon me-2"></i>{{ 'insight.growth_potential'|trans }}</p>
-                <p class="mb-0"><i class="bi bi-heart text-danger me-2"></i>{{ 'insight.high_relationship_score'|trans }}</p>
+                <p class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>{{ 'insight.strong.engagement'|trans }}</p>
+                <p class="mb-2"><i class="bi bi-trending-up text-neon me-2"></i>{{ 'insight.growth.potential'|trans }}</p>
+                <p class="mb-0"><i class="bi bi-heart text-danger me-2"></i>{{ 'insight.high.relationship.score'|trans }}</p>
             </div>
         </div>
     </div>
@@ -75,10 +81,10 @@
         <div class="infinity-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
-                    <i class="bi bi-people me-2"></i>{{ 'organization.users_in_organization'|trans }} ({{ organization.users|length }})
+                    <i class="bi bi-people me-2"></i>{{ 'organization.users.in.organization'|trans }} ({{ organization.users|length }})
                 </h5>
                 <button class="btn infinity-btn-primary btn-sm">
-                    <i class="bi bi-person-plus me-1"></i>{{ 'button.add_contact'|trans }}
+                    <i class="bi bi-person-plus me-1"></i>{{ 'button.add.contact'|trans }}
                 </button>
             </div>
 
@@ -111,10 +117,10 @@
             {% else %}
                 <div class="text-center py-5">
                     <i class="bi bi-person-plus" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
-                    <h5 class="text-white mt-3 mb-2">{{ 'empty.no_contacts_yet'|trans }}</h5>
-                    <p class="text-secondary mb-4">{{ 'empty.organization_contacts_description'|trans }}</p>
+                    <h5 class="text-white mt-3 mb-2">{{ 'empty.no.contacts.yet'|trans }}</h5>
+                    <p class="text-secondary mb-4">{{ 'empty.organization.contacts.description'|trans }}</p>
                     <button class="btn infinity-btn-primary">
-                        <i class="bi bi-person-plus me-2"></i>{{ 'button.add_first_contact'|trans }}
+                        <i class="bi bi-person-plus me-2"></i>{{ 'button.add.first.contact'|trans }}
                     </button>
                 </div>
             {% endif %}

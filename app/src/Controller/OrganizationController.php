@@ -9,11 +9,13 @@ use App\Form\OrganizationFormType;
 use App\Repository\OrganizationRepository;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Security\Voter\OrganizationVoter;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @extends BaseApiController<Organization>
@@ -24,7 +26,8 @@ final class OrganizationController extends BaseApiController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly OrganizationRepository $repository,
-        private readonly ListPreferencesService $listPreferencesService
+        private readonly ListPreferencesService $listPreferencesService,
+        private readonly SluggerInterface $slugger
     ) {}
 
     #[Route('', name: 'organization_index', methods: ['GET'])]
@@ -65,6 +68,36 @@ final class OrganizationController extends BaseApiController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle light logo file upload
+            $logoFileLight = $form->get('logoFileLight')->getData();
+            if ($logoFileLight instanceof UploadedFile) {
+                $originalFilename = pathinfo($logoFileLight->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $this->slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-light-' . uniqid() . '.' . $logoFileLight->guessExtension();
+
+                $logoFileLight->move(
+                    $this->getParameter('kernel.project_dir') . '/public/uploads/logos',
+                    $newFilename
+                );
+
+                $organization->setLogoPath('/uploads/logos/' . $newFilename);
+            }
+
+            // Handle dark logo file upload
+            $logoFileDark = $form->get('logoFileDark')->getData();
+            if ($logoFileDark instanceof UploadedFile) {
+                $originalFilename = pathinfo($logoFileDark->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $this->slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-dark-' . uniqid() . '.' . $logoFileDark->guessExtension();
+
+                $logoFileDark->move(
+                    $this->getParameter('kernel.project_dir') . '/public/uploads/logos',
+                    $newFilename
+                );
+
+                $organization->setLogoPathDark('/uploads/logos/' . $newFilename);
+            }
+
             $this->entityManager->persist($organization);
             $this->entityManager->flush();
 
@@ -110,6 +143,52 @@ final class OrganizationController extends BaseApiController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle light logo file upload
+            $logoFileLight = $form->get('logoFileLight')->getData();
+            if ($logoFileLight instanceof UploadedFile) {
+                // Delete old light logo if exists
+                if ($organization->getLogoPath()) {
+                    $oldLogoPath = $this->getParameter('kernel.project_dir') . '/public' . $organization->getLogoPath();
+                    if (file_exists($oldLogoPath)) {
+                        unlink($oldLogoPath);
+                    }
+                }
+
+                $originalFilename = pathinfo($logoFileLight->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $this->slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-light-' . uniqid() . '.' . $logoFileLight->guessExtension();
+
+                $logoFileLight->move(
+                    $this->getParameter('kernel.project_dir') . '/public/uploads/logos',
+                    $newFilename
+                );
+
+                $organization->setLogoPath('/uploads/logos/' . $newFilename);
+            }
+
+            // Handle dark logo file upload
+            $logoFileDark = $form->get('logoFileDark')->getData();
+            if ($logoFileDark instanceof UploadedFile) {
+                // Delete old dark logo if exists
+                if ($organization->getLogoPathDark()) {
+                    $oldLogoPath = $this->getParameter('kernel.project_dir') . '/public' . $organization->getLogoPathDark();
+                    if (file_exists($oldLogoPath)) {
+                        unlink($oldLogoPath);
+                    }
+                }
+
+                $originalFilename = pathinfo($logoFileDark->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $this->slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-dark-' . uniqid() . '.' . $logoFileDark->guessExtension();
+
+                $logoFileDark->move(
+                    $this->getParameter('kernel.project_dir') . '/public/uploads/logos',
+                    $newFilename
+                );
+
+                $organization->setLogoPathDark('/uploads/logos/' . $newFilename);
+            }
+
             $this->entityManager->flush();
 
             $this->addFlash('success', 'organization.flash.updated_successfully');
@@ -217,12 +296,40 @@ final class OrganizationController extends BaseApiController
     {
         assert($entity instanceof Organization);
 
+        // Calculate active courses (courses with students enrolled)
+        $activeCourseCount = 0;
+        foreach ($entity->getCourses() as $course) {
+            if ($course->getStudentCourses()->count() > 0) {
+                $activeCourseCount++;
+            }
+        }
+
+        // Get verified users count
+        $verifiedUserCount = 0;
+        foreach ($entity->getUsers() as $user) {
+            if ($user->isVerified()) {
+                $verifiedUserCount++;
+            }
+        }
+
         return [
             'id' => $entity->getId()?->toString() ?? '',
             'name' => $entity->getName(),
+            'slug' => $entity->getSlug(),
             'description' => $entity->getDescription(),
+            'logoPath' => $entity->getLogoPath(),
+            'logoPathDark' => $entity->getLogoPathDark(),
             'userCount' => $entity->getUsers()->count(),
+            'verifiedUserCount' => $verifiedUserCount,
+            'courseCount' => $entity->getCourses()->count(),
+            'activeCourseCount' => $activeCourseCount,
             'createdAt' => $entity->getCreatedAt()->format('c'),
+            'createdAtFormatted' => $entity->getCreatedAt()->format('M d, Y'),
+            'updatedAt' => $entity->getUpdatedAt()->format('c'),
+            'updatedAtFormatted' => $entity->getUpdatedAt()->format('M d, Y'),
+            'createdByName' => $entity->getCreatedBy()?->getName() ?? null,
+            'updatedByName' => $entity->getUpdatedBy()?->getName() ?? null,
+            'isActive' => $entity->isActive(),
         ];
     }
 }

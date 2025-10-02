@@ -678,6 +678,7 @@ final class CourseController extends BaseApiController
             'description' => $entity->getDescription() ?? '',
             'active' => $entity->isActive(),
             'releaseDate' => $entity->getReleaseDate()?->format('c'),
+            'releaseDateFormatted' => $entity->getReleaseDate()?->format('M d, Y') ?? null,
             'totalLengthSeconds' => $entity->getTotalLengthSeconds(),
             'totalLengthFormatted' => $entity->getTotalLengthFormatted(),
             'organizationId' => $entity->getOrganization()->getId()?->toString() ?? '',
@@ -685,7 +686,9 @@ final class CourseController extends BaseApiController
             'ownerId' => $entity->getOwner()->getId()?->toString() ?? '',
             'ownerName' => $entity->getOwner()->getName() ?? '',
             'lecturesCount' => $entity->getLectures()->count(),
+            'enrolledStudentsCount' => $entity->getStudentCourses()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
+            'createdAtFormatted' => $entity->getCreatedAt()->format('M d, Y'),
         ];
     }
 }

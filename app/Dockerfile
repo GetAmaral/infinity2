@@ -4,7 +4,13 @@ FROM dunglas/frankenphp:1.9-php8.4-alpine
 RUN apk add --no-cache \
     postgresql-dev \
     ffmpeg \
-    && docker-php-ext-install pdo_pgsql opcache
+    icu-dev \
+    icu-data-full \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_pgsql opcache intl gd
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

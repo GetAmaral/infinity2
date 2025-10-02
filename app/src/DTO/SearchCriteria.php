@@ -16,6 +16,8 @@ final readonly class SearchCriteria
         public int $limit = 10,
         public string $sortBy = 'id',
         public string $sortDir = 'asc',
+        /** @var array<string, string> */
+        public array $filters = [],
     ) {
     }
 
@@ -36,6 +38,16 @@ final readonly class SearchCriteria
 
     public static function fromRequest(array $params): self
     {
+        // Extract column filters from filter[field] parameters
+        $filters = [];
+        if (isset($params['filter']) && is_array($params['filter'])) {
+            foreach ($params['filter'] as $field => $value) {
+                if (is_string($value) && !empty(trim($value))) {
+                    $filters[$field] = trim($value);
+                }
+            }
+        }
+
         return new self(
             query: trim($params['q'] ?? ''),
             page: max(1, (int) ($params['page'] ?? 1)),
@@ -44,6 +56,7 @@ final readonly class SearchCriteria
             sortDir: in_array(strtolower($params['sortDir'] ?? 'asc'), ['asc', 'desc'])
                 ? strtolower($params['sortDir'])
                 : 'asc',
+            filters: $filters,
         );
     }
 }

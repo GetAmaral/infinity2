@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+{% import '_macros/organization_logo.html.twig' as org_logo %}
+
+{% block title %}{{ 'organization.edit'|trans }} - {{ organization.name }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
+
+{% block body %}
+<!-- Navigation -->
+<div class="mb-4">
+    <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn infinity-btn-ai">
+        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.organization'|trans }}
+    </a>
+</div>
+
+<!-- Page Header -->
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center">
+            {{ org_logo.logo(organization, 'lg', 'me-4') }}
+            <div>
+                <h1 class="text-gradient mb-2">{{ 'organization.edit'|trans }}</h1>
+                <p class="text-secondary mb-0 fs-5">{{ organization.name }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Form -->
+<div class="infinity-card p-4">
+    {{ form_start(form, {
+        'attr': {
+            'data-controller': 'form-navigation'
+        }
+    }) }}
+
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="form-group-modern">
+                <label class="form-label-modern">{{ form_label(form.name) }}</label>
+                {{ form_widget(form.name, {
+                    'attr': {
+                        'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : '')
+                    }
+                }) }}
+                {{ form_errors(form.name) }}
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group-modern">
+                <label class="form-label-modern">{{ form_label(form.description) }}</label>
+                {{ form_widget(form.description, {
+                    'attr': {
+                        'class': 'form-input-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
+                        'rows': 4
+                    }
+                }) }}
+                {{ form_errors(form.description) }}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group-modern">
+                <label class="form-label-modern">{{ form_label(form.logoFileLight) }}</label>
+                {{ form_widget(form.logoFileLight, {
+                    'attr': {
+                        'class': 'form-input-modern' ~ (form.logoFileLight.vars.errors|length > 0 ? ' input-error' : '')
+                    }
+                }) }}
+                {% if form.logoFileLight.vars.help %}
+                    <small class="form-help-text">{{ form.logoFileLight.vars.help|trans }}</small>
+                {% endif %}
+                {{ form_errors(form.logoFileLight) }}
+                {% if organization.logoPath %}
+                    <div class="mt-2">
+                        <small class="text-muted">{{ 'organization.form.current.logo'|trans }}</small>
+                        <img src="{{ organization.logoPath }}" alt="Current logo" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group-modern">
+                <label class="form-label-modern">{{ form_label(form.logoFileDark) }}</label>
+                {{ form_widget(form.logoFileDark, {
+                    'attr': {
+                        'class': 'form-input-modern' ~ (form.logoFileDark.vars.errors|length > 0 ? ' input-error' : '')
+                    }
+                }) }}
+                {% if form.logoFileDark.vars.help %}
+                    <small class="form-help-text">{{ form.logoFileDark.vars.help|trans }}</small>
+                {% endif %}
+                {{ form_errors(form.logoFileDark) }}
+                {% if organization.logoPathDark %}
+                    <div class="mt-2">
+                        <small class="text-muted">{{ 'organization.form.current.logo'|trans }}</small>
+                        <img src="{{ organization.logoPathDark }}" alt="Current dark logo" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-check form-check-modern">
+                {{ form_widget(form.isActive, {
+                    'attr': {
+                        'class': 'form-check-input-modern'
+                    }
+                }) }}
+                <label class="form-check-label-modern" for="{{ form.isActive.vars.id }}">
+                    {{ form_label(form.isActive) }}
+                </label>
+                {{ form_errors(form.isActive) }}
+            </div>
+        </div>
+    </div>
+
+    {{ form_rest(form) }}
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn btn-outline-secondary">
+            <i class="bi bi-x-circle me-2"></i>{{ 'button.cancel'|trans }}
+        </a>
+        <button type="submit" class="btn infinity-btn-primary">
+            <i class="bi bi-check-circle me-2"></i>{{ 'button.save'|trans }}
+        </button>
+    </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

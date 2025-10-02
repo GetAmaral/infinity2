@@ -34,25 +34,6 @@ final class CourseRepository extends BaseRepository
     }
 
     /**
-     * Get filterable fields and their types
-     */
-    protected function getFilterableFields(): array
-    {
-        return [
-            'active' => 'boolean',
-            'owner' => 'entity',
-        ];
-    }
-
-    /**
-     * Get default sort configuration
-     */
-    protected function getDefaultSort(): array
-    {
-        return ['name' => 'ASC'];
-    }
-
-    /**
      * Define sortable fields mapping
      * API field name => Entity property
      */
@@ -61,10 +42,52 @@ final class CourseRepository extends BaseRepository
         return [
             'name' => 'name',
             'active' => 'active',
+            'ownerName' => 'owner.name', // Relationship field - sortable but not filterable
             'releaseDate' => 'releaseDate',
             'createdAt' => 'createdAt',
             'updatedAt' => 'updatedAt',
         ];
+    }
+
+    /**
+     * Define filterable fields (exclude relationship and computed fields)
+     */
+    protected function getFilterableFields(): array
+    {
+        return [
+            'name' => 'name',
+            'active' => 'active',
+            'releaseDate' => 'releaseDate',
+            'createdAt' => 'createdAt',
+            'updatedAt' => 'updatedAt',
+        ];
+    }
+
+    /**
+     * Define relationship filter mappings
+     * When filtering by ownerName, search in the owner's name
+     */
+    protected function getRelationshipFilterFields(): array
+    {
+        return [
+            'ownerName' => ['relation' => 'owner', 'field' => 'name'],
+        ];
+    }
+
+    /**
+     * Define boolean fields for proper filtering
+     */
+    protected function getBooleanFilterFields(): array
+    {
+        return ['active'];
+    }
+
+    /**
+     * Define date fields for range filtering
+     */
+    protected function getDateFilterFields(): array
+    {
+        return ['releaseDate', 'createdAt', 'updatedAt'];
     }
 
     /**

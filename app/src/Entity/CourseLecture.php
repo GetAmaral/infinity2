@@ -238,6 +238,22 @@ class CourseLecture extends EntityBase
         return $this;
     }
 
+    public function getLengthFormatted(): string
+    {
+        if ($this->lengthSeconds < 60) {
+            return $this->lengthSeconds . ' s';
+        }
+
+        if ($this->lengthSeconds < 3600) {
+            $minutes = (int)floor($this->lengthSeconds / 60);
+            return $minutes . ' m';
+        }
+
+        $hours = (int)floor($this->lengthSeconds / 3600);
+        $minutes = (int)floor(($this->lengthSeconds % 3600) / 60);
+        return sprintf('%02d:%02d', $hours, $minutes);
+    }
+
     public function getCourse(): Course
     {
         return $this->course;

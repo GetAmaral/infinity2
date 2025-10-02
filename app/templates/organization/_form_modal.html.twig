@@ -1,3 +1,4 @@
+{% import '_macros/organization_logo.html.twig' as org_logo %}
 <!-- Full Screen Modal Overlay -->
 <div class="modal-fullscreen-overlay"
      data-controller="crud-modal"
@@ -9,7 +10,8 @@
         'attr': {
             'data-controller': 'form-navigation',
             'data-crud-modal-target': 'form',
-            'data-action': 'submit->crud-modal#submit'
+            'data-action': 'submit->crud-modal#submit',
+            'enctype': 'multipart/form-data'
         }
     }) }}
 
@@ -20,21 +22,25 @@
             <div class="modal-header-bar">
                 <div class="d-flex align-items-center gap-3">
                     <div class="modal-icon-circle">
-                        <i class="bi bi-building"></i>
+                        {% if is_edit and (organization.logoPath or organization.logoPathDark) %}
+                            {{ org_logo.logo(organization, 'md') }}
+                        {% else %}
+                            <i class="bi bi-building"></i>
+                        {% endif %}
                     </div>
                     <div>
                         <h2 class="modal-title-text">
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ organization.name }}
                             {% else %}
-                                {{ 'organization.new_organization'|trans }}
+                                {{ 'organization.new.organization'|trans }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'organization.modal.edit_subtitle'|trans }}
+                                {{ 'organization.modal.edit.subtitle'|trans }}
                             {% else %}
-                                {{ 'organization.modal.create_subtitle'|trans }}
+                                {{ 'organization.modal.create.subtitle'|trans }}
                             {% endif %}
                         </p>
                     </div>
@@ -54,7 +60,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'organization.form.name_placeholder'|trans,
+                            'placeholder': 'organization.form.name.placeholder'|trans,
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -66,11 +72,65 @@
                     {{ form_widget(form.description, {
                         'attr': {
                             'class': 'form-input-modern form-textarea-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'organization.form.description_placeholder'|trans,
+                            'placeholder': 'organization.form.description.placeholder'|trans,
                             'rows': '4'
                         }
                     }) }}
                     {{ form_errors(form.description) }}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.logoFileLight) }}</label>
+                    {{ form_widget(form.logoFileLight, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.logoFileLight.vars.errors|length > 0 ? ' input-error' : '')
+                        }
+                    }) }}
+                    {% if form.logoFileLight.vars.help %}
+                        <small class="form-help-text">{{ form.logoFileLight.vars.help|trans }}</small>
+                    {% endif %}
+                    {{ form_errors(form.logoFileLight) }}
+                    {% if is_edit and organization.logoPath %}
+                        <div class="mt-2">
+                            <small class="text-muted">{{ 'organization.form.current.logo'|trans }}</small>
+                            <img src="{{ organization.logoPath }}" alt="Current logo" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.logoFileDark) }}</label>
+                    {{ form_widget(form.logoFileDark, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.logoFileDark.vars.errors|length > 0 ? ' input-error' : '')
+                        }
+                    }) }}
+                    {% if form.logoFileDark.vars.help %}
+                        <small class="form-help-text">{{ form.logoFileDark.vars.help|trans }}</small>
+                    {% endif %}
+                    {{ form_errors(form.logoFileDark) }}
+                    {% if is_edit and organization.logoPathDark %}
+                        <div class="mt-2">
+                            <small class="text-muted">{{ 'organization.form.current.logo'|trans }}</small>
+                            <img src="{{ organization.logoPathDark }}" alt="Current dark logo" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group-modern">
+                    <div class="form-check">
+                        {{ form_widget(form.isActive, {
+                            'attr': {
+                                'class': 'form-check-input'
+                            }
+                        }) }}
+                        <label class="form-check-label" for="{{ form.isActive.vars.id }}">
+                            {{ form_label(form.isActive) }}
+                        </label>
+                    </div>
+                    {% if form.isActive.vars.help %}
+                        <small class="form-help-text">{{ form.isActive.vars.help|trans }}</small>
+                    {% endif %}
                 </div>
 
                 {{ form_widget(form._token) }}
@@ -88,9 +148,9 @@
                         data-crud-modal-target="submitButton">
                     <i class="bi bi-{{ is_edit ? 'check2' : 'plus-lg' }} me-2"></i>
                     {% if is_edit %}
-                        {{ 'button.update_organization'|trans }}
+                        {{ 'button.update.organization'|trans }}
                     {% else %}
-                        {{ 'button.create_organization'|trans }}
+                        {{ 'button.create.organization'|trans }}
                     {% endif %}
                 </button>
             </div>
@@ -282,6 +342,40 @@
     color: #ef4444;
     font-size: 0.875rem;
     margin-top: 0.5rem;
+}
+
+.form-help-text {
+    display: block;
+    color: var(--infinity-text-muted, rgba(255, 255, 255, 0.5));
+    font-size: 0.8125rem;
+    margin-top: 0.5rem;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--infinity-border-color, rgba(255, 255, 255, 0.12));
+    background: var(--infinity-input-bg, rgba(255, 255, 255, 0.04));
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background: linear-gradient(135deg, #00f5ff 0%, #8a2be2 100%);
+    border-color: #00f5ff;
+}
+
+.form-check-label {
+    color: var(--infinity-text-primary, rgba(255, 255, 255, 0.95));
+    font-weight: 500;
+    cursor: pointer;
+    margin: 0;
 }
 
 /* Footer */

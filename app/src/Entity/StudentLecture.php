@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: StudentLectureRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ApiResource(
     normalizationContext: ['groups' => ['student_lecture:read']],
     denormalizationContext: ['groups' => ['student_lecture:write']],
@@ -25,6 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class StudentLecture extends EntityBase
 {
+    public const MIN_COMPLETION = 90.0;
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['student_lecture:read'])]
@@ -34,6 +36,11 @@ class StudentLecture extends EntityBase
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['student_lecture:read'])]
     private CourseLecture $lecture;
+
+    #[ORM\ManyToOne(targetEntity: StudentCourse::class, inversedBy: 'studentLectures')]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['student_lecture:read'])]
+    private ?StudentCourse $studentCourse = null;
 
     #[ORM\Column(type: 'integer')]
     #[Assert\PositiveOrZero]
@@ -61,18 +68,6 @@ class StudentLecture extends EntityBase
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Groups(['student_lecture:read', 'student_lecture:write'])]
     private ?\DateTimeImmutable $completedAt = null;
-
-    #[ORM\Column(type: 'boolean')]
-    #[Groups(['student_lecture:read', 'student_lecture:write'])]
-    private bool $reached25Percent = false;
-
-    #[ORM\Column(type: 'boolean')]
-    #[Groups(['student_lecture:read', 'student_lecture:write'])]
-    private bool $reached50Percent = false;
-
-    #[ORM\Column(type: 'boolean')]
-    #[Groups(['student_lecture:read', 'student_lecture:write'])]
-    private bool $reached75Percent = false;
 
     public function getStudent(): User
     {
@@ -162,37 +157,91 @@ class StudentLecture extends EntityBase
         return $this;
     }
 
+    /**
+     * Dynamic check: returns true if completion >= 25%
+     */
     public function isReached25Percent(): bool
     {
-        return $this->reached25Percent;
+        return $this->completionPercentage >= 25.0;
     }
 
-    public function setReached25Percent(bool $reached25Percent): self
-    {
-        $this->reached25Percent = $reached25Percent;
-        return $this;
-    }
-
+    /**
+     * Dynamic check: returns true if completion >= 50%
+     */
     public function isReached50Percent(): bool
     {
-        return $this->reached50Percent;
+        return $this->completionPercentage >= 50.0;
     }
 
-    public function setReached50Percent(bool $reached50Percent): self
-    {
-        $this->reached50Percent = $reached50Percent;
-        return $this;
-    }
-
+    /**
+     * Dynamic check: returns true if completion >= 75%
+     */
     public function isReached75Percent(): bool
     {
-        return $this->reached75Percent;
+        return $this->completionPercentage >= 75.0;
     }
 
-    public function setReached75Percent(bool $reached75Percent): self
+    public function getStudentCourse(): ?StudentCourse
     {
-        $this->reached75Percent = $reached75Percent;
+        return $this->studentCourse;
+    }
+
+    public function setStudentCourse(?StudentCourse $studentCourse): self
+    {
+        $this->studentCourse = $studentCourse;
         return $this;
+    }
+
+    /**
+     * Calculate completion percentage and status.
+     * Called automatically before persist or update.
+     */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function calculateCompletion(): void
+    {
+        $lectureLength = $this->lecture->getLengthSeconds();
+
+        error_log(sprintf('[PreUpdate] Calculating completion: watchedSeconds=%d, lectureLength=%d',
+            $this->watchedSeconds,
+            $lectureLength
+        ));
+
+        if ($lectureLength > 0) {
+            $percentage = ($this->watchedSeconds / $lectureLength) * 100;
+            $this->completionPercentage = min($percentage, 100.0); // Max 100%
+            error_log(sprintf('[PreUpdate] Calculated percentage: %.2f%%', $this->completionPercentage));
+        } else {
+            $this->completionPercentage = 0.0;
+            error_log('[PreUpdate] Lecture length is 0, setting completion to 0%');
+        }
+
+        // Auto-mark as completed if >= MIN_COMPLETION
+        if ($this->completionPercentage >= self::MIN_COMPLETION) {
+            if (!$this->completed) {
+                $this->completed = true;
+                $this->completedAt = new \DateTimeImmutable();
+                error_log('[PreUpdate] Marking as COMPLETED');
+            }
+        } else {
+            // Reset completion if below threshold
+            $this->completed = false;
+            $this->completedAt = null;
+            error_log('[PreUpdate] Marking as NOT COMPLETED');
+        }
+    }
+
+    /**
+     * Update parent StudentCourse progress.
+     * Called automatically after persist or update.
+     */
+    #[ORM\PostPersist]
+    #[ORM\PostUpdate]
+    public function updateParentProgress(): void
+    {
+        if ($this->studentCourse !== null) {
+            $this->studentCourse->recalculateProgress();
+        }
     }
 
     public function __toString(): string

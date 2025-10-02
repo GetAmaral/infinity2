@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Certificate</title>
+    <style type="text/css">
+        @page {
+            size: A4 landscape;
+            margin: 0.8rem;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Georgia, serif;
+            margin: 0;
+            padding: 0;
+        }
+        .certificate-border {
+            border: 2px solid #1a1a1a;
+            padding: 1.2rem;
+            margin: 0;
+            position: relative;
+            background: white;
+        }
+        .certificate-border::before {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #667eea;
+            top: -3px;
+            left: -3px;
+            border-right: none;
+            border-bottom: none;
+        }
+        .certificate-border::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #667eea;
+            bottom: -3px;
+            right: -3px;
+            border-left: none;
+            border-top: none;
+        }
+        .certificate-header {
+            text-align: center;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 1.2rem;
+        }
+        .certificate-logo {
+            margin-bottom: 0.5rem;
+        }
+        .certificate-logo img {
+            max-height: 50px;
+            max-width: 200px;
+        }
+        .certificate-org-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0.25rem;
+        }
+        .certificate-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-top: 0.75rem;
+            letter-spacing: 2px;
+        }
+        .certificate-body {
+            text-align: center;
+            padding: 0.8rem 2rem;
+        }
+        .certificate-presented {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+        .certificate-student-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0.6rem 0;
+            padding: 0.4rem 0;
+            position: relative;
+        }
+        .certificate-student-name::after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 3px;
+            background: #667eea;
+            margin: 0.5rem auto 0;
+        }
+        .certificate-text {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.4;
+            margin: 0.8rem 0 0.4rem;
+        }
+        .certificate-course-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0.8rem 0 0.4rem;
+        }
+        .certificate-course-desc {
+            font-size: 0.95rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 1.2rem;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.3;
+        }
+        .certificate-details {
+            display: table;
+            width: 100%;
+            margin-top: 1.2rem;
+            padding-top: 1.2rem;
+            border-top: 2px solid #f0f0f0;
+        }
+        .certificate-detail-item {
+            display: table-cell;
+            text-align: center;
+            padding: 0.6rem;
+            background: #f9fafb;
+            border-radius: 6px;
+            width: 50%;
+        }
+        .certificate-detail-item + .certificate-detail-item {
+            border-left: 15px solid white;
+        }
+        .certificate-detail-label {
+            font-size: 0.75rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .certificate-detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .certificate-footer {
+            margin-top: 1.2rem;
+            padding-top: 0.8rem;
+            border-top: 2px solid #f0f0f0;
+            text-align: center;
+        }
+        .certificate-footer-text {
+            font-size: 0.8rem;
+            color: #999;
+            line-height: 1.3;
+            max-width: 580px;
+            margin: 0 auto 0.6rem;
+        }
+        .certificate-verification {
+            font-size: 0.75rem;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .certificate-watermark {
+            position: absolute;
+            top: 40%;
+            left: 45%;
+            font-size: 6rem;
+            color: rgba(102, 126, 234, 0.03);
+            font-weight: 900;
+            z-index: 0;
+        }
+        .certificate-content {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="certificate-border">
+    <div class="certificate-watermark">✦</div>
+    <div class="certificate-content">
+            <div class="certificate-header">
+                {% if organization.logoPath %}
+                <div class="certificate-logo">
+                    <img src="{{ absolute_url(asset(organization.logoPath)) }}" alt="{{ organization.name }}">
+                </div>
+                {% endif %}
+                <div class="certificate-org-name">{{ organization.name }}</div>
+                <div class="certificate-title">{{ 'certificate.title'|trans }}</div>
+            </div>
+            <div class="certificate-body">
+                <div class="certificate-presented">{{ 'certificate.presented.to'|trans }}</div>
+                <div class="certificate-student-name">{{ student.name }}</div>
+                <div class="certificate-text">{{ 'certificate.text.has.successfully.completed'|trans }}</div>
+                <div class="certificate-course-name">{{ course.name }}</div>
+                {% if course.description %}
+                <div class="certificate-course-desc">{{ course.description }}</div>
+                {% endif %}
+                <div class="certificate-details">
+                    <div class="certificate-detail-item">
+                        <div class="certificate-detail-label">{{ 'certificate.completion.date'|trans }}</div>
+                        <div class="certificate-detail-value">
+                            {% if enrollment.completedAt %}
+                                {% if app.request.locale == 'pt_BR' %}
+                                    {{ enrollment.completedAt|format_date('long', locale='pt_BR') }}
+                                {% else %}
+                                    {{ enrollment.completedAt|format_date('long', locale='en') }}
+                                {% endif %}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="certificate-detail-item">
+                        <div class="certificate-detail-label">{{ 'certificate.course.duration'|trans }}</div>
+                        <div class="certificate-detail-value">{{ course.totalLengthFormatted }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="certificate-footer">
+                <div class="certificate-footer-text">{{ 'certificate.footer'|trans }}</div>
+                <div class="certificate-verification">{{ 'certificate.credential.verification'|trans }}: {{ enrollment.id|slice(0, 13)|upper }}</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

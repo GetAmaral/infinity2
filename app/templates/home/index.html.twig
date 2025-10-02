@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ title }} - AI-Powered CRM Dashboard{% endblock %}
+{% block title %}{{ title }} - {{ 'branding.ai.dashboard'|trans }}{% endblock %}
 
 {% block body %}
 <!-- AI Dashboard Header -->
@@ -12,10 +12,10 @@
         </div>
         <div class="d-flex gap-2">
             <div class="ai-status-indicator">
-                <i class="bi bi-lightning me-1"></i> AI Enhanced
+                <i class="bi bi-lightning me-1"></i> {{ 'status.ai.enhanced'|trans }}
             </div>
             <div class="real-time-badge">
-                Real-time
+                {{ 'status.real.time'|trans }}
             </div>
         </div>
     </div>
@@ -25,7 +25,7 @@
 <div class="bento-grid mb-4">
     <div class="bento-item large">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="text-neon mb-0">{{ 'ai.quick_actions'|trans }}</h6>
+            <h6 class="text-neon mb-0">{{ 'ai.quick.actions'|trans }}</h6>
             <i class="bi bi-magic text-neon"></i>
         </div>
         <div class="row">
@@ -60,9 +60,9 @@
         <div class="metric-card">
             <i class="bi bi-people-fill text-neon fs-1"></i>
             <div class="metric-value">247</div>
-            <div class="metric-label">{{ 'metric.total_contacts'|trans }}</div>
+            <div class="metric-label">{{ 'metric.total.contacts'|trans }}</div>
             <div class="metric-trend trend-up">
-                <i class="bi bi-arrow-up"></i> +12% this month
+                <i class="bi bi-arrow-up"></i> {{ 'metric.month.growth'|trans({'%percent%': 12}) }}
             </div>
         </div>
     </div>
@@ -73,7 +73,7 @@
             <div class="metric-value">42</div>
             <div class="metric-label">{{ 'nav.organizations'|trans }}</div>
             <div class="metric-trend trend-up">
-                <i class="bi bi-arrow-up"></i> +3 new
+                <i class="bi bi-arrow-up"></i> {{ 'metric.new.count'|trans({'%count%': 3}) }}
             </div>
         </div>
     </div>
@@ -82,9 +82,9 @@
         <div class="metric-card">
             <i class="bi bi-chat-dots-fill text-neon fs-1"></i>
             <div class="metric-value">1.2k</div>
-            <div class="metric-label">{{ 'metric.ai_interactions'|trans }}</div>
+            <div class="metric-label">{{ 'metric.ai.interactions'|trans }}</div>
             <div class="metric-trend trend-up">
-                <i class="bi bi-arrow-up"></i> +15% today
+                <i class="bi bi-arrow-up"></i> {{ 'metric.today.growth'|trans({'%percent%': 15}) }}
             </div>
         </div>
     </div>
@@ -94,7 +94,7 @@
 <div class="bento-grid">
     <div class="bento-item large ai-enhanced">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="text-gradient mb-0">{{ 'ai.powered_crm'|trans }}</h5>
+            <h5 class="text-gradient mb-0">{{ 'ai.powered.crm'|trans }}</h5>
             <i class="bi bi-stars text-neon"></i>
         </div>
         <div class="row">
@@ -106,7 +106,7 @@
                         </div>
                     </div>
                     <h6 class="text-center text-white">{{ 'ai.conversational'|trans }}</h6>
-                    <p class="text-secondary text-center">{{ 'ai.conversational_description'|trans }}</p>
+                    <p class="text-secondary text-center">{{ 'ai.conversational.description'|trans }}</p>
                 </div>
             </div>
             <div class="col-lg-4 mb-4">
@@ -116,8 +116,8 @@
                             <i class="bi bi-graph-up-arrow text-primary fs-3"></i>
                         </div>
                     </div>
-                    <h6 class="text-center text-white">{{ 'ai.predictive_analytics'|trans }}</h6>
-                    <p class="text-secondary text-center">{{ 'ai.predictive_description'|trans }}</p>
+                    <h6 class="text-center text-white">{{ 'ai.predictive.analytics'|trans }}</h6>
+                    <p class="text-secondary text-center">{{ 'ai.predictive.description'|trans }}</p>
                 </div>
             </div>
             <div class="col-lg-4 mb-4">
@@ -127,8 +127,8 @@
                             <i class="bi bi-magic text-secondary fs-3"></i>
                         </div>
                     </div>
-                    <h6 class="text-center text-white">{{ 'ai.smart_automation'|trans }}</h6>
-                    <p class="text-secondary text-center">{{ 'ai.automation_description'|trans }}</p>
+                    <h6 class="text-center text-white">{{ 'ai.smart.automation'|trans }}</h6>
+                    <p class="text-secondary text-center">{{ 'ai.automation.description'|trans }}</p>
                 </div>
             </div>
         </div>
@@ -144,7 +144,7 @@
         <div class="metric-card mb-3">
             <i class="bi bi-speedometer2 text-neon"></i>
             <div class="metric-value text-start" style="font-size: 1.5rem;">< 200ms</div>
-            <div class="metric-label text-start">{{ 'metric.response_time'|trans }}</div>
+            <div class="metric-label text-start">{{ 'metric.response.time'|trans }}</div>
         </div>
         <div class="metric-card">
             <i class="bi bi-shield-check text-neon"></i>

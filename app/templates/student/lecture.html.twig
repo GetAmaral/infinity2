@@ -9,7 +9,7 @@
         <ol class="breadcrumb" style="background: transparent; padding: 0;">
             <li class="breadcrumb-item">
                 <a href="{{ path('student_courses') }}" class="text-neon">
-                    <i class="bi bi-house-door me-1"></i>{{ 'student.my_courses'|trans }}
+                    <i class="bi bi-house-door me-1"></i>{{ 'student.my.courses'|trans }}
                 </a>
             </li>
             <li class="breadcrumb-item">
@@ -28,20 +28,78 @@
             <div class="infinity-card p-0 mb-4" style="overflow: hidden;">
                 {% if lecture.processingStatus == 'completed' and lecture.videoPath %}
                     <!-- Plyr Video Player with HLS -->
-                    <div style="position: relative; background: #000;">
+                    <div
+                        data-controller="student-video"
+                        data-student-video-video-url-value="{{ lecture.videoPath }}"
+                        data-student-video-lecture-id-value="{{ lecture.id }}"
+                        data-student-video-progress-url-value="{{ path('student_progress_update', {lectureId: lecture.id}) }}"
+                        data-student-video-current-position-value="{{ studentProgress ? studentProgress.lastPositionSeconds : 0 }}"
+                        data-student-video-completed-value="{{ studentProgress ? studentProgress.completed : false }}"
+                        style="position: relative; background: #000;">
+
                         <video
-                            data-controller="student-video"
                             data-student-video-target="player"
-                            data-student-video-video-url-value="{{ lecture.videoPath }}"
-                            data-student-video-lecture-id-value="{{ lecture.id }}"
-                            data-student-video-progress-url-value="{{ path('student_progress_update', {lectureId: lecture.id}) }}"
-                            data-student-video-current-position-value="{{ studentProgress ? studentProgress.lastPositionSeconds : 0 }}"
-                            data-student-video-completed-value="{{ studentProgress ? studentProgress.completed : false }}"
                             playsinline
                             crossorigin="anonymous"
                             style="width: 100%; height: auto; display: block;">
                         </video>
+
                         <div class="video-error-message" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(220, 38, 38, 0.9); color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 1000;"></div>
+                    </div>
+
+                    <!-- Navigation Controls -->
+                    <div class="d-flex justify-content-between align-items-center p-3" style="background: rgba(0, 0, 0, 0.5); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div>
+                            {% if previousLecture %}
+                                <a href="{{ path('student_lecture', {courseId: course.id, lectureId: previousLecture.id}) }}"
+                                   class="btn btn-outline-light btn-sm"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="top"
+                                   title="{{ previousLecture.name }}">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            {% else %}
+                                <button class="btn btn-outline-secondary btn-sm" disabled>
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex align-items-center"
+                             data-controller="completion-toggle"
+                             data-completion-toggle-lecture-id-value="{{ lecture.id }}"
+                             data-completion-toggle-url-value="{{ path('student_progress_complete', {lectureId: lecture.id}) }}">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       role="switch"
+                                       id="completionToggle"
+                                       data-completion-toggle-target="toggle"
+                                       data-action="change->completion-toggle#toggle"
+                                       {% if studentProgress and studentProgress.completed %}checked{% endif %}
+                                       style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                                <label class="form-check-label text-white ms-2" for="completionToggle" style="cursor: pointer;">
+                                    <strong>{{ 'student.completed'|trans }}</strong>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            {% if nextLecture %}
+                                <a href="{{ path('student_lecture', {courseId: course.id, lectureId: nextLecture.id}) }}"
+                                   class="btn btn-outline-light btn-sm"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="top"
+                                   title="{{ nextLecture.name }}">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            {% else %}
+                                <a href="{{ path('student_course', {id: course.id}) }}"
+                                   class="btn btn-success btn-sm">
+                                    <i class="bi bi-check-circle me-1"></i>{{ 'student.end.course'|trans }}
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 {% elseif lecture.processingStatus == 'processing' %}
                     <div class="p-5 text-center" style="background: var(--infinity-card-bg);">
@@ -49,7 +107,7 @@
                             <span class="visually-hidden">{{ 'course.lecture.processing'|trans }}...</span>
                         </div>
                         <h4 class="text-white mt-4">{{ 'course.lecture.processing'|trans }}...</h4>
-                        <p class="text-muted">{{ 'course.lecture.processing_description'|trans }}</p>
+                        <p class="text-muted">{{ 'course.lecture.processing.description'|trans }}</p>
                         <button class="btn btn-outline-light mt-3" onclick="window.location.reload()">
                             <i class="bi bi-arrow-clockwise me-2"></i>{{ 'button.refresh'|trans }}
                         </button>
@@ -58,7 +116,7 @@
                     <div class="p-5 text-center" style="background: var(--infinity-card-bg);">
                         <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
                         <h4 class="text-white mt-3">{{ 'course.lecture.failed'|trans }}</h4>
-                        <p class="text-muted">{{ 'course.lecture.failed_description'|trans }}</p>
+                        <p class="text-muted">{{ 'course.lecture.failed.description'|trans }}</p>
                         {% if lecture.processingError %}
                             <p class="text-danger small">{{ lecture.processingError }}</p>
                         {% endif %}
@@ -66,8 +124,8 @@
                 {% else %}
                     <div class="p-5 text-center" style="background: var(--infinity-card-bg);">
                         <i class="bi bi-film text-muted" style="font-size: 4rem;"></i>
-                        <h4 class="text-white mt-3">{{ 'course.lecture.no_video'|trans }}</h4>
-                        <p class="text-muted">{{ 'course.lecture.no_video_description'|trans }}</p>
+                        <h4 class="text-white mt-3">{{ 'course.lecture.no.video'|trans }}</h4>
+                        <p class="text-muted">{{ 'course.lecture.no.video.description'|trans }}</p>
                     </div>
                 {% endif %}
             </div>
@@ -89,13 +147,9 @@
                                 <small class="text-muted d-block">{{ 'course.lecture.duration'|trans }}</small>
                                 <strong class="text-white">
                                     {% if lecture.lengthSeconds %}
-                                        {% if lecture.lengthSeconds < 60 %}
-                                            {{ lecture.lengthSeconds }} sec
-                                        {% else %}
-                                            {{ (lecture.lengthSeconds / 60)|round }} {{ 'course.minutes'|trans }}
-                                        {% endif %}
+                                        {{ lecture.lengthFormatted }}
                                     {% else %}
-                                        N/A
+                                        {{ 'misc.na'|trans }}
                                     {% endif %}
                                 </strong>
                             </div>
@@ -105,8 +159,8 @@
                         <div class="d-flex align-items-center p-3 rounded-3" style="background: rgba(16, 185, 129, 0.1);">
                             <i class="bi bi-bar-chart text-success fs-3 me-3"></i>
                             <div>
-                                <small class="text-muted d-block">{{ 'student.your_progress'|trans }}</small>
-                                <strong class="text-white">
+                                <small class="text-muted d-block">{{ 'student.your.progress'|trans }}</small>
+                                <strong class="text-white lecture-progress-text">
                                     {{ studentProgress ? studentProgress.completionPercentage|round : 0 }}%
                                 </strong>
                             </div>
@@ -118,13 +172,15 @@
                             <div>
                                 <small class="text-muted d-block">{{ 'student.status'|trans }}</small>
                                 <strong class="text-white">
-                                    {% if studentProgress and studentProgress.completed %}
-                                        {{ 'student.completed'|trans }}
-                                    {% elseif studentProgress and studentProgress.lastWatchedAt %}
-                                        {{ 'student.in_progress'|trans }}
-                                    {% else %}
-                                        {{ 'student.not_started'|trans }}
-                                    {% endif %}
+                                    <span class="lecture-completion-badge badge {% if studentProgress and studentProgress.completed %}bg-success{% elseif studentProgress and studentProgress.lastWatchedAt %}bg-primary{% else %}bg-secondary{% endif %}">
+                                        {% if studentProgress and studentProgress.completed %}
+                                            {{ 'student.completed'|trans }}
+                                        {% elseif studentProgress and studentProgress.lastWatchedAt %}
+                                            {{ 'student.in.progress'|trans }}
+                                        {% else %}
+                                            {{ 'student.not.started'|trans }}
+                                        {% endif %}
+                                    </span>
                                 </strong>
                             </div>
                         </div>
@@ -132,41 +188,21 @@
                 </div>
 
                 <!-- Progress Bar (if watching) -->
-                {% if studentProgress and studentProgress.completionPercentage > 0 %}
-                <div class="mt-4">
+                <div class="mt-4" style="{% if not studentProgress or studentProgress.completionPercentage == 0 %}display: none;{% endif %}">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="text-white">{{ 'student.watch_progress'|trans }}</span>
-                        <span class="text-neon fw-bold">{{ studentProgress.completionPercentage|round }}%</span>
+                        <span class="text-white">{{ 'student.watch.progress'|trans }}</span>
+                        <span class="text-neon fw-bold lecture-progress-text">{{ studentProgress ? studentProgress.completionPercentage|round : 0 }}%</span>
                     </div>
                     <div class="progress" style="height: 10px; background: rgba(255, 255, 255, 0.1);">
-                        <div class="progress-bar bg-success"
+                        <div class="progress-bar lecture-progress-bar bg-success"
                              role="progressbar"
-                             style="width: {{ studentProgress.completionPercentage|round }}%"
-                             aria-valuenow="{{ studentProgress.completionPercentage|round }}"
+                             style="width: {{ studentProgress ? studentProgress.completionPercentage|round : 0 }}%"
+                             aria-valuenow="{{ studentProgress ? studentProgress.completionPercentage|round : 0 }}"
                              aria-valuemin="0"
                              aria-valuemax="100">
                         </div>
                     </div>
-
-                    <!-- Milestones -->
-                    {% if studentProgress %}
-                    <div class="d-flex gap-2 mt-3">
-                        <span class="badge {% if studentProgress.reached25Percent %}bg-success{% else %}bg-secondary{% endif %}">
-                            <i class="bi bi-{{ studentProgress.reached25Percent ? 'check-' : '' }}circle me-1"></i>25%
-                        </span>
-                        <span class="badge {% if studentProgress.reached50Percent %}bg-success{% else %}bg-secondary{% endif %}">
-                            <i class="bi bi-{{ studentProgress.reached50Percent ? 'check-' : '' }}circle me-1"></i>50%
-                        </span>
-                        <span class="badge {% if studentProgress.reached75Percent %}bg-success{% else %}bg-secondary{% endif %}">
-                            <i class="bi bi-{{ studentProgress.reached75Percent ? 'check-' : '' }}circle me-1"></i>75%
-                        </span>
-                        <span class="badge {% if studentProgress.completed %}bg-success{% else %}bg-secondary{% endif %}">
-                            <i class="bi bi-{{ studentProgress.completed ? 'check-' : '' }}circle me-1"></i>100%
-                        </span>
-                    </div>
-                    {% endif %}
                 </div>
-                {% endif %}
             </div>
         </div>
 
@@ -201,12 +237,7 @@
                                     </div>
                                     {% if courseLecture.lengthSeconds %}
                                         <small class="text-muted">
-                                            <i class="bi bi-clock me-1"></i>
-                                            {% if courseLecture.lengthSeconds < 60 %}
-                                                {{ courseLecture.lengthSeconds }} sec
-                                            {% else %}
-                                                {{ (courseLecture.lengthSeconds / 60)|round }} min
-                                            {% endif %}
+                                            <i class="bi bi-clock me-1"></i>{{ courseLecture.lengthFormatted }}
                                         </small>
                                     {% endif %}
                                 </div>
@@ -228,18 +259,17 @@
 
                 <!-- Course Progress Summary -->
                 <div class="mt-4 p-3 rounded-3" style="background: rgba(79, 70, 229, 0.1);">
-                    <small class="text-muted d-block mb-2">{{ 'course.overall_progress'|trans }}</small>
+                    <small class="text-muted d-block mb-2">{{ 'course.overall.progress'|trans }}</small>
                     <div class="d-flex justify-content-between align-items-center">
-                        <strong class="text-neon">{{ enrollment.progressPercentage|round }}%</strong>
-                        <small class="text-muted">
+                        <strong class="text-neon course-progress-text">{{ enrollment.progressPercentage|round }}%</strong>
+                        <small class="text-muted course-lecture-count">
                             {{ allLectureProgress|filter(p => p.completed)|length }} / {{ allLectures|length }}
                         </small>
                     </div>
                     <div class="progress mt-2" style="height: 6px; background: rgba(255, 255, 255, 0.1);">
-                        <div class="progress-bar"
-                             style="background: var(--infinity-ai-gradient);"
+                        <div class="progress-bar course-progress-bar"
                              role="progressbar"
-                             style="width: {{ enrollment.progressPercentage|round }}%"
+                             style="background: var(--infinity-ai-gradient); width: {{ enrollment.progressPercentage|round }}%;"
                              aria-valuenow="{{ enrollment.progressPercentage|round }}"
                              aria-valuemin="0"
                              aria-valuemax="100">
@@ -250,4 +280,22 @@
         </div>
     </div>
 </div>
+
+<script>
+// Initialize Bootstrap tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('[Init] DOM Content Loaded');
+
+    // Initialize Bootstrap tooltips if bootstrap is available
+    if (typeof bootstrap !== 'undefined') {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        console.log('[Init] Tooltips initialized');
+    } else {
+        console.warn('[Init] Bootstrap not loaded, skipping tooltip initialization');
+    }
+});
+</script>
 {% endblock %}
