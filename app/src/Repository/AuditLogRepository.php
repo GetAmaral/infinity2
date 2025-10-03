@@ -259,14 +259,19 @@ class AuditLogRepository extends ServiceEntityRepository
     {
         $oneDayAgo = new \DateTimeImmutable('-24 hours');
 
-        return $this->createQueryBuilder('a')
-            ->select("EXTRACT(HOUR FROM a.createdAt) as hour", 'COUNT(a.id) as count')
-            ->where('a.createdAt >= :since')
-            ->groupBy('hour')
-            ->orderBy('hour', 'ASC')
-            ->setParameter('since', $oneDayAgo)
-            ->getQuery()
-            ->getResult();
+        $sql = '
+            SELECT EXTRACT(HOUR FROM created_at) as hour, COUNT(id) as count
+            FROM audit_log
+            WHERE created_at >= :since
+            GROUP BY hour
+            ORDER BY hour ASC
+        ';
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery(['since' => $oneDayAgo->format('Y-m-d H:i:s')]);
+
+        return $result->fetchAllAssociative();
     }
 
     /**

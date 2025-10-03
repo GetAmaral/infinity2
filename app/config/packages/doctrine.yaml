@@ -29,6 +29,8 @@ doctrine:
         dql:
             string_functions:
                 unaccent: App\Doctrine\DQL\UnaccentFunction
+            numeric_functions:
+                extract: App\Doctrine\DQL\ExtractFunction
         filters:
             organization_filter:
                 class: App\Doctrine\Filter\OrganizationFilter

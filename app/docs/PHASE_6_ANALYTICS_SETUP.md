@@ -325,6 +325,8 @@ All analytics queries use indexed fields:
 - `user_id` for user-based queries
 - `entity_class` for entity-type queries
 
+**Technical Note**: The hourly distribution query (`getHourlyDistribution()`) uses native SQL with PostgreSQL's `EXTRACT()` function instead of DQL for optimal performance and compatibility.
+
 For databases with >100k audit logs:
 - Consider materialized views for hourly distribution
 - Add database-level caching for frequent queries
