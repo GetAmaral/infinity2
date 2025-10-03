@@ -144,12 +144,12 @@ class Question extends EntityBase
     /**
      * @return Collection<int, FewShotExample>
      */
-    public function getExamples(): Collection
+    public function getFewShotExamples(): Collection
     {
         return $this->examples;
     }
 
-    public function addExample(FewShotExample $example): self
+    public function addFewShotExample(FewShotExample $example): self
     {
         if (!$this->examples->contains($example)) {
             $this->examples->add($example);
@@ -158,7 +158,7 @@ class Question extends EntityBase
         return $this;
     }
 
-    public function removeExample(FewShotExample $example): self
+    public function removeFewShotExample(FewShotExample $example): self
     {
         if ($this->examples->removeElement($example)) {
             if ($example->getQuestion() === $this) {
@@ -169,9 +169,9 @@ class Question extends EntityBase
     }
 
     /**
-     * Get only positive examples
+     * Get only positive few-shot examples
      */
-    public function getPositiveExamples(): Collection
+    public function getPositiveFewShotExamples(): Collection
     {
         return $this->examples->filter(
             fn(FewShotExample $example) => $example->getType() === \App\Enum\FewShotType::POSITIVE
@@ -179,9 +179,9 @@ class Question extends EntityBase
     }
 
     /**
-     * Get only negative examples
+     * Get only negative few-shot examples
      */
-    public function getNegativeExamples(): Collection
+    public function getNegativeFewShotExamples(): Collection
     {
         return $this->examples->filter(
             fn(FewShotExample $example) => $example->getType() === \App\Enum\FewShotType::NEGATIVE

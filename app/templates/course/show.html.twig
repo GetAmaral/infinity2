@@ -115,7 +115,10 @@
     <div class="bento-item large"
          data-controller="module-lecture-reorder"
          data-module-lecture-reorder-update-url-value="{{ path('course_lectures_reorder', {id: course.id}) }}"
-         data-module-lecture-reorder-course-id-value="{{ course.id }}">
+         data-module-lecture-reorder-course-id-value="{{ course.id }}"
+         data-module-lecture-reorder-saving-text-value="{{ 'button.saving'|trans }}"
+         data-module-lecture-reorder-success-text-value="{{ 'course.lecture.flash.updated_successfully'|trans }}"
+         data-module-lecture-reorder-error-text-value="{{ 'modal.delete.failed'|trans }}">
         <div class="infinity-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
@@ -152,7 +155,10 @@
                      id="modulesAccordion"
                      data-controller="module-reorder"
                      data-module-reorder-update-url-value="{{ path('course_modules_reorder', {courseId: course.id}) }}"
-                     data-module-reorder-course-id-value="{{ course.id }}">
+                     data-module-reorder-course-id-value="{{ course.id }}"
+                     data-module-reorder-saving-text-value="{{ 'button.saving'|trans }}"
+                     data-module-reorder-success-text-value="{{ 'course.module.flash.reordered_successfully'|trans }}"
+                     data-module-reorder-error-text-value="{{ 'modal.delete.failed'|trans }}">
                     {% for module in modules %}
                         <div class="module-wrapper mb-3" data-module-id="{{ module.id }}" data-module-reorder-target="module">
                             <div class="accordion-item" style="background: var(--infinity-card-bg); border: 1px solid var(--infinity-border-color); border-radius: 8px; overflow: hidden;">
@@ -360,8 +366,8 @@
         </div>
     </div>
 
-    <!-- Enrolled Students Section (ADMIN ONLY) -->
-    {% if is_granted('ROLE_ADMIN') %}
+    <!-- Enrolled Students Section (ADMIN and ORGANIZATION_ADMIN) -->
+    {% if is_granted('COURSE_MANAGE_ENROLLMENTS', course) %}
     <div class="bento-item large">
         <div class="infinity-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -390,9 +396,9 @@
                 </div>
             {% else %}
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle infinity-table">
                         <thead>
-                            <tr class="text-white">
+                            <tr>
                                 <th><i class="bi bi-person me-2"></i>{{ 'user.name'|trans }}</th>
                                 <th><i class="bi bi-envelope me-2"></i>{{ 'user.email'|trans }}</th>
                                 <th><i class="bi bi-calendar me-2"></i>{{ 'course.enrolled.at'|trans }}</th>
@@ -403,57 +409,61 @@
                         </thead>
                         <tbody>
                             {% for enrollment in course.studentCourses %}
-                            <tr class="text-secondary">
+                            <tr>
                                 <td class="text-white fw-bold">{{ enrollment.student.name }}</td>
-                                <td>{{ enrollment.student.email }}</td>
-                                <td>{{ enrollment.enrolledAt|date('M d, Y') }}</td>
+                                <td class="text-secondary">{{ enrollment.student.email }}</td>
+                                <td class="text-secondary">{{ enrollment.enrolledAt|date('M d, Y') }}</td>
                                 <td>
-                                    <div class="progress" style="height: 6px; width: 100px;">
-                                        <div class="progress-bar bg-success"
-                                             role="progressbar"
-                                             style="width: {{ enrollment.progressPercentage }}%"
-                                             aria-valuenow="{{ enrollment.progressPercentage }}"
-                                             aria-valuemin="0"
-                                             aria-valuemax="100">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress" style="height: 8px; width: 120px; background: rgba(255, 255, 255, 0.1);">
+                                            <div class="progress-bar"
+                                                 role="progressbar"
+                                                 style="width: {{ enrollment.progressPercentage }}%; background: linear-gradient(90deg, #10b981, #34d399);"
+                                                 aria-valuenow="{{ enrollment.progressPercentage }}"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100">
+                                            </div>
                                         </div>
+                                        <small class="text-secondary" style="min-width: 35px;">{{ enrollment.progressPercentage|round }}%</small>
                                     </div>
-                                    <small class="text-muted">{{ enrollment.progressPercentage|round }}%</small>
                                 </td>
                                 <td>
                                     {% if enrollment.active %}
-                                        <span class="badge bg-success">
+                                        <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.4rem 0.75rem;">
                                             <i class="bi bi-check-circle me-1"></i>{{ 'course.enrollment.active'|trans }}
                                         </span>
                                     {% else %}
-                                        <span class="badge bg-secondary">
+                                        <span class="badge" style="background: rgba(107, 114, 128, 0.2); color: #9ca3af; border: 1px solid rgba(107, 114, 128, 0.3); padding: 0.4rem 0.75rem;">
                                             <i class="bi bi-x-circle me-1"></i>{{ 'course.enrollment.inactive'|trans }}
                                         </span>
                                     {% endif %}
                                 </td>
                                 <td class="text-end">
-                                    <form method="post"
-                                          action="{{ path('course_enrollment_toggle', {courseId: course.id, enrollmentId: enrollment.id}) }}"
-                                          style="display: inline-block;">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('toggle-enrollment-' ~ enrollment.id) }}">
-                                        <button type="submit"
-                                                class="btn btn-sm {{ enrollment.active ? 'btn-warning' : 'btn-success' }}"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-title="{{ enrollment.active ? 'course.enrollment.deactivate'|trans : 'course.enrollment.activate'|trans }}">
-                                            <i class="bi bi-{{ enrollment.active ? 'pause-circle' : 'play-circle' }}"></i>
-                                        </button>
-                                    </form>
-                                    <form method="post"
-                                          action="{{ path('course_enrollment_remove', {courseId: course.id, enrollmentId: enrollment.id}) }}"
-                                          style="display: inline-block;"
-                                          onsubmit="return confirm('{{ 'course.enrollment.confirm.remove'|trans({'%student%': enrollment.student.name}) }}');">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('remove-enrollment-' ~ enrollment.id) }}">
-                                        <button type="submit"
-                                                class="btn btn-sm infinity-btn-danger"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-title="{{ 'button.remove'|trans }}">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                    <div class="d-inline-flex gap-1">
+                                        <form method="post"
+                                              action="{{ path('course_enrollment_toggle', {courseId: course.id, enrollmentId: enrollment.id}) }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('toggle-enrollment-' ~ enrollment.id) }}">
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ enrollment.active ? 'infinity-btn-warning' : 'infinity-btn-success' }}"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-title="{{ enrollment.active ? 'course.enrollment.deactivate'|trans : 'course.enrollment.activate'|trans }}"
+                                                    style="min-width: 32px;">
+                                                <i class="bi bi-{{ enrollment.active ? 'pause-circle' : 'play-circle' }}"></i>
+                                            </button>
+                                        </form>
+                                        <form method="post"
+                                              action="{{ path('course_enrollment_remove', {courseId: course.id, enrollmentId: enrollment.id}) }}"
+                                              onsubmit="return confirm('{{ 'course.enrollment.confirm.remove'|trans({'%student%': enrollment.student.name}) }}');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('remove-enrollment-' ~ enrollment.id) }}">
+                                            <button type="submit"
+                                                    class="btn btn-sm infinity-btn-danger"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-title="{{ 'button.remove'|trans }}"
+                                                    style="min-width: 32px;">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -466,15 +476,21 @@
     {% endif %}
 </div>
 
-<!-- Enroll Student Modal (ADMIN ONLY) -->
-{% if is_granted('ROLE_ADMIN') %}
+<!-- Enroll Student Modal (ADMIN and ORGANIZATION_ADMIN) -->
+{% if is_granted('COURSE_MANAGE_ENROLLMENTS', course) %}
 <div class="modal fade" id="enrollStudentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content" style="background: var(--infinity-card-bg); border: 1px solid var(--infinity-border-color);"
              data-controller="enrollment-switch"
              data-enrollment-switch-course-id-value="{{ course.id }}"
              data-enrollment-switch-enroll-url-value="{{ path('course_enrollment_add_multi', {courseId: course.id}) }}"
-             data-enrollment-switch-deactivate-url-value="{{ path('course_enrollment_deactivate_multi', {courseId: course.id}) }}">
+             data-enrollment-switch-deactivate-url-value="{{ path('course_enrollment_deactivate_multi', {courseId: course.id}) }}"
+             data-enrollment-switch-saving-text-value="{{ 'button.saving'|trans }}"
+             data-enrollment-switch-confirm-text-value="{{ 'button.confirm'|trans }}"
+             data-enrollment-switch-enrolled-text-value="{{ 'course.enrollment.enrolled'|trans }}"
+             data-enrollment-switch-deactivated-text-value="{{ 'course.enrollment.deactivate'|trans }}"
+             data-enrollment-switch-no-changes-text-value="{{ 'modal.crud.unsaved_changes'|trans }}"
+             data-enrollment-switch-error-text-value="{{ 'modal.crud.error_saving'|trans }}">
             <div class="modal-header" style="border-bottom: 1px solid var(--infinity-border-color);">
                 <h5 class="modal-title text-white">
                     <i class="bi bi-people me-2"></i>{{ 'course.manage.enrollments'|trans }}
@@ -520,20 +536,23 @@
                                 <small class="text-muted">{{ user.email }}</small>
                             </div>
                         </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input"
-                                   type="checkbox"
-                                   role="switch"
-                                   id="switch-{{ user.id }}"
-                                   data-enrollment-switch-target="userSwitch"
-                                   data-user-id="{{ user.id }}"
-                                   {{ user.id.toString in enrolledUserIds ? 'checked' : '' }}
-                                   style="width: 3rem; height: 1.5rem; cursor: pointer;">
-                            <label class="form-check-label text-white ms-2" for="switch-{{ user.id }}" style="cursor: pointer;">
-                                <span class="badge {{ user.id.toString in enrolledUserIds ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ user.id.toString in enrolledUserIds ? 'course.enrollment.enrolled'|trans : 'course.enrollment.not.enrolled'|trans }}
-                                </span>
-                            </label>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-success badge-enrolled" style="display: {{ user.id.toString in enrolledUserIds ? 'inline-block' : 'none' }}; min-width: 110px;" data-enrollment-switch-target="badgeEnrolled">
+                                {{ 'course.enrollment.enrolled'|trans }}
+                            </span>
+                            <span class="badge bg-secondary badge-not-enrolled" style="display: {{ user.id.toString in enrolledUserIds ? 'none' : 'inline-block' }}; min-width: 110px;" data-enrollment-switch-target="badgeNotEnrolled">
+                                {{ 'course.enrollment.not_enrolled'|trans }}
+                            </span>
+                            <div class="form-check form-switch mb-0">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       role="switch"
+                                       id="switch-{{ user.id }}"
+                                       data-enrollment-switch-target="userSwitch"
+                                       data-user-id="{{ user.id }}"
+                                       {{ user.id.toString in enrolledUserIds ? 'checked' : '' }}
+                                       style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
@@ -855,6 +874,82 @@
     background: rgba(239, 68, 68, 0.15);
     border: 1px solid rgba(239, 68, 68, 0.3);
     color: #f87171;
+}
+
+/* Students Table Styling */
+.infinity-table {
+    margin-bottom: 0;
+}
+
+.infinity-table thead tr {
+    border-bottom: 2px solid var(--infinity-border-color);
+}
+
+.infinity-table thead th {
+    color: var(--infinity-text-white);
+    font-weight: 600;
+    padding: 1rem 0.75rem;
+    border: none;
+    background: transparent;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.infinity-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.infinity-table tbody tr:hover {
+    background: rgba(0, 245, 255, 0.03);
+}
+
+.infinity-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.infinity-table tbody td {
+    padding: 1rem 0.75rem;
+    border: none;
+    vertical-align: middle;
+}
+
+/* Additional Button Styles */
+.infinity-btn-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+}
+
+.infinity-btn-warning:hover {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    transform: translateY(-1px);
+    color: white;
+}
+
+.infinity-btn-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.infinity-btn-success:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    transform: translateY(-1px);
+    color: white;
 }
 </style>
 {% endblock %}

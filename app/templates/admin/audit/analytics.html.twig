@@ -2,6 +2,67 @@
 
 {% block title %}Audit Analytics{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Analytics Table Styles - Dark Theme (Default) */
+    .analytics-table {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+        --bs-table-bg: transparent !important;
+        --bs-table-striped-bg: transparent !important;
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .analytics-table thead th {
+        background-color: rgba(59, 130, 246, 0.1) !important;
+        color: rgba(255, 255, 255, 0.9);
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .analytics-table tbody td {
+        background-color: transparent !important;
+        color: rgba(255, 255, 255, 0.9);
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .analytics-table tbody tr {
+        background-color: transparent !important;
+    }
+
+    .analytics-table tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* Analytics Table Styles - Light Theme */
+    [data-theme="light"] .analytics-table {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        --bs-table-bg: rgba(255, 255, 255, 0.9) !important;
+        --bs-table-striped-bg: rgba(0, 0, 0, 0.02) !important;
+        --bs-table-hover-bg: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    [data-theme="light"] .analytics-table thead th {
+        background-color: rgba(59, 130, 246, 0.08) !important;
+        color: #1a1a1a;
+        border-color: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    [data-theme="light"] .analytics-table tbody td {
+        color: #1a1a1a;
+        background-color: transparent !important;
+        border-color: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    [data-theme="light"] .analytics-table tbody tr {
+        background-color: transparent !important;
+    }
+
+    [data-theme="light"] .analytics-table tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.05) !important;
+    }
+</style>
+{% endblock %}
+
 {% block body %}
 <div class="container-fluid py-4">
     {# Header #}
@@ -72,7 +133,9 @@
                 <h5 class="mb-3">
                     <i class="bi bi-clock me-2"></i>Activity by Hour (Last 24h)
                 </h5>
-                <canvas id="hourlyChart" height="200"></canvas>
+                <div style="position: relative; height: 350px; padding: 10px;">
+                    <canvas id="hourlyChart"></canvas>
+                </div>
             </div>
         </div>
         <div class="col-md-6 mb-4">
@@ -80,7 +143,9 @@
                 <h5 class="mb-3">
                     <i class="bi bi-pie-chart me-2"></i>Action Breakdown (Last 7 Days)
                 </h5>
-                <canvas id="actionChart" height="200"></canvas>
+                <div style="position: relative; height: 350px; padding: 10px;">
+                    <canvas id="actionChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -96,7 +161,7 @@
                     <p class="text-muted">No user activity data available</p>
                 {% else %}
                     <div class="table-responsive">
-                        <table class="table table-sm">
+                        <table class="table table-sm analytics-table">
                             <thead>
                                 <tr>
                                     <th>User</th>
@@ -130,7 +195,7 @@
                     <p class="text-muted">No entity modification data available</p>
                 {% else %}
                     <div class="table-responsive">
-                        <table class="table table-sm">
+                        <table class="table table-sm analytics-table">
                             <thead>
                                 <tr>
                                     <th>Entity Type</th>
@@ -216,58 +281,190 @@
 </div>
 
 <script type="module">
-    import Chart from 'chart.js';
+    import Chart from 'chart.js/auto';
 
-    // Hourly distribution chart
-    new Chart(document.getElementById('hourlyChart'), {
+    // Prevent multiple initializations
+    if (window.auditChartsInitialized) {
+        console.log('Charts already initialized');
+    } else {
+        window.auditChartsInitialized = true;
+
+        // Detect theme
+        const isDarkTheme = document.documentElement.getAttribute('data-theme') !== 'light';
+        const textColor = isDarkTheme ? 'rgba(255, 255, 255, 0.9)' : '#1a1a1a';
+        const gridColor = isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const tooltipBg = isDarkTheme ? 'rgba(26, 29, 41, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+        const chartBg = isDarkTheme ? 'rgba(59, 130, 246, 0.7)' : 'rgba(59, 130, 246, 0.8)';
+        const chartBorder = isDarkTheme ? 'rgba(59, 130, 246, 1)' : 'rgba(59, 130, 246, 1)';
+
+        // Set Chart.js defaults for theme
+        Chart.defaults.color = textColor;
+        Chart.defaults.borderColor = gridColor;
+
+        // Hourly distribution chart
+        const hourlyChart = new Chart(document.getElementById('hourlyChart'), {
         type: 'bar',
         data: {
             labels: {{ metrics.hourly_distribution.hours|json_encode|raw }},
             datasets: [{
-                label: 'Events',
+                label: 'Events per Hour',
                 data: {{ metrics.hourly_distribution.counts|json_encode|raw }},
-                backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                borderColor: 'rgba(59, 130, 246, 1)',
-                borderWidth: 1
+                backgroundColor: chartBg,
+                borderColor: chartBorder,
+                borderWidth: 1,
+                borderRadius: 4
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            },
             scales: {
-                y: {
-                    beginAtZero: true,
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Hour of Day',
+                        color: textColor,
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    },
+                    grid: {
+                        color: gridColor,
+                        display: false
+                    },
                     ticks: {
-                        stepSize: 1
+                        color: textColor,
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Number of Events',
+                        color: textColor,
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    },
+                    beginAtZero: true,
+                    grid: {
+                        color: gridColor
+                    },
+                    ticks: {
+                        stepSize: 1,
+                        color: textColor,
+                        font: {
+                            size: 11
+                        }
                     }
                 }
             },
             plugins: {
                 legend: {
-                    display: false
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        color: textColor,
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: tooltipBg,
+                    titleColor: textColor,
+                    bodyColor: textColor,
+                    borderColor: isDarkTheme ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 0, 0, 0.2)',
+                    borderWidth: 1,
+                    padding: 10,
+                    displayColors: true
                 }
             }
         }
     });
 
     // Action breakdown pie chart
-    new Chart(document.getElementById('actionChart'), {
+    const actionChart = new Chart(document.getElementById('actionChart'), {
         type: 'pie',
         data: {
             labels: {{ metrics.action_breakdown.labels|json_encode|raw }},
             datasets: [{
                 data: {{ metrics.action_breakdown.data|json_encode|raw }},
-                backgroundColor: {{ metrics.action_breakdown.colors|json_encode|raw }}
+                backgroundColor: {{ metrics.action_breakdown.colors|json_encode|raw }},
+                borderWidth: isDarkTheme ? 2 : 1,
+                borderColor: isDarkTheme ? '#1a1d29' : '#ffffff'
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 20,
+                    top: 10,
+                    bottom: 10
+                }
+            },
             plugins: {
                 legend: {
-                    position: 'right'
+                    position: 'bottom',
+                    align: 'center',
+                    labels: {
+                        color: textColor,
+                        padding: 12,
+                        font: {
+                            size: 12
+                        },
+                        boxWidth: 15,
+                        boxHeight: 15,
+                        usePointStyle: false
+                    }
+                },
+                tooltip: {
+                    backgroundColor: tooltipBg,
+                    titleColor: textColor,
+                    bodyColor: textColor,
+                    borderColor: isDarkTheme ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 0, 0, 0.2)',
+                    borderWidth: 1,
+                    padding: 10,
+                    displayColors: true,
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return label + ': ' + value + ' (' + percentage + '%)';
+                        }
+                    }
                 }
             }
+        }
+    });
+
+        // Store chart instances globally for cleanup
+        window.auditCharts = { hourlyChart, actionChart };
+    }
+
+    // Clean up on page unload (Turbo navigation)
+    document.addEventListener('turbo:before-render', function() {
+        if (window.auditCharts) {
+            window.auditCharts.hourlyChart?.destroy();
+            window.auditCharts.actionChart?.destroy();
+            window.auditChartsInitialized = false;
         }
     });
 </script>

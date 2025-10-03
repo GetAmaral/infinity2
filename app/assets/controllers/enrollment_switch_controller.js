@@ -10,11 +10,17 @@ import { Controller } from '@hotwired/stimulus';
  * - Only process on confirm
  */
 export default class extends Controller {
-    static targets = ['searchInput', 'userRow', 'userName', 'userSwitch', 'confirmButton'];
+    static targets = ['searchInput', 'userRow', 'userName', 'userSwitch', 'confirmButton', 'badgeEnrolled', 'badgeNotEnrolled'];
     static values = {
         courseId: String,
         enrollUrl: String,
-        deactivateUrl: String
+        deactivateUrl: String,
+        savingText: String,
+        confirmText: String,
+        enrolledText: String,
+        deactivatedText: String,
+        noChangesText: String,
+        errorText: String
     };
 
     connect() {
@@ -39,14 +45,19 @@ export default class extends Controller {
     }
 
     updateBadge(switchEl) {
-        const label = switchEl.parentElement.querySelector('.badge');
-        if (label) {
-            if (switchEl.checked) {
-                label.className = 'badge bg-success';
-                label.textContent = 'Enrolled';
-            } else {
-                label.className = 'badge bg-secondary';
-                label.textContent = 'Not Enrolled';
+        const container = switchEl.closest('.d-flex');
+        if (container) {
+            const enrolledBadge = container.querySelector('.badge-enrolled');
+            const notEnrolledBadge = container.querySelector('.badge-not-enrolled');
+
+            if (enrolledBadge && notEnrolledBadge) {
+                if (switchEl.checked) {
+                    enrolledBadge.style.display = 'inline-block';
+                    notEnrolledBadge.style.display = 'none';
+                } else {
+                    enrolledBadge.style.display = 'none';
+                    notEnrolledBadge.style.display = 'inline-block';
+                }
             }
         }
     }
@@ -91,14 +102,14 @@ export default class extends Controller {
         const changes = this.getChanges();
 
         if (changes.toEnroll.length === 0 && changes.toDeactivate.length === 0) {
-            this.showNotification('No changes to save', 'info');
+            this.showNotification(this.noChangesTextValue, 'info');
             return;
         }
 
         console.log('Changes to process:', changes);
 
         this.confirmButtonTarget.disabled = true;
-        this.confirmButtonTarget.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Saving...';
+        this.confirmButtonTarget.innerHTML = `<i class="bi bi-hourglass-split me-2"></i>${this.savingTextValue}...`;
 
         try {
             let enrolledCount = 0;
@@ -151,8 +162,8 @@ export default class extends Controller {
 
             // Show success message
             const messages = [];
-            if (enrolledCount > 0) messages.push(`Enrolled ${enrolledCount} student(s)`);
-            if (deactivatedCount > 0) messages.push(`Deactivated ${deactivatedCount} student(s)`);
+            if (enrolledCount > 0) messages.push(`${this.enrolledTextValue} ${enrolledCount}`);
+            if (deactivatedCount > 0) messages.push(`${this.deactivatedTextValue} ${deactivatedCount}`);
 
             this.showNotification(messages.join(', '), 'success');
 
@@ -163,9 +174,9 @@ export default class extends Controller {
 
         } catch (error) {
             console.error('Error processing enrollments:', error);
-            this.showNotification('Failed to process enrollments', 'error');
+            this.showNotification(this.errorTextValue, 'error');
             this.confirmButtonTarget.disabled = false;
-            this.confirmButtonTarget.innerHTML = '<i class="bi bi-check-circle me-2"></i>Confirm';
+            this.confirmButtonTarget.innerHTML = `<i class="bi bi-check-circle me-2"></i>${this.confirmTextValue}`;
         }
     }
 

@@ -185,8 +185,15 @@ final class StepController extends AbstractController
                 }
             }
 
-            // TODO: When Step entity has an 'order' or 'position' field, persist the new order here
-            // For now, just return success to enable the drag-and-drop UI
+            // Persist the new order (Enhancement: Step viewOrder field)
+            foreach ($data['steps'] as $stepData) {
+                $step = $this->stepRepository->find($stepData['id']);
+                if ($step) {
+                    $step->setViewOrder($stepData['order']);
+                }
+            }
+
+            $this->entityManager->flush();
 
             return new JsonResponse([
                 'success' => true,

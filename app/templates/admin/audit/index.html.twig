@@ -523,12 +523,12 @@
     {# History Modal #}
     <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content" style="background-color: #1a1d29; border: 1px solid rgba(59, 130, 246, 0.3);">
+            <div class="modal-content audit-history-modal">
                 <div class="modal-header">
                     <h5 class="modal-title" id="historyModalLabel">
                         <i class="bi bi-clock-history me-2"></i>Entity History
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close audit-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="historyModalBody">
                     <div class="text-center py-5">
@@ -653,6 +653,169 @@ code {
     height: 28px;
 }
 
+/* History Modal Theme Support - Dark Theme (Default) */
+.audit-history-modal {
+    background-color: #1a1d29 !important;
+    border: 1px solid rgba(59, 130, 246, 0.3) !important;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.audit-history-modal .modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.audit-history-modal .modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.audit-modal-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* History Modal Theme Support - Light Theme */
+[data-theme="light"] .audit-history-modal {
+    background-color: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .audit-history-modal .modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .audit-history-modal .modal-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .audit-modal-close {
+    filter: none;
+}
+
+/* Table Styles - Dark Theme (Default) */
+.audit-table {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+    border-radius: 8px;
+    overflow: hidden;
+    --bs-table-bg: transparent !important;
+    --bs-table-striped-bg: transparent !important;
+}
+
+.audit-table thead {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.15)) !important;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+}
+
+.audit-table thead th {
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1rem 0.75rem;
+    border: none;
+    color: rgba(255, 255, 255, 0.9);
+    background-color: transparent !important;
+}
+
+.audit-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+    background-color: transparent !important;
+}
+
+.audit-table tbody tr:hover {
+    background-color: rgba(59, 130, 246, 0.08) !important;
+    transform: scale(1.01);
+}
+
+.audit-table tbody td {
+    padding: 0.875rem 0.75rem;
+    vertical-align: middle;
+    border: none;
+    color: rgba(255, 255, 255, 0.9);
+    background-color: transparent !important;
+}
+
+.table-responsive {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: transparent;
+}
+
+/* Table Styles - Light Theme */
+[data-theme="light"] .audit-table {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --bs-table-bg: rgba(255, 255, 255, 0.9) !important;
+    --bs-table-striped-bg: rgba(0, 0, 0, 0.02) !important;
+}
+
+[data-theme="light"] .audit-table thead {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(124, 58, 237, 0.08)) !important;
+    border-bottom: 2px solid rgba(79, 70, 229, 0.2);
+}
+
+[data-theme="light"] .audit-table thead th {
+    color: #1a1a1a;
+    background-color: transparent !important;
+}
+
+[data-theme="light"] .audit-table tbody tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: transparent !important;
+}
+
+[data-theme="light"] .audit-table tbody tr:hover {
+    background-color: rgba(79, 70, 229, 0.05) !important;
+}
+
+[data-theme="light"] .audit-table tbody td {
+    color: #1a1a1a;
+    background-color: transparent !important;
+}
+
+[data-theme="light"] .table-responsive {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Table text elements - theme aware */
+.audit-table .text-muted {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+[data-theme="light"] .audit-table .text-muted {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.audit-table code {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .audit-table code {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #1a1a1a;
+}
+
+.audit-table a {
+    color: #60a5fa;
+    text-decoration: none;
+}
+
+.audit-table a:hover {
+    color: #93c5fd;
+}
+
+[data-theme="light"] .audit-table a {
+    color: #2563eb;
+}
+
+[data-theme="light"] .audit-table a:hover {
+    color: #1d4ed8;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .audit-timeline {
@@ -672,6 +835,42 @@ code {
 
     .modal-xl {
         max-width: 95%;
+    }
+
+    /* Table responsive adjustments */
+    .audit-table thead th {
+        font-size: 0.75rem;
+        padding: 0.75rem 0.5rem;
+    }
+
+    .audit-table tbody td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .audit-table tbody td small {
+        font-size: 0.75rem;
+    }
+
+    /* Stack timestamp on mobile */
+    .audit-table tbody td:first-child {
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 576px) {
+    .table-responsive {
+        border-radius: 4px;
+    }
+
+    .audit-table thead th,
+    .audit-table tbody td {
+        padding: 0.5rem 0.25rem;
+    }
+
+    .audit-table .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
     }
 }
 </style>
@@ -739,41 +938,55 @@ function openHistoryModal(entityClass, entityId, entityName) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Toggle filters
-    const toggleBtn = document.getElementById('toggleFilters');
-    const filterSection = document.getElementById('filterSection');
-
-    if (toggleBtn && filterSection) {
-        toggleBtn.addEventListener('click', function() {
+// Use event delegation to avoid re-attaching listeners on Turbo navigation
+// Toggle filters - event delegation
+document.addEventListener('click', function(e) {
+    const toggleBtn = e.target.closest('#toggleFilters');
+    if (toggleBtn) {
+        const filterSection = document.getElementById('filterSection');
+        if (filterSection) {
             filterSection.classList.toggle('d-none');
-            const icon = this.querySelector('i');
-            icon.classList.toggle('bi-chevron-down');
-            icon.classList.toggle('bi-chevron-up');
-        });
+            const icon = toggleBtn.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('bi-chevron-down');
+                icon.classList.toggle('bi-chevron-up');
+            }
+        }
     }
 
-    // View toggle
-    const viewTimeline = document.getElementById('viewTimeline');
-    const viewTable = document.getElementById('viewTable');
-    const timelineView = document.getElementById('timelineView');
-    const tableView = document.getElementById('tableView');
+    // View toggle - Timeline
+    const viewTimelineBtn = e.target.closest('#viewTimeline');
+    if (viewTimelineBtn) {
+        const timelineView = document.getElementById('timelineView');
+        const tableView = document.getElementById('tableView');
+        const viewTable = document.getElementById('viewTable');
 
-    if (viewTimeline && viewTable && timelineView && tableView) {
-        viewTimeline.addEventListener('click', function() {
+        if (timelineView && tableView) {
             timelineView.style.display = 'block';
             tableView.style.display = 'none';
-            this.classList.add('active');
-            viewTable.classList.remove('active');
-        });
+            viewTimelineBtn.classList.add('active');
+            if (viewTable) viewTable.classList.remove('active');
+        }
+    }
 
-        viewTable.addEventListener('click', function() {
+    // View toggle - Table
+    const viewTableBtn = e.target.closest('#viewTable');
+    if (viewTableBtn) {
+        const timelineView = document.getElementById('timelineView');
+        const tableView = document.getElementById('tableView');
+        const viewTimeline = document.getElementById('viewTimeline');
+
+        if (timelineView && tableView) {
             timelineView.style.display = 'none';
             tableView.style.display = 'block';
-            this.classList.add('active');
-            viewTimeline.classList.remove('active');
-        });
+            viewTableBtn.classList.add('active');
+            if (viewTimeline) viewTimeline.classList.remove('active');
+        }
     }
+});
+
+// Keep the old DOMContentLoaded for other functionality
+document.addEventListener('DOMContentLoaded', function() {
 
     // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {

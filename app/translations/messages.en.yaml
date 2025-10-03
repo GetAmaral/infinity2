@@ -256,6 +256,7 @@ button.create_organization: Create Organization
 button.update_organization: Update Organization
 button.creating: Creating...
 button.updating: Updating...
+button.saving: Saving...
 
 # ========================================
 # Form and Validation
@@ -1327,9 +1328,9 @@ treeflow.modal.create.subtitle: Add a new TreeFlow to guide AI agents
 treeflow.modal.edit.subtitle: Update TreeFlow configuration
 
 # TreeFlow Flash Messages
-treeflow.flash.created_successfully: TreeFlow created successfully
-treeflow.flash.updated_successfully: TreeFlow updated successfully
-treeflow.flash.deleted_successfully: TreeFlow deleted successfully
+treeflow.flash.created_successfully: TreeFlow "%name%" created successfully (Version %version%)
+treeflow.flash.updated_successfully: TreeFlow "%name%" updated successfully (Version %version%)
+treeflow.flash.deleted_successfully: TreeFlow "%name%" deleted successfully
 treeflow.flash.invalid_csrf_token: Invalid security token
 
 # TreeFlow Button
@@ -1531,4 +1532,49 @@ input.flash.invalid_csrf_token: Invalid security token
 # Input Button
 input.button.create.input: Create Input
 
-# Total translations: 889
+# ===================================
+# VALIDATION ERROR MESSAGES (Phase 6)
+# ===================================
+
+validation:
+  # TreeFlow Validation
+  treeflow:
+    name_required: TreeFlow name is required
+    name_too_short: Name must be at least 2 characters
+    name_too_long: Name cannot exceed 255 characters
+    version_invalid: Version must be a positive integer
+
+  # Step Validation
+  step:
+    name_required: Step name is required
+    cannot_delete_first: Cannot delete the first step
+    objective_too_long: Objective cannot exceed 1000 characters
+    prompt_too_long: Prompt cannot exceed 5000 characters
+
+  # Question Validation
+  question:
+    name_required: Question name is required
+    importance_range: Importance must be between 1 and 10
+    importance_required: Importance is required
+    view_order_invalid: View order must be a positive integer
+
+  # FewShot Validation
+  fewshot:
+    name_required: Example name is required
+    type_required: Example type is required
+    type_invalid: Type must be either 'positive' or 'negative'
+
+  # Output Validation
+  output:
+    name_required: Output name is required
+    destination_required: Destination step is required
+    conditional_too_long: Conditional expression cannot exceed 1000 characters
+
+  # Input Validation
+  input:
+    name_required: Input name is required
+    type_required: Input type is required
+    type_invalid: Invalid input type selected
+    prompt_too_long: Prompt cannot exceed 1000 characters
+
+# Total translations: 933

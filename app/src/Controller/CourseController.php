@@ -132,7 +132,7 @@ final class CourseController extends BaseApiController
 
         // Get ALL users for enrollment (including enrolled ones for Tom Select multi-select)
         $availableUsers = [];
-        if ($this->isGranted('ROLE_ADMIN')) {
+        if ($this->isGranted(CourseVoter::MANAGE_ENROLLMENTS, $course)) {
             // Get all users from the same organization for Tom Select
             $availableUsers = $this->userRepository->createQueryBuilder('u')
                 ->where('u.organization = :organization')
@@ -522,14 +522,12 @@ final class CourseController extends BaseApiController
     #[Route('/{courseId}/enrollment/add', name: 'course_enrollment_add', requirements: ['courseId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['POST'])]
     public function addEnrollment(Request $request, string $courseId): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $course = $this->repository->find($courseId);
         if (!$course) {
             throw $this->createNotFoundException('Course not found');
         }
 
-        $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
+        $this->denyAccessUnlessGranted(CourseVoter::MANAGE_ENROLLMENTS, $course);
 
         if ($this->isCsrfTokenValid('enroll-student-' . $courseId, $request->request->get('_token'))) {
             $studentId = $request->request->get('studentId');
@@ -574,14 +572,12 @@ final class CourseController extends BaseApiController
     #[Route('/{courseId}/enrollment/{enrollmentId}/toggle', name: 'course_enrollment_toggle', requirements: ['courseId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'enrollmentId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['POST'])]
     public function toggleEnrollment(Request $request, string $courseId, string $enrollmentId): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $course = $this->repository->find($courseId);
         if (!$course) {
             throw $this->createNotFoundException('Course not found');
         }
 
-        $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
+        $this->denyAccessUnlessGranted(CourseVoter::MANAGE_ENROLLMENTS, $course);
 
         $enrollment = $this->studentCourseRepository->find($enrollmentId);
         if (!$enrollment || $enrollment->getCourse()->getId()->toString() !== $courseId) {
@@ -604,14 +600,12 @@ final class CourseController extends BaseApiController
     #[Route('/{courseId}/enrollment/{enrollmentId}/remove', name: 'course_enrollment_remove', requirements: ['courseId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'enrollmentId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['POST'])]
     public function removeEnrollment(Request $request, string $courseId, string $enrollmentId): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $course = $this->repository->find($courseId);
         if (!$course) {
             throw $this->createNotFoundException('Course not found');
         }
 
-        $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
+        $this->denyAccessUnlessGranted(CourseVoter::MANAGE_ENROLLMENTS, $course);
 
         $enrollment = $this->studentCourseRepository->find($enrollmentId);
         if (!$enrollment || $enrollment->getCourse()->getId()->toString() !== $courseId) {
@@ -633,14 +627,12 @@ final class CourseController extends BaseApiController
     #[Route('/{courseId}/enrollment/add-multi', name: 'course_enrollment_add_multi', requirements: ['courseId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['POST'])]
     public function addMultiEnrollment(Request $request, string $courseId): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $course = $this->repository->find($courseId);
         if (!$course) {
             return $this->json(['error' => 'Course not found'], 404);
         }
 
-        $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
+        $this->denyAccessUnlessGranted(CourseVoter::MANAGE_ENROLLMENTS, $course);
 
         $data = json_decode($request->getContent(), true);
 
@@ -701,14 +693,12 @@ final class CourseController extends BaseApiController
     #[Route('/{courseId}/enrollment/deactivate-multi', name: 'course_enrollment_deactivate_multi', requirements: ['courseId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['POST'])]
     public function deactivateMultiEnrollment(Request $request, string $courseId): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $course = $this->repository->find($courseId);
         if (!$course) {
             return $this->json(['error' => 'Course not found'], 404);
         }
 
-        $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
+        $this->denyAccessUnlessGranted(CourseVoter::MANAGE_ENROLLMENTS, $course);
 
         $data = json_decode($request->getContent(), true);
 

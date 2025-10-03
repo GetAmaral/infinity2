@@ -29,6 +29,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       APP_ENV: ${APP_ENV}
       APP_SECRET: ${APP_SECRET}
+      APP_TIMEZONE: ${APP_TIMEZONE:-UTC}
       FRANKENPHP_NUM_THREADS: ${FRANKENPHP_NUM_THREADS}
     volumes:
       - ./app:/app
@@ -53,6 +54,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       APP_ENV: ${APP_ENV}
       APP_SECRET: ${APP_SECRET}
+      APP_TIMEZONE: ${APP_TIMEZONE:-UTC}
     volumes:
       - ./app:/app
     restart: unless-stopped

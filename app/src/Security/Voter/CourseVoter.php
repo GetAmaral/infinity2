@@ -23,11 +23,12 @@ final class CourseVoter extends Voter
     public const EDIT = 'COURSE_EDIT';
     public const DELETE = 'COURSE_DELETE';
     public const LIST = 'COURSE_LIST';
+    public const MANAGE_ENROLLMENTS = 'COURSE_MANAGE_ENROLLMENTS';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
         // Check if this is a course-related permission
-        if (!in_array($attribute, [self::CREATE, self::VIEW, self::EDIT, self::DELETE, self::LIST])) {
+        if (!in_array($attribute, [self::CREATE, self::VIEW, self::EDIT, self::DELETE, self::LIST, self::MANAGE_ENROLLMENTS])) {
             return false;
         }
 
@@ -36,7 +37,7 @@ final class CourseVoter extends Voter
             return true;
         }
 
-        // For VIEW, EDIT, DELETE, subject must be a Course
+        // For VIEW, EDIT, DELETE, MANAGE_ENROLLMENTS, subject must be a Course
         return $subject instanceof Course;
     }
 
@@ -58,6 +59,7 @@ final class CourseVoter extends Voter
             self::VIEW => $this->canView($targetCourse, $currentUser),
             self::EDIT => $this->canEdit($targetCourse, $currentUser),
             self::DELETE => $this->canDelete($targetCourse, $currentUser),
+            self::MANAGE_ENROLLMENTS => $this->canManageEnrollments($targetCourse, $currentUser),
             default => false,
         };
     }
@@ -194,5 +196,35 @@ final class CourseVoter extends Voter
 
         // Course owner can delete their own courses
         return $currentUser->getId()->equals($targetCourse->getOwner()->getId());
+    }
+
+    /**
+     * Can the user manage enrollments for this course?
+     * - ADMIN and SUPER_ADMIN can manage all enrollments
+     * - ORGANIZATION_ADMIN can manage enrollments in their organization
+     */
+    private function canManageEnrollments(?Course $targetCourse, User $currentUser): bool
+    {
+        if (!$targetCourse) {
+            return false;
+        }
+
+        // ADMIN and SUPER_ADMIN can manage all enrollments
+        if (in_array('ROLE_ADMIN', $currentUser->getRoles(), true)
+            || in_array('ROLE_SUPER_ADMIN', $currentUser->getRoles(), true)) {
+            return true;
+        }
+
+        // Course must be in user's organization
+        $sameOrganization = $currentUser->getOrganization()
+            && $targetCourse->getOrganization()
+            && $currentUser->getOrganization()->getId()->equals($targetCourse->getOrganization()->getId());
+
+        if (!$sameOrganization) {
+            return false;
+        }
+
+        // ORGANIZATION_ADMIN can manage enrollments in their organization
+        return in_array('ROLE_ORGANIZATION_ADMIN', $currentUser->getRoles(), true);
     }
 }

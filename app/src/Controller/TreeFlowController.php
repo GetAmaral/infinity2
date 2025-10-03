@@ -80,7 +80,11 @@ final class TreeFlowController extends BaseApiController
             $this->entityManager->persist($treeFlow);
             $this->entityManager->flush();
 
-            $this->addFlash('success', 'treeflow.flash.created_successfully');
+            // Enhanced flash message with parameters (Phase 6)
+            $this->addFlash('success', $this->trans('treeflow.flash.created_successfully', [
+                '%name%' => $treeFlow->getName(),
+                '%version%' => $treeFlow->getVersion(),
+            ]));
 
             return $this->redirectToRefererOrRoute($request, 'treeflow_index');
         }
@@ -110,10 +114,12 @@ final class TreeFlowController extends BaseApiController
             ->setParameter('id', $id)
             ->leftJoin('t.steps', 's')
             ->leftJoin('s.questions', 'q')
-            ->leftJoin('q.fewShotExamples', 'e')
+            ->leftJoin('q.examples', 'e')
             ->leftJoin('s.outputs', 'o')
             ->leftJoin('s.inputs', 'i')
             ->addSelect('s', 'q', 'e', 'o', 'i')
+            ->orderBy('s.viewOrder', 'ASC')
+            ->addOrderBy('q.viewOrder', 'ASC')
             ->getQuery()
             ->getOneOrNullResult();
 
@@ -143,7 +149,11 @@ final class TreeFlowController extends BaseApiController
             // Version auto-increments via PreUpdate callback
             $this->entityManager->flush();
 
-            $this->addFlash('success', 'treeflow.flash.updated_successfully');
+            // Enhanced flash message with parameters (Phase 6)
+            $this->addFlash('success', $this->trans('treeflow.flash.updated_successfully', [
+                '%name%' => $treeFlow->getName(),
+                '%version%' => $treeFlow->getVersion(),
+            ]));
 
             return $this->redirectToRefererOrRoute($request, 'treeflow_index');
         }
@@ -175,7 +185,10 @@ final class TreeFlowController extends BaseApiController
             $this->entityManager->remove($treeFlow);
             $this->entityManager->flush();
 
-            $this->addFlash('success', 'treeflow.flash.deleted_successfully');
+            // Enhanced flash message with parameters (Phase 6)
+            $this->addFlash('success', $this->trans('treeflow.flash.deleted_successfully', [
+                '%name%' => $treeFlowName,
+            ]));
         } else {
             $this->addFlash('error', 'treeflow.flash.invalid_csrf_token');
         }

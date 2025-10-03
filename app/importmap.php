@@ -42,6 +42,9 @@ return [
     'chart.js' => [
         'version' => '3.9.1',
     ],
+    'chart.js/auto' => [
+        'version' => '3.9.1',
+    ],
     '@symfony/ux-live-component' => [
         'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
     ],

@@ -182,12 +182,17 @@
                                 </h6>
 
                                 {% if step.questions|length > 0 %}
-                                    <div class="list-group list-group-flush">
+                                    <div class="list-group list-group-flush" id="questions-{{ step.id }}" data-step-id="{{ step.id }}">
                                         {% for question in step.questions|sort((a, b) => a.viewOrder <=> b.viewOrder) %}
-                                            <div class="list-group-item bg-transparent text-white border-secondary py-3">
+                                            <div class="list-group-item bg-transparent text-white border-secondary py-3" data-question-id="{{ question.id }}">
                                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                                     <div class="flex-grow-1">
                                                         <div class="d-flex align-items-center gap-2 mb-2">
+                                                            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                                                                <span class="drag-handle-question me-2" style="cursor: move;">
+                                                                    <i class="bi bi-grip-vertical text-muted"></i>
+                                                                </span>
+                                                            {% endif %}
                                                             <div class="rounded-circle d-flex align-items-center justify-content-center"
                                                                  style="width: 30px; height: 30px; background: linear-gradient(135deg, #3b82f6, #2563eb);">
                                                                 <i class="bi bi-question-circle text-white small"></i>
@@ -313,7 +318,7 @@
                                 {% if is_granted('TREEFLOW_EDIT', treeflow) %}
                                     <div class="text-center mt-3">
                                         <button type="button"
-                                                class="btn btn-sm infinity-btn-primary"
+                                                class="btn infinity-btn-primary"
                                                 data-controller="modal-opener"
                                                 data-modal-opener-url-value="{{ path('question_new', {treeflowId: treeflow.id, stepId: step.id}) }}"
                                                 data-action="click->modal-opener#open">
@@ -389,7 +394,7 @@
                                 {% if is_granted('TREEFLOW_EDIT', treeflow) %}
                                     <div class="text-center mt-3">
                                         <button type="button"
-                                                class="btn btn-sm btn-outline-success"
+                                                class="btn infinity-btn-primary"
                                                 data-controller="modal-opener"
                                                 data-modal-opener-url-value="{{ path('output_new', {treeflowId: treeflow.id, stepId: step.id}) }}"
                                                 data-action="click->modal-opener#open">
@@ -458,7 +463,7 @@
                                 {% if is_granted('TREEFLOW_EDIT', treeflow) %}
                                     <div class="text-center mt-3">
                                         <button type="button"
-                                                class="btn btn-sm btn-outline-warning"
+                                                class="btn infinity-btn-primary"
                                                 data-controller="modal-opener"
                                                 data-modal-opener-url-value="{{ path('input_new', {treeflowId: treeflow.id, stepId: step.id}) }}"
                                                 data-action="click->modal-opener#open">
@@ -558,6 +563,49 @@
                     }
                 });
             }
+
+            // Initialize sortable for Questions within each Step
+            document.querySelectorAll('[id^="questions-"]').forEach(function(questionsList) {
+                if (questionsList) {
+                    new Sortable(questionsList, {
+                        handle: '.drag-handle-question',
+                        animation: 150,
+                        ghostClass: 'sortable-ghost',
+                        dragClass: 'sortable-drag',
+                        onEnd: function(evt) {
+                            const stepId = questionsList.dataset.stepId;
+
+                            // Collect new question order
+                            const questionOrder = [...questionsList.querySelectorAll('[data-question-id]')]
+                                .map((el, index) => ({
+                                    id: el.dataset.questionId,
+                                    order: index
+                                }));
+
+                            // Send reorder request to backend
+                            fetch('/treeflow/{{ treeflow.id }}/step/' + stepId + '/question/reorder', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: JSON.stringify({ questions: questionOrder })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    console.log('Questions reordered successfully');
+                                } else {
+                                    console.error('Failed to reorder questions:', data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error reordering questions:', error);
+                            });
+                        }
+                    });
+                }
+            });
         });
     </script>
 
@@ -581,5 +629,16 @@
         .drag-handle:active {
             cursor: grabbing;
         }
+
+        .drag-handle-question {
+            cursor: grab;
+            user-select: none;
+        }
+
+        .drag-handle-question:active {
+            cursor: grabbing;
+        }
     </style>
+{% endblock %}
+
 {% endblock %}

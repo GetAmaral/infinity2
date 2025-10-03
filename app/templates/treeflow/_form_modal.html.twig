@@ -90,13 +90,17 @@
                 <button type="submit"
                         class="btn-modal-primary"
                         data-crud-modal-target="submitButton"
+                        data-loading-text="{{ 'button.saving'|trans }}"
+                        data-original-text="{% if is_edit %}{{ 'button.save.changes'|trans }}{% else %}{{ 'treeflow.button.create.treeflow'|trans }}{% endif %}"
                         style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
-                    <i class="bi bi-{{ is_edit ? 'check2' : 'plus-lg' }} me-2"></i>
-                    {% if is_edit %}
-                        {{ 'button.save.changes'|trans }}
-                    {% else %}
-                        {{ 'treeflow.button.create.treeflow'|trans }}
-                    {% endif %}
+                    <i class="bi bi-{{ is_edit ? 'check2' : 'plus-lg' }} me-2" data-button-icon></i>
+                    <span data-button-text>
+                        {% if is_edit %}
+                            {{ 'button.save.changes'|trans }}
+                        {% else %}
+                            {{ 'treeflow.button.create.treeflow'|trans }}
+                        {% endif %}
+                    </span>
                 </button>
             </div>
 
@@ -388,3 +392,29 @@
     }
 }
 </style>
+
+<script>
+// Loading State Handler (Phase 6)
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('[data-crud-modal-target="form"]');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const submitButton = form.querySelector('[data-crud-modal-target="submitButton"]');
+            if (submitButton && !submitButton.disabled) {
+                const loadingText = submitButton.dataset.loadingText || 'Loading...';
+                const buttonText = submitButton.querySelector('[data-button-text]');
+                const buttonIcon = submitButton.querySelector('[data-button-icon]');
+
+                // Disable button and show loading state
+                submitButton.disabled = true;
+                if (buttonIcon) {
+                    buttonIcon.className = 'bi bi-hourglass-split me-2 spinner-grow spinner-grow-sm';
+                }
+                if (buttonText) {
+                    buttonText.textContent = loadingText;
+                }
+            }
+        });
+    }
+});
+</script>

@@ -185,6 +185,7 @@ button.create_organization: Criar Organização
 button.update_organization: Atualizar Organização
 button.creating: Criando...
 button.updating: Atualizando...
+button.saving: Salvando...
 
 # ========================================
 # Form and Validation
@@ -1022,6 +1023,31 @@ button.confirm: Confirmar
 course.minutes: minutos
 # Empty state message for courses without lectures
 course.no_lectures_description: Este curso ainda não possui aulas
+# Enrollment translations
+course.enrollment.active: Ativo
+course.enrollment.inactive: Inativo
+course.enrollment.activate: Ativar
+course.enrollment.deactivate: Desativar
+course.enrollment.confirm_remove: 'Tem certeza de que deseja remover %student% deste curso?'
+course.enrollment.select_hint: Apenas usuários da mesma organização que ainda não estão matriculados serão exibidos
+course.enrollment.active_immediately: Ativar matrícula imediatamente
+course.enrollment.flash.enrolled_successfully: Aluno matriculado com sucesso
+course.enrollment.flash.already_enrolled: Este aluno já está matriculado neste curso
+course.enrollment.flash.student_not_found: Aluno não encontrado
+course.enrollment.flash.activated_successfully: Matrícula ativada com sucesso
+course.enrollment.flash.deactivated_successfully: Matrícula desativada com sucesso
+course.enrollment.flash.removed_successfully: Aluno removido do curso com sucesso
+course.enrollment.select_students: Selecionar Alunos
+course.enrollment.enroll_selected: Matricular Alunos Selecionados
+course.enrollment.save_changes: Salvar Alterações
+course.enrollment.multi_select_hint: Selecione vários alunos para matricular de uma vez
+course.enrollment.auto_deactivate_hint: Desmarcar um aluno desativará automaticamente sua matrícula (não excluirá)
+course.enrollment.search_hint: Digite para pesquisar por nome ou email
+course.enrollment.deactivate_warning: Remover um aluno da seleção desativará (não excluirá) sua matrícula. Eles perderão acesso ao curso, mas seu progresso será preservado.
+course.enrollment.search_by_name: Pesquisar por nome...
+course.enrollment.switch_hint: Alterne os interruptores para matricular/desativar alunos. Clique em Confirmar para salvar as alterações.
+course.enrollment.enrolled: Matriculado
+course.enrollment.not_enrolled: Não Matriculado
 
 # ========================================
 # Missing Misc Translations

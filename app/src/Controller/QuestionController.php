@@ -12,6 +12,7 @@ use App\Repository\TreeFlowRepository;
 use App\Security\Voter\TreeFlowVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -173,5 +174,75 @@ final class QuestionController extends AbstractController
         }
 
         return $this->redirectToRoute('treeflow_show', ['id' => $treeflowId]);
+    }
+
+    #[Route('/{treeflowId}/step/{stepId}/question/reorder', name: 'question_reorder', methods: ['POST'])]
+    public function reorder(Request $request, string $treeflowId, string $stepId): JsonResponse
+    {
+        $treeFlow = $this->treeFlowRepository->find($treeflowId);
+        if (!$treeFlow) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'TreeFlow not found'
+            ], 404);
+        }
+
+        $step = $this->stepRepository->find($stepId);
+        if (!$step || $step->getTreeFlow()->getId()->toString() !== $treeflowId) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Step not found'
+            ], 404);
+        }
+
+        $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
+
+        // Get JSON data from request
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['questions']) || !is_array($data['questions'])) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Invalid request data'
+            ], 400);
+        }
+
+        try {
+            // Process reorder - validate question IDs belong to this Step
+            $questionIds = array_column($data['questions'], 'id');
+            $stepQuestionIds = array_map(
+                fn($question) => $question->getId()->toString(),
+                $step->getQuestions()->toArray()
+            );
+
+            foreach ($questionIds as $questionId) {
+                if (!in_array($questionId, $stepQuestionIds)) {
+                    return new JsonResponse([
+                        'success' => false,
+                        'message' => 'Invalid question ID'
+                    ], 400);
+                }
+            }
+
+            // Persist the new order
+            foreach ($data['questions'] as $questionData) {
+                $question = $this->questionRepository->find($questionData['id']);
+                if ($question) {
+                    $question->setViewOrder($questionData['order']);
+                }
+            }
+
+            $this->entityManager->flush();
+
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Questions reordered successfully'
+            ]);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Error reordering questions: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

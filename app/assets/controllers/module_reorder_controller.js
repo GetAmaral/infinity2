@@ -9,7 +9,10 @@ export default class extends Controller {
     static targets = ['module'];
     static values = {
         updateUrl: String,
-        courseId: String
+        courseId: String,
+        savingText: String,
+        successText: String,
+        errorText: String
     };
 
     connect() {
@@ -169,7 +172,7 @@ export default class extends Controller {
 
         const indicator = document.createElement('div');
         indicator.className = 'module-reorder-indicator saving';
-        indicator.innerHTML = '<i class="bi bi-arrow-repeat spin me-2"></i>Saving order...';
+        indicator.innerHTML = `<i class="bi bi-arrow-repeat spin me-2"></i>${this.savingTextValue}...`;
 
         const container = this.element.closest('.bento-item.large');
         if (container) {
@@ -182,7 +185,7 @@ export default class extends Controller {
 
         const indicator = document.createElement('div');
         indicator.className = 'module-reorder-indicator success';
-        indicator.innerHTML = '<i class="bi bi-check-circle me-2"></i>Module order updated successfully';
+        indicator.innerHTML = `<i class="bi bi-check-circle me-2"></i>${this.successTextValue}`;
 
         const container = this.element.closest('.bento-item.large');
         if (container) {
@@ -199,7 +202,7 @@ export default class extends Controller {
 
         const indicator = document.createElement('div');
         indicator.className = 'module-reorder-indicator error';
-        indicator.innerHTML = '<i class="bi bi-exclamation-circle me-2"></i>Failed to update module order';
+        indicator.innerHTML = `<i class="bi bi-exclamation-circle me-2"></i>${this.errorTextValue}`;
 
         const container = this.element.closest('.bento-item.large');
         if (container) {

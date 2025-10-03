@@ -48,6 +48,10 @@ class Step extends EntityBase
     #[Groups(['step:read', 'step:write'])]
     protected ?string $prompt = null;
 
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['step:read', 'step:write'])]
+    protected int $viewOrder = 1;
+
     #[ORM\OneToMany(mappedBy: 'step', targetEntity: Question::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups(['step:read'])]
     protected Collection $questions;
@@ -131,6 +135,17 @@ class Step extends EntityBase
     public function setPrompt(?string $prompt): self
     {
         $this->prompt = $prompt;
+        return $this;
+    }
+
+    public function getViewOrder(): int
+    {
+        return $this->viewOrder;
+    }
+
+    public function setViewOrder(int $viewOrder): self
+    {
+        $this->viewOrder = $viewOrder;
         return $this;
     }
 
