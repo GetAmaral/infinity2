@@ -256,7 +256,6 @@ button.create_organization: Create Organization
 button.update_organization: Update Organization
 button.creating: Creating...
 button.updating: Updating...
-button.saving: Saving...
 
 # ========================================
 # Form and Validation
@@ -1097,19 +1096,43 @@ sv_zo_u: Please enter a valid email address.
 WGMBjaJ: Please select a valid option.
 X1pJkwv: Please select a valid range.
 2MEQpjY: Please enter a valid week.
-M7IJXPA: __organization.validation.name_required
-Ov577jX: __organization.validation.name_min_length
-.z6UIh_: __organization.validation.name_max_length
-WL7_zf8: __organization.validation.description_max_length
-nnpDp2E: __user.validation.name_required
-5iT.fNg: __user.validation.name_min_length
-9cugrVY: __user.validation.name_max_length
-pIrIYB7: __user.validation.email_required
-68NHVXV: __user.validation.email_invalid
-OVQY6k4: __user.validation.password_required
-mah_225: __user.validation.password_min_length
-wf4wXUZ: __The slug can only contain lowercase letters, numbers, and hyphens.
-vsM4tSv: __There is already an account with this email
+# Custom Course Module Validation IDs
+fxVs_1.: Module name is required
+xsSJYf6: Module name must be at least 3 characters
+Ox8dz9o: Module name cannot exceed 255 characters
+d9WqcQb: Description cannot exceed 1000 characters
+# Custom Course Validation IDs
+I.b5Y8r: Course name is required
+W8FbsyP: Course name must be at least 2 characters
+oWsvlra: Course name cannot exceed 255 characters
+OvK3DdC: Description cannot exceed 5000 characters
+# Custom Course Lecture Validation IDs
+Iq__dwn: Lecture name is required
+9jzTnOw: Lecture name must be at least 2 characters
+ypDlSFL: Lecture name cannot exceed 255 characters
+rd1gKon: Description cannot exceed 5000 characters
+oKvuIbQ: Please upload a valid video file (MP4, WebM, OGG, MOV)
+# Custom Organization Validation IDs
+M7IJXPA: Organization name is required
+Ov577jX: Organization name must be at least 2 characters long
+.z6UIh_: Organization name cannot exceed 255 characters
+OXSuWdr: Organization slug is required
+zPsohpi: Slug must be at least 2 characters long
+frg0gUP: Slug cannot exceed 255 characters
+P33qq9N: Slug can only contain lowercase letters, numbers, and hyphens
+WL7_zf8: Description cannot exceed 1000 characters
+YnKxTu9: Logo must be an image (JPEG, PNG, GIF)
+# Custom User Validation IDs
+nnpDp2E: User name is required
+5iT.fNg: User name must be at least 2 characters long
+9cugrVY: User name cannot exceed 255 characters
+pIrIYB7: Email is required
+68NHVXV: Please enter a valid email address
+OVQY6k4: Password is required
+mah_225: Password must be at least 8 characters long
+# Other Custom Validation IDs
+wf4wXUZ: The slug can only contain lowercase letters, numbers, and hyphens
+vsM4tSv: There is already an account with this email
 
 # ========================================
 # Student Portal Translations
