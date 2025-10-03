@@ -60,9 +60,9 @@ class Course extends EntityBase
     #[Groups(['course:read'])]
     protected User $owner;
 
-    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseLecture::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseModule::class, cascade: ['persist', 'remove'])]
     #[Groups(['course:read'])]
-    protected Collection $lectures;
+    protected Collection $modules;
 
     #[ORM\OneToMany(mappedBy: 'course', targetEntity: StudentCourse::class, cascade: ['persist', 'remove'])]
     protected Collection $studentCourses;
@@ -70,7 +70,7 @@ class Course extends EntityBase
     public function __construct()
     {
         parent::__construct();
-        $this->lectures = new ArrayCollection();
+        $this->modules = new ArrayCollection();
         $this->studentCourses = new ArrayCollection();
     }
 
@@ -126,8 +126,8 @@ class Course extends EntityBase
     public function calculateTotalLengthSeconds(): void
     {
         $total = 0;
-        foreach ($this->lectures as $lecture) {
-            $total += $lecture->getLengthSeconds();
+        foreach ($this->modules as $module) {
+            $total += $module->getTotalLengthSeconds();
         }
         $this->totalLengthSeconds = $total;
     }
@@ -171,27 +171,27 @@ class Course extends EntityBase
     }
 
     /**
-     * @return Collection<int, CourseLecture>
+     * @return Collection<int, CourseModule>
      */
-    public function getLectures(): Collection
+    public function getModules(): Collection
     {
-        return $this->lectures;
+        return $this->modules;
     }
 
-    public function addLecture(CourseLecture $lecture): self
+    public function addModule(CourseModule $module): self
     {
-        if (!$this->lectures->contains($lecture)) {
-            $this->lectures->add($lecture);
-            $lecture->setCourse($this);
+        if (!$this->modules->contains($module)) {
+            $this->modules->add($module);
+            $module->setCourse($this);
         }
         return $this;
     }
 
-    public function removeLecture(CourseLecture $lecture): self
+    public function removeModule(CourseModule $module): self
     {
-        if ($this->lectures->removeElement($lecture)) {
-            if ($lecture->getCourse() === $this) {
-                $lecture->setCourse(null);
+        if ($this->modules->removeElement($module)) {
+            if ($module->getCourse() === $this) {
+                $module->setCourse(null);
             }
         }
         return $this;

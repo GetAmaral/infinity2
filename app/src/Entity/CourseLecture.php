@@ -82,10 +82,10 @@ class CourseLecture extends EntityBase
     #[Groups(['course_lecture:read', 'course_lecture:write'])]
     protected int $lengthSeconds = 0;
 
-    #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'lectures')]
+    #[ORM\ManyToOne(targetEntity: CourseModule::class, inversedBy: 'lectures')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['course_lecture:read'])]
-    protected Course $course;
+    protected CourseModule $courseModule;
 
     #[ORM\OneToMany(mappedBy: 'courseLecture', targetEntity: StudentLecture::class, cascade: ['persist', 'remove'])]
     protected Collection $studentLectures;
@@ -254,14 +254,14 @@ class CourseLecture extends EntityBase
         return sprintf('%02d:%02d', $hours, $minutes);
     }
 
-    public function getCourse(): Course
+    public function getCourseModule(): CourseModule
     {
-        return $this->course;
+        return $this->courseModule;
     }
 
-    public function setCourse(?Course $course): self
+    public function setCourseModule(?CourseModule $courseModule): self
     {
-        $this->course = $course;
+        $this->courseModule = $courseModule;
         return $this;
     }
 
@@ -322,10 +322,12 @@ class CourseLecture extends EntityBase
     #[ORM\PostPersist]
     #[ORM\PostUpdate]
     #[ORM\PostRemove]
-    public function updateCourseTotalLength(): void
+    public function updateModuleTotalLength(): void
     {
-        if ($this->course) {
-            $this->course->calculateTotalLengthSeconds();
+        if ($this->courseModule) {
+            $this->courseModule->calculateTotalLengthSeconds();
+            // Also update the parent course total length
+            $this->courseModule->getCourse()->calculateTotalLengthSeconds();
         }
     }
 

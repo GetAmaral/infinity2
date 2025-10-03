@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Course;
+use App\Entity\CourseModule;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends BaseRepository<Course>
+ * @extends BaseRepository<CourseModule>
  */
-final class CourseRepository extends BaseRepository
+final class CourseModuleRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Course::class);
+        parent::__construct($registry, CourseModule::class);
     }
 
     /**
@@ -22,7 +22,7 @@ final class CourseRepository extends BaseRepository
      */
     protected function getEntityName(): string
     {
-        return 'course';
+        return 'course_module';
     }
 
     /**
@@ -42,7 +42,7 @@ final class CourseRepository extends BaseRepository
         return [
             'name' => 'name',
             'active' => 'active',
-            'ownerName' => 'owner.name', // Relationship field - sortable but not filterable
+            'viewOrder' => 'viewOrder',
             'releaseDate' => 'releaseDate',
             'createdAt' => 'createdAt',
             'updatedAt' => 'updatedAt',
@@ -57,6 +57,7 @@ final class CourseRepository extends BaseRepository
         return [
             'name' => 'name',
             'active' => 'active',
+            'viewOrder' => 'viewOrder',
             'releaseDate' => 'releaseDate',
             'createdAt' => 'createdAt',
             'updatedAt' => 'updatedAt',
@@ -65,12 +66,11 @@ final class CourseRepository extends BaseRepository
 
     /**
      * Define relationship filter mappings
-     * When filtering by ownerName, search in the owner's name
      */
     protected function getRelationshipFilterFields(): array
     {
         return [
-            'ownerName' => ['relation' => 'owner', 'field' => 'name'],
+            'courseName' => ['relation' => 'course', 'field' => 'name'],
         ];
     }
 
@@ -91,11 +91,11 @@ final class CourseRepository extends BaseRepository
     }
 
     /**
-     * Transform Course entity to array for API response
+     * Transform CourseModule entity to array for API response
      */
     protected function entityToArray(object $entity): array
     {
-        assert($entity instanceof Course);
+        assert($entity instanceof CourseModule);
 
         return [
             'id' => $entity->getId()?->toString() ?? '',
@@ -103,12 +103,12 @@ final class CourseRepository extends BaseRepository
             'description' => $entity->getDescription() ?? '',
             'active' => $entity->isActive(),
             'releaseDate' => $entity->getReleaseDate()?->format('c'),
-            'totalLength' => $entity->getTotalLength(),
-            'organizationId' => $entity->getOrganization()->getId()?->toString() ?? '',
-            'organizationName' => $entity->getOrganization()->getName() ?? '',
-            'ownerId' => $entity->getOwner()->getId()?->toString() ?? '',
-            'ownerName' => $entity->getOwner()->getName() ?? '',
-            'modulesCount' => $entity->getModules()->count(),
+            'viewOrder' => $entity->getViewOrder(),
+            'totalLengthSeconds' => $entity->getTotalLengthSeconds(),
+            'totalLengthFormatted' => $entity->getTotalLengthFormatted(),
+            'courseId' => $entity->getCourse()->getId()?->toString() ?? '',
+            'courseName' => $entity->getCourse()->getName() ?? '',
+            'lecturesCount' => $entity->getLectures()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];
