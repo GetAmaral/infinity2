@@ -6,13 +6,13 @@ namespace App\EventSubscriber;
 
 use App\Entity\Trait\AuditTrait;
 use App\Entity\User;
+use App\Message\AuditEventMessage;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * AuditSubscriber automatically populates audit fields for entities using AuditTrait
@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  * - Sets createdAt/createdBy on entity creation
  * - Updates updatedAt/updatedBy on entity modification
  * - Handles cases where no user is authenticated (CLI, fixtures, etc.)
- * - Logs audit events for security monitoring
+ * - Dispatches audit events asynchronously for performance
  */
 #[AsDoctrineListener(event: Events::prePersist)]
 #[AsDoctrineListener(event: Events::preUpdate)]
@@ -29,8 +29,7 @@ final class AuditSubscriber
 {
     public function __construct(
         private readonly Security $security,
-        #[Autowire(service: 'monolog.logger.audit')]
-        private readonly LoggerInterface $auditLogger
+        private readonly MessageBusInterface $messageBus
     ) {}
 
     public function prePersist(PrePersistEventArgs $args): void
@@ -118,7 +117,7 @@ final class AuditSubscriber
     }
 
     /**
-     * Log audit events for security monitoring
+     * Dispatch audit event message for asynchronous logging
      */
     private function logAuditEvent(
         string $action,
@@ -140,23 +139,26 @@ final class AuditSubscriber
             }
         }
 
-        $logData = [
-            'action' => $action,
-            'entity_class' => $entityClass,
-            'entity_id' => $entityId,
-            'user_id' => $user?->getId()?->toString(),
-            'user_email' => $user?->getEmail(),
-            'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
-            'ip_address' => $this->getClientIpAddress(),
-            'user_agent' => $this->getUserAgent(),
-        ];
-
-        // Add change information for updates
+        // Sanitize change set for updates
+        $changes = [];
         if ($action === 'entity_updated' && !empty($changeSet)) {
-            $logData['changes'] = $this->sanitizeChangeSet($changeSet);
+            $changes = $this->sanitizeChangeSet($changeSet);
         }
 
-        $this->auditLogger->info('Audit event recorded', $logData);
+        // Dispatch async message instead of logging directly
+        $message = new AuditEventMessage(
+            action: $action,
+            entityClass: $entityClass,
+            entityId: $entityId,
+            userId: $user?->getId()?->toString(),
+            userEmail: $user?->getEmail(),
+            timestamp: (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
+            ipAddress: $this->getClientIpAddress(),
+            userAgent: $this->getUserAgent(),
+            changes: $changes
+        );
+
+        $this->messageBus->dispatch($message);
     }
 
     /**
