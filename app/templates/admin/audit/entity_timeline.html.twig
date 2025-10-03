@@ -1,0 +1,142 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Entity Audit Timeline{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="infinity-card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="text-gradient mb-0">
+                <i class="bi bi-clock-history me-2"></i>Entity Audit Timeline
+            </h1>
+            <a href="{{ path('admin_audit_index') }}" class="btn btn-outline-light">
+                <i class="bi bi-arrow-left me-1"></i>Back to Audit Log
+            </a>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h6 class="text-muted mb-2">Entity Type</h6>
+                <p class="mb-0"><code>{{ entityClass }}</code></p>
+            </div>
+            <div class="col-md-6">
+                <h6 class="text-muted mb-2">Entity ID</h6>
+                <p class="mb-0"><code>{{ entityId }}</code></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="infinity-card p-4">
+        <h5 class="mb-4">
+            <i class="bi bi-list-timeline me-2"></i>Complete History
+            <span class="badge bg-primary ms-2">{{ auditLogs|length }} event(s)</span>
+        </h5>
+
+        {% if auditLogs is empty %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>No audit history available for this entity.
+            </div>
+        {% else %}
+            <div class="timeline">
+                {% for log in auditLogs %}
+                <div class="timeline-item mb-4">
+                    <div class="d-flex">
+                        <div class="timeline-marker me-3">
+                            {% set iconClass = log.action == 'entity_created' ? 'plus-circle' : (log.action == 'entity_deleted' ? 'trash' : 'pencil-square') %}
+                            {% set bgClass = log.action == 'entity_created' ? 'success' : (log.action == 'entity_deleted' ? 'danger' : 'primary') %}
+                            <div class="rounded-circle bg-{{ bgClass }} p-2 d-inline-flex align-items-center justify-content-center"
+                                 style="width: 40px; height: 40px;">
+                                <i class="bi bi-{{ iconClass }} fs-5"></i>
+                            </div>
+                        </div>
+                        <div class="timeline-content flex-grow-1 infinity-card p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="text-white mb-0">
+                                    {{ log.action|replace({'entity_': '', '_': ' '})|title }}
+                                </h6>
+                                <small class="text-muted">{{ log.createdAt|date('Y-m-d H:i:s') }}</small>
+                            </div>
+
+                            <p class="mb-2">
+                                <i class="bi bi-person me-1"></i>
+                                by {% if log.user %}
+                                    <a href="{{ path('admin_audit_user', {id: log.user.id}) }}">{{ log.user.email }}</a>
+                                {% else %}
+                                    <em>System</em>
+                                {% endif %}
+                            </p>
+
+                            {% if log.changes is not empty %}
+                            <div class="changes-detail mt-3">
+                                <h6 class="text-muted mb-2"><i class="bi bi-pencil-square me-1"></i>Changes:</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 30%;">Field</th>
+                                                <th style="width: 35%;">Old Value</th>
+                                                <th style="width: 35%;">New Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for field, values in log.changes %}
+                                            <tr>
+                                                <td><strong>{{ field }}</strong></td>
+                                                <td>
+                                                    <code class="text-danger">{{ values[0]|default('NULL')|slice(0, 100) }}</code>
+                                                </td>
+                                                <td>
+                                                    <code class="text-success">{{ values[1]|default('NULL')|slice(0, 100) }}</code>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% set metadata = log.metadata %}
+                            {% if metadata %}
+                            <div class="metadata-detail mt-3 pt-3 border-top">
+                                <small class="text-muted d-block">
+                                    {% if metadata.ip_address %}
+                                        <i class="bi bi-globe me-1"></i>IP: {{ metadata.ip_address }}
+                                    {% endif %}
+                                    {% if metadata.user_agent %}
+                                        <br><i class="bi bi-info-circle me-1"></i>{{ metadata.user_agent|slice(0, 80) }}...
+                                    {% endif %}
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    bottom: 0;
+    width: 2px;
+    background: rgba(59, 130, 246, 0.3);
+}
+
+.timeline-item:last-child .timeline-content::after {
+    display: none;
+}
+</style>
+{% endblock %}

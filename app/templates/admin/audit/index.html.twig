@@ -1,0 +1,195 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Audit Log{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="infinity-card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-gradient mb-0">
+                <i class="bi bi-clipboard-data me-2"></i>Audit Log
+            </h1>
+            <div>
+                <a href="{{ path('admin_audit_export', app.request.query.all) }}" class="btn infinity-btn-primary me-2">
+                    <i class="bi bi-download me-1"></i>Export CSV
+                </a>
+                <a href="{{ path('admin_audit_export', app.request.query.all|merge({format: 'json'})) }}" class="btn btn-outline-light">
+                    <i class="bi bi-file-earmark-code me-1"></i>Export JSON
+                </a>
+            </div>
+        </div>
+
+        {# Search/Filter Form #}
+        {{ form_start(searchForm, {'attr': {'class': 'mb-4'}}) }}
+            <div class="row g-3">
+                <div class="col-md-3">
+                    {{ form_row(searchForm.entityClass) }}
+                </div>
+                <div class="col-md-2">
+                    {{ form_row(searchForm.action) }}
+                </div>
+                <div class="col-md-3">
+                    {{ form_row(searchForm.user) }}
+                </div>
+                <div class="col-md-2">
+                    {{ form_row(searchForm.dateFrom) }}
+                </div>
+                <div class="col-md-2">
+                    {{ form_row(searchForm.dateTo) }}
+                </div>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn infinity-btn-primary">
+                    <i class="bi bi-search me-1"></i>Search
+                </button>
+                <a href="{{ path('admin_audit_index') }}" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                </a>
+            </div>
+        {{ form_end(searchForm) }}
+    </div>
+
+    {# Results #}
+    <div class="infinity-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">
+                <i class="bi bi-list-ul me-2"></i>Audit Events
+                <span class="badge bg-primary ms-2">{{ totalCount }}</span>
+            </h5>
+        </div>
+
+        {% if auditLogs is empty %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>No audit events found. Try adjusting your filters.
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th><i class="bi bi-clock me-1"></i>Timestamp</th>
+                            <th><i class="bi bi-lightning me-1"></i>Action</th>
+                            <th><i class="bi bi-box me-1"></i>Entity</th>
+                            <th><i class="bi bi-person me-1"></i>User</th>
+                            <th><i class="bi bi-pencil-square me-1"></i>Changes</th>
+                            <th><i class="bi bi-gear me-1"></i>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in auditLogs %}
+                        <tr>
+                            <td>
+                                <small class="text-muted">{{ log.createdAt|date('Y-m-d') }}</small><br>
+                                <strong>{{ log.createdAt|date('H:i:s') }}</strong>
+                            </td>
+                            <td>
+                                {% set badgeClass = log.action == 'entity_created' ? 'success' : (log.action == 'entity_deleted' ? 'danger' : 'primary') %}
+                                <span class="badge bg-{{ badgeClass }}">
+                                    <i class="bi bi-{{ log.action == 'entity_created' ? 'plus-circle' : (log.action == 'entity_deleted' ? 'trash' : 'pencil') }} me-1"></i>
+                                    {{ log.action|replace({'entity_': '', '_': ' '})|title }}
+                                </span>
+                            </td>
+                            <td>
+                                <div>
+                                    <strong>{{ log.entityClass|split('\\\\')|last }}</strong>
+                                </div>
+                                <small class="text-muted font-monospace">{{ log.entityId|slice(0, 8) }}...</small>
+                            </td>
+                            <td>
+                                {% if log.user %}
+                                    <a href="{{ path('admin_audit_user', {id: log.user.id}) }}" class="text-decoration-none">
+                                        <i class="bi bi-person-circle me-1"></i>{{ log.user.email }}
+                                    </a>
+                                {% else %}
+                                    <em class="text-muted"><i class="bi bi-robot me-1"></i>System</em>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if log.changes is not empty %}
+                                    <button type="button" class="btn btn-sm infinity-btn-ai"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#changesModal{{ log.id }}">
+                                        <i class="bi bi-eye me-1"></i>View {{ log.changes|length }} change(s)
+                                    </button>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('admin_audit_entity', {
+                                    class: log.entityClass|url_encode,
+                                    id: log.entityId
+                                }) }}" class="btn btn-sm btn-outline-light" title="View Timeline">
+                                    <i class="bi bi-clock-history"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        {# Changes Modal #}
+                        {% if log.changes is not empty %}
+                        <div class="modal fade" id="changesModal{{ log.id }}" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content" style="background-color: #1a1d29; border: 1px solid rgba(59, 130, 246, 0.3);">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <i class="bi bi-pencil-square me-2"></i>Field Changes
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Field</th>
+                                                        <th>Old Value</th>
+                                                        <th></th>
+                                                        <th>New Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for field, values in log.changes %}
+                                                    <tr>
+                                                        <td><strong>{{ field }}</strong></td>
+                                                        <td><code class="text-danger">{{ values[0]|default('NULL') }}</code></td>
+                                                        <td class="text-center"><i class="bi bi-arrow-right"></i></td>
+                                                        <td><code class="text-success">{{ values[1]|default('NULL') }}</code></td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        {% set metadata = log.metadata %}
+                                        {% if metadata %}
+                                        <hr>
+                                        <h6><i class="bi bi-info-circle me-2"></i>Metadata</h6>
+                                        <div class="row">
+                                            {% if metadata.ip_address %}
+                                            <div class="col-md-6">
+                                                <small class="text-muted">IP Address:</small><br>
+                                                <code>{{ metadata.ip_address }}</code>
+                                            </div>
+                                            {% endif %}
+                                            {% if metadata.user_agent %}
+                                            <div class="col-md-6">
+                                                <small class="text-muted">User Agent:</small><br>
+                                                <small class="text-truncate d-block">{{ metadata.user_agent }}</small>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
