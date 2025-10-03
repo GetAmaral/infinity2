@@ -32,11 +32,11 @@
                 <i class="bi bi-{{ course.active ? 'check-circle-fill' : 'x-circle-fill' }}"></i> {{ course.active ? 'course.status.active'|trans : 'course.status.inactive'|trans }}
             </div>
             <div class="real-time-badge">
-                {% if lectures|length == 0 %}
-                    {{ 'course.no.lectures'|trans }}
-                {% else %}
-                    {{ lectures|length }} {{ 'course.lectures'|trans }}
-                {% endif %}
+                {% set totalLectures = 0 %}
+                {% for module in modules %}
+                    {% set totalLectures = totalLectures + module.lectures|length %}
+                {% endfor %}
+                {{ modules|length }} {{ 'course.modules'|trans }} • {{ totalLectures }} {{ 'course.lectures'|trans }}
             </div>
             {% if is_granted('COURSE_EDIT', course) %}
                 <button type="button"
@@ -62,12 +62,12 @@
 
 <!-- Course Details Bento Grid -->
 <div class="bento-grid">
-    <!-- Quick Stats - Lectures Count -->
+    <!-- Quick Stats - Modules Count -->
     <div class="bento-item">
         <div class="metric-card">
-            <i class="bi bi-collection-fill text-neon fs-1"></i>
-            <div class="metric-value">{{ lectures|length }}</div>
-            <div class="metric-label">{{ 'course.total.lectures'|trans }}</div>
+            <i class="bi bi-layers-fill text-neon fs-1"></i>
+            <div class="metric-value">{{ modules|length }}</div>
+            <div class="metric-label">{{ 'course.total.modules'|trans }}</div>
             <div class="metric-trend trend-up">
                 <i class="bi bi-arrow-up"></i> {{ course.active ? 'course.status.active'|trans : 'course.status.inactive'|trans }}
             </div>
@@ -111,144 +111,231 @@
         </div>
     </div>
 
-    <!-- Lectures Section -->
+    <!-- Modules & Lectures Section -->
     <div class="bento-item large">
         <div class="infinity-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
-                    <i class="bi bi-collection me-2"></i>{{ 'course.lectures.in.course'|trans }} ({{ lectures|length }})
+                    <i class="bi bi-layers me-2"></i>{{ 'course.modules.and.lectures'|trans }} ({{ modules|length }} {{ 'course.modules'|trans }})
                 </h5>
                 {% if is_granted('COURSE_EDIT', course) %}
                     <button type="button"
                             class="btn infinity-btn-primary btn-sm"
                             data-controller="modal-opener"
-                            data-modal-opener-url-value="{{ path('course_lecture_new', {courseId: course.id}) }}"
+                            data-modal-opener-url-value="{{ path('course_module_new', {courseId: course.id}) }}"
                             data-action="click->modal-opener#open">
-                        <i class="bi bi-plus-circle me-1"></i>{{ 'button.add.lecture'|trans }}
+                        <i class="bi bi-plus-circle me-1"></i>{{ 'button.add.module'|trans }}
                     </button>
                 {% endif %}
             </div>
 
-            {% if lectures is empty %}
+            {% if modules is empty %}
                 <div class="text-center py-5">
-                    <i class="bi bi-collection" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
-                    <h5 class="text-white mt-3 mb-2">{{ 'empty.no.lectures.yet'|trans }}</h5>
-                    <p class="text-secondary mb-4">{{ 'empty.course.lectures.description'|trans }}</p>
+                    <i class="bi bi-layers" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
+                    <h5 class="text-white mt-3 mb-2">{{ 'empty.no.modules.yet'|trans }}</h5>
+                    <p class="text-secondary mb-4">{{ 'empty.course.modules.description'|trans }}</p>
                     {% if is_granted('COURSE_EDIT', course) %}
                         <button type="button"
                                 class="btn infinity-btn-primary"
                                 data-controller="modal-opener"
-                                data-modal-opener-url-value="{{ path('course_lecture_new', {courseId: course.id}) }}"
+                                data-modal-opener-url-value="{{ path('course_module_new', {courseId: course.id}) }}"
                                 data-action="click->modal-opener#open">
-                            <i class="bi bi-plus-circle me-2"></i>{{ 'button.add.first.lecture'|trans }}
+                            <i class="bi bi-plus-circle me-2"></i>{{ 'button.add.first.module'|trans }}
                         </button>
                     {% endif %}
                 </div>
             {% else %}
-                <div data-controller="lecture-reorder"
-                     data-lecture-reorder-update-url-value="{{ path('course_lectures_reorder', {id: course.id}) }}"
-                     data-lecture-reorder-course-id-value="{{ course.id }}"
-                     data-lecture-reorder-target="container">
-                    {% for lecture in lectures %}
-                        <div class="mb-3"
-                             data-lecture-reorder-target="item"
-                             data-lecture-id="{{ lecture.id }}">
-                            <div class="infinity-card p-3 lecture-card">
-                                <div class="d-flex align-items-start mb-2">
-                                    <div class="drag-handle me-2" style="cursor: grab; color: var(--infinity-text-muted); font-size: 1.2rem;">
-                                        <i class="bi bi-grip-vertical"></i>
-                                    </div>
-                                    <div class="p-2 rounded-3 me-3 lecture-order-badge" style="background: linear-gradient(135deg, #3b82f6, #2563eb); min-width: 48px; display: flex; align-items: center; justify-content: center;">
-                                        <span class="text-white fw-bold">{{ lecture.viewOrder }}</span>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="text-white mb-1">{{ lecture.name }}</h6>
-                                        {% if lecture.description %}
-                                            <small class="text-secondary d-block mb-2">{{ lecture.description|length > 80 ? lecture.description|slice(0, 80) ~ '...' : lecture.description }}</small>
+                <div class="accordion" id="modulesAccordion">
+                    {% for module in modules %}
+                        <div class="accordion-item mb-3" style="background: var(--infinity-card-bg); border: 1px solid var(--infinity-border-color); border-radius: 8px; overflow: hidden;">
+                            <h2 class="accordion-header" id="heading-module-{{ module.id }}">
+                                <button class="accordion-button {{ loop.first ? '' : 'collapsed' }}"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse-module-{{ module.id }}"
+                                        aria-expanded="{{ loop.first ? 'true' : 'false' }}"
+                                        aria-controls="collapse-module-{{ module.id }}"
+                                        style="background: var(--infinity-card-bg); color: white; border: none; padding: 1.25rem;">
+                                    <div class="d-flex align-items-center w-100">
+                                        <div class="p-2 rounded-3 me-3" style="background: linear-gradient(135deg, #f59e0b, #d97706); min-width: 48px; display: flex; align-items-center; justify-content: center;">
+                                            <span class="text-white fw-bold">{{ module.viewOrder }}</span>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1 text-white">{{ module.name }}</h6>
+                                            <small class="text-secondary">
+                                                {{ module.lectures|length }} {{ 'course.lectures'|trans }}
+                                                {% if module.totalLengthSeconds > 0 %}
+                                                    • <i class="bi bi-clock me-1"></i>{{ module.totalLengthFormatted }}
+                                                {% endif %}
+                                                {% if not module.active %}
+                                                    • <span class="badge bg-secondary">{{ 'course.status.inactive'|trans }}</span>
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                        {% if is_granted('COURSE_EDIT', course) %}
+                                            <div class="d-flex gap-1 me-2" onclick="event.stopPropagation();">
+                                                <button type="button"
+                                                        class="btn btn-sm infinity-btn-ai"
+                                                        data-controller="modal-opener"
+                                                        data-modal-opener-url-value="{{ path('course_module_edit', {courseId: course.id, moduleId: module.id}) }}"
+                                                        data-action="click->modal-opener#open"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-title="{{ 'button.edit'|trans }}">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-sm infinity-btn-danger"
+                                                        data-delete-url="{{ path('course_module_delete', {courseId: course.id, moduleId: module.id}) }}"
+                                                        data-entity-name="{{ module.name }}"
+                                                        data-csrf-token="{{ csrf_token('delete-module-' ~ module.id) }}"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-title="{{ 'button.delete'|trans }}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
                                         {% endif %}
-                                        <div class="d-flex gap-2 flex-wrap align-items-center">
-                                            {% if lecture.lengthSeconds > 0 %}
-                                                <span class="real-time-badge">
-                                                    <i class="bi bi-clock me-1"></i>{{ lecture.lengthFormatted }}
-                                                </span>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="collapse-module-{{ module.id }}"
+                                 class="accordion-collapse collapse {{ loop.first ? 'show' : '' }}"
+                                 aria-labelledby="heading-module-{{ module.id }}"
+                                 data-bs-parent="#modulesAccordion">
+                                <div class="accordion-body" style="padding: 1.25rem; background: rgba(0, 0, 0, 0.2);">
+                                    {% if module.description %}
+                                        <p class="text-secondary mb-3">{{ module.description }}</p>
+                                    {% endif %}
+
+                                    {% if module.lectures is empty %}
+                                        <div class="text-center py-4">
+                                            <i class="bi bi-collection text-muted" style="font-size: 2rem;"></i>
+                                            <p class="text-secondary mt-2 mb-3">{{ 'empty.no.lectures.in.module'|trans }}</p>
+                                            {% if is_granted('COURSE_EDIT', course) %}
+                                                <button type="button"
+                                                        class="btn infinity-btn-primary btn-sm"
+                                                        data-controller="modal-opener"
+                                                        data-modal-opener-url-value="{{ path('course_module_lecture_new', {courseId: course.id, moduleId: module.id}) }}"
+                                                        data-action="click->modal-opener#open">
+                                                    <i class="bi bi-plus-circle me-1"></i>{{ 'button.add.lecture'|trans }}
+                                                </button>
                                             {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="text-white mb-0">
+                                                <i class="bi bi-collection me-2"></i>{{ 'course.lectures'|trans }} ({{ module.lectures|length }})
+                                            </h6>
+                                            {% if is_granted('COURSE_EDIT', course) %}
+                                                <button type="button"
+                                                        class="btn infinity-btn-primary btn-sm"
+                                                        data-controller="modal-opener"
+                                                        data-modal-opener-url-value="{{ path('course_module_lecture_new', {courseId: course.id, moduleId: module.id}) }}"
+                                                        data-action="click->modal-opener#open">
+                                                    <i class="bi bi-plus-circle me-1"></i>{{ 'button.add.lecture'|trans }}
+                                                </button>
+                                            {% endif %}
+                                        </div>
 
-                                            {# Processing Status with Real-time Updates #}
-                                            <div {% if lecture.processingStatus in ['processing', 'pending'] %}
-                                                     data-controller="lecture-processing"
-                                                     data-lecture-processing-course-id-value="{{ course.id }}"
-                                                     data-lecture-processing-lecture-id-value="{{ lecture.id }}"
-                                                     data-lecture-processing-status-url-value="{{ path('course_lecture_processing_status', {courseId: course.id, lectureId: lecture.id}) }}"
-                                                 {% endif %}
-                                                 class="d-flex gap-2 align-items-center flex-wrap">
+                                        {% for lecture in module.lectures %}
+                                            <div class="mb-3 lecture-card-wrapper">
+                                                <div class="infinity-card p-3 lecture-card">
+                                                    <div class="d-flex align-items-start">
+                                                        <div class="p-2 rounded-3 me-3 lecture-order-badge" style="background: linear-gradient(135deg, #3b82f6, #2563eb); min-width: 48px; display: flex; align-items: center; justify-content: center;">
+                                                            <span class="text-white fw-bold">{{ lecture.viewOrder }}</span>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="text-white mb-1">{{ lecture.name }}</h6>
+                                                            {% if lecture.description %}
+                                                                <small class="text-secondary d-block mb-2">{{ lecture.description|length > 80 ? lecture.description|slice(0, 80) ~ '...' : lecture.description }}</small>
+                                                            {% endif %}
+                                                            <div class="d-flex gap-2 flex-wrap align-items-center">
+                                                                {% if lecture.lengthSeconds > 0 %}
+                                                                    <span class="real-time-badge">
+                                                                        <i class="bi bi-clock me-1"></i>{{ lecture.lengthFormatted }}
+                                                                    </span>
+                                                                {% endif %}
 
-                                                {# Status Badge #}
-                                                <span data-lecture-processing-target="status" class="badge {% if lecture.processingStatus == 'completed' %}bg-success{% elseif lecture.processingStatus == 'processing' %}bg-warning text-dark{% elseif lecture.processingStatus == 'failed' %}bg-danger{% else %}bg-secondary{% endif %}">
-                                                    {% if lecture.processingStatus == 'completed' %}
-                                                        <i class="bi bi-check-circle me-1"></i>{{ ('course.lecture.status.completed')|trans }}
-                                                    {% elseif lecture.processingStatus == 'processing' %}
-                                                        <i class="bi bi-hourglass-split me-1"></i>{{ ('course.lecture.status.processing')|trans }}
-                                                    {% elseif lecture.processingStatus == 'failed' %}
-                                                        <i class="bi bi-exclamation-triangle me-1"></i>{{ ('course.lecture.status.failed')|trans }}
-                                                    {% else %}
-                                                        <i class="bi bi-clock-history me-1"></i>{{ ('course.lecture.status.pending')|trans }}
-                                                    {% endif %}
-                                                </span>
+                                                                {# Processing Status with Real-time Updates #}
+                                                                <div {% if lecture.processingStatus in ['processing', 'pending'] %}
+                                                                         data-controller="lecture-processing"
+                                                                         data-lecture-processing-course-id-value="{{ course.id }}"
+                                                                         data-lecture-processing-lecture-id-value="{{ lecture.id }}"
+                                                                         data-lecture-processing-status-url-value="{{ path('course_lecture_processing_status', {courseId: course.id, lectureId: lecture.id}) }}"
+                                                                     {% endif %}
+                                                                     class="d-flex gap-2 align-items-center flex-wrap">
 
-                                                {# Watch Button (only if completed) #}
-                                                <a href="{{ path('course_lecture_watch', {courseId: course.id, lectureId: lecture.id}) }}"
-                                                   data-lecture-processing-target="watchButton"
-                                                   class="real-time-badge"
-                                                   style="text-decoration: none; {{ lecture.processingStatus != 'completed' ? 'display: none;' : '' }}">
-                                                    <i class="bi bi-play-circle me-1"></i>{{ 'course.lecture.watch.video'|trans }}
-                                                </a>
+                                                                    {# Status Badge #}
+                                                                    <span data-lecture-processing-target="status" class="badge {% if lecture.processingStatus == 'completed' %}bg-success{% elseif lecture.processingStatus == 'processing' %}bg-warning text-dark{% elseif lecture.processingStatus == 'failed' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                                                        {% if lecture.processingStatus == 'completed' %}
+                                                                            <i class="bi bi-check-circle me-1"></i>{{ ('course.lecture.status.completed')|trans }}
+                                                                        {% elseif lecture.processingStatus == 'processing' %}
+                                                                            <i class="bi bi-hourglass-split me-1"></i>{{ ('course.lecture.status.processing')|trans }}
+                                                                        {% elseif lecture.processingStatus == 'failed' %}
+                                                                            <i class="bi bi-exclamation-triangle me-1"></i>{{ ('course.lecture.status.failed')|trans }}
+                                                                        {% else %}
+                                                                            <i class="bi bi-clock-history me-1"></i>{{ ('course.lecture.status.pending')|trans }}
+                                                                        {% endif %}
+                                                                    </span>
 
-                                                {# Progress Bar (only if processing or pending) #}
-                                                {% if lecture.processingStatus in ['processing', 'pending'] %}
-                                                    <div style="width: 200px;">
-                                                        <div class="progress" style="height: 6px; background: rgba(255, 255, 255, 0.1);">
-                                                            <div data-lecture-processing-target="progressBar"
-                                                                 class="progress-bar bg-info progress-bar-striped progress-bar-animated"
-                                                                 role="progressbar"
-                                                                 style="width: {{ lecture.processingPercentage }}%"
-                                                                 aria-valuenow="{{ lecture.processingPercentage }}"
-                                                                 aria-valuemin="0"
-                                                                 aria-valuemax="100">
+                                                                    {# Watch Button (only if completed) #}
+                                                                    <a href="{{ path('course_lecture_watch', {courseId: course.id, lectureId: lecture.id}) }}"
+                                                                       data-lecture-processing-target="watchButton"
+                                                                       class="real-time-badge"
+                                                                       style="text-decoration: none; {{ lecture.processingStatus != 'completed' ? 'display: none;' : '' }}">
+                                                                        <i class="bi bi-play-circle me-1"></i>{{ 'course.lecture.watch.video'|trans }}
+                                                                    </a>
+
+                                                                    {# Progress Bar (only if processing or pending) #}
+                                                                    {% if lecture.processingStatus in ['processing', 'pending'] %}
+                                                                        <div style="width: 200px;">
+                                                                            <div class="progress" style="height: 6px; background: rgba(255, 255, 255, 0.1);">
+                                                                                <div data-lecture-processing-target="progressBar"
+                                                                                     class="progress-bar bg-info progress-bar-striped progress-bar-animated"
+                                                                                     role="progressbar"
+                                                                                     style="width: {{ lecture.processingPercentage }}%"
+                                                                                     aria-valuenow="{{ lecture.processingPercentage }}"
+                                                                                     aria-valuemin="0"
+                                                                                     aria-valuemax="100">
+                                                                                </div>
+                                                                            </div>
+                                                                            <small class="text-muted d-flex justify-content-between mt-1">
+                                                                                <span data-lecture-processing-target="step">{{ lecture.processingStep ?: 'misc.waiting'|trans }}</span>
+                                                                                <span data-lecture-processing-target="percentage">{{ lecture.processingPercentage }}%</span>
+                                                                            </small>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <small class="text-muted d-flex justify-content-between mt-1">
-                                                            <span data-lecture-processing-target="step">{{ lecture.processingStep ?: 'misc.waiting'|trans }}</span>
-                                                            <span data-lecture-processing-target="percentage">{{ lecture.processingPercentage }}%</span>
-                                                        </small>
+                                                        <div class="d-flex gap-1">
+                                                            {% if is_granted('COURSE_EDIT', course) %}
+                                                                <button type="button"
+                                                                        class="btn btn-sm infinity-btn-ai"
+                                                                        data-controller="modal-opener"
+                                                                        data-modal-opener-url-value="{{ path('course_lecture_edit', {courseId: course.id, lectureId: lecture.id}) }}"
+                                                                        data-action="click->modal-opener#open"
+                                                                        data-bs-toggle="tooltip"
+                                                                        data-bs-title="{{ 'button.edit'|trans }}">
+                                                                    <i class="bi bi-pencil"></i>
+                                                                </button>
+                                                            {% endif %}
+                                                            {% if is_granted('COURSE_DELETE', course) %}
+                                                                <button type="button"
+                                                                        class="btn btn-sm infinity-btn-danger"
+                                                                        data-delete-url="{{ path('course_lecture_delete', {courseId: course.id, lectureId: lecture.id}) }}"
+                                                                        data-entity-name="{{ lecture.name }}"
+                                                                        data-csrf-token="{{ csrf_token('delete-lecture-' ~ lecture.id) }}"
+                                                                        data-bs-toggle="tooltip"
+                                                                        data-bs-title="{{ 'button.delete'|trans }}">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </button>
+                                                            {% endif %}
+                                                        </div>
                                                     </div>
-                                                {% endif %}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex gap-1">
-                                        {% if is_granted('COURSE_EDIT', course) %}
-                                            <button type="button"
-                                                    class="btn btn-sm infinity-btn-ai"
-                                                    data-controller="modal-opener"
-                                                    data-modal-opener-url-value="{{ path('course_lecture_edit', {courseId: course.id, lectureId: lecture.id}) }}"
-                                                    data-action="click->modal-opener#open"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-title="{{ 'button.edit'|trans }}">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                        {% endif %}
-                                        {% if is_granted('COURSE_DELETE', course) %}
-                                            <button type="button"
-                                                    class="btn btn-sm infinity-btn-danger"
-                                                    data-delete-url="{{ path('course_lecture_delete', {courseId: course.id, lectureId: lecture.id}) }}"
-                                                    data-entity-name="{{ lecture.name }}"
-                                                    data-csrf-token="{{ csrf_token('delete-lecture-' ~ lecture.id) }}"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-title="{{ 'button.delete'|trans }}">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        {% endif %}
-                                    </div>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -454,7 +541,27 @@
 {% endif %}
 
 <style>
-/* Drag and Drop Styles */
+/* Module Accordion Styles */
+.accordion-button {
+    transition: all 0.2s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background: var(--infinity-card-bg);
+    color: white;
+    box-shadow: none;
+}
+
+.accordion-button::after {
+    filter: brightness(0) invert(1);
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: var(--infinity-border-color);
+}
+
+/* Lecture Card Styles */
 .lecture-card {
     transition: all 0.2s ease;
     position: relative;
@@ -463,93 +570,6 @@
 .lecture-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-.drag-handle {
-    opacity: 0.5;
-    transition: opacity 0.2s;
-}
-
-.lecture-card:hover .drag-handle {
-    opacity: 1;
-}
-
-.drag-handle:active {
-    cursor: grabbing !important;
-}
-
-/* Dragging state */
-[data-lecture-reorder-target="item"][draggable="true"] {
-    cursor: move;
-}
-
-[data-lecture-reorder-target="item"].dragging-placeholder {
-    pointer-events: none;
-}
-
-/* Drag over indicators */
-.drag-over-top {
-    border-top: 3px solid var(--infinity-neon) !important;
-    margin-top: -3px;
-}
-
-.drag-over-bottom {
-    border-bottom: 3px solid var(--infinity-neon) !important;
-    margin-bottom: -3px;
-}
-
-/* Reorder indicator */
-.lecture-reorder-indicator {
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    font-weight: 500;
-    animation: slideDown 0.3s ease-out;
-}
-
-.lecture-reorder-indicator.saving {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.15));
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    color: #3b82f6;
-}
-
-.lecture-reorder-indicator.success {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(22, 163, 74, 0.15));
-    border: 1px solid rgba(34, 197, 94, 0.3);
-    color: #22c55e;
-}
-
-.lecture-reorder-indicator.error {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #ef4444;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.spin {
-    animation: spin 1s linear infinite;
 }
 
 /* Danger button matching infinity-btn-ai style */
@@ -575,7 +595,8 @@
 }
 
 /* Ensure edit button has same fixed size */
-.lecture-card .infinity-btn-ai {
+.lecture-card .infinity-btn-ai,
+.accordion-button .infinity-btn-ai {
     width: 32px;
     height: 32px;
     display: inline-flex;

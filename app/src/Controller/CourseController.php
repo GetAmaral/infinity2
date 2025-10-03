@@ -6,12 +6,14 @@ namespace App\Controller;
 
 use App\Entity\Course;
 use App\Entity\CourseLecture;
+use App\Entity\CourseModule;
 use App\Entity\StudentCourse;
 use App\Form\CourseFormType;
 use App\Form\CourseLectureFormType;
 use App\Message\ProcessVideoMessage;
 use App\Repository\CourseRepository;
 use App\Repository\CourseLectureRepository;
+use App\Repository\CourseModuleRepository;
 use App\Repository\StudentCourseRepository;
 use App\Repository\UserRepository;
 use App\Service\ListPreferencesService;
@@ -32,6 +34,7 @@ final class CourseController extends BaseApiController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly CourseRepository $repository,
+        private readonly CourseModuleRepository $moduleRepository,
         private readonly CourseLectureRepository $lectureRepository,
         private readonly StudentCourseRepository $studentCourseRepository,
         private readonly UserRepository $userRepository,
@@ -117,8 +120,14 @@ final class CourseController extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CourseVoter::VIEW, $course);
 
-        // Get lectures ordered by viewOrder
-        $lectures = $this->lectureRepository->findByCourseOrdered($course->getId()->toString());
+        // Get modules ordered by viewOrder
+        $modules = $this->moduleRepository->createQueryBuilder('cm')
+            ->where('cm.course = :course')
+            ->setParameter('course', $course)
+            ->orderBy('cm.viewOrder', 'ASC')
+            ->addOrderBy('cm.name', 'ASC')
+            ->getQuery()
+            ->getResult();
 
         // Get ALL users for enrollment (including enrolled ones for Tom Select multi-select)
         $availableUsers = [];
@@ -134,7 +143,7 @@ final class CourseController extends BaseApiController
 
         return $this->render('course/show.html.twig', [
             'course' => $course,
-            'lectures' => $lectures,
+            'modules' => $modules,
             'availableUsers' => $availableUsers,
         ]);
     }
@@ -202,21 +211,26 @@ final class CourseController extends BaseApiController
     }
 
 
-    #[Route('/{courseId}/lecture/new', name: 'course_lecture_new', requirements: ['courseId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['GET', 'POST'])]
-    public function newLecture(Request $request, string $courseId): Response
+    #[Route('/{courseId}/module/{moduleId}/lecture/new', name: 'course_module_lecture_new', requirements: ['courseId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'moduleId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['GET', 'POST'])]
+    public function newLecture(Request $request, string $courseId, string $moduleId): Response
     {
         $course = $this->repository->find($courseId);
         if (!$course) {
             throw $this->createNotFoundException('Course not found');
         }
 
+        $module = $this->moduleRepository->find($moduleId);
+        if (!$module || $module->getCourse()->getId()->toString() !== $courseId) {
+            throw $this->createNotFoundException('Module not found');
+        }
+
         $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
 
         $lecture = new CourseLecture();
-        $lecture->setCourse($course);
+        $lecture->setCourseModule($module);
 
-        // Set default view order to be last
-        $existingLectures = $this->lectureRepository->findByCourseOrdered($courseId);
+        // Set default view order to be last in this module
+        $existingLectures = $this->lectureRepository->findByModuleOrdered($moduleId);
         $lecture->setViewOrder(count($existingLectures) + 1);
 
         $form = $this->createForm(CourseLectureFormType::class, $lecture);
@@ -244,6 +258,7 @@ final class CourseController extends BaseApiController
 
         return $this->render('course/_lecture_form_modal.html.twig', [
             'course' => $course,
+            'module' => $module,
             'lecture' => $lecture,
             'form' => $form,
             'is_edit' => false,
@@ -261,7 +276,7 @@ final class CourseController extends BaseApiController
         $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
 
         $lecture = $this->lectureRepository->find($lectureId);
-        if (!$lecture || $lecture->getCourse()->getId()->toString() !== $courseId) {
+        if (!$lecture || $lecture->getCourseModule()->getCourse()->getId()->toString() !== $courseId) {
             throw $this->createNotFoundException('Lecture not found');
         }
 
@@ -311,7 +326,7 @@ final class CourseController extends BaseApiController
         $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
 
         $lecture = $this->lectureRepository->find($lectureId);
-        if (!$lecture || $lecture->getCourse()->getId()->toString() !== $courseId) {
+        if (!$lecture || $lecture->getCourseModule()->getCourse()->getId()->toString() !== $courseId) {
             throw $this->createNotFoundException('Lecture not found');
         }
 
@@ -347,7 +362,7 @@ final class CourseController extends BaseApiController
                 $lecture = $this->lectureRepository->find($lectureData['id']);
 
                 // Verify lecture belongs to this course
-                if (!$lecture || $lecture->getCourse()->getId()->toString() !== $course->getId()->toString()) {
+                if (!$lecture || $lecture->getCourseModule()->getCourse()->getId()->toString() !== $course->getId()->toString()) {
                     continue;
                 }
 
@@ -373,11 +388,11 @@ final class CourseController extends BaseApiController
     {
         $lecture = $this->lectureRepository->find($lectureId);
 
-        if (!$lecture || $lecture->getCourse()->getId()->toString() !== $courseId) {
+        if (!$lecture || $lecture->getCourseModule()->getCourse()->getId()->toString() !== $courseId) {
             return $this->json(['error' => 'Lecture not found'], 404);
         }
 
-        $this->denyAccessUnlessGranted(CourseVoter::VIEW, $lecture->getCourse());
+        $this->denyAccessUnlessGranted(CourseVoter::VIEW, $lecture->getCourseModule()->getCourse());
 
         return $this->json([
             'status' => $lecture->getProcessingStatus(),
@@ -427,7 +442,7 @@ final class CourseController extends BaseApiController
         }
 
         $lecture = $this->lectureRepository->find($lectureId);
-        if (!$lecture || $lecture->getCourse()->getId()->toString() !== $courseId) {
+        if (!$lecture || $lecture->getCourseModule()->getCourse()->getId()->toString() !== $courseId) {
             throw $this->createNotFoundException('Lecture not found');
         }
 
@@ -687,7 +702,7 @@ final class CourseController extends BaseApiController
             'organizationName' => $entity->getOrganization()->getName() ?? '',
             'ownerId' => $entity->getOwner()->getId()?->toString() ?? '',
             'ownerName' => $entity->getOwner()->getName() ?? '',
-            'lecturesCount' => $entity->getLectures()->count(),
+            'modulesCount' => $entity->getModules()->count(),
             'enrolledStudentsCount' => $entity->getStudentCourses()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'createdAtFormatted' => $entity->getCreatedAt()->format('M d, Y'),

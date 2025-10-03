@@ -39,7 +39,7 @@ final class CourseLectureRepository extends BaseRepository
     protected function getFilterableFields(): array
     {
         return [
-            'course' => 'entity',
+            'courseModule' => 'entity',
         ];
     }
 
@@ -78,22 +78,41 @@ final class CourseLectureRepository extends BaseRepository
             'description' => $entity->getDescription() ?? '',
             'videoUrl' => $entity->getVideoUrl() ?? '',
             'viewOrder' => $entity->getViewOrder(),
-            'courseId' => $entity->getCourse()->getId()?->toString() ?? '',
-            'courseName' => $entity->getCourse()->getName() ?? '',
+            'courseModuleId' => $entity->getCourseModule()->getId()?->toString() ?? '',
+            'courseModuleName' => $entity->getCourseModule()->getName() ?? '',
+            'courseId' => $entity->getCourseModule()->getCourse()->getId()?->toString() ?? '',
+            'courseName' => $entity->getCourseModule()->getCourse()->getName() ?? '',
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];
     }
 
     /**
-     * Find lectures by course ordered by view order
+     * Find lectures by module ordered by view order
+     */
+    public function findByModuleOrdered(string $moduleId): array
+    {
+        return $this->createQueryBuilder('cl')
+            ->andWhere('cl.courseModule = :moduleId')
+            ->setParameter('moduleId', $moduleId)
+            ->orderBy('cl.viewOrder', 'ASC')
+            ->addOrderBy('cl.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Find lectures by course ordered by module and view order
+     * Gets all lectures from all modules of a course
      */
     public function findByCourseOrdered(string $courseId): array
     {
         return $this->createQueryBuilder('cl')
-            ->andWhere('cl.course = :courseId')
+            ->join('cl.courseModule', 'cm')
+            ->andWhere('cm.course = :courseId')
             ->setParameter('courseId', $courseId)
-            ->orderBy('cl.viewOrder', 'ASC')
+            ->orderBy('cm.viewOrder', 'ASC')
+            ->addOrderBy('cl.viewOrder', 'ASC')
             ->addOrderBy('cl.name', 'ASC')
             ->getQuery()
             ->getResult();
