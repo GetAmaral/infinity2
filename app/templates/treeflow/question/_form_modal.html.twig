@@ -1,0 +1,170 @@
+<!-- Full Screen Modal Overlay -->
+<div class="modal-fullscreen-overlay"
+     data-controller="crud-modal"
+     data-crud-modal-target="overlay"
+     data-action="click->crud-modal#backdropClick">
+
+    {{ form_start(form, {
+        'action': (is_edit and question.id) ? path('question_edit', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id}) : path('question_new', {treeflowId: treeflow.id, stepId: step.id}),
+        'attr': {
+            'data-controller': 'form-navigation',
+            'data-crud-modal-target': 'form',
+            'data-action': 'submit->crud-modal#submit'
+        }
+    }) }}
+
+    <div class="modal-dialog-centered" data-action="click->crud-modal#stopPropagation">
+        <div class="modal-content-box">
+
+            <!-- Header -->
+            <div class="modal-header-bar">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-circle" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="bi bi-question-circle"></i>
+                    </div>
+                    <div>
+                        <h2 class="modal-title-text">
+                            {% if is_edit %}
+                                {{ 'action.edit'|trans }} {{ question.name }}
+                            {% else %}
+                                {{ 'question.modal.create.title'|trans }}
+                            {% endif %}
+                        </h2>
+                        <p class="modal-subtitle-text">
+                            {% if is_edit %}
+                                {{ 'question.modal.edit.subtitle'|trans }}
+                            {% else %}
+                                {{ 'question.modal.create.subtitle'|trans }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <button type="button"
+                        class="modal-close-btn"
+                        data-action="crud-modal#close"
+                        aria-label="{{ 'button.close'|trans }}">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body-content">
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.name) }}</label>
+                    {{ form_widget(form.name, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
+                            'placeholder': 'question.form.name_placeholder'|trans,
+                            'autofocus': 'autofocus'
+                        }
+                    }) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.prompt) }}</label>
+                    {{ form_widget(form.prompt, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.prompt.vars.errors|length > 0 ? ' input-error' : ''),
+                            'placeholder': 'question.form.prompt_placeholder'|trans,
+                            'rows': 4
+                        }
+                    }) }}
+                    {{ form_errors(form.prompt) }}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.objective) }}</label>
+                    {{ form_widget(form.objective, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.objective.vars.errors|length > 0 ? ' input-error' : ''),
+                            'placeholder': 'question.form.objective_placeholder'|trans,
+                            'rows': 3
+                        }
+                    }) }}
+                    {{ form_errors(form.objective) }}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.importance) }}</label>
+                    <div class="d-flex align-items-center gap-3">
+                        {{ form_widget(form.importance, {
+                            'attr': {
+                                'class': 'form-range flex-grow-1',
+                                'style': 'height: 6px;'
+                            }
+                        }) }}
+                        <output class="badge bg-warning text-dark px-3 py-2" style="font-size: 1rem; min-width: 40px; text-align: center;">{{ form.importance.vars.value ?? 5 }}</output>
+                    </div>
+                    <small class="text-muted mt-1 d-block">{{ 'question.form.importance_help'|trans }}</small>
+                    {{ form_errors(form.importance) }}
+                </div>
+
+                {{ form_widget(form._token) }}
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer-bar">
+                <button type="button"
+                        class="btn-modal-secondary"
+                        data-action="crud-modal#close">
+                    {{ 'button.cancel'|trans }}
+                </button>
+                <button type="submit"
+                        class="btn-modal-primary"
+                        data-crud-modal-target="submitButton"
+                        style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                    <i class="bi bi-{{ is_edit ? 'check2' : 'plus-lg' }} me-2"></i>
+                    {% if is_edit %}
+                        {{ 'button.save.changes'|trans }}
+                    {% else %}
+                        {{ 'question.button.create.question'|trans }}
+                    {% endif %}
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    {{ form_end(form, {'render_rest': false}) }}
+</div>
+
+<style>
+/* Importance Range Slider */
+.form-range {
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    outline: none;
+}
+
+.form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.form-range::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.form-range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.form-range::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+</style>
