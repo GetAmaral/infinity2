@@ -1,0 +1,25 @@
+# Audit System Configuration
+# Retention policies, encryption, and compliance settings
+
+parameters:
+    audit.retention.default_days: 90
+    audit.retention.policies:
+        'App\Entity\User': 365                  # Keep user audit logs for 1 year
+        'App\Entity\Organization': 1825         # Keep org logs for 5 years (legal requirement)
+        'App\Entity\Course': 730                # Keep course logs for 2 years
+        'App\Entity\Lecture': 730               # Keep lecture logs for 2 years
+        'App\Entity\CourseModule': 730          # Keep module logs for 2 years
+        'App\Entity\StudentCourse': 365         # Keep student course logs for 1 year
+        'App\Entity\StudentLecture': 90         # Keep student lecture logs for 90 days
+
+    # Encryption settings
+    audit.encryption.enabled: true
+    audit.encryption.algorithm: 'aes-256-gcm'
+
+    # GDPR Compliance settings
+    audit.compliance.gdpr_enabled: true
+    audit.compliance.anonymize_after_days: 730  # Anonymize after 2 years
+
+    # Tamper detection
+    audit.integrity.enabled: true
+    audit.integrity.algorithm: 'sha256'

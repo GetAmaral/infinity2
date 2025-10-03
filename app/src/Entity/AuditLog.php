@@ -73,6 +73,13 @@ class AuditLog
     private ?array $metadata = null;
 
     /**
+     * SHA-256 checksum for tamper detection
+     * Generated from: action + entityClass + entityId + changes + createdAt + salt
+     */
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $checksum = null;
+
+    /**
      * When this audit event occurred
      */
     #[ORM\Column(type: 'datetime_immutable')]
@@ -195,5 +202,65 @@ class AuditLog
     public function getNewValue(string $fieldName): mixed
     {
         return $this->changes[$fieldName][1] ?? null;
+    }
+
+    public function getChecksum(): ?string
+    {
+        return $this->checksum;
+    }
+
+    public function setChecksum(?string $checksum): self
+    {
+        $this->checksum = $checksum;
+        return $this;
+    }
+
+    /**
+     * Generate checksum for tamper detection
+     *
+     * Creates a SHA-256 hash of critical audit log fields with a salt.
+     * The salt should be defined in the AUDIT_INTEGRITY_SALT environment variable.
+     *
+     * @param string $salt Secret salt for checksum generation
+     */
+    public function generateChecksum(string $salt): void
+    {
+        $data = json_encode([
+            'action' => $this->action,
+            'entity_class' => $this->entityClass,
+            'entity_id' => $this->entityId->toString(),
+            'changes' => $this->changes,
+            'created_at' => $this->createdAt->format(\DateTimeInterface::ATOM),
+        ]);
+
+        $this->checksum = hash('sha256', $data . $salt);
+    }
+
+    /**
+     * Verify audit log integrity
+     *
+     * Recomputes the checksum and compares it with the stored value.
+     * Returns false if the audit log has been tampered with.
+     *
+     * @param string $salt Secret salt used for checksum generation
+     * @return bool True if integrity is intact, false if tampered
+     */
+    public function verifyIntegrity(string $salt): bool
+    {
+        if ($this->checksum === null) {
+            return false; // No checksum means can't verify
+        }
+
+        $data = json_encode([
+            'action' => $this->action,
+            'entity_class' => $this->entityClass,
+            'entity_id' => $this->entityId->toString(),
+            'changes' => $this->changes,
+            'created_at' => $this->createdAt->format(\DateTimeInterface::ATOM),
+        ]);
+
+        $expectedChecksum = hash('sha256', $data . $salt);
+
+        return hash_equals($expectedChecksum, $this->checksum);
     }
 }
