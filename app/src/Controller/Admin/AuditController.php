@@ -8,6 +8,7 @@ use App\Form\AuditSearchType;
 use App\Repository\AuditLogRepository;
 use App\Repository\UserRepository;
 use App\Service\AuditExportService;
+use App\Service\AuditAnalyticsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +29,8 @@ class AuditController extends AbstractController
     public function __construct(
         private readonly AuditLogRepository $auditLogRepository,
         private readonly UserRepository $userRepository,
-        private readonly AuditExportService $exportService
+        private readonly AuditExportService $exportService,
+        private readonly AuditAnalyticsService $analyticsService
     ) {}
 
     /**
@@ -53,10 +55,25 @@ class AuditController extends AbstractController
             $totalCount = count($auditLogs);
         }
 
+        // Get analytics data for dashboard
+        $stats = [
+            'total_events' => $this->auditLogRepository->count([]),
+            'events_today' => $this->analyticsService->getEventsToday(),
+            'events_week' => $this->analyticsService->getEventsThisWeek(),
+            'events_hour' => $this->auditLogRepository->countInLastHour(),
+        ];
+
+        // Get raw action breakdown from repository
+        $actionBreakdown = $this->auditLogRepository->getActionBreakdown(new \DateTimeImmutable('-7 days'));
+        $topUsers = $this->analyticsService->getTopActiveUsers(5);
+
         return $this->render('admin/audit/index.html.twig', [
             'searchForm' => $form,
             'auditLogs' => $auditLogs,
             'totalCount' => $totalCount,
+            'stats' => $stats,
+            'actionBreakdown' => $actionBreakdown,
+            'topUsers' => $topUsers,
         ]);
     }
 

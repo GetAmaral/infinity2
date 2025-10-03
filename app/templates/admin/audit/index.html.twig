@@ -4,192 +4,737 @@
 
 {% block body %}
 <div class="container-fluid py-4">
-    <div class="infinity-card p-4 mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+    {# Header with Live Indicator #}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
             <h1 class="text-gradient mb-0">
-                <i class="bi bi-clipboard-data me-2"></i>Audit Log
+                <i class="bi bi-shield-check me-2"></i>Audit & Activity Log
             </h1>
-            <div>
-                <a href="{{ path('admin_audit_export', app.request.query.all) }}" class="btn infinity-btn-primary me-2">
-                    <i class="bi bi-download me-1"></i>Export CSV
-                </a>
-                <a href="{{ path('admin_audit_export', app.request.query.all|merge({format: 'json'})) }}" class="btn btn-outline-light">
-                    <i class="bi bi-file-earmark-code me-1"></i>Export JSON
-                </a>
+            <p class="text-muted mb-0 mt-1">
+                <i class="bi bi-circle-fill text-success me-1" style="font-size: 0.5rem; animation: pulse 2s ease-in-out infinite;"></i>
+                Live monitoring • Last updated: <span id="lastUpdate">{{ "now"|date("H:i:s") }}</span>
+            </p>
+        </div>
+        <div>
+            <a href="{{ path('admin_audit_analytics') }}" class="btn btn-outline-light me-2">
+                <i class="bi bi-graph-up me-1"></i>Analytics
+            </a>
+            <div class="btn-group">
+                <button type="button" class="btn infinity-btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bi bi-download me-1"></i>Export
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" style="background-color: #1a1d29; border: 1px solid rgba(59, 130, 246, 0.3);">
+                    <li><a class="dropdown-item" href="{{ path('admin_audit_export', app.request.query.all) }}">
+                        <i class="bi bi-filetype-csv me-2"></i>CSV Format
+                    </a></li>
+                    <li><a class="dropdown-item" href="{{ path('admin_audit_export', app.request.query.all|merge({format: 'json'})) }}">
+                        <i class="bi bi-file-earmark-code me-2"></i>JSON Format
+                    </a></li>
+                    <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
+                    <li><a class="dropdown-item text-muted disabled"><i class="bi bi-file-earmark-pdf me-2"></i>PDF (Coming Soon)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {# Stats Dashboard #}
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="infinity-card p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="rounded-circle p-3" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));">
+                            <i class="bi bi-database-fill text-primary" style="font-size: 1.5rem;"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Total Events</h6>
+                        <h3 class="text-gradient mb-0">{{ stats.total_events|number_format }}</h3>
+                        <p class="text-muted mb-0" style="font-size: 0.75rem;">All time</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        {# Search/Filter Form #}
-        {{ form_start(searchForm, {'attr': {'class': 'mb-4'}}) }}
-            <div class="row g-3">
-                <div class="col-md-3">
-                    {{ form_row(searchForm.entityClass) }}
-                </div>
-                <div class="col-md-2">
-                    {{ form_row(searchForm.action) }}
-                </div>
-                <div class="col-md-3">
-                    {{ form_row(searchForm.user) }}
-                </div>
-                <div class="col-md-2">
-                    {{ form_row(searchForm.dateFrom) }}
-                </div>
-                <div class="col-md-2">
-                    {{ form_row(searchForm.dateTo) }}
+        <div class="col-md-3">
+            <div class="infinity-card p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="rounded-circle p-3" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.2));">
+                            <i class="bi bi-calendar-check-fill text-success" style="font-size: 1.5rem;"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Today</h6>
+                        <h3 class="mb-0" style="color: #22c55e;">{{ stats.events_today|number_format }}</h3>
+                        <p class="text-muted mb-0" style="font-size: 0.75rem;">Last 24 hours</p>
+                    </div>
                 </div>
             </div>
-            <div class="mt-3">
-                <button type="submit" class="btn infinity-btn-primary">
-                    <i class="bi bi-search me-1"></i>Search
-                </button>
-                <a href="{{ path('admin_audit_index') }}" class="btn btn-outline-light">
-                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
-                </a>
+        </div>
+
+        <div class="col-md-3">
+            <div class="infinity-card p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="rounded-circle p-3" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(147, 51, 234, 0.2));">
+                            <i class="bi bi-calendar-week-fill" style="font-size: 1.5rem; color: #a855f7;"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">This Week</h6>
+                        <h3 class="mb-0" style="color: #a855f7;">{{ stats.events_week|number_format }}</h3>
+                        <p class="text-muted mb-0" style="font-size: 0.75rem;">Last 7 days</p>
+                    </div>
+                </div>
             </div>
-        {{ form_end(searchForm) }}
+        </div>
+
+        <div class="col-md-3">
+            <div class="infinity-card p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="rounded-circle p-3" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2));">
+                            <i class="bi bi-clock-history text-warning" style="font-size: 1.5rem;"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Last Hour</h6>
+                        <h3 class="mb-0 text-warning">{{ stats.events_hour|number_format }}</h3>
+                        <p class="text-muted mb-0" style="font-size: 0.75rem;">Recent activity</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    {# Results #}
-    <div class="infinity-card p-4">
+    {# Quick Insights #}
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="infinity-card p-3 h-100">
+                <h6 class="mb-3">
+                    <i class="bi bi-pie-chart me-2"></i>Activity Breakdown (7 Days)
+                </h6>
+                <div class="d-flex justify-content-around">
+                    {% set totalActions = 0 %}
+                    {% for action in actionBreakdown %}
+                        {% set totalActions = totalActions + action.count %}
+                    {% endfor %}
+                    {% for action in actionBreakdown %}
+                        {% set percentage = totalActions > 0 ? (action.count / totalActions * 100)|round : 0 %}
+                        {% set colorClass = action.action == 'entity_created' ? 'success' : (action.action == 'entity_deleted' ? 'danger' : 'primary') %}
+                        <div class="text-center">
+                            <div class="mb-2">
+                                <span class="badge bg-{{ colorClass }}" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
+                                    {{ percentage }}%
+                                </span>
+                            </div>
+                            <p class="text-muted mb-0" style="font-size: 0.75rem;">
+                                {{ action.action|replace({'entity_': '', '_': ' '})|title }}
+                            </p>
+                            <small class="text-muted">{{ action.count }} events</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="infinity-card p-3 h-100">
+                <h6 class="mb-3">
+                    <i class="bi bi-people me-2"></i>Top Active Users (7 Days)
+                </h6>
+                {% if topUsers is empty %}
+                    <p class="text-muted mb-0">No user activity</p>
+                {% else %}
+                    <div class="list-group list-group-flush">
+                        {% for userRow in topUsers %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center bg-transparent border-0 px-0 py-2">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-person-circle me-2 text-primary"></i>
+                                    <span>{{ userRow[0].email }}</span>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">{{ userRow.action_count }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# Advanced Filters #}
+    <div class="infinity-card p-4 mb-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0">
-                <i class="bi bi-list-ul me-2"></i>Audit Events
+                <i class="bi bi-funnel me-2"></i>Filters & Search
+            </h5>
+            <button type="button" class="btn btn-sm btn-outline-light" id="toggleFilters">
+                <i class="bi bi-chevron-down"></i>
+            </button>
+        </div>
+
+        <div id="filterSection">
+            {# Quick Filter Chips #}
+            <div class="mb-3">
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-sm btn-outline-primary quick-filter" data-filter="today">
+                        <i class="bi bi-calendar-day me-1"></i>Today
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary quick-filter" data-filter="week">
+                        <i class="bi bi-calendar-week me-1"></i>This Week
+                    </button>
+                    <button class="btn btn-sm btn-outline-success quick-filter" data-filter="created">
+                        <i class="bi bi-plus-circle me-1"></i>Created
+                    </button>
+                    <button class="btn btn-sm btn-outline-warning quick-filter" data-filter="updated">
+                        <i class="bi bi-pencil me-1"></i>Updated
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger quick-filter" data-filter="deleted">
+                        <i class="bi bi-trash me-1"></i>Deleted
+                    </button>
+                </div>
+            </div>
+
+            {# Advanced Filter Form #}
+            {{ form_start(searchForm, {'attr': {'class': 'mb-0'}}) }}
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        {{ form_row(searchForm.entityClass, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_row(searchForm.action, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form_row(searchForm.user, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_row(searchForm.dateFrom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_row(searchForm.dateTo, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="mt-3 d-flex justify-content-between">
+                    <div>
+                        <button type="submit" class="btn infinity-btn-primary">
+                            <i class="bi bi-search me-1"></i>Apply Filters
+                        </button>
+                        <a href="{{ path('admin_audit_index') }}" class="btn btn-outline-light">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                        </a>
+                    </div>
+                    <div class="text-muted small">
+                        <kbd>Ctrl</kbd> + <kbd>F</kbd> to focus search
+                    </div>
+                </div>
+            {{ form_end(searchForm) }}
+        </div>
+    </div>
+
+    {# Activity Timeline #}
+    <div class="infinity-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0">
+                <i class="bi bi-activity me-2"></i>Activity Timeline
                 <span class="badge bg-primary ms-2">{{ totalCount }}</span>
             </h5>
+            <div class="btn-group btn-group-sm" role="group">
+                <button type="button" class="btn btn-outline-light active" id="viewTimeline">
+                    <i class="bi bi-list-ul"></i> Timeline
+                </button>
+                <button type="button" class="btn btn-outline-light" id="viewTable">
+                    <i class="bi bi-table"></i> Table
+                </button>
+            </div>
         </div>
 
         {% if auditLogs is empty %}
-            <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>No audit events found. Try adjusting your filters.
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 4rem; color: rgba(255, 255, 255, 0.1);"></i>
+                <h5 class="text-muted mt-3">No audit events found</h5>
+                <p class="text-muted">Try adjusting your filters or check back later</p>
             </div>
         {% else %}
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th><i class="bi bi-clock me-1"></i>Timestamp</th>
-                            <th><i class="bi bi-lightning me-1"></i>Action</th>
-                            <th><i class="bi bi-box me-1"></i>Entity</th>
-                            <th><i class="bi bi-person me-1"></i>User</th>
-                            <th><i class="bi bi-pencil-square me-1"></i>Changes</th>
-                            <th><i class="bi bi-gear me-1"></i>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for log in auditLogs %}
-                        <tr>
-                            <td>
-                                <small class="text-muted">{{ log.createdAt|date('Y-m-d') }}</small><br>
-                                <strong>{{ log.createdAt|date('H:i:s') }}</strong>
-                            </td>
-                            <td>
-                                {% set badgeClass = log.action == 'entity_created' ? 'success' : (log.action == 'entity_deleted' ? 'danger' : 'primary') %}
-                                <span class="badge bg-{{ badgeClass }}">
-                                    <i class="bi bi-{{ log.action == 'entity_created' ? 'plus-circle' : (log.action == 'entity_deleted' ? 'trash' : 'pencil') }} me-1"></i>
-                                    {{ log.action|replace({'entity_': '', '_': ' '})|title }}
-                                </span>
-                            </td>
-                            <td>
-                                <div>
-                                    <strong>{{ log.entityClass|split('\\\\')|last }}</strong>
+            {# Timeline View #}
+            <div id="timelineView">
+                <div class="audit-timeline">
+                    {% for log in auditLogs %}
+                        <div class="timeline-item" data-entry-id="{{ log.id }}">
+                            <div class="timeline-marker {{ log.action == 'entity_created' ? 'bg-success' : (log.action == 'entity_deleted' ? 'bg-danger' : 'bg-primary') }}">
+                                <i class="bi bi-{{ log.action == 'entity_created' ? 'plus-lg' : (log.action == 'entity_deleted' ? 'trash' : 'pencil') }}"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <span class="badge bg-{{ log.action == 'entity_created' ? 'success' : (log.action == 'entity_deleted' ? 'danger' : 'primary') }} me-2">
+                                            {{ log.action|replace({'entity_': '', '_': ' '})|title }}
+                                        </span>
+                                        <strong>{{ log.entityClass|split('\\\\')|last }}</strong>
+                                    </div>
+                                    <small class="text-muted">
+                                        {{ log.createdAt|date('M d, H:i:s') }}
+                                    </small>
                                 </div>
-                                <small class="text-muted font-monospace">{{ log.entityId|slice(0, 8) }}...</small>
-                            </td>
-                            <td>
-                                {% if log.user %}
-                                    <a href="{{ path('admin_audit_user', {id: log.user.id}) }}" class="text-decoration-none">
-                                        <i class="bi bi-person-circle me-1"></i>{{ log.user.email }}
-                                    </a>
-                                {% else %}
-                                    <em class="text-muted"><i class="bi bi-robot me-1"></i>System</em>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if log.changes is not empty %}
-                                    <button type="button" class="btn btn-sm infinity-btn-ai"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#changesModal{{ log.id }}">
-                                        <i class="bi bi-eye me-1"></i>View {{ log.changes|length }} change(s)
+
+                                <div class="d-flex align-items-center gap-3 mb-2">
+                                    {% if log.user %}
+                                        <a href="{{ path('admin_audit_user', {id: log.user.id}) }}" class="text-decoration-none">
+                                            <i class="bi bi-person-circle me-1"></i>
+                                            <span>{{ log.user.email }}</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">
+                                            <i class="bi bi-robot me-1"></i>System
+                                        </span>
+                                    {% endif %}
+
+                                    <span class="text-muted">
+                                        <i class="bi bi-hash"></i>
+                                        <span class="font-monospace" style="font-size: 0.85rem;">{{ log.entityId|slice(0, 12) }}</span>
+                                    </span>
+                                </div>
+
+                                <div class="mt-2">
+                                    {% if log.changes is not empty %}
+                                        <button type="button"
+                                                class="btn btn-sm infinity-btn-ai"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#changes-{{ log.id }}">
+                                            <i class="bi bi-eye me-1"></i>
+                                            View {{ log.changes|length }} change(s)
+                                        </button>
+                                    {% endif %}
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-light {% if log.changes is empty %}infinity-btn-primary{% else %}ms-2{% endif %}"
+                                            onclick="openHistoryModal('{{ log.entityClass|e('js') }}', '{{ log.entityId }}', '{{ log.entityClass|split('\\\\')|last }}')">
+                                        <i class="bi bi-clock-history me-1"></i>Full History
                                     </button>
-                                {% else %}
-                                    <span class="text-muted">—</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a href="{{ path('admin_audit_entity', {
-                                    class: log.entityClass|url_encode,
-                                    id: log.entityId
-                                }) }}" class="btn btn-sm btn-outline-light" title="View Timeline">
-                                    <i class="bi bi-clock-history"></i>
-                                </a>
-                            </td>
-                        </tr>
-
-                        {# Changes Modal #}
-                        {% if log.changes is not empty %}
-                        <div class="modal fade" id="changesModal{{ log.id }}" tabindex="-1">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content" style="background-color: #1a1d29; border: 1px solid rgba(59, 130, 246, 0.3);">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">
-                                            <i class="bi bi-pencil-square me-2"></i>Field Changes
-                                        </h5>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-sm">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Field</th>
-                                                        <th>Old Value</th>
-                                                        <th></th>
-                                                        <th>New Value</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for field, values in log.changes %}
-                                                    <tr>
-                                                        <td><strong>{{ field }}</strong></td>
-                                                        <td><code class="text-danger">{{ values[0]|default('NULL') }}</code></td>
-                                                        <td class="text-center"><i class="bi bi-arrow-right"></i></td>
-                                                        <td><code class="text-success">{{ values[1]|default('NULL') }}</code></td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        {% set metadata = log.metadata %}
-                                        {% if metadata %}
-                                        <hr>
-                                        <h6><i class="bi bi-info-circle me-2"></i>Metadata</h6>
-                                        <div class="row">
-                                            {% if metadata.ip_address %}
-                                            <div class="col-md-6">
-                                                <small class="text-muted">IP Address:</small><br>
-                                                <code>{{ metadata.ip_address }}</code>
-                                            </div>
-                                            {% endif %}
-                                            {% if metadata.user_agent %}
-                                            <div class="col-md-6">
-                                                <small class="text-muted">User Agent:</small><br>
-                                                <small class="text-truncate d-block">{{ metadata.user_agent }}</small>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        {% endif %}
-                                    </div>
+                                    <a href="{{ path('admin_audit_entity', {
+                                        class: log.entityClass|url_encode,
+                                        id: log.entityId
+                                    }) }}" class="btn btn-sm btn-link text-muted ms-1" target="_blank" title="Open in new tab">
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
                                 </div>
+
+                                {% if log.changes is not empty %}
+
+                                    <div class="collapse mt-3" id="changes-{{ log.id }}">
+                                        <div class="card" style="background-color: rgba(0, 0, 0, 0.2); border: 1px solid rgba(59, 130, 246, 0.2);">
+                                            <div class="card-body p-3">
+                                                <h6 class="mb-3">
+                                                    <i class="bi bi-pencil-square me-2"></i>Field Changes
+                                                </h6>
+                                                {% for field, values in log.changes %}
+                                                    <div class="change-row mb-2 p-2 rounded" style="background-color: rgba(255, 255, 255, 0.02);">
+                                                        <div class="d-flex justify-content-between align-items-start">
+                                                            <div class="flex-grow-1">
+                                                                <strong class="text-primary">{{ field }}</strong>
+                                                                <div class="d-flex gap-2 mt-2 flex-wrap">
+                                                                    {# Check if it's JSON diff format #}
+                                                                    {% if values.status is defined %}
+                                                                        {# JSON field with recursive diff #}
+                                                                        <div class="flex-grow-1">
+                                                                            <div class="json-diff p-2 rounded" style="background-color: rgba(0, 0, 0, 0.3); font-family: 'Courier New', monospace; font-size: 0.85rem;">
+                                                                                {{ values|json_encode(constant('JSON_PRETTY_PRINT'))|raw }}
+                                                                            </div>
+                                                                        </div>
+                                                                    {% else %}
+                                                                        {# Regular field change #}
+                                                                        <div class="diff-old">
+                                                                            <small class="text-muted d-block">Old</small>
+                                                                            <code class="text-danger">{{ values[0]|default('NULL') }}</code>
+                                                                        </div>
+                                                                        <div class="align-self-center">
+                                                                            <i class="bi bi-arrow-right text-muted"></i>
+                                                                        </div>
+                                                                        <div class="diff-new">
+                                                                            <small class="text-muted d-block">New</small>
+                                                                            <code class="text-success">{{ values[1]|default('NULL') }}</code>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+
+                                                {# Metadata #}
+                                                {% set metadata = log.metadata %}
+                                                {% if metadata %}
+                                                    <hr style="border-color: rgba(255, 255, 255, 0.1);">
+                                                    <h6 class="mb-2"><i class="bi bi-info-circle me-2"></i>Context</h6>
+                                                    <div class="row g-2">
+                                                        {% if metadata.ip_address %}
+                                                            <div class="col-md-6">
+                                                                <small class="text-muted">IP Address:</small>
+                                                                <div><code class="text-info">{{ metadata.ip_address }}</code></div>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if metadata.user_agent %}
+                                                            <div class="col-md-6">
+                                                                <small class="text-muted">User Agent:</small>
+                                                                <div class="text-truncate small">{{ metadata.user_agent }}</div>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
-                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
 
-                        {% endfor %}
-                    </tbody>
-                </table>
+            {# Table View (Hidden by default) #}
+            <div id="tableView" style="display: none;">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th><i class="bi bi-clock me-1"></i>Timestamp</th>
+                                <th><i class="bi bi-lightning me-1"></i>Action</th>
+                                <th><i class="bi bi-box me-1"></i>Entity</th>
+                                <th><i class="bi bi-person me-1"></i>User</th>
+                                <th><i class="bi bi-pencil-square me-1"></i>Changes</th>
+                                <th><i class="bi bi-gear me-1"></i>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in auditLogs %}
+                            <tr>
+                                <td>
+                                    <small class="text-muted">{{ log.createdAt|date('Y-m-d') }}</small><br>
+                                    <strong>{{ log.createdAt|date('H:i:s') }}</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ log.action == 'entity_created' ? 'success' : (log.action == 'entity_deleted' ? 'danger' : 'primary') }}">
+                                        <i class="bi bi-{{ log.action == 'entity_created' ? 'plus-circle' : (log.action == 'entity_deleted' ? 'trash' : 'pencil') }} me-1"></i>
+                                        {{ log.action|replace({'entity_': '', '_': ' '})|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div><strong>{{ log.entityClass|split('\\\\')|last }}</strong></div>
+                                    <small class="text-muted font-monospace">{{ log.entityId|slice(0, 8) }}...</small>
+                                </td>
+                                <td>
+                                    {% if log.user %}
+                                        <a href="{{ path('admin_audit_user', {id: log.user.id}) }}" class="text-decoration-none">
+                                            <i class="bi bi-person-circle me-1"></i>{{ log.user.email }}
+                                        </a>
+                                    {% else %}
+                                        <em class="text-muted"><i class="bi bi-robot me-1"></i>System</em>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.changes is not empty %}
+                                        <span class="badge bg-info">{{ log.changes|length }}</span>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-light"
+                                            onclick="openHistoryModal('{{ log.entityClass|e('js') }}', '{{ log.entityId }}', '{{ log.entityClass|split('\\\\')|last }}')">
+                                        <i class="bi bi-clock-history"></i>
+                                    </button>
+                                    <a href="{{ path('admin_audit_entity', {
+                                        class: log.entityClass|url_encode,
+                                        id: log.entityId
+                                    }) }}" class="btn btn-sm btn-link text-muted" target="_blank" title="Open in new tab">
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         {% endif %}
     </div>
+
+    {# History Modal #}
+    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content" style="background-color: #1a1d29; border: 1px solid rgba(59, 130, 246, 0.3);">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historyModalLabel">
+                        <i class="bi bi-clock-history me-2"></i>Entity History
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="historyModalBody">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="text-muted mt-3">Loading history...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a id="historyOpenNewTab" href="#" target="_blank" class="btn btn-outline-light">
+                        <i class="bi bi-box-arrow-up-right me-1"></i>Open in New Tab
+                    </a>
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+/* Timeline Styles */
+.audit-timeline {
+    position: relative;
+    padding-left: 40px;
+}
+
+.audit-timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.5), rgba(59, 130, 246, 0.1));
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -32px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #1a1d29;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    z-index: 1;
+}
+
+.timeline-content {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    transform: translateX(2px);
+}
+
+/* Pulse animation for live indicator */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* Quick filter pills */
+.quick-filter {
+    transition: all 0.2s ease;
+}
+
+.quick-filter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+}
+
+/* Enhanced code blocks */
+code {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.json-diff {
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Modal enhancements */
+.modal-xl {
+    max-width: 1200px;
+}
+
+#historyModal .modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+#historyModal .audit-timeline {
+    padding-left: 30px;
+}
+
+#historyModal .timeline-marker {
+    left: -27px;
+    width: 28px;
+    height: 28px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .audit-timeline {
+        padding-left: 25px;
+    }
+
+    .timeline-marker {
+        left: -25px;
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+    }
+
+    .timeline-content {
+        padding: 0.75rem;
+    }
+
+    .modal-xl {
+        max-width: 95%;
+    }
+}
+</style>
+
+<script>
+// Open history in modal (preserves scroll position)
+function openHistoryModal(entityClass, entityId, entityName) {
+    const modal = new bootstrap.Modal(document.getElementById('historyModal'));
+    const modalBody = document.getElementById('historyModalBody');
+    const modalTitle = document.getElementById('historyModalLabel');
+    const openNewTabBtn = document.getElementById('historyOpenNewTab');
+
+    // Update modal title
+    modalTitle.innerHTML = `<i class="bi bi-clock-history me-2"></i>History: ${entityName} <code class="ms-2" style="font-size: 0.75rem;">${entityId.substring(0, 8)}...</code>`;
+
+    // Update "Open in New Tab" link
+    const url = `/admin/audit/entity/${encodeURIComponent(entityClass)}/${entityId}`;
+    openNewTabBtn.href = url;
+
+    // Show loading state
+    modalBody.innerHTML = `
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="text-muted mt-3">Loading history...</p>
+        </div>
+    `;
+
+    // Open modal
+    modal.show();
+
+    // Fetch history via AJAX
+    fetch(url, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(html => {
+        // Extract the timeline content from the response
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const content = doc.querySelector('.audit-timeline') || doc.querySelector('.container-fluid');
+
+        if (content) {
+            modalBody.innerHTML = content.outerHTML;
+        } else {
+            modalBody.innerHTML = html;
+        }
+    })
+    .catch(error => {
+        console.error('Error loading history:', error);
+        modalBody.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Failed to load history. Please try again or <a href="${url}" target="_blank">open in new tab</a>.
+            </div>
+        `;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle filters
+    const toggleBtn = document.getElementById('toggleFilters');
+    const filterSection = document.getElementById('filterSection');
+
+    if (toggleBtn && filterSection) {
+        toggleBtn.addEventListener('click', function() {
+            filterSection.classList.toggle('d-none');
+            const icon = this.querySelector('i');
+            icon.classList.toggle('bi-chevron-down');
+            icon.classList.toggle('bi-chevron-up');
+        });
+    }
+
+    // View toggle
+    const viewTimeline = document.getElementById('viewTimeline');
+    const viewTable = document.getElementById('viewTable');
+    const timelineView = document.getElementById('timelineView');
+    const tableView = document.getElementById('tableView');
+
+    if (viewTimeline && viewTable && timelineView && tableView) {
+        viewTimeline.addEventListener('click', function() {
+            timelineView.style.display = 'block';
+            tableView.style.display = 'none';
+            this.classList.add('active');
+            viewTable.classList.remove('active');
+        });
+
+        viewTable.addEventListener('click', function() {
+            timelineView.style.display = 'none';
+            tableView.style.display = 'block';
+            this.classList.add('active');
+            viewTimeline.classList.remove('active');
+        });
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+F to focus first filter
+        if (e.ctrlKey && e.key === 'f') {
+            e.preventDefault();
+            const firstInput = document.querySelector('#filterSection select, #filterSection input');
+            if (firstInput) firstInput.focus();
+        }
+    });
+
+    // Update last updated time
+    setInterval(function() {
+        const now = new Date();
+        const timeStr = now.getHours().toString().padStart(2, '0') + ':' +
+                       now.getMinutes().toString().padStart(2, '0') + ':' +
+                       now.getSeconds().toString().padStart(2, '0');
+        const lastUpdate = document.getElementById('lastUpdate');
+        if (lastUpdate) {
+            lastUpdate.textContent = timeStr;
+        }
+    }, 1000);
+});
+</script>
 {% endblock %}
