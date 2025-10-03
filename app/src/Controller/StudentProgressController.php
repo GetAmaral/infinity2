@@ -50,7 +50,7 @@ final class StudentProgressController extends AbstractController
         // Find StudentCourse enrollment
         $studentCourse = $this->studentCourseRepository->findOneBy([
             'student' => $user,
-            'course' => $lecture->getCourse(),
+            'course' => $lecture->getCourseModule()->getCourse(),
             'active' => true
         ]);
 
@@ -177,7 +177,7 @@ final class StudentProgressController extends AbstractController
         // Find StudentCourse enrollment
         $studentCourse = $this->studentCourseRepository->findOneBy([
             'student' => $user,
-            'course' => $lecture->getCourse(),
+            'course' => $lecture->getCourseModule()->getCourse(),
             'active' => true
         ]);
 

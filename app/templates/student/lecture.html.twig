@@ -210,50 +210,81 @@
         <div class="col-lg-3">
             <div class="infinity-card p-3 sticky-top" style="top: 1rem;">
                 <h6 class="text-neon mb-3">
-                    <i class="bi bi-collection me-2"></i>{{ 'course.lectures'|trans }}
+                    <i class="bi bi-layers me-2"></i>{{ 'course.content'|trans }}
                 </h6>
 
-                <div class="list-group">
-                    {% for courseLecture in allLectures %}
-                        {% set isCurrentLecture = courseLecture.id.toString == lecture.id.toString %}
-                        {% set lectureProgress = allLectureProgress[courseLecture.id.toString] ?? null %}
-                        {% set isLectureCompleted = lectureProgress and lectureProgress.completed %}
-                        {% set canAccess = courseLecture.processingStatus == 'completed' %}
+                <div class="accordion" id="sidebarModules">
+                    {% for module in modules %}
+                        {% set moduleHasCurrentLecture = false %}
+                        {% for moduleLecture in module.lectures %}
+                            {% if moduleLecture.id.toString == lecture.id.toString %}
+                                {% set moduleHasCurrentLecture = true %}
+                            {% endif %}
+                        {% endfor %}
 
-                        <a href="{% if canAccess %}{{ path('student_lecture', {courseId: course.id, lectureId: courseLecture.id}) }}{% else %}#{% endif %}"
-                           class="list-group-item list-group-item-action {% if isCurrentLecture %}active{% endif %} {% if not canAccess %}disabled{% endif %}"
-                           style="background: {% if isCurrentLecture %}var(--infinity-ai-gradient){% else %}var(--infinity-card-bg){% endif %};
-                                  border: 1px solid rgba(255, 255, 255, 0.1);
-                                  margin-bottom: 0.5rem;
-                                  border-radius: 8px;
-                                  {% if not canAccess %}opacity: 0.5; cursor: not-allowed;{% endif %}">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="flex-grow-1">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <small class="text-muted me-2">{{ courseLecture.viewOrder }}.</small>
-                                        <span class="{% if isCurrentLecture %}text-white fw-bold{% else %}text-white{% endif %}" style="font-size: 0.875rem;">
-                                            {{ courseLecture.name|slice(0, 30) }}{% if courseLecture.name|length > 30 %}...{% endif %}
-                                        </span>
+                        <div class="accordion-item mb-2" style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button {{ moduleHasCurrentLecture ? '' : 'collapsed' }} p-2"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#sidebar-module-{{ module.id }}"
+                                        aria-expanded="{{ moduleHasCurrentLecture ? 'true' : 'false' }}"
+                                        style="background: transparent; color: white; border: none; font-size: 0.875rem;">
+                                    <div class="d-flex align-items-center w-100">
+                                        <div class="rounded me-2" style="background: linear-gradient(135deg, #f59e0b, #d97706); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                            <span class="text-white fw-bold" style="font-size: 0.7rem;">{{ module.viewOrder }}</span>
+                                        </div>
+                                        <span class="text-white" style="font-size: 0.85rem;">{{ module.name|slice(0, 20) }}{% if module.name|length > 20 %}...{% endif %}</span>
                                     </div>
-                                    {% if courseLecture.lengthSeconds %}
-                                        <small class="text-muted">
-                                            <i class="bi bi-clock me-1"></i>{{ courseLecture.lengthFormatted }}
-                                        </small>
-                                    {% endif %}
-                                </div>
-                                <div class="ms-2">
-                                    {% if isLectureCompleted %}
-                                        <i class="bi bi-check-circle-fill text-success"></i>
-                                    {% elseif isCurrentLecture %}
-                                        <i class="bi bi-play-circle-fill text-white"></i>
-                                    {% elseif canAccess %}
-                                        <i class="bi bi-play-circle text-muted"></i>
-                                    {% else %}
-                                        <i class="bi bi-hourglass-split text-warning"></i>
-                                    {% endif %}
+                                </button>
+                            </h2>
+                            <div id="sidebar-module-{{ module.id }}" class="accordion-collapse collapse {{ moduleHasCurrentLecture ? 'show' : '' }}">
+                                <div class="accordion-body p-1">
+                                    {% for courseLecture in module.lectures %}
+                                        {% set isCurrentLecture = courseLecture.id.toString == lecture.id.toString %}
+                                        {% set lectureProgress = allLectureProgress[courseLecture.id.toString] ?? null %}
+                                        {% set isLectureCompleted = lectureProgress and lectureProgress.completed %}
+                                        {% set canAccess = courseLecture.processingStatus == 'completed' %}
+
+                                        <a href="{% if canAccess %}{{ path('student_lecture', {courseId: course.id, lectureId: courseLecture.id}) }}{% else %}#{% endif %}"
+                                           class="d-block p-2 mb-1 rounded {% if not canAccess %}disabled{% endif %}"
+                                           style="background: {% if isCurrentLecture %}linear-gradient(135deg, #3b82f6, #2563eb){% else %}transparent{% endif %};
+                                                  text-decoration: none;
+                                                  border: 1px solid {% if isCurrentLecture %}rgba(59, 130, 246, 0.3){% else %}rgba(255, 255, 255, 0.05){% endif %};
+                                                  transition: all 0.2s;
+                                                  {% if not canAccess %}opacity: 0.5; cursor: not-allowed;{% endif %}"
+                                           {% if canAccess %}onmouseover="this.style.background='rgba(59, 130, 246, 0.1)'" onmouseout="this.style.background='{{ isCurrentLecture ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : 'transparent' }}'"{% endif %}>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex align-items-center">
+                                                        <small class="text-muted me-2" style="font-size: 0.7rem;">{{ courseLecture.viewOrder }}.</small>
+                                                        <span class="{% if isCurrentLecture %}text-white fw-bold{% else %}text-white{% endif %}" style="font-size: 0.8rem;">
+                                                            {{ courseLecture.name|slice(0, 25) }}{% if courseLecture.name|length > 25 %}...{% endif %}
+                                                        </span>
+                                                    </div>
+                                                    {% if courseLecture.lengthSeconds %}
+                                                        <small class="text-muted" style="font-size: 0.7rem;">
+                                                            <i class="bi bi-clock me-1"></i>{{ courseLecture.lengthFormatted }}
+                                                        </small>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="ms-2">
+                                                    {% if isLectureCompleted %}
+                                                        <i class="bi bi-check-circle-fill text-success" style="font-size: 0.9rem;"></i>
+                                                    {% elseif isCurrentLecture %}
+                                                        <i class="bi bi-play-circle-fill text-white" style="font-size: 0.9rem;"></i>
+                                                    {% elseif canAccess %}
+                                                        <i class="bi bi-play-circle text-muted" style="font-size: 0.9rem;"></i>
+                                                    {% else %}
+                                                        <i class="bi bi-hourglass-split text-warning" style="font-size: 0.9rem;"></i>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     {% endfor %}
                 </div>
 

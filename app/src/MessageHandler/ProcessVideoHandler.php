@@ -83,9 +83,12 @@ class ProcessVideoHandler
 
             $this->entityManager->flush();
 
-            // Update parent course total length
-            $course = $lecture->getCourse();
+            // Update parent module and course total length
+            $course = $lecture->getCourseModule()->getCourse();
             if ($course) {
+                // First update the module total length
+                $lecture->getCourseModule()->calculateTotalLengthSeconds();
+                // Then update the course total length
                 $course->calculateTotalLengthSeconds();
                 $this->entityManager->flush();
             }

@@ -39,7 +39,10 @@
             {% set course = enrollment.course %}
             {% set progress = enrollment.progressPercentage|round %}
             {% set isCompleted = enrollment.completedAt is not null %}
-            {% set totalLectures = course.lectures|length %}
+            {% set totalLectures = 0 %}
+            {% for module in course.modules %}
+                {% set totalLectures = totalLectures + module.lectures|length %}
+            {% endfor %}
 
             <div class="col-xl-4 col-lg-6 mb-4">
                 <div class="infinity-card ai-enhanced p-4 h-100 d-flex flex-column">

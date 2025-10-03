@@ -9,6 +9,7 @@ use App\Entity\CourseLecture;
 use App\Entity\StudentCourse;
 use App\Repository\CourseRepository;
 use App\Repository\CourseLectureRepository;
+use App\Repository\CourseModuleRepository;
 use App\Repository\StudentCourseRepository;
 use App\Repository\StudentLectureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +33,7 @@ final class StudentController extends AbstractController
         private readonly StudentCourseRepository $studentCourseRepository,
         private readonly StudentLectureRepository $studentLectureRepository,
         private readonly CourseRepository $courseRepository,
+        private readonly CourseModuleRepository $moduleRepository,
         private readonly CourseLectureRepository $lectureRepository
     ) {}
 
@@ -87,11 +89,17 @@ final class StudentController extends AbstractController
             throw $this->createAccessDeniedException('You are not enrolled in this course.');
         }
 
-        // Get all lectures ordered by viewOrder
-        $lectures = $this->lectureRepository->findBy(
-            ['course' => $course],
-            ['viewOrder' => 'ASC']
-        );
+        // Get all modules ordered by viewOrder
+        $modules = $this->moduleRepository->createQueryBuilder('cm')
+            ->where('cm.course = :course')
+            ->setParameter('course', $course)
+            ->orderBy('cm.viewOrder', 'ASC')
+            ->addOrderBy('cm.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        // Get all lectures for progress counting
+        $lectures = $this->lectureRepository->findByCourseOrdered($course->getId()->toString());
 
         // Get student's progress for each lecture
         $lectureProgress = [];
@@ -109,6 +117,7 @@ final class StudentController extends AbstractController
         return $this->render('student/course.html.twig', [
             'course' => $course,
             'enrollment' => $enrollment,
+            'modules' => $modules,
             'lectures' => $lectures,
             'lectureProgress' => $lectureProgress,
         ]);
@@ -150,7 +159,7 @@ final class StudentController extends AbstractController
         }
 
         // Verify lecture belongs to this course
-        if ($lecture->getCourse()->getId()->toString() !== $courseId) {
+        if ($lecture->getCourseModule()->getCourse()->getId()->toString() !== $courseId) {
             throw $this->createNotFoundException('Lecture does not belong to this course.');
         }
 
@@ -160,11 +169,17 @@ final class StudentController extends AbstractController
             'lecture' => $lecture
         ]);
 
-        // Get all lectures for navigation sidebar
-        $allLectures = $this->lectureRepository->findBy(
-            ['course' => $course],
-            ['viewOrder' => 'ASC']
-        );
+        // Get all modules for navigation sidebar
+        $modules = $this->moduleRepository->createQueryBuilder('cm')
+            ->where('cm.course = :course')
+            ->setParameter('course', $course)
+            ->orderBy('cm.viewOrder', 'ASC')
+            ->addOrderBy('cm.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        // Get all lectures for navigation sidebar (ordered by module and viewOrder)
+        $allLectures = $this->lectureRepository->findByCourseOrdered($course->getId()->toString());
 
         // Get progress for all lectures (for sidebar completion indicators)
         $allLectureProgress = [];
@@ -215,6 +230,7 @@ final class StudentController extends AbstractController
             'studentProgress' => $studentProgress,
             'previousLecture' => $previousLecture,
             'nextLecture' => $nextLecture,
+            'modules' => $modules,
             'allLectures' => $allLectures,
             'allLectureProgress' => $allLectureProgress,
         ]);
