@@ -67,37 +67,49 @@ when@prod:
                 path: php://stderr
                 formatter: monolog.formatter.json
 
-            # Application-specific logs to file
+            # Application-specific logs to file with rotation
             app_file:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/app.log"
                 level: info
                 channels: ['app']
                 formatter: monolog.formatter.json
+                max_files: 30  # Keep 30 days of logs
+                filename_format: '{filename}-{date}'
+                date_format: 'Y-m-d'
 
-            # Performance monitoring logs
+            # Performance monitoring logs with rotation
             performance_file:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/performance.log"
                 level: info
                 channels: ['performance']
                 formatter: monolog.formatter.json
+                max_files: 30  # Keep 30 days of logs
+                filename_format: '{filename}-{date}'
+                date_format: 'Y-m-d'
 
-            # Security events logging
+            # Security events logging with rotation
             security_file:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/security.log"
                 level: warning
                 channels: ['security']
                 formatter: monolog.formatter.json
+                max_files: 365  # Keep 1 year of security logs
+                filename_format: '{filename}-{date}'
+                date_format: 'Y-m-d'
 
-            # Business logic events
+            # Business logic events with rotation
             business_file:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/business.log"
                 level: info
                 channels: ['business']
                 formatter: monolog.formatter.json
+                max_files: 30  # Keep 30 days of logs
+                filename_format: '{filename}-{date}'
+                date_format: 'Y-m-d'
 
             # Critical errors to syslog for monitoring systems
             syslog_critical:
@@ -106,18 +118,24 @@ when@prod:
                 facility: local0
                 ident: infinity_app
 
-            # Audit events logging
+            # Audit events logging with rotation
             audit_file:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/audit.log"
                 level: info
                 channels: ['audit']
                 formatter: monolog.formatter.json
+                max_files: 90  # Keep 90 days of logs
+                filename_format: '{filename}-{date}'
+                date_format: 'Y-m-d'
 
-            # Video processing logs
+            # Video processing logs with rotation
             video_processing_file:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/video_processing.log"
                 level: info
                 channels: ['video_processing']
                 formatter: monolog.formatter.json
+                max_files: 30  # Keep 30 days of logs
+                filename_format: '{filename}-{date}'
+                date_format: 'Y-m-d'
