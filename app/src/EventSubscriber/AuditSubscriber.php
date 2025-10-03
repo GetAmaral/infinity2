@@ -11,6 +11,7 @@ use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -29,7 +30,8 @@ final class AuditSubscriber
 {
     public function __construct(
         private readonly Security $security,
-        private readonly MessageBusInterface $messageBus
+        private readonly MessageBusInterface $messageBus,
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     public function prePersist(PrePersistEventArgs $args): void
@@ -70,12 +72,11 @@ final class AuditSubscriber
 
         $currentUser = $this->getCurrentUser();
 
-        if(!$currentUser){
-            return;
+        if ($currentUser) {
+            $entity->setUpdatedBy($currentUser);
         }
 
-        $entity->setUpdatedBy($currentUser);
-
+        // Log audit event even if no user (for CLI/background operations)
         $this->logAuditEvent('entity_updated', $entity, $currentUser, $args->getEntityChangeSet());
     }
 
@@ -142,7 +143,7 @@ final class AuditSubscriber
         // Sanitize change set for updates
         $changes = [];
         if ($action === 'entity_updated' && !empty($changeSet)) {
-            $changes = $this->sanitizeChangeSet($changeSet);
+            $changes = $this->sanitizeChangeSet($changeSet, $entity);
         }
 
         // Dispatch async message instead of logging directly
@@ -189,15 +190,31 @@ final class AuditSubscriber
 
     /**
      * Sanitize change set to remove sensitive data from logs
+     * For JSON fields, performs deep comparison and returns only changed keys
      */
-    private function sanitizeChangeSet(array $changeSet): array
+    private function sanitizeChangeSet(array $changeSet, object $entity): array
     {
         $sensitiveFields = ['password', 'apiToken', 'verificationToken'];
         $sanitized = [];
 
+        // Get entity metadata to detect JSON fields
+        $metadata = $this->entityManager->getClassMetadata(get_class($entity));
+
         foreach ($changeSet as $field => $values) {
             if (in_array($field, $sensitiveFields, true)) {
                 $sanitized[$field] = ['[REDACTED]', '[REDACTED]'];
+                continue;
+            }
+
+            // Check if this is a JSON field
+            if ($this->isJsonField($metadata, $field)) {
+                // Perform deep comparison for JSON fields
+                $jsonDiff = $this->getJsonDiff($values[0], $values[1]);
+
+                // Only add to sanitized if there are actual changes
+                if (!empty($jsonDiff)) {
+                    $sanitized[$field] = $jsonDiff;
+                }
             } else {
                 // Convert objects to strings for logging
                 $sanitized[$field] = [
@@ -208,6 +225,121 @@ final class AuditSubscriber
         }
 
         return $sanitized;
+    }
+
+    /**
+     * Check if a field is a JSON type in Doctrine metadata
+     */
+    private function isJsonField($metadata, string $fieldName): bool
+    {
+        if (!$metadata->hasField($fieldName)) {
+            return false;
+        }
+
+        $fieldMapping = $metadata->getFieldMapping($fieldName);
+        return in_array($fieldMapping['type'], ['json', 'json_array'], true);
+    }
+
+    /**
+     * Get recursive diff for JSON fields
+     * Returns only the changed keys with old and new values
+     */
+    private function getJsonDiff(mixed $oldValue, mixed $newValue): array
+    {
+        // Parse JSON values if they're strings
+        $old = $this->parseJsonValue($oldValue);
+        $new = $this->parseJsonValue($newValue);
+
+        // If either is not an array, return simple diff
+        if (!is_array($old) || !is_array($new)) {
+            return [
+                'old' => $this->serializeValue($old),
+                'new' => $this->serializeValue($new)
+            ];
+        }
+
+        // Perform recursive comparison
+        return $this->recursiveJsonDiff($old, $new);
+    }
+
+    /**
+     * Parse JSON value - handles both arrays and JSON strings
+     */
+    private function parseJsonValue(mixed $value): mixed
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            return json_last_error() === JSON_ERROR_NONE ? $decoded : $value;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Recursively compare two arrays and return only changed keys
+     */
+    private function recursiveJsonDiff(array $old, array $new): array
+    {
+        $diff = [];
+
+        // Get all keys from both arrays
+        $allKeys = array_unique(array_merge(array_keys($old), array_keys($new)));
+
+        foreach ($allKeys as $key) {
+            $oldExists = array_key_exists($key, $old);
+            $newExists = array_key_exists($key, $new);
+
+            // Key was removed
+            if ($oldExists && !$newExists) {
+                $diff[$key] = [
+                    'old' => $this->serializeValue($old[$key]),
+                    'new' => null,
+                    'status' => 'removed'
+                ];
+                continue;
+            }
+
+            // Key was added
+            if (!$oldExists && $newExists) {
+                $diff[$key] = [
+                    'old' => null,
+                    'new' => $this->serializeValue($new[$key]),
+                    'status' => 'added'
+                ];
+                continue;
+            }
+
+            // Both exist - check if values are different
+            $oldVal = $old[$key];
+            $newVal = $new[$key];
+
+            // If both are arrays, recurse
+            if (is_array($oldVal) && is_array($newVal)) {
+                $nestedDiff = $this->recursiveJsonDiff($oldVal, $newVal);
+                if (!empty($nestedDiff)) {
+                    $diff[$key] = $nestedDiff;
+                }
+            } else {
+                // Scalar comparison
+                if ($oldVal !== $newVal) {
+                    $diff[$key] = [
+                        'old' => $this->serializeValue($oldVal),
+                        'new' => $this->serializeValue($newVal),
+                        'status' => 'modified'
+                    ];
+                }
+            }
+        }
+
+        return $diff;
     }
 
     /**
