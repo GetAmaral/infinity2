@@ -1,0 +1,162 @@
+{% extends '_base_entity_list.html.twig' %}
+
+{#
+ # TreeFlow Index - Grid/List/Table Views
+ # Data-bind compatible with TreeFlowController::entityToArray()
+ #
+ # API Response Structure:
+ # {
+ #   "id": "uuid",
+ #   "name": "TreeFlow Name",
+ #   "version": 1,
+ #   "active": true,
+ #   "organizationId": "uuid",
+ #   "organizationName": "Org Name",
+ #   "stepsCount": 5,
+ #   "createdAt": "2025-10-03T...",
+ #   "createdAtFormatted": "Oct 3, 2025",
+ #   "updatedAtFormatted": "Oct 3, 2025",
+ #   "createdByName": "John Doe"
+ # }
+#}
+
+{# Grid View Template #}
+{% block grid_view_item_template %}
+    <div class="col">
+        <div class="infinity-card h-100 p-4" style="cursor: pointer;" onclick="window.location.href='/treeflow/' + this.closest('[data-entity-id]').dataset.entityId">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div onclick="event.stopPropagation();" class="dropdown me-3">
+                    <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                        <li><a class="dropdown-item" onclick="window.location.href='/treeflow/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'button.view'|trans }}</a></li>
+                        <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/treeflow/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/treeflow/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                    </ul>
+                </div>
+                <div class="d-flex align-items-center flex-grow-1">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                         style="width: 48px; height: 48px; background: var(--infinity-ai-gradient);">
+                        <i class="bi bi-diagram-3 text-white fs-5"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1 text-white" data-bind="name" data-bind-text></h5>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <span class="badge bg-info">v<span data-bind="version" data-bind-text></span></span>
+                            <span class="badge bg-success" data-bind-if="active">{{ 'treeflow.active'|trans }}</span>
+                            <span class="badge bg-secondary" data-bind-if="!active">{{ 'treeflow.inactive'|trans }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-auto">
+                <div class="d-flex gap-3 mb-2">
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        <i class="bi bi-signpost me-1 text-neon"></i><span data-bind="stepsCount" data-bind-text></span> {{ 'treeflow.steps'|trans }}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center pt-2 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important; font-size: 0.8rem;">
+                    <span class="text-muted">
+                        <i class="bi bi-building me-1"></i><span data-bind="organizationName" data-bind-text></span>
+                    </span>
+                    <span class="text-muted">
+                        <i class="bi bi-calendar-plus me-1"></i><span data-bind="updatedAtFormatted" data-bind-text></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{# List View Template #}
+{% block list_view_item_template %}
+    <div class="infinity-card mb-3 p-3">
+        <div class="d-flex align-items-center">
+            <div onclick="event.stopPropagation();" class="dropdown me-3">
+                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                    <li><a class="dropdown-item" onclick="window.location.href='/treeflow/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'button.view'|trans }}</a></li>
+                    <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/treeflow/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/treeflow/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                </ul>
+            </div>
+            <div class="d-flex align-items-center flex-grow-1" style="cursor: pointer;" onclick="window.location.href='/treeflow/' + this.closest('[data-entity-id]').dataset.entityId">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 40px; height: 40px; background: var(--infinity-ai-gradient);">
+                    <i class="bi bi-diagram-3 text-white"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                        <h6 class="mb-0 text-white" data-bind="name" data-bind-text></h6>
+                        <span class="badge bg-info">v<span data-bind="version" data-bind-text></span></span>
+                        <span class="badge bg-success" data-bind-if="active">{{ 'treeflow.active'|trans }}</span>
+                        <span class="badge bg-secondary" data-bind-if="!active">{{ 'treeflow.inactive'|trans }}</span>
+                    </div>
+                    <div class="text-muted d-flex gap-3 flex-wrap" style="font-size: 0.85rem;">
+                        <span><i class="bi bi-signpost me-1 text-neon"></i><span data-bind="stepsCount" data-bind-text></span> {{ 'treeflow.steps'|trans }}</span>
+                        <span><i class="bi bi-building me-1"></i><span data-bind="organizationName" data-bind-text></span></span>
+                        <span><i class="bi bi-calendar-plus me-1"></i><span data-bind="updatedAtFormatted" data-bind-text></span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{# Table Headers #}
+{% block table_headers %}
+    <th style="width: 60px;">{{ 'table.actions'|trans }}</th>
+    <th data-sort-field="name">{{ 'treeflow.name'|trans }}</th>
+    <th class="text-center" data-sort-field="version">{{ 'treeflow.version'|trans }}</th>
+    <th class="text-center" data-sort-field="active" data-field-type="boolean">{{ 'treeflow.status'|trans }}</th>
+    <th class="text-center" data-sort-field="stepsCount">{{ 'treeflow.steps'|trans }}</th>
+    <th data-sort-field="organizationName">{{ 'organization.singular'|trans }}</th>
+    <th data-sort-field="updatedAt" data-field-type="date">{{ 'table.updated'|trans }}</th>
+{% endblock %}
+
+{# Table Row Template #}
+{% block table_view_row_template %}
+    <tr style="cursor: pointer;" onclick="window.location.href='/treeflow/' + this.closest('[data-entity-id]').dataset.entityId">
+        <td onclick="event.stopPropagation();">
+            <div class="dropdown">
+                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                    <li><a class="dropdown-item" onclick="window.location.href='/treeflow/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'button.view'|trans }}</a></li>
+                    <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/treeflow/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/treeflow/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                </ul>
+            </div>
+        </td>
+        <td>
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-2"
+                     style="width: 32px; height: 32px; background: var(--infinity-ai-gradient);">
+                    <i class="bi bi-diagram-3 text-white"></i>
+                </div>
+                <span class="text-white" data-bind="name" data-bind-text></span>
+            </div>
+        </td>
+        <td class="text-center">
+            <span class="badge bg-info">v<span data-bind="version" data-bind-text></span></span>
+        </td>
+        <td class="text-center">
+            <span class="badge bg-success" data-bind-if="active">{{ 'treeflow.active'|trans }}</span>
+            <span class="badge bg-secondary" data-bind-if="!active">{{ 'treeflow.inactive'|trans }}</span>
+        </td>
+        <td class="text-center text-muted">
+            <i class="bi bi-signpost me-1 text-neon"></i><span data-bind="stepsCount" data-bind-text></span>
+        </td>
+        <td class="text-muted" data-bind="organizationName" data-bind-text></td>
+        <td class="text-muted" style="font-size: 0.85rem;">
+            <i class="bi bi-calendar-plus me-1"></i><span data-bind="updatedAtFormatted" data-bind-text></span>
+        </td>
+    </tr>
+{% endblock %}

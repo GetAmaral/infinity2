@@ -1,0 +1,189 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ treeflow.name }} - {{ 'treeflow.singular'|trans }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
+
+{% block body %}
+<!-- Navigation -->
+<div class="mb-4">
+    <a href="{{ path('treeflow_index') }}" class="btn infinity-btn-ai">
+        <i class="bi bi-arrow-left me-2"></i>{{ 'treeflow.back.to.list'|trans }}
+    </a>
+</div>
+
+<!-- TreeFlow Header -->
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center">
+            <div class="p-3 rounded-3 me-4" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                <i class="bi bi-diagram-3 text-white fs-2"></i>
+            </div>
+            <div>
+                <h1 class="text-gradient mb-2">{{ treeflow.name }}</h1>
+                <div class="d-flex gap-2 align-items-center">
+                    <span class="badge bg-info">{{ 'treeflow.version'|trans }} {{ treeflow.version }}</span>
+                    {% if treeflow.active %}
+                        <span class="badge bg-success">{{ 'treeflow.active'|trans }}</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ 'treeflow.inactive'|trans }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="real-time-badge">
+                {{ treeflow.steps|length }} {{ 'treeflow.steps'|trans }}
+            </div>
+            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                <button type="button"
+                        class="btn infinity-btn-primary btn-sm"
+                        data-controller="modal-opener"
+                        data-modal-opener-url-value="{{ path('treeflow_edit', {id: treeflow.id}) }}"
+                        data-action="click->modal-opener#open">
+                    <i class="bi bi-pencil me-1"></i>{{ 'button.edit'|trans }}
+                </button>
+            {% endif %}
+            {% if is_granted('TREEFLOW_DELETE', treeflow) %}
+                <form method="post" action="{{ path('treeflow_delete', {id: treeflow.id}) }}" class="d-inline" onsubmit="return confirm('{{ 'confirm.delete.entity'|trans }}');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-treeflow-' ~ treeflow.id) }}">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash me-1"></i>{{ 'button.delete'|trans }}
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- TreeFlow Stats -->
+<div class="bento-grid mb-4">
+    <div class="bento-item">
+        <div class="metric-card">
+            <i class="bi bi-signpost-fill text-neon fs-1"></i>
+            <div class="metric-value">{{ treeflow.steps|length }}</div>
+            <div class="metric-label">{{ 'treeflow.total.steps'|trans }}</div>
+        </div>
+    </div>
+
+    <div class="bento-item">
+        <div class="metric-card">
+            <i class="bi bi-{{ treeflow.active ? 'check-circle-fill' : 'x-circle-fill' }} text-neon fs-1"></i>
+            <div class="metric-value">{{ treeflow.active ? 'treeflow.status.active'|trans : 'treeflow.status.inactive'|trans }}</div>
+            <div class="metric-label">{{ 'treeflow.status'|trans }}</div>
+        </div>
+    </div>
+
+    <div class="bento-item">
+        <div class="metric-card">
+            <i class="bi bi-building text-neon fs-1"></i>
+            <div class="metric-value" style="font-size: 1.2rem;">{{ treeflow.organization.name }}</div>
+            <div class="metric-label">{{ 'organization.singular'|trans }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Steps Section -->
+<div class="infinity-card p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-gradient mb-0">{{ 'step.plural'|trans }} ({{ treeflow.steps|length }})</h2>
+        {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+            <button type="button"
+                    class="btn infinity-btn-primary"
+                    data-controller="modal-opener"
+                    data-modal-opener-url-value="{{ path('step_new', {treeflowId: treeflow.id}) }}"
+                    data-action="click->modal-opener#open">
+                <i class="bi bi-plus-circle me-2"></i>{{ 'step.add.step'|trans }}
+            </button>
+        {% endif %}
+    </div>
+
+    {% if treeflow.steps|length > 0 %}
+        <div class="list-group list-group-flush">
+            {% for step in treeflow.steps %}
+                <div class="list-group-item bg-transparent text-white border-secondary py-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="d-flex align-items-center flex-grow-1">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                                 style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981, #059669);">
+                                <i class="bi bi-signpost text-white"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">
+                                    {{ step.name }}
+                                    {% if step.first %}
+                                        <span class="badge bg-success ms-2">{{ 'step.first'|trans }}</span>
+                                    {% endif %}
+                                </h5>
+                                {% if step.objective %}
+                                    <p class="text-muted mb-0 small">{{ step.objective }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                                    <li>
+                                        <button type="button"
+                                                class="dropdown-item"
+                                                data-controller="modal-opener"
+                                                data-modal-opener-url-value="{{ path('step_edit', {treeflowId: treeflow.id, stepId: step.id}) }}"
+                                                data-action="click->modal-opener#open">
+                                            <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
+                                        </button>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="post" action="{{ path('step_delete', {treeflowId: treeflow.id, stepId: step.id}) }}" class="d-inline" onsubmit="return confirm('{{ 'step.confirm.delete'|trans }}');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete-step-' ~ step.id) }}">
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-signpost text-muted" style="font-size: 3rem;"></i>
+            <p class="text-muted mt-3 mb-3">{{ 'treeflow.no.steps'|trans }}</p>
+            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                <button type="button"
+                        class="btn infinity-btn-primary"
+                        data-controller="modal-opener"
+                        data-modal-opener-url-value="{{ path('step_new', {treeflowId: treeflow.id}) }}"
+                        data-action="click->modal-opener#open">
+                    <i class="bi bi-plus-circle me-2"></i>{{ 'step.add.first.step'|trans }}
+                </button>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Metadata -->
+<div class="infinity-card p-4">
+    <h3 class="text-gradient mb-3">{{ 'treeflow.metadata'|trans }}</h3>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="text-muted small">{{ 'table.created'|trans }}</label>
+            <div class="text-white">{{ treeflow.createdAt|date('M d, Y H:i') }}</div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="text-muted small">{{ 'table.updated'|trans }}</label>
+            <div class="text-white">{{ treeflow.updatedAt|date('M d, Y H:i') }}</div>
+        </div>
+        {% if treeflow.createdBy %}
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small">{{ 'table.created_by'|trans }}</label>
+                <div class="text-white">{{ treeflow.createdBy.name }}</div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

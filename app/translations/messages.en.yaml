@@ -1297,4 +1297,79 @@ course.no_lectures_description: This course doesn't have any lectures yet
 # Waiting status message
 misc.waiting: Waiting...
 
-# Total translations: 696
+# ========================================
+# TreeFlow
+# ========================================
+treeflow.singular: TreeFlow
+treeflow.plural: TreeFlows
+treeflow.name: Name
+treeflow.version: Version
+treeflow.active: Active
+treeflow.inactive: Inactive
+treeflow.steps: Steps
+treeflow.status: Status
+treeflow.total.steps: Total Steps
+treeflow.no.steps: No steps defined yet
+treeflow.metadata: Metadata
+treeflow.back.to.list: Back to TreeFlows
+
+# TreeFlow Form
+treeflow.form.name: TreeFlow Name
+treeflow.form.name_placeholder: Enter TreeFlow name
+treeflow.form.active: Active
+treeflow.form.active_help: Inactive TreeFlows are hidden from users
+
+# TreeFlow Modal
+treeflow.modal.create.title: Create New TreeFlow
+treeflow.modal.create.subtitle: Add a new TreeFlow to guide AI agents
+treeflow.modal.edit.subtitle: Update TreeFlow configuration
+
+# TreeFlow Flash Messages
+treeflow.flash.created_successfully: TreeFlow created successfully
+treeflow.flash.updated_successfully: TreeFlow updated successfully
+treeflow.flash.deleted_successfully: TreeFlow deleted successfully
+treeflow.flash.invalid_csrf_token: Invalid security token
+
+# TreeFlow Button
+treeflow.button.create.treeflow: Create TreeFlow
+
+# TreeFlow Status
+treeflow.status.active: Active
+treeflow.status.inactive: Inactive
+
+# Step
+step.first: FIRST
+step.singular: Step
+step.plural: Steps
+
+# Step Actions
+step.add.step: Add Step
+step.add.first.step: Add First Step
+step.confirm.delete: Are you sure you want to delete this step?
+
+# Step Form
+step.form.name: Step Name
+step.form.name_placeholder: Enter step name
+step.form.first: First Step
+step.form.first_help: Mark this as the starting point of the TreeFlow
+step.form.first_warning: Only one step can be marked as first. Marking this step as first will automatically unmark other steps.
+step.form.objective: Objective
+step.form.objective_placeholder: What should this step achieve?
+step.form.prompt: Prompt
+step.form.prompt_placeholder: Instructions for the AI agent at this step
+
+# Step Modal
+step.modal.create.title: Create New Step
+step.modal.create.subtitle: Add a new step to the TreeFlow
+step.modal.edit.subtitle: Update step configuration
+
+# Step Flash Messages
+step.flash.created_successfully: Step created successfully
+step.flash.updated_successfully: Step updated successfully
+step.flash.deleted_successfully: Step deleted successfully
+step.flash.invalid_csrf_token: Invalid security token
+
+# Step Button
+step.button.create.step: Create Step
+
+# Total translations: 747

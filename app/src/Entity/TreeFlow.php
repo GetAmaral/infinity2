@@ -24,6 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * containing steps with questions, few-shot examples, and conditional routing.
  */
 #[ORM\Entity(repositoryClass: TreeFlowRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ApiResource(
     normalizationContext: ['groups' => ['treeflow:read']],
     denormalizationContext: ['groups' => ['treeflow:write']],
@@ -51,10 +52,9 @@ class TreeFlow extends EntityBase
     #[Groups(['treeflow:read', 'treeflow:write'])]
     protected string $name = '';
 
-    #[ORM\Column(length: 100)]
-    #[Assert\NotBlank]
+    #[ORM\Column(type: 'integer')]
     #[Groups(['treeflow:read', 'treeflow:write'])]
-    protected string $version = '1.0.0';
+    protected int $version = 1;
 
     #[ORM\Column(type: 'boolean')]
     #[Groups(['treeflow:read', 'treeflow:write'])]
@@ -73,6 +73,14 @@ class TreeFlow extends EntityBase
     {
         parent::__construct();
         $this->steps = new ArrayCollection();
+        $this->version = 1; // Start at version 1
+    }
+
+    #[ORM\PreUpdate]
+    public function incrementVersion(): void
+    {
+        // Auto-increment version on each update
+        $this->version++;
     }
 
     public function getName(): string
@@ -86,12 +94,12 @@ class TreeFlow extends EntityBase
         return $this;
     }
 
-    public function getVersion(): string
+    public function getVersion(): int
     {
         return $this->version;
     }
 
-    public function setVersion(string $version): self
+    public function setVersion(int $version): self
     {
         $this->version = $version;
         return $this;

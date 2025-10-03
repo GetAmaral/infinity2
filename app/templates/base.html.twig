@@ -56,6 +56,11 @@
                                 <i class="bi bi-book me-2"></i>{{ 'nav.courses'|trans }}
                             </a>
                         </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('treeflow_index') }}">
+                                <i class="bi bi-diagram-3 me-2"></i>{{ 'treeflow.plural'|trans }}
+                            </a>
+                        </li>
                         {% if is_granted('ROLE_ADMIN') %}
                         <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
                         <li class="px-3 py-1">

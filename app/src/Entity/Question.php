@@ -46,6 +46,10 @@ class Question extends EntityBase
     #[Groups(['question:read', 'question:write'])]
     protected int $importance = 5;
 
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['question:read', 'question:write'])]
+    protected int $viewOrder = 1;
+
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: FewShotExample::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups(['question:read'])]
     protected Collection $examples;
@@ -108,6 +112,17 @@ class Question extends EntityBase
     public function setImportance(int $importance): self
     {
         $this->importance = $importance;
+        return $this;
+    }
+
+    public function getViewOrder(): int
+    {
+        return $this->viewOrder;
+    }
+
+    public function setViewOrder(int $viewOrder): self
+    {
+        $this->viewOrder = $viewOrder;
         return $this;
     }
 
