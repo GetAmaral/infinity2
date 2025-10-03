@@ -558,6 +558,7 @@ course.lecture.form.view_order: Ordem
 course.lecture.form.view_order_placeholder: 1
 course.lecture.watch_video: Assistir Vídeo
 course.lecture.drag.to.reorder: Arraste para reordenar ou mover para outro módulo
+course.module.drag.to.reorder: Arraste para reordenar módulo
 
 # ========================================
 # Course Lecture Validation

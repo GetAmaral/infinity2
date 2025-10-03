@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\FewShotExample;
+use App\Entity\Question;
+use App\Entity\Step;
+use App\Entity\StepInput;
+use App\Entity\StepOutput;
 use App\Entity\TreeFlow;
 use App\Form\TreeFlowFormType;
 use App\Repository\TreeFlowRepository;
@@ -96,8 +101,26 @@ final class TreeFlowController extends BaseApiController
     }
 
     #[Route('/{id}', name: 'treeflow_show', requirements: ['id' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['GET'])]
-    public function show(TreeFlow $treeFlow): Response
+    public function show(string $id): Response
     {
+        // Performance Optimization (Phase 5): Use eager loading to prevent N+1 queries
+        // Single optimized query that loads TreeFlow with all nested relations
+        $treeFlow = $this->repository->createQueryBuilder('t')
+            ->where('t.id = :id')
+            ->setParameter('id', $id)
+            ->leftJoin('t.steps', 's')
+            ->leftJoin('s.questions', 'q')
+            ->leftJoin('q.fewShotExamples', 'e')
+            ->leftJoin('s.outputs', 'o')
+            ->leftJoin('s.inputs', 'i')
+            ->addSelect('s', 'q', 'e', 'o', 'i')
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$treeFlow) {
+            throw $this->createNotFoundException('TreeFlow not found');
+        }
+
         $this->denyAccessUnlessGranted(TreeFlowVoter::VIEW, $treeFlow);
 
         return $this->render('treeflow/show.html.twig', [
@@ -187,7 +210,7 @@ final class TreeFlowController extends BaseApiController
     }
 
     /**
-     * Transform TreeFlow entity to array for JSON API response (Phase 1 - Basic)
+     * Transform TreeFlow entity to array for JSON API response (Phase 5 - Deep Nested)
      */
     protected function entityToArray(object $entity): array
     {
@@ -196,6 +219,7 @@ final class TreeFlowController extends BaseApiController
         return [
             'id' => $entity->getId()?->toString(),
             'name' => $entity->getName(),
+            'slug' => $entity->getSlug(),
             'version' => $entity->getVersion(),
             'active' => $entity->isActive(),
             'organizationId' => $entity->getOrganization()->getId()?->toString(),
@@ -205,6 +229,69 @@ final class TreeFlowController extends BaseApiController
             'createdAtFormatted' => $entity->getCreatedAt()->format('M d, Y'),
             'updatedAtFormatted' => $entity->getUpdatedAt()->format('M d, Y'),
             'createdByName' => $entity->getCreatedBy()?->getName(),
+
+            // DEEP NESTED DATA (Phase 5)
+            'steps' => array_map(function(Step $step) {
+                return [
+                    'id' => $step->getId()?->toString(),
+                    'name' => $step->getName(),
+                    'slug' => $step->getSlug(),
+                    'first' => $step->isFirst(),
+                    'objective' => $step->getObjective(),
+                    'prompt' => $step->getPrompt(),
+
+                    // Questions with FewShots
+                    'questions' => array_map(function(Question $q) {
+                        return [
+                            'id' => $q->getId()?->toString(),
+                            'name' => $q->getName(),
+                            'slug' => $q->getSlug(),
+                            'prompt' => $q->getPrompt(),
+                            'objective' => $q->getObjective(),
+                            'importance' => $q->getImportance(),
+                            'viewOrder' => $q->getViewOrder(),
+
+                            // FewShot Examples
+                            'examples' => array_map(function(FewShotExample $ex) {
+                                return [
+                                    'id' => $ex->getId()?->toString(),
+                                    'type' => $ex->getType()->value,
+                                    'name' => $ex->getName(),
+                                    'slug' => $ex->getSlug(),
+                                    'prompt' => $ex->getPrompt(),
+                                    'description' => $ex->getDescription(),
+                                ];
+                            }, $q->getFewShotExamples()->toArray()),
+                        ];
+                    }, $step->getQuestions()->toArray()),
+
+                    // Outputs
+                    'outputs' => array_map(function(StepOutput $out) {
+                        return [
+                            'id' => $out->getId()?->toString(),
+                            'name' => $out->getName(),
+                            'slug' => $out->getSlug(),
+                            'description' => $out->getDescription(),
+                            'conditional' => $out->getConditional(),
+                            'destinationStepId' => $out->getDestinationStep()?->getId()?->toString(),
+                            'destinationStepName' => $out->getDestinationStep()?->getName(),
+                        ];
+                    }, $step->getOutputs()->toArray()),
+
+                    // Inputs
+                    'inputs' => array_map(function(StepInput $in) {
+                        return [
+                            'id' => $in->getId()?->toString(),
+                            'name' => $in->getName(),
+                            'slug' => $in->getSlug(),
+                            'type' => $in->getType()->value,
+                            'sourceStepId' => $in->getSourceStep()?->getId()?->toString(),
+                            'sourceStepName' => $in->getSourceStep()?->getName(),
+                            'prompt' => $in->getPrompt(),
+                        ];
+                    }, $step->getInputs()->toArray()),
+                ];
+            }, $entity->getSteps()->toArray()),
         ];
     }
 }

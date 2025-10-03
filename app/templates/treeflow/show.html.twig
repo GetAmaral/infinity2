@@ -81,7 +81,7 @@
     </div>
 </div>
 
-<!-- Steps Section -->
+<!-- Steps Accordion with All Content -->
 <div class="infinity-card p-4 mb-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-gradient mb-0">{{ 'step.plural'|trans }} ({{ treeflow.steps|length }})</h2>
@@ -97,103 +97,91 @@
     </div>
 
     {% if treeflow.steps|length > 0 %}
-        <div class="list-group list-group-flush">
+        <!-- Steps Accordion -->
+        <div class="accordion" id="stepsAccordion">
             {% for step in treeflow.steps %}
-                <div class="list-group-item bg-transparent text-white border-secondary py-3">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div class="d-flex align-items-center flex-grow-1">
+                <div class="accordion-item infinity-card mb-3" data-step-id="{{ step.id }}">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button {{ loop.first ? '' : 'collapsed' }}"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#step-{{ step.id }}"
+                                aria-expanded="{{ loop.first ? 'true' : 'false' }}"
+                                style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.2)); color: white; border-radius: 12px;">
+                            <span class="drag-handle me-3" style="cursor: move;">
+                                <i class="bi bi-grip-vertical"></i>
+                            </span>
                             <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                                 style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981, #059669);">
+                                 style="width: 35px; height: 35px; min-width: 35px; background: linear-gradient(135deg, #10b981, #059669);">
                                 <i class="bi bi-signpost text-white"></i>
                             </div>
                             <div class="flex-grow-1">
-                                <h5 class="mb-1">
-                                    {{ step.name }}
-                                    {% if step.first %}
-                                        <span class="badge bg-success ms-2">{{ 'step.first'|trans }}</span>
-                                    {% endif %}
-                                </h5>
-                                {% if step.objective %}
-                                    <p class="text-muted mb-0 small">{{ step.objective }}</p>
+                                <strong class="me-2">{{ step.name }}</strong>
+                                {% if step.first %}
+                                    <span class="badge bg-success">{{ 'step.first'|trans }}</span>
                                 {% endif %}
+                                <div class="d-flex gap-2 mt-1">
+                                    <span class="badge bg-primary">{{ step.questions|length }} {{ 'question.plural'|trans }}</span>
+                                    <span class="badge bg-success">{{ step.outputs|length }} {{ 'output.plural'|trans }}</span>
+                                    <span class="badge bg-warning text-dark">{{ step.inputs|length }} {{ 'input.plural'|trans }}</span>
+                                </div>
                             </div>
-                        </div>
-                        {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
-                                    <li>
-                                        <button type="button"
-                                                class="dropdown-item"
-                                                data-controller="modal-opener"
-                                                data-modal-opener-url-value="{{ path('step_edit', {treeflowId: treeflow.id, stepId: step.id}) }}"
-                                                data-action="click->modal-opener#open">
-                                            <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
-                                        </button>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <form method="post" action="{{ path('step_delete', {treeflowId: treeflow.id, stepId: step.id}) }}" class="d-inline" onsubmit="return confirm('{{ 'step.confirm.delete'|trans }}');">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete-step-' ~ step.id) }}">
-                                            <button type="submit" class="dropdown-item text-danger">
-                                                <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
+                            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                                <div class="dropdown" onclick="event.stopPropagation();">
+                                    <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}" type="button">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                                        <li>
+                                            <button type="button"
+                                                    class="dropdown-item"
+                                                    data-controller="modal-opener"
+                                                    data-modal-opener-url-value="{{ path('step_edit', {treeflowId: treeflow.id, stepId: step.id}) }}"
+                                                    data-action="click->modal-opener#open">
+                                                <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
                                             </button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="text-center py-5">
-            <i class="bi bi-signpost text-muted" style="font-size: 3rem;"></i>
-            <p class="text-muted mt-3 mb-3">{{ 'treeflow.no.steps'|trans }}</p>
-            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                <button type="button"
-                        class="btn infinity-btn-primary"
-                        data-controller="modal-opener"
-                        data-modal-opener-url-value="{{ path('step_new', {treeflowId: treeflow.id}) }}"
-                        data-action="click->modal-opener#open">
-                    <i class="bi bi-plus-circle me-2"></i>{{ 'step.add.first.step'|trans }}
-                </button>
-            {% endif %}
-        </div>
-    {% endif %}
-</div>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form method="post" action="{{ path('step_delete', {treeflowId: treeflow.id, stepId: step.id}) }}" class="d-inline" onsubmit="return confirm('{{ 'step.confirm.delete'|trans }}');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete-step-' ~ step.id) }}">
+                                                <button type="submit" class="dropdown-item text-danger">
+                                                    <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </button>
+                    </h2>
+                    <div id="step-{{ step.id }}"
+                         class="accordion-collapse collapse {{ loop.first ? 'show' : '' }}"
+                         data-bs-parent="#stepsAccordion">
+                        <div class="accordion-body" style="background: rgba(30, 41, 59, 0.5); border-radius: 0 0 12px 12px;">
 
-<!-- Questions & FewShot Examples Section -->
-<div class="infinity-card p-4 mb-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-gradient mb-0">{{ 'question.plural'|trans }}</h2>
-    </div>
+                            {# Step Details #}
+                            {% if step.objective %}
+                                <div class="mb-4 p-3 rounded" style="background: rgba(139, 92, 246, 0.1); border-left: 3px solid #8b5cf6;">
+                                    <small class="text-muted d-block mb-1">{{ 'step.form.objective'|trans }}</small>
+                                    <p class="mb-0">{{ step.objective }}</p>
+                                </div>
+                            {% endif %}
 
-    {% if treeflow.steps|length > 0 %}
-        {% set totalQuestions = 0 %}
-        {% for step in treeflow.steps %}
-            {% set totalQuestions = totalQuestions + step.questions|length %}
-        {% endfor %}
+                            {% if step.prompt %}
+                                <div class="mb-4 p-3 rounded" style="background: rgba(139, 92, 246, 0.1); border-left: 3px solid #7c3aed;">
+                                    <small class="text-muted d-block mb-1">{{ 'step.form.prompt'|trans }}</small>
+                                    <p class="mb-0">{{ step.prompt }}</p>
+                                </div>
+                            {% endif %}
 
-        {% if totalQuestions > 0 %}
-            <!-- Questions by Step -->
-            <div class="accordion" id="questionsAccordion">
-                {% for step in treeflow.steps %}
-                    {% if step.questions|length > 0 %}
-                        <div class="accordion-item bg-transparent border-secondary mb-2">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step-{{ step.id }}-questions" style="background: rgba(59, 130, 246, 0.1); color: white;">
-                                    <i class="bi bi-signpost me-2"></i>
-                                    <strong>{{ step.name }}</strong>
-                                    <span class="badge bg-primary ms-2">{{ step.questions|length }} {{ 'question.plural'|trans }}</span>
-                                </button>
-                            </h2>
-                            <div id="step-{{ step.id }}-questions" class="accordion-collapse collapse" data-bs-parent="#questionsAccordion">
-                                <div class="accordion-body bg-transparent">
-                                    <!-- Questions List -->
+                            {# Questions Section #}
+                            <div class="mb-4">
+                                <h6 class="text-primary mb-3">
+                                    <i class="bi bi-question-circle me-2"></i>{{ 'question.plural'|trans }} ({{ step.questions|length }})
+                                </h6>
+
+                                {% if step.questions|length > 0 %}
                                     <div class="list-group list-group-flush">
                                         {% for question in step.questions|sort((a, b) => a.viewOrder <=> b.viewOrder) %}
                                             <div class="list-group-item bg-transparent text-white border-secondary py-3">
@@ -216,7 +204,7 @@
                                                             <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
                                                                 <i class="bi bi-three-dots-vertical"></i>
                                                             </button>
-                                                            <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                                                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">
                                                                 <li>
                                                                     <button type="button"
                                                                             class="dropdown-item"
@@ -249,7 +237,7 @@
                                                     {% endif %}
                                                 </div>
 
-                                                <!-- FewShot Examples for this Question -->
+                                                {# FewShot Examples #}
                                                 {% if question.fewShotExamples|length > 0 %}
                                                     <div class="ms-5 mt-3">
                                                         <div class="small text-muted mb-2">
@@ -320,180 +308,184 @@
                                             </div>
                                         {% endfor %}
                                     </div>
+                                {% endif %}
 
-                                    <!-- Add Question Button -->
-                                    {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                        <div class="text-center mt-3">
-                                            <button type="button"
-                                                    class="btn btn-sm infinity-btn-primary"
-                                                    data-controller="modal-opener"
-                                                    data-modal-opener-url-value="{{ path('question_new', {treeflowId: treeflow.id, stepId: step.id}) }}"
-                                                    data-action="click->modal-opener#open">
-                                                <i class="bi bi-plus-circle me-2"></i>{{ 'question.add.question'|trans }}
-                                            </button>
-                                        </div>
-                                    {% endif %}
-
-                                    <!-- Outputs Section -->
-                                    <div class="mt-4 pt-4 border-top border-secondary">
-                                        <h6 class="text-success mb-3">
-                                            <i class="bi bi-arrow-right-circle me-2"></i>{{ 'output.plural'|trans }} ({{ step.outputs|length }})
-                                        </h6>
-
-                                        {% if step.outputs|length > 0 %}
-                                            <div class="list-group list-group-flush">
-                                                {% for output in step.outputs %}
-                                                    <div class="list-group-item bg-transparent text-white border-secondary py-3">
-                                                        <div class="d-flex justify-content-between align-items-start">
-                                                            <div class="flex-grow-1">
-                                                                <div class="d-flex align-items-center gap-2 mb-2">
-                                                                    <strong>{{ output.name }}</strong>
-                                                                    {% if output.destinationStep %}
-                                                                        <span class="badge bg-success">→ {{ output.destinationStep.name }}</span>
-                                                                    {% endif %}
-                                                                </div>
-                                                                {% if output.description %}
-                                                                    <p class="text-muted mb-1 small">{{ output.description }}</p>
-                                                                {% endif %}
-                                                                {% if output.conditional %}
-                                                                    <div class="mt-2">
-                                                                        <small class="text-info">
-                                                                            <i class="bi bi-code-slash me-1"></i>
-                                                                            <code class="text-info">{{ output.conditional }}</code>
-                                                                        </small>
-                                                                    </div>
-                                                                {% endif %}
-                                                            </div>
-                                                            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                                                <div class="dropdown">
-                                                                    <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
-                                                                        <i class="bi bi-three-dots-vertical"></i>
-                                                                    </button>
-                                                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">
-                                                                        <li>
-                                                                            <button type="button"
-                                                                                    class="dropdown-item"
-                                                                                    data-controller="modal-opener"
-                                                                                    data-modal-opener-url-value="{{ path('output_edit', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}) }}"
-                                                                                    data-action="click->modal-opener#open">
-                                                                                <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
-                                                                            </button>
-                                                                        </li>
-                                                                        <li><hr class="dropdown-divider"></li>
-                                                                        <li>
-                                                                            <form method="post" action="{{ path('output_delete', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}) }}" class="d-inline" onsubmit="return confirm('{{ 'output.confirm.delete'|trans }}');">
-                                                                                <input type="hidden" name="_token" value="{{ csrf_token('delete-output-' ~ output.id) }}">
-                                                                                <button type="submit" class="dropdown-item text-danger">
-                                                                                    <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
-                                                                                </button>
-                                                                            </form>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-
-                                        {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                            <div class="text-center mt-3">
-                                                <button type="button"
-                                                        class="btn btn-sm btn-outline-success"
-                                                        data-controller="modal-opener"
-                                                        data-modal-opener-url-value="{{ path('output_new', {treeflowId: treeflow.id, stepId: step.id}) }}"
-                                                        data-action="click->modal-opener#open">
-                                                    <i class="bi bi-plus-circle me-2"></i>{{ 'output.add.output'|trans }}
-                                                </button>
-                                            </div>
-                                        {% endif %}
+                                {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                                    <div class="text-center mt-3">
+                                        <button type="button"
+                                                class="btn btn-sm infinity-btn-primary"
+                                                data-controller="modal-opener"
+                                                data-modal-opener-url-value="{{ path('question_new', {treeflowId: treeflow.id, stepId: step.id}) }}"
+                                                data-action="click->modal-opener#open">
+                                            <i class="bi bi-plus-circle me-2"></i>{{ 'question.add.question'|trans }}
+                                        </button>
                                     </div>
-
-                                    <!-- Inputs Section -->
-                                    <div class="mt-4 pt-4 border-top border-secondary">
-                                        <h6 class="text-warning mb-3">
-                                            <i class="bi bi-arrow-left-circle me-2"></i>{{ 'input.plural'|trans }} ({{ step.inputs|length }})
-                                        </h6>
-
-                                        {% if step.inputs|length > 0 %}
-                                            <div class="list-group list-group-flush">
-                                                {% for input in step.inputs %}
-                                                    <div class="list-group-item bg-transparent text-white border-secondary py-3">
-                                                        <div class="d-flex justify-content-between align-items-start">
-                                                            <div class="flex-grow-1">
-                                                                <div class="d-flex align-items-center gap-2 mb-2">
-                                                                    <strong>{{ input.name }}</strong>
-                                                                    <span class="badge bg-warning text-dark">{{ ('input.type.' ~ input.type.value)|trans }}</span>
-                                                                    {% if input.sourceStep %}
-                                                                        <span class="badge bg-secondary">← {{ input.sourceStep.name }}</span>
-                                                                    {% endif %}
-                                                                </div>
-                                                                {% if input.prompt %}
-                                                                    <p class="text-muted mb-0 small">{{ input.prompt|u.truncate(100, '...') }}</p>
-                                                                {% endif %}
-                                                            </div>
-                                                            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                                                <div class="dropdown">
-                                                                    <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
-                                                                        <i class="bi bi-three-dots-vertical"></i>
-                                                                    </button>
-                                                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">
-                                                                        <li>
-                                                                            <button type="button"
-                                                                                    class="dropdown-item"
-                                                                                    data-controller="modal-opener"
-                                                                                    data-modal-opener-url-value="{{ path('input_edit', {treeflowId: treeflow.id, stepId: step.id, inputId: input.id}) }}"
-                                                                                    data-action="click->modal-opener#open">
-                                                                                <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
-                                                                            </button>
-                                                                        </li>
-                                                                        <li><hr class="dropdown-divider"></li>
-                                                                        <li>
-                                                                            <form method="post" action="{{ path('input_delete', {treeflowId: treeflow.id, stepId: step.id, inputId: input.id}) }}" class="d-inline" onsubmit="return confirm('{{ 'input.confirm.delete'|trans }}');">
-                                                                                <input type="hidden" name="_token" value="{{ csrf_token('delete-input-' ~ input.id) }}">
-                                                                                <button type="submit" class="dropdown-item text-danger">
-                                                                                    <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
-                                                                                </button>
-                                                                            </form>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-
-                                        {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                            <div class="text-center mt-3">
-                                                <button type="button"
-                                                        class="btn btn-sm btn-outline-warning"
-                                                        data-controller="modal-opener"
-                                                        data-modal-opener-url-value="{{ path('input_new', {treeflowId: treeflow.id, stepId: step.id}) }}"
-                                                        data-action="click->modal-opener#open">
-                                                    <i class="bi bi-plus-circle me-2"></i>{{ 'input.add.input'|trans }}
-                                                </button>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
+                                {% endif %}
                             </div>
+
+                            {# Outputs Section #}
+                            <div class="mb-4">
+                                <h6 class="text-success mb-3">
+                                    <i class="bi bi-arrow-right-circle me-2"></i>{{ 'output.plural'|trans }} ({{ step.outputs|length }})
+                                </h6>
+
+                                {% if step.outputs|length > 0 %}
+                                    <div class="list-group list-group-flush">
+                                        {% for output in step.outputs %}
+                                            <div class="list-group-item bg-transparent text-white border-secondary py-3">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                                            <strong>{{ output.name }}</strong>
+                                                            {% if output.destinationStep %}
+                                                                <span class="badge bg-success">→ {{ output.destinationStep.name }}</span>
+                                                            {% endif %}
+                                                        </div>
+                                                        {% if output.description %}
+                                                            <p class="text-muted mb-1 small">{{ output.description }}</p>
+                                                        {% endif %}
+                                                        {% if output.conditional %}
+                                                            <div class="mt-2">
+                                                                <small class="text-info">
+                                                                    <i class="bi bi-code-slash me-1"></i>
+                                                                    <code class="text-info">{{ output.conditional }}</code>
+                                                                </small>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
+                                                                <i class="bi bi-three-dots-vertical"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                                                                <li>
+                                                                    <button type="button"
+                                                                            class="dropdown-item"
+                                                                            data-controller="modal-opener"
+                                                                            data-modal-opener-url-value="{{ path('output_edit', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}) }}"
+                                                                            data-action="click->modal-opener#open">
+                                                                        <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
+                                                                    </button>
+                                                                </li>
+                                                                <li><hr class="dropdown-divider"></li>
+                                                                <li>
+                                                                    <form method="post" action="{{ path('output_delete', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}) }}" class="d-inline" onsubmit="return confirm('{{ 'output.confirm.delete'|trans }}');">
+                                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete-output-' ~ output.id) }}">
+                                                                        <button type="submit" class="dropdown-item text-danger">
+                                                                            <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                                    <div class="text-center mt-3">
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-success"
+                                                data-controller="modal-opener"
+                                                data-modal-opener-url-value="{{ path('output_new', {treeflowId: treeflow.id, stepId: step.id}) }}"
+                                                data-action="click->modal-opener#open">
+                                            <i class="bi bi-plus-circle me-2"></i>{{ 'output.add.output'|trans }}
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {# Inputs Section #}
+                            <div class="mb-2">
+                                <h6 class="text-warning mb-3">
+                                    <i class="bi bi-arrow-left-circle me-2"></i>{{ 'input.plural'|trans }} ({{ step.inputs|length }})
+                                </h6>
+
+                                {% if step.inputs|length > 0 %}
+                                    <div class="list-group list-group-flush">
+                                        {% for input in step.inputs %}
+                                            <div class="list-group-item bg-transparent text-white border-secondary py-3">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                                            <strong>{{ input.name }}</strong>
+                                                            <span class="badge bg-warning text-dark">{{ ('input.type.' ~ input.type.value)|trans }}</span>
+                                                            {% if input.sourceStep %}
+                                                                <span class="badge bg-secondary">← {{ input.sourceStep.name }}</span>
+                                                            {% endif %}
+                                                        </div>
+                                                        {% if input.prompt %}
+                                                            <p class="text-muted mb-0 small">{{ input.prompt|u.truncate(100, '...') }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                    {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
+                                                                <i class="bi bi-three-dots-vertical"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                                                                <li>
+                                                                    <button type="button"
+                                                                            class="dropdown-item"
+                                                                            data-controller="modal-opener"
+                                                                            data-modal-opener-url-value="{{ path('input_edit', {treeflowId: treeflow.id, stepId: step.id, inputId: input.id}) }}"
+                                                                            data-action="click->modal-opener#open">
+                                                                        <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
+                                                                    </button>
+                                                                </li>
+                                                                <li><hr class="dropdown-divider"></li>
+                                                                <li>
+                                                                    <form method="post" action="{{ path('input_delete', {treeflowId: treeflow.id, stepId: step.id, inputId: input.id}) }}" class="d-inline" onsubmit="return confirm('{{ 'input.confirm.delete'|trans }}');">
+                                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete-input-' ~ input.id) }}">
+                                                                        <button type="submit" class="dropdown-item text-danger">
+                                                                            <i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                                    <div class="text-center mt-3">
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-warning"
+                                                data-controller="modal-opener"
+                                                data-modal-opener-url-value="{{ path('input_new', {treeflowId: treeflow.id, stepId: step.id}) }}"
+                                                data-action="click->modal-opener#open">
+                                            <i class="bi bi-plus-circle me-2"></i>{{ 'input.add.input'|trans }}
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </div>
+
                         </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="text-center py-5">
-                <i class="bi bi-question-circle text-muted" style="font-size: 3rem;"></i>
-                <p class="text-muted mt-3 mb-0">{{ 'treeflow.no.questions'|trans }}</p>
-                <p class="text-muted small">{{ 'treeflow.add.questions.to.steps'|trans }}</p>
-            </div>
-        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     {% else %}
-        <div class="text-center py-4">
-            <p class="text-muted">{{ 'treeflow.add.steps.first'|trans }}</p>
+        <div class="text-center py-5">
+            <i class="bi bi-signpost text-muted" style="font-size: 3rem;"></i>
+            <p class="text-muted mt-3 mb-3">{{ 'treeflow.no.steps'|trans }}</p>
+            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
+                <button type="button"
+                        class="btn infinity-btn-primary"
+                        data-controller="modal-opener"
+                        data-modal-opener-url-value="{{ path('step_new', {treeflowId: treeflow.id}) }}"
+                        data-action="click->modal-opener#open">
+                    <i class="bi bi-plus-circle me-2"></i>{{ 'step.add.first.step'|trans }}
+                </button>
+            {% endif %}
         </div>
     {% endif %}
 </div>
@@ -518,4 +510,76 @@
         {% endif %}
     </div>
 </div>
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- Sortable.js for drag-and-drop reordering -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stepsAccordion = document.getElementById('stepsAccordion');
+
+            if (stepsAccordion) {
+                const sortable = new Sortable(stepsAccordion, {
+                    handle: '.drag-handle',
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    onEnd: function(evt) {
+                        // Collect new step order
+                        const stepOrder = [...document.querySelectorAll('[data-step-id]')]
+                            .map((el, index) => ({
+                                id: el.dataset.stepId,
+                                order: index
+                            }));
+
+                        // Send reorder request to backend
+                        fetch('{{ path('step_reorder', {treeflowId: treeflow.id}) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({ steps: stepOrder })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log('Steps reordered successfully');
+                            } else {
+                                console.error('Failed to reorder steps:', data.message);
+                                // Optionally revert the UI change
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error reordering steps:', error);
+                            // Optionally revert the UI change
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+
+    <style>
+        /* Sortable.js ghost and drag classes */
+        .sortable-ghost {
+            opacity: 0.4;
+            background: rgba(139, 92, 246, 0.3);
+        }
+
+        .sortable-drag {
+            opacity: 1;
+            cursor: grabbing !important;
+        }
+
+        .drag-handle {
+            cursor: grab;
+            user-select: none;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+    </style>
 {% endblock %}

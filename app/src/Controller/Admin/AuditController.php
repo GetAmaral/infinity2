@@ -42,18 +42,26 @@ class AuditController extends AbstractController
         $form = $this->createForm(AuditSearchType::class);
         $form->handleRequest($request);
 
+        // Pagination
+        $page = max(1, $request->query->getInt('page', 1));
+        $itemsPerPage = 50; // Optimal for audit logs
+
         $auditLogs = [];
         $totalCount = 0;
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $auditLogs = $this->searchAuditLogs($data);
-            $totalCount = count($auditLogs);
+            $auditLogs = $this->searchAuditLogs($data, $page, $itemsPerPage);
+            $totalCount = $this->countSearchResults($data);
         } else {
-            // Default: show recent 100 audit events
-            $auditLogs = $this->auditLogRepository->findRecent(100);
-            $totalCount = count($auditLogs);
+            // Default: show recent audit events with pagination
+            $offset = ($page - 1) * $itemsPerPage;
+            $allLogs = $this->auditLogRepository->findRecent(10000); // Get all for total count
+            $totalCount = count($allLogs);
+            $auditLogs = array_slice($allLogs, $offset, $itemsPerPage);
         }
+
+        $totalPages = (int) ceil($totalCount / $itemsPerPage);
 
         // Get analytics data for dashboard
         $stats = [
@@ -74,6 +82,9 @@ class AuditController extends AbstractController
             'stats' => $stats,
             'actionBreakdown' => $actionBreakdown,
             'topUsers' => $topUsers,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'itemsPerPage' => $itemsPerPage,
         ]);
     }
 
@@ -160,9 +171,9 @@ class AuditController extends AbstractController
     }
 
     /**
-     * Search audit logs based on form criteria
+     * Search audit logs based on form criteria with pagination
      */
-    private function searchAuditLogs(array $data): array
+    private function searchAuditLogs(array $data, int $page, int $itemsPerPage): array
     {
         // Start with all logs
         $auditLogs = $this->auditLogRepository->findRecent(10000);
@@ -202,6 +213,44 @@ class AuditController extends AbstractController
             });
         }
 
-        return array_values($auditLogs);
+        $auditLogs = array_values($auditLogs);
+
+        // Apply pagination
+        $offset = ($page - 1) * $itemsPerPage;
+        return array_slice($auditLogs, $offset, $itemsPerPage);
+    }
+
+    /**
+     * Count search results for pagination
+     */
+    private function countSearchResults(array $data): int
+    {
+        // Start with all logs
+        $auditLogs = $this->auditLogRepository->findRecent(10000);
+
+        // Apply same filters
+        if (!empty($data['entityClass'])) {
+            $auditLogs = array_filter($auditLogs, fn($log) => $log->getEntityClass() === $data['entityClass']);
+        }
+
+        if (!empty($data['action'])) {
+            $auditLogs = array_filter($auditLogs, fn($log) => $log->getAction() === $data['action']);
+        }
+
+        if (!empty($data['user'])) {
+            $auditLogs = array_filter($auditLogs, fn($log) =>
+                $log->getUser() && $log->getUser()->getId()->equals($data['user']->getId())
+            );
+        }
+
+        if (!empty($data['dateFrom'])) {
+            $auditLogs = array_filter($auditLogs, fn($log) => $log->getCreatedAt() >= $data['dateFrom']);
+        }
+
+        if (!empty($data['dateTo'])) {
+            $auditLogs = array_filter($auditLogs, fn($log) => $log->getCreatedAt() <= $data['dateTo']);
+        }
+
+        return count($auditLogs);
     }
 }

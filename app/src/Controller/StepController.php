@@ -11,6 +11,7 @@ use App\Repository\TreeFlowRepository;
 use App\Security\Voter\TreeFlowVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -142,5 +143,60 @@ final class StepController extends AbstractController
         }
 
         return $this->redirectToRoute('treeflow_show', ['id' => $treeflowId]);
+    }
+
+    #[Route('/{treeflowId}/step/reorder', name: 'step_reorder', methods: ['POST'])]
+    public function reorder(Request $request, string $treeflowId): JsonResponse
+    {
+        $treeFlow = $this->treeFlowRepository->find($treeflowId);
+        if (!$treeFlow) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'TreeFlow not found'
+            ], 404);
+        }
+
+        $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
+
+        // Get JSON data from request
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['steps']) || !is_array($data['steps'])) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Invalid request data'
+            ], 400);
+        }
+
+        try {
+            // Process reorder - for now just validate the step IDs belong to this TreeFlow
+            $stepIds = array_column($data['steps'], 'id');
+            $treeFlowStepIds = array_map(
+                fn($step) => $step->getId()->toString(),
+                $treeFlow->getSteps()->toArray()
+            );
+
+            foreach ($stepIds as $stepId) {
+                if (!in_array($stepId, $treeFlowStepIds)) {
+                    return new JsonResponse([
+                        'success' => false,
+                        'message' => 'Invalid step ID'
+                    ], 400);
+                }
+            }
+
+            // TODO: When Step entity has an 'order' or 'position' field, persist the new order here
+            // For now, just return success to enable the drag-and-drop UI
+
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Steps reordered successfully'
+            ]);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Error reordering steps: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

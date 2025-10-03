@@ -148,18 +148,28 @@
                     {% endif %}
                 </div>
             {% else %}
-                <div class="accordion" id="modulesAccordion">
+                <div class="accordion"
+                     id="modulesAccordion"
+                     data-controller="module-reorder"
+                     data-module-reorder-update-url-value="{{ path('course_modules_reorder', {courseId: course.id}) }}"
+                     data-module-reorder-course-id-value="{{ course.id }}">
                     {% for module in modules %}
-                        <div class="accordion-item mb-3" style="background: var(--infinity-card-bg); border: 1px solid var(--infinity-border-color); border-radius: 8px; overflow: hidden;">
-                            <h2 class="accordion-header d-flex align-items-center" id="heading-module-{{ module.id }}">
-                                <button class="accordion-button flex-grow-1"
+                        <div class="module-wrapper mb-3" data-module-id="{{ module.id }}" data-module-reorder-target="module">
+                            <div class="accordion-item" style="background: var(--infinity-card-bg); border: 1px solid var(--infinity-border-color); border-radius: 8px; overflow: hidden;">
+                                <h2 class="accordion-header d-flex align-items-center" id="heading-module-{{ module.id }}">
+                                    {% if is_granted('COURSE_EDIT', course) %}
+                                        <div class="module-drag-handle me-2" title="{{ 'course.module.drag.to.reorder'|trans }}">
+                                            <i class="bi bi-grip-vertical"></i>
+                                        </div>
+                                    {% endif %}
+                                    <button class="accordion-button flex-grow-1"
                                         type="button"
                                         data-bs-toggle="collapse"
                                         data-bs-target="#collapse-module-{{ module.id }}"
                                         aria-expanded="true"
                                         aria-controls="collapse-module-{{ module.id }}"
                                         style="background: var(--infinity-card-bg); color: white; border: none; padding: 1.25rem;">
-                                    <div class="p-2 rounded-3 me-3" style="background: linear-gradient(135deg, #f59e0b, #d97706); min-width: 48px; display: flex; align-items: center; justify-content: center;">
+                                    <div class="p-2 rounded-3 me-3 module-order-badge" style="background: linear-gradient(135deg, #f59e0b, #d97706); min-width: 48px; display: flex; align-items: center; justify-content: center;">
                                         <span class="text-white fw-bold">{{ module.viewOrder }}</span>
                                     </div>
                                     <div class="flex-grow-1">
@@ -183,7 +193,8 @@
                                                 data-modal-opener-url-value="{{ path('course_module_edit', {courseId: course.id, moduleId: module.id}) }}"
                                                 data-action="click->modal-opener#open"
                                                 data-bs-toggle="tooltip"
-                                                data-bs-title="{{ 'button.edit'|trans }}">
+                                                data-bs-title="{{ 'button.edit'|trans }}"
+                                                style="min-width: 32px;">
                                             <i class="bi bi-pencil"></i>
                                         </button>
                                         <button type="button"
@@ -192,7 +203,8 @@
                                                 data-entity-name="{{ module.name }}"
                                                 data-csrf-token="{{ csrf_token('delete-module-' ~ module.id) }}"
                                                 data-bs-toggle="tooltip"
-                                                data-bs-title="{{ 'button.delete'|trans }}">
+                                                data-bs-title="{{ 'button.delete'|trans }}"
+                                                style="min-width: 32px;">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
@@ -339,6 +351,7 @@
                                         {% endfor %}
                                     {% endif %}
                                 </div>
+                            </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -753,6 +766,95 @@
     cursor: grabbing;
     color: var(--infinity-neon, #00f5ff);
     background: rgba(0, 245, 255, 0.15);
+}
+
+/* Module Drag and Drop */
+.module-drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 100%;
+    min-height: 60px;
+    color: var(--infinity-text-muted, rgba(255, 255, 255, 0.3));
+    cursor: grab;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+}
+
+.module-drag-handle:hover {
+    color: var(--infinity-neon, #00f5ff);
+    background: rgba(0, 245, 255, 0.1);
+}
+
+.module-wrapper[draggable="true"]:active .module-drag-handle {
+    cursor: grabbing;
+    color: var(--infinity-neon, #00f5ff);
+    background: rgba(0, 245, 255, 0.15);
+}
+
+.module-wrapper.drag-over-top::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--infinity-neon, #00f5ff);
+    border-radius: 2px;
+    box-shadow: 0 0 12px rgba(0, 245, 255, 0.6);
+    z-index: 10;
+    animation: pulseGlow 0.8s ease-in-out infinite;
+}
+
+.module-wrapper.drag-over-bottom::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--infinity-neon, #00f5ff);
+    border-radius: 2px;
+    box-shadow: 0 0 12px rgba(0, 245, 255, 0.6);
+    z-index: 10;
+    animation: pulseGlow 0.8s ease-in-out infinite;
+}
+
+.module-wrapper {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+/* Module Reorder Indicators */
+.module-reorder-indicator {
+    padding: 12px 20px;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    animation: slideInDown 0.3s ease-out;
+}
+
+.module-reorder-indicator.saving {
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #60a5fa;
+}
+
+.module-reorder-indicator.success {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
+}
+
+.module-reorder-indicator.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
 }
 </style>
 {% endblock %}

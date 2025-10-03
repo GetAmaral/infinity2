@@ -19,6 +19,7 @@ use App\Repository\UserRepository;
 use App\Service\ListPreferencesService;
 use App\Security\Voter\CourseVoter;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -397,6 +398,48 @@ final class CourseController extends BaseApiController
             return $this->json([
                 'success' => false,
                 'message' => 'Failed to update lecture order: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    #[Route('/{courseId}/modules/reorder', name: 'course_modules_reorder', requirements: ['courseId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['POST'])]
+    public function reorderModules(Request $request, #[MapEntity(id: 'courseId')] Course $course): Response
+    {
+        $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
+
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['modules']) || !is_array($data['modules'])) {
+            return $this->json(['success' => false, 'message' => 'Invalid request data'], 400);
+        }
+
+        try {
+            foreach ($data['modules'] as $moduleData) {
+                if (!isset($moduleData['id']) || !isset($moduleData['viewOrder'])) {
+                    continue;
+                }
+
+                $module = $this->moduleRepository->find($moduleData['id']);
+
+                // Verify module belongs to this course
+                if (!$module || $module->getCourse()->getId()->toString() !== $course->getId()->toString()) {
+                    continue;
+                }
+
+                // Update view order
+                $module->setViewOrder((int)$moduleData['viewOrder']);
+            }
+
+            $this->entityManager->flush();
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Module order updated successfully'
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Failed to update module order: ' . $e->getMessage()
             ], 500);
         }
     }

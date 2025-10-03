@@ -393,15 +393,15 @@
             {# Table View (Hidden by default) #}
             <div id="tableView" style="display: none;">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle audit-table">
                         <thead>
                             <tr>
-                                <th><i class="bi bi-clock me-1"></i>Timestamp</th>
-                                <th><i class="bi bi-lightning me-1"></i>Action</th>
-                                <th><i class="bi bi-box me-1"></i>Entity</th>
-                                <th><i class="bi bi-person me-1"></i>User</th>
-                                <th><i class="bi bi-pencil-square me-1"></i>Changes</th>
-                                <th><i class="bi bi-gear me-1"></i>Actions</th>
+                                <th class="text-nowrap"><i class="bi bi-clock me-1"></i>Timestamp</th>
+                                <th class="text-nowrap"><i class="bi bi-lightning me-1"></i>Action</th>
+                                <th class="text-nowrap"><i class="bi bi-box me-1"></i>Entity</th>
+                                <th class="text-nowrap d-none d-md-table-cell"><i class="bi bi-person me-1"></i>User</th>
+                                <th class="text-nowrap text-center"><i class="bi bi-pencil-square me-1"></i>Changes</th>
+                                <th class="text-nowrap text-center"><i class="bi bi-gear me-1"></i>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -421,7 +421,7 @@
                                     <div><strong>{{ log.entityClass|split('\\\\')|last }}</strong></div>
                                     <small class="text-muted font-monospace">{{ log.entityId|slice(0, 8) }}...</small>
                                 </td>
-                                <td>
+                                <td class="d-none d-md-table-cell">
                                     {% if log.user %}
                                         <a href="{{ path('admin_audit_user', {id: log.user.id}) }}" class="text-decoration-none">
                                             <i class="bi bi-person-circle me-1"></i>{{ log.user.email }}
@@ -430,25 +430,20 @@
                                         <em class="text-muted"><i class="bi bi-robot me-1"></i>System</em>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     {% if log.changes is not empty %}
                                         <span class="badge bg-info">{{ log.changes|length }}</span>
                                     {% else %}
                                         <span class="text-muted">—</span>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <button type="button"
                                             class="btn btn-sm btn-outline-light"
-                                            onclick="openHistoryModal('{{ log.entityClass|e('js') }}', '{{ log.entityId }}', '{{ log.entityClass|split('\\\\')|last }}')">
+                                            onclick="openHistoryModal('{{ log.entityClass|e('js') }}', '{{ log.entityId }}', '{{ log.entityClass|split('\\\\')|last }}')"
+                                            title="View history">
                                         <i class="bi bi-clock-history"></i>
                                     </button>
-                                    <a href="{{ path('admin_audit_entity', {
-                                        class: log.entityClass|url_encode,
-                                        id: log.entityId
-                                    }) }}" class="btn btn-sm btn-link text-muted" target="_blank" title="Open in new tab">
-                                        <i class="bi bi-box-arrow-up-right"></i>
-                                    </a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -456,6 +451,72 @@
                     </table>
                 </div>
             </div>
+        {% endif %}
+
+        {# Pagination #}
+        {% if totalPages > 1 %}
+        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+            <div class="text-muted">
+                Showing {{ ((currentPage - 1) * itemsPerPage + 1) }} to {{ min(currentPage * itemsPerPage, totalCount) }} of {{ totalCount|number_format }} events
+            </div>
+            <nav aria-label="Audit log pagination">
+                <ul class="pagination pagination-sm mb-0">
+                    {# Previous Button #}
+                    <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
+                        <a class="page-link" href="{{ currentPage > 1 ? path('admin_audit_index', app.request.query.all|merge({page: currentPage - 1})) : '#' }}" {% if currentPage <= 1 %}tabindex="-1" aria-disabled="true"{% endif %}>
+                            <i class="bi bi-chevron-left"></i> Previous
+                        </a>
+                    </li>
+
+                    {# Page Numbers with Smart Ellipsis #}
+                    {% set showPages = [] %}
+                    {% if totalPages <= 7 %}
+                        {% for p in 1..totalPages %}
+                            {% set showPages = showPages|merge([p]) %}
+                        {% endfor %}
+                    {% else %}
+                        {# Always show first page #}
+                        {% set showPages = showPages|merge([1]) %}
+
+                        {# Show pages around current page #}
+                        {% if currentPage > 3 %}
+                            {% set showPages = showPages|merge(['...']) %}
+                        {% endif %}
+
+                        {% for p in max(2, currentPage - 1)..min(totalPages - 1, currentPage + 1) %}
+                            {% set showPages = showPages|merge([p]) %}
+                        {% endfor %}
+
+                        {# Always show last page #}
+                        {% if currentPage < totalPages - 2 %}
+                            {% set showPages = showPages|merge(['...']) %}
+                        {% endif %}
+                        {% set showPages = showPages|merge([totalPages]) %}
+                    {% endif %}
+
+                    {% for pageNum in showPages %}
+                        {% if pageNum == '...' %}
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item {% if pageNum == currentPage %}active{% endif %}">
+                                <a class="page-link" href="{{ path('admin_audit_index', app.request.query.all|merge({page: pageNum})) }}">
+                                    {{ pageNum }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {# Next Button #}
+                    <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
+                        <a class="page-link" href="{{ currentPage < totalPages ? path('admin_audit_index', app.request.query.all|merge({page: currentPage + 1})) : '#' }}" {% if currentPage >= totalPages %}tabindex="-1" aria-disabled="true"{% endif %}>
+                            Next <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
         {% endif %}
     </div>
 
