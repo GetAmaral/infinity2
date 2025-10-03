@@ -557,6 +557,7 @@ course.lecture.form.video_file: Arquivo de Vídeo
 course.lecture.form.view_order: Ordem
 course.lecture.form.view_order_placeholder: 1
 course.lecture.watch_video: Assistir Vídeo
+course.lecture.drag.to.reorder: Arraste para reordenar ou mover para outro módulo
 
 # ========================================
 # Course Lecture Validation

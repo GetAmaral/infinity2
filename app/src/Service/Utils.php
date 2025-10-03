@@ -64,6 +64,26 @@ class Utils
 
         return $text ?: 'unnamed';
     }
+
+    static public function stringToSlug(string $input): string
+    {
+        // Convert to ASCII, removing accents (ç=>c, á=>a, ê=>e, etc)
+        $text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $input);
+
+        // Replace spaces and special characters with underscores
+        $text = preg_replace('/[^a-zA-Z0-9]+/', '_', $text);
+
+        // Convert to lowercase
+        $text = strtolower($text);
+
+        // Remove leading/trailing underscores
+        $text = trim($text, '_');
+
+        // Replace multiple consecutive underscores with single underscore
+        $text = preg_replace('/_+/', '_', $text);
+
+        return $text ?: 'unnamed';
+    }
     static public function isNullEmpty(?string $input = '', string $default=''):string
     {
         if(is_null($input)) return $default;

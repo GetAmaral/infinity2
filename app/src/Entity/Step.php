@@ -36,6 +36,10 @@ class Step extends EntityBase
     #[Groups(['step:read', 'step:write'])]
     protected string $name = '';
 
+    #[ORM\Column(length: 255)]
+    #[Groups(['step:read'])]
+    protected string $slug = '';
+
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['step:read', 'step:write'])]
     protected ?string $objective = null;
@@ -94,6 +98,17 @@ class Step extends EntityBase
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
         return $this;
     }
 

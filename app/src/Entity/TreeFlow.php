@@ -52,6 +52,10 @@ class TreeFlow extends EntityBase
     #[Groups(['treeflow:read', 'treeflow:write'])]
     protected string $name = '';
 
+    #[ORM\Column(length: 255)]
+    #[Groups(['treeflow:read'])]
+    protected string $slug = '';
+
     #[ORM\Column(type: 'integer')]
     #[Groups(['treeflow:read', 'treeflow:write'])]
     protected int $version = 1;
@@ -91,6 +95,17 @@ class TreeFlow extends EntityBase
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
         return $this;
     }
 

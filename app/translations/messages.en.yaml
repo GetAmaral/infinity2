@@ -748,6 +748,7 @@ course.lecture.form.video_file: Video File
 course.lecture.form.view_order: Order
 course.lecture.form.view_order_placeholder: 1
 course.lecture.watch_video: Watch Video
+course.lecture.drag.to.reorder: Drag to reorder or move to another module
 
 # ========================================
 # Course Lecture Validation

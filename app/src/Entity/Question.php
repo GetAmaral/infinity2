@@ -33,6 +33,10 @@ class Question extends EntityBase
     #[Groups(['question:read', 'question:write'])]
     protected string $name = '';
 
+    #[ORM\Column(length: 255)]
+    #[Groups(['question:read'])]
+    protected string $slug = '';
+
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['question:read', 'question:write'])]
     protected ?string $prompt = null;
@@ -79,6 +83,17 @@ class Question extends EntityBase
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
         return $this;
     }
 

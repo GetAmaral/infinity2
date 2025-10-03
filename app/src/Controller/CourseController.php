@@ -366,7 +366,25 @@ final class CourseController extends BaseApiController
                     continue;
                 }
 
+                // Update view order
                 $lecture->setViewOrder((int)$lectureData['viewOrder']);
+
+                // Handle module change if provided
+                if (isset($lectureData['moduleId'])) {
+                    $newModule = $this->moduleRepository->find($lectureData['moduleId']);
+
+                    // Verify module belongs to this course
+                    if ($newModule && $newModule->getCourse()->getId()->toString() === $course->getId()->toString()) {
+                        $oldModule = $lecture->getCourseModule();
+                        $lecture->setCourseModule($newModule);
+
+                        // Recalculate module lengths
+                        $this->entityManager->flush(); // Flush first to ensure lecture is in new module
+                        $oldModule->calculateTotalLengthSeconds();
+                        $newModule->calculateTotalLengthSeconds();
+                        $course->calculateTotalLengthSeconds();
+                    }
+                }
             }
 
             $this->entityManager->flush();
