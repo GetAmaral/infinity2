@@ -67,6 +67,8 @@ final class LocaleSubscriber implements EventSubscriberInterface
         // Convert common language codes to our supported locales
         $languageMap = [
             'pt' => 'pt_BR',
+            'ptbr' => 'pt_BR',
+            'ptBR' => 'pt_BR',
             'pt-br' => 'pt_BR',
             'pt_br' => 'pt_BR',
             'pt-BR' => 'pt_BR',

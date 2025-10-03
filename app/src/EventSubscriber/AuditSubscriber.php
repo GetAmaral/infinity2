@@ -47,6 +47,11 @@ final class AuditSubscriber
         // Set creation audit fields
         $entity->setCreatedAt($now);
         $entity->setUpdatedAt($now);
+
+        if(!$currentUser){
+            return;
+        }
+
         $entity->setCreatedBy($currentUser);
         $entity->setUpdatedBy($currentUser);
 
@@ -61,10 +66,15 @@ final class AuditSubscriber
             return;
         }
 
-        $currentUser = $this->getCurrentUser();
-
         // Update modification audit fields
         $entity->updateAuditTimestamp();
+
+        $currentUser = $this->getCurrentUser();
+
+        if(!$currentUser){
+            return;
+        }
+
         $entity->setUpdatedBy($currentUser);
 
         $this->logAuditEvent('entity_updated', $entity, $currentUser, $args->getEntityChangeSet());
