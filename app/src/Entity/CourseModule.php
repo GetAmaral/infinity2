@@ -60,7 +60,8 @@ class CourseModule extends EntityBase
     #[Groups(['course_module:read'])]
     protected Course $course;
 
-    #[ORM\OneToMany(mappedBy: 'courseModule', targetEntity: CourseLecture::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: CourseLecture::class, mappedBy: 'courseModule', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['viewOrder' => 'ASC'])]
     #[Groups(['course_module:read'])]
     protected Collection $lectures;
 

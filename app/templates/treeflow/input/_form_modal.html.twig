@@ -1,0 +1,149 @@
+<!-- Full Screen Modal Overlay -->
+<div class="modal-fullscreen-overlay"
+     data-controller="crud-modal"
+     data-crud-modal-target="overlay"
+     data-action="click->crud-modal#backdropClick">
+
+    {{ form_start(form, {
+        'action': (is_edit and input.id) ? path('input_edit', {treeflowId: treeflow.id, stepId: step.id, inputId: input.id}) : path('input_new', {treeflowId: treeflow.id, stepId: step.id}),
+        'attr': {
+            'data-controller': 'form-navigation',
+            'data-crud-modal-target': 'form',
+            'data-action': 'submit->crud-modal#submit'
+        }
+    }) }}
+
+    <div class="modal-dialog-centered" data-action="click->crud-modal#stopPropagation">
+        <div class="modal-content-box">
+
+            <!-- Header -->
+            <div class="modal-header-bar">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-circle" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="bi bi-arrow-left-circle"></i>
+                    </div>
+                    <div>
+                        <h2 class="modal-title-text">
+                            {% if is_edit %}
+                                {{ 'action.edit'|trans }} {{ input.name }}
+                            {% else %}
+                                {{ 'input.modal.create.title'|trans }}
+                            {% endif %}
+                        </h2>
+                        <p class="modal-subtitle-text">
+                            {% if is_edit %}
+                                {{ 'input.modal.edit.subtitle'|trans }}
+                            {% else %}
+                                {{ 'input.modal.create.subtitle'|trans }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <button type="button"
+                        class="modal-close-btn"
+                        data-action="crud-modal#close"
+                        aria-label="{{ 'button.close'|trans }}">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body-content">
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.name) }}</label>
+                    {{ form_widget(form.name, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
+                            'placeholder': 'input.form.name_placeholder'|trans,
+                            'autofocus': 'autofocus'
+                        }
+                    }) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.type) }}</label>
+                    <div class="d-flex flex-column gap-2">
+                        {% for choice in form.type %}
+                            <div class="form-check">
+                                {{ form_widget(choice, {
+                                    'attr': {
+                                        'class': 'form-check-input'
+                                    }
+                                }) }}
+                                {{ form_label(choice, null, {
+                                    'label_attr': {
+                                        'class': 'form-check-label'
+                                    }
+                                }) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {{ form_errors(form.type) }}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.sourceStep) }}</label>
+                    {{ form_widget(form.sourceStep, {
+                        'attr': {
+                            'class': 'form-select-modern' ~ (form.sourceStep.vars.errors|length > 0 ? ' input-error' : '')
+                        }
+                    }) }}
+                    <small class="text-muted mt-1 d-block">{{ 'input.form.source_help'|trans }}</small>
+                    {{ form_errors(form.sourceStep) }}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.prompt) }}</label>
+                    {{ form_widget(form.prompt, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.prompt.vars.errors|length > 0 ? ' input-error' : ''),
+                            'placeholder': 'input.form.prompt_placeholder'|trans,
+                            'rows': 4
+                        }
+                    }) }}
+                    <small class="text-muted mt-1 d-block">{{ 'input.form.prompt_help'|trans }}</small>
+                    {{ form_errors(form.prompt) }}
+                </div>
+
+                {{ form_widget(form._token) }}
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer-bar">
+                <button type="button"
+                        class="btn-modal-secondary"
+                        data-action="crud-modal#close">
+                    {{ 'button.cancel'|trans }}
+                </button>
+                <button type="submit"
+                        class="btn-modal-primary"
+                        data-crud-modal-target="submitButton"
+                        style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                    <i class="bi bi-{{ is_edit ? 'check2' : 'plus-lg' }} me-2"></i>
+                    {% if is_edit %}
+                        {{ 'button.save.changes'|trans }}
+                    {% else %}
+                        {{ 'input.button.create.input'|trans }}
+                    {% endif %}
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    {{ form_end(form, {'render_rest': false}) }}
+</div>
+
+<style>
+/* Input Type Radio Buttons */
+.form-check-input:checked {
+    background-color: #f59e0b;
+    border-color: #f59e0b;
+}
+
+.form-check-input:focus {
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 0.25rem rgba(245, 158, 11, 0.25);
+}
+</style>

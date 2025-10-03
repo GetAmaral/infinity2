@@ -157,6 +157,9 @@ export default class extends Controller {
             dropModule.appendChild(this.draggedLecture);
         }
 
+        // Update module lecture counts and empty states immediately
+        this.updateModuleCounts();
+
         // Update order and save
         this.updateOrder();
 
@@ -230,6 +233,57 @@ export default class extends Controller {
             console.error('Error updating lecture order:', error);
             this.showErrorIndicator();
         }
+    }
+
+    updateModuleCounts() {
+        // Update lecture counts and empty states for all modules
+        this.moduleTargets.forEach(moduleContainer => {
+            const moduleId = moduleContainer.dataset.moduleId;
+            const lectureCards = moduleContainer.querySelectorAll('.lecture-card-wrapper');
+            const lectureCount = lectureCards.length;
+
+            // Update count in module header (accordion button)
+            const headerCount = document.querySelector(`.module-header-summary[data-module-id="${moduleId}"] .module-header-lecture-count`);
+            if (headerCount) {
+                // Get translation for "lectures" - use the first word from the existing text
+                const lecturesText = headerCount.textContent.split(' ').slice(1).join(' ');
+                headerCount.textContent = `${lectureCount} ${lecturesText}`;
+            }
+
+            // Update count in body header
+            const bodyCount = document.querySelector(`.module-lecture-count[data-module-id="${moduleId}"]`);
+            if (bodyCount) {
+                bodyCount.textContent = lectureCount;
+            }
+
+            // Show/hide empty state
+            const emptyState = document.querySelector(`.module-empty-state[data-module-id="${moduleId}"]`);
+            if (emptyState) {
+                if (lectureCount === 0) {
+                    emptyState.style.display = 'block';
+                } else {
+                    emptyState.style.display = 'none';
+                }
+            } else if (lectureCount === 0) {
+                // Create empty state if it doesn't exist
+                const emptyStateHtml = `
+                    <div class="module-empty-state infinity-card p-4 text-center" data-module-id="${moduleId}">
+                        <i class="bi bi-collection text-muted" style="font-size: 2.5rem;"></i>
+                        <p class="text-secondary mt-3 mb-0">${this.getEmptyStateText()}</p>
+                    </div>
+                `;
+                moduleContainer.insertAdjacentHTML('beforeend', emptyStateHtml);
+            }
+        });
+    }
+
+    getEmptyStateText() {
+        // Try to get the translation from an existing empty state, or use default
+        const existingEmptyState = document.querySelector('.module-empty-state p');
+        if (existingEmptyState) {
+            return existingEmptyState.textContent;
+        }
+        return 'No lectures in this module'; // Fallback
     }
 
     showSavingIndicator() {

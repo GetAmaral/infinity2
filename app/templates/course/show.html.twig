@@ -164,8 +164,8 @@
                                     </div>
                                     <div class="flex-grow-1">
                                         <h6 class="mb-1 text-white">{{ module.name }}</h6>
-                                        <small class="text-secondary">
-                                            {{ module.lectures|length }} {{ 'course.lectures'|trans }}
+                                        <small class="text-secondary module-header-summary" data-module-id="{{ module.id }}">
+                                            <span class="module-header-lecture-count">{{ module.lectures|length }} {{ 'course.lectures'|trans }}</span>
                                             {% if module.totalLengthSeconds > 0 %}
                                                 • <i class="bi bi-clock me-1"></i>{{ module.totalLengthFormatted }}
                                             {% endif %}
@@ -213,7 +213,7 @@
                                     <!-- Lectures Header with Add Button -->
                                     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                                         <h6 class="text-white mb-0">
-                                            <i class="bi bi-collection me-2"></i>{{ 'course.lectures'|trans }} ({{ module.lectures|length }})
+                                            <i class="bi bi-collection me-2"></i>{{ 'course.lectures'|trans }} (<span class="module-lecture-count" data-module-id="{{ module.id }}">{{ module.lectures|length }}</span>)
                                         </h6>
                                         {% if is_granted('COURSE_EDIT', course) %}
                                             <button type="button"
@@ -228,7 +228,7 @@
 
                                     {% if module.lectures is empty %}
                                         <!-- Empty State -->
-                                        <div class="infinity-card p-4 text-center">
+                                        <div class="module-empty-state infinity-card p-4 text-center" data-module-id="{{ module.id }}">
                                             <i class="bi bi-collection text-muted" style="font-size: 2.5rem;"></i>
                                             <p class="text-secondary mt-3 mb-0">{{ 'empty.no.lectures.in.module'|trans }}</p>
                                         </div>

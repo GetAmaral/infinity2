@@ -1,0 +1,127 @@
+<!-- Full Screen Modal Overlay -->
+<div class="modal-fullscreen-overlay"
+     data-controller="crud-modal"
+     data-crud-modal-target="overlay"
+     data-action="click->crud-modal#backdropClick">
+
+    {{ form_start(form, {
+        'action': (is_edit and output.id) ? path('output_edit', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}) : path('output_new', {treeflowId: treeflow.id, stepId: step.id}),
+        'attr': {
+            'data-controller': 'form-navigation',
+            'data-crud-modal-target': 'form',
+            'data-action': 'submit->crud-modal#submit'
+        }
+    }) }}
+
+    <div class="modal-dialog-centered" data-action="click->crud-modal#stopPropagation">
+        <div class="modal-content-box">
+
+            <!-- Header -->
+            <div class="modal-header-bar">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-circle" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div>
+                        <h2 class="modal-title-text">
+                            {% if is_edit %}
+                                {{ 'action.edit'|trans }} {{ output.name }}
+                            {% else %}
+                                {{ 'output.modal.create.title'|trans }}
+                            {% endif %}
+                        </h2>
+                        <p class="modal-subtitle-text">
+                            {% if is_edit %}
+                                {{ 'output.modal.edit.subtitle'|trans }}
+                            {% else %}
+                                {{ 'output.modal.create.subtitle'|trans }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <button type="button"
+                        class="modal-close-btn"
+                        data-action="crud-modal#close"
+                        aria-label="{{ 'button.close'|trans }}">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body-content">
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.name) }}</label>
+                    {{ form_widget(form.name, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
+                            'placeholder': 'output.form.name_placeholder'|trans,
+                            'autofocus': 'autofocus'
+                        }
+                    }) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.description) }}</label>
+                    {{ form_widget(form.description, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
+                            'placeholder': 'output.form.description_placeholder'|trans,
+                            'rows': 3
+                        }
+                    }) }}
+                    {{ form_errors(form.description) }}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.conditional) }}</label>
+                    {{ form_widget(form.conditional, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (form.conditional.vars.errors|length > 0 ? ' input-error' : ''),
+                            'placeholder': 'output.form.conditional_placeholder'|trans,
+                            'rows': 3
+                        }
+                    }) }}
+                    <small class="text-muted mt-1 d-block">{{ 'output.form.conditional_help'|trans }}</small>
+                    {{ form_errors(form.conditional) }}
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">{{ form_label(form.destinationStep) }}</label>
+                    {{ form_widget(form.destinationStep, {
+                        'attr': {
+                            'class': 'form-select-modern' ~ (form.destinationStep.vars.errors|length > 0 ? ' input-error' : '')
+                        }
+                    }) }}
+                    <small class="text-muted mt-1 d-block">{{ 'output.form.destination_help'|trans }}</small>
+                    {{ form_errors(form.destinationStep) }}
+                </div>
+
+                {{ form_widget(form._token) }}
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer-bar">
+                <button type="button"
+                        class="btn-modal-secondary"
+                        data-action="crud-modal#close">
+                    {{ 'button.cancel'|trans }}
+                </button>
+                <button type="submit"
+                        class="btn-modal-primary"
+                        data-crud-modal-target="submitButton"
+                        style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="bi bi-{{ is_edit ? 'check2' : 'plus-lg' }} me-2"></i>
+                    {% if is_edit %}
+                        {{ 'button.save.changes'|trans }}
+                    {% else %}
+                        {{ 'output.button.create.output'|trans }}
+                    {% endif %}
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    {{ form_end(form, {'render_rest': false}) }}
+</div>

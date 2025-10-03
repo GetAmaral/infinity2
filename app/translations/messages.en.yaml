@@ -1454,4 +1454,80 @@ treeflow.no.questions: No questions defined yet
 treeflow.add.questions.to.steps: Add questions to your steps to get started
 treeflow.add.steps.first: Add steps first before creating questions
 
-# Total translations: 821
+# ========================================
+# Step Output
+# ========================================
+output.singular: Output
+output.plural: Outputs
+
+# Output Actions
+output.add.output: Add Output
+output.confirm.delete: Are you sure you want to delete this output?
+
+# Output Form
+output.form.name: Output Name
+output.form.name_placeholder: Enter output name
+output.form.description: Description
+output.form.description_placeholder: Describe what this output represents
+output.form.conditional: Conditional Expression
+output.form.conditional_placeholder: 'Example: regex:/urgent/i or keywords:high-priority,immediate'
+output.form.conditional_help: 'Define conditions for this output (regex, keywords, or custom logic)'
+output.form.destination: Destination Step
+output.form.destination_placeholder: Select where to route when this condition matches
+output.form.destination_help: Where to route when this condition matches (optional)
+
+# Output Modal
+output.modal.create.title: Create New Output
+output.modal.create.subtitle: Define a conditional exit from this step
+output.modal.edit.subtitle: Update output configuration
+
+# Output Flash Messages
+output.flash.created_successfully: Output created successfully
+output.flash.updated_successfully: Output updated successfully
+output.flash.deleted_successfully: Output deleted successfully
+output.flash.invalid_csrf_token: Invalid security token
+
+# Output Button
+output.button.create.output: Create Output
+
+# ========================================
+# Step Input
+# ========================================
+input.singular: Input
+input.plural: Inputs
+
+# Input Types
+input.type.fully_completed: Fully Completed
+input.type.not_completed_after_attempts: Not Completed After Attempts
+input.type.any: Any Status
+
+# Input Actions
+input.add.input: Add Input
+input.confirm.delete: Are you sure you want to delete this input?
+
+# Input Form
+input.form.name: Input Name
+input.form.name_placeholder: Enter input name
+input.form.type: Entry Type
+input.form.source: Source Step
+input.form.source_placeholder: Select the step that can route here
+input.form.source_help: Which step can route to this step (optional)
+input.form.prompt: Entry Prompt
+input.form.prompt_placeholder: Additional context when entering via this input
+input.form.prompt_help: Additional instructions when entering through this input
+
+# Input Modal
+input.modal.create.title: Create New Input
+input.modal.create.subtitle: Define how this step can be entered
+input.modal.edit.subtitle: Update input configuration
+
+# Input Flash Messages
+input.flash.created_successfully: Input created successfully
+input.flash.updated_successfully: Input updated successfully
+input.flash.deleted_successfully: Input deleted successfully
+input.flash.invalid_csrf_token: Invalid security token
+
+# Input Button
+input.button.create.input: Create Input
+
+# Total translations: 889
