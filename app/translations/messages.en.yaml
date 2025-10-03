@@ -838,6 +838,61 @@ course.enrollment.enrolled: Enrolled
 course.enrollment.not_enrolled: Not Enrolled
 
 # ========================================
+# Course Module Translations
+# ========================================
+course.modules: Modules
+course.module: Module
+course.modules_count: Modules
+course.total_modules: Total Modules
+course.total.modules: Total Modules
+course.modules.and.lectures: Modules & Lectures
+course.no_content: No Content Yet
+course.no_content_description: This course doesn't have any modules or lectures yet. Add your first module to get started.
+
+# Module Buttons
+button.add.module: Add Module
+button.add.first.module: Add First Module
+button.create_module: Create Module
+button.update_module: Update Module
+button.edit_module: Edit Module
+button.delete_module: Delete Module
+button.reorder_modules: Reorder Modules
+
+# Module Form
+course.module.form.title.new: New Module
+course.module.form.title.edit: Edit Module
+course.module.form.name.label: Module Name
+course.module.form.name.placeholder: Enter module name
+course.module.form.description.label: Description
+course.module.form.description.placeholder: Enter module description
+course.module.form.viewOrder.label: View Order
+course.module.form.viewOrder.placeholder: Display order (e.g., 1, 2, 3)
+course.module.form.releaseDate.label: Release Date
+course.module.form.releaseDate.placeholder: When should this module be available?
+course.module.form.active.label: Active
+
+# Module Flash Messages
+course.module.flash.created_successfully: Module created successfully
+course.module.flash.updated_successfully: Module updated successfully
+course.module.flash.deleted_successfully: Module deleted successfully
+course.module.flash.reordered_successfully: Modules reordered successfully
+course.module.flash.not_found: Module not found
+course.module.flash.delete_error: Cannot delete module with lectures. Please remove all lectures first.
+
+# Module Empty States
+empty.no.modules.yet: No modules yet
+empty.no.lectures.in.module: No lectures in this module
+empty.course.modules.description: Start organizing your course by creating modules to structure your content
+empty.module_description: Start organizing your course by creating modules. Each module can contain multiple lectures.
+
+# Module Validation
+course.module.validation.name_required: Module name is required
+course.module.validation.name_too_short: Module name must be at least 3 characters
+course.module.validation.name_too_long: Module name cannot exceed 255 characters
+course.module.validation.view_order_invalid: View order must be a positive number
+course.module.validation.course_required: Module must be associated with a course
+
+# ========================================
 # Course Page Titles
 # ========================================
 page.course_details: Course Details

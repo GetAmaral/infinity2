@@ -609,6 +609,61 @@ button.create_lecture: Criar Aula
 button.update_lecture: Atualizar Aula
 
 # ========================================
+# Course Module Translations
+# ========================================
+course.modules: Módulos
+course.module: Módulo
+course.modules_count: Módulos
+course.total_modules: Total de Módulos
+course.total.modules: Total de Módulos
+course.modules.and.lectures: Módulos e Aulas
+course.no_content: Nenhum Conteúdo Ainda
+course.no_content_description: Este curso ainda não tem módulos ou aulas. Adicione seu primeiro módulo para começar.
+
+# Module Buttons
+button.add.module: Adicionar Módulo
+button.add.first.module: Adicionar Primeiro Módulo
+button.create_module: Criar Módulo
+button.update_module: Atualizar Módulo
+button.edit_module: Editar Módulo
+button.delete_module: Excluir Módulo
+button.reorder_modules: Reordenar Módulos
+
+# Module Form
+course.module.form.title.new: Novo Módulo
+course.module.form.title.edit: Editar Módulo
+course.module.form.name.label: Nome do Módulo
+course.module.form.name.placeholder: Digite o nome do módulo
+course.module.form.description.label: Descrição
+course.module.form.description.placeholder: Digite a descrição do módulo
+course.module.form.viewOrder.label: Ordem de Exibição
+course.module.form.viewOrder.placeholder: 'Ordem de exibição (ex: 1, 2, 3)'
+course.module.form.releaseDate.label: Data de Lançamento
+course.module.form.releaseDate.placeholder: Quando este módulo deve estar disponível?
+course.module.form.active.label: Ativo
+
+# Module Flash Messages
+course.module.flash.created_successfully: Módulo criado com sucesso
+course.module.flash.updated_successfully: Módulo atualizado com sucesso
+course.module.flash.deleted_successfully: Módulo excluído com sucesso
+course.module.flash.reordered_successfully: Módulos reordenados com sucesso
+course.module.flash.not_found: Módulo não encontrado
+course.module.flash.delete_error: Não é possível excluir módulo com aulas. Por favor, remova todas as aulas primeiro.
+
+# Module Empty States
+empty.no.modules.yet: Nenhum módulo ainda
+empty.no.lectures.in.module: Nenhuma aula neste módulo
+empty.course.modules.description: Comece a organizar seu curso criando módulos para estruturar seu conteúdo
+empty.module_description: Comece a organizar seu curso criando módulos. Cada módulo pode conter várias aulas.
+
+# Module Validation
+course.module.validation.name_required: Nome do módulo é obrigatório
+course.module.validation.name_too_short: Nome do módulo deve ter pelo menos 3 caracteres
+course.module.validation.name_too_long: Nome do módulo não pode exceder 255 caracteres
+course.module.validation.view_order_invalid: Ordem de exibição deve ser um número positivo
+course.module.validation.course_required: Módulo deve estar associado a um curso
+
+# ========================================
 # Course Page Titles
 # ========================================
 page.course_details: Detalhes do Curso

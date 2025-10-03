@@ -5,7 +5,7 @@
      data-action="click->crud-modal#backdropClick">
 
     {{ form_start(form, {
-        'action': (is_edit and lecture.id) ? path('course_lecture_edit', {courseId: course.id, lectureId: lecture.id}) : path('course_lecture_new', {courseId: course.id}),
+        'action': (is_edit and lecture.id) ? path('course_lecture_edit', {courseId: course.id, lectureId: lecture.id}) : path('course_module_lecture_new', {courseId: course.id, moduleId: module.id}),
         'attr': {
             'data-controller': 'form-navigation',
             'data-crud-modal-target': 'form',
