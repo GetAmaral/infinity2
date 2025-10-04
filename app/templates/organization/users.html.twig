@@ -11,7 +11,7 @@
                class="btn btn-sm btn-outline-light"
                data-bs-toggle="tooltip"
                data-bs-placement="top"
-               data-bs-title="{{ 'common.action.view_details'|trans }}">
+               data-bs-title="{{ 'common.action.view.details'|trans }}">
                 <i class="bi bi-eye"></i>
             </a>
             {% if is_granted('USER_EDIT', user) %}
@@ -48,7 +48,7 @@
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="background: var(--infinity-dark-surface);">
             <li>
                 <a class="dropdown-item" href="{{ path('user_show', {id: user.id}) }}">
-                    <i class="bi bi-eye me-2"></i>{{ 'common.action.view_details'|trans }}
+                    <i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}
                 </a>
             </li>
             {% if is_granted('USER_EDIT', user) %}
@@ -80,13 +80,13 @@
 
 {% import _self as macros %}
 
-{% block title %}{{ organization.name }} - {{ 'organization.users.page.title'|trans }}{% endblock %}
+{% block title %}{{ organization.name }} - {{ 'organization.users.page.title'|trans({}, 'organization') }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
 <div class="mb-4">
     <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn infinity-btn-ai">
-        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.organization'|trans }}
+        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.organization'|trans({}, 'organization') }}
     </a>
 </div>
 
@@ -97,7 +97,7 @@
             {{ org_logo.logo(organization, 'lg', 'me-4') }}
             <div>
                 <h1 class="text-gradient mb-2">{{ organization.name }}</h1>
-                <p class="text-secondary mb-0 fs-5">{{ 'organization.manage.users'|trans }} ({{ users|length }})</p>
+                <p class="text-secondary mb-0 fs-5">{{ 'organization.manage.users'|trans({}, 'organization') }} ({{ users|length }})</p>
             </div>
         </div>
         <div class="d-flex gap-2">
@@ -210,9 +210,9 @@
                     <thead>
                         <tr>
                             <th>{{ 'common.label.actions'|trans }}</th>
-                            <th data-sort-field="name">{{ 'user.name'|trans }}</th>
-                            <th data-sort-field="email">{{ 'user.email'|trans }}</th>
-                            <th data-sort-field="createdAt">{{ 'user.created.at'|trans }}</th>
+                            <th data-sort-field="name">{{ 'user.name'|trans({}, 'user') }}</th>
+                            <th data-sort-field="email">{{ 'user.email'|trans({}, 'user') }}</th>
+                            <th data-sort-field="createdAt">{{ 'user.created.at'|trans({}, 'user') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -246,17 +246,17 @@
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h6 class="text-neon mb-2">
-                    <i class="bi bi-graph-up me-2"></i>{{ 'organization.statistics'|trans }}
+                    <i class="bi bi-graph-up me-2"></i>{{ 'organization.statistics'|trans({}, 'organization') }}
                 </h6>
                 <div class="d-flex gap-4">
                     <div>
                         <div class="text-white fs-4 fw-bold">{{ users|length }}</div>
-                        <div class="text-secondary small">{{ 'organization.total.users'|trans }}</div>
+                        <div class="text-secondary small">{{ 'organization.total.users'|trans({}, 'organization') }}</div>
                     </div>
                 </div>
             </div>
             <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn infinity-btn-ai">
-                <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.details'|trans }}
+                <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.details'|trans({}, 'organization') }}
             </a>
         </div>
     </div>

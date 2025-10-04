@@ -202,19 +202,19 @@
                 </div>
                 {% endif %}
                 <div class="certificate-org-name">{{ organization.name }}</div>
-                <div class="certificate-title">{{ 'certificate.title'|trans }}</div>
+                <div class="certificate-title">{{ 'certificate.title'|trans({}, 'course') }}</div>
             </div>
             <div class="certificate-body">
-                <div class="certificate-presented">{{ 'certificate.presented.to'|trans }}</div>
+                <div class="certificate-presented">{{ 'certificate.presented.to'|trans({}, 'course') }}</div>
                 <div class="certificate-student-name">{{ student.name }}</div>
-                <div class="certificate-text">{{ 'certificate.text.has.successfully.completed'|trans }}</div>
+                <div class="certificate-text">{{ 'certificate.text.has.successfully.completed'|trans({}, 'course') }}</div>
                 <div class="certificate-course-name">{{ course.name }}</div>
                 {% if course.description %}
                 <div class="certificate-course-desc">{{ course.description }}</div>
                 {% endif %}
                 <div class="certificate-details">
                     <div class="certificate-detail-item">
-                        <div class="certificate-detail-label">{{ 'certificate.completion.date'|trans }}</div>
+                        <div class="certificate-detail-label">{{ 'certificate.completion.date'|trans({}, 'course') }}</div>
                         <div class="certificate-detail-value">
                             {% if enrollment.completedAt %}
                                 {% if app.request.locale == 'pt_BR' %}
@@ -228,14 +228,14 @@
                         </div>
                     </div>
                     <div class="certificate-detail-item">
-                        <div class="certificate-detail-label">{{ 'certificate.course.duration'|trans }}</div>
+                        <div class="certificate-detail-label">{{ 'certificate.course.duration'|trans({}, 'course') }}</div>
                         <div class="certificate-detail-value">{{ course.totalLengthFormatted }}</div>
                     </div>
                 </div>
             </div>
             <div class="certificate-footer">
-                <div class="certificate-footer-text">{{ 'certificate.footer'|trans }}</div>
-                <div class="certificate-verification">{{ 'certificate.credential.verification'|trans }}: {{ enrollment.id|slice(0, 13)|upper }}</div>
+                <div class="certificate-footer-text">{{ 'certificate.footer'|trans({}, 'course') }}</div>
+                <div class="certificate-verification">{{ 'certificate.credential.verification'|trans({}, 'course') }}: {{ enrollment.id|slice(0, 13)|upper }}</div>
             </div>
         </div>
     </div>

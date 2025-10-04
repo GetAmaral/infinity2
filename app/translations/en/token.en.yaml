@@ -1,0 +1,56 @@
+# Symfony Translations - English (Token Domain)
+# Usage: {{ 'key'|trans({}, 'token') }}
+
+# ================================================================================
+# API Tokens
+# ================================================================================
+token.access.level: Access Level
+token.active.token: Active Token
+token.active.tokens: Active Tokens
+# Copied confirmation
+token.copied: Copied
+# Copy button
+token.copy: Copy
+# Token security warning
+token.copy.warning: Copy this token now - you won't be able to see it again
+# CSRF error message
+token.csrf_invalid: Invalid security token
+token.current.token: Current Token
+token.description: Manage your API access tokens
+token.expires: Expires
+token.full.api.access: Full API Access
+# Generate button
+token.generate: Generate New Token
+# No token status
+# Generation success message
+token.generated.successfully: 'API token generated successfully!'
+# Info card heading
+token.info.title: API Token Information
+# No token message
+token.no.active.token: No active token
+token.no.token: No Token
+# Full access description
+token.regeneration: Regeneration
+token.regeneration.description: Generate a new token to replace the current one
+# Revoke button
+token.revoke: Revoke Token
+token.revoke.confirm: Are you sure you want to revoke this token?
+# Revocation success message
+token.revoked.successfully: API token revoked successfully
+# Active tokens metric
+# Secure status
+token.secure: Secured
+token.security.tips: Security Tips
+token.tip.1: Never share your API token publicly
+token.tip.2: Revoke tokens immediately if compromised
+token.tip.3: Use environment variables to store tokens in applications
+token.tip.4: Regenerate tokens periodically for better security
+token.title: API Tokens
+# Usage section heading
+token.usage.description: Include this token in the Authorization header
+token.usage.instructions: Usage Instructions
+token.validity.30.days: 30 days
+token.validity.period: Validity Period
+# API Token Management
+token.your.token: Your API Token
+

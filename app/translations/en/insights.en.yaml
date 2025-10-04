@@ -1,0 +1,69 @@
+# Symfony Translations - English (Insights Domain)
+# Usage: {{ 'key'|trans({}, 'insights') }}
+
+# ================================================================================
+# AI & Insights
+# ================================================================================
+# Analytics feature
+ai.analytics: Analytics
+ai.assistant: AI Assistant
+# Smart automation feature
+ai.automation.description: Automate routine tasks with AI
+ai.coming.soon: AI Chat coming soon...
+ai.conversational: Conversational AI
+ai.conversational.description: Natural language interactions
+# AI assistant prompt
+ai.crm.question: Ask me anything about your CRM
+# AI Features
+ai.insights: AI Insights
+# Quick actions section
+# Home & Dashboard
+ai.powered.crm: AI-Powered CRM
+ai.predictive.analytics: Predictive Analytics
+# Predictive analytics feature
+ai.predictive.description: Get insights before they happen
+ai.quick.actions: Quick Actions
+ai.smart.automation: Smart Automation
+# Branding/Navigation
+# Full product name with CRM
+branding.ai.dashboard: AI-Powered Dashboard
+# User Insights
+insight.active.communicator: Active Communicator
+# Organization Insights
+insight.active.organization: Active Organization
+insight.growth.potential: Growth Potential
+# Insights and Status
+insight.high.engagement: High Engagement
+insight.high.relationship.score: High Relationship Score
+insight.key.relationship: Key Relationship
+insight.last.interaction: 'Last interaction: %days%d ago'
+# User Insights (Random Messages)
+insight.recent.activity: Recent activity increase
+insight.strong.engagement: Strong Engagement
+# AI insight: good relationship
+insight.strong.relationship: Strong relationship score
+# AI insight: sales opportunity
+insight.upsell.opportunity: Potential upsell opportunity
+# Metrics
+metric.ai.interactions: AI Interactions
+# System response time metric
+metric.encryption: Encryption
+metric.month.growth: This Month
+metric.new.count: New
+metric.response.time: Response Time
+metric.response.time.value: '< 200ms'
+metric.today.growth: Today's Growth
+metric.total.contacts: Total Contacts
+metric.trend.new.count: +3 new
+# Metric Trends
+metric.trend.this.month: +12% this month
+metric.trend.today: +15% today
+# Metrics and Statistics
+# Label for total contacts metric
+# Label for AI interactions metric
+metric.uptime: Uptime
+page.organization.description: Manage your business relationships with AI insights
+page.settings.description: Customize your Infinity experience
+# Page Descriptions
+page.user.description: AI-powered contact management and relationship insights
+

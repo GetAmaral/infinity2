@@ -8,8 +8,8 @@
             <div class="d-flex align-items-center">
                 <i class="bi bi-check-circle-fill me-2"></i>
                 <div>
-                    <strong>{{ 'organization.flash.save.success'|trans }}</strong>
-                    <br><small>{{ 'organization.flash.save.success.description'|trans }}</small>
+                    <strong>{{ 'organization.flash.save.success'|trans({}, 'organization') }}</strong>
+                    <br><small>{{ 'organization.flash.save.success.description'|trans({}, 'organization') }}</small>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': (form.name.vars.valid ? 'form-control' : 'form-control is-invalid'),
-                            'placeholder': 'organization.form.name.placeholder'|trans
+                            'placeholder': 'organization.form.name.placeholder'|trans({}, 'organization')
                         }
                     }) }}
                     {{ form_label(form.name, null, {
@@ -65,7 +65,7 @@
                     {{ form_widget(form.description, {
                         'attr': {
                             'class': (form.description.vars.valid ? 'form-control' : 'form-control is-invalid'),
-                            'placeholder': 'organization.form.description.placeholder'|trans,
+                            'placeholder': 'organization.form.description.placeholder'|trans({}, 'organization'),
                             'style': 'min-height: 120px;'
                         }
                     }) }}
@@ -86,7 +86,7 @@
     {% if form.name.vars.data or form.description.vars.data %}
         <div class="mb-4 p-3 rounded-3" style="background: rgba(0, 245, 255, 0.05); border: 1px solid rgba(0, 245, 255, 0.2);">
             <h6 class="text-neon mb-2">
-                <i class="bi bi-eye me-1"></i>{{ 'organization.form.preview'|trans }}
+                <i class="bi bi-eye me-1"></i>{{ 'organization.form.preview'|trans({}, 'organization') }}
             </h6>
             <div class="infinity-card-mini p-3">
                 <div class="d-flex align-items-start">
@@ -95,10 +95,10 @@
                     </div>
                     <div class="flex-grow-1">
                         <h6 class="text-white mb-1">
-                            {{ form.name.vars.data ?: 'organization.form.name.placeholder'|trans }}
+                            {{ form.name.vars.data ?: 'organization.form.name.placeholder'|trans({}, 'organization') }}
                         </h6>
                         <p class="text-secondary mb-0" style="font-size: 0.875rem;">
-                            {{ form.description.vars.data ?: 'organization.form.description.placeholder'|trans }}
+                            {{ form.description.vars.data ?: 'organization.form.description.placeholder'|trans({}, 'organization') }}
                         </p>
                     </div>
                 </div>

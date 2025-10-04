@@ -27,14 +27,14 @@
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ module.name }}
                             {% else %}
-                                {{ 'course.module.modal.create.title'|trans }}
+                                {{ 'course.module.modal.create.title'|trans({}, 'course') }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'course.module.modal.edit.subtitle'|trans }}
+                                {{ 'course.module.modal.edit.subtitle'|trans({}, 'course') }}
                             {% else %}
-                                {{ 'course.module.modal.create.subtitle'|trans }}
+                                {{ 'course.module.modal.create.subtitle'|trans({}, 'course') }}
                             {% endif %}
                         </p>
                     </div>
@@ -54,7 +54,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.module.form.name.placeholder'|trans,
+                            'placeholder': 'course.module.form.name.placeholder'|trans({}, 'course'),
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -66,7 +66,7 @@
                     {{ form_widget(form.description, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.module.form.description.placeholder'|trans,
+                            'placeholder': 'course.module.form.description.placeholder'|trans({}, 'course'),
                             'rows': 4
                         }
                     }) }}
@@ -131,7 +131,7 @@
                     {% if is_edit %}
                         {{ 'button.save.changes'|trans }}
                     {% else %}
-                        {{ 'course.module.button.create.module'|trans }}
+                        {{ 'course.module.button.create.module'|trans({}, 'course') }}
                     {% endif %}
                 </button>
             </div>

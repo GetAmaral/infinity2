@@ -27,14 +27,14 @@
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ user.name }}
                             {% else %}
-                                {{ 'user.new.user'|trans }}
+                                {{ 'user.new.user'|trans({}, 'user') }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'user.modal.edit.subtitle'|trans }}
+                                {{ 'user.modal.edit.subtitle'|trans({}, 'user') }}
                             {% else %}
-                                {{ 'user.modal.create.subtitle'|trans }}
+                                {{ 'user.modal.create.subtitle'|trans({}, 'user') }}
                             {% endif %}
                         </p>
                     </div>
@@ -54,7 +54,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'user.form.name.placeholder'|trans,
+                            'placeholder': 'user.form.name.placeholder'|trans({}, 'user'),
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -66,7 +66,7 @@
                     {{ form_widget(form.email, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.email.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'user.form.email.placeholder'|trans
+                            'placeholder': 'user.form.email.placeholder'|trans({}, 'user')
                         }
                     }) }}
                     {{ form_errors(form.email) }}
@@ -114,7 +114,7 @@
                     {{ form_widget(form.plainPassword.first, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.plainPassword.first.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'user.form.password.placeholder'|trans
+                            'placeholder': 'user.form.password.placeholder'|trans({}, 'user')
                         }
                     }) }}
                     {{ form_errors(form.plainPassword.first) }}
@@ -125,7 +125,7 @@
                     {{ form_widget(form.plainPassword.second, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.plainPassword.second.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'user.form.password.confirm.placeholder'|trans
+                            'placeholder': 'user.form.password.confirm.placeholder'|trans({}, 'user')
                         }
                     }) }}
                     {{ form_errors(form.plainPassword.second) }}

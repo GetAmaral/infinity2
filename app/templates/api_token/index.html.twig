@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'token.title'|trans }}{% endblock %}
+{% block title %}{{ 'token.title'|trans({}, 'token') }}{% endblock %}
 
 {% block body %}
 <div class="ai-dashboard-header mb-4">
@@ -8,8 +8,8 @@
         <div class="d-flex align-items-center">
             <i class="bi bi-key text-neon fs-2 me-3"></i>
             <div>
-                <h1 class="text-gradient mb-1">{{ 'token.title'|trans }}</h1>
-                <p class="text-secondary mb-0">{{ 'token.description'|trans }}</p>
+                <h1 class="text-gradient mb-1">{{ 'token.title'|trans({}, 'token') }}</h1>
+                <p class="text-secondary mb-0">{{ 'token.description'|trans({}, 'token') }}</p>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
         <!-- Current API Token -->
         <div class="infinity-card p-4 mb-4">
             <h5 class="text-white mb-3">
-                <i class="bi bi-shield-check me-2"></i>{{ 'token.current.token'|trans }}
+                <i class="bi bi-shield-check me-2"></i>{{ 'token.current.token'|trans({}, 'token') }}
             </h5>
 
             {% if user.apiToken and user.isApiTokenValid %}
@@ -28,16 +28,16 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <i class="bi bi-check-circle me-2"></i>
-                            <strong>{{ 'token.active.token'|trans }}</strong>
+                            <strong>{{ 'token.active.token'|trans({}, 'token') }}</strong>
                         </div>
                         <span class="badge" style="background: var(--infinity-ai-gradient);">
-                            <i class="bi bi-clock me-1"></i>{{ 'token.expires'|trans }}: {{ user.apiTokenExpiresAt|date('M d, Y') }}
+                            <i class="bi bi-clock me-1"></i>{{ 'token.expires'|trans({}, 'token') }}: {{ user.apiTokenExpiresAt|date('M d, Y') }}
                         </span>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label text-white">{{ 'token.your.token'|trans }}</label>
+                    <label class="form-label text-white">{{ 'token.your.token'|trans({}, 'token') }}</label>
                     <div class="input-group">
                         <input
                             type="text"
@@ -48,27 +48,27 @@
                             style="background: var(--infinity-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
                         >
                         <button class="btn infinity-btn-ai" type="button" onclick="copyToken()">
-                            <i class="bi bi-clipboard me-1"></i>{{ 'token.copy'|trans }}
+                            <i class="bi bi-clipboard me-1"></i>{{ 'token.copy'|trans({}, 'token') }}
                         </button>
                     </div>
-                    <small class="text-muted">{{ 'token.copy.warning'|trans }}</small>
+                    <small class="text-muted">{{ 'token.copy.warning'|trans({}, 'token') }}</small>
                 </div>
 
-                <form method="post" action="{{ path('api_token_revoke') }}" onsubmit="return confirm('{{ 'token.revoke.confirm'|trans }}')">
+                <form method="post" action="{{ path('api_token_revoke') }}" onsubmit="return confirm('{{ 'token.revoke.confirm'|trans({}, 'token') }}')">
                     <input type="hidden" name="_token" value="{{ csrf_token('revoke_token') }}">
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-x-circle me-2"></i>{{ 'token.revoke'|trans }}
+                        <i class="bi bi-x-circle me-2"></i>{{ 'token.revoke'|trans({}, 'token') }}
                     </button>
                 </form>
             {% else %}
                 <div class="alert alert-warning border-0 rounded-3 mb-4" style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3) !important; color: #fbbf24;">
-                    <i class="bi bi-exclamation-triangle me-2"></i>{{ 'token.no.active.token'|trans }}
+                    <i class="bi bi-exclamation-triangle me-2"></i>{{ 'token.no.active.token'|trans({}, 'token') }}
                 </div>
 
                 <form method="post" action="{{ path('api_token_generate') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('generate_token') }}">
                     <button type="submit" class="btn infinity-btn-primary">
-                        <i class="bi bi-plus-circle me-2"></i>{{ 'token.generate'|trans }}
+                        <i class="bi bi-plus-circle me-2"></i>{{ 'token.generate'|trans({}, 'token') }}
                     </button>
                 </form>
             {% endif %}
@@ -77,10 +77,10 @@
         <!-- Usage Instructions -->
         <div class="infinity-card p-4">
             <h5 class="text-white mb-3">
-                <i class="bi bi-book me-2"></i>{{ 'token.usage.instructions'|trans }}
+                <i class="bi bi-book me-2"></i>{{ 'token.usage.instructions'|trans({}, 'token') }}
             </h5>
 
-            <p class="text-secondary mb-3">{{ 'token.usage.description'|trans }}</p>
+            <p class="text-secondary mb-3">{{ 'token.usage.description'|trans({}, 'token') }}</p>
 
             <div class="bg-dark p-3 rounded mb-3">
                 <code class="text-white">
@@ -89,12 +89,12 @@ curl -H "Authorization: Bearer YOUR_API_TOKEN" \<br>
                 </code>
             </div>
 
-            <h6 class="text-neon mb-2">{{ 'token.security.tips'|trans }}</h6>
+            <h6 class="text-neon mb-2">{{ 'token.security.tips'|trans({}, 'token') }}</h6>
             <ul class="text-secondary">
-                <li>{{ 'token.tip.1'|trans }}</li>
-                <li>{{ 'token.tip.2'|trans }}</li>
-                <li>{{ 'token.tip.3'|trans }}</li>
-                <li>{{ 'token.tip.4'|trans }}</li>
+                <li>{{ 'token.tip.1'|trans({}, 'token') }}</li>
+                <li>{{ 'token.tip.2'|trans({}, 'token') }}</li>
+                <li>{{ 'token.tip.3'|trans({}, 'token') }}</li>
+                <li>{{ 'token.tip.4'|trans({}, 'token') }}</li>
             </ul>
         </div>
     </div>
@@ -104,24 +104,24 @@ curl -H "Authorization: Bearer YOUR_API_TOKEN" \<br>
         <div class="infinity-card ai-enhanced p-4 mb-4">
             <div class="d-flex align-items-center mb-3">
                 <i class="bi bi-info-circle text-neon me-2 fs-4"></i>
-                <h6 class="text-gradient mb-0">{{ 'token.info.title'|trans }}</h6>
+                <h6 class="text-gradient mb-0">{{ 'token.info.title'|trans({}, 'token') }}</h6>
             </div>
             <div class="text-secondary">
-                <p class="mb-2"><strong>{{ 'token.validity.period'|trans }}:</strong> {{ 'token.validity.30.days'|trans }}</p>
-                <p class="mb-2"><strong>{{ 'token.access.level'|trans }}:</strong> {{ 'token.full.api.access'|trans }}</p>
-                <p class="mb-0"><strong>{{ 'token.regeneration'|trans }}:</strong> {{ 'token.regeneration.description'|trans }}</p>
+                <p class="mb-2"><strong>{{ 'token.validity.period'|trans({}, 'token') }}:</strong> {{ 'token.validity.30.days'|trans({}, 'token') }}</p>
+                <p class="mb-2"><strong>{{ 'token.access.level'|trans({}, 'token') }}:</strong> {{ 'token.full.api.access'|trans({}, 'token') }}</p>
+                <p class="mb-0"><strong>{{ 'token.regeneration'|trans({}, 'token') }}:</strong> {{ 'token.regeneration.description'|trans({}, 'token') }}</p>
             </div>
         </div>
 
         <div class="metric-card">
             <i class="bi bi-shield-lock text-neon fs-1"></i>
             <div class="metric-value">{% if user.apiToken %}1{% else %}0{% endif %}</div>
-            <div class="metric-label">{{ 'token.active.tokens'|trans }}</div>
+            <div class="metric-label">{{ 'token.active.tokens'|trans({}, 'token') }}</div>
             <div class="metric-trend {% if user.apiToken %}trend-up{% endif %}">
                 {% if user.apiToken %}
-                    <i class="bi bi-check-circle"></i> {{ 'token.secure'|trans }}
+                    <i class="bi bi-check-circle"></i> {{ 'token.secure'|trans({}, 'token') }}
                 {% else %}
-                    <i class="bi bi-dash-circle"></i> {{ 'token.no.token'|trans }}
+                    <i class="bi bi-dash-circle"></i> {{ 'token.no.token'|trans({}, 'token') }}
                 {% endif %}
             </div>
         </div>
@@ -137,7 +137,7 @@ function copyToken() {
 
     const btn = event.target.closest('button');
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="bi bi-check me-1"></i>{{ 'token.copied'|trans }}';
+    btn.innerHTML = '<i class="bi bi-check me-1"></i>{{ 'token.copied'|trans({}, 'token') }}';
     btn.classList.add('btn-success');
     btn.classList.remove('infinity-btn-ai');
 

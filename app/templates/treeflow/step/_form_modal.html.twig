@@ -27,14 +27,14 @@
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ step.name }}
                             {% else %}
-                                {{ 'step.modal.create.title'|trans }}
+                                {{ 'step.modal.create.title'|trans({}, 'treeflow') }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'step.modal.edit.subtitle'|trans }}
+                                {{ 'step.modal.edit.subtitle'|trans({}, 'treeflow') }}
                             {% else %}
-                                {{ 'step.modal.create.subtitle'|trans }}
+                                {{ 'step.modal.create.subtitle'|trans({}, 'treeflow') }}
                             {% endif %}
                         </p>
                     </div>
@@ -54,7 +54,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'step.form.name_placeholder'|trans,
+                            'placeholder': 'step.form.name.placeholder'|trans({}, 'treeflow'),
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -73,9 +73,9 @@
                             {{ form_label(form.first) }}
                         </label>
                     </div>
-                    <small class="text-muted mt-1 d-block">{{ 'step.form.first_help'|trans }}</small>
+                    <small class="text-muted mt-1 d-block">{{ 'step.form.first.help'|trans({}, 'treeflow') }}</small>
                     <div class="alert alert-warning mt-2" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
-                        <i class="bi bi-exclamation-triangle me-2"></i>{{ 'step.form.first_warning'|trans }}
+                        <i class="bi bi-exclamation-triangle me-2"></i>{{ 'step.form.first.warning'|trans({}, 'treeflow') }}
                     </div>
                     {{ form_errors(form.first) }}
                 </div>
@@ -85,7 +85,7 @@
                     {{ form_widget(form.objective, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.objective.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'step.form.objective_placeholder'|trans,
+                            'placeholder': 'step.form.objective.placeholder'|trans({}, 'treeflow'),
                             'rows': 3
                         }
                     }) }}
@@ -97,7 +97,7 @@
                     {{ form_widget(form.prompt, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.prompt.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'step.form.prompt_placeholder'|trans,
+                            'placeholder': 'step.form.prompt.placeholder'|trans({}, 'treeflow'),
                             'rows': 5
                         }
                     }) }}
@@ -124,7 +124,7 @@
                         {% if is_edit %}
                             {{ 'button.save.changes'|trans }}
                         {% else %}
-                            {{ 'step.button.create.step'|trans }}
+                            {{ 'step.button.create.step'|trans({}, 'treeflow') }}
                         {% endif %}
                     </span>
                 </button>

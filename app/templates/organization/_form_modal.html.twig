@@ -33,14 +33,14 @@
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ organization.name }}
                             {% else %}
-                                {{ 'organization.new.organization'|trans }}
+                                {{ 'organization.new.organization'|trans({}, 'organization') }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'organization.modal.edit.subtitle'|trans }}
+                                {{ 'organization.modal.edit.subtitle'|trans({}, 'organization') }}
                             {% else %}
-                                {{ 'organization.modal.create.subtitle'|trans }}
+                                {{ 'organization.modal.create.subtitle'|trans({}, 'organization') }}
                             {% endif %}
                         </p>
                     </div>
@@ -60,7 +60,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'organization.form.name.placeholder'|trans,
+                            'placeholder': 'organization.form.name.placeholder'|trans({}, 'organization'),
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -72,7 +72,7 @@
                     {{ form_widget(form.slug, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.slug.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'organization.form.slug.placeholder'|trans
+                            'placeholder': 'organization.form.slug.placeholder'|trans({}, 'organization')
                         }
                     }) }}
                     {% if form.slug.vars.help %}
@@ -86,7 +86,7 @@
                     {{ form_widget(form.description, {
                         'attr': {
                             'class': 'form-input-modern form-textarea-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'organization.form.description.placeholder'|trans,
+                            'placeholder': 'organization.form.description.placeholder'|trans({}, 'organization'),
                             'rows': '4'
                         }
                     }) }}
@@ -106,8 +106,8 @@
                     {{ form_errors(form.logoFileLight) }}
                     {% if is_edit and organization.logoPath %}
                         <div class="mt-2">
-                            <small class="text-muted">{{ 'organization.form.current.logo'|trans }}</small>
-                            <img src="{{ organization.logoPath }}" alt="{{ 'organization.form.current.logo'|trans }}" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
+                            <small class="text-muted">{{ 'organization.form.current.logo'|trans({}, 'organization') }}</small>
+                            <img src="{{ organization.logoPath }}" alt="{{ 'organization.form.current.logo'|trans({}, 'organization') }}" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
                         </div>
                     {% endif %}
                 </div>
@@ -125,8 +125,8 @@
                     {{ form_errors(form.logoFileDark) }}
                     {% if is_edit and organization.logoPathDark %}
                         <div class="mt-2">
-                            <small class="text-muted">{{ 'organization.form.current.logo'|trans }}</small>
-                            <img src="{{ organization.logoPathDark }}" alt="{{ 'organization.form.current.dark.logo'|trans }}" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
+                            <small class="text-muted">{{ 'organization.form.current.logo'|trans({}, 'organization') }}</small>
+                            <img src="{{ organization.logoPathDark }}" alt="{{ 'organization.form.current.dark.logo'|trans({}, 'organization') }}" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
                         </div>
                     {% endif %}
                 </div>

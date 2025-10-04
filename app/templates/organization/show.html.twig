@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 {% import '_macros/organization_logo.html.twig' as org_logo %}
 
-{% block title %}{{ organization.name }} - {{ 'organization.singular'|trans }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
+{% block title %}{{ organization.name }} - {{ 'organization.singular'|trans({}, 'organization') }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
 <div class="mb-4 d-flex gap-2">
     <a href="{{ path('organization_index') }}" class="btn infinity-btn-ai">
-        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.list'|trans }}
+        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.list'|trans({}, 'organization') }}
     </a>
     <button type="button"
             class="btn infinity-btn-ai"
@@ -34,11 +34,11 @@
         </div>
         <div class="d-flex gap-2">
             <div class="ai-status-indicator">
-                <i class="bi bi-star-fill"></i> {{ 'organization.singular'|trans }}
+                <i class="bi bi-star-fill"></i> {{ 'organization.singular'|trans({}, 'organization') }}
             </div>
             <div class="real-time-badge">
                 {% if organization.users|length == 0 %}
-                    {{ 'organization.no.users'|trans }}
+                    {{ 'organization.no.users'|trans({}, 'organization') }}
                 {% else %}
                     {{ 'organization.users.count'|trans({'%count%': organization.users|length}, 'messages', null, organization.users|length) }}
                 {% endif %}
@@ -54,9 +54,9 @@
         <div class="metric-card">
             <i class="bi bi-people-fill text-neon fs-1"></i>
             <div class="metric-value">{{ organization.users|length }}</div>
-            <div class="metric-label">{{ 'metric.total.contacts'|trans }}</div>
+            <div class="metric-label">{{ 'metric.total.contacts'|trans({}, 'insights') }}</div>
             <div class="metric-trend trend-up">
-                <i class="bi bi-arrow-up"></i> {{ 'insight.active.organization'|trans }}
+                <i class="bi bi-arrow-up"></i> {{ 'insight.active.organization'|trans({}, 'insights') }}
             </div>
         </div>
     </div>
@@ -66,12 +66,12 @@
         <div class="infinity-card ai-enhanced p-4 h-100">
             <div class="d-flex align-items-center mb-3">
                 <i class="bi bi-magic text-neon me-2"></i>
-                <h6 class="text-gradient mb-0">{{ 'ai.insights'|trans }}</h6>
+                <h6 class="text-gradient mb-0">{{ 'ai.insights'|trans({}, 'insights') }}</h6>
             </div>
             <div class="text-secondary">
-                <p class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>{{ 'insight.strong.engagement'|trans }}</p>
-                <p class="mb-2"><i class="bi bi-trending-up text-neon me-2"></i>{{ 'insight.growth.potential'|trans }}</p>
-                <p class="mb-0"><i class="bi bi-heart text-danger me-2"></i>{{ 'insight.high.relationship.score'|trans }}</p>
+                <p class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>{{ 'insight.strong.engagement'|trans({}, 'insights') }}</p>
+                <p class="mb-2"><i class="bi bi-trending-up text-neon me-2"></i>{{ 'insight.growth.potential'|trans({}, 'insights') }}</p>
+                <p class="mb-0"><i class="bi bi-heart text-danger me-2"></i>{{ 'insight.high.relationship.score'|trans({}, 'insights') }}</p>
             </div>
         </div>
     </div>
@@ -81,7 +81,7 @@
         <div class="infinity-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
-                    <i class="bi bi-people me-2"></i>{{ 'organization.users.in.organization'|trans }} ({{ organization.users|length }})
+                    <i class="bi bi-people me-2"></i>{{ 'organization.users.in.organization'|trans({}, 'organization') }} ({{ organization.users|length }})
                 </h5>
                 <button class="btn infinity-btn-primary btn-sm">
                     <i class="bi bi-person-plus me-1"></i>{{ 'button.add.contact'|trans }}

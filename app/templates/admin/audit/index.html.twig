@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'audit.title'|trans }}{% endblock %}
+{% block title %}{{ 'audit.title'|trans({}, 'audit') }}{% endblock %}
 
 {% block body %}
 <div class="container-fluid py-4">
@@ -8,11 +8,11 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="text-gradient mb-0">
-                <i class="bi bi-shield-check me-2"></i>{{ 'audit.title'|trans }}
+                <i class="bi bi-shield-check me-2"></i>{{ 'audit.title'|trans({}, 'audit') }}
             </h1>
             <p class="text-muted mb-0 mt-1">
                 <i class="bi bi-circle-fill text-success me-1" style="font-size: 0.5rem; animation: pulse 2s ease-in-out infinite;"></i>
-                {{ 'audit.live_monitoring'|trans }} • {{ 'audit.last_updated'|trans }} <span id="lastUpdate">{{ "now"|date("H:i:s") }}</span>
+                {{ 'audit.live.monitoring'|trans({}, 'audit') }} • {{ 'audit.last.updated'|trans({}, 'audit') }} <span id="lastUpdate">{{ "now"|date("H:i:s") }}</span>
             </p>
         </div>
         <div>
@@ -21,17 +21,17 @@
             </a>
             <div class="btn-group">
                 <button type="button" class="btn infinity-btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bi bi-download me-1"></i>{{ 'audit.export'|trans }}
+                    <i class="bi bi-download me-1"></i>{{ 'audit.export'|trans({}, 'audit') }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" style="background-color: #1a1d29; border: 1px solid rgba(59, 130, 246, 0.3);">
                     <li><a class="dropdown-item" href="{{ path('admin_audit_export', app.request.query.all) }}">
-                        <i class="bi bi-filetype-csv me-2"></i>{{ 'audit.export.csv'|trans }}
+                        <i class="bi bi-filetype-csv me-2"></i>{{ 'audit.export.csv'|trans({}, 'audit') }}
                     </a></li>
                     <li><a class="dropdown-item" href="{{ path('admin_audit_export', app.request.query.all|merge({format: 'json'})) }}">
-                        <i class="bi bi-file-earmark-code me-2"></i>{{ 'audit.export.json'|trans }}
+                        <i class="bi bi-file-earmark-code me-2"></i>{{ 'audit.export.json'|trans({}, 'audit') }}
                     </a></li>
                     <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
-                    <li><a class="dropdown-item text-muted disabled"><i class="bi bi-file-earmark-pdf me-2"></i>{{ 'audit.export.pdf'|trans }}</a></li>
+                    <li><a class="dropdown-item text-muted disabled"><i class="bi bi-file-earmark-pdf me-2"></i>{{ 'audit.export.pdf'|trans({}, 'audit') }}</a></li>
                 </ul>
             </div>
         </div>
@@ -48,9 +48,9 @@
                         </div>
                     </div>
                     <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'audit.stats.total_events'|trans }}</h6>
+                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'audit.stats.total.events'|trans({}, 'audit') }}</h6>
                         <h3 class="text-gradient mb-0">{{ stats.total_events|number_format }}</h3>
-                        <p class="text-muted mb-0" style="font-size: 0.75rem;">{{ 'audit.stats.all_time'|trans }}</p>
+                        <p class="text-muted mb-0" style="font-size: 0.75rem;">{{ 'audit.stats.all.time'|trans({}, 'audit') }}</p>
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
                     <div class="flex-grow-1 ms-3">
                         <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'common.date.today'|trans }}</h6>
                         <h3 class="mb-0" style="color: #22c55e;">{{ stats.events_today|number_format }}</h3>
-                        <p class="text-muted mb-0" style="font-size: 0.75rem;">{{ 'audit.stats.last_24_hours'|trans }}</p>
+                        <p class="text-muted mb-0" style="font-size: 0.75rem;">{{ 'audit.stats.last_24_hours'|trans({}, 'audit') }}</p>
                     </div>
                 </div>
             </div>
@@ -82,9 +82,9 @@
                         </div>
                     </div>
                     <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'audit.stats.this_week'|trans }}</h6>
+                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'audit.stats.this.week'|trans({}, 'audit') }}</h6>
                         <h3 class="mb-0" style="color: #a855f7;">{{ stats.events_week|number_format }}</h3>
-                        <p class="text-muted mb-0" style="font-size: 0.75rem;">{{ 'audit.stats.last_7_days'|trans }}</p>
+                        <p class="text-muted mb-0" style="font-size: 0.75rem;">{{ 'audit.stats.last_7_days'|trans({}, 'audit') }}</p>
                     </div>
                 </div>
             </div>
@@ -99,9 +99,9 @@
                         </div>
                     </div>
                     <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'audit.stats.last_hour'|trans }}</h6>
+                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'audit.stats.last.hour'|trans({}, 'audit') }}</h6>
                         <h3 class="mb-0 text-warning">{{ stats.events_hour|number_format }}</h3>
-                        <p class="text-muted mb-0" style="font-size: 0.75rem;">{{ 'audit.stats.recent_activity'|trans }}</p>
+                        <p class="text-muted mb-0" style="font-size: 0.75rem;">{{ 'audit.stats.recent.activity'|trans({}, 'audit') }}</p>
                     </div>
                 </div>
             </div>
@@ -113,7 +113,7 @@
         <div class="col-md-6">
             <div class="infinity-card p-3 h-100">
                 <h6 class="mb-3">
-                    <i class="bi bi-pie-chart me-2"></i>{{ 'audit.activity_breakdown'|trans }}
+                    <i class="bi bi-pie-chart me-2"></i>{{ 'audit.activity.breakdown'|trans({}, 'audit') }}
                 </h6>
                 <div class="d-flex justify-content-around">
                     {% set totalActions = 0 %}
@@ -132,7 +132,7 @@
                             <p class="text-muted mb-0" style="font-size: 0.75rem;">
                                 {{ action.action|replace({'entity_': '', '_': ' '})|title }}
                             </p>
-                            <small class="text-muted">{{ action.count }} {{ 'audit.events'|trans }}</small>
+                            <small class="text-muted">{{ action.count }} {{ 'audit.events'|trans({}, 'audit') }}</small>
                         </div>
                     {% endfor %}
                 </div>
@@ -142,10 +142,10 @@
         <div class="col-md-6">
             <div class="infinity-card p-3 h-100">
                 <h6 class="mb-3">
-                    <i class="bi bi-people me-2"></i>{{ 'audit.top_active_users'|trans }}
+                    <i class="bi bi-people me-2"></i>{{ 'audit.top.active.users'|trans({}, 'audit') }}
                 </h6>
                 {% if topUsers is empty %}
-                    <p class="text-muted mb-0">{{ 'audit.no_user_activity'|trans }}</p>
+                    <p class="text-muted mb-0">{{ 'audit.no.user.activity'|trans({}, 'audit') }}</p>
                 {% else %}
                     <div class="list-group list-group-flush">
                         {% for userRow in topUsers %}
@@ -167,7 +167,7 @@
     <div class="infinity-card p-4 mb-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0">
-                <i class="bi bi-funnel me-2"></i>{{ 'audit.filters_and_search'|trans }}
+                <i class="bi bi-funnel me-2"></i>{{ 'audit.filters.and.search'|trans({}, 'audit') }}
             </h5>
             <button type="button" class="btn btn-sm btn-outline-light" id="toggleFilters">
                 <i class="bi bi-chevron-down"></i>
@@ -182,16 +182,16 @@
                         <i class="bi bi-calendar-day me-1"></i>{{ 'common.date.today'|trans }}
                     </button>
                     <button class="btn btn-sm btn-outline-primary quick-filter" data-filter="week">
-                        <i class="bi bi-calendar-week me-1"></i>{{ 'audit.filter.week'|trans }}
+                        <i class="bi bi-calendar-week me-1"></i>{{ 'audit.filter.week'|trans({}, 'audit') }}
                     </button>
                     <button class="btn btn-sm btn-outline-success quick-filter" data-filter="created">
-                        <i class="bi bi-plus-circle me-1"></i>{{ 'audit.filter.created'|trans }}
+                        <i class="bi bi-plus-circle me-1"></i>{{ 'audit.filter.created'|trans({}, 'audit') }}
                     </button>
                     <button class="btn btn-sm btn-outline-warning quick-filter" data-filter="updated">
-                        <i class="bi bi-pencil me-1"></i>{{ 'audit.filter.updated'|trans }}
+                        <i class="bi bi-pencil me-1"></i>{{ 'audit.filter.updated'|trans({}, 'audit') }}
                     </button>
                     <button class="btn btn-sm btn-outline-danger quick-filter" data-filter="deleted">
-                        <i class="bi bi-trash me-1"></i>{{ 'audit.filter.deleted'|trans }}
+                        <i class="bi bi-trash me-1"></i>{{ 'audit.filter.deleted'|trans({}, 'audit') }}
                     </button>
                 </div>
             </div>
@@ -218,14 +218,14 @@
                 <div class="mt-3 d-flex justify-content-between">
                     <div>
                         <button type="submit" class="btn infinity-btn-primary">
-                            <i class="bi bi-search me-1"></i>{{ 'audit.apply_filters'|trans }}
+                            <i class="bi bi-search me-1"></i>{{ 'audit.apply.filters'|trans({}, 'audit') }}
                         </button>
                         <a href="{{ path('admin_audit_index') }}" class="btn btn-outline-light">
-                            <i class="bi bi-arrow-clockwise me-1"></i>{{ 'audit.reset'|trans }}
+                            <i class="bi bi-arrow-clockwise me-1"></i>{{ 'audit.reset'|trans({}, 'audit') }}
                         </a>
                     </div>
                     <div class="text-muted small">
-                        <kbd>Ctrl</kbd> + <kbd>F</kbd> {{ 'audit.focus_search_shortcut'|trans }}
+                        <kbd>Ctrl</kbd> + <kbd>F</kbd> {{ 'audit.focus.search.shortcut'|trans({}, 'audit') }}
                     </div>
                 </div>
             {{ form_end(searchForm) }}
@@ -236,15 +236,15 @@
     <div class="infinity-card p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="mb-0">
-                <i class="bi bi-activity me-2"></i>{{ 'audit.activity_timeline'|trans }}
+                <i class="bi bi-activity me-2"></i>{{ 'audit.activity.timeline'|trans({}, 'audit') }}
                 <span class="badge bg-primary ms-2">{{ totalCount }}</span>
             </h5>
             <div class="btn-group btn-group-sm" role="group">
                 <button type="button" class="btn btn-outline-light active" id="viewTimeline">
-                    <i class="bi bi-list-ul"></i> {{ 'audit.view.timeline'|trans }}
+                    <i class="bi bi-list-ul"></i> {{ 'audit.view.timeline'|trans({}, 'audit') }}
                 </button>
                 <button type="button" class="btn btn-outline-light" id="viewTable">
-                    <i class="bi bi-table"></i> {{ 'audit.view.table'|trans }}
+                    <i class="bi bi-table"></i> {{ 'audit.view.table'|trans({}, 'audit') }}
                 </button>
             </div>
         </div>
@@ -252,8 +252,8 @@
         {% if auditLogs is empty %}
             <div class="text-center py-5">
                 <i class="bi bi-inbox" style="font-size: 4rem; color: rgba(255, 255, 255, 0.1);"></i>
-                <h5 class="text-muted mt-3">{{ 'audit.no_events_found'|trans }}</h5>
-                <p class="text-muted">{{ 'audit.no_events_description'|trans }}</p>
+                <h5 class="text-muted mt-3">{{ 'audit.no.events.found'|trans({}, 'audit') }}</h5>
+                <p class="text-muted">{{ 'audit.no.events.description'|trans({}, 'audit') }}</p>
             </div>
         {% else %}
             {# Timeline View #}
@@ -285,7 +285,7 @@
                                         </a>
                                     {% else %}
                                         <span class="text-muted">
-                                            <i class="bi bi-robot me-1"></i>{{ 'audit.system'|trans }}
+                                            <i class="bi bi-robot me-1"></i>{{ 'audit.system'|trans({}, 'audit') }}
                                         </span>
                                     {% endif %}
 
@@ -302,13 +302,13 @@
                                                 data-bs-toggle="collapse"
                                                 data-bs-target="#changes-{{ log.id }}">
                                             <i class="bi bi-eye me-1"></i>
-                                            {{ 'audit.view_changes'|trans({'%count%': log.changes|length}) }}
+                                            {{ 'audit.view.changes'|trans({'%count%': log.changes|length}) }}
                                         </button>
                                     {% endif %}
                                     <button type="button"
                                             class="btn btn-sm btn-outline-light {% if log.changes is empty %}infinity-btn-primary{% else %}ms-2{% endif %}"
                                             onclick="openHistoryModal('{{ log.entityClass|e('js') }}', '{{ log.entityId }}', '{{ log.entityClass|split('\\\\')|last }}')">
-                                        <i class="bi bi-clock-history me-1"></i>{{ 'audit.full_history'|trans }}
+                                        <i class="bi bi-clock-history me-1"></i>{{ 'audit.full.history'|trans({}, 'audit') }}
                                     </button>
                                     <a href="{{ path('admin_audit_entity', {
                                         class: log.entityClass|url_encode,
@@ -324,7 +324,7 @@
                                         <div class="card" style="background-color: rgba(0, 0, 0, 0.2); border: 1px solid rgba(59, 130, 246, 0.2);">
                                             <div class="card-body p-3">
                                                 <h6 class="mb-3">
-                                                    <i class="bi bi-pencil-square me-2"></i>{{ 'audit.field_changes'|trans }}
+                                                    <i class="bi bi-pencil-square me-2"></i>{{ 'audit.field.changes'|trans({}, 'audit') }}
                                                 </h6>
                                                 {% for field, values in log.changes %}
                                                     <div class="change-row mb-2 p-2 rounded" style="background-color: rgba(255, 255, 255, 0.02);">
@@ -343,14 +343,14 @@
                                                                     {% else %}
                                                                         {# Regular field change #}
                                                                         <div class="diff-old">
-                                                                            <small class="text-muted d-block">{{ 'audit.old.value'|trans }}</small>
+                                                                            <small class="text-muted d-block">{{ 'audit.old.value'|trans({}, 'audit') }}</small>
                                                                             <code class="text-danger">{{ values[0]|default('NULL') }}</code>
                                                                         </div>
                                                                         <div class="align-self-center">
                                                                             <i class="bi bi-arrow-right text-muted"></i>
                                                                         </div>
                                                                         <div class="diff-new">
-                                                                            <small class="text-muted d-block">{{ 'audit.new.value'|trans }}</small>
+                                                                            <small class="text-muted d-block">{{ 'audit.new.value'|trans({}, 'audit') }}</small>
                                                                             <code class="text-success">{{ values[1]|default('NULL') }}</code>
                                                                         </div>
                                                                     {% endif %}
@@ -364,17 +364,17 @@
                                                 {% set metadata = log.metadata %}
                                                 {% if metadata %}
                                                     <hr style="border-color: rgba(255, 255, 255, 0.1);">
-                                                    <h6 class="mb-2"><i class="bi bi-info-circle me-2"></i>{{ 'audit.context'|trans }}</h6>
+                                                    <h6 class="mb-2"><i class="bi bi-info-circle me-2"></i>{{ 'audit.context'|trans({}, 'audit') }}</h6>
                                                     <div class="row g-2">
                                                         {% if metadata.ip_address %}
                                                             <div class="col-md-6">
-                                                                <small class="text-muted">{{ 'audit.ip_address'|trans }}:</small>
+                                                                <small class="text-muted">{{ 'audit.ip.address'|trans({}, 'audit') }}:</small>
                                                                 <div><code class="text-info">{{ metadata.ip_address }}</code></div>
                                                             </div>
                                                         {% endif %}
                                                         {% if metadata.user_agent %}
                                                             <div class="col-md-6">
-                                                                <small class="text-muted">{{ 'audit.user_agent'|trans }}:</small>
+                                                                <small class="text-muted">{{ 'audit.user.agent'|trans({}, 'audit') }}:</small>
                                                                 <div class="text-truncate small">{{ metadata.user_agent }}</div>
                                                             </div>
                                                         {% endif %}
@@ -396,11 +396,11 @@
                     <table class="table table-hover align-middle audit-table">
                         <thead>
                             <tr>
-                                <th class="text-nowrap"><i class="bi bi-clock me-1"></i>{{ 'audit.table.timestamp'|trans }}</th>
-                                <th class="text-nowrap"><i class="bi bi-lightning me-1"></i>{{ 'audit.table.action'|trans }}</th>
-                                <th class="text-nowrap"><i class="bi bi-box me-1"></i>{{ 'audit.table.entity'|trans }}</th>
-                                <th class="text-nowrap d-none d-md-table-cell"><i class="bi bi-person me-1"></i>{{ 'audit.table.user'|trans }}</th>
-                                <th class="text-nowrap text-center"><i class="bi bi-pencil-square me-1"></i>{{ 'audit.table.changes'|trans }}</th>
+                                <th class="text-nowrap"><i class="bi bi-clock me-1"></i>{{ 'audit.table.timestamp'|trans({}, 'audit') }}</th>
+                                <th class="text-nowrap"><i class="bi bi-lightning me-1"></i>{{ 'audit.table.action'|trans({}, 'audit') }}</th>
+                                <th class="text-nowrap"><i class="bi bi-box me-1"></i>{{ 'audit.table.entity'|trans({}, 'audit') }}</th>
+                                <th class="text-nowrap d-none d-md-table-cell"><i class="bi bi-person me-1"></i>{{ 'audit.table.user'|trans({}, 'audit') }}</th>
+                                <th class="text-nowrap text-center"><i class="bi bi-pencil-square me-1"></i>{{ 'audit.table.changes'|trans({}, 'audit') }}</th>
                                 <th class="text-nowrap text-center"><i class="bi bi-gear me-1"></i>{{ 'common.label.actions'|trans }}</th>
                             </tr>
                         </thead>
@@ -427,7 +427,7 @@
                                             <i class="bi bi-person-circle me-1"></i>{{ log.user.email }}
                                         </a>
                                     {% else %}
-                                        <em class="text-muted"><i class="bi bi-robot me-1"></i>{{ 'audit.system'|trans }}</em>
+                                        <em class="text-muted"><i class="bi bi-robot me-1"></i>{{ 'audit.system'|trans({}, 'audit') }}</em>
                                     {% endif %}
                                 </td>
                                 <td class="text-center">
@@ -457,14 +457,14 @@
         {% if totalPages > 1 %}
         <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
             <div class="text-muted">
-                {{ 'audit.showing'|trans }} {{ ((currentPage - 1) * itemsPerPage + 1) }} {{ 'audit.to'|trans }} {{ min(currentPage * itemsPerPage, totalCount) }} {{ 'audit.of'|trans }} {{ totalCount|number_format }} {{ 'audit.events_total'|trans }}
+                {{ 'audit.showing'|trans({}, 'audit') }} {{ ((currentPage - 1) * itemsPerPage + 1) }} {{ 'audit.to'|trans({}, 'audit') }} {{ min(currentPage * itemsPerPage, totalCount) }} {{ 'audit.of'|trans({}, 'audit') }} {{ totalCount|number_format }} {{ 'audit.events.total'|trans({}, 'audit') }}
             </div>
             <nav aria-label="Audit log pagination">
                 <ul class="pagination pagination-sm mb-0">
                     {# Previous Button #}
                     <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
                         <a class="page-link" href="{{ currentPage > 1 ? path('admin_audit_index', app.request.query.all|merge({page: currentPage - 1})) : '#' }}" {% if currentPage <= 1 %}tabindex="-1" aria-disabled="true"{% endif %}>
-                            <i class="bi bi-chevron-left"></i> {{ 'audit.previous'|trans }}
+                            <i class="bi bi-chevron-left"></i> {{ 'audit.previous'|trans({}, 'audit') }}
                         </a>
                     </li>
 
@@ -511,7 +511,7 @@
                     {# Next Button #}
                     <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
                         <a class="page-link" href="{{ currentPage < totalPages ? path('admin_audit_index', app.request.query.all|merge({page: currentPage + 1})) : '#' }}" {% if currentPage >= totalPages %}tabindex="-1" aria-disabled="true"{% endif %}>
-                            {{ 'audit.next'|trans }} <i class="bi bi-chevron-right"></i>
+                            {{ 'audit.next'|trans({}, 'audit') }} <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>
                 </ul>
@@ -526,23 +526,23 @@
             <div class="modal-content audit-history-modal">
                 <div class="modal-header">
                     <h5 class="modal-title" id="historyModalLabel">
-                        <i class="bi bi-clock-history me-2"></i>{{ 'audit.history_modal.title'|trans }}
+                        <i class="bi bi-clock-history me-2"></i>{{ 'audit.history.modal.title'|trans({}, 'audit') }}
                     </h5>
                     <button type="button" class="btn-close audit-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="historyModalBody">
                     <div class="text-center py-5">
                         <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">{{ 'audit.history_modal.loading'|trans }}</span>
+                            <span class="visually-hidden">{{ 'audit.history.modal.loading'|trans({}, 'audit') }}</span>
                         </div>
-                        <p class="text-muted mt-3">{{ 'audit.history_modal.loading_description'|trans }}</p>
+                        <p class="text-muted mt-3">{{ 'audit.history.modal.loading.description'|trans({}, 'audit') }}</p>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <a id="historyOpenNewTab" href="#" target="_blank" class="btn btn-outline-light">
-                        <i class="bi bi-box-arrow-up-right me-1"></i>{{ 'audit.history_modal.open_new_tab'|trans }}
+                        <i class="bi bi-box-arrow-up-right me-1"></i>{{ 'audit.history.modal.open.new.tab'|trans({}, 'audit') }}
                     </a>
-                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">{{ 'audit.history_modal.close'|trans }}</button>
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">{{ 'audit.history.modal.close'|trans({}, 'audit') }}</button>
                 </div>
             </div>
         </div>
@@ -884,7 +884,7 @@ function openHistoryModal(entityClass, entityId, entityName) {
     const openNewTabBtn = document.getElementById('historyOpenNewTab');
 
     // Update modal title
-    modalTitle.innerHTML = `<i class="bi bi-clock-history me-2"></i>{{ 'audit.history_modal.history'|trans }} ${entityName} <code class="ms-2" style="font-size: 0.75rem;">${entityId.substring(0, 8)}...</code>`;
+    modalTitle.innerHTML = `<i class="bi bi-clock-history me-2"></i>{{ 'audit.history.modal.history'|trans({}, 'audit') }} ${entityName} <code class="ms-2" style="font-size: 0.75rem;">${entityId.substring(0, 8)}...</code>`;
 
     // Update "Open in New Tab" link
     const url = `/admin/audit/entity/${encodeURIComponent(entityClass)}/${entityId}`;
@@ -932,7 +932,7 @@ function openHistoryModal(entityClass, entityId, entityName) {
         modalBody.innerHTML = `
             <div class="alert alert-danger">
                 <i class="bi bi-exclamation-triangle me-2"></i>
-                {{ 'audit.history_modal.failed'|trans }} <a href="${url}" target="_blank">{{ 'audit.history_modal.open_link'|trans }}</a>.
+                {{ 'audit.history.modal.failed'|trans({}, 'audit') }} <a href="${url}" target="_blank">{{ 'audit.history.modal.open.link'|trans({}, 'audit') }}</a>.
             </div>
         `;
     });

@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 {% import '_macros/organization_logo.html.twig' as org_logo %}
 
-{% block title %}{{ course.name }} - {{ 'course.singular'|trans }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
+{% block title %}{{ course.name }} - {{ 'course.singular'|trans({}, 'course') }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
 <div class="mb-4">
     <a href="{{ path('course_index') }}" class="btn infinity-btn-ai">
-        <i class="bi bi-arrow-left me-2"></i>{{ 'course.back.to.list'|trans }}
+        <i class="bi bi-arrow-left me-2"></i>{{ 'course.back.to.list'|trans({}, 'course') }}
     </a>
 </div>
 
@@ -36,7 +36,7 @@
                 {% for module in modules %}
                     {% set totalLectures = totalLectures + module.lectures|length %}
                 {% endfor %}
-                {{ modules|length }} {{ 'course.modules'|trans }} • {{ totalLectures }} {{ 'course.lectures'|trans }}
+                {{ modules|length }} {{ 'course.modules'|trans({}, 'course') }} • {{ totalLectures }} {{ 'course.lectures'|trans({}, 'course') }}
             </div>
             {% if is_granted('COURSE_EDIT', course) %}
                 <button type="button"
@@ -71,7 +71,7 @@
         <div class="metric-card">
             <i class="bi bi-layers-fill text-neon fs-1"></i>
             <div class="metric-value">{{ modules|length }}</div>
-            <div class="metric-label">{{ 'course.total.modules'|trans }}</div>
+            <div class="metric-label">{{ 'course.total.modules'|trans({}, 'course') }}</div>
             <div class="metric-trend trend-up">
                 <i class="bi bi-arrow-up"></i> {{ course.active ? 'common.status.active'|trans : 'common.status.inactive'|trans }}
             </div>
@@ -83,9 +83,9 @@
         <div class="metric-card">
             <i class="bi bi-clock-fill text-neon fs-1"></i>
             <div class="metric-value">{{ course.totalLengthFormatted }}</div>
-            <div class="metric-label">{{ 'course.total.duration'|trans }}</div>
+            <div class="metric-label">{{ 'course.total.duration'|trans({}, 'course') }}</div>
             <div class="metric-trend">
-                <i class="bi bi-calendar me-1"></i> {{ course.releaseDate ? course.releaseDate|date('M d, Y') : 'course.no.release.date'|trans }}
+                <i class="bi bi-calendar me-1"></i> {{ course.releaseDate ? course.releaseDate|date('M d, Y') : 'course.no.release.date'|trans({}, 'course') }}
             </div>
         </div>
     </div>
@@ -95,21 +95,21 @@
         <div class="infinity-card ai-enhanced p-4 h-100">
             <div class="d-flex align-items-center mb-3">
                 <i class="bi bi-info-circle text-neon me-2"></i>
-                <h6 class="text-gradient mb-0">{{ 'course.information'|trans }}</h6>
+                <h6 class="text-gradient mb-0">{{ 'course.information'|trans({}, 'course') }}</h6>
             </div>
             <div class="text-secondary">
                 <p class="mb-2">
                     <i class="bi bi-person text-success me-2"></i>
-                    <strong>{{ 'course.owner'|trans }}:</strong> {{ course.owner.name }}
+                    <strong>{{ 'course.owner'|trans({}, 'course') }}:</strong> {{ course.owner.name }}
                 </p>
                 <p class="mb-2 d-flex align-items-center">
                     {{ org_logo.logo(course.organization, 'xs', 'me-2') }}
-                    <strong>{{ 'organization.singular'|trans }}:</strong>
+                    <strong>{{ 'organization.singular'|trans({}, 'organization') }}:</strong>
                     <span class="ms-1">{{ course.organization.name }}</span>
                 </p>
                 <p class="mb-0">
                     <i class="bi bi-calendar-check text-info me-2"></i>
-                    <strong>{{ 'course.created.at'|trans }}:</strong> {{ course.createdAt|date('M d, Y') }}
+                    <strong>{{ 'course.created.at'|trans({}, 'course') }}:</strong> {{ course.createdAt|date('M d, Y') }}
                 </p>
             </div>
         </div>
@@ -121,12 +121,12 @@
          data-module-lecture-reorder-update-url-value="{{ path('course_lectures_reorder', {id: course.id}) }}"
          data-module-lecture-reorder-course-id-value="{{ course.id }}"
          data-module-lecture-reorder-saving-text-value="{{ 'button.saving'|trans }}"
-         data-module-lecture-reorder-success-text-value="{{ 'course.lecture.flash.updated_successfully'|trans }}"
+         data-module-lecture-reorder-success-text-value="{{ 'course.lecture.flash.updated.successfully'|trans({}, 'course') }}"
          data-module-lecture-reorder-error-text-value="{{ 'modal.delete.failed'|trans }}">
         <div class="infinity-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
-                    <i class="bi bi-layers me-2"></i>{{ 'course.modules.and.lectures'|trans }} ({{ modules|length }} {{ 'course.modules'|trans }})
+                    <i class="bi bi-layers me-2"></i>{{ 'course.modules.and.lectures'|trans({}, 'course') }} ({{ modules|length }} {{ 'course.modules'|trans({}, 'course') }})
                 </h5>
                 {% if is_granted('COURSE_EDIT', course) %}
                     <button type="button"
@@ -163,14 +163,14 @@
                      data-module-reorder-update-url-value="{{ path('course_modules_reorder', {courseId: course.id}) }}"
                      data-module-reorder-course-id-value="{{ course.id }}"
                      data-module-reorder-saving-text-value="{{ 'button.saving'|trans }}"
-                     data-module-reorder-success-text-value="{{ 'course.module.flash.reordered_successfully'|trans }}"
+                     data-module-reorder-success-text-value="{{ 'course.module.flash.reordered.successfully'|trans({}, 'course') }}"
                      data-module-reorder-error-text-value="{{ 'modal.delete.failed'|trans }}">
                     {% for module in modules %}
                         <div class="module-wrapper mb-3" data-module-id="{{ module.id }}" data-module-reorder-target="module">
                             <div class="accordion-item" style="background: var(--infinity-card-bg); border: 1px solid var(--infinity-border-color); border-radius: 8px; overflow: hidden;">
                                 <h2 class="accordion-header d-flex align-items-center" id="heading-module-{{ module.id }}">
                                     {% if is_granted('COURSE_EDIT', course) %}
-                                        <div class="module-drag-handle me-2" title="{{ 'course.module.drag.to.reorder'|trans }}">
+                                        <div class="module-drag-handle me-2" title="{{ 'course.module.drag.to.reorder'|trans({}, 'course') }}">
                                             <i class="bi bi-grip-vertical"></i>
                                         </div>
                                     {% endif %}
@@ -187,7 +187,7 @@
                                     <div class="flex-grow-1">
                                         <h6 class="mb-1 text-white">{{ module.name }}</h6>
                                         <small class="text-secondary module-header-summary" data-module-id="{{ module.id }}">
-                                            <span class="module-header-lecture-count">{{ module.lectures|length }} {{ 'course.lectures'|trans }}</span>
+                                            <span class="module-header-lecture-count">{{ module.lectures|length }} {{ 'course.lectures'|trans({}, 'course') }}</span>
                                             {% if module.totalLengthSeconds > 0 %}
                                                 • <i class="bi bi-clock me-1"></i>{{ module.totalLengthFormatted }}
                                             {% endif %}
@@ -237,7 +237,7 @@
                                     <!-- Lectures Header with Add Button -->
                                     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                                         <h6 class="text-white mb-0">
-                                            <i class="bi bi-collection me-2"></i>{{ 'course.lectures'|trans }} (<span class="module-lecture-count" data-module-id="{{ module.id }}">{{ module.lectures|length }}</span>)
+                                            <i class="bi bi-collection me-2"></i>{{ 'course.lectures'|trans({}, 'course') }} (<span class="module-lecture-count" data-module-id="{{ module.id }}">{{ module.lectures|length }}</span>)
                                         </h6>
                                         {% if is_granted('COURSE_EDIT', course) %}
                                             <button type="button"
@@ -265,7 +265,7 @@
                                                 <div class="infinity-card p-3 lecture-card">
                                                     <div class="d-flex align-items-start">
                                                         <!-- Drag Handle -->
-                                                        <div class="lecture-drag-handle me-2" title="{{ 'course.lecture.drag.to.reorder'|trans }}">
+                                                        <div class="lecture-drag-handle me-2" title="{{ 'course.lecture.drag.to.reorder'|trans({}, 'course') }}">
                                                             <i class="bi bi-grip-vertical"></i>
                                                         </div>
                                                         <div class="p-2 rounded-3 me-3 lecture-order-badge" style="background: linear-gradient(135deg, #3b82f6, #2563eb); min-width: 48px; display: flex; align-items: center; justify-content: center;">
@@ -310,7 +310,7 @@
                                                                        data-lecture-processing-target="watchButton"
                                                                        class="real-time-badge"
                                                                        style="text-decoration: none; {{ lecture.processingStatus != 'completed' ? 'display: none;' : '' }}">
-                                                                        <i class="bi bi-play-circle me-1"></i>{{ 'course.lecture.watch.video'|trans }}
+                                                                        <i class="bi bi-play-circle me-1"></i>{{ 'course.lecture.watch.video'|trans({}, 'course') }}
                                                                     </a>
 
                                                                     {# Progress Bar (only if processing or pending) #}
@@ -380,14 +380,14 @@
         <div class="infinity-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
-                    <i class="bi bi-people me-2"></i>{{ 'course.enrolled.students'|trans }} ({{ course.studentCourses|length }})
+                    <i class="bi bi-people me-2"></i>{{ 'course.enrolled.students'|trans({}, 'course') }} ({{ course.studentCourses|length }})
                 </h5>
                 <button type="button"
                         class="btn infinity-btn-primary btn-sm"
                         data-bs-toggle="modal"
                         data-bs-target="#enrollStudentModal"
                         data-bs-toggle="tooltip"
-                        data-bs-title="{{ 'course.enroll.student'|trans }}">
+                        data-bs-title="{{ 'course.enroll.student'|trans({}, 'course') }}">
                     <i class="bi bi-person-plus"></i>
                 </button>
             </div>
@@ -401,7 +401,7 @@
                             class="btn infinity-btn-primary"
                             data-bs-toggle="modal"
                             data-bs-target="#enrollStudentModal">
-                        <i class="bi bi-person-plus me-2"></i>{{ 'course.enroll.first.student'|trans }}
+                        <i class="bi bi-person-plus me-2"></i>{{ 'course.enroll.first.student'|trans({}, 'course') }}
                     </button>
                 </div>
             {% else %}
@@ -409,11 +409,11 @@
                     <table class="table table-hover align-middle infinity-table">
                         <thead>
                             <tr>
-                                <th><i class="bi bi-person me-2"></i>{{ 'user.name'|trans }}</th>
-                                <th><i class="bi bi-envelope me-2"></i>{{ 'user.email'|trans }}</th>
-                                <th><i class="bi bi-calendar me-2"></i>{{ 'course.enrolled.at'|trans }}</th>
-                                <th><i class="bi bi-graph-up me-2"></i>{{ 'course.progress'|trans }}</th>
-                                <th><i class="bi bi-toggle-on me-2"></i>{{ 'course.status'|trans }}</th>
+                                <th><i class="bi bi-person me-2"></i>{{ 'user.name'|trans({}, 'user') }}</th>
+                                <th><i class="bi bi-envelope me-2"></i>{{ 'user.email'|trans({}, 'user') }}</th>
+                                <th><i class="bi bi-calendar me-2"></i>{{ 'course.enrolled.at'|trans({}, 'course') }}</th>
+                                <th><i class="bi bi-graph-up me-2"></i>{{ 'course.progress'|trans({}, 'course') }}</th>
+                                <th><i class="bi bi-toggle-on me-2"></i>{{ 'course.status'|trans({}, 'course') }}</th>
                                 <th class="text-end">{{ 'common.label.actions'|trans }}</th>
                             </tr>
                         </thead>
@@ -456,7 +456,7 @@
                                             <button type="submit"
                                                     class="btn btn-sm {{ enrollment.active ? 'infinity-btn-warning' : 'infinity-btn-success' }}"
                                                     data-bs-toggle="tooltip"
-                                                    data-bs-title="{{ enrollment.active ? 'course.enrollment.deactivate'|trans : 'course.enrollment.activate'|trans }}"
+                                                    data-bs-title="{{ enrollment.active ? 'course.enrollment.deactivate'|trans({}, 'course') : 'course.enrollment.activate'|trans({}, 'course') }}"
                                                     style="min-width: 32px;">
                                                 <i class="bi bi-{{ enrollment.active ? 'pause-circle' : 'play-circle' }}"></i>
                                             </button>
@@ -497,13 +497,13 @@
              data-enrollment-switch-deactivate-url-value="{{ path('course_enrollment_deactivate_multi', {courseId: course.id}) }}"
              data-enrollment-switch-saving-text-value="{{ 'button.saving'|trans }}"
              data-enrollment-switch-confirm-text-value="{{ 'button.confirm'|trans }}"
-             data-enrollment-switch-enrolled-text-value="{{ 'course.enrollment.enrolled'|trans }}"
-             data-enrollment-switch-deactivated-text-value="{{ 'course.enrollment.deactivate'|trans }}"
-             data-enrollment-switch-no-changes-text-value="{{ 'modal.crud.unsaved_changes'|trans }}"
-             data-enrollment-switch-error-text-value="{{ 'modal.crud.error_saving'|trans }}">
+             data-enrollment-switch-enrolled-text-value="{{ 'course.enrollment.enrolled'|trans({}, 'course') }}"
+             data-enrollment-switch-deactivated-text-value="{{ 'course.enrollment.deactivate'|trans({}, 'course') }}"
+             data-enrollment-switch-no-changes-text-value="{{ 'modal.crud.unsaved.changes'|trans }}"
+             data-enrollment-switch-error-text-value="{{ 'modal.crud.error.saving'|trans }}">
             <div class="modal-header" style="border-bottom: 1px solid var(--infinity-border-color);">
                 <h5 class="modal-title text-white">
-                    <i class="bi bi-people me-2"></i>{{ 'course.manage.enrollments'|trans }}
+                    <i class="bi bi-people me-2"></i>{{ 'course.manage.enrollments'|trans({}, 'course') }}
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -516,13 +516,13 @@
                         </span>
                         <input type="text"
                                class="form-control"
-                               placeholder="{{ 'course.enrollment.search.by.name'|trans }}"
+                               placeholder="{{ 'course.enrollment.search.by.name'|trans({}, 'course') }}"
                                data-enrollment-switch-target="searchInput"
                                data-action="input->enrollment-switch#search"
                                style="background: var(--infinity-bg); border-color: var(--infinity-border-color); color: white;">
                     </div>
                     <small class="text-muted d-block mt-2">
-                        <i class="bi bi-info-circle me-1"></i>{{ 'course.enrollment.switch.hint'|trans }}
+                        <i class="bi bi-info-circle me-1"></i>{{ 'course.enrollment.switch.hint'|trans({}, 'course') }}
                     </small>
                 </div>
 
@@ -548,10 +548,10 @@
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge bg-success badge-enrolled" style="display: {{ user.id.toString in enrolledUserIds ? 'inline-block' : 'none' }}; min-width: 110px;" data-enrollment-switch-target="badgeEnrolled">
-                                {{ 'course.enrollment.enrolled'|trans }}
+                                {{ 'course.enrollment.enrolled'|trans({}, 'course') }}
                             </span>
                             <span class="badge bg-secondary badge-not-enrolled" style="display: {{ user.id.toString in enrolledUserIds ? 'none' : 'inline-block' }}; min-width: 110px;" data-enrollment-switch-target="badgeNotEnrolled">
-                                {{ 'course.enrollment.not_enrolled'|trans }}
+                                {{ 'course.enrollment.not.enrolled'|trans({}, 'course') }}
                             </span>
                             <div class="form-check form-switch mb-0">
                                 <input class="form-check-input"

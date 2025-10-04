@@ -27,14 +27,14 @@
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ input.name }}
                             {% else %}
-                                {{ 'input.modal.create.title'|trans }}
+                                {{ 'input.modal.create.title'|trans({}, 'treeflow') }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'input.modal.edit.subtitle'|trans }}
+                                {{ 'input.modal.edit.subtitle'|trans({}, 'treeflow') }}
                             {% else %}
-                                {{ 'input.modal.create.subtitle'|trans }}
+                                {{ 'input.modal.create.subtitle'|trans({}, 'treeflow') }}
                             {% endif %}
                         </p>
                     </div>
@@ -54,7 +54,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'input.form.name_placeholder'|trans,
+                            'placeholder': 'input.form.name.placeholder'|trans({}, 'treeflow'),
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -89,7 +89,7 @@
                             'class': 'form-select-modern' ~ (form.sourceStep.vars.errors|length > 0 ? ' input-error' : '')
                         }
                     }) }}
-                    <small class="text-muted mt-1 d-block">{{ 'input.form.source_help'|trans }}</small>
+                    <small class="text-muted mt-1 d-block">{{ 'input.form.source.help'|trans({}, 'treeflow') }}</small>
                     {{ form_errors(form.sourceStep) }}
                 </div>
 
@@ -98,11 +98,11 @@
                     {{ form_widget(form.prompt, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.prompt.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'input.form.prompt_placeholder'|trans,
+                            'placeholder': 'input.form.prompt.placeholder'|trans({}, 'treeflow'),
                             'rows': 4
                         }
                     }) }}
-                    <small class="text-muted mt-1 d-block">{{ 'input.form.prompt_help'|trans }}</small>
+                    <small class="text-muted mt-1 d-block">{{ 'input.form.prompt.help'|trans({}, 'treeflow') }}</small>
                     {{ form_errors(form.prompt) }}
                 </div>
 
@@ -126,7 +126,7 @@
                         {% if is_edit %}
                             {{ 'button.save.changes'|trans }}
                         {% else %}
-                            {{ 'input.button.create.input'|trans }}
+                            {{ 'input.button.create.input'|trans({}, 'treeflow') }}
                         {% endif %}
                     </span>
                 </button>

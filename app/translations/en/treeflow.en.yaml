@@ -1,0 +1,181 @@
+# Symfony Translations - English (Treeflow Domain)
+# Usage: {{ 'key'|trans({}, 'treeflow') }}
+
+# ================================================================================
+# TreeFlow
+# ================================================================================
+# FewShot Actions
+fewshot.add.example: Add Example
+fewshot.add.first.example: Add First Example
+# FewShot Button
+fewshot.button.create.example: Create Example
+fewshot.confirm.delete: Are you sure you want to delete this example?
+fewshot.examples: Examples
+# FewShot Flash Messages
+fewshot.flash.created.successfully: Example created successfully
+fewshot.flash.deleted.successfully: Example deleted successfully
+fewshot.flash.updated.successfully: Example updated successfully
+fewshot.form.description.placeholder: Describe what makes this a good/bad example
+fewshot.form.name: Example Name
+fewshot.form.name.placeholder: Enter example name
+fewshot.form.prompt: Prompt
+fewshot.form.prompt.placeholder: Example prompt for the AI
+# FewShot Form
+fewshot.form.type: Example Type
+fewshot.modal.create.subtitle: Add a few-shot learning example
+# FewShot Modal
+fewshot.modal.create.title: Create New Example
+fewshot.modal.edit.subtitle: Update example configuration
+fewshot.plural: Few-Shot Examples
+# FewShot Examples
+fewshot.singular: Few-Shot Example
+fewshot.type.negative: Negative
+# FewShot Types
+fewshot.type.positive: Positive
+# Input Actions
+input.add.input: Add Input
+# Input Button
+input.button.create.input: Create Input
+input.confirm.delete: Are you sure you want to delete this input?
+# Input Flash Messages
+input.flash.created.successfully: Input created successfully
+input.flash.deleted.successfully: Input deleted successfully
+input.flash.updated.successfully: Input updated successfully
+# Input Form
+input.form.name: Input Name
+input.form.name.placeholder: Enter input name
+input.form.prompt: Entry Prompt
+input.form.prompt.help: Additional instructions when entering through this input
+input.form.prompt.placeholder: Additional context when entering via this input
+input.form.source: Source Step
+input.form.source.help: Which step can route to this step (optional)
+input.form.source.placeholder: Select the step that can route here
+input.form.type: Entry Type
+input.modal.create.subtitle: Define how this step can be entered
+# Input Modal
+input.modal.create.title: Create New Input
+input.modal.edit.subtitle: Update input configuration
+input.plural: Inputs
+# Step Input
+input.singular: Input
+input.type.any: Any Status
+# Input Types
+input.type.fully.completed: Fully Completed
+input.type.not.completed.after.attempts: Not Completed After Attempts
+# Output Actions
+output.add.output: Add Output
+# Output Button
+output.button.create.output: Create Output
+output.confirm.delete: Are you sure you want to delete this output?
+# Output Flash Messages
+output.flash.created.successfully: Output created successfully
+output.flash.deleted.successfully: Output deleted successfully
+output.flash.updated.successfully: Output updated successfully
+output.form.conditional: Conditional Expression
+output.form.conditional.help: 'Define conditions for this output (regex, keywords, or custom logic)'
+output.form.conditional.placeholder: 'Example: regex:/urgent/i or keywords:high-priority,immediate'
+output.form.description.placeholder: Describe what this output represents
+output.form.destination: Destination Step
+output.form.destination.help: Where to route when this condition matches (optional)
+output.form.destination.placeholder: Select where to route when this condition matches
+# Output Form
+output.form.name: Output Name
+output.form.name.placeholder: Enter output name
+output.modal.create.subtitle: Define a conditional exit from this step
+# Output Modal
+output.modal.create.title: Create New Output
+output.modal.edit.subtitle: Update output configuration
+output.plural: Outputs
+# Step Output
+output.singular: Output
+# Question Actions
+question.add.question: Add Question
+# Question Button
+question.button.create.question: Create Question
+question.confirm.delete: Are you sure you want to delete this question?
+# Question Flash Messages
+question.flash.created.successfully: Question created successfully
+question.flash.deleted.successfully: Question deleted successfully
+question.flash.updated.successfully: Question updated successfully
+question.form.importance: Importance
+question.form.importance.help: 'Rate from 1 (low) to 10 (high)'
+# Question Form
+question.form.name: Question Name
+question.form.name.placeholder: Enter question name
+question.form.objective: Objective
+question.form.objective.placeholder: What should this question achieve?
+question.form.prompt: Prompt
+question.form.prompt.placeholder: Instructions for this question
+question.importance: Importance
+question.modal.create.subtitle: Add a new question to this step
+# Question Modal
+question.modal.create.title: Create New Question
+question.modal.edit.subtitle: Update question configuration
+question.plural: Questions
+question.reorder.error: Failed to reorder questions
+question.reorder.success: Questions reordered successfully
+question.singular: Question
+step.add.first.step: Add First Step
+# Step Actions
+step.add.step: Add Step
+# Step Button
+step.button.create.step: Create Step
+step.confirm.delete: Are you sure you want to delete this step?
+# Step
+step.first: FIRST
+# Step Flash Messages
+step.flash.created.successfully: Step created successfully
+step.flash.deleted.successfully: Step deleted successfully
+step.flash.updated.successfully: Step updated successfully
+step.form.first: First Step
+step.form.first.help: Mark this as the starting point of the TreeFlow
+step.form.first.warning: Only one step can be marked as first. Marking this step as first will automatically unmark other steps.
+# Step Form
+step.form.name: Step Name
+step.form.name.placeholder: Enter step name
+step.form.objective: Objective
+step.form.objective.placeholder: What should this step achieve?
+step.form.prompt: Prompt
+step.form.prompt.placeholder: Instructions for the AI agent at this step
+step.modal.create.subtitle: Add a new step to the TreeFlow
+# Step Modal
+step.modal.create.title: Create New Step
+step.modal.edit.subtitle: Update step configuration
+step.plural: Steps
+step.singular: Step
+treeflow.add.questions.to.steps: Add questions to your steps to get started
+treeflow.add.steps.first: Add steps first before creating questions
+treeflow.back.to.list: Back to TreeFlows
+# TreeFlow Button
+treeflow.button.create.treeflow: Create TreeFlow
+# TreeFlow Flash Messages
+treeflow.flash.created.successfully: TreeFlow "%name%" created successfully (Version %version%)
+treeflow.flash.deleted.successfully: TreeFlow "%name%" deleted successfully
+treeflow.flash.updated.successfully: TreeFlow "%name%" updated successfully (Version %version%)
+treeflow.form.active: Active
+treeflow.form.active.help: Inactive TreeFlows are hidden from users
+# TreeFlow Form
+treeflow.form.name: TreeFlow Name
+treeflow.form.name.placeholder: Enter TreeFlow name
+treeflow.metadata: Metadata
+treeflow.modal.create.subtitle: Add a new TreeFlow to guide AI agents
+# TreeFlow Modal
+treeflow.modal.create.title: Create New TreeFlow
+treeflow.modal.edit.subtitle: Update TreeFlow configuration
+treeflow.name: Name
+# TreeFlow Additional
+treeflow.no.questions: No questions defined yet
+treeflow.no.steps: No steps defined yet
+treeflow.plural: TreeFlows
+treeflow.singular: TreeFlow
+treeflow.status: Status
+# TreeFlow Status
+treeflow.status.active: Active
+treeflow.status.inactive: Inactive
+treeflow.steps: Steps
+treeflow.steps.reorder.error: Failed to reorder steps
+# TreeFlow - JavaScript Messages
+treeflow.steps.reorder.success: Steps reordered successfully
+treeflow.total.steps: Total Steps
+treeflow.version: Version
+

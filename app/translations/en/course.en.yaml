@@ -1,0 +1,243 @@
+# Symfony Translations - English (Course Domain)
+# Usage: {{ 'key'|trans({}, 'course') }}
+
+# ================================================================================
+# Course
+# ================================================================================
+certificate.back.to.course: Back to Course
+certificate.completion.date: Completion Date
+certificate.course.duration: Course Duration
+certificate.credential.verification: Credential Verification
+certificate.document.title: Certificate
+certificate.download.pdf: Download PDF
+certificate.footer: This certificate verifies that the above individual successfully completed the course.
+certificate.presented.to: Presented to
+certificate.print: Print Certificate
+certificate.text.has.successfully.completed: has successfully completed the course
+certificate.title: Certificate of Completion
+# Certificates
+certificate.view.certificate: Certificate
+course.back.to.course: Back to Course
+# Course Details & Display
+course.back.to.list: Back to Courses
+# Course Modal Forms
+course.button.create.course: Create Course
+course.content: Course Content
+course.created.at: Created At
+course.date: Date
+course.duration: Duration
+course.enroll.first.student: Enroll First Student
+# Course Enrollments
+course.enroll.student: Enroll Student
+course.enrolled.at: Enrolled At
+course.enrolled.students: Enrolled Students
+course.enrollment.activate: Activate
+course.enrollment.active.immediately: Activate enrollment immediately
+course.enrollment.auto.deactivate.hint: Unselecting a student will automatically deactivate their enrollment (not delete)
+course.enrollment.confirm.remove: Are you sure you want to remove %student% from this course?
+course.enrollment.deactivate: Deactivate
+course.enrollment.deactivate.warning: Removing a student from selection will deactivate (not delete) their enrollment. They will lose access to the course but their progress will be preserved.
+course.enrollment.enroll.selected: Enroll Selected Students
+course.enrollment.enrolled: Enrolled
+course.enrollment.flash.activated.successfully: Enrollment activated successfully
+course.enrollment.flash.already.enrolled: This student is already enrolled in this course
+course.enrollment.flash.deactivated.successfully: Enrollment deactivated successfully
+course.enrollment.flash.enrolled.successfully: Student enrolled successfully
+course.enrollment.flash.removed.successfully: Student removed from course successfully
+course.enrollment.flash.student.not.found: Student not found
+course.enrollment.multi.select.hint: Select multiple students to enroll at once
+course.enrollment.not.enrolled: Not Enrolled
+course.enrollment.save.changes: Save Changes
+course.enrollment.search.by.name: Search by name...
+course.enrollment.search.hint: Type to search by name or email
+course.enrollment.select.hint: Only users from the same organization who are not yet enrolled will be shown
+course.enrollment.select.students: Select Students
+course.enrollment.switch.hint: Toggle switches to enroll/deactivate students. Click Confirm to save changes.
+# Course Flash Messages
+course.flash.created.successfully: Course created successfully
+course.flash.deleted.successfully: Course deleted successfully
+course.flash.updated.successfully: Course updated successfully
+course.form.active: Active Course
+course.form.description.placeholder: Enter course description
+# Course Form
+course.form.name: Course Name
+course.form.name.placeholder: Enter course name
+course.form.release.date: Release Date
+course.form.total.length: Total Length (hours)
+course.form.total.length.placeholder: 0.0
+course.hours: hours
+course.information: Course Information
+# Lecture Modal Forms
+course.lecture.button.add.lecture: Add Lecture
+course.lecture.drag.to.reorder: Drag to reorder or move to another module
+course.lecture.duration: Duration
+course.lecture.failed: Processing Failed
+course.lecture.failed.description: Video processing failed. Please contact support.
+# Course Lecture Flash Messages
+course.lecture.flash.created.successfully: Lecture created successfully
+course.lecture.flash.deleted.successfully: Lecture deleted successfully
+course.lecture.flash.updated.successfully: Lecture updated successfully
+course.lecture.form.description.placeholder: Enter lecture description
+# Course Lecture Translations
+course.lecture.form.name: Lecture Name
+course.lecture.form.name.placeholder: Enter lecture name
+course.lecture.form.video.file: Video File
+course.lecture.form.view.order: Order
+course.lecture.form.view.order.placeholder: Display order (e.g., 1, 2, 3)
+course.lecture.modal.create.subtitle: Add a new lecture to this module
+course.lecture.modal.create.tip: Fill in the lecture details below. The order determines the sequence in the course.
+# Course Lecture Modal
+course.lecture.modal.create.title: Add New Lecture
+course.lecture.modal.edit.subtitle: Update lecture information
+course.lecture.modal.edit.title: Edit Lecture
+course.lecture.modal.new.title: Add New Lecture
+course.lecture.no.video: No Video Available
+course.lecture.no.video.description: This lecture doesn't have a video yet
+# Course/Lecture
+course.lecture.number: Lecture
+# Course Lecture States
+course.lecture.processing: Processing
+course.lecture.processing.description: Your video is being processed. This may take a few minutes.
+course.lecture.singular: Lecture
+course.lecture.status.completed: Ready
+course.lecture.status.failed: Processing Failed
+# Course Lecture Status
+course.lecture.status.pending: Pending Processing
+course.lecture.status.processing: Processing...
+course.lecture.validation.description.max.length: Description cannot exceed 5000 characters
+course.lecture.validation.invalid.video.format: Please upload a valid video file (MP4, WebM, OGG, MOV)
+course.lecture.validation.name.max.length: Lecture name cannot exceed 255 characters
+course.lecture.validation.name.min.length: Lecture name must be at least 2 characters
+# Course Lecture Validation
+course.lecture.validation.name_required: Lecture name is required
+course.lecture.validation.view.order.positive: Order must be zero or positive
+course.lecture.watch.video: Watch Video
+# Plural form - multiple lectures
+course.lectures: Lectures
+course.lectures.count: Lectures
+course.lectures.in.course: Lectures in Course
+course.manage.enrollments: Manage Enrollments
+course.manage.lectures: Manage Lectures
+# Missing Course Translations
+# Time unit for course duration
+course.minutes: minutes
+# Course Modal
+course.modal.create.subtitle: Add a new course to your organization
+course.modal.create.tip: Fill in the course details below. You can add lectures after creating the course.
+course.modal.create.title: Create New Course
+course.modal.edit.subtitle: Update course information
+course.modal.edit.title: Edit Course
+course.module: Module
+# Module Modal Forms
+course.module.button.create.module: Create Module
+course.module.drag.to.reorder: Drag to reorder module
+# Module Flash Messages
+course.module.flash.created.successfully: Module created successfully
+course.module.flash.delete.error: Cannot delete module with lectures. Please remove all lectures first.
+course.module.flash.deleted.successfully: Module deleted successfully
+course.module.flash.not.found: Module not found
+course.module.flash.reordered.successfully: Modules reordered successfully
+course.module.flash.updated.successfully: Module updated successfully
+course.module.form.active.label: Active
+course.module.form.description.label: Description
+course.module.form.description.placeholder: Enter module description
+course.module.form.name.label: Module Name
+course.module.form.name.placeholder: Enter module name
+course.module.form.releaseDate.label: Release Date
+course.module.form.releaseDate.placeholder: When should this module be available?
+course.module.form.title.edit: Edit Module
+# Module Form
+course.module.form.title.new: New Module
+course.module.form.viewOrder.label: View Order
+course.module.form.viewOrder.placeholder: Display order (e.g., 1, 2, 3)
+course.module.modal.create.subtitle: Add a new module to this course
+course.module.modal.create.title: Create New Module
+course.module.modal.edit.subtitle: Update module information
+course.module.validation.course_required: Module must be associated with a course
+# Module Validation
+course.module.validation.name_required: Module name is required
+course.module.validation.name_too_long: Module name cannot exceed 255 characters
+course.module.validation.name_too_short: Module name must be at least 3 characters
+course.module.validation.view_order_invalid: View order must be a positive number
+# Course Module Translations
+course.modules: Modules
+course.modules.and.lectures: Modules & Lectures
+course.modules.count: Modules
+course.name: Course Name
+course.no.content: No Content Yet
+course.no.content.description: This course doesn't have any modules or lectures yet
+course.no.lectures: No lectures
+# Empty state message for courses without lectures
+course.no.lectures.description: This course doesn't have any lectures yet
+course.no.release.date: No Release Date
+course.overall.progress: Overall Progress
+course.owner: Owner
+# Course Enrollment
+course.progress: Progress
+course.release.date: Release Date
+course.singular: Course
+course.status: Status
+# Number of enrolled students
+course.students: Students
+# Course Translations
+course.title: Courses
+course.total.duration: Total Duration
+course.total.lectures: Total Lectures
+course.total.length: Total Length
+course.total.modules: Total Modules
+course.updated.at: Updated At
+course.validation.description.max.length: Description cannot exceed 5000 characters
+course.validation.name.max.length: Course name cannot exceed 255 characters
+course.validation.name.min.length: Course name must be at least 2 characters
+# Course Validation
+course.validation.name_required: Course name is required
+course.validation.total.length.positive: Total length must be zero or positive
+empty.course.enrollment.description: Start building your class by enrolling students from your organization
+empty.course.lectures.description: Start building your course by adding the first lecture.
+empty.course.modules.description: Start organizing your course by creating modules to structure your content
+empty.module.description: Start organizing your course by creating modules. Each module can contain multiple lectures.
+empty.no.lectures.in.module: No lectures in this module
+# Course Empty States
+empty.no.lectures.yet: No lectures yet
+# Course Page Titles
+page.course.details: Course Details
+
+# ================================================================================
+# Student
+# ================================================================================
+empty.no.students.enrolled: No students enrolled yet
+student.back.to.courses: Back to My Courses
+student.complete: Complete
+student.completed: Completed
+student.completed.courses: Completed
+student.completed.lectures: Completed Lectures
+student.continue: Continue
+student.course.completed: Course Completed
+student.courses.subtitle: Your learning journey
+student.current: Current
+student.end.course: End of Course
+student.enrolled: Enrolled
+student.enrolled.on: Enrolled on
+student.in.progress: In Progress
+student.in.progress.courses: In Progress
+student.last.accessed: Last Accessed
+# Student Portal
+student.my.courses: My Courses
+# Student Empty States
+student.no.courses: No courses yet
+student.no.courses.description: You haven't been enrolled in any courses yet
+student.not.started: Not Started
+student.not.yet: Not yet
+student.overall.completion: Overall Completion
+student.progress: Progress
+student.restart: Restart
+student.review: Review
+# Student Portal Translations
+student.singular: Student
+student.start: Start Course
+student.status: Status
+student.total.courses: Total Courses
+student.watch.progress: Watch Progress
+student.watched: Watched
+student.your.progress: Your Progress
+

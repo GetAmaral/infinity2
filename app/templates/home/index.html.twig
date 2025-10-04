@@ -25,7 +25,7 @@
 <div class="bento-grid mb-4">
     <div class="bento-item large">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="text-neon mb-0">{{ 'ai.quick.actions'|trans }}</h6>
+            <h6 class="text-neon mb-0">{{ 'ai.quick.actions'|trans({}, 'insights') }}</h6>
             <i class="bi bi-magic text-neon"></i>
         </div>
         <div class="row">
@@ -50,7 +50,7 @@
             <div class="col-6 col-lg-3 mb-3">
                 <a href="/health" class="btn infinity-btn-ai w-100 py-3">
                     <i class="bi bi-activity fs-4 d-block mb-2"></i>
-                    <span class="fw-semibold">{{ 'ai.analytics'|trans }}</span>
+                    <span class="fw-semibold">{{ 'ai.analytics'|trans({}, 'insights') }}</span>
                 </a>
             </div>
         </div>
@@ -60,7 +60,7 @@
         <div class="metric-card">
             <i class="bi bi-people-fill text-neon fs-1"></i>
             <div class="metric-value">247</div>
-            <div class="metric-label">{{ 'metric.total.contacts'|trans }}</div>
+            <div class="metric-label">{{ 'metric.total.contacts'|trans({}, 'insights') }}</div>
             <div class="metric-trend trend-up">
                 <i class="bi bi-arrow-up"></i> {{ 'metric.month.growth'|trans({'%percent%': 12}) }}
             </div>
@@ -82,7 +82,7 @@
         <div class="metric-card">
             <i class="bi bi-chat-dots-fill text-neon fs-1"></i>
             <div class="metric-value">1.2k</div>
-            <div class="metric-label">{{ 'metric.ai.interactions'|trans }}</div>
+            <div class="metric-label">{{ 'metric.ai.interactions'|trans({}, 'insights') }}</div>
             <div class="metric-trend trend-up">
                 <i class="bi bi-arrow-up"></i> {{ 'metric.today.growth'|trans({'%percent%': 15}) }}
             </div>
@@ -94,7 +94,7 @@
 <div class="bento-grid">
     <div class="bento-item large ai-enhanced">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="text-gradient mb-0">{{ 'ai.powered.crm'|trans }}</h5>
+            <h5 class="text-gradient mb-0">{{ 'ai.powered.crm'|trans({}, 'insights') }}</h5>
             <i class="bi bi-stars text-neon"></i>
         </div>
         <div class="row">
@@ -105,8 +105,8 @@
                             <i class="bi bi-chat-square-quote text-neon fs-3"></i>
                         </div>
                     </div>
-                    <h6 class="text-center text-white">{{ 'ai.conversational'|trans }}</h6>
-                    <p class="text-secondary text-center">{{ 'ai.conversational.description'|trans }}</p>
+                    <h6 class="text-center text-white">{{ 'ai.conversational'|trans({}, 'insights') }}</h6>
+                    <p class="text-secondary text-center">{{ 'ai.conversational.description'|trans({}, 'insights') }}</p>
                 </div>
             </div>
             <div class="col-lg-4 mb-4">
@@ -116,8 +116,8 @@
                             <i class="bi bi-graph-up-arrow text-primary fs-3"></i>
                         </div>
                     </div>
-                    <h6 class="text-center text-white">{{ 'ai.predictive.analytics'|trans }}</h6>
-                    <p class="text-secondary text-center">{{ 'ai.predictive.description'|trans }}</p>
+                    <h6 class="text-center text-white">{{ 'ai.predictive.analytics'|trans({}, 'insights') }}</h6>
+                    <p class="text-secondary text-center">{{ 'ai.predictive.description'|trans({}, 'insights') }}</p>
                 </div>
             </div>
             <div class="col-lg-4 mb-4">
@@ -127,8 +127,8 @@
                             <i class="bi bi-magic text-secondary fs-3"></i>
                         </div>
                     </div>
-                    <h6 class="text-center text-white">{{ 'ai.smart.automation'|trans }}</h6>
-                    <p class="text-secondary text-center">{{ 'ai.automation.description'|trans }}</p>
+                    <h6 class="text-center text-white">{{ 'ai.smart.automation'|trans({}, 'insights') }}</h6>
+                    <p class="text-secondary text-center">{{ 'ai.automation.description'|trans({}, 'insights') }}</p>
                 </div>
             </div>
         </div>
@@ -139,17 +139,17 @@
         <div class="metric-card mb-3">
             <i class="bi bi-lightning-charge text-neon"></i>
             <div class="metric-value text-start" style="font-size: 1.5rem;">99.9%</div>
-            <div class="metric-label text-start">{{ 'metric.uptime'|trans }}</div>
+            <div class="metric-label text-start">{{ 'metric.uptime'|trans({}, 'insights') }}</div>
         </div>
         <div class="metric-card mb-3">
             <i class="bi bi-speedometer2 text-neon"></i>
             <div class="metric-value text-start" style="font-size: 1.5rem;">< 200ms</div>
-            <div class="metric-label text-start">{{ 'metric.response.time'|trans }}</div>
+            <div class="metric-label text-start">{{ 'metric.response.time'|trans({}, 'insights') }}</div>
         </div>
         <div class="metric-card">
             <i class="bi bi-shield-check text-neon"></i>
             <div class="metric-value text-start" style="font-size: 1.5rem;">256-bit</div>
-            <div class="metric-label text-start">{{ 'metric.encryption'|trans }}</div>
+            <div class="metric-label text-start">{{ 'metric.encryption'|trans({}, 'insights') }}</div>
         </div>
     </div>
 </div>

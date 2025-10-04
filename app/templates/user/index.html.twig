@@ -35,7 +35,7 @@
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
-                        <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view_details'|trans }}</a></li>
+                        <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}</a></li>
                         <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/user/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/user/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
@@ -49,10 +49,10 @@
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center gap-2 mb-1">
                             <h5 class="mb-0 text-white" data-bind="name" data-bind-text></h5>
-                            <span class="badge bg-success" data-bind-if="isVerified" title="{{ 'user.verified'|trans }}">
+                            <span class="badge bg-success" data-bind-if="isVerified" title="{{ 'user.verified'|trans({}, 'user') }}">
                                 <i class="bi bi-patch-check-fill"></i>
                             </span>
-                            <span class="badge bg-danger" data-bind-if="isLocked" title="{{ 'user.locked'|trans }}">
+                            <span class="badge bg-danger" data-bind-if="isLocked" title="{{ 'user.locked'|trans({}, 'user') }}">
                                 <i class="bi bi-lock-fill"></i>
                             </span>
                         </div>
@@ -69,11 +69,11 @@
             <div class="mb-3 p-3 rounded" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
                 <div class="row g-2 text-center">
                     <div class="col-6">
-                        <div class="text-muted" style="font-size: 0.7rem;">{{ 'user.courses.owned'|trans }}</div>
+                        <div class="text-muted" style="font-size: 0.7rem;">{{ 'user.courses.owned'|trans({}, 'user') }}</div>
                         <div class="text-white fw-bold" data-bind="ownedCoursesCount" data-bind-text></div>
                     </div>
                     <div class="col-6">
-                        <div class="text-muted" style="font-size: 0.7rem;">{{ 'user.courses.enrolled'|trans }}</div>
+                        <div class="text-muted" style="font-size: 0.7rem;">{{ 'user.courses.enrolled'|trans({}, 'user') }}</div>
                         <div class="text-white fw-bold" data-bind="enrolledCoursesCount" data-bind-text></div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
-                    <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view_details'|trans }}</a></li>
+                    <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}</a></li>
                     <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/user/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/user/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
@@ -126,7 +126,7 @@
                         <span data-bind="email" data-bind-text></span>
                         <span class="mx-2">•</span>
                         <i class="bi bi-book me-1"></i><span data-bind="ownedCoursesCount" data-bind-text></span>/<!--
-                     --><span data-bind="enrolledCoursesCount" data-bind-text></span> {{ 'user.courses.label'|trans }}
+                     --><span data-bind="enrolledCoursesCount" data-bind-text></span> {{ 'user.courses.label'|trans({}, 'user') }}
                         <span class="mx-2" data-bind-if="lastLoginFormatted">•</span>
                         <span data-bind-if="lastLoginFormatted">
                             <i class="bi bi-clock me-1"></i><span data-bind="lastLoginFormatted" data-bind-text></span>
@@ -141,11 +141,11 @@
 {# Table Headers #}
 {% block table_headers %}
     <th style="width: 60px;">{{ 'common.label.actions'|trans }}</th>
-    <th data-sort-field="name">{{ 'user.name'|trans }}</th>
-    <th data-sort-field="email">{{ 'user.email'|trans }}</th>
-    <th class="d-none d-md-table-cell text-center" data-sort-field="isVerified" data-field-type="boolean">{{ 'user.verified'|trans }}</th>
-    <th class="d-none d-xl-table-cell text-center">{{ 'user.courses'|trans }}</th>
-    <th class="d-none d-xl-table-cell" data-sort-field="lastLoginAt" data-field-type="date">{{ 'user.last.login'|trans }}</th>
+    <th data-sort-field="name">{{ 'user.name'|trans({}, 'user') }}</th>
+    <th data-sort-field="email">{{ 'user.email'|trans({}, 'user') }}</th>
+    <th class="d-none d-md-table-cell text-center" data-sort-field="isVerified" data-field-type="boolean">{{ 'user.verified'|trans({}, 'user') }}</th>
+    <th class="d-none d-xl-table-cell text-center">{{ 'user.courses'|trans({}, 'user') }}</th>
+    <th class="d-none d-xl-table-cell" data-sort-field="lastLoginAt" data-field-type="date">{{ 'user.last.login'|trans({}, 'user') }}</th>
 {% endblock %}
 
 {# Table Row Template #}
@@ -157,7 +157,7 @@
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
-                    <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view_details'|trans }}</a></li>
+                    <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}</a></li>
                     <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/user/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/user/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
@@ -178,10 +178,10 @@
         <td class="text-muted" data-bind="email" data-bind-text></td>
         <td class="d-none d-md-table-cell text-center">
             <span class="badge bg-success" data-bind-if="isVerified">
-                <i class="bi bi-patch-check-fill me-1"></i>{{ 'user.verified'|trans }}
+                <i class="bi bi-patch-check-fill me-1"></i>{{ 'user.verified'|trans({}, 'user') }}
             </span>
             <span class="badge bg-warning" data-bind-if="!isVerified">
-                <i class="bi bi-exclamation-circle me-1"></i>{{ 'user.unverified'|trans }}
+                <i class="bi bi-exclamation-circle me-1"></i>{{ 'user.unverified'|trans({}, 'user') }}
             </span>
         </td>
         <td class="d-none d-xl-table-cell text-center">
@@ -198,7 +198,7 @@
             <span data-bind-if="lastLoginFormatted">
                 <i class="bi bi-clock me-1"></i><span data-bind="lastLoginFormatted" data-bind-text></span>
             </span>
-            <span data-bind-if="!lastLoginFormatted" class="fst-italic">{{ 'user.never.logged.in'|trans }}</span>
+            <span data-bind-if="!lastLoginFormatted" class="fst-italic">{{ 'user.never.logged.in'|trans({}, 'user') }}</span>
         </td>
     </tr>
 {% endblock %}

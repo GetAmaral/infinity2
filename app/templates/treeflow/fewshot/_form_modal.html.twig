@@ -27,14 +27,14 @@
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ fewshot.name }}
                             {% else %}
-                                {{ 'fewshot.modal.create.title'|trans }}
+                                {{ 'fewshot.modal.create.title'|trans({}, 'treeflow') }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'fewshot.modal.edit.subtitle'|trans }}
+                                {{ 'fewshot.modal.edit.subtitle'|trans({}, 'treeflow') }}
                             {% else %}
-                                {{ 'fewshot.modal.create.subtitle'|trans }}
+                                {{ 'fewshot.modal.create.subtitle'|trans({}, 'treeflow') }}
                             {% endif %}
                         </p>
                     </div>
@@ -75,7 +75,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'fewshot.form.name_placeholder'|trans,
+                            'placeholder': 'fewshot.form.name.placeholder'|trans({}, 'treeflow'),
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -87,7 +87,7 @@
                     {{ form_widget(form.prompt, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.prompt.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'fewshot.form.prompt_placeholder'|trans,
+                            'placeholder': 'fewshot.form.prompt.placeholder'|trans({}, 'treeflow'),
                             'rows': 5
                         }
                     }) }}
@@ -99,7 +99,7 @@
                     {{ form_widget(form.description, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'fewshot.form.description_placeholder'|trans,
+                            'placeholder': 'fewshot.form.description.placeholder'|trans({}, 'treeflow'),
                             'rows': 3
                         }
                     }) }}
@@ -126,7 +126,7 @@
                         {% if is_edit %}
                             {{ 'button.save.changes'|trans }}
                         {% else %}
-                            {{ 'fewshot.button.create.example'|trans }}
+                            {{ 'fewshot.button.create.example'|trans({}, 'treeflow') }}
                         {% endif %}
                     </span>
                 </button>

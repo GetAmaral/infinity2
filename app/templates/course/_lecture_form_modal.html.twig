@@ -28,14 +28,14 @@
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ lecture.name }}
                             {% else %}
-                                {{ 'course.lecture.modal.new.title'|trans }}
+                                {{ 'course.lecture.modal.new.title'|trans({}, 'course') }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'course.lecture.modal.edit.subtitle'|trans }}
+                                {{ 'course.lecture.modal.edit.subtitle'|trans({}, 'course') }}
                             {% else %}
-                                {{ 'course.lecture.modal.create.subtitle'|trans }}
+                                {{ 'course.lecture.modal.create.subtitle'|trans({}, 'course') }}
                             {% endif %}
                         </p>
                     </div>
@@ -55,7 +55,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.lecture.form.name.placeholder'|trans,
+                            'placeholder': 'course.lecture.form.name.placeholder'|trans({}, 'course'),
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -67,7 +67,7 @@
                     {{ form_widget(form.description, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.lecture.form.description.placeholder'|trans,
+                            'placeholder': 'course.lecture.form.description.placeholder'|trans({}, 'course'),
                             'rows': 3
                         }
                     }) }}
@@ -101,7 +101,7 @@
                     {{ form_widget(form.viewOrder, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.viewOrder.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.lecture.form.view.order.placeholder'|trans
+                            'placeholder': 'course.lecture.form.view.order.placeholder'|trans({}, 'course')
                         }
                     }) }}
                     {{ form_errors(form.viewOrder) }}
@@ -125,7 +125,7 @@
                     {% if is_edit %}
                         {{ 'button.save.changes'|trans }}
                     {% else %}
-                        {{ 'course.lecture.button.add.lecture'|trans }}
+                        {{ 'course.lecture.button.add.lecture'|trans({}, 'course') }}
                     {% endif %}
                 </button>
             </div>

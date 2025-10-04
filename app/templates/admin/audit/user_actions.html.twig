@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'audit.user.actions.title'|trans }}{% endblock %}
+{% block title %}{{ 'audit.user.actions.title'|trans({}, 'audit') }}{% endblock %}
 
 {% block body %}
 <div class="container-fluid py-4">
     <div class="infinity-card p-4 mb-4">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="text-gradient mb-0">
-                <i class="bi bi-person-lines-fill me-2"></i>{{ 'audit.user.actions.title'|trans }}
+                <i class="bi bi-person-lines-fill me-2"></i>{{ 'audit.user.actions.title'|trans({}, 'audit') }}
             </h1>
             <a href="{{ path('admin_audit_index') }}" class="btn btn-outline-light">
-                <i class="bi bi-arrow-left me-1"></i>{{ 'audit.back.to.log'|trans }}
+                <i class="bi bi-arrow-left me-1"></i>{{ 'audit.back.to.log'|trans({}, 'audit') }}
             </a>
         </div>
 
@@ -18,11 +18,11 @@
 
         <div class="row">
             <div class="col-md-6">
-                <h6 class="text-muted mb-2">{{ 'audit.user.name'|trans }}</h6>
+                <h6 class="text-muted mb-2">{{ 'audit.user.name'|trans({}, 'audit') }}</h6>
                 <p class="mb-0">{{ user.name }}</p>
             </div>
             <div class="col-md-6">
-                <h6 class="text-muted mb-2">{{ 'audit.user.email'|trans }}</h6>
+                <h6 class="text-muted mb-2">{{ 'audit.user.email'|trans({}, 'audit') }}</h6>
                 <p class="mb-0">{{ user.email }}</p>
             </div>
         </div>
@@ -30,23 +30,23 @@
 
     <div class="infinity-card p-4">
         <h5 class="mb-4">
-            <i class="bi bi-activity me-2"></i>{{ 'audit.all.actions'|trans }}
-            <span class="badge bg-primary ms-2">{{ auditLogs|length }} {{ 'audit.action.count'|trans }}</span>
+            <i class="bi bi-activity me-2"></i>{{ 'audit.all.actions'|trans({}, 'audit') }}
+            <span class="badge bg-primary ms-2">{{ auditLogs|length }} {{ 'audit.action.count'|trans({}, 'audit') }}</span>
         </h5>
 
         {% if auditLogs is empty %}
             <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>{{ 'audit.no.actions.recorded'|trans }}
+                <i class="bi bi-info-circle me-2"></i>{{ 'audit.no.actions.recorded'|trans({}, 'audit') }}
             </div>
         {% else %}
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead>
                         <tr>
-                            <th><i class="bi bi-clock me-1"></i>{{ 'audit.timestamp'|trans }}</th>
-                            <th><i class="bi bi-lightning me-1"></i>{{ 'audit.action'|trans }}</th>
-                            <th><i class="bi bi-box me-1"></i>{{ 'audit.entity'|trans }}</th>
-                            <th><i class="bi bi-pencil-square me-1"></i>{{ 'audit.changes'|trans }}</th>
+                            <th><i class="bi bi-clock me-1"></i>{{ 'audit.timestamp'|trans({}, 'audit') }}</th>
+                            <th><i class="bi bi-lightning me-1"></i>{{ 'audit.action'|trans({}, 'audit') }}</th>
+                            <th><i class="bi bi-box me-1"></i>{{ 'audit.entity'|trans({}, 'audit') }}</th>
+                            <th><i class="bi bi-pencil-square me-1"></i>{{ 'audit.changes'|trans({}, 'audit') }}</th>
                             <th><i class="bi bi-gear me-1"></i>{{ 'common.label.actions'|trans }}</th>
                         </tr>
                     </thead>
@@ -71,7 +71,7 @@
                             </td>
                             <td>
                                 {% if log.changes is not empty %}
-                                    <span class="badge bg-secondary">{{ log.changes|length }} {{ 'audit.change.count'|trans }}</span>
+                                    <span class="badge bg-secondary">{{ log.changes|length }} {{ 'audit.change.count'|trans({}, 'audit') }}</span>
                                 {% else %}
                                     <span class="text-muted">—</span>
                                 {% endif %}
@@ -80,8 +80,8 @@
                                 <a href="{{ path('admin_audit_entity', {
                                     class: log.entityClass|url_encode,
                                     id: log.entityId
-                                }) }}" class="btn btn-sm btn-outline-light" title="{{ 'audit.view.timeline'|trans }}">
-                                    <i class="bi bi-clock-history"></i> {{ 'audit.timeline'|trans }}
+                                }) }}" class="btn btn-sm btn-outline-light" title="{{ 'audit.view.timeline'|trans({}, 'audit') }}">
+                                    <i class="bi bi-clock-history"></i> {{ 'audit.timeline'|trans({}, 'audit') }}
                                 </a>
                             </td>
                         </tr>

@@ -27,14 +27,14 @@
                             {% if is_edit %}
                                 {{ 'action.edit'|trans }} {{ treeflow.name }}
                             {% else %}
-                                {{ 'treeflow.modal.create.title'|trans }}
+                                {{ 'treeflow.modal.create.title'|trans({}, 'treeflow') }}
                             {% endif %}
                         </h2>
                         <p class="modal-subtitle-text">
                             {% if is_edit %}
-                                {{ 'treeflow.modal.edit.subtitle'|trans }}
+                                {{ 'treeflow.modal.edit.subtitle'|trans({}, 'treeflow') }}
                             {% else %}
-                                {{ 'treeflow.modal.create.subtitle'|trans }}
+                                {{ 'treeflow.modal.create.subtitle'|trans({}, 'treeflow') }}
                             {% endif %}
                         </p>
                     </div>
@@ -54,7 +54,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'treeflow.form.name_placeholder'|trans,
+                            'placeholder': 'treeflow.form.name.placeholder'|trans({}, 'treeflow'),
                             'autofocus': 'autofocus'
                         }
                     }) }}
@@ -73,7 +73,7 @@
                             {{ form_label(form.active) }}
                         </label>
                     </div>
-                    <small class="text-muted mt-1 d-block">{{ 'treeflow.form.active_help'|trans }}</small>
+                    <small class="text-muted mt-1 d-block">{{ 'treeflow.form.active.help'|trans({}, 'treeflow') }}</small>
                     {{ form_errors(form.active) }}
                 </div>
 
@@ -91,14 +91,14 @@
                         class="btn-modal-primary"
                         data-crud-modal-target="submitButton"
                         data-loading-text="{{ 'button.saving'|trans }}"
-                        data-original-text="{% if is_edit %}{{ 'button.save.changes'|trans }}{% else %}{{ 'treeflow.button.create.treeflow'|trans }}{% endif %}"
+                        data-original-text="{% if is_edit %}{{ 'button.save.changes'|trans }}{% else %}{{ 'treeflow.button.create.treeflow'|trans({}, 'treeflow') }}{% endif %}"
                         style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
                     <i class="bi bi-{{ is_edit ? 'check2' : 'plus-lg' }} me-2" data-button-icon></i>
                     <span data-button-text>
                         {% if is_edit %}
                             {{ 'button.save.changes'|trans }}
                         {% else %}
-                            {{ 'treeflow.button.create.treeflow'|trans }}
+                            {{ 'treeflow.button.create.treeflow'|trans({}, 'treeflow') }}
                         {% endif %}
                     </span>
                 </button>

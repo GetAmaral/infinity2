@@ -58,7 +58,7 @@
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ path('treeflow_index') }}">
-                                <i class="bi bi-diagram-3 me-2"></i>{{ 'treeflow.plural'|trans }}
+                                <i class="bi bi-diagram-3 me-2"></i>{{ 'treeflow.plural'|trans({}, 'treeflow') }}
                             </a>
                         </li>
                         {% if is_granted('ROLE_ADMIN') %}
@@ -85,7 +85,7 @@
                 {% set orgs = available_organizations() %}
                 <!-- Organization Switcher (Admin/Super Admin Only) -->
                 <div class="dropdown">
-                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher.title'|trans }}">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher.title'|trans({}, 'organization') }}">
                         {% if current_organization() %}
                             <div class="me-2">
                                 {{ org_logo.logo(current_organization(), 'xs') }}
@@ -93,19 +93,19 @@
                         {% else %}
                             <i class="bi bi-globe me-2"></i>
                         {% endif %}
-                        <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'organization.all.organizations'|trans }}</span>
+                        <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'organization.all.organizations'|trans({}, 'organization') }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="orgDropdown" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
                         <li class="px-3 py-2 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
-                            <small class="org-switcher-title">{{ 'organization.switcher.title'|trans|upper }}</small>
-                            <div class="org-switcher-subtitle" style="font-size: 0.7rem; margin-top: 0.25rem;">{{ 'organization.switcher.subtitle'|trans }}</div>
+                            <small class="org-switcher-title">{{ 'organization.switcher.title'|trans({}, 'organization')|upper }}</small>
+                            <div class="org-switcher-subtitle" style="font-size: 0.7rem; margin-top: 0.25rem;">{{ 'organization.switcher.subtitle'|trans({}, 'organization') }}</div>
                         </li>
                         {% if has_active_organization() %}
                         <li>
                             <form method="post" action="{{ path('app_organization_switcher_clear') }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token('organization_clear') }}">
                                 <button type="submit" class="dropdown-item">
-                                    <i class="bi bi-globe me-2"></i>{{ 'organization.all.organizations.root'|trans }}
+                                    <i class="bi bi-globe me-2"></i>{{ 'organization.all.organizations.root'|trans({}, 'organization') }}
                                 </button>
                             </form>
                         </li>
@@ -256,10 +256,10 @@
 
                 if (this.current === 'light') {
                     if (icon) icon.className = 'bi bi-moon-stars me-2';
-                    if (text) text.textContent = '{{ 'theme.switch.to.dark'|trans }}';
+                    if (text) text.textContent = '{{ 'theme.switch.to.dark'|trans({}, 'settings') }}';
                 } else {
                     if (icon) icon.className = 'bi bi-sun me-2';
-                    if (text) text.textContent = '{{ 'theme.switch.to.light'|trans }}';
+                    if (text) text.textContent = '{{ 'theme.switch.to.light'|trans({}, 'settings') }}';
                 }
             }
             };

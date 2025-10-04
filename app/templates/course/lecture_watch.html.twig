@@ -9,7 +9,7 @@
             <!-- Back to course button -->
             <div class="mb-4">
                 <a href="{{ path('course_show', {id: course.id}) }}" class="btn infinity-btn-ai">
-                    <i class="bi bi-arrow-left me-2"></i>{{ 'course.back.to.course'|trans }}
+                    <i class="bi bi-arrow-left me-2"></i>{{ 'course.back.to.course'|trans({}, 'course') }}
                 </a>
             </div>
 
@@ -71,7 +71,7 @@
                     {% endif %}
 
                     <!-- All lectures list -->
-                    <h6 class="mt-4 mb-3">{{ 'course.content'|trans }}</h6>
+                    <h6 class="mt-4 mb-3">{{ 'course.content'|trans({}, 'course') }}</h6>
                     <div class="list-group">
                         {% for courseLecture in course.lectures %}
                             <a

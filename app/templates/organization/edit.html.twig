@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 {% import '_macros/organization_logo.html.twig' as org_logo %}
 
-{% block title %}{{ 'organization.edit'|trans }} - {{ organization.name }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
+{% block title %}{{ 'organization.edit'|trans({}, 'organization') }} - {{ organization.name }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
 <div class="mb-4">
     <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn infinity-btn-ai">
-        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.organization'|trans }}
+        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.organization'|trans({}, 'organization') }}
     </a>
 </div>
 
@@ -17,7 +17,7 @@
         <div class="d-flex align-items-center">
             {{ org_logo.logo(organization, 'lg', 'me-4') }}
             <div>
-                <h1 class="text-gradient mb-2">{{ 'organization.edit'|trans }}</h1>
+                <h1 class="text-gradient mb-2">{{ 'organization.edit'|trans({}, 'organization') }}</h1>
                 <p class="text-secondary mb-0 fs-5">{{ organization.name }}</p>
             </div>
         </div>
@@ -87,7 +87,7 @@
                 {{ form_errors(form.logoFileLight) }}
                 {% if organization.logoPath %}
                     <div class="mt-2">
-                        <small class="text-muted">{{ 'organization.form.current.logo'|trans }}</small>
+                        <small class="text-muted">{{ 'organization.form.current.logo'|trans({}, 'organization') }}</small>
                         <img src="{{ organization.logoPath }}" alt="Current logo" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
                     </div>
                 {% endif %}
@@ -108,8 +108,8 @@
                 {{ form_errors(form.logoFileDark) }}
                 {% if organization.logoPathDark %}
                     <div class="mt-2">
-                        <small class="text-muted">{{ 'organization.form.current.logo'|trans }}</small>
-                        <img src="{{ organization.logoPathDark }}" alt="{{ 'organization.form.current.dark.logo'|trans }}" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
+                        <small class="text-muted">{{ 'organization.form.current.logo'|trans({}, 'organization') }}</small>
+                        <img src="{{ organization.logoPathDark }}" alt="{{ 'organization.form.current.dark.logo'|trans({}, 'organization') }}" style="max-width: 100px; max-height: 50px; display: block; margin-top: 0.5rem;">
                     </div>
                 {% endif %}
             </div>

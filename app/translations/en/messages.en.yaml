@@ -1,0 +1,372 @@
+# Symfony Translations - English (Default Domain)
+# Usage: {{ 'key'|trans }}
+
+# ================================================================================
+# Common
+# ================================================================================
+# Common actions
+common.action.view.details: View Details
+# Common dates
+common.date.today: Today
+# Common errors
+common.error.invalid.csrf: Invalid security token
+# Common form labels
+common.form.description: Description
+# Common labels
+common.label.actions: Actions
+# Common/Shared Translations
+# Common status labels
+common.status.active: Active
+common.status.inactive: Inactive
+
+# ================================================================================
+# Navigation
+# ================================================================================
+nav.admin.audit.analytics: Audit Analytics
+nav.admin.audit.log: Audit Log
+# Admin Navigation (base.html.twig)
+nav.admin.section: Admin
+nav.ai.chat: AI Chat
+nav.analytics: Analytics
+nav.courses: Courses
+nav.home: Home
+# Navigation
+# Application brand name in navigation
+nav.infinity: Infinity
+nav.language: Language
+nav.my.courses: My Courses
+nav.organizations: Organizations
+nav.settings: Settings
+nav.toggle.navigation: Toggle navigation
+nav.users: Users
+
+# ================================================================================
+# Authentication
+# ================================================================================
+# Create account button
+auth.already.have.account: Already have an account?
+auth.confirm.password: Confirm Password
+auth.create.account: Create Account
+auth.create.account.button: Create Account
+auth.email: Email Address
+auth.full.name: Full Name
+# Register link text
+# Create account heading
+# Registration invitation
+auth.join.infinity: Join Infinity
+# Authentication
+auth.login: Login
+# Login welcome message
+# Login instruction
+auth.login.to.continue: Login to continue
+# Logout link
+auth.logout: Logout
+# Remember me checkbox
+# Sign in button
+auth.no.account: Don't have an account?
+auth.password: Password
+auth.password.requirements: At least 8 characters with letters and numbers
+# Password mismatch error
+auth.passwords.do.not.match: Passwords do not match
+auth.register: Register
+auth.register.now: Register now
+# Registration error message
+auth.registration.failed: Registration failed. Please try again.
+# Registration success message
+auth.registration.successful: 'Registration successful! You can now log in.'
+auth.remember.me: Remember me
+# Security & Authentication (Dot Notation Aliases)
+auth.sign.in: Sign In
+auth.welcome.back: Welcome Back
+
+# ================================================================================
+# UI Elements
+# ================================================================================
+# Status Badges
+badge.ai.enhanced: AI Enhanced
+badge.real.time: Real-time
+# Organization Contacts
+button.add.contact: Add Contact
+button.add.first.contact: Add First Contact
+button.add.first.lecture: Add First Lecture
+button.add.first.module: Add First Module
+button.add.first.user: Add First User
+# Course Buttons
+button.add.lecture: Add Lecture
+# Module Buttons
+button.add.module: Add Module
+# Buttons
+button.add.organization: Add Organization
+button.add.user: Add User
+button.call.contact: Call Contact
+button.cancel: Cancel
+button.clear.search: Clear search
+button.close: Close
+button.confirm: Confirm
+button.create.course: Create Course
+button.create.first.organization: Create First Organization
+button.create.lecture: Create Lecture
+button.create.module: Create Module
+button.create.organization: Create Organization
+button.create.user: Create User
+button.creating: Creating...
+button.delete: Delete
+button.delete.module: Delete Module
+# CRUD Buttons
+button.edit: Edit
+# User Actions
+button.edit.contact: Edit Contact
+button.edit.module: Edit Module
+button.filter: Filter
+button.refresh: Refresh Page
+# Missing Button Translations
+# Generic actions button/label
+button.remove: Remove
+button.reorder.modules: Reorder Modules
+button.reset: Reset
+button.reset.form: Reset Form
+# Form Elements
+button.save: Save
+button.save.changes: Save Changes
+button.saving: Saving...
+button.schedule.meeting: Schedule Meeting
+button.send.email: Send Email
+button.send.message: Send Message
+button.share.contact: Share Contact
+button.start.ai.chat: Start AI Chat
+button.update.course: Update Course
+button.update.lecture: Update Lecture
+button.update.module: Update Module
+button.update.organization: Update Organization
+button.update.user: Update User
+button.updating: Updating...
+button.view: View
+# Confirmation Messages
+confirm.delete.entity: Are you sure you want to delete this item?
+# Confirmation Messages
+confirm.delete.item: 'Are you sure you want to delete this item?'
+# Filters
+filter.active.organizations: Active Organizations
+# Missing Filter Translations
+filter.active.users: Active Users
+filter.all: All
+filter.by.organization: By Organization
+filter.empty.organizations: Organizations without Users
+filter.no: No
+# Filters & Search
+filter.yes: Yes
+modal.crud.continue.editing: Continue Editing
+modal.crud.discard.changes: Discard Changes
+modal.crud.error.saving: An error occurred while saving. Please try again.
+# CRUD Modal
+modal.crud.saving: Saving...
+modal.crud.unsaved.changes: 'You have unsaved changes. Are you sure you want to discard them?'
+modal.delete.cancel: Cancel
+modal.delete.cannot.undo: This action cannot be undone.
+modal.delete.confirm.message: Are you sure you want to delete
+modal.delete.deleting: Deleting...
+modal.delete.failed: Failed to delete item
+modal.delete.network.error: Network error occurred
+modal.delete.success: Item deleted successfully
+# Delete Modal
+modal.delete.title: Confirm Deletion
+modal.delete.yes.delete: Yes, Delete It
+# Modal Opener Errors
+modal.error.failed.to.open: Failed to open form. Please try again.
+pagination.of: of
+# Pagination (additional)
+pagination.show: Show
+pagination.show.label: Show
+# Pagination & Table
+pagination.showing: Showing
+pagination.to: to
+# Search Errors
+search.error.failed: Search failed. Please try again.
+search.error.failed.to.load: Failed to load data
+# Status
+status.active: Active
+# Status
+status.ai.enhanced: AI Enhanced
+status.failed: Failed
+status.pending: Pending
+status.processing: Processing...
+# AI enhanced feature badge
+# Real-time status indicator
+status.ready: Ready
+status.real.time: Real-time
+table.aria.label: users table
+# Table & List Elements
+table.created: Created
+table.created.by: Created By
+# Hint for mobile users to scroll table horizontally
+table.swipe.to.see.more: Swipe to see more
+table.updated: Updated
+# Upload
+# Upload & Media
+upload.video.hint: Upload video files (MP4, WebM, or AVI)
+# Views
+view.grid: Grid View
+view.list: List View
+view.table: Table View
+
+# ================================================================================
+# Forms
+# ================================================================================
+validation:
+  # TreeFlow Validation
+  treeflow:
+    name_too_short: Name must be at least 2 characters
+    name_too_long: Name cannot exceed 255 characters
+    version_invalid: Version must be a positive integer
+
+  # Step Validation
+  step:
+    cannot_delete_first: Cannot delete the first step
+    objective_too_long: Objective cannot exceed 1000 characters
+
+  # Question Validation
+  question:
+    importance_range: Importance must be between 1 and 10
+    importance_required: Importance is required
+    view_order_invalid: View order must be a positive integer
+
+  # FewShot Validation
+  fewshot:
+
+  # Output Validation
+  output:
+    destination_required: Destination step is required
+    conditional_too_long: Conditional expression cannot exceed 1000 characters
+
+  # Input Validation
+  input:
+    name_required: Input name is required
+    type_required: Input type is required
+    type_invalid: Invalid input type selected
+    prompt_too_long: Prompt cannot exceed 1000 characters
+
+# Form and Validation
+form.validation.errors: Please fix the validation errors
+
+# ================================================================================
+# Pages
+# ================================================================================
+home.description: A complete enterprise-ready Symfony 7.3 application featuring PostgreSQL 18, Redis 7, FrankenPHP 1.9, and modern development practices.
+home.subtitle: Modern Symfony Application
+# Home Page
+home.title: Welcome to Infinity
+home.view.organizations: View Organizations
+home.view.users: View Users
+page.infinity.suffix: Infinity
+page.manage.users: Manage Users
+page.organization.details: Organization Details
+
+# ================================================================================
+# Miscellaneous
+# ================================================================================
+action.cancel: Cancel
+action.delete: Delete
+action.edit: Edit
+# Common Actions
+action.save: Save
+action.view: View
+# Base Navigation & Branding
+branding.infinity.crm: Infinity CRM
+developer.message.override.grid.item: Override grid_item block in child template
+# Developer Messages (for _base_entity_list.html.twig)
+developer.message.override.grid.template: Override grid_view_item_template block in {entity_name}/index.html.twig
+developer.message.override.list.template: Override list_view_item_template block in {entity_name}/index.html.twig
+developer.message.override.table.headers: Override table_headers block
+developer.message.override.table.row: Override table_row block
+developer.message.override.table.row.template: Override table_view_row_template block in {entity_name}/index.html.twig
+# General/Misc - Additional
+general.not.available: N/A
+misc.ai.insights.tooltip: AI Insights
+misc.coming.soon: Coming Soon
+misc.contacts.section: Contacts
+misc.infinity.alt: Infinity Logo
+misc.loading.ellipsis: "..."
+misc.quick.actions.tooltip: Quick Actions
+# Misc UI Elements
+misc.voice.commands: Voice Commands
+# Missing Misc Translations
+# Waiting status message
+misc.waiting: Waiting...
+ui.account: Account
+# Active status indicator
+ui.active: Active
+# General UI Text
+# Artificial Intelligence abbreviation
+ui.ai: AI
+ui.back.to.dashboard: Back to Dashboard
+ui.dashboard: Dashboard
+
+# ================================================================================
+# Dates & Time
+# ================================================================================
+date.format: M/d/Y
+date.relative.days.ago: 2 days ago
+date.relative.week.ago: 1 week ago
+# Date/Time Relative
+date.relative.yesterday: Yesterday
+datetime.format: 'M/d/Y g:i A'
+time.d.ago: '%count%d ago'
+time.days.ago: '%count% day ago|%count% days ago'
+time.week.ago: 1 week ago
+# Time/Date
+# Today time reference
+time.yesterday: Yesterday
+# Abbreviated: minute/minutes
+unit.min: min
+# Units
+unit.minute: minute
+unit.minutes: minutes
+
+# ================================================================================
+# Empty States
+# ================================================================================
+empty.contact.description: Start building your network by adding your first contact. Our AI will help you manage relationships and provide valuable insights.
+# Empty state title for contacts
+empty.no.contacts.yet: No contacts yet
+# Empty States
+# Empty States
+empty.no.description: No description provided
+# Module Empty States
+empty.no.modules.yet: No modules yet
+empty.no.organization: No organization
+# Empty state title for organizations
+empty.no.organizations.yet: No Organizations Yet
+# Empty States
+empty.no.users.yet: No users yet
+empty.organization.contacts.description: Start managing your business relationships by adding contacts
+empty.organization.description: Start building your business relationships by creating your first organization. Our AI will help you manage and grow these connections.
+# Missing Empty State Translations
+empty.organization.users.description: Invite team members to collaborate on your organization
+
+# ================================================================================
+# Internationalization
+# ================================================================================
+# Language Names
+language.en: English
+# Portuguese (Brazil) language name
+language.pt.BR: Português (Brasil)
+
+# ================================================================================
+# System
+# ================================================================================
+debug.init.bootstrap.missing: "[Init] Bootstrap not loaded, skipping tooltip initialization"
+# Debug/Console Messages
+debug.init.dom.loaded: "[Init] DOM Content Loaded"
+debug.init.tooltips.initialized: "[Init] Tooltips initialized"
+system.database: Database
+system.framework: Framework
+system.information: System Information
+# System Information
+system.performance: System Performance
+system.runtime: Runtime
+system.security.message: All systems operational
+# System Status
+system.security.status: Security Status
+system.status: System Status
+system.version: Version
+
