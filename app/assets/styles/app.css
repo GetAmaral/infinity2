@@ -500,6 +500,43 @@ body::before {
 }
 
 /* Infinity Button Variants - Consistent Sizing */
+.infinity-btn-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--infinity-text-primary);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
+}
+
+.infinity-btn-success::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.infinity-btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4);
+    border-color: rgba(16, 185, 129, 0.6);
+}
+
+.infinity-btn-success:hover::before {
+    left: 100%;
+}
+
 .infinity-btn-warning {
     background: linear-gradient(135deg, #f59e0b, #d97706);
     border: 1px solid rgba(245, 158, 11, 0.3);
@@ -539,6 +576,7 @@ body::before {
 }
 
 /* Ensure consistent sizing for small action buttons */
+.btn-sm.infinity-btn-success,
 .btn-sm.infinity-btn-warning,
 .btn-sm.infinity-btn-danger,
 .btn-sm.infinity-btn-secondary,
@@ -554,6 +592,7 @@ body::before {
 }
 
 /* Icon-only buttons should be square and same size */
+.btn-sm.infinity-btn-success:has(i:only-child),
 .btn-sm.infinity-btn-warning:has(i:only-child),
 .btn-sm.infinity-btn-danger:has(i:only-child),
 .btn-sm.infinity-btn-secondary:has(i:only-child),
