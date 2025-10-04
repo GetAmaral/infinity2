@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'audit.stats.today'|trans }}</h6>
+                        <h6 class="text-muted mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'common.date.today'|trans }}</h6>
                         <h3 class="mb-0" style="color: #22c55e;">{{ stats.events_today|number_format }}</h3>
                         <p class="text-muted mb-0" style="font-size: 0.75rem;">{{ 'audit.stats.last_24_hours'|trans }}</p>
                     </div>
@@ -179,7 +179,7 @@
             <div class="mb-3">
                 <div class="d-flex flex-wrap gap-2">
                     <button class="btn btn-sm btn-outline-primary quick-filter" data-filter="today">
-                        <i class="bi bi-calendar-day me-1"></i>{{ 'audit.filter.today'|trans }}
+                        <i class="bi bi-calendar-day me-1"></i>{{ 'common.date.today'|trans }}
                     </button>
                     <button class="btn btn-sm btn-outline-primary quick-filter" data-filter="week">
                         <i class="bi bi-calendar-week me-1"></i>{{ 'audit.filter.week'|trans }}
@@ -343,14 +343,14 @@
                                                                     {% else %}
                                                                         {# Regular field change #}
                                                                         <div class="diff-old">
-                                                                            <small class="text-muted d-block">{{ 'audit.old_value'|trans }}</small>
+                                                                            <small class="text-muted d-block">{{ 'audit.old.value'|trans }}</small>
                                                                             <code class="text-danger">{{ values[0]|default('NULL') }}</code>
                                                                         </div>
                                                                         <div class="align-self-center">
                                                                             <i class="bi bi-arrow-right text-muted"></i>
                                                                         </div>
                                                                         <div class="diff-new">
-                                                                            <small class="text-muted d-block">{{ 'audit.new_value'|trans }}</small>
+                                                                            <small class="text-muted d-block">{{ 'audit.new.value'|trans }}</small>
                                                                             <code class="text-success">{{ values[1]|default('NULL') }}</code>
                                                                         </div>
                                                                     {% endif %}
@@ -401,7 +401,7 @@
                                 <th class="text-nowrap"><i class="bi bi-box me-1"></i>{{ 'audit.table.entity'|trans }}</th>
                                 <th class="text-nowrap d-none d-md-table-cell"><i class="bi bi-person me-1"></i>{{ 'audit.table.user'|trans }}</th>
                                 <th class="text-nowrap text-center"><i class="bi bi-pencil-square me-1"></i>{{ 'audit.table.changes'|trans }}</th>
-                                <th class="text-nowrap text-center"><i class="bi bi-gear me-1"></i>{{ 'audit.table.actions'|trans }}</th>
+                                <th class="text-nowrap text-center"><i class="bi bi-gear me-1"></i>{{ 'common.label.actions'|trans }}</th>
                             </tr>
                         </thead>
                         <tbody>

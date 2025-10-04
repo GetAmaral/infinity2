@@ -180,7 +180,7 @@ final class FewShotExampleController extends AbstractController
 
             $this->addFlash('success', 'fewshot.flash.deleted_successfully');
         } else {
-            $this->addFlash('error', 'fewshot.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('treeflow_show', ['id' => $treeflowId]);

@@ -45,8 +45,8 @@
                         <h5 class="mb-1 text-white" data-bind="name" data-bind-text></h5>
                         <div class="d-flex gap-1 flex-wrap">
                             <span class="badge bg-info">v<span data-bind="version" data-bind-text></span></span>
-                            <span class="badge bg-success" data-bind-if="active">{{ 'treeflow.active'|trans }}</span>
-                            <span class="badge bg-secondary" data-bind-if="!active">{{ 'treeflow.inactive'|trans }}</span>
+                            <span class="badge bg-success" data-bind-if="active">{{ 'common.status.active'|trans }}</span>
+                            <span class="badge bg-secondary" data-bind-if="!active">{{ 'common.status.inactive'|trans }}</span>
                         </div>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                         <h6 class="mb-0 text-white" data-bind="name" data-bind-text></h6>
                         <span class="badge bg-info">v<span data-bind="version" data-bind-text></span></span>
                         <span class="badge bg-success" data-bind-if="active">{{ 'treeflow.active'|trans }}</span>
-                        <span class="badge bg-secondary" data-bind-if="!active">{{ 'treeflow.inactive'|trans }}</span>
+                        <span class="badge bg-secondary" data-bind-if="!active">{{ 'common.status.inactive'|trans }}</span>
                     </div>
                     <div class="text-muted d-flex gap-3 flex-wrap" style="font-size: 0.85rem;">
                         <span><i class="bi bi-signpost me-1 text-neon"></i><span data-bind="stepsCount" data-bind-text></span> {{ 'treeflow.steps'|trans }}</span>
@@ -110,7 +110,7 @@
 
 {# Table Headers #}
 {% block table_headers %}
-    <th style="width: 60px;">{{ 'table.actions'|trans }}</th>
+    <th style="width: 60px;">{{ 'common.label.actions'|trans }}</th>
     <th data-sort-field="name">{{ 'treeflow.name'|trans }}</th>
     <th class="text-center" data-sort-field="version">{{ 'treeflow.version'|trans }}</th>
     <th class="text-center" data-sort-field="active" data-field-type="boolean">{{ 'treeflow.status'|trans }}</th>
@@ -149,7 +149,7 @@
         </td>
         <td class="text-center">
             <span class="badge bg-success" data-bind-if="active">{{ 'treeflow.active'|trans }}</span>
-            <span class="badge bg-secondary" data-bind-if="!active">{{ 'treeflow.inactive'|trans }}</span>
+            <span class="badge bg-secondary" data-bind-if="!active">{{ 'common.status.inactive'|trans }}</span>
         </td>
         <td class="text-center text-muted">
             <i class="bi bi-signpost me-1 text-neon"></i><span data-bind="stepsCount" data-bind-text></span>

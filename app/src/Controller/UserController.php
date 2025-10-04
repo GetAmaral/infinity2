@@ -169,7 +169,7 @@ final class UserController extends BaseApiController
                 ]);
             }
         } else {
-            $this->addFlash('error', 'user.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('user_index');

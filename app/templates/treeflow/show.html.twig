@@ -22,9 +22,9 @@
                 <div class="d-flex gap-2 align-items-center">
                     <span class="badge bg-info">{{ 'treeflow.version'|trans }} {{ treeflow.version }}</span>
                     {% if treeflow.active %}
-                        <span class="badge bg-success">{{ 'treeflow.active'|trans }}</span>
+                        <span class="badge bg-success">{{ 'common.status.active'|trans }}</span>
                     {% else %}
-                        <span class="badge bg-secondary">{{ 'treeflow.inactive'|trans }}</span>
+                        <span class="badge bg-secondary">{{ 'common.status.inactive'|trans }}</span>
                     {% endif %}
                 </div>
             </div>
@@ -128,7 +128,7 @@
                             </div>
                             {% if is_granted('TREEFLOW_EDIT', treeflow) %}
                                 <div class="dropdown" onclick="event.stopPropagation();">
-                                    <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}" type="button">
+                                    <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'common.label.actions'|trans }}" type="button">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">
@@ -206,7 +206,7 @@
                                                     </div>
                                                     {% if is_granted('TREEFLOW_EDIT', treeflow) %}
                                                         <div class="dropdown">
-                                                            <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
+                                                            <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'common.label.actions'|trans }}">
                                                                 <i class="bi bi-three-dots-vertical"></i>
                                                             </button>
                                                             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">
@@ -262,7 +262,7 @@
                                                                                 </div>
                                                                                 {% if is_granted('TREEFLOW_EDIT', treeflow) %}
                                                                                     <div class="dropdown">
-                                                                                        <button class="btn btn-sm btn-link text-white p-0" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
+                                                                                        <button class="btn btn-sm btn-link text-white p-0" data-bs-toggle="dropdown" aria-label="{{ 'common.label.actions'|trans }}">
                                                                                             <i class="bi bi-three-dots"></i>
                                                                                         </button>
                                                                                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">
@@ -360,7 +360,7 @@
                                                     </div>
                                                     {% if is_granted('TREEFLOW_EDIT', treeflow) %}
                                                         <div class="dropdown">
-                                                            <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
+                                                            <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'common.label.actions'|trans }}">
                                                                 <i class="bi bi-three-dots-vertical"></i>
                                                             </button>
                                                             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">
@@ -429,7 +429,7 @@
                                                     </div>
                                                     {% if is_granted('TREEFLOW_EDIT', treeflow) %}
                                                         <div class="dropdown">
-                                                            <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'button.actions'|trans }}">
+                                                            <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-label="{{ 'common.label.actions'|trans }}">
                                                                 <i class="bi bi-three-dots-vertical"></i>
                                                             </button>
                                                             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--infinity-dark-surface); z-index: 1060;">

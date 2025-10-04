@@ -190,7 +190,7 @@ final class TreeFlowController extends BaseApiController
                 '%name%' => $treeFlowName,
             ]));
         } else {
-            $this->addFlash('error', 'treeflow.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('treeflow_index');

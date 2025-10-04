@@ -34,7 +34,7 @@ class StepOutputFormType extends AbstractType
                 ],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'output.form.description',
+                'label' => 'common.form.description',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',

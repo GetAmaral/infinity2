@@ -29,7 +29,7 @@
         </div>
         <div class="d-flex gap-2">
             <div class="ai-status-indicator" style="{{ course.active ? 'background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(22, 163, 74, 0.15)); border-color: rgba(34, 197, 94, 0.3); color: #22c55e;' : 'background: rgba(156, 163, 175, 0.15); border-color: rgba(156, 163, 175, 0.3); color: #9ca3af;' }}">
-                <i class="bi bi-{{ course.active ? 'check-circle-fill' : 'x-circle-fill' }}"></i> {{ course.active ? 'course.status.active'|trans : 'course.status.inactive'|trans }}
+                <i class="bi bi-{{ course.active ? 'check-circle-fill' : 'x-circle-fill' }}"></i> {{ course.active ? 'common.status.active'|trans : 'common.status.inactive'|trans }}
             </div>
             <div class="real-time-badge">
                 {% set totalLectures = 0 %}
@@ -73,7 +73,7 @@
             <div class="metric-value">{{ modules|length }}</div>
             <div class="metric-label">{{ 'course.total.modules'|trans }}</div>
             <div class="metric-trend trend-up">
-                <i class="bi bi-arrow-up"></i> {{ course.active ? 'course.status.active'|trans : 'course.status.inactive'|trans }}
+                <i class="bi bi-arrow-up"></i> {{ course.active ? 'common.status.active'|trans : 'common.status.inactive'|trans }}
             </div>
         </div>
     </div>
@@ -192,7 +192,7 @@
                                                 • <i class="bi bi-clock me-1"></i>{{ module.totalLengthFormatted }}
                                             {% endif %}
                                             {% if not module.active %}
-                                                • <span class="badge bg-secondary">{{ 'course.status.inactive'|trans }}</span>
+                                                • <span class="badge bg-secondary">{{ 'common.status.inactive'|trans }}</span>
                                             {% endif %}
                                         </small>
                                     </div>
@@ -414,7 +414,7 @@
                                 <th><i class="bi bi-calendar me-2"></i>{{ 'course.enrolled.at'|trans }}</th>
                                 <th><i class="bi bi-graph-up me-2"></i>{{ 'course.progress'|trans }}</th>
                                 <th><i class="bi bi-toggle-on me-2"></i>{{ 'course.status'|trans }}</th>
-                                <th class="text-end">{{ 'button.actions'|trans }}</th>
+                                <th class="text-end">{{ 'common.label.actions'|trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -440,11 +440,11 @@
                                 <td>
                                     {% if enrollment.active %}
                                         <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.4rem 0.75rem;">
-                                            <i class="bi bi-check-circle me-1"></i>{{ 'course.enrollment.active'|trans }}
+                                            <i class="bi bi-check-circle me-1"></i>{{ 'common.status.active'|trans }}
                                         </span>
                                     {% else %}
                                         <span class="badge" style="background: rgba(107, 114, 128, 0.2); color: #9ca3af; border: 1px solid rgba(107, 114, 128, 0.3); padding: 0.4rem 0.75rem;">
-                                            <i class="bi bi-x-circle me-1"></i>{{ 'course.enrollment.inactive'|trans }}
+                                            <i class="bi bi-x-circle me-1"></i>{{ 'common.status.inactive'|trans }}
                                         </span>
                                     {% endif %}
                                 </td>

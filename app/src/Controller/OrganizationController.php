@@ -248,7 +248,7 @@ final class OrganizationController extends BaseApiController
                 ]);
             }
         } else {
-            $this->addFlash('error', 'organization.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('organization_index');

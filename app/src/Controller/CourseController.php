@@ -205,7 +205,7 @@ final class CourseController extends BaseApiController
                 ]);
             }
         } else {
-            $this->addFlash('error', 'course.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('course_index');
@@ -337,7 +337,7 @@ final class CourseController extends BaseApiController
 
             $this->addFlash('success', 'course.lecture.flash.deleted_successfully');
         } else {
-            $this->addFlash('error', 'course.lecture.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('course_show', ['id' => $courseId]);
@@ -563,7 +563,7 @@ final class CourseController extends BaseApiController
 
             $this->addFlash('success', 'course.enrollment.flash.enrolled_successfully');
         } else {
-            $this->addFlash('error', 'course.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('course_show', ['id' => $courseId]);
@@ -591,7 +591,7 @@ final class CourseController extends BaseApiController
             $status = $enrollment->isActive() ? 'activated' : 'deactivated';
             $this->addFlash('success', "course.enrollment.flash.{$status}_successfully");
         } else {
-            $this->addFlash('error', 'course.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('course_show', ['id' => $courseId]);
@@ -618,7 +618,7 @@ final class CourseController extends BaseApiController
 
             $this->addFlash('success', 'course.enrollment.flash.removed_successfully');
         } else {
-            $this->addFlash('error', 'course.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('course_show', ['id' => $courseId]);

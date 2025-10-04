@@ -3,6 +3,28 @@
 # Format: YAML with preserved structure and sections
 
 # ========================================
+# Common/Shared Translations
+# ========================================
+# Common status labels
+common.status.active: Active
+common.status.inactive: Inactive
+
+# Common form labels
+common.form.description: Description
+
+# Common actions
+common.action.view_details: View Details
+
+# Common labels
+common.label.actions: Actions
+
+# Common dates
+common.date.today: Today
+
+# Common errors
+common.error.invalid_csrf: Invalid security token
+
+# ========================================
 # Navigation
 # ========================================
 # Application brand name in navigation
@@ -44,17 +66,14 @@ organization.singular: Organization
 # Organization name field label
 organization.name: Name
 # Organization description field label
-organization.description: Description
 # Users count with pluralization
 organization.users_count: '%count% user|%count% users'
 # Zero users message
 organization.no_users: No users
 # Button text to view organization details
-organization.view_details: View Details
 # Link to organization API endpoint
 organization.api_link: API
 # Link to go back to organizations list
-organization.back_to_list: Back to Organizations
 # Organization creation date label
 organization.created_at: Created
 # Organization last update date label
@@ -66,11 +85,9 @@ organization.users_in_organization: Users in this Organization
 # Organization CRUD Forms
 # ========================================
 organization.form.name: Organization Name
-organization.form.name_placeholder: Enter organization name
 organization.form.slug: Slug
 organization.form.slug_placeholder: organization-url-slug
 organization.form.slug_help: URL-friendly identifier (lowercase letters, numbers, and hyphens only)
-organization.form.description: Description
 organization.form.description_placeholder: Describe the organization's purpose and activities
 organization.form.preview: Live Preview
 
@@ -86,9 +103,7 @@ organization.modal.create_tip: Organization names should be descriptive and uniq
 # ========================================
 # Organization Actions
 # ========================================
-organization.manage_users: Manage Users
 organization.confirm_delete: 'Are you sure you want to delete "%name%"?'
-organization.new_organization: New Organization
 organization.search_placeholder: Search organizations...
 
 # ========================================
@@ -101,7 +116,6 @@ organization.flash.save_success: 'Changes saved successfully!'
 organization.flash.save_success_description: The organization has been updated with your changes.
 organization.flash.save_error: Failed to save organization
 organization.flash.cannot_delete_has_users: Cannot delete organization with assigned users
-organization.flash.invalid_csrf_token: Invalid security token. Please try again.
 
 # ========================================
 # Organization Validation
@@ -129,17 +143,14 @@ user.email: Email
 # User organization field label
 user.organization: Organization
 # Button text to view user details
-user.view_details: View Details
 # Link to user API endpoint
 user.api_link: API
 # Link to go back to users list
-user.back_to_list: Back to Users
 # User creation date label
 user.created_at: Created
 # User last update date label
 user.updated_at: Updated
 # Link to view user's organization
-user.view_organization: View Organization
 
 # ========================================
 # Settings Page
@@ -147,23 +158,16 @@ user.view_organization: View Organization
 # Settings page title
 settings.title: Settings
 # Language preferences section title
-settings.language_preferences: Language Preferences
 # Current language label
-settings.current_language: Current Language
 # Language selection label
-settings.choose_language: Choose Language
 # Save button text
 settings.save_changes: Save Changes
 # Success message after saving language
 settings.language_saved: 'Language preference saved successfully!'
 # UI preferences section title
-settings.ui_preferences: UI Preferences
 # Enable animations checkbox label
-settings.enable_animations: Enable Animations
 # Enable sound effects checkbox label
-settings.enable_sound: Enable Sound Effects
 # Compact mode checkbox label
-settings.compact_mode: Compact Mode
 # Items per page label
 settings.items_per_page: Items Per Page
 
@@ -209,7 +213,6 @@ ui.account: Account
 # Dashboard page title
 ui.dashboard: Dashboard
 # Link to go back to dashboard
-ui.back_to_dashboard: Back to Dashboard
 
 # ========================================
 # Empty States
@@ -235,9 +238,7 @@ empty.course_lectures_description: Start building your course by adding the firs
 # Button to add new organization
 button.add_organization: Add Organization
 # Button to add new contact
-button.add_contact: Add Contact
 # Button to add first contact
-button.add_first_contact: Add First Contact
 # Button to create first organization
 button.create_first_organization: Create First Organization
 
@@ -249,11 +250,7 @@ button.delete: Delete
 button.cancel: Cancel
 button.close: Close
 button.reset: Reset
-button.reset_form: Reset Form
 button.filter: Filter
-button.clear_search: Clear search
-button.create_organization: Create Organization
-button.update_organization: Update Organization
 button.creating: Creating...
 button.updating: Updating...
 
@@ -275,35 +272,24 @@ filter.all: All
 view.grid: Grid View
 view.list: List View
 view.table: Table View
-table.actions: Actions
 # Hint for mobile users to scroll table horizontally
 table.swipe_to_see_more: Swipe to see more
 # Button to edit contact
-button.edit_contact: Edit Contact
 # Button to send email
-button.send_email: Send Email
 # Button to send message
-button.send_message: Send Message
 # Button to call contact
-button.call_contact: Call Contact
 # Button to schedule meeting
-button.schedule_meeting: Schedule Meeting
 # Button to share contact
-button.share_contact: Share Contact
 # Button to start AI chat
-button.start_ai_chat: Start AI Chat
 
 # ========================================
 # Metrics and Statistics
 # ========================================
 # Label for total contacts metric
-metric.total_contacts: Total Contacts
 # Label for AI interactions metric
-metric.ai_interactions: AI Interactions
 # System uptime metric
 metric.uptime: Uptime
 # System response time metric
-metric.response_time: Response Time
 # Security encryption metric
 metric.encryption: Encryption
 
@@ -329,7 +315,6 @@ ai.chat: AI Chat
 # Analytics feature
 ai.analytics: Analytics
 # Quick actions section
-ai.quick_actions: Quick Actions
 # AI-powered CRM features section
 ai.powered_crm: AI-Powered CRM Features
 # Conversational AI feature
@@ -337,11 +322,9 @@ ai.conversational: Conversational AI
 # Conversational AI description
 ai.conversational_description: Voice commands, WhatsApp integration, and natural language processing
 # Predictive analytics feature
-ai.predictive_analytics: Predictive Analytics
 # Predictive analytics description
 ai.predictive_description: AI-driven insights and customer behavior predictions
 # Smart automation feature
-ai.smart_automation: Smart Automation
 # Smart automation description
 ai.automation_description: Intelligent workflows and automated customer interactions
 # AI chat coming soon message
@@ -413,7 +396,6 @@ theme.light_description: Clean light interface with vibrant colors
 # Contact information section
 contact.information: Contact Information
 # Last activity label
-contact.last_activity: Last Activity
 # Member since label
 contact.member_since: Member Since
 # Active user status
@@ -423,9 +405,7 @@ contact.active_user: Active user
 # Misc UI Elements
 # ========================================
 # Contacts section title
-misc.contacts_section: Contacts
 # Coming soon label
-misc.coming_soon: Coming Soon
 # Voice commands tooltip
 misc.voice_commands: Voice Commands
 # AI insights tooltip
@@ -441,7 +421,6 @@ auth.login: Login
 # Registration page title
 auth.register: Register
 # Login welcome message
-auth.welcome_back: Welcome Back
 # Login instruction
 auth.login_to_continue: Sign in to continue to your account
 # Email field label
@@ -449,25 +428,18 @@ auth.email: Email Address
 # Password field label
 auth.password: Password
 # Remember me checkbox
-auth.remember_me: Remember me
 # Sign in button
-auth.sign_in: Sign In
 # Link to registration
 auth.no_account: 'Don''t have an account?'
 # Register link text
-auth.register_now: Register now
 # Create account heading
-auth.create_account: Create Account
 # Registration invitation
 auth.join_infinity: Join Infinity and start managing your data
 # Full name field label
-auth.full_name: Full Name
 # Confirm password field label
-auth.confirm_password: Confirm Password
 # Password requirements hint
 auth.password_requirements: Minimum 8 characters required
 # Create account button
-auth.create_account_button: Create Account
 # Link to login
 auth.already_have_account: 'Already have an account?'
 # Password mismatch error
@@ -489,11 +461,9 @@ token.description: Manage your API access tokens
 # Current token section heading
 token.current_token: Current API Token
 # Active token label
-token.active_token: Active Token
 # Token expiration label
 token.expires: Expires
 # Token input label
-token.your_token: Your API Token
 # Copy button
 token.copy: Copy
 # Copied confirmation
@@ -509,7 +479,6 @@ token.no_active_token: You don't have an active API token
 # Generate button
 token.generate: Generate New Token
 # Usage section heading
-token.usage_instructions: Usage Instructions
 # Usage description
 token.usage_description: 'Use your API token in the Authorization header of your requests:'
 # Security tips heading
@@ -525,23 +494,18 @@ token.tip_4: Regenerate tokens periodically for better security
 # Info card heading
 token.info_title: Token Information
 # Validity period label
-token.validity_period: Validity Period
 # 30 days validity
 token.validity_30_days: 30 days
 # Access level label
-token.access_level: Access Level
 # Full access description
-token.full_api_access: Full API Access
 # Regeneration label
 token.regeneration: Regeneration
 # Regeneration description
 token.regeneration_description: Revoke old token before generating new one
 # Active tokens metric
-token.active_tokens: Active Tokens
 # Secure status
 token.secure: Secured
 # No token status
-token.no_token: No Token
 # Generation success message
 token.generated_successfully: 'API token generated successfully!'
 # Revocation success message
@@ -552,28 +516,14 @@ token.csrf_invalid: Invalid security token
 # ========================================
 # Missing User Translations
 # ========================================
-button.add_user: Add User
-button.add_first_user: Add First User
-button.update_user: Update User
-button.create_user: Create User
-course.button.create_course: Create Course
-course.lecture.button.add_lecture: Add Lecture
-user.new_user: New User
 user.confirm_delete: 'Are you sure you want to delete %name%?'
 user.modal.edit_subtitle: Update user information and permissions
 user.modal.create_subtitle: Add a new user to the system
-user.form.name_placeholder: Enter full name
-user.form.email_placeholder: Enter email address
-user.form.password_placeholder: Enter password
-user.form.password_confirm_placeholder: Confirm password
 
 # ========================================
 # Missing Organization Translations
 # ========================================
-organization.back_to_organization: Back to Organization
-organization.back_to_details: Back to Details
 organization.statistics: Statistics
-organization.total_users: Total Users
 organization.switcher.title: Change Your Organization
 organization.switcher.subtitle: This will update your account
 
@@ -586,7 +536,6 @@ filter.by_organization: By Organization
 # ========================================
 # Missing Empty State Translations
 # ========================================
-empty.no_users_yet: No users yet
 empty.organization_users_description: Start building your team by adding the first user
 empty.no_organization: No organization
 
@@ -596,7 +545,6 @@ empty.no_organization: No organization
 page.ai_powered_crm: AI-Powered CRM Dashboard
 page.organization_details: Organization Details
 page.manage_users: Manage Users
-page.infinity_suffix: Infinity
 page.infinity.suffix: Infinity
 
 # ========================================
@@ -669,16 +617,12 @@ course.title: Courses
 # Singular form - single course reference
 course.singular: Course
 course.name: Course Name
-course.description: Description
 course.status: Status
-course.status.active: Active
-course.status.inactive: Inactive
 course.owner: Owner
 # Plural form - multiple lectures
 course.lectures: Lectures
 # Singular form - single lecture reference
 course.lecture.singular: Lecture
-course.lectures_count: Lectures
 # Number of enrolled students
 course.students: Students
 # Course duration/length
@@ -689,14 +633,10 @@ course.release_date: Release Date
 course.total_length: Total Length
 course.hours: hours
 course.information: Course Information
-course.created_at: Created At
 course.updated_at: Updated At
-course.view_details: View Details
-course.back_to_list: Back to Courses
 course.manage_lectures: Manage Lectures
 course.no_lectures: No lectures
 course.lectures_in_course: Lectures in Course
-course.total_duration: Total Duration
 course.total_lectures: Total Lectures
 course.no_release_date: No release date
 
@@ -704,9 +644,6 @@ course.no_release_date: No release date
 # Course Form
 # ========================================
 course.form.name: Course Name
-course.form.name_placeholder: Enter course name
-course.form.description: Description
-course.form.description_placeholder: Enter course description
 course.form.active: Active Course
 course.form.release_date: Release Date
 course.form.total_length: Total Length (hours)
@@ -727,28 +664,21 @@ course.validation.total_length_positive: Total length must be zero or positive
 course.flash.created_successfully: Course created successfully
 course.flash.updated_successfully: Course updated successfully
 course.flash.deleted_successfully: Course deleted successfully
-course.flash.invalid_csrf_token: Invalid security token
 
 # ========================================
 # Course Modal
 # ========================================
-course.modal.create_title: Create New Course
 course.modal.create_subtitle: Create a new course
 course.modal.create_tip: Fill in the course details below. You can add lectures after creating the course.
 course.modal.edit_title: Edit Course
-course.modal.edit_subtitle: Update course information
 
 # ========================================
 # Course Lecture Translations
 # ========================================
 course.lecture.form.name: Lecture Name
-course.lecture.form.name_placeholder: Enter lecture name
-course.lecture.form.description: Description
-course.lecture.form.description_placeholder: Enter lecture description
 course.lecture.form.video_file: Video File
 course.lecture.form.view_order: Order
 course.lecture.form.view_order_placeholder: 1
-course.lecture.watch_video: Watch Video
 course.lecture.drag.to.reorder: Drag to reorder or move to another module
 course.module.drag.to.reorder: Drag to reorder module
 
@@ -776,7 +706,6 @@ course.lecture.status.failed: Processing Failed
 course.lecture.flash.created_successfully: Lecture created successfully
 course.lecture.flash.updated_successfully: Lecture updated successfully
 course.lecture.flash.deleted_successfully: Lecture deleted successfully
-course.lecture.flash.invalid_csrf_token: Invalid security token
 
 # ========================================
 # Course Lecture Modal
@@ -785,7 +714,6 @@ course.lecture.modal.create_title: Add New Lecture
 course.lecture.modal.create_subtitle: Add a new lecture to the course
 course.lecture.modal.create_tip: Fill in the lecture details below. The order determines the sequence in the course.
 course.lecture.modal.edit_title: Edit Lecture
-course.lecture.modal.edit_subtitle: Update lecture information
 
 # ========================================
 # Course Empty States
@@ -795,8 +723,6 @@ empty.no_lectures_yet: No lectures yet
 # ========================================
 # Course Buttons
 # ========================================
-button.add_lecture: Add Lecture
-button.add_first_lecture: Add First Lecture
 button.add.lecture: Add Lecture
 button.add.first.lecture: Add First Lecture
 button.create_course: Create Course
@@ -809,13 +735,7 @@ button.saving: Saving...
 # ========================================
 # Course Enrollment
 # ========================================
-course.enrolled_students: Enrolled Students
-course.enroll_student: Enroll Student
-course.enroll_first_student: Enroll First Student
-course.enrolled_at: Enrolled At
 course.progress: Progress
-course.enrollment.active: Active
-course.enrollment.inactive: Inactive
 course.enrollment.activate: Activate
 course.enrollment.deactivate: Deactivate
 course.enrollment.confirm_remove: 'Are you sure you want to remove %student% from this course?'
@@ -829,9 +749,6 @@ course.enrollment.flash.deactivated_successfully: Enrollment deactivated success
 course.enrollment.flash.removed_successfully: Student removed from course successfully
 user.select_student: Select Student
 user.select_student_placeholder: '-- Select a student --'
-empty.no_students_enrolled: No students enrolled yet
-empty.course_enrollment_description: Start building your class by enrolling students from your organization
-course.manage_enrollments: Manage Enrollments
 course.enrollment.select_students: Select Students
 course.enrollment.enroll_selected: Enroll Selected Students
 course.enrollment.save_changes: Save Changes
@@ -839,8 +756,6 @@ course.enrollment.multi_select_hint: Select multiple students to enroll at once
 course.enrollment.auto_deactivate_hint: Unselecting a student will automatically deactivate their enrollment (not delete)
 course.enrollment.search_hint: Type to search by name or email
 course.enrollment.deactivate_warning: Removing a student from selection will deactivate (not delete) their enrollment. They will lose access to the course but their progress will be preserved.
-course.enrollment.search_by_name: Search by name...
-course.enrollment.switch_hint: Toggle switches to enroll/deactivate students. Click Confirm to save changes.
 course.enrollment.enrolled: Enrolled
 course.enrollment.not_enrolled: Not Enrolled
 
@@ -850,10 +765,8 @@ course.enrollment.not_enrolled: Not Enrolled
 course.modules: Modules
 course.module: Module
 course.modules_count: Modules
-course.total_modules: Total Modules
 course.total.modules: Total Modules
 course.modules.and.lectures: Modules & Lectures
-course.no_content: No Content Yet
 course.no_content_description: This course doesn't have any modules or lectures yet. Add your first module to get started.
 
 # Module Buttons
@@ -1142,38 +1055,21 @@ vsM4tSv: There is already an account with this email
 # ========================================
 # Student Portal Translations
 # ========================================
-nav.my_courses: My Courses
 student.singular: Student
-student.my_courses: My Courses
 student.courses_subtitle: Access your enrolled courses and continue learning
 student.enrolled: Enrolled
 student.no_courses: No Courses Yet
 student.no_courses_description: You haven't been enrolled in any courses yet. Contact your administrator for access.
 student.progress: Progress
 student.completed: Completed
-student.in_progress: In Progress
-student.not_started: Not Started
 student.current: Current
-student.enrolled_on: Enrolled on
 student.review: Review
 student.continue: Continue
 student.start: Start Course
 student.restart: Restart
-student.total_courses: Total Courses
-student.completed_courses: Completed
-student.in_progress_courses: In Progress
-student.back_to_courses: Back to My Courses
 student.complete: Complete
-student.your_progress: Your Progress
-student.course_completed: Course Completed
-student.overall_completion: Overall Completion
-student.last_accessed: Last Accessed
-student.not_yet: Not yet
-student.completed_lectures: Completed Lectures
 student.watched: Watched
 student.status: Status
-student.watch_progress: Watch Progress
-course.overall_progress: Overall Progress
 course.lecture.processing_description: This video is being processed and will be available shortly. Please check back in a few minutes.
 button.refresh: Refresh Page
 course.lecture.failed_description: There was an error processing this video. Please contact support.
@@ -1186,9 +1082,7 @@ course.lecture.duration: Duration
 # Active status indicator
 status.active: Active
 # AI enhanced feature badge
-status.ai_enhanced: AI Enhanced
 # Real-time status indicator
-status.real_time: Real-time
 # Ready status
 status.ready: Ready
 # Processing status with ellipsis
@@ -1202,7 +1096,6 @@ status.pending: Pending
 # Time/Date
 # ========================================
 # Today time reference
-time.today: Today
 # Yesterday time reference
 time.yesterday: Yesterday
 # Days ago with pluralization
@@ -1244,7 +1137,6 @@ upload.video_hint: 'Max size: 4GB. Formats: MP4, WebM, OGG, MOV. Duration auto-c
 # Branding/Navigation
 # ========================================
 # Full product name with CRM
-branding.infinity_crm: Infinity CRM
 # Full dashboard title with AI branding
 branding.ai_dashboard: AI-Powered CRM Dashboard
 # AI Chat navigation link
@@ -1252,7 +1144,6 @@ nav.ai_chat: AI Chat
 # Analytics navigation link
 nav.analytics: Analytics
 # Aria label for mobile nav toggle
-nav.toggle_navigation: Toggle navigation
 
 # ========================================
 # Organization Switcher
@@ -1260,9 +1151,7 @@ nav.toggle_navigation: Toggle navigation
 # Tooltip for organization switcher
 organization.switcher_title: Change your organization
 # All organizations option in switcher
-organization.all_organizations: All Organizations
 # Root access option in switcher
-organization.all_organizations_root: All Organizations (Root)
 # Page title for organization users management
 organization.users_page_title: Manage Users - Infinity
 
@@ -1270,7 +1159,6 @@ organization.users_page_title: Manage Users - Infinity
 # Course/Lecture
 # ========================================
 # Link to return to course overview
-course.back_to_course: Back to Course
 # Lecture number label
 course.lecture_number: Lecture %number%
 # Course content section heading
@@ -1308,7 +1196,6 @@ insight.last_interaction: 'Last interaction: %days%d ago'
 # Missing Button Translations
 # ========================================
 # Generic actions button/label
-button.actions: Actions
 # Remove button
 button.remove: Remove
 # Confirm button
@@ -1335,8 +1222,6 @@ treeflow.singular: TreeFlow
 treeflow.plural: TreeFlows
 treeflow.name: Name
 treeflow.version: Version
-treeflow.active: Active
-treeflow.inactive: Inactive
 treeflow.steps: Steps
 treeflow.status: Status
 treeflow.total.steps: Total Steps
@@ -1359,7 +1244,6 @@ treeflow.modal.edit.subtitle: Update TreeFlow configuration
 treeflow.flash.created_successfully: TreeFlow "%name%" created successfully (Version %version%)
 treeflow.flash.updated_successfully: TreeFlow "%name%" updated successfully (Version %version%)
 treeflow.flash.deleted_successfully: TreeFlow "%name%" deleted successfully
-treeflow.flash.invalid_csrf_token: Invalid security token
 
 # TreeFlow Button
 treeflow.button.create.treeflow: Create TreeFlow
@@ -1398,7 +1282,6 @@ step.modal.edit.subtitle: Update step configuration
 step.flash.created_successfully: Step created successfully
 step.flash.updated_successfully: Step updated successfully
 step.flash.deleted_successfully: Step deleted successfully
-step.flash.invalid_csrf_token: Invalid security token
 
 # Step Button
 step.button.create.step: Create Step
@@ -1433,7 +1316,6 @@ question.modal.edit.subtitle: Update question configuration
 question.flash.created_successfully: Question created successfully
 question.flash.updated_successfully: Question updated successfully
 question.flash.deleted_successfully: Question deleted successfully
-question.flash.invalid_csrf_token: Invalid security token
 
 # Question Button
 question.button.create.question: Create Question
@@ -1460,7 +1342,6 @@ fewshot.form.name: Example Name
 fewshot.form.name_placeholder: Enter example name
 fewshot.form.prompt: Prompt
 fewshot.form.prompt_placeholder: Example prompt for the AI
-fewshot.form.description: Description
 fewshot.form.description_placeholder: Describe what makes this a good/bad example
 
 # FewShot Modal
@@ -1472,7 +1353,6 @@ fewshot.modal.edit.subtitle: Update example configuration
 fewshot.flash.created_successfully: Example created successfully
 fewshot.flash.updated_successfully: Example updated successfully
 fewshot.flash.deleted_successfully: Example deleted successfully
-fewshot.flash.invalid_csrf_token: Invalid security token
 
 # FewShot Button
 fewshot.button.create.example: Create Example
@@ -1497,7 +1377,6 @@ output.confirm.delete: Are you sure you want to delete this output?
 # Output Form
 output.form.name: Output Name
 output.form.name_placeholder: Enter output name
-output.form.description: Description
 output.form.description_placeholder: Describe what this output represents
 output.form.conditional: Conditional Expression
 output.form.conditional_placeholder: 'Example: regex:/urgent/i or keywords:high-priority,immediate'
@@ -1515,7 +1394,6 @@ output.modal.edit.subtitle: Update output configuration
 output.flash.created_successfully: Output created successfully
 output.flash.updated_successfully: Output updated successfully
 output.flash.deleted_successfully: Output deleted successfully
-output.flash.invalid_csrf_token: Invalid security token
 
 # Output Button
 output.button.create.output: Create Output
@@ -1555,7 +1433,6 @@ input.modal.edit.subtitle: Update input configuration
 input.flash.created_successfully: Input created successfully
 input.flash.updated_successfully: Input updated successfully
 input.flash.deleted_successfully: Input deleted successfully
-input.flash.invalid_csrf_token: Invalid security token
 
 # Input Button
 input.button.create.input: Create Input
@@ -1620,7 +1497,6 @@ organization.form.current.dark.logo: Current dark logo
 # ========================================
 # Date/Time Relative
 # ========================================
-date.relative.today: Today
 date.relative.yesterday: Yesterday
 date.relative.days_ago: 2 days ago
 date.relative.week_ago: 1 week ago
@@ -1645,7 +1521,6 @@ audit.timestamp: Timestamp
 audit.action: Action
 audit.entity: Entity
 audit.changes: Changes
-audit.actions: Actions
 audit.change.count: change(s)
 audit.view.timeline: View Timeline
 audit.timeline: Timeline
@@ -1732,7 +1607,6 @@ course.total.duration: Total Duration
 course.no.release.date: No Release Date
 course.lectures.count: Lectures
 course.lecture.number: Lecture
-course.view.details: View Details
 course.lecture.watch.video: Watch Video
 
 # Course Enrollments
@@ -1784,9 +1658,6 @@ organization.new.organization: New Organization
 organization.all.organizations: All Organizations
 organization.all.organizations.root: All Organizations (Root)
 organization.status: Status
-organization.active: Active
-organization.inactive: Inactive
-organization.view.details: View Details
 organization.manage.users: Manage Users
 organization.users: Users
 organization.users.count: Users
@@ -1827,7 +1698,6 @@ insight.strong.engagement: Strong Engagement
 # User Management
 # ========================================
 user.back.to.list: Back to Users
-user.view.details: View Details
 user.view.organization: View Organization
 user.created.at: Created At
 user.last.login: Last Login
@@ -1889,7 +1759,6 @@ audit.top_active_users: Top Active Users
 
 # Audit Stats
 audit.stats.total_events: Total Events
-audit.stats.today: Today
 audit.stats.this_week: This Week
 audit.stats.last_hour: Last Hour
 audit.stats.all_time: All Time
@@ -1899,7 +1768,6 @@ audit.stats.recent_activity: Recent Activity
 audit.filters_and_search: Filters & Search
 audit.apply_filters: Apply Filters
 audit.reset: Reset
-audit.filter.today: Today
 audit.filter.week: This Week
 audit.filter.created: Created
 audit.filter.updated: Updated
@@ -1910,7 +1778,6 @@ audit.focus_search_shortcut: Press '/' to focus search
 audit.table.timestamp: Timestamp
 audit.table.user: User
 audit.table.action: Action
-audit.table.actions: Actions
 audit.table.entity: Entity
 audit.table.changes: Changes
 audit.showing: Showing
@@ -1921,8 +1788,6 @@ audit.next: Next
 
 # Audit Details
 audit.field_changes: Field Changes
-audit.old_value: Old Value
-audit.new_value: New Value
 audit.context: Context
 audit.ip_address: IP Address
 audit.user_agent: User Agent
@@ -1955,11 +1820,9 @@ audit.history_modal.open_new_tab: Open in new tab
 audit.analytics.title: Audit Analytics Dashboard
 audit.analytics.back_to_log: Back to Audit Log
 audit.analytics.total_events: Total Events
-audit.analytics.today: Today
 audit.analytics.this_week: This Week
 audit.analytics.activity_by_hour: Activity by Hour (Last 24h)
 audit.analytics.action_breakdown: Action Breakdown
-audit.analytics.actions: Actions
 audit.analytics.top_active_users: Top Active Users
 audit.analytics.user: User
 audit.analytics.events_count: Events

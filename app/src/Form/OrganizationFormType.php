@@ -65,7 +65,7 @@ class OrganizationFormType extends AbstractType
                 'help' => 'organization.form.slug_help',
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'organization.form.description',
+                'label' => 'common.form.description',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',

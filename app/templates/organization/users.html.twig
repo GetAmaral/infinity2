@@ -11,7 +11,7 @@
                class="btn btn-sm btn-outline-light"
                data-bs-toggle="tooltip"
                data-bs-placement="top"
-               data-bs-title="{{ 'user.view.details'|trans }}">
+               data-bs-title="{{ 'common.action.view_details'|trans }}">
                 <i class="bi bi-eye"></i>
             </a>
             {% if is_granted('USER_EDIT', user) %}
@@ -48,7 +48,7 @@
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="background: var(--infinity-dark-surface);">
             <li>
                 <a class="dropdown-item" href="{{ path('user_show', {id: user.id}) }}">
-                    <i class="bi bi-eye me-2"></i>{{ 'user.view.details'|trans }}
+                    <i class="bi bi-eye me-2"></i>{{ 'common.action.view_details'|trans }}
                 </a>
             </li>
             {% if is_granted('USER_EDIT', user) %}
@@ -209,7 +209,7 @@
                 <table id="usersDataTable" class="table table-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th>{{ 'table.actions'|trans }}</th>
+                            <th>{{ 'common.label.actions'|trans }}</th>
                             <th data-sort-field="name">{{ 'user.name'|trans }}</th>
                             <th data-sort-field="email">{{ 'user.email'|trans }}</th>
                             <th data-sort-field="createdAt">{{ 'user.created.at'|trans }}</th>

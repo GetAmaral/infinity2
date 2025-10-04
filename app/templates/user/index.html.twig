@@ -35,7 +35,7 @@
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
-                        <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'user.view.details'|trans }}</a></li>
+                        <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view_details'|trans }}</a></li>
                         <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/user/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/user/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
@@ -101,7 +101,7 @@
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
-                    <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'user.view.details'|trans }}</a></li>
+                    <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view_details'|trans }}</a></li>
                     <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/user/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/user/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
@@ -140,7 +140,7 @@
 
 {# Table Headers #}
 {% block table_headers %}
-    <th style="width: 60px;">{{ 'table.actions'|trans }}</th>
+    <th style="width: 60px;">{{ 'common.label.actions'|trans }}</th>
     <th data-sort-field="name">{{ 'user.name'|trans }}</th>
     <th data-sort-field="email">{{ 'user.email'|trans }}</th>
     <th class="d-none d-md-table-cell text-center" data-sort-field="isVerified" data-field-type="boolean">{{ 'user.verified'|trans }}</th>
@@ -157,7 +157,7 @@
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
-                    <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'user.view.details'|trans }}</a></li>
+                    <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view_details'|trans }}</a></li>
                     <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/user/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/user/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>

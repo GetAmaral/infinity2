@@ -56,7 +56,7 @@ class FewShotExampleFormType extends AbstractType
                 ],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'fewshot.form.description',
+                'label' => 'common.form.description',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',

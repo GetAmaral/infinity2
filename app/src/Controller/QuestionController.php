@@ -170,7 +170,7 @@ final class QuestionController extends AbstractController
 
             $this->addFlash('success', 'question.flash.deleted_successfully');
         } else {
-            $this->addFlash('error', 'question.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('treeflow_show', ['id' => $treeflowId]);

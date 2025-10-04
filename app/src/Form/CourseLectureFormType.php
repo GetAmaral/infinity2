@@ -41,7 +41,7 @@ class CourseLectureFormType extends AbstractType
                 ],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'course.lecture.form.description',
+                'label' => 'common.form.description',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',

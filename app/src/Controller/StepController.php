@@ -139,7 +139,7 @@ final class StepController extends AbstractController
 
             $this->addFlash('success', 'step.flash.deleted_successfully');
         } else {
-            $this->addFlash('error', 'step.flash.invalid_csrf_token');
+            $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
         return $this->redirectToRoute('treeflow_show', ['id' => $treeflowId]);
