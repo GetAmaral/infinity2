@@ -16,9 +16,9 @@ export default class extends Controller {
 
     async toggle(event) {
         const isCompleted = event.target.checked;
-        const originalState = !isCompleted;
+        const wasCompleted = !isCompleted;  // Previous state before toggle
 
-        console.log('[CompletionToggle] Toggle changed! New state:', isCompleted);
+        console.log('[CompletionToggle] Toggle changed! Previous:', wasCompleted, 'New:', isCompleted);
 
         // Disable toggle during request
         event.target.disabled = true;
@@ -51,21 +51,21 @@ export default class extends Controller {
 
                 // Update course progress UI
                 if (data.courseProgress !== undefined) {
-                    this.updateCourseProgress(data.courseProgress, isCompleted, data.completed);
+                    this.updateCourseProgress(data.courseProgress, isCompleted, wasCompleted);
                 }
 
                 // Re-enable toggle
                 event.target.disabled = false;
             } else {
                 // Revert toggle state on error
-                event.target.checked = originalState;
+                event.target.checked = wasCompleted;
                 event.target.disabled = false;
                 alert('Failed to update completion status');
             }
         } catch (error) {
             console.error('[CompletionToggle] Error:', error);
             // Revert toggle state on error
-            event.target.checked = originalState;
+            event.target.checked = wasCompleted;
             event.target.disabled = false;
             alert('Error updating completion status');
         }
@@ -100,7 +100,7 @@ export default class extends Controller {
         }
     }
 
-    updateCourseProgress(courseProgress, isCompleted, lectureCompleted) {
+    updateCourseProgress(courseProgress, isCompleted, wasCompleted) {
         // Update course progress texts
         const courseProgressTexts = document.querySelectorAll('.course-progress-text');
         courseProgressTexts.forEach(el => {
@@ -123,11 +123,15 @@ export default class extends Controller {
                 let completedCount = parseInt(match[1]);
                 const totalCount = parseInt(match[2]);
 
-                // Increment or decrement based on toggle state
-                if (isCompleted && lectureCompleted) {
+                // Increment or decrement based on state change
+                if (isCompleted && !wasCompleted) {
+                    // Just marked as complete - increment
                     completedCount = Math.min(completedCount + 1, totalCount);
-                } else if (!isCompleted && !lectureCompleted) {
+                    console.log('[CompletionToggle] Incrementing count (marked complete)');
+                } else if (!isCompleted && wasCompleted) {
+                    // Just unmarked - decrement
                     completedCount = Math.max(completedCount - 1, 0);
+                    console.log('[CompletionToggle] Decrementing count (marked incomplete)');
                 }
 
                 courseLectureCount.textContent = `${completedCount} / ${totalCount}`;

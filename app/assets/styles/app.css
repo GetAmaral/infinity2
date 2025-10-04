@@ -945,3 +945,27 @@ main {
 [data-theme="light"] .infinity-table tbody td {
     border-color: rgba(0, 0, 0, 0.05);
 }
+
+/* Video Navigation Controls - Theme Aware */
+.video-nav-controls {
+    background: rgba(0, 0, 0, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+[data-theme="light"] .video-nav-controls {
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Video Nav Controls - Form Check Label */
+.video-nav-controls .form-check-label {
+    color: #ffffff;
+    cursor: pointer;
+}
+
+[data-theme="light"] .video-nav-controls .form-check-label {
+    color: #1a1a1a;
+}

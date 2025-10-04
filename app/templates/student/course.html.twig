@@ -65,7 +65,7 @@
             <!-- Progress Bar -->
             <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-white">{{ 'student.overall.completion'|trans }}</span>
+                    <span class="text-white">{{ 'student.overall_completion'|trans }}</span>
                     <span class="text-neon fw-bold fs-5">{{ enrollment.progressPercentage|round }}%</span>
                 </div>
                 <div class="progress" style="height: 20px; background: rgba(255, 255, 255, 0.1);">
@@ -92,12 +92,12 @@
                         {% if enrollment.lastDate %}
                             {{ enrollment.lastDate|format_date('medium') }}
                         {% else %}
-                            {{ 'student.not.yet'|trans }}
+                            {{ 'student.not_yet'|trans }}
                         {% endif %}
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="text-muted small">{{ 'student.completed.lectures'|trans }}</div>
+                    <div class="text-muted small">{{ 'student.completed_lectures'|trans }}</div>
                     <div class="text-white fw-bold">
                         {{ lectureProgress|filter(p => p.completed)|length }} / {{ lectures|length }}
                     </div>
@@ -120,8 +120,8 @@
             {% if modules is empty %}
                 <div class="text-center py-5">
                     <i class="bi bi-layers" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
-                    <h5 class="text-white mt-3 mb-2">{{ 'course.no.content'|trans }}</h5>
-                    <p class="text-secondary mb-0">{{ 'course.no.content.description'|trans }}</p>
+                    <h5 class="text-white mt-3 mb-2">{{ 'course.no_content'|trans }}</h5>
+                    <p class="text-secondary mb-0">{{ 'course.no_content_description'|trans }}</p>
                 </div>
             {% else %}
                 <div class="accordion" id="modulesAccordion">
@@ -167,13 +167,12 @@
                                                 {% set progress = lectureProgress[lecture.id.toString] ?? null %}
                                                 {% set isCompleted = progress and progress.completed %}
                                                 {% set progressPercent = progress ? progress.completionPercentage|round : 0 %}
-                                                {% set isProcessed = lecture.processingStatus == 'completed' %}
                                                 {% set isProcessing = lecture.processingStatus == 'processing' %}
                                                 {% set isFailed = lecture.processingStatus == 'failed' %}
 
-                                                <a href="{% if isProcessed %}{{ path('student_lecture', {courseId: course.id, lectureId: lecture.id}) }}{% else %}#{% endif %}"
-                                                   class="list-group-item list-group-item-action {% if not isProcessed %}disabled{% endif %}"
-                                                   style="background: transparent; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.05); {% if not isProcessed %}opacity: 0.6; cursor: not-allowed;{% endif %}">
+                                                <a href="{{ path('student_lecture', {courseId: course.id, lectureId: lecture.id}) }}"
+                                                   class="list-group-item list-group-item-action"
+                                                   style="background: transparent; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
                                                     <div class="d-flex align-items-start py-2">
                                                         <!-- Lecture Number Badge -->
                                                         <div class="me-3 d-flex align-items-center justify-content-center"
@@ -202,7 +201,23 @@
 
                                                             <!-- Progress & Status -->
                                                             <div class="d-flex gap-2 align-items-center flex-wrap">
-                                                                {% if isProcessing %}
+                                                                {% if isCompleted %}
+                                                                    <span class="badge bg-success">
+                                                                        <i class="bi bi-check-circle me-1"></i>{{ 'student.completed'|trans }}
+                                                                    </span>
+                                                                {% elseif progressPercent > 0 %}
+                                                                    <span class="badge bg-primary">
+                                                                        {{ progressPercent }}% {{ 'student.watched'|trans }}
+                                                                    </span>
+                                                                    <div style="width: 100px;">
+                                                                        <div class="progress" style="height: 4px; background: rgba(255, 255, 255, 0.1);">
+                                                                            <div class="progress-bar bg-primary"
+                                                                                 role="progressbar"
+                                                                                 style="width: {{ progressPercent }}%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                {% elseif isProcessing %}
                                                                     <span class="badge bg-warning text-dark">
                                                                         <i class="bi bi-hourglass-split me-1"></i>{{ 'course.lecture.processing'|trans }}
                                                                     </span>
@@ -210,38 +225,18 @@
                                                                     <span class="badge bg-danger">
                                                                         <i class="bi bi-exclamation-triangle me-1"></i>{{ 'course.lecture.failed'|trans }}
                                                                     </span>
-                                                                {% elseif isProcessed %}
-                                                                    {% if isCompleted %}
-                                                                        <span class="badge bg-success">
-                                                                            <i class="bi bi-check-circle me-1"></i>{{ 'student.completed'|trans }}
-                                                                        </span>
-                                                                    {% elseif progressPercent > 0 %}
-                                                                        <span class="badge bg-primary">
-                                                                            {{ progressPercent }}% {{ 'student.watched'|trans }}
-                                                                        </span>
-                                                                        <div style="width: 100px;">
-                                                                            <div class="progress" style="height: 4px; background: rgba(255, 255, 255, 0.1);">
-                                                                                <div class="progress-bar bg-primary"
-                                                                                     role="progressbar"
-                                                                                     style="width: {{ progressPercent }}%">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    {% else %}
-                                                                        <span class="badge bg-secondary">
-                                                                            <i class="bi bi-play-circle me-1"></i>{{ 'student.not.started'|trans }}
-                                                                        </span>
-                                                                    {% endif %}
+                                                                {% else %}
+                                                                    <span class="badge bg-secondary">
+                                                                        <i class="bi bi-play-circle me-1"></i>{{ 'student.not.started'|trans }}
+                                                                    </span>
                                                                 {% endif %}
                                                             </div>
                                                         </div>
 
                                                         <!-- Play Button -->
-                                                        {% if isProcessed %}
-                                                            <div class="ms-3 d-flex align-items-center">
-                                                                <i class="bi bi-play-circle-fill text-neon" style="font-size: 1.5rem;"></i>
-                                                            </div>
-                                                        {% endif %}
+                                                        <div class="ms-3 d-flex align-items-center">
+                                                            <i class="bi bi-play-circle-fill text-neon" style="font-size: 1.5rem;"></i>
+                                                        </div>
                                                     </div>
                                                 </a>
                                             {% endfor %}

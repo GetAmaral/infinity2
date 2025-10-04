@@ -208,12 +208,19 @@ class StudentLecture extends EntityBase
         ));
 
         if ($lectureLength > 0) {
+            // Lecture with video - calculate based on watched time
             $percentage = ($this->watchedSeconds / $lectureLength) * 100;
             $this->completionPercentage = min($percentage, 100.0); // Max 100%
             error_log(sprintf('[PreUpdate] Calculated percentage: %.2f%%', $this->completionPercentage));
         } else {
-            $this->completionPercentage = 0.0;
-            error_log('[PreUpdate] Lecture length is 0, setting completion to 0%');
+            // Videoless lecture - mark as 100% if any watched seconds recorded, 0% otherwise
+            if ($this->watchedSeconds > 0) {
+                $this->completionPercentage = 100.0;
+                error_log('[PreUpdate] Videoless lecture marked as complete (100%)');
+            } else {
+                $this->completionPercentage = 0.0;
+                error_log('[PreUpdate] Videoless lecture not started (0%)');
+            }
         }
 
         // Auto-mark as completed if >= MIN_COMPLETION

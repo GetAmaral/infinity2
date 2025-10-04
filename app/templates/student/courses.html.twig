@@ -115,38 +115,35 @@
 
                     <!-- Footer Actions -->
                     <div class="mt-auto pt-3 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">
-                                <i class="bi bi-calendar me-1"></i>{{ 'student.enrolled.on'|trans }} {{ enrollment.enrolledAt|format_date('medium') }}
-                            </small>
-                            <div class="d-flex gap-2">
-                                {% if isCompleted %}
-                                    <a href="{{ path('certificate_course', {id: course.id}) }}"
-                                       class="btn btn-success btn-sm"
-                                       target="_blank">
-                                        <i class="bi bi-award me-1"></i>{{ 'certificate.view.certificate'|trans }}
-                                    </a>
-                                {% endif %}
+                        <div class="d-flex justify-content-end align-items-center gap-2">
                             {% if isCompleted %}
+                                <a href="{{ path('certificate_course', {id: course.id}) }}"
+                                   class="btn btn-success btn-sm"
+                                   style="min-width: 140px;"
+                                   target="_blank">
+                                    <i class="bi bi-award me-1"></i>{{ 'certificate.view.certificate'|trans }}
+                                </a>
                                 {# Completed course - Restart #}
                                 <a href="{{ path('student_course', {id: course.id}) }}"
-                                   class="btn infinity-btn-primary btn-sm">
+                                   class="btn infinity-btn-primary btn-sm"
+                                   style="min-width: 140px;">
                                     <i class="bi bi-arrow-clockwise me-1"></i>{{ 'student.restart'|trans }}
                                 </a>
                             {% elseif enrollment.currentLecture %}
                                 {# In progress - Continue #}
                                 <a href="{{ path('student_lecture', {courseId: course.id, lectureId: enrollment.currentLecture.id}) }}"
-                                   class="btn infinity-btn-primary btn-sm">
+                                   class="btn infinity-btn-primary btn-sm"
+                                   style="min-width: 140px;">
                                     <i class="bi bi-play-fill me-1"></i>{{ 'student.continue'|trans }}
                                 </a>
                             {% else %}
                                 {# Not started - Start #}
                                 <a href="{{ path('student_course', {id: course.id}) }}"
-                                   class="btn infinity-btn-primary btn-sm">
+                                   class="btn infinity-btn-primary btn-sm"
+                                   style="min-width: 140px;">
                                     <i class="bi bi-play-circle me-1"></i>{{ 'student.start'|trans }}
                                 </a>
                             {% endif %}
-                            </div>
                         </div>
                     </div>
                 </div>

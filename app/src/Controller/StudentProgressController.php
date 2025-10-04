@@ -202,28 +202,21 @@ final class StudentProgressController extends AbstractController
         if ($shouldBeCompleted) {
             // Mark as completed: set watched seconds to full lecture length
             if ($lectureLength > 0) {
+                // Video lecture: set to full length
                 $studentLecture->setWatchedSeconds($lectureLength);
                 $studentLecture->setLastPositionSeconds($lectureLength);
-                error_log(sprintf('[Completion] Set watched seconds to: %d', $lectureLength));
+                error_log(sprintf('[Completion] Video lecture - set watched seconds to: %d', $lectureLength));
             } else {
-                error_log('[Completion] WARNING: Lecture length is 0, cannot mark as complete');
-                // Set to 100 seconds as a fallback if lecture length is not set
-                $studentLecture->setWatchedSeconds(100);
-                $studentLecture->setLastPositionSeconds(100);
+                // Videoless lecture: set to 1 to indicate manually completed
+                $studentLecture->setWatchedSeconds(1);
+                $studentLecture->setLastPositionSeconds(1);
+                error_log('[Completion] Videoless lecture - marked as complete (watchedSeconds=1)');
             }
         } else {
-            // Mark as incomplete: reset to 0 or keep current position if less than full
-            $currentWatched = $studentLecture->getWatchedSeconds();
-            error_log(sprintf('[Completion] Current watched: %d, Lecture length: %d', $currentWatched, $lectureLength));
-            if ($currentWatched >= $lectureLength) {
-                // Was at 100%, reset to 0
-                $studentLecture->setWatchedSeconds(0);
-                $studentLecture->setLastPositionSeconds(0);
-                error_log('[Completion] Reset to 0');
-            } else {
-                error_log('[Completion] Keeping current progress');
-            }
-            // If less than 100%, keep current progress
+            // Mark as incomplete: reset to 0
+            $studentLecture->setWatchedSeconds(0);
+            $studentLecture->setLastPositionSeconds(0);
+            error_log('[Completion] Reset to incomplete (watchedSeconds=0)');
         }
 
         $studentLecture->setLastWatchedAt(new \DateTimeImmutable());

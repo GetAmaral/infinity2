@@ -1761,10 +1761,375 @@ upload.video.hint: Upload video files (MP4, WebM, or AVI)
 confirm.delete.entity: Are you sure you want to delete this item?
 
 # ========================================
+# Base Navigation & Branding
+# ========================================
+branding.infinity.crm: Infinity CRM
+branding.ai.dashboard: AI-Powered Dashboard
+misc.infinity.alt: Infinity Logo
+nav.my.courses: My Courses
+nav.toggle.navigation: Toggle navigation
+theme.switch.to.dark: Switch to dark mode
+theme.switch.to.light: Switch to light mode
+theme.dark.description: Dark mode for comfortable viewing in low light
+theme.light.description: Light mode for bright environments
+
+# ========================================
+# Organization Management
+# ========================================
+organization.edit: Edit Organization
+organization.back.to.organization: Back to Organization
+organization.back.to.list: Back to Organizations
+organization.back.to.details: Back to Details
+organization.new.organization: New Organization
+organization.all.organizations: All Organizations
+organization.all.organizations.root: All Organizations (Root)
+organization.status: Status
+organization.active: Active
+organization.inactive: Inactive
+organization.view.details: View Details
+organization.manage.users: Manage Users
+organization.users: Users
+organization.users.count: Users
+organization.users.in.organization: Users in Organization
+organization.users.page.title: Users
+organization.total.users: Total Users
+organization.no.users: No users yet
+organization.courses: Courses
+organization.created.by: Created By
+
+# Organization Form
+organization.form.current.logo: Current logo
+organization.form.name.placeholder: Enter organization name
+organization.form.slug.placeholder: organization-slug
+organization.form.description.placeholder: Enter organization description
+button.create.organization: Create Organization
+button.update.organization: Update Organization
+organization.modal.create.subtitle: Add a new organization
+organization.modal.edit.subtitle: Update organization information
+organization.flash.save.success: Organization saved successfully
+organization.flash.save.success.description: Your changes have been saved
+
+# Organization Contacts
+button.add.contact: Add Contact
+button.add.first.contact: Add First Contact
+empty.no.contacts.yet: No contacts yet
+empty.organization.contacts.description: Start managing your business relationships by adding contacts
+misc.contacts.section: Contacts
+metric.total.contacts: Total Contacts
+
+# Organization Insights
+insight.active.organization: Active Organization
+insight.growth.potential: Growth Potential
+insight.high.relationship.score: High Relationship Score
+insight.strong.engagement: Strong Engagement
+
+# ========================================
+# User Management
+# ========================================
+user.back.to.list: Back to Users
+user.view.details: View Details
+user.view.organization: View Organization
+user.created.at: Created At
+user.last.login: Last Login
+user.never.logged.in: Never logged in
+user.verified: Verified
+user.unverified: Unverified
+user.locked: Locked
+user.courses: Courses
+user.courses.label: Courses
+user.courses.enrolled: Enrolled
+user.courses.owned: Owned
+
+# User Form
+user.new.user: New User
+button.add.user: Add User
+button.add.first.user: Add First User
+button.create.user: Create User
+button.update.user: Update User
+user.form.name.placeholder: Enter full name
+user.form.email.placeholder: Enter email address
+user.form.password.placeholder: Enter password
+user.form.password.confirm.placeholder: Confirm password
+user.modal.create.subtitle: Add a new user to your organization
+user.modal.edit.subtitle: Update user information
+
+# User Actions
+button.edit.contact: Edit Contact
+button.send.email: Send Email
+button.send.message: Send Message
+button.call.contact: Call Contact
+button.schedule.meeting: Schedule Meeting
+button.share.contact: Share Contact
+button.start.ai.chat: Start AI Chat
+contact.active.user: Active User
+contact.last.activity: Last Activity
+
+# User Insights
+insight.active.communicator: Active Communicator
+insight.high.engagement: High Engagement
+insight.key.relationship: Key Relationship
+
+# Empty States
+empty.no.users.yet: No users yet
+empty.organization.users.description: Invite team members to collaborate on your organization
+
+# ========================================
+# Audit & Analytics
+# ========================================
+audit.title: Audit & Activity Log
+audit.live_monitoring: Live monitoring
+audit.last_updated: Last updated
+audit.events: Events
+audit.events_total: Total Events
+audit.activity_timeline: Activity Timeline
+audit.activity_breakdown: Activity Breakdown
+audit.full_history: Full History
+audit.view_changes: View Changes
+audit.top_active_users: Top Active Users
+
+# Audit Stats
+audit.stats.total_events: Total Events
+audit.stats.today: Today
+audit.stats.this_week: This Week
+audit.stats.last_hour: Last Hour
+audit.stats.all_time: All Time
+audit.stats.recent_activity: Recent Activity
+
+# Audit Filters
+audit.filters_and_search: Filters & Search
+audit.apply_filters: Apply Filters
+audit.reset: Reset
+audit.filter.today: Today
+audit.filter.week: This Week
+audit.filter.created: Created
+audit.filter.updated: Updated
+audit.filter.deleted: Deleted
+audit.focus_search_shortcut: Press '/' to focus search
+
+# Audit Table
+audit.table.timestamp: Timestamp
+audit.table.user: User
+audit.table.action: Action
+audit.table.actions: Actions
+audit.table.entity: Entity
+audit.table.changes: Changes
+audit.showing: Showing
+audit.to: to
+audit.of: of
+audit.previous: Previous
+audit.next: Next
+
+# Audit Details
+audit.field_changes: Field Changes
+audit.old_value: Old Value
+audit.new_value: New Value
+audit.context: Context
+audit.ip_address: IP Address
+audit.user_agent: User Agent
+audit.no_user_activity: System
+audit.view.table: Table View
+
+# Audit Export
+audit.export: Export
+audit.export.csv: Export CSV
+audit.export.json: Export JSON
+audit.export.pdf: Export PDF
+
+# Audit Empty States
+audit.no_events_found: No events found
+audit.no_events_description: Try adjusting your filters or search criteria
+
+# Audit History Modal
+audit.history_modal.title: Entity History
+audit.history_modal.history: History
+audit.history_modal.loading: Loading
+audit.history_modal.loading_description: Please wait...
+audit.history_modal.failed: Failed to load
+audit.history_modal.close: Close
+audit.history_modal.open_link: Open
+audit.history_modal.open_new_tab: Open in new tab
+
+# ========================================
+# Audit Analytics
+# ========================================
+audit.analytics.title: Audit Analytics Dashboard
+audit.analytics.back_to_log: Back to Audit Log
+audit.analytics.total_events: Total Events
+audit.analytics.today: Today
+audit.analytics.this_week: This Week
+audit.analytics.activity_by_hour: Activity by Hour (Last 24h)
+audit.analytics.action_breakdown: Action Breakdown
+audit.analytics.actions: Actions
+audit.analytics.top_active_users: Top Active Users
+audit.analytics.user: User
+audit.analytics.events_count: Events
+audit.analytics.most_modified_entities: Most Modified Entities
+audit.analytics.entity_type: Entity Type
+audit.analytics.modifications: Modifications
+audit.analytics.anomalies: Anomalies Detected
+audit.analytics.anomaly_detected: Anomaly Detected
+audit.analytics.predicted_events: Predicted Events
+audit.analytics.next_week_prediction: Next Week Prediction
+audit.analytics.confidence: Confidence
+audit.analytics.trend: Trend
+audit.analytics.historical_data: Historical Data
+audit.analytics.week: Week
+audit.analytics.capacity_recommendation: Capacity Recommendation
+audit.analytics.no_user_data: No user activity data available
+audit.analytics.no_entity_data: No entity modification data available
+
+# Chart Labels
+audit.analytics.chart.hour_of_day: Hour of Day
+audit.analytics.chart.number_of_events: Number of Events
+audit.analytics.chart.events_per_hour: Events per Hour
+
+# ========================================
+# Student Portal
+# ========================================
+student.my.courses: My Courses
+student.back.to.courses: Back to My Courses
+student.courses.subtitle: Your learning journey
+student.total.courses: Total Courses
+student.in.progress.courses: In Progress
+student.completed.courses: Completed
+student.not.started: Not Started
+student.in.progress: In Progress
+student.enrolled.on: Enrolled on
+student.your.progress: Your Progress
+student.overall.completion: Overall Completion
+student.last.accessed: Last Accessed
+student.not.yet: Not yet
+student.completed.lectures: Completed Lectures
+student.course.completed: Course Completed
+student.watch.progress: Watch Progress
+student.end.course: End of Course
+
+# Student Empty States
+student.no.courses: No courses yet
+student.no.courses.description: You haven't been enrolled in any courses yet
+
+# Course Lecture States
+course.lecture.processing: Processing
+course.lecture.processing.description: Your video is being processed. This may take a few minutes.
+course.lecture.failed: Processing Failed
+course.lecture.failed.description: Video processing failed. Please contact support.
+course.lecture.no.video: No Video Available
+course.lecture.no.video.description: This lecture doesn't have a video yet
+course.no.content: No Content Yet
+course.no.content.description: This course doesn't have any modules or lectures yet
+course.overall.progress: Overall Progress
+
+# ========================================
+# Security & Authentication (Dot Notation Aliases)
+# ========================================
+auth.sign.in: Sign In
+auth.welcome.back: Welcome Back
+auth.login.to.continue: Login to continue
+auth.no.account: Don't have an account?
+auth.register.now: Register now
+auth.remember.me: Remember me
+auth.create.account: Create Account
+auth.create.account.button: Create Account
+auth.join.infinity: Join Infinity
+auth.full.name: Full Name
+auth.confirm.password: Confirm Password
+auth.password.requirements: At least 8 characters with letters and numbers
+auth.already.have.account: Already have an account?
+
+# ========================================
+# Settings & Preferences
+# ========================================
+settings.ui.preferences: UI Preferences
+settings.language.preferences: Language Preferences
+settings.current.language: Current Language
+settings.choose.language: Choose Language
+settings.items.per.page: Items per Page
+settings.enable.animations: Enable Animations
+settings.enable.sound: Enable Sound Effects
+settings.compact.mode: Compact Mode
+ai.settings.description: Customize your AI assistant preferences
+page.settings.description: Customize your Infinity experience
+misc.coming.soon: Coming Soon
+ui.back.to.dashboard: Back to Dashboard
+
+# System Status
+system.security.status: Security Status
+system.security.message: All systems operational
+
+# ========================================
+# API Token Management
+# ========================================
+token.your.token: Your API Token
+token.active.tokens: Active Tokens
+token.active.token: Active Token
+token.no.active.token: No active token
+token.no.token: No Token
+token.current.token: Current Token
+token.copy.warning: Copy this token now - you won't be able to see it again
+token.info.title: API Token Information
+token.validity.period: Validity Period
+token.access.level: Access Level
+token.full.api.access: Full API Access
+token.security.tips: Security Tips
+token.usage.instructions: Usage Instructions
+token.usage.description: Include this token in the Authorization header
+token.regeneration.description: Generate a new token to replace the current one
+token.revoke.confirm: Are you sure you want to revoke this token?
+
+# ========================================
+# Home & Dashboard
+# ========================================
+ai.powered.crm: AI-Powered CRM
+ai.quick.actions: Quick Actions
+ai.smart.automation: Smart Automation
+ai.automation.description: Automate routine tasks with AI
+ai.predictive.analytics: Predictive Analytics
+ai.predictive.description: Get insights before they happen
+ai.conversational.description: Natural language interactions
+
+# Metrics
+metric.ai.interactions: AI Interactions
+metric.response.time: Response Time
+metric.new.count: New
+metric.today.growth: Today's Growth
+metric.month.growth: This Month
+
+# Status
+status.ai.enhanced: AI Enhanced
+status.real.time: Real-time
+
+# ========================================
+# Certificates
+# ========================================
+certificate.view.certificate: View Certificate
+
+# ========================================
+# Table & List Elements
+# ========================================
+table.created: Created
+table.updated: Updated
+table.created_by: Created By
+button.view: View
+
+# ========================================
+# Filters & Search
+# ========================================
+filter.yes: Yes
+filter.no: No
+button.clear.search: Clear search
+
+# ========================================
+# Form Elements
+# ========================================
+button.save: Save
+button.reset.form: Reset Form
+form.validation.errors: Please fix the validation errors
+
+# ========================================
 # Debug/Console Messages
 # ========================================
 debug.init.dom.loaded: "[Init] DOM Content Loaded"
 debug.init.tooltips.initialized: "[Init] Tooltips initialized"
 debug.init.bootstrap.missing: "[Init] Bootstrap not loaded, skipping tooltip initialization"
 
-# Total translations: 1060
+# Total translations: 1054
