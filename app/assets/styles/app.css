@@ -499,6 +499,71 @@ body::before {
     background: linear-gradient(135deg, #5b21b6, var(--infinity-primary));
 }
 
+/* Infinity Button Variants - Consistent Sizing */
+.infinity-btn-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.infinity-btn-warning:hover {
+    background: linear-gradient(135deg, #d97706, #f59e0b);
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+    transform: translateY(-1px);
+}
+
+.infinity-btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.infinity-btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+    transform: translateY(-1px);
+}
+
+.infinity-btn-secondary {
+    background: var(--infinity-btn-secondary-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--infinity-text-primary);
+    transition: all 0.3s ease;
+}
+
+.infinity-btn-secondary:hover {
+    background: var(--infinity-btn-secondary-hover);
+    transform: translateY(-1px);
+}
+
+/* Ensure consistent sizing for small action buttons */
+.btn-sm.infinity-btn-warning,
+.btn-sm.infinity-btn-danger,
+.btn-sm.infinity-btn-secondary,
+.btn-sm.infinity-btn-primary,
+.btn-sm.infinity-btn-ai {
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0.4rem 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+}
+
+/* Icon-only buttons should be square and same size */
+.btn-sm.infinity-btn-warning:has(i:only-child),
+.btn-sm.infinity-btn-danger:has(i:only-child),
+.btn-sm.infinity-btn-secondary:has(i:only-child),
+.btn-sm.infinity-btn-primary:has(i:only-child),
+.btn-sm.infinity-btn-ai:has(i:only-child) {
+    padding: 0.5rem;
+    width: 36px;
+    height: 36px;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
@@ -807,4 +872,76 @@ main {
     --infinity-search-bg: #ffffff;
     --infinity-search-border: rgba(0, 0, 0, 0.2);
     --infinity-search-text: #1a1a1a;
+}
+
+/* Infinity Table - Theme Aware - Override Bootstrap defaults */
+.table.infinity-table,
+.infinity-table {
+    background: transparent !important;
+    color: var(--infinity-text-primary);
+    border-color: rgba(255, 255, 255, 0.1);
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.02);
+    --bs-table-active-bg: rgba(255, 255, 255, 0.05);
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+.infinity-table thead,
+.infinity-table thead th {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: var(--infinity-text-primary) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    padding: 1rem;
+}
+
+.infinity-table tbody,
+.infinity-table tbody tr {
+    background: transparent !important;
+    border-color: rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.infinity-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.infinity-table tbody td {
+    padding: 1rem;
+    border-color: rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+    background: transparent !important;
+}
+
+/* Light Theme - Table Overrides */
+[data-theme="light"] .table.infinity-table,
+[data-theme="light"] .infinity-table {
+    border-color: rgba(0, 0, 0, 0.1);
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: rgba(0, 0, 0, 0.01);
+    --bs-table-active-bg: rgba(0, 0, 0, 0.02);
+    --bs-table-hover-bg: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .infinity-table thead,
+[data-theme="light"] .infinity-table thead th {
+    background: rgba(0, 0, 0, 0.03) !important;
+    color: #1a1a1a !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .infinity-table tbody,
+[data-theme="light"] .infinity-table tbody tr {
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .infinity-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.02) !important;
+}
+
+[data-theme="light"] .infinity-table tbody td {
+    border-color: rgba(0, 0, 0, 0.05);
 }

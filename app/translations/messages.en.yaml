@@ -597,6 +597,7 @@ page.ai_powered_crm: AI-Powered CRM Dashboard
 page.organization_details: Organization Details
 page.manage_users: Manage Users
 page.infinity_suffix: Infinity
+page.infinity.suffix: Infinity
 
 # ========================================
 # Status Badges
@@ -796,10 +797,14 @@ empty.no_lectures_yet: No lectures yet
 # ========================================
 button.add_lecture: Add Lecture
 button.add_first_lecture: Add First Lecture
+button.add.lecture: Add Lecture
+button.add.first.lecture: Add First Lecture
 button.create_course: Create Course
 button.update_course: Update Course
 button.create_lecture: Create Lecture
 button.update_lecture: Update Lecture
+button.save.changes: Save Changes
+button.saving: Saving...
 
 # ========================================
 # Course Enrollment
@@ -1600,4 +1605,166 @@ validation:
     type_invalid: Invalid input type selected
     prompt_too_long: Prompt cannot exceed 1000 characters
 
-# Total translations: 933
+# ========================================
+# Admin Navigation (base.html.twig)
+# ========================================
+nav.admin.section: Admin
+nav.admin.audit.log: Audit Log
+nav.admin.audit.analytics: Audit Analytics
+
+# ========================================
+# Organization - Additional
+# ========================================
+organization.form.current.dark.logo: Current dark logo
+
+# ========================================
+# Date/Time Relative
+# ========================================
+date.relative.today: Today
+date.relative.yesterday: Yesterday
+date.relative.days_ago: 2 days ago
+date.relative.week_ago: 1 week ago
+
+# ========================================
+# General/Misc - Additional
+# ========================================
+general.not.available: N/A
+misc.loading.ellipsis: "..."
+
+# ========================================
+# Audit - User Actions & Entity Timeline
+# ========================================
+audit.user.actions.title: User Audit Actions
+audit.back.to.log: Back to Audit Log
+audit.user.name: User Name
+audit.user.email: Email
+audit.all.actions: All Actions
+audit.action.count: action(s)
+audit.no.actions.recorded: No actions recorded for this user.
+audit.timestamp: Timestamp
+audit.action: Action
+audit.entity: Entity
+audit.changes: Changes
+audit.actions: Actions
+audit.change.count: change(s)
+audit.view.timeline: View Timeline
+audit.timeline: Timeline
+audit.entity.timeline.title: Entity Audit Timeline
+audit.entity.type: Entity Type
+audit.entity.id: Entity ID
+audit.complete.history: Complete History
+audit.event.count: event(s)
+audit.no.history.available: No audit history available for this entity.
+audit.by: by
+audit.system: System
+audit.changes.label: "Changes:"
+audit.field: Field
+audit.old.value: Old Value
+audit.new.value: New Value
+audit.value.null: NULL
+audit.metadata.ip: "IP:"
+
+# ========================================
+# TreeFlow - JavaScript Messages
+# ========================================
+treeflow.steps.reorder.success: Steps reordered successfully
+treeflow.steps.reorder.error: Failed to reorder steps
+question.reorder.success: Questions reordered successfully
+question.reorder.error: Failed to reorder questions
+
+# ========================================
+# Developer Messages (for _base_entity_list.html.twig)
+# ========================================
+developer.message.override.grid.template: Override grid_view_item_template block in {entity_name}/index.html.twig
+developer.message.override.list.template: Override list_view_item_template block in {entity_name}/index.html.twig
+developer.message.override.table.row.template: Override table_view_row_template block in {entity_name}/index.html.twig
+developer.message.override.grid.item: Override grid_item block in child template
+developer.message.override.table.headers: Override table_headers block
+developer.message.override.table.row: Override table_row block
+
+# ========================================
+# Certificate
+# ========================================
+certificate.document.title: Certificate
+certificate.title: Certificate of Completion
+certificate.presented.to: Presented to
+certificate.text.has.successfully.completed: has successfully completed the course
+certificate.completion.date: Completion Date
+certificate.course.duration: Course Duration
+certificate.credential.verification: Credential Verification
+certificate.footer: This certificate verifies that the above individual successfully completed the course.
+certificate.download.pdf: Download PDF
+certificate.print: Print Certificate
+certificate.back.to.course: Back to Course
+
+# ========================================
+# Course Modal Forms
+# ========================================
+course.button.create.course: Create Course
+course.modal.create.title: Create New Course
+course.modal.create.subtitle: Add a new course to your organization
+course.modal.edit.subtitle: Update course information
+course.form.name.placeholder: Enter course name
+course.form.description.placeholder: Enter course description
+
+# Lecture Modal Forms
+course.lecture.button.add.lecture: Add Lecture
+course.lecture.modal.new.title: Add New Lecture
+course.lecture.modal.create.subtitle: Add a new lecture to this module
+course.lecture.modal.edit.subtitle: Update lecture information
+course.lecture.form.name.placeholder: Enter lecture name
+course.lecture.form.description.placeholder: Enter lecture description
+course.lecture.form.view.order.placeholder: Display order (e.g., 1, 2, 3)
+
+# Module Modal Forms
+course.module.button.create.module: Create Module
+course.module.modal.create.title: Create New Module
+course.module.modal.create.subtitle: Add a new module to this course
+course.module.modal.edit.subtitle: Update module information
+
+# ========================================
+# Course Details & Display
+# ========================================
+course.back.to.list: Back to Courses
+course.back.to.course: Back to Course
+course.created.at: Created At
+course.total.duration: Total Duration
+course.no.release.date: No Release Date
+course.lectures.count: Lectures
+course.lecture.number: Lecture
+course.view.details: View Details
+course.lecture.watch.video: Watch Video
+
+# Course Enrollments
+course.enroll.student: Enroll Student
+course.enroll.first.student: Enroll First Student
+course.enrolled.students: Enrolled Students
+course.enrolled.at: Enrolled At
+course.manage.enrollments: Manage Enrollments
+course.enrollment.search.by.name: Search by name...
+course.enrollment.switch.hint: Toggle switches to enroll/deactivate students. Click Confirm to save changes.
+course.enrollment.confirm.remove: Are you sure you want to remove %student% from this course?
+
+# Empty States
+empty.no.description: No description provided
+empty.no.students.enrolled: No students enrolled yet
+empty.course.enrollment.description: Start building your class by enrolling students from your organization
+
+# ========================================
+# Upload & Media
+# ========================================
+upload.video.hint: Upload video files (MP4, WebM, or AVI)
+
+# ========================================
+# Confirmation Messages
+# ========================================
+confirm.delete.entity: Are you sure you want to delete this item?
+
+# ========================================
+# Debug/Console Messages
+# ========================================
+debug.init.dom.loaded: "[Init] DOM Content Loaded"
+debug.init.tooltips.initialized: "[Init] Tooltips initialized"
+debug.init.bootstrap.missing: "[Init] Bootstrap not loaded, skipping tooltip initialization"
+
+# Total translations: 1060

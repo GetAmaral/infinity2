@@ -289,7 +289,7 @@
                                                                                 {% endif %}
                                                                             </div>
                                                                             {% if fewshot.description %}
-                                                                                <small class="text-muted d-block">{{ fewshot.description|u.truncate(60, '...') }}</small>
+                                                                                <small class="text-muted d-block">{{ fewshot.description|u.truncate(60, 'misc.loading.ellipsis'|trans) }}</small>
                                                                             {% endif %}
                                                                         </div>
                                                                     </div>
@@ -424,7 +424,7 @@
                                                             {% endif %}
                                                         </div>
                                                         {% if input.prompt %}
-                                                            <p class="text-muted mb-0 small">{{ input.prompt|u.truncate(100, '...') }}</p>
+                                                            <p class="text-muted mb-0 small">{{ input.prompt|u.truncate(100, 'misc.loading.ellipsis'|trans) }}</p>
                                                         {% endif %}
                                                     </div>
                                                     {% if is_granted('TREEFLOW_EDIT', treeflow) %}

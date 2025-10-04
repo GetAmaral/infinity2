@@ -234,7 +234,7 @@
                                         <div class="rounded me-2" style="background: linear-gradient(135deg, #f59e0b, #d97706); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                             <span class="text-white fw-bold" style="font-size: 0.7rem;">{{ module.viewOrder }}</span>
                                         </div>
-                                        <span class="text-white" style="font-size: 0.85rem;">{{ module.name|slice(0, 20) }}{% if module.name|length > 20 %}...{% endif %}</span>
+                                        <span class="text-white" style="font-size: 0.85rem;">{{ module.name|slice(0, 20) }}{% if module.name|length > 20 %}{{ 'misc.loading.ellipsis'|trans }}{% endif %}</span>
                                     </div>
                                 </button>
                             </h2>
@@ -259,7 +259,7 @@
                                                     <div class="d-flex align-items-center">
                                                         <small class="text-muted me-2" style="font-size: 0.7rem;">{{ courseLecture.viewOrder }}.</small>
                                                         <span class="{% if isCurrentLecture %}text-white fw-bold{% else %}text-white{% endif %}" style="font-size: 0.8rem;">
-                                                            {{ courseLecture.name|slice(0, 25) }}{% if courseLecture.name|length > 25 %}...{% endif %}
+                                                            {{ courseLecture.name|slice(0, 25) }}{% if courseLecture.name|length > 25 %}{{ 'misc.loading.ellipsis'|trans }}{% endif %}
                                                         </span>
                                                     </div>
                                                     {% if courseLecture.lengthSeconds %}

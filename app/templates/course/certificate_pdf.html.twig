@@ -223,7 +223,7 @@
                                     {{ enrollment.completedAt|format_date('long', locale='en') }}
                                 {% endif %}
                             {% else %}
-                                N/A
+                                {{ 'general.not.available'|trans }}
                             {% endif %}
                         </div>
                     </div>

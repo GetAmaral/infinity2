@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Entity Audit Timeline{% endblock %}
+{% block title %}{{ 'audit.entity.timeline.title'|trans }}{% endblock %}
 
 {% block body %}
 <div class="container-fluid py-4">
     <div class="infinity-card p-4 mb-4">
         <h1 class="text-gradient mb-0">
-            <i class="bi bi-clock-history me-2"></i>Entity Audit Timeline
+            <i class="bi bi-clock-history me-2"></i>{{ 'audit.entity.timeline.title'|trans }}
         </h1>
 
         <hr>
 
         <div class="row">
             <div class="col-md-6">
-                <h6 class="text-muted mb-2">Entity Type</h6>
+                <h6 class="text-muted mb-2">{{ 'audit.entity.type'|trans }}</h6>
                 <p class="mb-0"><code>{{ entityClass }}</code></p>
             </div>
             <div class="col-md-6">
-                <h6 class="text-muted mb-2">Entity ID</h6>
+                <h6 class="text-muted mb-2">{{ 'audit.entity.id'|trans }}</h6>
                 <p class="mb-0"><code>{{ entityId }}</code></p>
             </div>
         </div>
@@ -25,13 +25,13 @@
 
     <div class="infinity-card p-4">
         <h5 class="mb-4">
-            <i class="bi bi-list-timeline me-2"></i>Complete History
-            <span class="badge bg-primary ms-2">{{ auditLogs|length }} event(s)</span>
+            <i class="bi bi-list-timeline me-2"></i>{{ 'audit.complete.history'|trans }}
+            <span class="badge bg-primary ms-2">{{ auditLogs|length }} {{ 'audit.event.count'|trans }}</span>
         </h5>
 
         {% if auditLogs is empty %}
             <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>No audit history available for this entity.
+                <i class="bi bi-info-circle me-2"></i>{{ 'audit.no.history.available'|trans }}
             </div>
         {% else %}
             <div class="timeline">
@@ -56,23 +56,23 @@
 
                             <p class="mb-2">
                                 <i class="bi bi-person me-1"></i>
-                                by {% if log.user %}
+                                {{ 'audit.by'|trans }} {% if log.user %}
                                     <a href="{{ path('admin_audit_user', {id: log.user.id}) }}">{{ log.user.email }}</a>
                                 {% else %}
-                                    <em>System</em>
+                                    <em>{{ 'audit.system'|trans }}</em>
                                 {% endif %}
                             </p>
 
                             {% if log.changes is not empty %}
                             <div class="changes-detail mt-3">
-                                <h6 class="text-muted mb-2"><i class="bi bi-pencil-square me-1"></i>Changes:</h6>
+                                <h6 class="text-muted mb-2"><i class="bi bi-pencil-square me-1"></i>{{ 'audit.changes.label'|trans }}</h6>
                                 <div class="table-responsive">
                                     <table class="table table-sm table-bordered">
                                         <thead>
                                             <tr>
-                                                <th style="width: 30%;">Field</th>
-                                                <th style="width: 35%;">Old Value</th>
-                                                <th style="width: 35%;">New Value</th>
+                                                <th style="width: 30%;">{{ 'audit.field'|trans }}</th>
+                                                <th style="width: 35%;">{{ 'audit.old.value'|trans }}</th>
+                                                <th style="width: 35%;">{{ 'audit.new.value'|trans }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -80,10 +80,10 @@
                                             <tr>
                                                 <td><strong>{{ field }}</strong></td>
                                                 <td>
-                                                    <code class="text-danger">{{ values[0]|default('NULL')|slice(0, 100) }}</code>
+                                                    <code class="text-danger">{{ values[0]|default('audit.value.null'|trans)|slice(0, 100) }}</code>
                                                 </td>
                                                 <td>
-                                                    <code class="text-success">{{ values[1]|default('NULL')|slice(0, 100) }}</code>
+                                                    <code class="text-success">{{ values[1]|default('audit.value.null'|trans)|slice(0, 100) }}</code>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -98,10 +98,10 @@
                             <div class="metadata-detail mt-3 pt-3 border-top">
                                 <small class="text-muted d-block">
                                     {% if metadata.ip_address %}
-                                        <i class="bi bi-globe me-1"></i>IP: {{ metadata.ip_address }}
+                                        <i class="bi bi-globe me-1"></i>{{ 'audit.metadata.ip'|trans }} {{ metadata.ip_address }}
                                     {% endif %}
                                     {% if metadata.user_agent %}
-                                        <br><i class="bi bi-info-circle me-1"></i>{{ metadata.user_agent|slice(0, 80) }}...
+                                        <br><i class="bi bi-info-circle me-1"></i>{{ metadata.user_agent|slice(0, 80) }}{{ 'misc.loading.ellipsis'|trans }}
                                     {% endif %}
                                 </small>
                             </div>

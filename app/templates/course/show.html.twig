@@ -43,17 +43,21 @@
                         class="btn infinity-btn-primary btn-sm"
                         data-controller="modal-opener"
                         data-modal-opener-url-value="{{ path('course_edit', {id: course.id}) }}"
-                        data-action="click->modal-opener#open">
-                    <i class="bi bi-pencil me-1"></i>{{ 'button.edit'|trans }}
+                        data-action="click->modal-opener#open"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="{{ 'button.edit'|trans }}">
+                    <i class="bi bi-pencil"></i>
                 </button>
             {% endif %}
             {% if is_granted('COURSE_DELETE', course) %}
                 <button type="button"
-                        class="btn btn-outline-danger btn-sm"
+                        class="btn infinity-btn-danger btn-sm"
                         data-delete-url="{{ path('course_delete', {id: course.id}) }}"
                         data-entity-name="{{ course.name }}"
-                        data-csrf-token="{{ csrf_token('delete-course-' ~ course.id) }}">
-                    <i class="bi bi-trash me-1"></i>{{ 'button.delete'|trans }}
+                        data-csrf-token="{{ csrf_token('delete-course-' ~ course.id) }}"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="{{ 'button.delete'|trans }}">
+                    <i class="bi bi-trash"></i>
                 </button>
             {% endif %}
         </div>
@@ -129,8 +133,10 @@
                             class="btn infinity-btn-primary btn-sm"
                             data-controller="modal-opener"
                             data-modal-opener-url-value="{{ path('course_module_new', {courseId: course.id}) }}"
-                            data-action="click->modal-opener#open">
-                        <i class="bi bi-plus-circle me-1"></i>{{ 'button.add.module'|trans }}
+                            data-action="click->modal-opener#open"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="{{ 'button.add.module'|trans }}">
+                        <i class="bi bi-plus-circle"></i>
                     </button>
                 {% endif %}
             </div>
@@ -238,8 +244,10 @@
                                                     class="btn infinity-btn-primary btn-sm"
                                                     data-controller="modal-opener"
                                                     data-modal-opener-url-value="{{ path('course_module_lecture_new', {courseId: course.id, moduleId: module.id}) }}"
-                                                    data-action="click->modal-opener#open">
-                                                <i class="bi bi-plus-circle me-1"></i>{{ 'button.add.lecture'|trans }}
+                                                    data-action="click->modal-opener#open"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-title="{{ 'button.add.lecture'|trans }}">
+                                                <i class="bi bi-plus-circle"></i>
                                             </button>
                                         {% endif %}
                                     </div>
@@ -377,8 +385,10 @@
                 <button type="button"
                         class="btn infinity-btn-primary btn-sm"
                         data-bs-toggle="modal"
-                        data-bs-target="#enrollStudentModal">
-                    <i class="bi bi-person-plus me-1"></i>{{ 'course.enroll.student'|trans }}
+                        data-bs-target="#enrollStudentModal"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="{{ 'course.enroll.student'|trans }}">
+                    <i class="bi bi-person-plus"></i>
                 </button>
             </div>
 
