@@ -109,7 +109,7 @@ yarn.lock
 # Composer
 /vendor/
 composer.phar
-composer.lock
+# composer.lock - tracked for production deployments
 
 # PHP-CS-Fixer
 /.php-cs-fixer.cache

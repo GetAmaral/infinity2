@@ -578,7 +578,9 @@ When you ask Claude to "deploy to vps" or "vps deploy", Claude will automaticall
 5. **VPS**: Run `make:migration` inside app container (CREATE migration on VPS)
 6. **VPS**: Run `doctrine:migrations:migrate` inside app container (EXECUTE migration)
 7. **VPS**: Clear and warm production cache inside app container
-8. Report deployment status
+8. **VPS**: Restart nginx to refresh DNS cache
+9. **VPS**: Verify deployment with `/health/detailed` endpoint
+10. Report deployment status with comprehensive health metrics
 
 **Example Usage:**
 ```bash
@@ -593,7 +595,10 @@ ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && \
   docker-compose exec -T app php bin/console make:migration --no-interaction --env=prod && \
   docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction --env=prod && \
   docker-compose exec -T app php bin/console cache:clear --env=prod && \
-  docker-compose exec -T app php bin/console cache:warmup --env=prod'
+  docker-compose exec -T app php bin/console cache:warmup --env=prod && \
+  docker-compose restart nginx && \
+  sleep 3 && \
+  curl -s http://localhost/health/detailed'
 ```
 
 ### **VPS Deployment Checklist**
