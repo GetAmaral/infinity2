@@ -568,6 +568,9 @@ docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-inte
 # Clear and warm cache inside Docker container
 docker-compose exec -T app php bin/console cache:clear --env=prod
 docker-compose exec -T app php bin/console cache:warmup --env=prod
+
+# Install importmap assets
+docker-compose exec -T app php bin/console importmap:install
 ```
 
 ### **VPS Deployment Command**
@@ -597,6 +600,7 @@ ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && \
   docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction --env=prod && \
   docker-compose exec -T app php bin/console cache:clear --env=prod && \
   docker-compose exec -T app php bin/console cache:warmup --env=prod && \
+  docker-compose exec -T app php bin/console importmap:install && \
   docker-compose restart nginx && \
   sleep 3 && \
   curl -k https://localhost/health/detailed'
