@@ -559,7 +559,8 @@ docker-compose build app
 docker-compose up -d app
 
 # Create migration inside Docker container (ONLY exception to file creation rule)
-docker-compose exec -T app php bin/console make:migration --no-interaction --env=prod
+# Note: Use dev env for make:migration since MakerBundle is dev-only
+docker-compose exec -T app php bin/console make:migration --no-interaction
 
 # Execute migration inside Docker container
 docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction --env=prod
@@ -592,13 +593,13 @@ ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && \
   git pull origin main && \
   docker-compose build app && \
   docker-compose up -d app && \
-  docker-compose exec -T app php bin/console make:migration --no-interaction --env=prod && \
+  docker-compose exec -T app php bin/console make:migration --no-interaction && \
   docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction --env=prod && \
   docker-compose exec -T app php bin/console cache:clear --env=prod && \
   docker-compose exec -T app php bin/console cache:warmup --env=prod && \
   docker-compose restart nginx && \
   sleep 3 && \
-  curl -s http://localhost/health/detailed'
+  curl -k https://localhost/health/detailed'
 ```
 
 ### **VPS Deployment Checklist**
