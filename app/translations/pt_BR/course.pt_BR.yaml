@@ -222,7 +222,7 @@ student.in.progress: Em Progresso
 student.in.progress.courses: Em Progresso
 student.last.accessed: Último Acesso
 # Portal do Aluno
-student.my.courses: Meus Cursos
+student.my.courses: Área do aluno
 # Estados Vazios do Aluno
 student.no.courses: Nenhum curso ainda
 student.no.courses.description: Você ainda não foi inscrito em nenhum curso

@@ -34,7 +34,7 @@ nav.home: Home
 # Application brand name in navigation
 nav.brand: Luminai
 nav.language: Language
-nav.my.courses: My Courses
+nav.my.courses: Student area
 nav.organizations: Organizations
 nav.settings: Settings
 nav.toggle.navigation: Toggle navigation

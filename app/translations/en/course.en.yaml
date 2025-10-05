@@ -222,7 +222,7 @@ student.in.progress: In Progress
 student.in.progress.courses: In Progress
 student.last.accessed: Last Accessed
 # Student Portal
-student.my.courses: My Courses
+student.my.courses: Student area
 # Student Empty States
 student.no.courses: No courses yet
 student.no.courses.description: You haven't been enrolled in any courses yet
