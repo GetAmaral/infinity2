@@ -270,7 +270,7 @@ export default class extends Controller {
             } else if (lectureCount === 0) {
                 // Create empty state if it doesn't exist
                 const emptyStateHtml = `
-                    <div class="module-empty-state infinity-card p-4 text-center" data-module-id="${moduleId}">
+                    <div class="module-empty-state luminai-card p-4 text-center" data-module-id="${moduleId}">
                         <i class="bi bi-collection text-muted" style="font-size: 2.5rem;"></i>
                         <p class="text-secondary mt-3 mb-0">${this.getEmptyStateText()}</p>
                     </div>

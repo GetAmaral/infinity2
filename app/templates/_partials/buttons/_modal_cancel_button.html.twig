@@ -1,0 +1,18 @@
+{#
+/**
+ * Modal Cancel Button Template
+ *
+ * Renders a modal cancel/close button
+ *
+ * @param array config - Button configuration from ButtonConfig
+ * @param string|null translation_key - Translation key (default: 'button.cancel')
+ * @param string translation_domain - Translation domain (default: 'messages')
+ */
+#}
+{% set buttonText = translation_key ?? config.default_translation_key %}
+
+<button type="button"
+        class="{{ config.class }}"
+        data-action="{{ config.data_action }}">
+    {{ buttonText|trans({}, translation_domain) }}
+</button>

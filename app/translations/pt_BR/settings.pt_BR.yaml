@@ -1,0 +1,32 @@
+# Symfony Translations - Português Brasil (Domínio Settings)
+# Uso: {{ 'key'|trans({}, 'settings') }}
+
+# ================================================================================
+# Settings
+# ================================================================================
+ai.settings: Configurações de IA
+ai.settings.description: Customize suas preferências do assistente de IA
+settings.choose.language: Escolher Idioma
+settings.compact.mode: Modo Compacto
+settings.current.language: Idioma Atual
+settings.enable.animations: Habilitar Animações
+settings.enable.sound: Habilitar Efeitos Sonoros
+settings.items.per.page: Itens por Página
+settings.language.preferences: Preferências de Idioma
+# Mensagem de sucesso após salvar idioma
+settings.language.saved: 'Preferência de idioma salva com sucesso!'
+# Texto do botão salvar
+settings.save.changes: Salvar Alterações
+# Página de Configurações
+settings.title: Configurações
+# Configurações e Preferências
+settings.ui.preferences: Preferências de Interface
+theme.dark: Tema Escuro
+theme.dark.description: Modo escuro pra visualização confortável em ambiente com pouca luz
+theme.light: Tema Claro
+theme.light.description: Modo claro pra ambientes bem iluminados
+theme.settings: Configurações de Tema
+# Tema
+theme.switch.to.dark: Mudar pro modo escuro
+theme.switch.to.light: Mudar pro modo claro
+

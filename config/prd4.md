@@ -25,10 +25,10 @@ cd /home/user/inf
 #### **Step 2: Create Environment Configuration**
 Create `.env`:
 ```bash
-POSTGRES_DB=infinity_db
-POSTGRES_USER=infinity_user
-POSTGRES_PASSWORD=InfinitySecure2025!
-DATABASE_URL="postgresql://infinity_user:InfinitySecure2025!@database:5432/infinity_db"
+POSTGRES_DB=luminai_db
+POSTGRES_USER=luminai_user
+POSTGRES_PASSWORD=LuminaiSecure2025!
+DATABASE_URL="postgresql://luminai_user:LuminaiSecure2025!@database:5432/luminai_db"
 APP_ENV=dev
 APP_SECRET=b8f2c9e4a1d6f3e7c2b9a4d8e1f5a2c6b9e3f7a0d4c8b2e6f1a5d9c3f8e2a7b4
 FRANKENPHP_NUM_THREADS=4
@@ -296,7 +296,7 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         return $this->render('home/index.html.twig', [
-            'title' => 'Welcome to Infinity',
+            'title' => 'Welcome to Luminai',
         ]);
     }
 }
@@ -416,22 +416,22 @@ export { Application } from '@hotwired/stimulus';
 Create `assets/styles/app.css`:
 ```css
 :root {
-    --infinity-primary: #4f46e5;
-    --infinity-secondary: #7c3aed;
+    --luminai-primary: #4f46e5;
+    --luminai-secondary: #7c3aed;
 }
 
-.infinity-navbar {
-    background: linear-gradient(135deg, var(--infinity-primary), var(--infinity-secondary));
+.luminai-navbar {
+    background: linear-gradient(135deg, var(--luminai-primary), var(--luminai-secondary));
 }
 
-.infinity-card {
+.luminai-card {
     border: none;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     border-radius: 0.75rem;
 }
 
-.infinity-btn-primary {
-    background: linear-gradient(135deg, var(--infinity-primary), var(--infinity-secondary));
+.luminai-btn-primary {
+    background: linear-gradient(135deg, var(--luminai-primary), var(--luminai-secondary));
     border: none;
 }
 ```
@@ -450,14 +450,14 @@ Create `templates/base.html.twig`:
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Infinity{% endblock %}</title>
+    <title>{% block title %}Luminai{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block stylesheets %}{{ importmap('app') }}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg infinity-navbar">
+    <nav class="navbar navbar-expand-lg luminai-navbar">
         <div class="container">
-            <a class="navbar-brand text-white" href="{{ path('app_home') }}">🚀 Infinity</a>
+            <a class="navbar-brand text-white" href="{{ path('app_home') }}">🚀 Luminai</a>
             <div class="navbar-nav">
                 <a class="nav-link text-white" href="{{ path('app_home') }}">Home</a>
                 <a class="nav-link text-white" href="{{ path('organization_index') }}">Organizations</a>
@@ -489,17 +489,17 @@ Create `templates/home/index.html.twig`:
 {% block body %}
 <div class="row">
     <div class="col-12">
-        <div class="infinity-card p-4 mb-4">
+        <div class="luminai-card p-4 mb-4">
             <h1 class="h2 mb-3">{{ title }}</h1>
             <p class="lead">Modern Symfony UX application with PostgreSQL 18 and UUIDv7 support.</p>
             <div class="row mt-4">
                 <div class="col-md-6">
-                    <a href="{{ path('organization_index') }}" class="btn infinity-btn-primary w-100 mb-2">
+                    <a href="{{ path('organization_index') }}" class="btn luminai-btn-primary w-100 mb-2">
                         <i class="bi bi-building me-2"></i>Organizations
                     </a>
                 </div>
                 <div class="col-md-6">
-                    <a href="{{ path('user_index') }}" class="btn infinity-btn-primary w-100 mb-2">
+                    <a href="{{ path('user_index') }}" class="btn luminai-btn-primary w-100 mb-2">
                         <i class="bi bi-people me-2"></i>Users
                     </a>
                 </div>
@@ -525,7 +525,7 @@ Create `templates/organization/index.html.twig`:
 <div class="row">
     {% for org in organizations %}
         <div class="col-md-6 mb-3">
-            <div class="infinity-card p-3">
+            <div class="luminai-card p-3">
                 <h5>{{ org.name }}</h5>
                 {% if org.description %}
                     <p class="text-muted">{{ org.description }}</p>
@@ -556,7 +556,7 @@ Create `templates/organization/show.html.twig`:
     <a href="{{ path('organization_index') }}" class="btn btn-outline-secondary">← Back to Organizations</a>
 </div>
 
-<div class="infinity-card p-4">
+<div class="luminai-card p-4">
     <h1>{{ organization.name }}</h1>
     {% if organization.description %}
         <p class="lead">{{ organization.description }}</p>
@@ -600,7 +600,7 @@ Create `templates/user/index.html.twig`:
 <div class="row">
     {% for user in users %}
         <div class="col-md-6 mb-3">
-            <div class="infinity-card p-3">
+            <div class="luminai-card p-3">
                 <h5>{{ user.name }}</h5>
                 <p class="text-muted">{{ user.email }}</p>
                 {% if user.organization %}
@@ -631,7 +631,7 @@ Create `templates/user/show.html.twig`:
     <a href="{{ path('user_index') }}" class="btn btn-outline-secondary">← Back to Users</a>
 </div>
 
-<div class="infinity-card p-4">
+<div class="luminai-card p-4">
     <h1>{{ user.name }}</h1>
     <p class="lead">{{ user.email }}</p>
 
@@ -751,7 +751,7 @@ version: '3.8'
 services:
   database:
     image: postgres:18-alpine
-    container_name: infinity_database
+    container_name: luminai_database
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -767,11 +767,11 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - infinity_network
+      - luminai_network
 
   app:
     build: ./app
-    container_name: infinity_app
+    container_name: luminai_app
     depends_on:
       database:
         condition: service_healthy
@@ -790,11 +790,11 @@ services:
       timeout: 10s
       retries: 3
     networks:
-      - infinity_network
+      - luminai_network
 
   nginx:
     image: nginx:1.27-alpine
-    container_name: infinity_nginx
+    container_name: luminai_nginx
     depends_on:
       app:
         condition: service_healthy
@@ -805,13 +805,13 @@ services:
       - ./nginx/conf/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
     networks:
-      - infinity_network
+      - luminai_network
 
 volumes:
   postgres_data:
 
 networks:
-  infinity_network:
+  luminai_network:
     driver: bridge
 ```
 
@@ -874,9 +874,9 @@ server {
 ### **PHASE 8: DATABASE INITIALIZATION**
 
 #### **Step 18: Database Initialization Script**
-Create `database/init/01-infinity.sql`:
+Create `database/init/01-luminai.sql`:
 ```sql
--- Infinity Database Initialization
+-- Luminai Database Initialization
 -- PostgreSQL 18 with UUIDv7 Support
 
 -- Enable required extensions
@@ -909,7 +909,7 @@ Create `scripts/setup.sh`:
 #!/bin/bash
 set -e
 
-echo "🚀 Setting up Infinity - Modern Symfony UX Application"
+echo "🚀 Setting up Luminai - Modern Symfony UX Application"
 echo "================================================="
 
 # Check requirements
@@ -935,7 +935,7 @@ echo "🗄️ Starting database..."
 docker-compose up -d database
 
 echo "⏳ Waiting for database to be ready..."
-timeout 60 bash -c 'until docker-compose exec -T database pg_isready -U ${POSTGRES_USER:-infinity_user} -d ${POSTGRES_DB:-infinity_db} >/dev/null 2>&1; do sleep 2; done'
+timeout 60 bash -c 'until docker-compose exec -T database pg_isready -U ${POSTGRES_USER:-luminai_user} -d ${POSTGRES_DB:-luminai_db} >/dev/null 2>&1; do sleep 2; done'
 
 # Build and start application
 echo "🏗️ Building and starting application..."

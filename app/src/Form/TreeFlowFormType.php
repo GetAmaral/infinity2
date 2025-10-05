@@ -42,7 +42,7 @@ class TreeFlowFormType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => $isEdit ? 'button.update' : 'button.create',
                 'attr' => [
-                    'class' => 'btn infinity-btn-primary',
+                    'class' => 'btn luminai-btn-primary',
                 ],
             ]);
     }

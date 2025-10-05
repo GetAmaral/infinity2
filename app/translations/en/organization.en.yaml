@@ -31,13 +31,23 @@ organization.form.current.dark.logo: Current dark logo
 # Organization Form
 organization.form.current.logo: Current logo
 organization.form.description.placeholder: Enter organization description
+organization.form.description_placeholder: Enter organization description
+organization.form.is_active: Active Organization
+organization.form.is_active_help: Inactive organizations are hidden from users
+organization.form.logo_dark: Dark Mode Logo
+organization.form.logo_dark_help: Logo for dark theme (PNG, JPG, SVG - max 2MB)
+organization.form.logo_light: Light Mode Logo
+organization.form.logo_light_help: Logo for light theme (PNG, JPG, SVG - max 2MB)
 # Organization CRUD Forms
 organization.form.name: Organization Name
 organization.form.name.placeholder: Enter organization name
+organization.form.name_placeholder: Enter organization name
 organization.form.preview: Live Preview
 organization.form.slug: Slug
 organization.form.slug.help: URL-friendly identifier (lowercase letters, numbers, and hyphens only)
 organization.form.slug.placeholder: organization-slug
+organization.form.slug_help: URL-friendly identifier (lowercase letters, numbers, and hyphens only)
+organization.form.slug_placeholder: organization-slug
 organization.manage.users: Manage Users
 organization.modal.create.subtitle: Add a new organization
 organization.modal.create.tip: Organization names should be descriptive and unique within your system.
@@ -58,6 +68,12 @@ organization.switcher.subtitle: This will update your account
 # Organization Switcher
 # Tooltip for organization switcher
 organization.switcher.title: Change your organization
+# Organization Switcher Flash Messages
+organization_switcher.error.invalid_token: Invalid security token. Please try again.
+organization_switcher.error.not_logged_in: You must be logged in to switch organizations.
+organization_switcher.error.not_found: Organization not found.
+organization_switcher.success.switched: Successfully switched to %name%
+organization_switcher.success.cleared: Organization context cleared. You now have root access.
 # Organization Pages
 organization.title: Organizations
 organization.total.users: Total Users
@@ -69,6 +85,7 @@ organization.users.in.organization: Users in Organization
 # Root access option in switcher
 organization.users.page.title: Users
 organization.validation.description.max.length: Description cannot exceed 1000 characters
+organization.validation.logo_mime_type: Logo must be an image (PNG, JPG, SVG)
 organization.validation.name.max.length: Organization name cannot exceed 255 characters
 organization.validation.name.min.length: Organization name must be at least 2 characters long
 # Organization Validation

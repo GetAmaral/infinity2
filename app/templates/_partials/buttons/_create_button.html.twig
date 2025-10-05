@@ -1,0 +1,41 @@
+{#
+/**
+ * Create Button Template
+ *
+ * Renders a primary action button for creating new entities (modal trigger)
+ *
+ * @param array config - Button configuration from ButtonConfig
+ * @param string url - Modal URL to open
+ * @param string|null translation_key - Translation key (default: 'button.create')
+ * @param string translation_domain - Translation domain (default: 'messages')
+ * @param string|null tooltip - Tooltip text
+ * @param string|null label - Button label (null = icon-only)
+ * @param bool is_granted - Permission check result
+ * @param string size - Size class ('sm', 'lg', or '')
+ * @param string|null style - Inline CSS override
+ * @param string|null icon - Icon override
+ * @param string|null css_class_override - CSS class override
+ */
+#}
+{% set buttonText = translation_key ?? config.default_translation_key %}
+{% set buttonIcon = icon ?? config.default_icon %}
+{% set sizeClass = size ? 'btn-' ~ size : '' %}
+{% set buttonClass = css_class_override ?? config.class %}
+
+<button type="button"
+        class="{{ buttonClass }} {{ sizeClass }}"
+        {% if style %}style="{{ style }}"{% endif %}
+        data-controller="{{ config.data_controller }}"
+        data-modal-opener-url-value="{{ url }}"
+        data-action="click->modal-opener#open"
+        {% if tooltip %}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="{{ tooltip }}"
+        {% endif %}
+        {% if not is_granted %}disabled aria-disabled="true"{% endif %}>
+    <i class="{{ buttonIcon }}{% if label is not null %} me-2{% endif %}"></i>
+    {% if label is not null %}
+        {{ buttonText|trans({}, translation_domain) }}
+    {% endif %}
+</button>

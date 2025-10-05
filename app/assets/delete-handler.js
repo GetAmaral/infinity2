@@ -38,17 +38,17 @@ class DeleteHandler {
         const modalHtml = `
             <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" id="deleteConfirmModal">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content infinity-modal-content">
-                        <div class="modal-header border-bottom infinity-modal-header">
+                    <div class="modal-content luminai-modal-content">
+                        <div class="modal-header border-bottom luminai-modal-header">
                             <div class="d-flex align-items-center">
                                 <div class="p-3 rounded-3 me-3" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
                                     <i class="bi bi-exclamation-triangle text-white fs-4"></i>
                                 </div>
-                                <h5 class="modal-title infinity-modal-title mb-0">Confirm Deletion</h5>
+                                <h5 class="modal-title luminai-modal-title mb-0">Confirm Deletion</h5>
                             </div>
                         </div>
                         <div class="modal-body p-4">
-                            <div class="alert alert-danger border-0 rounded-3 infinity-alert-danger">
+                            <div class="alert alert-danger border-0 rounded-3 luminai-alert-danger">
                                 <div class="d-flex align-items-start">
                                     <i class="bi bi-exclamation-triangle me-2 mt-1"></i>
                                     <div>
@@ -58,7 +58,7 @@ class DeleteHandler {
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer border-top infinity-modal-footer">
+                        <div class="modal-footer border-top luminai-modal-footer">
                             <div class="d-flex gap-2 justify-content-end w-100">
                                 <button type="button" class="btn btn-modal-secondary" data-dismiss-modal>
                                     <i class="bi bi-x-circle me-2"></i>Cancel

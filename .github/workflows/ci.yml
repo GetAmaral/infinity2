@@ -27,9 +27,9 @@ jobs:
       postgres:
         image: postgres:18-alpine
         env:
-          POSTGRES_USER: infinity_user
-          POSTGRES_PASSWORD: InfinitySecure2025!
-          POSTGRES_DB: infinity_test_db
+          POSTGRES_USER: luminai_user
+          POSTGRES_PASSWORD: LuminaiProd2025_xK9mN7qL2vR8jT4pW6fY3hZ5nM1gB4cD2eF9
+          POSTGRES_DB: luminai_test_db
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -69,13 +69,13 @@ jobs:
 
     - name: Verify PostgreSQL UUIDv7 support
       run: |
-        PGPASSWORD=InfinitySecure2025! psql -h localhost -U infinity_user -d infinity_test_db -c "SELECT uuidv7();"
+        PGPASSWORD=LuminaiProd2025_xK9mN7qL2vR8jT4pW6fY3hZ5nM1gB4cD2eF9 psql -h localhost -U luminai_user -d luminai_test_db -c "SELECT uuidv7();"
 
     - name: Configure application
       working-directory: ./app
       run: |
         cp .env .env.local
-        echo "DATABASE_URL=postgresql://infinity_user:InfinitySecure2025!@127.0.0.1:5432/infinity_test_db" >> .env.test.local
+        echo "DATABASE_URL=postgresql://luminai_user:LuminaiSecure2025!@127.0.0.1:5432/luminai_test_db" >> .env.test.local
         echo "APP_ENV=test" >> .env.test.local
 
     - name: Create database and run migrations
@@ -191,7 +191,7 @@ jobs:
     - name: Build application image
       working-directory: ./app
       run: |
-        docker build -t infinity-app:test .
+        docker build -t luminai-app:test .
 
     - name: Test Docker image
       run: |
@@ -200,7 +200,7 @@ jobs:
         sleep 10
 
         # Test database connection
-        docker-compose exec -T database pg_isready -U infinity_user -d infinity_db
+        docker-compose exec -T database pg_isready -U luminai_user -d luminai_db
 
         # Build and test app container
         docker-compose up --build -d app
@@ -226,7 +226,7 @@ jobs:
 
     environment:
       name: staging
-      url: https://staging.infinity.example.com
+      url: https://staging.luminai.example.com
 
     steps:
     - name: Checkout code
@@ -250,7 +250,7 @@ jobs:
 
     environment:
       name: production
-      url: https://infinity.example.com
+      url: https://luminai.example.com
 
     steps:
     - name: Checkout code

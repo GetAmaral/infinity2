@@ -42,3 +42,15 @@ user.updated.at: Updated
 user.verified: Verified
 user.view.organization: View Organization
 
+user.form.email: Email
+user.form.email_placeholder: Enter email address
+user.form.is_verified: Verified User
+user.form.name: Full Name
+user.form.name_placeholder: Enter full name
+user.form.organization: Organization
+user.form.organization_placeholder: Select organization
+user.form.password: Password
+user.form.password_confirm: Confirm Password
+user.form.password_confirm_placeholder: Confirm password
+user.form.password_placeholder: Enter password
+user.form.roles: Roles

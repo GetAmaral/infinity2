@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ################################################################################
-# Infinity Log Rotation - Automated Setup Script
+# Luminai Log Rotation - Automated Setup Script
 ################################################################################
 #
 # This script automatically configures systemd timer for log rotation,
@@ -24,7 +24,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 APP_DIR="/home/user/inf/app"
-SERVICE_NAME="infinity-logs-cleanup"
+SERVICE_NAME="luminai-logs-cleanup"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
 TIMER_FILE="/etc/systemd/system/${SERVICE_NAME}.timer"
 PHP_BIN="/usr/bin/php"
@@ -33,7 +33,7 @@ PHP_BIN="/usr/bin/php"
 print_header() {
     echo -e "${BLUE}"
     echo "════════════════════════════════════════════════════════════════"
-    echo "  Infinity Log Rotation - Automated Setup"
+    echo "  Luminai Log Rotation - Automated Setup"
     echo "════════════════════════════════════════════════════════════════"
     echo -e "${NC}"
 }
@@ -118,7 +118,7 @@ create_systemd_service() {
 
     cat > "$SERVICE_FILE" << EOF
 [Unit]
-Description=Infinity Log Cleanup and Compression
+Description=Luminai Log Cleanup and Compression
 After=network.target
 Documentation=file://$APP_DIR/docs/LOG_ROTATION_SETUP.md
 
@@ -130,7 +130,7 @@ WorkingDirectory=$APP_DIR
 ExecStart=$PHP_BIN $APP_DIR/bin/console app:logs:cleanup --env=prod
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=infinity-logs-cleanup
+SyslogIdentifier=luminai-logs-cleanup
 
 [Install]
 WantedBy=multi-user.target
@@ -144,7 +144,7 @@ create_systemd_timer() {
 
     cat > "$TIMER_FILE" << EOF
 [Unit]
-Description=Daily Infinity Log Cleanup at 2:00 AM
+Description=Daily Luminai Log Cleanup at 2:00 AM
 Requires=$SERVICE_NAME.service
 Documentation=file://$APP_DIR/docs/LOG_ROTATION_SETUP.md
 

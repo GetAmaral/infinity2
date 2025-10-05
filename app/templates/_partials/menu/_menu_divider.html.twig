@@ -1,0 +1,17 @@
+{#
+/**
+ * Menu Divider Template
+ *
+ * Renders a menu divider with optional section title
+ *
+ * @param string|null section_title - Translation key for section title (optional)
+ */
+#}
+<li>
+    <hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);">
+</li>
+{% if section_title is defined and section_title %}
+<li class="px-3 py-1">
+    <small class="text-muted text-uppercase">{{ section_title|trans }}</small>
+</li>
+{% endif %}

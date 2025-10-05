@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\FewShotExample;
-use App\Entity\Question;
+use App\Entity\StepFewShot;
+use App\Entity\StepQuestion;
 use App\Entity\Step;
 use App\Entity\StepInput;
 use App\Entity\StepOutput;
@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @extends BaseApiController<TreeFlow>
@@ -29,6 +30,7 @@ final class TreeFlowController extends BaseApiController
         private readonly EntityManagerInterface $entityManager,
         private readonly TreeFlowRepository $repository,
         private readonly ListPreferencesService $listPreferencesService,
+        private readonly TranslatorInterface $translator,
     ) {}
 
     #[Route('', name: 'treeflow_index', methods: ['GET'])]
@@ -81,10 +83,10 @@ final class TreeFlowController extends BaseApiController
             $this->entityManager->flush();
 
             // Enhanced flash message with parameters (Phase 6)
-            $this->addFlash('success', $this->trans('treeflow.flash.created_successfully', [
+            $this->addFlash('success', $this->translator->trans('treeflow.flash.created_successfully', [
                 '%name%' => $treeFlow->getName(),
                 '%version%' => $treeFlow->getVersion(),
-            ]));
+            ], 'treeflow'));
 
             return $this->redirectToRefererOrRoute($request, 'treeflow_index');
         }
@@ -105,7 +107,7 @@ final class TreeFlowController extends BaseApiController
     }
 
     #[Route('/{id}', name: 'treeflow_show', requirements: ['id' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['GET'])]
-    public function show(string $id): Response
+    public function show(Request $request, string $id): Response
     {
         // Performance Optimization (Phase 5): Use eager loading to prevent N+1 queries
         // Single optimized query that loads TreeFlow with all nested relations
@@ -129,6 +131,56 @@ final class TreeFlowController extends BaseApiController
 
         $this->denyAccessUnlessGranted(TreeFlowVoter::VIEW, $treeFlow);
 
+        // Return JSON for AJAX requests (canvas refresh)
+        if ($request->isXmlHttpRequest() && $request->headers->get('Accept') === 'application/json') {
+            $stepsData = [];
+            foreach ($treeFlow->getSteps() as $step) {
+                $questionsData = [];
+                foreach ($step->getQuestions() as $question) {
+                    $questionsData[] = [
+                        'id' => $question->getId()?->toString(),
+                        'questionText' => $question->getName(),
+                        'text' => $question->getName(),
+                        'viewOrder' => $question->getViewOrder(),
+                    ];
+                }
+
+                $inputsData = [];
+                foreach ($step->getInputs() as $input) {
+                    $inputsData[] = [
+                        'id' => $input->getId()?->toString(),
+                        'name' => $input->getName(),
+                        'type' => $input->getType()?->value,
+                    ];
+                }
+
+                $outputsData = [];
+                foreach ($step->getOutputs() as $output) {
+                    $outputsData[] = [
+                        'id' => $output->getId()?->toString(),
+                        'name' => $output->getName(),
+                        'goToStep' => $output->getDestinationStep()?->getId()?->toString(),
+                    ];
+                }
+
+                $stepsData[] = [
+                    'id' => $step->getId()?->toString(),
+                    'name' => $step->getName(),
+                    'first' => $step->isFirst(),
+                    'positionX' => $step->getPositionX(),
+                    'positionY' => $step->getPositionY(),
+                    'questions' => $questionsData,
+                    'inputs' => $inputsData,
+                    'outputs' => $outputsData,
+                ];
+            }
+
+            return $this->json([
+                'success' => true,
+                'steps' => $stepsData,
+            ]);
+        }
+
         return $this->render('treeflow/show.html.twig', [
             'treeflow' => $treeFlow,
         ]);
@@ -150,10 +202,10 @@ final class TreeFlowController extends BaseApiController
             $this->entityManager->flush();
 
             // Enhanced flash message with parameters (Phase 6)
-            $this->addFlash('success', $this->trans('treeflow.flash.updated_successfully', [
+            $this->addFlash('success', $this->translator->trans('treeflow.flash.updated_successfully', [
                 '%name%' => $treeFlow->getName(),
                 '%version%' => $treeFlow->getVersion(),
-            ]));
+            ], 'treeflow'));
 
             return $this->redirectToRefererOrRoute($request, 'treeflow_index');
         }
@@ -186,9 +238,9 @@ final class TreeFlowController extends BaseApiController
             $this->entityManager->flush();
 
             // Enhanced flash message with parameters (Phase 6)
-            $this->addFlash('success', $this->trans('treeflow.flash.deleted_successfully', [
+            $this->addFlash('success', $this->translator->trans('treeflow.flash.deleted_successfully', [
                 '%name%' => $treeFlowName,
-            ]));
+            ], 'treeflow'));
         } else {
             $this->addFlash('error', 'common.error.invalid_csrf');
         }
@@ -254,7 +306,7 @@ final class TreeFlowController extends BaseApiController
                     'prompt' => $step->getPrompt(),
 
                     // Questions with FewShots
-                    'questions' => array_map(function(Question $q) {
+                    'questions' => array_map(function(StepQuestion $q) {
                         return [
                             'id' => $q->getId()?->toString(),
                             'name' => $q->getName(),
@@ -265,7 +317,7 @@ final class TreeFlowController extends BaseApiController
                             'viewOrder' => $q->getViewOrder(),
 
                             // FewShot Examples
-                            'examples' => array_map(function(FewShotExample $ex) {
+                            'examples' => array_map(function(StepFewShot $ex) {
                                 return [
                                     'id' => $ex->getId()?->toString(),
                                     'type' => $ex->getType()->value,

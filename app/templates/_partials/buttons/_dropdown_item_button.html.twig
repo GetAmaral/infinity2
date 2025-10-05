@@ -1,0 +1,31 @@
+{#
+/**
+ * Dropdown Item Button Template
+ *
+ * Renders a generic dropdown menu item button
+ *
+ * @param array config - Button configuration from ButtonConfig
+ * @param string action - JavaScript action or URL
+ * @param string|null translation_key - Translation key
+ * @param string translation_domain - Translation domain (default: 'messages')
+ * @param string|null icon - Icon override
+ * @param bool is_danger - Apply danger styling
+ * @param bool is_granted - Permission check result
+ * @param string|null data_controller - Stimulus controller
+ * @param string|null data_action - Stimulus action
+ */
+#}
+{% set buttonText = translation_key ?? config.default_translation_key %}
+{% set buttonIcon = icon ?? config.default_icon %}
+{% set cssClass = is_danger ? 'dropdown-item text-danger' : config.class %}
+
+{% if is_granted %}
+<button type="button"
+        class="{{ cssClass }}"
+        {% if data_controller %}data-controller="{{ data_controller }}"{% endif %}
+        {% if data_action %}data-action="{{ data_action }}"{% endif %}
+        {% if action %}onclick="{{ action }}"{% endif %}>
+    <i class="{{ buttonIcon }} me-2"></i>
+    {{ buttonText|trans({}, translation_domain) }}
+</button>
+{% endif %}

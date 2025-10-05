@@ -28,17 +28,15 @@
 {# Grid View Template #}
 {% block grid_view_item_template %}
     <div class="col">
-        <div class="infinity-card h-100 p-4" style="cursor: pointer;" onclick="window.location.href='/user/' + this.closest('[data-entity-id]').dataset.entityId">
+        <div class="luminai-card h-100 p-4" style="cursor: pointer;" onclick="window.location.href='/user/' + this.closest('[data-entity-id]').dataset.entityId">
             <div class="d-flex justify-content-between align-items-start mb-3">
                 <div onclick="event.stopPropagation();" class="dropdown me-3">
-                    <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
-                        <i class="bi bi-three-dots-vertical"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                    {{ button_dropdown_toggle() }}
+                    <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--luminai-dark-surface); z-index: 1060;">
                         <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}</a></li>
-                        <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/user/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                        <li>{{ button_edit('{entityId}', '{url}', null, 'messages') }}</li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/user/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                        <li>{{ button_delete('{entityId}', '{url}', 'confirm.delete.entity') }}</li>
                     </ul>
                 </div>
                 <div class="d-flex align-items-center flex-grow-1">
@@ -94,17 +92,15 @@
 
 {# List View Template #}
 {% block list_view_item_template %}
-    <div class="infinity-card mb-3 p-3">
+    <div class="luminai-card mb-3 p-3">
         <div class="d-flex align-items-center">
             <div onclick="event.stopPropagation();" class="dropdown me-3">
-                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
-                    <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                {{ button_dropdown_toggle() }}
+                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--luminai-dark-surface); z-index: 1060;">
                     <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}</a></li>
-                    <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/user/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                    <li>{{ button_edit('{entityId}', '{url}', null, 'messages') }}</li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/user/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                    <li>{{ button_delete('{entityId}', '{url}', 'confirm.delete.entity') }}</li>
                 </ul>
             </div>
             <div class="d-flex align-items-center flex-grow-1" style="cursor: pointer;" onclick="window.location.href='/user/' + this.closest('[data-entity-id]').dataset.entityId">
@@ -153,14 +149,12 @@
     <tr style="cursor: pointer;" onclick="window.location.href='/user/' + this.closest('[data-entity-id]').dataset.entityId">
         <td onclick="event.stopPropagation();">
             <div class="dropdown">
-                <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown">
-                    <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface); z-index: 1060;">
+                {{ button_dropdown_toggle() }}
+                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--luminai-dark-surface); z-index: 1060;">
                     <li><a class="dropdown-item" onclick="window.location.href='/user/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}</a></li>
-                    <li><button type="button" class="dropdown-item" data-controller="modal-opener" data-action="click->modal-opener#open" onclick="this.dataset.modalOpenerUrlValue='/user/'+this.closest('[data-entity-id]').dataset.entityId+'/edit'"><i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}</button></li>
+                    <li>{{ button_edit('{entityId}', '{url}', null, 'messages') }}</li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><button type="button" class="dropdown-item text-danger" onclick="if(confirm('{{ 'confirm.delete.entity'|trans }}')){ fetch('/user/'+this.closest('[data-entity-id]').dataset.entityId+'/delete', {method:'POST'}).then(()=>location.reload())}"><i class="bi bi-trash me-2"></i>{{ 'button.delete'|trans }}</button></li>
+                    <li>{{ button_delete('{entityId}', '{url}', 'confirm.delete.entity') }}</li>
                 </ul>
             </div>
         </td>

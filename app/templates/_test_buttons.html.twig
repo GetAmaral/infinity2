@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Button Extension Test{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="luminai-card p-4">
+        <h1 class="mb-4">ButtonExtension Test Page</h1>
+        <p class="text-muted">Testing all button types from ButtonExtension</p>
+
+        <hr class="my-4">
+
+        {# PRIMARY ACTION BUTTONS #}
+        <h3 class="mb-3">Primary Action Buttons</h3>
+        <div class="d-flex gap-2 mb-4 flex-wrap">
+            {{ button_create(path('organization_index'), 'button.create', 'messages', 'Create a new organization'|trans, 'Create Organization') }}
+
+            {{ button_edit('test-id', path('organization_index'), null, 'messages', 'Edit this item'|trans, 'Edit') }}
+
+            {{ button_delete('test-id', path('organization_index'), null, null, 'messages', 'Delete this item'|trans, 'Delete') }}
+        </div>
+
+        <hr class="my-4">
+
+        {# NAVIGATION BUTTONS #}
+        <h3 class="mb-3">Navigation Buttons</h3>
+        <div class="d-flex gap-2 mb-4 flex-wrap">
+            {{ button_back(path('app_home'), null, 'messages', null, 'Back to Home') }}
+
+            {{ button_link(path('organization_index'), 'button.view', 'messages', null, 'View Organizations', null, '', null, null, 'primary') }}
+
+            {{ button_link(path('user_index'), 'button.view', 'messages', null, 'View Users', null, '', null, null, 'secondary') }}
+        </div>
+
+        <hr class="my-4">
+
+        {# MODAL BUTTONS #}
+        <h3 class="mb-3">Modal Buttons</h3>
+        <div class="mb-4">
+            <div class="d-flex gap-2">
+                {{ button_modal_submit(false) }}
+                {{ button_modal_submit(true) }}
+                {{ button_modal_cancel() }}
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        {# DROPDOWN BUTTONS #}
+        <h3 class="mb-3">Dropdown Buttons</h3>
+        <div class="dropdown d-inline-block">
+            {{ button_dropdown_toggle() }}
+            <ul class="dropdown-menu">
+                <li>{{ button_dropdown_item('console.log("Edit clicked")', 'button.edit', 'messages', 'bi-pencil') }}</li>
+                <li>{{ button_dropdown_item('console.log("View clicked")', 'button.view', 'messages', 'bi-eye') }}</li>
+                <li><hr class="dropdown-divider"></li>
+                <li>{{ button_dropdown_item('console.log("Delete clicked")', 'button.delete', 'messages', 'bi-trash', true) }}</li>
+            </ul>
+        </div>
+
+        <hr class="my-4">
+
+        {# UTILITY BUTTONS #}
+        <h3 class="mb-3">Utility Buttons</h3>
+        <div class="d-flex gap-2 mb-4 flex-wrap">
+            <div>
+                <span id="copyText" class="d-none">This text will be copied!</span>
+                {{ button_copy('copyText', null, 'messages', 'Copy text'|trans, 'Copy Text') }}
+            </div>
+
+            {{ button_print(null, 'messages', 'Print page'|trans, 'Print') }}
+
+            {{ button_download(path('app_home'), null, 'messages', 'Download file'|trans, 'Download') }}
+        </div>
+
+        <hr class="my-4">
+
+        {# TOGGLE BUTTONS #}
+        <h3 class="mb-3">Toggle Buttons</h3>
+        <div class="d-flex gap-2 mb-4 flex-wrap">
+            {{ button_toggle(path('app_home'), false, 'button.activate', 'button.deactivate', 'messages', null, 'Activate') }}
+
+            {{ button_toggle(path('app_home'), true, 'button.activate', 'button.deactivate', 'messages', null, 'Deactivate') }}
+        </div>
+
+        <hr class="my-4">
+
+        {# VIEW TOGGLE BUTTONS #}
+        <h3 class="mb-3">View Toggle Buttons</h3>
+        <div class="btn-group" role="group">
+            {{ button_view_toggle('grid', 'bi-grid', true, 'Grid view'|trans) }}
+            {{ button_view_toggle('list', 'bi-list-ul', false, 'List view'|trans) }}
+            {{ button_view_toggle('timeline', 'bi-clock-history', false, 'Timeline view'|trans) }}
+        </div>
+
+        <hr class="my-4">
+
+        {# FILTER BUTTONS #}
+        <h3 class="mb-3">Filter Buttons</h3>
+        <div class="d-flex gap-2 mb-4 flex-wrap">
+            {{ button_filter('all', 'All', 'messages', 'primary', true) }}
+            {{ button_filter('active', 'Active', 'messages', 'success', false) }}
+            {{ button_filter('pending', 'Pending', 'messages', 'warning', false) }}
+            {{ button_filter('failed', 'Failed', 'messages', 'danger', false) }}
+        </div>
+
+        <hr class="my-4">
+
+        {# SUBMIT BUTTONS #}
+        <h3 class="mb-3">Submit Buttons</h3>
+        <div class="d-flex gap-2 mb-4 flex-wrap">
+            {{ button_submit('button.submit', 'messages', null, '', null, 'primary') }}
+            {{ button_submit('button.submit', 'messages', null, '', null, 'success') }}
+        </div>
+
+        <hr class="my-4">
+
+        {# ICON-ONLY BUTTONS #}
+        <h3 class="mb-3">Icon-Only Buttons (with tooltips)</h3>
+        <div class="d-flex gap-2 mb-4 flex-wrap">
+            {{ button_create(path('organization_index'), null, 'messages', 'Create'|trans, null) }}
+            {{ button_back(path('app_home'), null, 'messages', 'Back'|trans, null) }}
+            {{ button_download(path('app_home'), null, 'messages', 'Download'|trans, null) }}
+            {{ button_print(null, 'messages', 'Print'|trans, null) }}
+        </div>
+
+        <hr class="my-4">
+
+        {# DIFFERENT SIZES #}
+        <h3 class="mb-3">Button Sizes</h3>
+        <div class="d-flex gap-2 mb-4 flex-wrap align-items-center">
+            {{ button_link(path('app_home'), 'button.view', 'messages', null, 'Large Button', null, 'lg', null, null, 'primary') }}
+            {{ button_link(path('app_home'), 'button.view', 'messages', null, 'Regular Button', null, '', null, null, 'primary') }}
+            {{ button_link(path('app_home'), 'button.view', 'messages', null, 'Small Button', null, 'sm', null, null, 'primary') }}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

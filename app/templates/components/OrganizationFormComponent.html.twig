@@ -88,9 +88,9 @@
             <h6 class="text-neon mb-2">
                 <i class="bi bi-eye me-1"></i>{{ 'organization.form.preview'|trans({}, 'organization') }}
             </h6>
-            <div class="infinity-card-mini p-3">
+            <div class="luminai-card-mini p-3">
                 <div class="d-flex align-items-start">
-                    <div class="p-2 rounded-circle me-3" style="background: var(--infinity-ai-gradient);">
+                    <div class="p-2 rounded-circle me-3" style="background: var(--luminai-ai-gradient);">
                         <i class="bi bi-building text-white"></i>
                     </div>
                     <div class="flex-grow-1">
@@ -110,7 +110,7 @@
     <div class="d-grid gap-2">
         {{ form_widget(form.submit, {
             'attr': {
-                'class': 'btn infinity-btn-primary',
+                'class': 'btn luminai-btn-primary',
                 'data-action': 'click->live#action',
                 'data-live-action-param': 'save'
             }
@@ -130,25 +130,25 @@
 </div>
 
 <style>
-.infinity-card-mini {
-    background: var(--infinity-card-bg);
+.luminai-card-mini {
+    background: var(--luminai-card-bg);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0.5rem;
 }
 
 .form-floating > .form-control:focus ~ label,
 .form-floating > .form-control:not(:placeholder-shown) ~ label {
-    color: var(--infinity-neon);
+    color: var(--luminai-neon);
 }
 
 .form-floating > .form-control {
-    background: var(--infinity-dark-surface);
+    background: var(--luminai-dark-surface);
     border-color: rgba(255, 255, 255, 0.2);
     color: white;
 }
 
 .form-floating > .form-control:focus {
-    border-color: var(--infinity-neon);
+    border-color: var(--luminai-neon);
     box-shadow: 0 0 0 0.2rem rgba(0, 245, 255, 0.25);
 }
 

@@ -18,7 +18,7 @@
 <div class="row">
     <div class="col-lg-8">
         <!-- Current API Token -->
-        <div class="infinity-card p-4 mb-4">
+        <div class="luminai-card p-4 mb-4">
             <h5 class="text-white mb-3">
                 <i class="bi bi-shield-check me-2"></i>{{ 'token.current.token'|trans({}, 'token') }}
             </h5>
@@ -30,7 +30,7 @@
                             <i class="bi bi-check-circle me-2"></i>
                             <strong>{{ 'token.active.token'|trans({}, 'token') }}</strong>
                         </div>
-                        <span class="badge" style="background: var(--infinity-ai-gradient);">
+                        <span class="badge" style="background: var(--luminai-ai-gradient);">
                             <i class="bi bi-clock me-1"></i>{{ 'token.expires'|trans({}, 'token') }}: {{ user.apiTokenExpiresAt|date('M d, Y') }}
                         </span>
                     </div>
@@ -45,9 +45,9 @@
                             id="apiTokenValue"
                             value="{{ user.apiToken }}"
                             readonly
-                            style="background: var(--infinity-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
+                            style="background: var(--luminai-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
                         >
-                        <button class="btn infinity-btn-ai" type="button" onclick="copyToken()">
+                        <button class="btn luminai-btn-ai" type="button" onclick="copyToken()">
                             <i class="bi bi-clipboard me-1"></i>{{ 'token.copy'|trans({}, 'token') }}
                         </button>
                     </div>
@@ -67,7 +67,7 @@
 
                 <form method="post" action="{{ path('api_token_generate') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('generate_token') }}">
-                    <button type="submit" class="btn infinity-btn-primary">
+                    <button type="submit" class="btn luminai-btn-primary">
                         <i class="bi bi-plus-circle me-2"></i>{{ 'token.generate'|trans({}, 'token') }}
                     </button>
                 </form>
@@ -75,7 +75,7 @@
         </div>
 
         <!-- Usage Instructions -->
-        <div class="infinity-card p-4">
+        <div class="luminai-card p-4">
             <h5 class="text-white mb-3">
                 <i class="bi bi-book me-2"></i>{{ 'token.usage.instructions'|trans({}, 'token') }}
             </h5>
@@ -101,7 +101,7 @@ curl -H "Authorization: Bearer YOUR_API_TOKEN" \<br>
 
     <!-- Token Info Card -->
     <div class="col-lg-4">
-        <div class="infinity-card ai-enhanced p-4 mb-4">
+        <div class="luminai-card ai-enhanced p-4 mb-4">
             <div class="d-flex align-items-center mb-3">
                 <i class="bi bi-info-circle text-neon me-2 fs-4"></i>
                 <h6 class="text-gradient mb-0">{{ 'token.info.title'|trans({}, 'token') }}</h6>
@@ -139,12 +139,12 @@ function copyToken() {
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="bi bi-check me-1"></i>{{ 'token.copied'|trans({}, 'token') }}';
     btn.classList.add('btn-success');
-    btn.classList.remove('infinity-btn-ai');
+    btn.classList.remove('luminai-btn-ai');
 
     setTimeout(() => {
         btn.innerHTML = originalText;
         btn.classList.remove('btn-success');
-        btn.classList.add('infinity-btn-ai');
+        btn.classList.add('luminai-btn-ai');
     }, 2000);
 }
 </script>

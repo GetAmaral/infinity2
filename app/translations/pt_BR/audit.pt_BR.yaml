@@ -1,0 +1,126 @@
+# Symfony Translations - Português Brasil (Domínio Audit)
+# Uso: {{ 'key'|trans({}, 'audit') }}
+
+# ================================================================================
+# Audit
+# ================================================================================
+audit.action: Ação
+audit.action.count: ação(ões)
+audit.activity.breakdown: Detalhamento de Atividade
+audit.activity.timeline: Linha do Tempo de Atividade
+audit.all.actions: Todas as Ações
+audit.analytics.action.breakdown: Detalhamento de Ação
+audit.analytics.activity.by.hour: Atividade por Hora (Últimas 24h)
+audit.analytics.anomalies: Anomalias Detectadas
+audit.analytics.anomaly.detected: Anomalia Detectada
+audit.analytics.back.to.log: Voltar pro Log de Auditoria
+audit.analytics.capacity.recommendation: Recomendação de Capacidade
+audit.analytics.chart.events.per.hour: Eventos por Hora
+# Labels de Gráfico
+audit.analytics.chart.hour.of.day: Hora do Dia
+audit.analytics.chart.number.of.events: Número de Eventos
+audit.analytics.confidence: Confiança
+audit.analytics.entity.type: Tipo de Entidade
+audit.analytics.events.count: Eventos
+audit.analytics.historical.data: Dados Históricos
+audit.analytics.modifications: Modificações
+audit.analytics.most.modified.entities: Entidades Mais Modificadas
+audit.analytics.next.week.prediction: Previsão Semana que Vem
+audit.analytics.no.entity.data: Nenhum dado de modificação de entidade disponível
+audit.analytics.no.user.data: Nenhum dado de atividade de usuário disponível
+audit.analytics.predicted.events: Eventos Previstos
+audit.analytics.this.week: Esta Semana
+# Audit Analytics
+audit.analytics.title: Dashboard de Analytics de Auditoria
+audit.analytics.top.active.users: Usuários Mais Ativos
+audit.analytics.total.events: Total de Eventos
+audit.analytics.trend: Tendência
+audit.analytics.user: Usuário
+audit.analytics.week: Semana
+audit.apply.filters: Aplicar Filtros
+audit.back.to.log: Voltar pro Log de Auditoria
+audit.by: por
+audit.change.count: alteração(ões)
+audit.changes: Alterações
+audit.changes.label: "Alterações:"
+audit.complete.history: Histórico Completo
+audit.context: Contexto
+audit.entity: Entidade
+audit.entity.id: ID da Entidade
+audit.entity.timeline.title: Linha do Tempo de Auditoria da Entidade
+audit.entity.type: Tipo de Entidade
+audit.event.count: evento(s)
+audit.events: Eventos
+audit.events.total: Total de Eventos
+audit.export: Exportar
+audit.export.csv: Exportar CSV
+audit.export.json: Exportar JSON
+audit.export.pdf: Exportar PDF
+audit.field: Campo
+# Detalhes de Auditoria
+audit.field.changes: Alterações de Campo
+audit.filter.created: Criado
+audit.filter.deleted: Deletado
+audit.filter.updated: Atualizado
+audit.filter.week: Esta Semana
+# Filtros de Auditoria
+audit.filters.and.search: Filtros e Busca
+audit.focus.search.shortcut: Pressione '/' pra focar na busca
+audit.full.history: Histórico Completo
+audit.history.modal.close: Fechar
+audit.history.modal.failed: Falha ao carregar
+audit.history.modal.history: Histórico
+audit.history.modal.loading: Carregando
+audit.history.modal.loading.description: Aguarde...
+audit.history.modal.open.link: Abrir
+audit.history.modal.open.new.tab: Abrir em nova aba
+# Modal de Histórico de Auditoria
+audit.history.modal.title: Histórico da Entidade
+audit.ip.address: Endereço IP
+audit.last.updated: Última atualização
+audit.live.monitoring: Monitoramento ao vivo
+audit.metadata.ip: "IP:"
+audit.new.value: Novo Valor
+audit.next: Próximo
+audit.no.actions.recorded: Nenhuma ação registrada pra este usuário.
+audit.no.events.description: Tente ajustar seus filtros ou critérios de busca
+# Estados Vazios de Auditoria
+audit.no.events.found: Nenhum evento encontrado
+audit.no.history.available: Nenhum histórico de auditoria disponível pra esta entidade.
+audit.no.user.activity: Sistema
+audit.of: de
+audit.old.value: Valor Antigo
+audit.previous: Anterior
+audit.reset: Resetar
+audit.showing: Mostrando
+audit.stats.all.time: Todos os Tempos
+audit.stats.last.hour: Última Hora
+audit.stats.recent.activity: Atividade Recente
+audit.stats.this.week: Esta Semana
+# Estatísticas de Auditoria
+audit.stats.total.events: Total de Eventos
+audit.system: Sistema
+audit.table.action: Ação
+audit.table.changes: Alterações
+audit.table.entity: Entidade
+# Tabela de Auditoria
+audit.table.timestamp: Data/Hora
+audit.table.user: Usuário
+audit.timeline: Linha do Tempo
+audit.timestamp: Data/Hora
+# Auditoria e Analytics
+audit.title: Log de Auditoria e Atividade
+audit.to: até
+audit.top.active.users: Usuários Mais Ativos
+# Auditoria - Ações de Usuário e Linha do Tempo de Entidade
+audit.user.actions.title: Ações de Auditoria do Usuário
+audit.user.agent: User Agent
+audit.user.email: Email
+audit.user.name: Nome do Usuário
+audit.value.null: NULO
+audit.view.changes: Ver Alterações
+audit.view.table: Visualização em Tabela
+audit.view.timeline: Ver Linha do Tempo
+# Títulos de Página e Descrições
+page.ai.powered.crm: Dashboard CRM Turbinado com IA
+

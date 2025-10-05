@@ -1,7 +1,7 @@
 services:
   database:
     image: postgres:18-alpine
-    container_name: infinity_database
+    container_name: luminai_database
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -17,11 +17,11 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - infinity_network
+      - luminai_network
 
   app:
     build: ./app
-    container_name: infinity_app
+    container_name: luminai_app
     depends_on:
       database:
         condition: service_healthy
@@ -41,11 +41,11 @@ services:
       timeout: 10s
       retries: 3
     networks:
-      - infinity_network
+      - luminai_network
 
   messenger_worker:
     build: ./app
-    container_name: infinity_messenger_worker
+    container_name: luminai_messenger_worker
     command: php bin/console messenger:consume async --limit=100 --memory-limit=256M --time-limit=3600
     depends_on:
       database:
@@ -59,11 +59,11 @@ services:
       - ./app:/app
     restart: unless-stopped
     networks:
-      - infinity_network
+      - luminai_network
 
   redis:
     image: redis:7-alpine
-    container_name: infinity_redis
+    container_name: luminai_redis
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
       - redis_data:/data
@@ -75,11 +75,11 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - infinity_network
+      - luminai_network
 
   nginx:
     image: nginx:1.27-alpine
-    container_name: infinity_nginx
+    container_name: luminai_nginx
     depends_on:
       app:
         condition: service_healthy
@@ -90,12 +90,12 @@ services:
       - ./nginx/conf/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
     networks:
-      - infinity_network
+      - luminai_network
 
 volumes:
   postgres_data:
   redis_data:
 
 networks:
-  infinity_network:
+  luminai_network:
     driver: bridge

@@ -43,7 +43,7 @@ export default class extends Controller {
         // Create placeholder
         this.placeholder = this.draggedElement.cloneNode(true);
         this.placeholder.style.opacity = '0.3';
-        this.placeholder.style.border = '2px dashed var(--infinity-neon)';
+        this.placeholder.style.border = '2px dashed var(--luminai-neon)';
         this.placeholder.style.background = 'rgba(0, 245, 255, 0.05)';
         this.placeholder.classList.add('dragging-placeholder');
 

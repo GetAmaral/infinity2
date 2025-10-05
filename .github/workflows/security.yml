@@ -108,12 +108,12 @@ jobs:
 
     - name: Build Docker image
       working-directory: ./app
-      run: docker build -t infinity-app:security-scan .
+      run: docker build -t luminai-app:security-scan .
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'infinity-app:security-scan'
+        image-ref: 'luminai-app:security-scan'
         format: 'sarif'
         output: 'trivy-results.sarif'
 

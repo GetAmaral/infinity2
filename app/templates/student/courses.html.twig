@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'student.my.courses'|trans({}, 'course') }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
+{% block title %}{{ 'student.my.courses'|trans({}, 'course') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Page Header -->
@@ -8,7 +8,7 @@
     <div class="ai-dashboard-header">
         <div class="d-flex justify-content-between align-items-start">
             <div class="d-flex align-items-center">
-                <div class="p-3 rounded-3 me-4" style="background: var(--infinity-ai-gradient);">
+                <div class="p-3 rounded-3 me-4" style="background: var(--luminai-ai-gradient);">
                     <i class="bi bi-book text-white fs-2"></i>
                 </div>
                 <div>
@@ -27,8 +27,8 @@
 
 {% if enrollments is empty %}
     <!-- Empty State -->
-    <div class="infinity-card p-5 text-center">
-        <i class="bi bi-book" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
+    <div class="luminai-card p-5 text-center">
+        <i class="bi bi-book" style="font-size: 4rem; color: var(--luminai-text-muted);"></i>
         <h3 class="text-white mt-4 mb-3">{{ 'student.no.courses'|trans({}, 'course') }}</h3>
         <p class="text-secondary mb-4">{{ 'student.no.courses.description'|trans({}, 'course') }}</p>
     </div>
@@ -45,10 +45,10 @@
             {% endfor %}
 
             <div class="col-xl-4 col-lg-6 mb-4">
-                <div class="infinity-card ai-enhanced p-4 h-100 d-flex flex-column">
+                <div class="luminai-card ai-enhanced p-4 h-100 d-flex flex-column">
                     <!-- Course Header -->
                     <div class="d-flex align-items-start mb-3">
-                        <div class="p-2 rounded-3 me-3" style="background: var(--infinity-ai-gradient); background-size: 200% 200%; animation: gradientShift 4s ease infinite;">
+                        <div class="p-2 rounded-3 me-3" style="background: var(--luminai-ai-gradient); background-size: 200% 200%; animation: gradientShift 4s ease infinite;">
                             <i class="bi bi-book text-white fs-4"></i>
                         </div>
                         <div class="flex-grow-1">
@@ -83,7 +83,7 @@
                         </div>
                         <div class="progress" style="height: 8px; background: rgba(255, 255, 255, 0.1);">
                             <div class="progress-bar"
-                                 style="background: var(--infinity-ai-gradient); width: {{ progress }}%;"
+                                 style="background: var(--luminai-ai-gradient); width: {{ progress }}%;"
                                  role="progressbar"
                                  aria-valuenow="{{ progress }}"
                                  aria-valuemin="0"
@@ -118,28 +118,28 @@
                         <div class="d-flex justify-content-end align-items-center gap-2">
                             {% if isCompleted %}
                                 <a href="{{ path('certificate_course', {id: course.id}) }}"
-                                   class="btn infinity-btn-success btn-sm"
+                                   class="btn luminai-btn-success btn-sm"
                                    style="min-width: 140px;"
                                    target="_blank">
                                     <i class="bi bi-award me-1"></i>{{ 'certificate.view.certificate'|trans({}, 'course') }}
                                 </a>
                                 {# Completed course - Restart #}
                                 <a href="{{ path('student_course', {id: course.id}) }}"
-                                   class="btn infinity-btn-primary btn-sm"
+                                   class="btn luminai-btn-primary btn-sm"
                                    style="min-width: 140px;">
                                     <i class="bi bi-arrow-clockwise me-1"></i>{{ 'student.restart'|trans({}, 'course') }}
                                 </a>
                             {% elseif enrollment.currentLecture %}
                                 {# In progress - Continue #}
                                 <a href="{{ path('student_lecture', {courseId: course.id, lectureId: enrollment.currentLecture.id}) }}"
-                                   class="btn infinity-btn-primary btn-sm"
+                                   class="btn luminai-btn-primary btn-sm"
                                    style="min-width: 140px;">
                                     <i class="bi bi-play-fill me-1"></i>{{ 'student.continue'|trans({}, 'course') }}
                                 </a>
                             {% else %}
                                 {# Not started - Start #}
                                 <a href="{{ path('student_course', {id: course.id}) }}"
-                                   class="btn infinity-btn-primary btn-sm"
+                                   class="btn luminai-btn-primary btn-sm"
                                    style="min-width: 140px;">
                                     <i class="bi bi-play-circle me-1"></i>{{ 'student.start'|trans({}, 'course') }}
                                 </a>

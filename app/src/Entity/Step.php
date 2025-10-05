@@ -52,7 +52,15 @@ class Step extends EntityBase
     #[Groups(['step:read', 'step:write'])]
     protected int $viewOrder = 1;
 
-    #[ORM\OneToMany(mappedBy: 'step', targetEntity: Question::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['step:read', 'step:write'])]
+    protected ?int $positionX = null;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['step:read', 'step:write'])]
+    protected ?int $positionY = null;
+
+    #[ORM\OneToMany(mappedBy: 'step', targetEntity: StepQuestion::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups(['step:read'])]
     protected Collection $questions;
 
@@ -150,14 +158,14 @@ class Step extends EntityBase
     }
 
     /**
-     * @return Collection<int, Question>
+     * @return Collection<int, StepQuestion>
      */
     public function getQuestions(): Collection
     {
         return $this->questions;
     }
 
-    public function addQuestion(Question $question): self
+    public function addQuestion(StepQuestion $question): self
     {
         if (!$this->questions->contains($question)) {
             $this->questions->add($question);
@@ -166,7 +174,7 @@ class Step extends EntityBase
         return $this;
     }
 
-    public function removeQuestion(Question $question): self
+    public function removeQuestion(StepQuestion $question): self
     {
         if ($this->questions->removeElement($question)) {
             if ($question->getStep() === $this) {
@@ -227,6 +235,28 @@ class Step extends EntityBase
                 $input->setStep(null);
             }
         }
+        return $this;
+    }
+
+    public function getPositionX(): ?int
+    {
+        return $this->positionX;
+    }
+
+    public function setPositionX(?int $positionX): self
+    {
+        $this->positionX = $positionX;
+        return $this;
+    }
+
+    public function getPositionY(): ?int
+    {
+        return $this->positionY;
+    }
+
+    public function setPositionY(?int $positionY): self
+    {
+        $this->positionY = $positionY;
         return $this;
     }
 

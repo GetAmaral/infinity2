@@ -1,0 +1,44 @@
+{#
+/**
+ * Main Navigation Menu Template
+ *
+ * Renders the main navigation menu items with automatic permission filtering
+ *
+ * @param array menu_items - Filtered menu items from NavigationConfig
+ */
+#}
+{% set last_was_divider = false %}
+
+{% for key, item in menu_items %}
+    {# Skip if this is just a divider/section config without a route and we already handled the divider #}
+    {% if item.divider_before is defined and item.route is not defined %}
+        {# Render divider only if we haven't just rendered one #}
+        {% if not last_was_divider %}
+            {% include '_partials/menu/_menu_divider.html.twig' with {
+                section_title: item.section_title is defined ? item.section_title : null
+            } %}
+            {% set last_was_divider = true %}
+        {% endif %}
+    {% else %}
+        {# Handle divider before a menu item #}
+        {% if item.divider_before is defined and item.divider_before and not last_was_divider %}
+            {% include '_partials/menu/_menu_divider.html.twig' with {
+                section_title: item.section_title is defined ? item.section_title : null
+            } %}
+            {% set last_was_divider = true %}
+        {% endif %}
+
+        {# Render menu item if it has a route #}
+        {% if item.route is defined %}
+            {% include '_partials/menu/_menu_item.html.twig' with {
+                route: item.route,
+                icon: item.icon|default('bi-circle'),
+                label: item.label,
+                translation_domain: item.translation_domain|default('messages'),
+                css_class: item.css_class|default(null),
+                id: item.id|default(null)
+            } %}
+            {% set last_was_divider = false %}
+        {% endif %}
+    {% endif %}
+{% endfor %}

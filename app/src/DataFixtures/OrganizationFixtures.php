@@ -8,7 +8,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class OrganizationFixtures extends Fixture
 {
-    public const ORG_ACME_REFERENCE = 'org-acme';
+    public const ORG_AVELUM_REFERENCE = 'avelum';
     public const ORG_GLOBEX_REFERENCE = 'org-globex';
     public const ORG_WAYNETECH_REFERENCE = 'org-waynetech';
     public const ORG_STARK_REFERENCE = 'org-stark';
@@ -16,14 +16,15 @@ class OrganizationFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // Create Acme Corporation
+        // Create Avelum Corporation
         $acme = new Organization();
-        $acme->setName('Acme Corporation');
-        $acme->setSlug('acme-corporation'); // Subdomain: acme-corporation.localhost
-        $acme->setDescription('A fictional corporation that exists in the Warner Bros. universe, most prominently featured in the animated series featuring Wile E. Coyote and the Road Runner.');
+        $acme->setName('Avelum');
+        $acme->setSlug('avelum'); // Subdomain: acme-corporation.localhost
+        $acme->setDescription('A Avelum nasceu para levar a inteligência artificial ao coração dos negócios. Nosso foco é integrar IA nos processos de forma prática e desenvolver soluções personalizadas que aumentam a performance e aceleram a inovação.');
         $manager->persist($acme);
-        $this->addReference(self::ORG_ACME_REFERENCE, $acme);
+        $this->addReference(self::ORG_AVELUM_REFERENCE, $acme);
 
+        /*
         // Create Globex Corporation
         $globex = new Organization();
         $globex->setName('Globex Corporation');
@@ -55,6 +56,7 @@ class OrganizationFixtures extends Fixture
         $umbrella->setDescription('A multinational pharmaceutical company from the Resident Evil universe, known for its biotechnology research and development.');
         $manager->persist($umbrella);
         $this->addReference(self::ORG_UMBRELLA_REFERENCE, $umbrella);
+        */
 
         $manager->flush();
     }

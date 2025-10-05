@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'settings.title'|trans({}, 'settings') }} - Infinity{% endblock %}
+{% block title %}{{ 'settings.title'|trans({}, 'settings') }} - {{ 'nav.brand'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
 <div class="mb-4">
-    <a href="{{ path('app_home') }}" class="btn infinity-btn-ai">
+    <a href="{{ path('app_home') }}" class="btn luminai-btn-ai">
         <i class="bi bi-arrow-left me-2"></i>{{ 'ui.back.to.dashboard'|trans }}
     </a>
 </div>
@@ -25,7 +25,7 @@
 <div class="bento-grid">
     <!-- Theme Selection -->
     <div class="bento-item large">
-        <div class="infinity-card ai-enhanced p-4 h-100">
+        <div class="luminai-card ai-enhanced p-4 h-100">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
                     <i class="bi bi-palette me-2"></i>{{ 'theme.settings'|trans({}, 'settings') }}
@@ -38,7 +38,7 @@
             <div class="row">
                 <!-- Dark Theme -->
                 <div class="col-md-6 mb-3">
-                    <div class="theme-card" data-theme="dark" id="darkTheme" onclick="switchTheme('dark')">
+                    <div class="theme-card" data-theme="dark" id="darkTheme" onclick="window.switchTheme('dark')">
                         <div class="theme-preview-mini dark-preview-mini">
                             <div class="theme-header"></div>
                             <div class="theme-content">
@@ -57,7 +57,7 @@
 
                 <!-- Light Theme -->
                 <div class="col-md-6 mb-3">
-                    <div class="theme-card" data-theme="light" id="lightTheme" onclick="switchTheme('light')">
+                    <div class="theme-card" data-theme="light" id="lightTheme" onclick="window.switchTheme('light')">
                         <div class="theme-preview-mini light-preview-mini">
                             <div class="theme-header"></div>
                             <div class="theme-content">
@@ -79,7 +79,7 @@
 
     <!-- Language Preferences -->
     <div class="bento-item">
-        <div class="infinity-card p-4 h-100">
+        <div class="luminai-card p-4 h-100">
             <div class="mb-4">
                 <div class="d-flex align-items-center mb-3">
                     <i class="bi bi-translate text-neon fs-4 me-3"></i>
@@ -94,7 +94,7 @@
                 <form method="post" action="{{ path('app_settings_locale') }}" data-controller="form-navigation">
                     <div class="mb-3">
                         <label for="locale" class="form-label text-secondary">{{ 'settings.choose.language'|trans({}, 'settings') }}:</label>
-                        <select name="locale" id="locale" class="form-select" data-preference="locale" style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.2); color: white;" onchange="this.form.submit()">
+                        <select name="locale" id="locale" class="form-select" data-preference="locale" style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.2); color: white;" onchange="this.form.submit()">
                             {% for locale_code, locale_name in supported_locales %}
                                 <option value="{{ locale_code }}" {{ locale_code == current_locale ? 'selected' : '' }}>
                                     {{ locale_name|trans }}
@@ -109,7 +109,7 @@
 
     <!-- UI Preferences -->
     <div class="bento-item">
-        <div class="infinity-card p-4 h-100">
+        <div class="luminai-card p-4 h-100">
             <div class="mb-4">
                 <div class="d-flex align-items-center mb-3">
                     <i class="bi bi-sliders text-neon fs-4 me-3"></i>
@@ -148,7 +148,7 @@
                     <div class="mb-3">
                         <label for="items_per_page" class="form-label text-secondary">{{ 'settings.items.per.page'|trans({}, 'settings') }}:</label>
                         <select id="items_per_page" class="form-select" data-preference="items_per_page"
-                                style="background: var(--infinity-dark-surface); border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
+                                style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
                             <option value="10" {{ user_preferences.items_per_page == 10 ? 'selected' : '' }}>10</option>
                             <option value="25" {{ user_preferences.items_per_page == 25 ? 'selected' : '' }}>25</option>
                             <option value="50" {{ user_preferences.items_per_page == 50 ? 'selected' : '' }}>50</option>
@@ -162,14 +162,14 @@
 
     <!-- AI Configuration -->
     <div class="bento-item">
-        <div class="infinity-card p-4 h-100">
+        <div class="luminai-card p-4 h-100">
             <div class="text-center mb-4">
-                <div class="p-3 rounded-3 mx-auto mb-3" style="background: linear-gradient(135deg, var(--infinity-primary), var(--infinity-secondary)); width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                <div class="p-3 rounded-3 mx-auto mb-3" style="background: linear-gradient(135deg, var(--luminai-primary), var(--luminai-secondary)); width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
                     <i class="bi bi-robot text-white fs-2"></i>
                 </div>
                 <h5 class="text-white mb-2">{{ 'ai.settings'|trans({}, 'insights') }}</h5>
                 <p class="text-secondary mb-3">{{ 'ai.settings.description'|trans({}, 'insights') }}</p>
-                <button class="btn infinity-btn-ai" disabled>
+                <button class="btn luminai-btn-ai" disabled>
                     <i class="bi bi-magic me-2"></i>{{ 'misc.coming.soon'|trans }}
                 </button>
             </div>
@@ -178,7 +178,7 @@
 
     <!-- System Information -->
     <div class="bento-item large">
-        <div class="infinity-card p-4 h-100">
+        <div class="luminai-card p-4 h-100">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
                     <i class="bi bi-info-circle me-2"></i>{{ 'system.information'|trans }}
@@ -238,7 +238,7 @@
 
 /* Simple Theme Cards */
 .theme-card {
-    background: var(--infinity-dark-surface);
+    background: var(--luminai-dark-surface);
     border: 2px solid transparent;
     border-radius: 1rem;
     cursor: pointer;
@@ -252,7 +252,7 @@
 }
 
 .theme-card.active {
-    border-color: var(--infinity-neon);
+    border-color: var(--luminai-neon);
     box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
 }
 
@@ -324,7 +324,7 @@
 
 <script>
 // Settings page theme management
-const SettingsTheme = {
+window.SettingsTheme = window.SettingsTheme || {
     async init() {
         // Wait for PreferenceManager to load
         await window.PreferenceManager.waitForLoad();
@@ -349,8 +349,8 @@ const SettingsTheme = {
     }
 };
 
-// Global theme switch function
-async function switchTheme(theme) {
+// Global theme switch function (attach to window to avoid redeclaration)
+window.switchTheme = async function(theme) {
     // Save via PreferenceManager (saves to localStorage + database)
     await window.PreferenceManager.setUserPreference('theme', theme);
 
@@ -364,7 +364,7 @@ async function switchTheme(theme) {
     }
 
     // Update local UI
-    SettingsTheme.updateUI(theme);
+    window.SettingsTheme.updateUI(theme);
 
     // Show feedback
     const card = document.getElementById(theme + 'Theme');
@@ -374,11 +374,25 @@ async function switchTheme(theme) {
     setTimeout(() => {
         card.querySelector('.theme-info h6').innerHTML = originalContent;
     }, 1500);
+};
+
+// Initialize when page loads (works for both DOMContentLoaded and Turbo)
+function initializeSettings() {
+    window.SettingsTheme.init();
+
+    // Reset scroll position on page load
+    if (history.scrollRestoration) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
 }
 
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    SettingsTheme.init();
-});
+// Handle both initial load and Turbo navigation
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeSettings);
+} else {
+    // DOM already loaded (Turbo navigation)
+    initializeSettings();
+}
 </script>
 {% endblock %}

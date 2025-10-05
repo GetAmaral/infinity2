@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ################################################################################
-# Infinity Log Rotation - Uninstall Script
+# Luminai Log Rotation - Uninstall Script
 ################################################################################
 #
 # This script removes the systemd timer for log rotation.
@@ -21,14 +21,14 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-SERVICE_NAME="infinity-logs-cleanup"
+SERVICE_NAME="luminai-logs-cleanup"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
 TIMER_FILE="/etc/systemd/system/${SERVICE_NAME}.timer"
 
 print_header() {
     echo -e "${BLUE}"
     echo "════════════════════════════════════════════════════════════════"
-    echo "  Infinity Log Rotation - Uninstall"
+    echo "  Luminai Log Rotation - Uninstall"
     echo "════════════════════════════════════════════════════════════════"
     echo -e "${NC}"
 }

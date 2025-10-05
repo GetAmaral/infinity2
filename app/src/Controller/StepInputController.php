@@ -60,12 +60,36 @@ final class StepInputController extends AbstractController
             $this->entityManager->persist($input);
             $this->entityManager->flush();
 
+            // Return JSON for AJAX requests
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'success' => true,
+                    'message' => 'Input created successfully',
+                ]);
+            }
+
             $this->addFlash('success', 'input.flash.created_successfully');
 
             return $this->redirectToRoute('treeflow_show', ['id' => $treeflowId]);
         }
 
-        // Handle modal/AJAX requests
+        // Return validation errors as JSON for AJAX requests
+        if ($request->isXmlHttpRequest() && $form->isSubmitted()) {
+            $html = $this->renderView('treeflow/input/_form_modal.html.twig', [
+                'input' => $input,
+                'step' => $step,
+                'treeflow' => $treeFlow,
+                'form' => $form,
+                'is_edit' => false,
+            ]);
+
+            return $this->json([
+                'success' => false,
+                'html' => $html,
+            ]);
+        }
+
+        // Handle modal/AJAX requests for GET
         if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
             return $this->render('treeflow/input/_form_modal.html.twig', [
                 'input' => $input,
@@ -119,12 +143,36 @@ final class StepInputController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
 
+            // Return JSON for AJAX requests
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'success' => true,
+                    'message' => 'Input updated successfully',
+                ]);
+            }
+
             $this->addFlash('success', 'input.flash.updated_successfully');
 
             return $this->redirectToRoute('treeflow_show', ['id' => $treeflowId]);
         }
 
-        // Handle modal/AJAX requests
+        // Return validation errors as JSON for AJAX requests
+        if ($request->isXmlHttpRequest() && $form->isSubmitted()) {
+            $html = $this->renderView('treeflow/input/_form_modal.html.twig', [
+                'input' => $input,
+                'step' => $step,
+                'treeflow' => $treeFlow,
+                'form' => $form,
+                'is_edit' => true,
+            ]);
+
+            return $this->json([
+                'success' => false,
+                'html' => $html,
+            ]);
+        }
+
+        // Handle modal/AJAX requests for GET
         if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
             return $this->render('treeflow/input/_form_modal.html.twig', [
                 'input' => $input,

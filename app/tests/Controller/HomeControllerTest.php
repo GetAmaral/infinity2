@@ -14,9 +14,9 @@ class HomeControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('title', 'Welcome to Infinity');
-        $this->assertSelectorTextContains('h1', 'Welcome to Infinity');
-        $this->assertSelectorExists('.infinity-card');
+        $this->assertSelectorTextContains('title', 'Welcome to Luminai');
+        $this->assertSelectorTextContains('h1', 'Welcome to Luminai');
+        $this->assertSelectorExists('.luminai-card');
     }
 
     /**
@@ -30,6 +30,6 @@ class HomeControllerTest extends WebTestCase
         $this->assertSelectorExists('a[href="/organization"]');
         $this->assertSelectorExists('a[href="/user"]');
         $this->assertSelectorExists('a[href="/api"]');
-        $this->assertSelectorTextContains('nav', '🚀 Infinity');
+        $this->assertSelectorTextContains('nav', '🚀 Luminai');
     }
 }

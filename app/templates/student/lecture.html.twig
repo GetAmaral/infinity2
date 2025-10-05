@@ -28,7 +28,7 @@
         <!-- Video Player Column -->
         <div class="col-lg-9">
             <!-- Video Player Card -->
-            <div class="infinity-card p-0 mb-4" style="overflow: hidden;">
+            <div class="luminai-card p-0 mb-4" style="overflow: hidden;">
                 {% if lecture.processingStatus == 'completed' and lecture.videoPath %}
                     <!-- Plyr Video Player with HLS -->
                     <div
@@ -50,7 +50,7 @@
                         <div class="video-error-message" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(220, 38, 38, 0.9); color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 1000;"></div>
                     </div>
                 {% elseif lecture.processingStatus == 'processing' %}
-                    <div class="p-5 text-center" style="background: var(--infinity-card-bg);">
+                    <div class="p-5 text-center" style="background: var(--luminai-card-bg);">
                         <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
                             <span class="visually-hidden">{{ 'course.lecture.processing'|trans({}, 'course') }}...</span>
                         </div>
@@ -61,7 +61,7 @@
                         </button>
                     </div>
                 {% elseif lecture.processingStatus == 'failed' %}
-                    <div class="p-5 text-center" style="background: var(--infinity-card-bg);">
+                    <div class="p-5 text-center" style="background: var(--luminai-card-bg);">
                         <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
                         <h4 class="text-white mt-3">{{ 'course.lecture.failed'|trans({}, 'course') }}</h4>
                         <p class="text-muted">{{ 'course.lecture.failed.description'|trans({}, 'course') }}</p>
@@ -70,7 +70,7 @@
                         {% endif %}
                     </div>
                 {% else %}
-                    <div class="p-5 text-center" style="background: var(--infinity-card-bg);">
+                    <div class="p-5 text-center" style="background: var(--luminai-card-bg);">
                         <i class="bi bi-film text-muted" style="font-size: 4rem;"></i>
                         <h4 class="text-white mt-3">{{ 'course.lecture.no.video'|trans({}, 'course') }}</h4>
                         <p class="text-muted">{{ 'course.lecture.no.video.description'|trans({}, 'course') }}</p>
@@ -134,7 +134,7 @@
             </div>
 
             <!-- Lecture Info Card -->
-            <div class="infinity-card p-4">
+            <div class="luminai-card p-4">
                 <h2 class="text-gradient mb-3">{{ lecture.name }}</h2>
 
                 {% if lecture.description %}
@@ -211,7 +211,7 @@
 
         <!-- Course Navigation Sidebar -->
         <div class="col-lg-3">
-            <div class="infinity-card p-3 sticky-top" style="top: 1rem;">
+            <div class="luminai-card p-3 sticky-top" style="top: 1rem;">
                 <h6 class="text-neon mb-3">
                     <i class="bi bi-layers me-2"></i>{{ 'course.content'|trans({}, 'course') }}
                 </h6>
@@ -299,7 +299,7 @@
                     <div class="progress mt-2" style="height: 6px; background: rgba(255, 255, 255, 0.1);">
                         <div class="progress-bar course-progress-bar"
                              role="progressbar"
-                             style="background: var(--infinity-ai-gradient); width: {{ enrollment.progressPercentage|round }}%;"
+                             style="background: var(--luminai-ai-gradient); width: {{ enrollment.progressPercentage|round }}%;"
                              aria-valuenow="{{ enrollment.progressPercentage|round }}"
                              aria-valuemin="0"
                              aria-valuemax="100">

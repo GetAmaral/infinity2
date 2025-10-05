@@ -5,13 +5,13 @@
 {% block body %}
 <div class="row justify-content-center mt-5">
     <div class="col-md-5">
-        <div class="infinity-card p-4">
+        <div class="luminai-card p-4">
             <div class="text-center mb-4">
-                <div class="d-inline-block p-3 rounded-circle mb-3" style="background: var(--infinity-ai-gradient);">
+                <div class="d-inline-block p-3 rounded-circle mb-3" style="background: var(--luminai-ai-gradient);">
                     <i class="bi bi-person-plus text-white" style="font-size: 2.5rem;"></i>
                 </div>
                 <h2 class="text-gradient mb-2">{{ 'auth.create.account'|trans }}</h2>
-                <p class="text-secondary">{{ 'auth.join.infinity'|trans }}</p>
+                <p class="text-secondary">{{ 'auth.join.luminai'|trans }}</p>
             </div>
 
             <form method="post" action="{{ path('app_register') }}" data-controller="form-navigation">
@@ -27,7 +27,7 @@
                         value="{{ name ?? '' }}"
                         required
                         autofocus
-                        style="background: var(--infinity-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
+                        style="background: var(--luminai-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
                     >
                 </div>
 
@@ -42,7 +42,7 @@
                         name="email"
                         value="{{ email ?? '' }}"
                         required
-                        style="background: var(--infinity-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
+                        style="background: var(--luminai-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
                     >
                 </div>
 
@@ -57,7 +57,7 @@
                         name="password"
                         required
                         minlength="8"
-                        style="background: var(--infinity-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
+                        style="background: var(--luminai-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
                     >
                     <small class="text-muted">{{ 'auth.password.requirements'|trans }}</small>
                 </div>
@@ -73,13 +73,13 @@
                         name="confirm_password"
                         required
                         minlength="8"
-                        style="background: var(--infinity-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
+                        style="background: var(--luminai-card-bg); border-color: rgba(255, 255, 255, 0.1); color: white;"
                     >
                 </div>
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('register') }}">
 
-                <button type="submit" class="btn infinity-btn-primary w-100 mb-3" data-allow-enter-submit>
+                <button type="submit" class="btn luminai-btn-primary w-100 mb-3" data-allow-enter-submit>
                     <i class="bi bi-person-check me-2"></i>{{ 'auth.create.account.button'|trans }}
                 </button>
 

@@ -167,6 +167,7 @@ treeflow.name: Name
 treeflow.no.questions: No questions defined yet
 treeflow.no.steps: No steps defined yet
 treeflow.plural: TreeFlows
+treeflow.search.placeholder: Search TreeFlows...
 treeflow.singular: TreeFlow
 treeflow.status: Status
 # TreeFlow Status
@@ -179,3 +180,26 @@ treeflow.steps.reorder.success: Steps reordered successfully
 treeflow.total.steps: Total Steps
 treeflow.version: Version
 
+fewshot.form.description_placeholder: Describe what makes this a good/bad example
+fewshot.form.name_placeholder: Enter example name
+fewshot.form.prompt_placeholder: Example prompt for the AI
+input.form.name_placeholder: Enter input name
+input.form.prompt_help: Additional instructions when entering through this input
+input.form.prompt_placeholder: Additional context when entering via this input
+input.form.source_help: Which step can route to this step (optional)
+input.form.source_placeholder: Select the step that can route here
+output.form.conditional_help: Define conditions for this output (regex, keywords, or custom logic)
+output.form.conditional_placeholder: 'Example: regex:/urgent/i or keywords:high-priority,immediate'
+output.form.description_placeholder: Describe what this output represents
+output.form.destination_help: Where to route when this condition matches (optional)
+output.form.destination_placeholder: Select where to route when this condition matches
+output.form.name_placeholder: Enter output name
+question.form.name_placeholder: Enter question name
+question.form.objective_placeholder: What should this question achieve?
+question.form.prompt_placeholder: Instructions for this question
+step.form.first_help: Mark this as the starting point of the TreeFlow
+step.form.name_placeholder: Enter step name
+step.form.objective_placeholder: What should this step achieve?
+step.form.prompt_placeholder: Instructions for the AI agent at this step
+treeflow.form.active_help: Inactive TreeFlows are hidden from users
+treeflow.form.name_placeholder: Enter TreeFlow name

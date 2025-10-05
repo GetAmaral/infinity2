@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Infinity - Quick Test Runner
+# Luminai - Quick Test Runner
 #
 # AUTOMATICALLY RUNS ALL TESTS FROM /app/tests DIRECTORY
 # - Simple execution without verbose output
@@ -11,7 +11,7 @@
 
 set -e
 
-echo "🧪 Running ALL Infinity Tests from /tests directory..."
+echo "🧪 Running ALL Luminai Tests from /tests directory..."
 
 if [ ! -f "docker-compose.yml" ]; then
     echo "❌ Please run from /home/user/inf directory"
@@ -19,7 +19,7 @@ if [ ! -f "docker-compose.yml" ]; then
 fi
 
 # Run tests
-docker run --rm --network=inf_infinity_network \
+docker run --rm --network=inf_luminai_network \
     -v "$(pwd)/app:/app" \
     -w /app \
     inf-app php bin/phpunit

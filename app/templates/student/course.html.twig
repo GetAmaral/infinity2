@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ course.name }} - {{ 'student.singular'|trans({}, 'course') }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
+{% block title %}{{ course.name }} - {{ 'student.singular'|trans({}, 'course') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation Breadcrumb -->
 <div class="mb-4">
-    <a href="{{ path('student_courses') }}" class="btn infinity-btn-ai">
+    <a href="{{ path('student_courses') }}" class="btn luminai-btn-ai">
         <i class="bi bi-arrow-left me-2"></i>{{ 'student.back.to.courses'|trans({}, 'course') }}
     </a>
 </div>
@@ -14,7 +14,7 @@
 <div class="ai-dashboard-header mb-4">
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
         <div class="d-flex align-items-center">
-            <div class="p-3 rounded-3 me-4" style="background: var(--infinity-ai-gradient);">
+            <div class="p-3 rounded-3 me-4" style="background: var(--luminai-ai-gradient);">
                 <i class="bi bi-book text-white fs-2"></i>
             </div>
             <div>
@@ -43,7 +43,7 @@
 <!-- Progress Overview -->
 <div class="row mb-4">
     <div class="col-md-12">
-        <div class="infinity-card p-4">
+        <div class="luminai-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="text-neon mb-0">
                     <i class="bi bi-bar-chart me-2"></i>{{ 'student.your.progress'|trans({}, 'course') }}
@@ -71,7 +71,7 @@
                 <div class="progress" style="height: 20px; background: rgba(255, 255, 255, 0.1);">
                     <div class="progress-bar"
                          role="progressbar"
-                         style="background: var(--infinity-ai-gradient); font-weight: bold; width: {{ enrollment.progressPercentage|round }}%;"
+                         style="background: var(--luminai-ai-gradient); font-weight: bold; width: {{ enrollment.progressPercentage|round }}%;"
                          aria-valuenow="{{ enrollment.progressPercentage|round }}"
                          aria-valuemin="0"
                          aria-valuemax="100">
@@ -110,7 +110,7 @@
 <!-- Course Content - Modules & Lectures -->
 <div class="row">
     <div class="col-12">
-        <div class="infinity-card p-4">
+        <div class="luminai-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
                     <i class="bi bi-layers me-2"></i>{{ 'course.content'|trans({}, 'course') }}
@@ -119,14 +119,14 @@
 
             {% if modules is empty %}
                 <div class="text-center py-5">
-                    <i class="bi bi-layers" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
+                    <i class="bi bi-layers" style="font-size: 3rem; color: var(--luminai-text-muted);"></i>
                     <h5 class="text-white mt-3 mb-2">{{ 'course.no.content'|trans({}, 'course') }}</h5>
                     <p class="text-secondary mb-0">{{ 'course.no.content.description'|trans({}, 'course') }}</p>
                 </div>
             {% else %}
                 <div class="accordion" id="modulesAccordion">
                     {% for module in modules %}
-                        <div class="accordion-item mb-3" style="background: var(--infinity-card-bg); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden;">
+                        <div class="accordion-item mb-3" style="background: var(--luminai-card-bg); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden;">
                             <h2 class="accordion-header">
                                 <button class="accordion-button {{ loop.first ? '' : 'collapsed' }}"
                                         type="button"

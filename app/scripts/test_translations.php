@@ -50,7 +50,7 @@ $testKeys = [
     'unit.minutes',
     'pagination.show',
     'nav.ai_chat',
-    'branding.infinity_crm',
+    'branding.luminai_crm',
     'organization.switcher_title',
     'course.back_to_course',
     'theme.switch_to_dark',

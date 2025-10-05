@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Infinity Production Setup & Optimization"
+echo "🚀 Luminai Production Setup & Optimization"
 echo "=========================================="
 
 # Check requirements
@@ -34,7 +34,7 @@ echo "🗄️ Starting database and Redis..."
 docker-compose --env-file .env.prod up -d database redis
 
 echo "⏳ Waiting for services to be ready..."
-timeout 60 bash -c 'until docker-compose --env-file .env.prod exec -T database pg_isready -U ${POSTGRES_USER:-infinity_user} -d ${POSTGRES_DB:-infinity_db} >/dev/null 2>&1; do sleep 2; done'
+timeout 60 bash -c 'until docker-compose --env-file .env.prod exec -T database pg_isready -U ${POSTGRES_USER:-luminai_user} -d ${POSTGRES_DB:-luminai_db} >/dev/null 2>&1; do sleep 2; done'
 timeout 30 bash -c 'until docker-compose --env-file .env.prod exec -T redis redis-cli ping >/dev/null 2>&1; do sleep 2; done'
 
 echo "🏗️ Building optimized application container..."
@@ -105,7 +105,7 @@ echo "   View logs:     docker-compose --env-file .env.prod logs -f"
 echo "   Stop all:      docker-compose --env-file .env.prod down"
 echo "   Enter app:     docker-compose --env-file .env.prod exec app sh"
 echo "   Redis CLI:     docker-compose --env-file .env.prod exec redis redis-cli"
-echo "   PostgreSQL:    docker-compose --env-file .env.prod exec database psql -U infinity_user infinity_db"
+echo "   PostgreSQL:    docker-compose --env-file .env.prod exec database psql -U luminai_user luminai_db"
 echo ""
 echo "🔍 Performance Monitoring:"
 echo "   System metrics available at /health/metrics"

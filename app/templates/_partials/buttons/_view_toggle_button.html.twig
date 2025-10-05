@@ -1,0 +1,30 @@
+{#
+/**
+ * View Toggle Button Template
+ *
+ * Renders a view toggle button (grid/list/timeline)
+ *
+ * @param array config - Button configuration from ButtonConfig
+ * @param string view - View type identifier
+ * @param string|null icon - Icon override
+ * @param bool is_active - Is this view active
+ * @param string|null tooltip - Tooltip text
+ * @param string size - Size class
+ */
+#}
+{% set buttonIcon = icon ?? config.default_icon %}
+{% set sizeClass = size ? 'btn-' ~ size : '' %}
+{% set activeClass = is_active ? 'active' : '' %}
+
+<button type="button"
+        class="{{ config.class }} {{ sizeClass }} {{ activeClass }}"
+        data-view="{{ view }}"
+        data-action="view-toggle#setView"
+        data-view-toggle-target="{{ view }}Button"
+        {% if tooltip %}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="{{ tooltip }}"
+        {% endif %}>
+    <i class="{{ buttonIcon }}"></i>
+</button>

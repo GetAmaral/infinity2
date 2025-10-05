@@ -1,0 +1,21 @@
+{#
+/**
+ * Menu Item Template
+ *
+ * Renders a single navigation menu item with icon and label
+ *
+ * @param string route - Route name
+ * @param string icon - Bootstrap icon class (e.g., 'bi-house')
+ * @param string label - Translation key for label
+ * @param string translation_domain - Translation domain (default: 'messages')
+ * @param string|null css_class - Additional CSS classes
+ * @param string|null id - HTML id attribute
+ */
+#}
+<li>
+    <a class="dropdown-item{{ css_class is defined and css_class ? ' ' ~ css_class : '' }}"
+       href="{{ path(route) }}"
+       {{ id is defined and id ? 'id="' ~ id ~ '"' : '' }}>
+        <i class="bi {{ icon }} me-2"></i>{{ label|trans({}, translation_domain|default('messages')) }}
+    </a>
+</li>

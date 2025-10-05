@@ -1,0 +1,56 @@
+# Symfony Translations - Português Brasil (Domínio User)
+# Uso: {{ 'key'|trans({}, 'user') }}
+
+# ================================================================================
+# User
+# ================================================================================
+contact.active.user: Usuário Ativo
+contact.information: Informações de Contato
+contact.last.activity: Última Atividade
+contact.member.since: Membro Desde
+user.api.link: API
+# Gerenciamento de Usuário
+user.back.to.list: Voltar pros Usuários
+# Traduções de Usuário Faltantes
+user.confirm.delete: 'Tem certeza que quer deletar %name%?'
+user.courses: Cursos
+user.courses.enrolled: Inscrito
+user.courses.label: Cursos
+user.courses.owned: Próprio
+user.created.at: Criado Em
+user.email: Email
+user.form.email.placeholder: Digite o endereço de email
+user.form.name.placeholder: Digite o nome completo
+user.form.password.confirm.placeholder: Confirme a senha
+user.form.password.placeholder: Digite a senha
+user.last.login: Último Login
+user.locked: Bloqueado
+user.modal.create.subtitle: Adicionar um novo usuário à sua organização
+user.modal.edit.subtitle: Atualizar informações do usuário
+user.name: Nome
+user.never.logged.in: Nunca fez login
+# Formulário de Usuário
+user.new.user: Novo Usuário
+user.organization: Organização
+user.select.student: Selecionar Aluno
+user.select.student.placeholder: '-- Selecione um aluno --'
+user.singular: Usuário
+# Páginas de Usuário
+user.title: Usuários
+user.unverified: Não Verificado
+user.updated.at: Atualizado
+user.verified: Verificado
+user.view.organization: Ver Organização
+
+user.form.email: Email
+user.form.email_placeholder: Digite o endereço de email
+user.form.is_verified: Usuário Verificado
+user.form.name: Nome Completo
+user.form.name_placeholder: Digite o nome completo
+user.form.organization: Organização
+user.form.organization_placeholder: Selecione a organização
+user.form.password: Senha
+user.form.password_confirm: Confirme a Senha
+user.form.password_confirm_placeholder: Confirme a senha
+user.form.password_placeholder: Digite a senha
+user.form.roles: Permissões

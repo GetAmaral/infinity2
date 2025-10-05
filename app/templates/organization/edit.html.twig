@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 {% import '_macros/organization_logo.html.twig' as org_logo %}
 
-{% block title %}{{ 'organization.edit'|trans({}, 'organization') }} - {{ organization.name }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
+{% block title %}{{ 'organization.edit'|trans({}, 'organization') }} - {{ organization.name }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
 <div class="mb-4">
-    <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn infinity-btn-ai">
+    <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn luminai-btn-ai">
         <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.organization'|trans({}, 'organization') }}
     </a>
 </div>
@@ -25,7 +25,7 @@
 </div>
 
 <!-- Edit Form -->
-<div class="infinity-card p-4">
+<div class="luminai-card p-4">
     {{ form_start(form, {
         'attr': {
             'data-controller': 'form-navigation'
@@ -136,7 +136,7 @@
         <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn btn-outline-secondary">
             <i class="bi bi-x-circle me-2"></i>{{ 'button.cancel'|trans }}
         </a>
-        <button type="submit" class="btn infinity-btn-primary">
+        <button type="submit" class="btn luminai-btn-primary">
             <i class="bi bi-check-circle me-2"></i>{{ 'button.save'|trans }}
         </button>
     </div>

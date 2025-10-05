@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
-use App\Entity\FewShotExample;
-use App\Entity\Question;
+use App\Entity\StepFewShot;
+use App\Entity\StepQuestion;
 use App\Entity\Step;
 use App\Entity\TreeFlow;
 use App\Service\Utils;
@@ -50,8 +50,8 @@ final class EntitySlugSubscriber
         // Only update supported entities
         if (!$entity instanceof TreeFlow
             && !$entity instanceof Step
-            && !$entity instanceof Question
-            && !$entity instanceof FewShotExample) {
+            && !$entity instanceof StepQuestion
+            && !$entity instanceof StepFewShot) {
             return;
         }
 

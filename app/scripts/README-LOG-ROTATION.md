@@ -42,22 +42,22 @@ php bin/console app:logs:cleanup --dry-run
 php bin/console app:logs:cleanup
 
 # Check timer status
-systemctl status infinity-logs-cleanup.timer
+systemctl status luminai-logs-cleanup.timer
 
 # See next scheduled run
-systemctl list-timers infinity-logs-cleanup.timer
+systemctl list-timers luminai-logs-cleanup.timer
 
 # View execution logs
-journalctl -u infinity-logs-cleanup.service -n 50
+journalctl -u luminai-logs-cleanup.service -n 50
 
 # Manual trigger
-sudo systemctl start infinity-logs-cleanup.service
+sudo systemctl start luminai-logs-cleanup.service
 ```
 
 ## Files Created
 
-- `/etc/systemd/system/infinity-logs-cleanup.service` - The service definition
-- `/etc/systemd/system/infinity-logs-cleanup.timer` - The daily schedule
+- `/etc/systemd/system/luminai-logs-cleanup.service` - The service definition
+- `/etc/systemd/system/luminai-logs-cleanup.timer` - The daily schedule
 
 ## Requirements
 
@@ -67,7 +67,7 @@ sudo systemctl start infinity-logs-cleanup.service
 
 ## Customization
 
-Edit `/etc/systemd/system/infinity-logs-cleanup.service` to change retention:
+Edit `/etc/systemd/system/luminai-logs-cleanup.service` to change retention:
 
 ```bash
 # Change this line

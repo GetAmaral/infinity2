@@ -15,7 +15,7 @@
   for optimal placement across grid, list, and table views.
 #}
 
-{% block title %}{{ block('page_title') }} - Infinity{% endblock %}
+{% block title %}{{ block('page_title') }} - {{ 'nav.brand'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Page Header -->
@@ -31,14 +31,8 @@
             </div>
         </div>
         {% block header_actions %}
-            {% if enable_create_button|default(true) and is_granted(entity_name|upper ~ '_CREATE') %}
-                <button type="button"
-                        class="btn infinity-btn-primary"
-                        data-controller="modal-opener"
-                        data-modal-opener-url-value="{{ path(entity_name ~ '_new') }}"
-                        data-action="click->modal-opener#open">
-                    <i class="bi bi-plus-circle me-2"></i>{{ ('button.add.' ~ entity_name)|trans }}
-                </button>
+            {% if enable_create_button|default(true) %}
+                {{ button_create(path(entity_name ~ '_new'), 'button.add.' ~ entity_name, 'messages', null, ('button.add.' ~ entity_name)|trans, entity_name|upper ~ '_CREATE') }}
             {% endif %}
         {% endblock %}
     </div>
@@ -58,7 +52,7 @@
                 {% block search_input %}
                     {% if enable_search|default(true) %}
                         <div class="input-group">
-                            <span class="input-group-text" style="background: var(--infinity-search-bg); border-color: var(--infinity-search-border); color: var(--infinity-text-secondary);">
+                            <span class="input-group-text" style="background: var(--luminai-search-bg); border-color: var(--luminai-search-border); color: var(--luminai-text-secondary);">
                                 <i class="bi bi-search"></i>
                             </span>
                             <input type="text"
@@ -68,14 +62,8 @@
                                    data-controller="live-search"
                                    data-live-search-url-value="{{ path(entity_name ~ '_api_search') }}"
                                    data-live-search-target-value="#{{ entity_name_plural }}-grid"
-                                   style="background: var(--infinity-search-bg); border-color: var(--infinity-search-border); color: var(--infinity-search-text);">
-                            <button type="button"
-                                    id="clearSearchBtn"
-                                    class="btn btn-clear-search"
-                                    aria-label="{{ 'button.clear.search'|trans }}"
-                                    title="{{ 'button.clear.search'|trans }}">
-                                <i class="bi bi-x-lg"></i>
-                            </button>
+                                   style="background: var(--luminai-search-bg); border-color: var(--luminai-search-border); color: var(--luminai-search-text);">
+                            {{ button_clear_search(null, 'messages', 'button.clear.search'|trans) }}
                         </div>
                     {% endif %}
                 {% endblock %}
@@ -88,7 +76,7 @@
                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                     <i class="bi bi-funnel me-1"></i>{{ 'button.filter'|trans }}
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--infinity-dark-surface);">
+                                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--luminai-dark-surface);">
                                     {% block filter_options %}
                                         {# Child templates override this block with entity-specific filters #}
                                     {% endblock %}
@@ -100,34 +88,13 @@
                     {% block view_toggle_buttons %}
                         <div class="btn-group" role="group">
                             {% if enable_grid_view|default(true) %}
-                                <button type="button"
-                                        class="btn btn-outline-secondary {{ default_view|default('grid') == 'grid' ? 'active' : '' }}"
-                                        data-view="grid"
-                                        data-action="view-toggle#setView"
-                                        data-view-toggle-target="gridButton"
-                                        title="{{ 'view.grid'|trans }}">
-                                    <i class="bi bi-grid-3x3-gap"></i>
-                                </button>
+                                {{ button_view_toggle('grid', 'bi-grid-3x3-gap', default_view|default('grid') == 'grid', 'view.grid'|trans) }}
                             {% endif %}
                             {% if enable_list_view|default(true) %}
-                                <button type="button"
-                                        class="btn btn-outline-secondary {{ default_view|default('grid') == 'list' ? 'active' : '' }}"
-                                        data-view="list"
-                                        data-action="view-toggle#setView"
-                                        data-view-toggle-target="listButton"
-                                        title="{{ 'view.list'|trans }}">
-                                    <i class="bi bi-list-ul"></i>
-                                </button>
+                                {{ button_view_toggle('list', 'bi-list-ul', default_view|default('grid') == 'list', 'view.list'|trans) }}
                             {% endif %}
                             {% if enable_table_view|default(true) %}
-                                <button type="button"
-                                        class="btn btn-outline-secondary {{ default_view|default('grid') == 'table' ? 'active' : '' }}"
-                                        data-view="table"
-                                        data-action="view-toggle#setView"
-                                        data-view-toggle-target="tableButton"
-                                        title="{{ 'view.table'|trans }}">
-                                    <i class="bi bi-table"></i>
-                                </button>
+                                {{ button_view_toggle('table', 'bi-table', default_view|default('grid') == 'table', 'view.table'|trans) }}
                             {% endif %}
                         </div>
                     {% endblock %}
@@ -141,7 +108,7 @@
     <template data-view-toggle-target="gridTemplate">
         {% block grid_view_item_template %}
             <div class="col">
-                <div class="infinity-card p-4">
+                <div class="luminai-card p-4">
                     <p class="text-warning">Override grid_view_item_template block in {{ entity_name }}/index.html.twig</p>
                 </div>
             </div>
@@ -151,7 +118,7 @@
     {# List View Template - Child templates override this #}
     <template data-view-toggle-target="listTemplate">
         {% block list_view_item_template %}
-            <div class="infinity-card mb-3 p-3">
+            <div class="luminai-card mb-3 p-3">
                 <p class="text-warning">Override list_view_item_template block in {{ entity_name }}/index.html.twig</p>
             </div>
         {% endblock %}
@@ -176,7 +143,7 @@
                 {% block grid_item %}
                     {# Child templates MUST override this block #}
                     <div class="bento-item">
-                        <div class="infinity-card ai-enhanced p-4 h-100">
+                        <div class="luminai-card ai-enhanced p-4 h-100">
                             <p class="text-muted">Override grid_item block in child template</p>
                         </div>
                     </div>
@@ -184,20 +151,13 @@
             {% else %}
                 {% block empty_state %}
                     <div class="bento-item large">
-                        <div class="infinity-card p-5 text-center">
+                        <div class="luminai-card p-5 text-center">
                             <div class="mb-4">
-                                <i class="{{ page_icon|default('bi bi-inbox') }}" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
+                                <i class="{{ page_icon|default('bi bi-inbox') }}" style="font-size: 4rem; color: var(--luminai-text-muted);"></i>
                             </div>
                             <h4 class="text-white mb-3">{{ ('empty.no.' ~ entity_name_plural ~ '.yet')|trans }}</h4>
                             <p class="text-secondary mb-4">{{ ('empty.' ~ entity_name ~ '.description')|trans }}</p>
-                            {% if is_granted(entity_name|upper ~ '_CREATE') %}
-                                <button class="btn infinity-btn-primary btn-lg"
-                                        data-controller="modal-opener"
-                                        data-modal-opener-url-value="{{ path(entity_name ~ '_new') }}"
-                                        data-action="click->modal-opener#open">
-                                    <i class="bi bi-plus-circle me-2"></i>{{ ('button.create.first.' ~ entity_name)|trans }}
-                                </button>
-                            {% endif %}
+                            {{ button_create(path(entity_name ~ '_new'), 'button.create.first.' ~ entity_name, 'messages', null, ('button.create.first.' ~ entity_name)|trans, entity_name|upper ~ '_CREATE', 'lg') }}
                         </div>
                     </div>
                 {% endblock %}
@@ -211,7 +171,7 @@
              class="table-view"
              data-view-toggle-target="tableContainer"
              style="{% if default_view|default('grid') != 'table' %}display: none;{% endif %}">
-            <div class="infinity-card table-card p-4">
+            <div class="luminai-card table-card p-4">
                 <div class="table-responsive">
                     <table id="{{ entity_name_plural }}DataTable" class="table table-hover" style="width:100%">
                         <thead>
@@ -241,7 +201,7 @@
     {% endblock %}
 
     {# Global Pagination/Controls Card - Works for all views #}
-    <div class="infinity-card p-3 mt-3" id="globalViewControls">
+    <div class="luminai-card p-3 mt-3" id="globalViewControls">
         <div class="row align-items-center">
             <div class="col-12 col-md-4">
                 <span class="text-secondary" style="font-size: 0.875rem;" id="viewInfo">
@@ -304,7 +264,7 @@
         overflow: visible !important;
     }
 
-    .list-view .infinity-card {
+    .list-view .luminai-card {
         display: flex;
         flex-direction: column;
         padding: 1.5rem !important;
@@ -317,13 +277,13 @@
         overflow: visible !important;
     }
 
-    .infinity-card {
+    .luminai-card {
         overflow: visible !important;
         position: relative;
     }
 
     /* Special handling for table cards to allow dropdowns to escape */
-    .infinity-card.table-card {
+    .luminai-card.table-card {
         overflow: visible !important;
     }
 
@@ -410,13 +370,13 @@
     }
 
     .table-hover {
-        color: var(--infinity-text-primary) !important;
+        color: var(--luminai-text-primary) !important;
         background: transparent !important;
     }
 
     .table-hover thead th {
-        background: var(--infinity-dark-surface) !important;
-        color: var(--infinity-text-primary) !important;
+        background: var(--luminai-dark-surface) !important;
+        color: var(--luminai-text-primary) !important;
         border-bottom: 2px solid rgba(0, 245, 255, 0.3) !important;
         padding: 1rem !important;
         font-weight: 600;
@@ -432,7 +392,7 @@
         background: transparent !important;
         border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
         padding: 1rem !important;
-        color: var(--infinity-text-primary) !important;
+        color: var(--luminai-text-primary) !important;
         vertical-align: middle;
     }
 
@@ -451,7 +411,7 @@
     }
 
     .dropdown-menu .dropdown-item {
-        color: var(--infinity-text-primary);
+        color: var(--luminai-text-primary);
         padding: 10px 16px;
         border-radius: 8px;
         transition: all 0.2s ease;
@@ -462,7 +422,7 @@
 
     .dropdown-menu .dropdown-item:hover {
         background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
-        color: var(--infinity-text-primary);
+        color: var(--luminai-text-primary);
         transform: translateX(4px);
     }
 
@@ -534,8 +494,8 @@
 
     /* Global Controls Card Styling */
     #globalViewControls {
-        background: var(--infinity-card-bg) !important;
-        border: 1px solid var(--infinity-border-color) !important;
+        background: var(--luminai-card-bg) !important;
+        border: 1px solid var(--luminai-border-color) !important;
     }
 
     [data-theme="light"] #globalViewControls {
@@ -544,9 +504,9 @@
     }
 
     #globalViewControls select.form-select {
-        background: var(--infinity-dark-surface) !important;
+        background: var(--luminai-dark-surface) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        color: var(--infinity-text-primary) !important;
+        color: var(--luminai-text-primary) !important;
         cursor: pointer;
     }
 
@@ -557,9 +517,9 @@
     }
 
     #globalViewControls .pagination .page-link {
-        background: var(--infinity-dark-surface) !important;
+        background: var(--luminai-dark-surface) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        color: var(--infinity-text-primary) !important;
+        color: var(--luminai-text-primary) !important;
         border-radius: 0.375rem;
         margin: 0 0.125rem;
         padding: 0.375rem 0.75rem;
@@ -573,13 +533,13 @@
 
     #globalViewControls .pagination .page-link:hover {
         background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(124, 58, 237, 0.3)) !important;
-        border-color: var(--infinity-neon) !important;
-        color: var(--infinity-neon) !important;
+        border-color: var(--luminai-neon) !important;
+        color: var(--luminai-neon) !important;
     }
 
     #globalViewControls .pagination .page-item.active .page-link {
-        background: var(--infinity-ai-gradient) !important;
-        border-color: var(--infinity-neon) !important;
+        background: var(--luminai-ai-gradient) !important;
+        border-color: var(--luminai-neon) !important;
         color: white !important;
     }
 
@@ -628,7 +588,7 @@
 
     .dataTables_wrapper .dataTables_info,
     .dataTables_wrapper .dataTables_length {
-        color: var(--infinity-text-secondary) !important;
+        color: var(--luminai-text-secondary) !important;
         font-size: 0.875rem;
         display: inline-block;
         margin-right: 1rem;
@@ -658,9 +618,9 @@
 
     /* DataTables Select Control - Theme Responsive */
     .dataTables_wrapper .dataTables_length select {
-        background: var(--infinity-dark-surface) !important;
+        background: var(--luminai-dark-surface) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        color: var(--infinity-text-primary) !important;
+        color: var(--luminai-text-primary) !important;
         border-radius: 0.375rem;
         padding: 0.375rem 0.75rem;
         margin: 0 0.5rem;
@@ -674,9 +634,9 @@
 
     /* DataTables Pagination Buttons - Theme Responsive */
     .dataTables_wrapper .dataTables_paginate .paginate_button {
-        color: var(--infinity-text-primary) !important;
+        color: var(--luminai-text-primary) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        background: var(--infinity-dark-surface) !important;
+        background: var(--luminai-dark-surface) !important;
         border-radius: 0.375rem !important;
         padding: 0.375rem 0.75rem !important;
         margin: 0 0.25rem !important;
@@ -690,13 +650,13 @@
 
     .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
         background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(124, 58, 237, 0.3)) !important;
-        border-color: var(--infinity-neon) !important;
-        color: var(--infinity-neon) !important;
+        border-color: var(--luminai-neon) !important;
+        color: var(--luminai-neon) !important;
     }
 
     .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-        background: var(--infinity-ai-gradient) !important;
-        border-color: var(--infinity-neon) !important;
+        background: var(--luminai-ai-gradient) !important;
+        border-color: var(--luminai-neon) !important;
         color: white !important;
     }
 
@@ -704,9 +664,9 @@
     .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
         opacity: 0.4;
         cursor: not-allowed;
-        background: var(--infinity-dark-surface) !important;
+        background: var(--luminai-dark-surface) !important;
         border-color: rgba(255, 255, 255, 0.1) !important;
-        color: var(--infinity-text-muted) !important;
+        color: var(--luminai-text-muted) !important;
     }
 
     [data-theme="light"] .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
@@ -719,7 +679,7 @@
     /* DataTables Column Filter Inputs - Dark Theme */
     .table-hover thead tr.filters th {
         padding: 0.5rem 1rem !important;
-        background: var(--infinity-dark-surface) !important;
+        background: var(--luminai-dark-surface) !important;
         border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
@@ -728,7 +688,7 @@
         width: 100%;
         background: rgba(255, 255, 255, 0.05) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        color: var(--infinity-text-primary) !important;
+        color: var(--luminai-text-primary) !important;
         border-radius: 0.375rem;
         padding: 0.375rem 0.75rem;
         font-size: 0.875rem;
@@ -739,14 +699,14 @@
     }
 
     .table-hover thead tr.filters th select option {
-        background: var(--infinity-dark-surface) !important;
-        color: var(--infinity-text-primary) !important;
+        background: var(--luminai-dark-surface) !important;
+        color: var(--luminai-text-primary) !important;
     }
 
     .table-hover thead tr.filters th input:focus,
     .table-hover thead tr.filters th select:focus {
         outline: none;
-        border-color: var(--infinity-neon) !important;
+        border-color: var(--luminai-neon) !important;
         box-shadow: 0 0 0 2px rgba(0, 245, 255, 0.1);
     }
 

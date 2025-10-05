@@ -1,0 +1,37 @@
+{#
+/**
+ * Link Secondary Button Template
+ *
+ * Renders a secondary style navigation link button
+ *
+ * @param array config - Button configuration from ButtonConfig
+ * @param string url - Navigation URL
+ * @param string|null translation_key - Translation key
+ * @param string translation_domain - Translation domain (default: 'messages')
+ * @param string|null tooltip - Tooltip text
+ * @param string|null label - Button label (null = icon-only)
+ * @param bool is_granted - Permission check result
+ * @param string size - Size class
+ * @param string|null style - Inline CSS override
+ * @param string|null icon - Icon override
+ */
+#}
+{% set buttonText = translation_key ?? config.default_translation_key %}
+{% set buttonIcon = icon ?? config.default_icon %}
+{% set sizeClass = size ? 'btn-' ~ size : '' %}
+
+{% if is_granted %}
+<a href="{{ url }}"
+   class="{{ config.class }} {{ sizeClass }}"
+   {% if style %}style="{{ style }}"{% endif %}
+   {% if tooltip %}
+       data-bs-toggle="tooltip"
+       data-bs-placement="top"
+       title="{{ tooltip }}"
+   {% endif %}>
+    <i class="{{ buttonIcon }}{% if label is not null %} me-2{% endif %}"></i>
+    {% if label is not null %}
+        {{ buttonText|trans({}, translation_domain) }}
+    {% endif %}
+</a>
+{% endif %}

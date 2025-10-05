@@ -1,0 +1,205 @@
+# Symfony Translations - Português Brasil (Domínio Treeflow)
+# Uso: {{ 'key'|trans({}, 'treeflow') }}
+
+# ================================================================================
+# TreeFlow
+# ================================================================================
+# Ações FewShot
+fewshot.add.example: Adicionar Exemplo
+fewshot.add.first.example: Adicionar Primeiro Exemplo
+# Botão FewShot
+fewshot.button.create.example: Criar Exemplo
+fewshot.confirm.delete: Tem certeza que quer deletar este exemplo?
+fewshot.examples: Exemplos
+# Mensagens Flash FewShot
+fewshot.flash.created.successfully: Exemplo criado com sucesso
+fewshot.flash.deleted.successfully: Exemplo deletado com sucesso
+fewshot.flash.updated.successfully: Exemplo atualizado com sucesso
+fewshot.form.description.placeholder: Descreva o que torna este um bom/mau exemplo
+fewshot.form.name: Nome do Exemplo
+fewshot.form.name.placeholder: Digite o nome do exemplo
+fewshot.form.prompt: Prompt
+fewshot.form.prompt.placeholder: Exemplo de prompt pra IA
+# Formulário FewShot
+fewshot.form.type: Tipo de Exemplo
+fewshot.modal.create.subtitle: Adicionar um exemplo de aprendizado few-shot
+# Modal FewShot
+fewshot.modal.create.title: Criar Novo Exemplo
+fewshot.modal.edit.subtitle: Atualizar configuração do exemplo
+fewshot.plural: Exemplos Few-Shot
+# Exemplos FewShot
+fewshot.singular: Exemplo Few-Shot
+fewshot.type.negative: Negativo
+# Tipos FewShot
+fewshot.type.positive: Positivo
+# Ações Input
+input.add.input: Adicionar Input
+# Botão Input
+input.button.create.input: Criar Input
+input.confirm.delete: Tem certeza que quer deletar este input?
+# Mensagens Flash Input
+input.flash.created.successfully: Input criado com sucesso
+input.flash.deleted.successfully: Input deletado com sucesso
+input.flash.updated.successfully: Input atualizado com sucesso
+# Formulário Input
+input.form.name: Nome do Input
+input.form.name.placeholder: Digite o nome do input
+input.form.prompt: Prompt de Entrada
+input.form.prompt.help: Instruções adicionais ao entrar por este input
+input.form.prompt.placeholder: Contexto adicional ao entrar via este input
+input.form.source: Step de Origem
+input.form.source.help: Qual step pode rotear pra este step (opcional)
+input.form.source.placeholder: Selecione o step que pode rotear pra cá
+input.form.type: Tipo de Entrada
+input.modal.create.subtitle: Defina como este step pode ser acessado
+# Modal Input
+input.modal.create.title: Criar Novo Input
+input.modal.edit.subtitle: Atualizar configuração do input
+input.plural: Inputs
+# Step Input
+input.singular: Input
+input.type.any: Qualquer Status
+# Tipos Input
+input.type.fully.completed: Totalmente Completo
+input.type.not.completed.after.attempts: Não Completo Após Tentativas
+# Ações Output
+output.add.output: Adicionar Output
+# Botão Output
+output.button.create.output: Criar Output
+output.confirm.delete: Tem certeza que quer deletar este output?
+# Mensagens Flash Output
+output.flash.created.successfully: Output criado com sucesso
+output.flash.deleted.successfully: Output deletado com sucesso
+output.flash.updated.successfully: Output atualizado com sucesso
+output.form.conditional: Expressão Condicional
+output.form.conditional.help: 'Defina condições pra este output (regex, palavras-chave ou lógica customizada)'
+output.form.conditional.placeholder: 'Exemplo: regex:/urgente/i ou keywords:alta-prioridade,imediato'
+output.form.description.placeholder: Descreva o que este output representa
+output.form.destination: Step de Destino
+output.form.destination.help: Pra onde rotear quando esta condição for atendida (opcional)
+output.form.destination.placeholder: Selecione pra onde rotear quando esta condição for atendida
+# Formulário Output
+output.form.name: Nome do Output
+output.form.name.placeholder: Digite o nome do output
+output.modal.create.subtitle: Defina uma saída condicional deste step
+# Modal Output
+output.modal.create.title: Criar Novo Output
+output.modal.edit.subtitle: Atualizar configuração do output
+output.plural: Outputs
+# Step Output
+output.singular: Output
+# Ações Question
+question.add.question: Adicionar Pergunta
+# Botão Question
+question.button.create.question: Criar Pergunta
+question.confirm.delete: Tem certeza que quer deletar esta pergunta?
+# Mensagens Flash Question
+question.flash.created.successfully: Pergunta criada com sucesso
+question.flash.deleted.successfully: Pergunta deletada com sucesso
+question.flash.updated.successfully: Pergunta atualizada com sucesso
+question.form.importance: Importância
+question.form.importance.help: 'Classifique de 1 (baixa) a 10 (alta)'
+# Formulário Question
+question.form.name: Nome da Pergunta
+question.form.name.placeholder: Digite o nome da pergunta
+question.form.objective: Objetivo
+question.form.objective.placeholder: O que esta pergunta deve alcançar?
+question.form.prompt: Prompt
+question.form.prompt.placeholder: Instruções pra esta pergunta
+question.importance: Importância
+question.modal.create.subtitle: Adicionar uma nova pergunta a este step
+# Modal Question
+question.modal.create.title: Criar Nova Pergunta
+question.modal.edit.subtitle: Atualizar configuração da pergunta
+question.plural: Perguntas
+question.reorder.error: Falha ao reordenar perguntas
+question.reorder.success: Perguntas reordenadas com sucesso
+question.singular: Pergunta
+step.add.first.step: Adicionar Primeiro Step
+# Ações Step
+step.add.step: Adicionar Step
+# Botão Step
+step.button.create.step: Criar Step
+step.confirm.delete: Tem certeza que quer deletar este step?
+# Step
+step.first: PRIMEIRO
+# Mensagens Flash Step
+step.flash.created.successfully: Step criado com sucesso
+step.flash.deleted.successfully: Step deletado com sucesso
+step.flash.updated.successfully: Step atualizado com sucesso
+step.form.first: Primeiro Step
+step.form.first.help: Marque como ponto de partida do TreeFlow
+step.form.first.warning: Apenas um step pode ser marcado como primeiro. Marcar este step como primeiro vai automaticamente desmarcar outros steps.
+# Formulário Step
+step.form.name: Nome do Step
+step.form.name.placeholder: Digite o nome do step
+step.form.objective: Objetivo
+step.form.objective.placeholder: O que este step deve alcançar?
+step.form.prompt: Prompt
+step.form.prompt.placeholder: Instruções pro agente de IA neste step
+step.modal.create.subtitle: Adicionar um novo step ao TreeFlow
+# Modal Step
+step.modal.create.title: Criar Novo Step
+step.modal.edit.subtitle: Atualizar configuração do step
+step.plural: Steps
+step.singular: Step
+treeflow.add.questions.to.steps: Adicione perguntas aos seus steps pra começar
+treeflow.add.steps.first: Adicione steps primeiro antes de criar perguntas
+treeflow.back.to.list: Voltar pros TreeFlows
+# Botão TreeFlow
+treeflow.button.create.treeflow: Criar TreeFlow
+# Mensagens Flash TreeFlow
+treeflow.flash.created.successfully: TreeFlow "%name%" criado com sucesso (Versão %version%)
+treeflow.flash.deleted.successfully: TreeFlow "%name%" deletado com sucesso
+treeflow.flash.updated.successfully: TreeFlow "%name%" atualizado com sucesso (Versão %version%)
+treeflow.form.active: Ativo
+treeflow.form.active.help: TreeFlows inativos ficam ocultos dos usuários
+# Formulário TreeFlow
+treeflow.form.name: Nome do TreeFlow
+treeflow.form.name.placeholder: Digite o nome do TreeFlow
+treeflow.metadata: Metadados
+treeflow.modal.create.subtitle: Adicionar um novo TreeFlow pra guiar agentes de IA
+# Modal TreeFlow
+treeflow.modal.create.title: Criar Novo TreeFlow
+treeflow.modal.edit.subtitle: Atualizar configuração do TreeFlow
+treeflow.name: Nome
+# TreeFlow Adicional
+treeflow.no.questions: Nenhuma pergunta definida ainda
+treeflow.no.steps: Nenhum step definido ainda
+treeflow.plural: TreeFlows
+treeflow.search.placeholder: Buscar TreeFlows...
+treeflow.singular: TreeFlow
+treeflow.status: Status
+# Status TreeFlow
+treeflow.status.active: Ativo
+treeflow.status.inactive: Inativo
+treeflow.steps: Steps
+treeflow.steps.reorder.error: Falha ao reordenar steps
+# TreeFlow - Mensagens JavaScript
+treeflow.steps.reorder.success: Steps reordenados com sucesso
+treeflow.total.steps: Total de Steps
+treeflow.version: Versão
+
+fewshot.form.description_placeholder: Descreva o que torna este um bom/mau exemplo
+fewshot.form.name_placeholder: Digite o nome do exemplo
+fewshot.form.prompt_placeholder: Exemplo de prompt pra IA
+input.form.name_placeholder: Digite o nome do input
+input.form.prompt_help: Instruções adicionais ao entrar por este input
+input.form.prompt_placeholder: Contexto adicional ao entrar via este input
+input.form.source_help: Qual step pode rotear pra este step (opcional)
+input.form.source_placeholder: Selecione o step que pode rotear pra cá
+output.form.conditional_help: Defina condições pra este output (regex, palavras-chave ou lógica customizada)
+output.form.conditional_placeholder: 'Exemplo: regex:/urgente/i ou keywords:alta-prioridade,imediato'
+output.form.description_placeholder: Descreva o que este output representa
+output.form.destination_help: Pra onde rotear quando esta condição for atendida (opcional)
+output.form.destination_placeholder: Selecione pra onde rotear quando esta condição for atendida
+output.form.name_placeholder: Digite o nome do output
+question.form.name_placeholder: Digite o nome da pergunta
+question.form.objective_placeholder: O que esta pergunta deve alcançar?
+question.form.prompt_placeholder: Instruções pra esta pergunta
+step.form.first_help: Marque como ponto de partida do TreeFlow
+step.form.name_placeholder: Digite o nome do step
+step.form.objective_placeholder: O que este step deve alcançar?
+step.form.prompt_placeholder: Instruções pro agente de IA neste step
+treeflow.form.active_help: TreeFlows inativos ficam ocultos dos usuários
+treeflow.form.name_placeholder: Digite o nome do TreeFlow

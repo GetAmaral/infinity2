@@ -96,7 +96,7 @@ class CourseLectureFormType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => $isEdit ? 'button.update_lecture' : 'button.create_lecture',
                 'attr' => [
-                    'class' => 'btn infinity-btn-primary w-100',
+                    'class' => 'btn luminai-btn-primary w-100',
                     'data-loading-text' => $isEdit ? 'button.updating' : 'button.creating',
                 ],
             ]);

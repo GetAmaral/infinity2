@@ -46,9 +46,9 @@ class UserControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/user');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.infinity-card', 'John Doe');
+        $this->assertSelectorTextContains('.luminai-card', 'John Doe');
         $this->assertStringContainsString($user->getEmail(), $client->getResponse()->getContent());
-        $this->assertSelectorTextContains('.infinity-card', 'User Test Org');
+        $this->assertSelectorTextContains('.luminai-card', 'User Test Org');
 
         // Clean up - clear the entity manager
         $entityManager->clear();
@@ -80,8 +80,8 @@ class UserControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('title', 'Jane Smith');
         $this->assertSelectorTextContains('h1', 'Jane Smith');
-        $this->assertSelectorTextContains('.infinity-card', $user->getEmail());
-        $this->assertSelectorTextContains('.infinity-card', 'Show Test Org');
+        $this->assertSelectorTextContains('.luminai-card', $user->getEmail());
+        $this->assertSelectorTextContains('.luminai-card', 'Show Test Org');
         $this->assertSelectorExists('a[href="/user"]');
 
         // Clean up - clear the entity manager

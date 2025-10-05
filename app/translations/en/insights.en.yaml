@@ -63,7 +63,7 @@ metric.trend.today: +15% today
 # Label for AI interactions metric
 metric.uptime: Uptime
 page.organization.description: Manage your business relationships with AI insights
-page.settings.description: Customize your Infinity experience
+page.settings.description: Customize your Luminai experience
 # Page Descriptions
 page.user.description: AI-powered contact management and relationship insights
 

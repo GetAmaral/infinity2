@@ -43,14 +43,14 @@ final class OrganizationSwitcherController extends AbstractController
     {
         // Validate CSRF token
         if (!$this->isCsrfTokenValid('organization_switch_' . $id, $request->request->get('_token'))) {
-            $this->addFlash('error', $this->translator->trans('organization_switcher.error.invalid_token'));
+            $this->addFlash('error', $this->translator->trans('organization_switcher.error.invalid_token', [], 'organization'));
             return $this->redirectToRoute('app_home');
         }
 
         // Get current user
         $user = $this->getUser();
         if (!$user instanceof User) {
-            $this->addFlash('error', $this->translator->trans('organization_switcher.error.not_logged_in'));
+            $this->addFlash('error', $this->translator->trans('organization_switcher.error.not_logged_in', [], 'organization'));
             return $this->redirectToRoute('app_home');
         }
 
@@ -58,7 +58,7 @@ final class OrganizationSwitcherController extends AbstractController
         $organization = $this->organizationRepository->find($id);
 
         if ($organization === null) {
-            $this->addFlash('error', $this->translator->trans('organization_switcher.error.not_found'));
+            $this->addFlash('error', $this->translator->trans('organization_switcher.error.not_found', [], 'organization'));
             return $this->redirectToRoute('app_home');
         }
 
@@ -71,7 +71,7 @@ final class OrganizationSwitcherController extends AbstractController
 
         $this->addFlash('success', $this->translator->trans('organization_switcher.success.switched', [
             '%name%' => $organization->getName()
-        ]));
+        ], 'organization'));
 
         // Redirect back to referer or home
         $referer = $request->headers->get('referer');
@@ -90,14 +90,14 @@ final class OrganizationSwitcherController extends AbstractController
     {
         // Validate CSRF token
         if (!$this->isCsrfTokenValid('organization_clear', $request->request->get('_token'))) {
-            $this->addFlash('error', $this->translator->trans('organization_switcher.error.invalid_token'));
+            $this->addFlash('error', $this->translator->trans('organization_switcher.error.invalid_token', [], 'organization'));
             return $this->redirectToRoute('app_home');
         }
 
         // Clear organization context
         $this->organizationContext->clearOrganization();
 
-        $this->addFlash('success', $this->translator->trans('organization_switcher.success.cleared'));
+        $this->addFlash('success', $this->translator->trans('organization_switcher.success.cleared', [], 'organization'));
 
         // Redirect back to referer or home
         $referer = $request->headers->get('referer');

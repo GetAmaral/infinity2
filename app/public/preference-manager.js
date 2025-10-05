@@ -1,5 +1,5 @@
 /**
- * Infinity Preference Manager
+ * Luminai Preference Manager
  *
  * SINGLE SOURCE OF TRUTH for all preferences:
  * - UserPreferences (theme, locale, animations, etc.)
@@ -149,7 +149,7 @@
          */
         loadFromLocalStorage() {
             try {
-                const stored = localStorage.getItem('infinity_preferences');
+                const stored = localStorage.getItem('luminai_preferences');
                 if (stored) {
                     this.preferences = JSON.parse(stored);
                     console.log('✅ Loaded from localStorage');
@@ -168,7 +168,7 @@
          */
         saveToLocalStorage() {
             try {
-                localStorage.setItem('infinity_preferences', JSON.stringify(this.preferences));
+                localStorage.setItem('luminai_preferences', JSON.stringify(this.preferences));
             } catch (error) {
                 console.error('❌ Failed to save to localStorage:', error);
             }

@@ -1,0 +1,56 @@
+# Symfony Translations - Português Brasil (Domínio Token)
+# Uso: {{ 'key'|trans({}, 'token') }}
+
+# ================================================================================
+# API Tokens
+# ================================================================================
+token.access.level: Nível de Acesso
+token.active.token: Token Ativo
+token.active.tokens: Tokens Ativos
+# Confirmação de copiado
+token.copied: Copiado
+# Botão copiar
+token.copy: Copiar
+# Aviso de segurança do token
+token.copy.warning: Copie este token agora - você não vai conseguir ver ele de novo
+# Mensagem de erro CSRF
+token.csrf_invalid: Token de segurança inválido
+token.current.token: Token Atual
+token.description: Gerencie seus tokens de acesso à API
+token.expires: Expira
+token.full.api.access: Acesso Completo à API
+# Botão gerar
+token.generate: Gerar Novo Token
+# Status sem token
+# Mensagem de sucesso de geração
+token.generated.successfully: 'Token de API gerado com sucesso!'
+# Título do card de info
+token.info.title: Informações do Token de API
+# Mensagem sem token
+token.no.active.token: Nenhum token ativo
+token.no.token: Sem Token
+# Descrição de acesso completo
+token.regeneration: Regeneração
+token.regeneration.description: Gere um novo token pra substituir o atual
+# Botão revogar
+token.revoke: Revogar Token
+token.revoke.confirm: Tem certeza que quer revogar este token?
+# Mensagem de sucesso de revogação
+token.revoked.successfully: Token de API revogado com sucesso
+# Métrica de tokens ativos
+# Status seguro
+token.secure: Seguro
+token.security.tips: Dicas de Segurança
+token.tip.1: Nunca compartilhe seu token de API publicamente
+token.tip.2: Revogue tokens imediatamente se comprometidos
+token.tip.3: Use variáveis de ambiente pra armazenar tokens em aplicações
+token.tip.4: Regenere tokens periodicamente pra melhor segurança
+token.title: Tokens de API
+# Título da seção de uso
+token.usage.description: Inclua este token no cabeçalho Authorization
+token.usage.instructions: Instruções de Uso
+token.validity.30.days: 30 dias
+token.validity.period: Período de Validade
+# Gerenciamento de Token de API
+token.your.token: Seu Token de API
+

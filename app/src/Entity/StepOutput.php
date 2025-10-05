@@ -35,6 +35,10 @@ class StepOutput extends EntityBase
     #[Groups(['output:read', 'output:write'])]
     protected string $name = '';
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['output:read', 'output:write'])]
+    protected ?string $slug = null;
+
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['output:read', 'output:write'])]
     protected ?string $description = null;
@@ -42,6 +46,10 @@ class StepOutput extends EntityBase
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['output:read', 'output:write'])]
     protected ?string $conditional = null;
+
+    #[ORM\OneToOne(mappedBy: 'sourceOutput', targetEntity: StepConnection::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups(['output:read'])]
+    protected ?StepConnection $connection = null;
 
     public function getStep(): Step
     {
@@ -73,6 +81,17 @@ class StepOutput extends EntityBase
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
         return $this;
     }
 
@@ -112,6 +131,36 @@ class StepOutput extends EntityBase
     public function hasConditional(): bool
     {
         return !empty($this->conditional);
+    }
+
+    public function getConnection(): ?StepConnection
+    {
+        return $this->connection;
+    }
+
+    public function setConnection(?StepConnection $connection): self
+    {
+        // Unset the owning side of the relation if necessary
+        if ($connection === null && $this->connection !== null) {
+            $this->connection->setSourceOutput(null);
+        }
+
+        // Set the owning side of the relation if necessary
+        if ($connection !== null && $connection->getSourceOutput() !== $this) {
+            $connection->setSourceOutput($this);
+        }
+
+        $this->connection = $connection;
+
+        return $this;
+    }
+
+    /**
+     * Check if this output has a connection
+     */
+    public function hasConnection(): bool
+    {
+        return $this->connection !== null;
     }
 
     public function __toString(): string

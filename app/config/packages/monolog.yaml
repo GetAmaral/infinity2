@@ -116,7 +116,7 @@ when@prod:
                 type: syslog
                 level: critical
                 facility: local0
-                ident: infinity_app
+                ident: luminai_app
 
             # Audit events logging with rotation
             audit_file:

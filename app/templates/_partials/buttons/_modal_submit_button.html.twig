@@ -1,0 +1,25 @@
+{#
+/**
+ * Modal Submit Button Template
+ *
+ * Renders a modal form submit button
+ *
+ * @param array config - Button configuration from ButtonConfig
+ * @param bool is_edit - Is edit mode (vs create mode)
+ * @param string|null translation_key - Translation key override
+ * @param string translation_domain - Translation domain (default: 'messages')
+ * @param string|null style - Inline CSS override
+ */
+#}
+{% set buttonIcon = is_edit ? config.icon_edit : config.icon_create %}
+{% set defaultTranslationKey = is_edit ? config.translation_key_edit : config.translation_key_create %}
+{% set buttonText = translation_key ?? defaultTranslationKey %}
+
+<button type="submit"
+        class="{{ config.class }}"
+        {% if style %}style="{{ style }}"{% else %}style="background: linear-gradient(135deg, #22c55e, #16a34a);"{% endif %}
+        data-crud-modal-target="submitButton"
+        data-loading-text="{{ 'button.saving'|trans }}">
+    <i class="{{ buttonIcon }} me-2"></i>
+    {{ buttonText|trans({}, translation_domain) }}
+</button>

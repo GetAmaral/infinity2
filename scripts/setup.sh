@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Setting up Infinity - Modern Symfony UX Application"
+echo "🚀 Setting up Luminai - Modern Symfony UX Application"
 echo "================================================="
 
 # Check requirements
@@ -27,7 +27,7 @@ echo "🗄️ Starting database..."
 docker-compose up -d database
 
 echo "⏳ Waiting for database to be ready..."
-timeout 60 bash -c 'until docker-compose exec -T database pg_isready -U ${POSTGRES_USER:-infinity_user} -d ${POSTGRES_DB:-infinity_db} >/dev/null 2>&1; do sleep 2; done'
+timeout 60 bash -c 'until docker-compose exec -T database pg_isready -U ${POSTGRES_USER:-luminai_user} -d ${POSTGRES_DB:-luminai_db} >/dev/null 2>&1; do sleep 2; done'
 
 # Build and start application
 echo "🏗️ Building and starting application..."

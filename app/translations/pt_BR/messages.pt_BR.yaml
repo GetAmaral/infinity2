@@ -1,0 +1,391 @@
+# Symfony Translations - Português Brasil (Domínio Padrão)
+# Uso: {{ 'key'|trans }}
+
+# ================================================================================
+# Comum
+# ================================================================================
+# Ações comuns
+common.action.view.details: Ver Detalhes
+# Datas comuns
+common.date.today: Hoje
+# Erros comuns
+common.error.invalid.csrf: Token de segurança inválido
+# Labels de formulários comuns
+common.form.description: Descrição
+# Labels comuns
+common.label.actions: Ações
+# Traduções Comuns/Compartilhadas
+# Labels de status comuns
+common.status.active: Ativo
+common.status.inactive: Inativo
+
+# ================================================================================
+# Navegação
+# ================================================================================
+nav.admin.audit.analytics: Analytics de Auditoria
+nav.admin.audit.log: Log de Auditoria
+# Navegação de Admin (base.html.twig)
+nav.admin.section: Admin
+nav.ai.chat: Chat com IA
+nav.analytics: Analytics
+nav.courses: Cursos
+nav.home: Início
+# Navegação
+# Nome da marca na navegação
+nav.brand: Luminai
+nav.language: Idioma
+nav.my.courses: Meus Cursos
+nav.organizations: Organizações
+nav.settings: Configurações
+nav.toggle.navigation: Alternar navegação
+nav.users: Usuários
+
+# ================================================================================
+# Autenticação
+# ================================================================================
+# Botão de criar conta
+auth.already.have.account: Já tem uma conta?
+auth.confirm.password: Confirme a Senha
+auth.create.account: Criar Conta
+auth.create.account.button: Criar Conta
+auth.email: Email
+auth.full.name: Nome Completo
+# Link de registro
+# Título de criar conta
+# Convite para registro
+auth.join.luminai: Entre no Luminai
+# Autenticação
+auth.login: Entrar
+# Mensagem de boas-vindas ao login
+# Instruções de login
+auth.login.to.continue: Faça login pra continuar
+# Link de logout
+auth.logout: Sair
+# Checkbox lembrar-me
+# Botão de login
+auth.no.account: Não tem uma conta?
+auth.password: Senha
+auth.password.requirements: Pelo menos 8 caracteres com letras e números
+# Erro de senha não corresponde
+auth.passwords.do.not.match: As senhas não conferem
+auth.register: Cadastrar
+auth.register.now: Cadastre-se agora
+# Mensagem de erro de registro
+auth.registration.failed: Ops, deu ruim no cadastro. Tenta de novo?
+# Mensagem de sucesso de registro
+auth.registration.successful: 'Cadastro concluído! Agora é só fazer login.'
+auth.remember.me: Lembrar de mim
+# Segurança e Autenticação (Aliases com Notação de Ponto)
+auth.sign.in: Entrar
+auth.welcome.back: Que bom te ver de volta!
+
+# ================================================================================
+# Elementos da Interface
+# ================================================================================
+# Badges de Status
+badge.ai.enhanced: Turbinado com IA
+badge.real.time: Em tempo real
+# Contatos da Organização
+button.add.contact: Adicionar Contato
+button.add.first.contact: Adicionar Primeiro Contato
+button.add.first.lecture: Adicionar Primeira Aula
+button.add.first.module: Adicionar Primeiro Módulo
+button.add.first.user: Adicionar Primeiro Usuário
+# Botões de Curso
+button.add.lecture: Adicionar Aula
+# Botões de Módulo
+button.add.module: Adicionar Módulo
+# Botões
+button.add.organization: Adicionar Organização
+button.add.user: Adicionar Usuário
+button.auto.layout: Layout Automático
+button.call.contact: Ligar pro Contato
+button.cancel: Cancelar
+button.canvas: Canvas
+button.clear.search: Limpar busca
+button.close: Fechar
+button.confirm: Confirmar
+button.create.course: Criar Curso
+button.create.first.organization: Criar Primeira Organização
+button.create.lecture: Criar Aula
+button.create.module: Criar Módulo
+button.create.organization: Criar Organização
+button.create.user: Criar Usuário
+button.creating: Criando...
+button.delete: Deletar
+button.delete.module: Deletar Módulo
+# Botões CRUD
+button.edit: Editar
+# Ações de Usuário
+button.edit.contact: Editar Contato
+button.edit.module: Editar Módulo
+button.filter: Filtrar
+button.fit.to.screen: Ajustar à Tela
+button.list: Lista
+button.refresh: Atualizar Página
+button.zoom.in: Aumentar Zoom
+button.zoom.out: Diminuir Zoom
+# Traduções de Botão Faltantes
+# Label/botão de ações genéricas
+button.remove: Remover
+button.reorder.modules: Reordenar Módulos
+button.reset: Resetar
+button.reset.form: Resetar Formulário
+# Elementos de Formulário
+button.save: Salvar
+button.save.changes: Salvar Alterações
+button.saving: Salvando...
+button.schedule.meeting: Agendar Reunião
+button.send.email: Enviar Email
+button.send.message: Enviar Mensagem
+button.share.contact: Compartilhar Contato
+button.start.ai.chat: Iniciar Chat com IA
+button.update.course: Atualizar Curso
+button.update.lecture: Atualizar Aula
+button.update.module: Atualizar Módulo
+button.update.organization: Atualizar Organização
+button.update.user: Atualizar Usuário
+button.updating: Atualizando...
+button.view: Visualizar
+# Mensagens de Confirmação
+confirm.delete.entity: Tem certeza que quer deletar este item?
+# Mensagens de Confirmação
+confirm.delete.item: 'Tem certeza que quer deletar este item?'
+# Filtros
+filter.active.organizations: Organizações Ativas
+# Traduções de Filtro Faltantes
+filter.active.users: Usuários Ativos
+filter.all: Todos
+filter.by.organization: Por Organização
+filter.empty.organizations: Organizações sem Usuários
+filter.no: Não
+# Filtros e Busca
+filter.yes: Sim
+modal.crud.continue.editing: Continuar Editando
+modal.crud.discard.changes: Descartar Alterações
+modal.crud.error.saving: Ocorreu um erro ao salvar. Tenta de novo?
+# Modal CRUD
+modal.crud.saving: Salvando...
+modal.crud.unsaved.changes: 'Você tem alterações não salvas. Tem certeza que quer descartar?'
+modal.delete.cancel: Cancelar
+modal.delete.cannot.undo: Esta ação não pode ser desfeita.
+modal.delete.confirm.message: Tem certeza que quer deletar
+modal.delete.deleting: Deletando...
+modal.delete.failed: Falha ao deletar item
+modal.delete.network.error: Erro de rede ocorreu
+modal.delete.success: Item deletado com sucesso
+# Modal de Deletar
+modal.delete.title: Confirmar Exclusão
+modal.delete.yes.delete: Sim, Deletar
+# Erros de Abertura de Modal
+modal.error.failed.to.open: Falha ao abrir formulário. Tenta de novo?
+pagination.of: de
+# Paginação (adicional)
+pagination.show: Mostrar
+pagination.show.label: Mostrar
+# Paginação e Tabela
+pagination.showing: Mostrando
+pagination.to: até
+# Erros de Busca
+search.error.failed: Busca falhou. Tenta de novo?
+search.error.failed.to.load: Falha ao carregar dados
+# Status
+status.active: Ativo
+# Status
+status.ai.enhanced: Turbinado com IA
+status.failed: Falhou
+status.pending: Pendente
+status.processing: Processando...
+# Badge de recurso turbinado com IA
+# Indicador de status em tempo real
+status.ready: Pronto
+status.real.time: Tempo real
+table.aria.label: tabela de usuários
+# Elementos de Tabela e Lista
+table.created: Criado
+table.created.by: Criado Por
+# Dica para usuários mobile deslizarem a tabela horizontalmente
+table.swipe.to.see.more: Deslize pra ver mais
+table.updated: Atualizado
+# Upload
+# Upload e Mídia
+upload.video.hint: Envie arquivos de vídeo (MP4, WebM ou AVI)
+# Visualizações
+view.grid: Visualização em Grade
+view.list: Visualização em Lista
+view.table: Visualização em Tabela
+
+# ================================================================================
+# Formulários
+# ================================================================================
+validation:
+  # Validação TreeFlow
+  treeflow:
+    name_too_short: Nome deve ter pelo menos 2 caracteres
+    name_too_long: Nome não pode ter mais de 255 caracteres
+    version_invalid: Versão deve ser um número inteiro positivo
+
+  # Validação de Step
+  step:
+    cannot_delete_first: Não pode deletar o primeiro step
+    objective_too_long: Objetivo não pode ter mais de 1000 caracteres
+
+  # Validação de Question
+  question:
+    importance_range: Importância deve estar entre 1 e 10
+    importance_required: Importância é obrigatória
+    view_order_invalid: Ordem de visualização deve ser um número inteiro positivo
+
+  # Validação de FewShot
+  fewshot:
+
+  # Validação de Output
+  output:
+    destination_required: Step de destino é obrigatório
+    conditional_too_long: Expressão condicional não pode ter mais de 1000 caracteres
+
+  # Validação de Input
+  input:
+    name_required: Nome do input é obrigatório
+    type_required: Tipo de input é obrigatório
+    type_invalid: Tipo de input inválido selecionado
+    prompt_too_long: Prompt não pode ter mais de 1000 caracteres
+
+# Formulário e Validação
+form.validation.errors: Por favor, corrija os erros de validação
+
+# ================================================================================
+# Páginas
+# ================================================================================
+home.description: Uma aplicação Symfony 7.3 enterprise completa, com PostgreSQL 18, Redis 7, FrankenPHP 1.9 e práticas modernas de desenvolvimento.
+home.subtitle: Aplicação Symfony Moderna
+# Página Inicial
+home.title: Bem-vindo ao Luminai
+home.view.organizations: Ver Organizações
+home.view.users: Ver Usuários
+page.ai.powered.crm: Dashboard CRM Turbinado com IA
+page.course.details: Detalhes do Curso
+page.luminai.suffix: Luminai
+page.manage.users: Gerenciar Usuários
+page.organization.description: Gerencie seus relacionamentos de negócios com insights de IA
+page.organization.details: Detalhes da Organização
+page.settings.description: Personalize sua experiência Luminai
+page.treeflow.description: Automação de fluxo de trabalho turbinada com IA e árvores de decisão inteligentes
+page.user.description: Gerenciamento de contatos e insights de relacionamento turbinados com IA
+
+# ================================================================================
+# Diversos
+# ================================================================================
+action.cancel: Cancelar
+action.delete: Deletar
+action.edit: Editar
+# Ações Comuns
+action.save: Salvar
+action.view: Visualizar
+# Navegação Base e Marca
+branding.luminai.crm: Luminai CRM
+developer.message.override.grid.item: Sobrescrever bloco grid_item no template filho
+# Mensagens de Desenvolvedor (para _base_entity_list.html.twig)
+developer.message.override.grid.template: Sobrescrever bloco grid_view_item_template em {entity_name}/index.html.twig
+developer.message.override.list.template: Sobrescrever bloco list_view_item_template em {entity_name}/index.html.twig
+developer.message.override.table.headers: Sobrescrever bloco table_headers
+developer.message.override.table.row: Sobrescrever bloco table_row
+developer.message.override.table.row.template: Sobrescrever bloco table_view_row_template em {entity_name}/index.html.twig
+# Geral/Diversos - Adicional
+general.not.available: N/D
+misc.ai.insights.tooltip: Insights de IA
+misc.coming.soon: Em Breve
+misc.contacts.section: Contatos
+misc.luminai.alt: Logo Luminai
+misc.loading.ellipsis: "..."
+misc.quick.actions.tooltip: Ações Rápidas
+# Elementos de Interface Diversos
+misc.voice.commands: Comandos de Voz
+# Traduções Diversas Faltantes
+# Mensagem de status de espera
+misc.waiting: Aguardando...
+course.title: Cursos
+entity.treeflows: TreeFlows
+organization.title: Organizações
+treeflow.title: TreeFlows
+user.title: Usuários
+ui.account: Conta
+# Indicador de status ativo
+ui.active: Ativo
+# Texto Geral da Interface
+# Abreviação de Inteligência Artificial
+ui.ai: IA
+ui.back.to.dashboard: Voltar pro Dashboard
+ui.dashboard: Dashboard
+
+# ================================================================================
+# Datas e Tempo
+# ================================================================================
+date.format: d/m/Y
+date.relative.days.ago: 2 dias atrás
+date.relative.week.ago: 1 semana atrás
+# Data/Hora Relativa
+date.relative.yesterday: Ontem
+datetime.format: 'd/m/Y H:i'
+time.d.ago: '%count%d atrás'
+time.days.ago: '%count% dia atrás|%count% dias atrás'
+time.week.ago: 1 semana atrás
+# Tempo/Data
+# Referência de tempo hoje
+time.yesterday: Ontem
+# Abreviado: minuto/minutos
+unit.min: min
+# Unidades
+unit.minute: minuto
+unit.minutes: minutos
+
+# ================================================================================
+# Estados Vazios
+# ================================================================================
+empty.contact.description: Comece a construir sua rede adicionando seu primeiro contato. Nossa IA vai te ajudar a gerenciar relacionamentos e fornecer insights valiosos.
+# Título de estado vazio para contatos
+empty.no.contacts.yet: Nenhum contato ainda
+# Estados Vazios
+# Estados Vazios
+empty.no.description: Sem descrição
+# Estados Vazios de Módulo
+empty.no.modules.yet: Nenhum módulo ainda
+empty.no.organization: Sem organização
+# Título de estado vazio para organizações
+empty.no.organizations.yet: Nenhuma Organização Ainda
+# Estados Vazios
+empty.no.users.yet: Nenhum usuário ainda
+empty.organization.contacts.description: Comece a gerenciar seus relacionamentos de negócios adicionando contatos
+empty.organization.description: Comece a construir seus relacionamentos de negócios criando sua primeira organização. Nossa IA vai te ajudar a gerenciar e crescer essas conexões.
+# Traduções de Estado Vazio Faltantes
+empty.organization.users.description: Convide membros da equipe pra colaborar na sua organização
+
+# ================================================================================
+# Internacionalização
+# ================================================================================
+# Nomes de Idiomas
+language.en: English
+# Nome do idioma Português (Brasil)
+language.pt.BR: Português (Brasil)
+
+# ================================================================================
+# Sistema
+# ================================================================================
+debug.init.bootstrap.missing: "[Init] Bootstrap não carregado, pulando inicialização de tooltip"
+# Mensagens de Debug/Console
+debug.init.dom.loaded: "[Init] Conteúdo DOM Carregado"
+debug.init.tooltips.initialized: "[Init] Tooltips inicializados"
+system.database: Banco de Dados
+system.framework: Framework
+system.information: Informações do Sistema
+# Informações do Sistema
+system.performance: Performance do Sistema
+system.runtime: Tempo de Execução
+system.security.message: Todos os sistemas operacionais
+# Status do Sistema
+system.security.status: Status de Segurança
+system.status: Status do Sistema
+system.version: Versão
+
+button.create: Criar
+button.update: Atualizar

@@ -241,3 +241,18 @@ student.watch.progress: Watch Progress
 student.watched: Watched
 student.your.progress: Your Progress
 
+course.form.description_placeholder: Enter course description
+course.form.name_placeholder: Enter course name
+course.form.release_date: Release Date
+course.lecture.form.description_placeholder: Enter lecture description
+course.lecture.form.name_placeholder: Enter lecture name
+course.lecture.form.video_file: Video File
+course.lecture.form.view_order: View Order
+course.lecture.form.view_order_placeholder: Enter display order (e.g., 1, 2, 3)
+course.module.form.active: Active Module
+course.module.form.description: Description
+course.module.form.description_placeholder: Enter module description
+course.module.form.name: Module Name
+course.module.form.name_placeholder: Enter module name
+course.module.form.release_date: Release Date
+course.module.form.view_order: View Order

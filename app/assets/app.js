@@ -15,9 +15,14 @@ const app = startStimulusApp();
 // Disable verbose Stimulus debug logs in console
 app.debug = false;
 
-// Auto-close other card dropdowns when opening a new one
+// Initialize Bootstrap tooltips and auto-close dropdowns
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🎯 Dropdown auto-close handler initialized');
+
+    // Initialize all Bootstrap tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    console.log(`💡 Initialized ${tooltipList.length} Bootstrap tooltips`);
 
     // When a dropdown is about to be shown, close all other card dropdowns
     document.addEventListener('show.bs.dropdown', function(event) {
@@ -45,6 +50,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
+        }
+    });
+});
+
+// Reinitialize tooltips after dynamic content loads (modals, AJAX)
+document.addEventListener('shown.bs.modal', function() {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    [...tooltipTriggerList].forEach(tooltipTriggerEl => {
+        if (!bootstrap.Tooltip.getInstance(tooltipTriggerEl)) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
         }
     });
 });

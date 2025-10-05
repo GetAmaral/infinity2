@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="container-fluid py-4">
-    <div class="infinity-card p-4 mb-4">
+    <div class="luminai-card p-4 mb-4">
         <h1 class="text-gradient mb-0">
             <i class="bi bi-clock-history me-2"></i>{{ 'audit.entity.timeline.title'|trans({}, 'audit') }}
         </h1>
@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <div class="infinity-card p-4">
+    <div class="luminai-card p-4">
         <h5 class="mb-4">
             <i class="bi bi-list-timeline me-2"></i>{{ 'audit.complete.history'|trans({}, 'audit') }}
             <span class="badge bg-primary ms-2">{{ auditLogs|length }} {{ 'audit.event.count'|trans({}, 'audit') }}</span>
@@ -46,7 +46,7 @@
                                 <i class="bi bi-{{ iconClass }} fs-5"></i>
                             </div>
                         </div>
-                        <div class="timeline-content flex-grow-1 infinity-card p-3">
+                        <div class="timeline-content flex-grow-1 luminai-card p-3">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h6 class="text-white mb-0">
                                     {{ log.action|replace({'entity_': '', '_': ' '})|title }}

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Infinity - Comprehensive Test Runner Script
+# Luminai - Comprehensive Test Runner Script
 #
 # AUTOMATICALLY RUNS ALL TESTS FROM /app/tests DIRECTORY
 # - No manual updates needed when new tests are added
@@ -69,7 +69,7 @@ print_header "📋 RUNNING ALL TESTS"
 print_step "Executing PHPUnit test suite..."
 
 # Run tests with detailed output and capture results
-docker run --rm --network=inf_infinity_network \
+docker run --rm --network=inf_luminai_network \
     -v "$(pwd)/app:/app" \
     -w /app \
     inf-app php bin/phpunit \
@@ -84,7 +84,7 @@ if [ $TEST_EXIT_CODE -eq 0 ]; then
     print_header "🎉 ALL TESTS PASSED SUCCESSFULLY!"
 
     # Get dynamic test counts
-    TEST_SUMMARY=$(docker run --rm --network=inf_infinity_network \
+    TEST_SUMMARY=$(docker run --rm --network=inf_luminai_network \
         -v "$(pwd)/app:/app" \
         -w /app \
         inf-app php bin/phpunit --list-tests 2>/dev/null | tail -n 1 || echo "Tests executed successfully")
@@ -125,14 +125,14 @@ print_step "Docker Services Status:"
 docker-compose ps
 
 print_step "Database Connection Test:"
-docker run --rm --network=inf_infinity_network \
+docker run --rm --network=inf_luminai_network \
     -v "$(pwd)/app:/app" \
     -w /app \
     inf-app php bin/console doctrine:query:sql "SELECT version();" \
     2>/dev/null && print_success "Database connection OK" || print_error "Database connection failed"
 
 print_step "Application Health Check:"
-if docker run --rm --network=inf_infinity_network inf-app wget --quiet --spider http://infinity_app:8000/health 2>/dev/null; then
+if docker run --rm --network=inf_luminai_network inf-app wget --quiet --spider http://luminai_app:8000/health 2>/dev/null; then
     print_success "Application health check OK"
 else
     print_error "Application health check failed"

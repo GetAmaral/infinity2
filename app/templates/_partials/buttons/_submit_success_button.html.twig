@@ -1,0 +1,25 @@
+{#
+/**
+ * Submit Success Button Template
+ *
+ * Renders a success submit button
+ *
+ * @param array config - Button configuration from ButtonConfig
+ * @param string|null translation_key - Translation key
+ * @param string translation_domain - Translation domain (default: 'messages')
+ * @param string|null icon - Icon override
+ * @param string size - Size class
+ * @param string|null style - Inline CSS override
+ */
+#}
+{% set buttonText = translation_key ?? config.default_translation_key %}
+{% set buttonIcon = icon ?? config.default_icon %}
+{% set sizeClass = size ? 'btn-' ~ size : '' %}
+
+<button type="submit"
+        class="{{ config.class }} {{ sizeClass }}"
+        {% if style %}style="{{ style }}"{% endif %}
+        data-loading-text="{{ 'button.saving'|trans }}">
+    <i class="{{ buttonIcon }} me-2"></i>
+    {{ buttonText|trans({}, translation_domain) }}
+</button>

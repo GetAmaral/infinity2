@@ -9,9 +9,9 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 5
     reviewers:
-      - "infinity-team"
+      - "luminai-team"
     assignees:
-      - "infinity-team"
+      - "luminai-team"
     commit-message:
       prefix: "composer"
       include: "scope"
@@ -28,9 +28,9 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 3
     reviewers:
-      - "infinity-team"
+      - "luminai-team"
     assignees:
-      - "infinity-team"
+      - "luminai-team"
     commit-message:
       prefix: "docker"
       include: "scope"
@@ -47,9 +47,9 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 2
     reviewers:
-      - "infinity-team"
+      - "luminai-team"
     assignees:
-      - "infinity-team"
+      - "luminai-team"
     commit-message:
       prefix: "docker"
       include: "scope"
@@ -67,9 +67,9 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 3
     reviewers:
-      - "infinity-team"
+      - "luminai-team"
     assignees:
-      - "infinity-team"
+      - "luminai-team"
     commit-message:
       prefix: "ci"
       include: "scope"

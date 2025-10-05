@@ -28,20 +28,20 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         // Create Admin User
         $admin = new User();
         $admin->setName('Admin User');
-        $admin->setEmail('admin@infinity.local');
-        $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin123'));
+        $admin->setEmail('admin@luminai.ai');
+        $admin->setPassword($this->passwordHasher->hashPassword($admin, '1'));
         $admin->setIsVerified(true);
         $admin->addRole($adminRole);
         $admin->generateApiToken(90); // 90 days for admin
         $manager->persist($admin);
 
-        // Acme Corporation Users
-        $acmeOrg = $this->getReference(OrganizationFixtures::ORG_ACME_REFERENCE, Organization::class);
+        // Avelum Organization Users
+        $acmeOrg = $this->getReference(OrganizationFixtures::ORG_AVELUM_REFERENCE, Organization::class);
 
         $acmeManager = new User();
-        $acmeManager->setName('Wile E. Coyote');
-        $acmeManager->setEmail('wile.coyote@acme.corp');
-        $acmeManager->setPassword($this->passwordHasher->hashPassword($acmeManager, 'password123'));
+        $acmeManager->setName('Nicolas Lucano S Amaral');
+        $acmeManager->setEmail('nicolas@avelum.ia.br');
+        $acmeManager->setPassword($this->passwordHasher->hashPassword($acmeManager, '123'));
         $acmeManager->setIsVerified(true);
         $acmeManager->setOrganization($acmeOrg);
         $acmeManager->addRole($managerRole);
@@ -49,21 +49,21 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($acmeManager);
 
         $acmeUsers = [
-            ['Marvin the Martian', 'marvin.martian@acme.corp'],
-            ['Porky Pig', 'porky.pig@acme.corp'],
+            ['Luan Vieira Mendes', 'luan@avelum.ia.br'],
         ];
 
         foreach ($acmeUsers as [$name, $email]) {
             $user = new User();
             $user->setName($name);
             $user->setEmail($email);
-            $user->setPassword($this->passwordHasher->hashPassword($user, 'password123'));
+            $user->setPassword($this->passwordHasher->hashPassword($user, '123'));
             $user->setIsVerified(true);
             $user->setOrganization($acmeOrg);
-            $user->addRole($userRole);
+            $user->addRole($managerRole);
             $manager->persist($user);
         }
 
+        /*
         // Globex Corporation Users
         $globexOrg = $this->getReference(OrganizationFixtures::ORG_GLOBEX_REFERENCE, Organization::class);
 
@@ -75,6 +75,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $globexManager->setOrganization($globexOrg);
         $globexManager->addRole($managerRole);
         $manager->persist($globexManager);
+
 
         $globexUsers = [
             ['Homer Simpson', 'homer.simpson@globex.com'],
@@ -194,6 +195,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user->addRole($userRole);
             $manager->persist($user);
         }
+        */
 
         $manager->flush();
     }

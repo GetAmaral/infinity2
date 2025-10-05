@@ -1,7 +1,7 @@
 framework:
     cache:
         # Unique name for cache key namespacing
-        prefix_seed: infinity_app
+        prefix_seed: luminai_app
 
         # Development uses filesystem cache
         app: cache.adapter.filesystem

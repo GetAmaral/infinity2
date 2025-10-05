@@ -1,14 +1,12 @@
 {% extends 'base.html.twig' %}
 {% import '_macros/organization_logo.html.twig' as org_logo %}
 
-{% block title %}{{ course.name }} - {{ 'course.singular'|trans({}, 'course') }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
+{% block title %}{{ course.name }} - {{ 'course.singular'|trans({}, 'course') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
 <div class="mb-4">
-    <a href="{{ path('course_index') }}" class="btn infinity-btn-ai">
-        <i class="bi bi-arrow-left me-2"></i>{{ 'course.back.to.list'|trans({}, 'course') }}
-    </a>
+    {{ button_back(path('course_index'), 'course.back.to.list', 'course') }}
 </div>
 
 <!-- Course Header -->
@@ -39,26 +37,10 @@
                 {{ modules|length }} {{ 'course.modules'|trans({}, 'course') }} • {{ totalLectures }} {{ 'course.lectures'|trans({}, 'course') }}
             </div>
             {% if is_granted('COURSE_EDIT', course) %}
-                <button type="button"
-                        class="btn infinity-btn-primary btn-sm"
-                        data-controller="modal-opener"
-                        data-modal-opener-url-value="{{ path('course_edit', {id: course.id}) }}"
-                        data-action="click->modal-opener#open"
-                        data-bs-toggle="tooltip"
-                        data-bs-title="{{ 'button.edit'|trans }}">
-                    <i class="bi bi-pencil"></i>
-                </button>
+                {{ button_edit(course.id, path('course_edit', {id: course.id}), permission='COURSE_EDIT') }}
             {% endif %}
             {% if is_granted('COURSE_DELETE', course) %}
-                <button type="button"
-                        class="btn infinity-btn-danger btn-sm"
-                        data-delete-url="{{ path('course_delete', {id: course.id}) }}"
-                        data-entity-name="{{ course.name }}"
-                        data-csrf-token="{{ csrf_token('delete-course-' ~ course.id) }}"
-                        data-bs-toggle="tooltip"
-                        data-bs-title="{{ 'button.delete'|trans }}">
-                    <i class="bi bi-trash"></i>
-                </button>
+                {{ button_delete(course.id, path('course_delete', {id: course.id}), permission='COURSE_DELETE') }}
             {% endif %}
         </div>
     </div>
@@ -92,7 +74,7 @@
 
     <!-- Course Information -->
     <div class="bento-item">
-        <div class="infinity-card ai-enhanced p-4 h-100">
+        <div class="luminai-card ai-enhanced p-4 h-100">
             <div class="d-flex align-items-center mb-3">
                 <i class="bi bi-info-circle text-neon me-2"></i>
                 <h6 class="text-gradient mb-0">{{ 'course.information'|trans({}, 'course') }}</h6>
@@ -123,37 +105,23 @@
          data-module-lecture-reorder-saving-text-value="{{ 'button.saving'|trans }}"
          data-module-lecture-reorder-success-text-value="{{ 'course.lecture.flash.updated.successfully'|trans({}, 'course') }}"
          data-module-lecture-reorder-error-text-value="{{ 'modal.delete.failed'|trans }}">
-        <div class="infinity-card p-4">
+        <div class="luminai-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
                     <i class="bi bi-layers me-2"></i>{{ 'course.modules.and.lectures'|trans({}, 'course') }} ({{ modules|length }} {{ 'course.modules'|trans({}, 'course') }})
                 </h5>
                 {% if is_granted('COURSE_EDIT', course) %}
-                    <button type="button"
-                            class="btn infinity-btn-primary btn-sm"
-                            data-controller="modal-opener"
-                            data-modal-opener-url-value="{{ path('course_module_new', {courseId: course.id}) }}"
-                            data-action="click->modal-opener#open"
-                            data-bs-toggle="tooltip"
-                            data-bs-title="{{ 'button.add.module'|trans }}">
-                        <i class="bi bi-plus-circle"></i>
-                    </button>
+                    {{ button_create(path('course_module_new', {courseId: course.id}), 'button.add.module', 'messages', permission='COURSE_EDIT', size='sm') }}
                 {% endif %}
             </div>
 
             {% if modules is empty %}
                 <div class="text-center py-5">
-                    <i class="bi bi-layers" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
+                    <i class="bi bi-layers" style="font-size: 3rem; color: var(--luminai-text-muted);"></i>
                     <h5 class="text-white mt-3 mb-2">{{ 'empty.no.modules.yet'|trans }}</h5>
                     <p class="text-secondary mb-4">{{ 'empty.course.modules.description'|trans }}</p>
                     {% if is_granted('COURSE_EDIT', course) %}
-                        <button type="button"
-                                class="btn infinity-btn-primary"
-                                data-controller="modal-opener"
-                                data-modal-opener-url-value="{{ path('course_module_new', {courseId: course.id}) }}"
-                                data-action="click->modal-opener#open">
-                            <i class="bi bi-plus-circle me-2"></i>{{ 'button.add.first.module'|trans }}
-                        </button>
+                        {{ button_create(path('course_module_new', {courseId: course.id}), 'button.add.first.module', 'messages', permission='COURSE_EDIT') }}
                     {% endif %}
                 </div>
             {% else %}
@@ -167,7 +135,7 @@
                      data-module-reorder-error-text-value="{{ 'modal.delete.failed'|trans }}">
                     {% for module in modules %}
                         <div class="module-wrapper mb-3" data-module-id="{{ module.id }}" data-module-reorder-target="module">
-                            <div class="accordion-item" style="background: var(--infinity-card-bg); border: 1px solid var(--infinity-border-color); border-radius: 8px; overflow: hidden;">
+                            <div class="accordion-item" style="background: var(--luminai-card-bg); border: 1px solid var(--luminai-border-color); border-radius: 8px; overflow: hidden;">
                                 <h2 class="accordion-header d-flex align-items-center" id="heading-module-{{ module.id }}">
                                     {% if is_granted('COURSE_EDIT', course) %}
                                         <div class="module-drag-handle me-2" title="{{ 'course.module.drag.to.reorder'|trans({}, 'course') }}">
@@ -180,7 +148,7 @@
                                         data-bs-target="#collapse-module-{{ module.id }}"
                                         aria-expanded="true"
                                         aria-controls="collapse-module-{{ module.id }}"
-                                        style="background: var(--infinity-card-bg); color: white; border: none; padding: 1.25rem;">
+                                        style="background: var(--luminai-card-bg); color: white; border: none; padding: 1.25rem;">
                                     <div class="p-2 rounded-3 me-3 module-order-badge" style="background: linear-gradient(135deg, #f59e0b, #d97706); min-width: 48px; display: flex; align-items: center; justify-content: center;">
                                         <span class="text-white fw-bold">{{ module.viewOrder }}</span>
                                     </div>
@@ -199,26 +167,8 @@
                                 </button>
                                 {% if is_granted('COURSE_EDIT', course) %}
                                     <div class="d-flex gap-1 me-3">
-                                        <button type="button"
-                                                class="btn btn-sm infinity-btn-ai"
-                                                data-controller="modal-opener"
-                                                data-modal-opener-url-value="{{ path('course_module_edit', {courseId: course.id, moduleId: module.id}) }}"
-                                                data-action="click->modal-opener#open"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-title="{{ 'button.edit'|trans }}"
-                                                style="min-width: 32px;">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <button type="button"
-                                                class="btn btn-sm infinity-btn-danger"
-                                                data-delete-url="{{ path('course_module_delete', {courseId: course.id, moduleId: module.id}) }}"
-                                                data-entity-name="{{ module.name }}"
-                                                data-csrf-token="{{ csrf_token('delete-module-' ~ module.id) }}"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-title="{{ 'button.delete'|trans }}"
-                                                style="min-width: 32px;">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        {{ button_edit(module.id, path('course_module_edit', {courseId: course.id, moduleId: module.id}), permission='COURSE_EDIT') }}
+                                        {{ button_delete(module.id, path('course_module_delete', {courseId: course.id, moduleId: module.id}), permission='COURSE_DELETE') }}
                                     </div>
                                 {% endif %}
                             </h2>
@@ -240,21 +190,13 @@
                                             <i class="bi bi-collection me-2"></i>{{ 'course.lectures'|trans({}, 'course') }} (<span class="module-lecture-count" data-module-id="{{ module.id }}">{{ module.lectures|length }}</span>)
                                         </h6>
                                         {% if is_granted('COURSE_EDIT', course) %}
-                                            <button type="button"
-                                                    class="btn infinity-btn-primary btn-sm"
-                                                    data-controller="modal-opener"
-                                                    data-modal-opener-url-value="{{ path('course_module_lecture_new', {courseId: course.id, moduleId: module.id}) }}"
-                                                    data-action="click->modal-opener#open"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-title="{{ 'button.add.lecture'|trans }}">
-                                                <i class="bi bi-plus-circle"></i>
-                                            </button>
+                                            {{ button_create(path('course_module_lecture_new', {courseId: course.id, moduleId: module.id}), 'button.add.lecture', 'messages', permission='COURSE_EDIT', size='sm') }}
                                         {% endif %}
                                     </div>
 
                                     {% if module.lectures is empty %}
                                         <!-- Empty State -->
-                                        <div class="module-empty-state infinity-card p-4 text-center" data-module-id="{{ module.id }}">
+                                        <div class="module-empty-state luminai-card p-4 text-center" data-module-id="{{ module.id }}">
                                             <i class="bi bi-collection text-muted" style="font-size: 2.5rem;"></i>
                                             <p class="text-secondary mt-3 mb-0">{{ 'empty.no.lectures.in.module'|trans }}</p>
                                         </div>
@@ -262,7 +204,7 @@
                                         <!-- Lectures List -->
                                         {% for lecture in module.lectures %}
                                             <div class="mb-3 lecture-card-wrapper" data-lecture-id="{{ lecture.id }}">
-                                                <div class="infinity-card p-3 lecture-card">
+                                                <div class="luminai-card p-3 lecture-card">
                                                     <div class="d-flex align-items-start">
                                                         <!-- Drag Handle -->
                                                         <div class="lecture-drag-handle me-2" title="{{ 'course.lecture.drag.to.reorder'|trans({}, 'course') }}">
@@ -337,26 +279,10 @@
                                                         </div>
                                                         <div class="d-flex gap-1">
                                                             {% if is_granted('COURSE_EDIT', course) %}
-                                                                <button type="button"
-                                                                        class="btn btn-sm infinity-btn-ai"
-                                                                        data-controller="modal-opener"
-                                                                        data-modal-opener-url-value="{{ path('course_lecture_edit', {courseId: course.id, lectureId: lecture.id}) }}"
-                                                                        data-action="click->modal-opener#open"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-title="{{ 'button.edit'|trans }}">
-                                                                    <i class="bi bi-pencil"></i>
-                                                                </button>
+                                                                {{ button_edit(lecture.id, path('course_lecture_edit', {courseId: course.id, lectureId: lecture.id}), permission='COURSE_EDIT') }}
                                                             {% endif %}
                                                             {% if is_granted('COURSE_DELETE', course) %}
-                                                                <button type="button"
-                                                                        class="btn btn-sm infinity-btn-danger"
-                                                                        data-delete-url="{{ path('course_lecture_delete', {courseId: course.id, lectureId: lecture.id}) }}"
-                                                                        data-entity-name="{{ lecture.name }}"
-                                                                        data-csrf-token="{{ csrf_token('delete-lecture-' ~ lecture.id) }}"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-title="{{ 'button.delete'|trans }}">
-                                                                    <i class="bi bi-trash"></i>
-                                                                </button>
+                                                                {{ button_delete(lecture.id, path('course_lecture_delete', {courseId: course.id, lectureId: lecture.id}), permission='COURSE_DELETE') }}
                                                             {% endif %}
                                                         </div>
                                                     </div>
@@ -377,13 +303,13 @@
     <!-- Enrolled Students Section (ADMIN and ORGANIZATION_ADMIN) -->
     {% if is_granted('COURSE_MANAGE_ENROLLMENTS', course) %}
     <div class="bento-item large">
-        <div class="infinity-card p-4">
+        <div class="luminai-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
                     <i class="bi bi-people me-2"></i>{{ 'course.enrolled.students'|trans({}, 'course') }} ({{ course.studentCourses|length }})
                 </h5>
                 <button type="button"
-                        class="btn infinity-btn-primary btn-sm"
+                        class="btn luminai-btn-primary btn-sm"
                         data-bs-toggle="modal"
                         data-bs-target="#enrollStudentModal"
                         data-bs-toggle="tooltip"
@@ -394,11 +320,11 @@
 
             {% if course.studentCourses is empty %}
                 <div class="text-center py-5">
-                    <i class="bi bi-people" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
+                    <i class="bi bi-people" style="font-size: 3rem; color: var(--luminai-text-muted);"></i>
                     <h5 class="text-white mt-3 mb-2">{{ 'empty.no.students.enrolled'|trans }}</h5>
                     <p class="text-secondary mb-4">{{ 'empty.course.enrollment.description'|trans }}</p>
                     <button type="button"
-                            class="btn infinity-btn-primary"
+                            class="btn luminai-btn-primary"
                             data-bs-toggle="modal"
                             data-bs-target="#enrollStudentModal">
                         <i class="bi bi-person-plus me-2"></i>{{ 'course.enroll.first.student'|trans({}, 'course') }}
@@ -406,7 +332,7 @@
                 </div>
             {% else %}
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle infinity-table">
+                    <table class="table table-hover align-middle luminai-table">
                         <thead>
                             <tr>
                                 <th><i class="bi bi-person me-2"></i>{{ 'user.name'|trans({}, 'user') }}</th>
@@ -454,7 +380,7 @@
                                               action="{{ path('course_enrollment_toggle', {courseId: course.id, enrollmentId: enrollment.id}) }}">
                                             <input type="hidden" name="_token" value="{{ csrf_token('toggle-enrollment-' ~ enrollment.id) }}">
                                             <button type="submit"
-                                                    class="btn btn-sm {{ enrollment.active ? 'infinity-btn-warning' : 'infinity-btn-success' }}"
+                                                    class="btn btn-sm {{ enrollment.active ? 'luminai-btn-warning' : 'luminai-btn-success' }}"
                                                     data-bs-toggle="tooltip"
                                                     data-bs-title="{{ enrollment.active ? 'course.enrollment.deactivate'|trans({}, 'course') : 'course.enrollment.activate'|trans({}, 'course') }}"
                                                     style="min-width: 32px;">
@@ -466,7 +392,7 @@
                                               onsubmit="return confirm('{{ 'course.enrollment.confirm.remove'|trans({'%student%': enrollment.student.name}) }}');">
                                             <input type="hidden" name="_token" value="{{ csrf_token('remove-enrollment-' ~ enrollment.id) }}">
                                             <button type="submit"
-                                                    class="btn btn-sm infinity-btn-danger"
+                                                    class="btn btn-sm luminai-btn-danger"
                                                     data-bs-toggle="tooltip"
                                                     data-bs-title="{{ 'button.remove'|trans }}"
                                                     style="min-width: 32px;">
@@ -490,7 +416,7 @@
 {% if is_granted('COURSE_MANAGE_ENROLLMENTS', course) %}
 <div class="modal fade" id="enrollStudentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content" style="background: var(--infinity-card-bg); border: 1px solid var(--infinity-border-color);"
+        <div class="modal-content" style="background: var(--luminai-card-bg); border: 1px solid var(--luminai-border-color);"
              data-controller="enrollment-switch"
              data-enrollment-switch-course-id-value="{{ course.id }}"
              data-enrollment-switch-enroll-url-value="{{ path('course_enrollment_add_multi', {courseId: course.id}) }}"
@@ -501,7 +427,7 @@
              data-enrollment-switch-deactivated-text-value="{{ 'course.enrollment.deactivate'|trans({}, 'course') }}"
              data-enrollment-switch-no-changes-text-value="{{ 'modal.crud.unsaved.changes'|trans }}"
              data-enrollment-switch-error-text-value="{{ 'modal.crud.error.saving'|trans }}">
-            <div class="modal-header" style="border-bottom: 1px solid var(--infinity-border-color);">
+            <div class="modal-header" style="border-bottom: 1px solid var(--luminai-border-color);">
                 <h5 class="modal-title text-white">
                     <i class="bi bi-people me-2"></i>{{ 'course.manage.enrollments'|trans({}, 'course') }}
                 </h5>
@@ -509,9 +435,9 @@
             </div>
             <div class="modal-body p-0">
                 <!-- Search Bar -->
-                <div class="p-3 sticky-top" style="background: var(--infinity-card-bg); border-bottom: 1px solid var(--infinity-border-color); z-index: 10;">
+                <div class="p-3 sticky-top" style="background: var(--luminai-card-bg); border-bottom: 1px solid var(--luminai-border-color); z-index: 10;">
                     <div class="input-group">
-                        <span class="input-group-text" style="background: var(--infinity-bg); border-color: var(--infinity-border-color);">
+                        <span class="input-group-text" style="background: var(--luminai-bg); border-color: var(--luminai-border-color);">
                             <i class="bi bi-search text-white"></i>
                         </span>
                         <input type="text"
@@ -519,7 +445,7 @@
                                placeholder="{{ 'course.enrollment.search.by.name'|trans({}, 'course') }}"
                                data-enrollment-switch-target="searchInput"
                                data-action="input->enrollment-switch#search"
-                               style="background: var(--infinity-bg); border-color: var(--infinity-border-color); color: white;">
+                               style="background: var(--luminai-bg); border-color: var(--luminai-border-color); color: white;">
                     </div>
                     <small class="text-muted d-block mt-2">
                         <i class="bi bi-info-circle me-1"></i>{{ 'course.enrollment.switch.hint'|trans({}, 'course') }}
@@ -531,7 +457,7 @@
                     {% set enrolledUserIds = course.studentCourses|filter(sc => sc.active)|map(sc => sc.student.id.toString) %}
                     {% for user in availableUsers %}
                     <div class="list-group-item d-flex justify-content-between align-items-center py-3"
-                         style="background: var(--infinity-card-bg); border-color: var(--infinity-border-color);"
+                         style="background: var(--luminai-card-bg); border-color: var(--luminai-border-color);"
                          data-enrollment-switch-target="userRow"
                          data-user-name="{{ user.name }}">
                         <div class="d-flex align-items-center flex-grow-1">
@@ -568,12 +494,10 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="modal-footer" style="border-top: 1px solid var(--infinity-border-color);">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    {{ 'button.cancel'|trans }}
-                </button>
+            <div class="modal-footer" style="border-top: 1px solid var(--luminai-border-color);">
+                {{ button_modal_cancel() }}
                 <button type="button"
-                        class="btn infinity-btn-primary"
+                        class="btn luminai-btn-primary"
                         data-enrollment-switch-target="confirmButton"
                         data-action="click->enrollment-switch#confirm">
                     <i class="bi bi-check-circle me-2"></i>{{ 'button.confirm'|trans }}
@@ -591,7 +515,7 @@
 }
 
 .accordion-button:not(.collapsed) {
-    background: var(--infinity-card-bg);
+    background: var(--luminai-card-bg);
     color: white;
     box-shadow: none;
 }
@@ -602,7 +526,7 @@
 
 .accordion-button:focus {
     box-shadow: none;
-    border-color: var(--infinity-border-color);
+    border-color: var(--luminai-border-color);
 }
 
 /* Lecture Card Styles */
@@ -616,8 +540,8 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
-/* Danger button matching infinity-btn-ai style */
-.infinity-btn-danger {
+/* Danger button matching luminai-btn-ai style */
+.luminai-btn-danger {
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
     border: 1px solid rgba(239, 68, 68, 0.3);
     color: #ef4444;
@@ -631,7 +555,7 @@
     padding: 0;
 }
 
-.infinity-btn-danger:hover {
+.luminai-btn-danger:hover {
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.25));
     border-color: rgba(239, 68, 68, 0.5);
     color: #ef4444;
@@ -639,8 +563,8 @@
 }
 
 /* Ensure edit button has same fixed size */
-.lecture-card .infinity-btn-ai,
-.accordion-button .infinity-btn-ai {
+.lecture-card .luminai-btn-ai,
+.accordion-button .luminai-btn-ai {
     width: 32px;
     height: 32px;
     display: inline-flex;
@@ -680,7 +604,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--infinity-neon, #00f5ff);
+    background: var(--luminai-neon, #00f5ff);
     border-radius: 2px;
     box-shadow: 0 0 12px rgba(0, 245, 255, 0.6);
     z-index: 10;
@@ -698,7 +622,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--infinity-neon, #00f5ff);
+    background: var(--luminai-neon, #00f5ff);
     border-radius: 2px;
     box-shadow: 0 0 12px rgba(0, 245, 255, 0.6);
     z-index: 10;
@@ -718,7 +642,7 @@
 
 .lectures-drop-zone.drag-over {
     background: rgba(0, 245, 255, 0.08) !important;
-    border: 2px dashed var(--infinity-neon, #00f5ff);
+    border: 2px dashed var(--luminai-neon, #00f5ff);
     border-radius: 8px;
 }
 
@@ -779,7 +703,7 @@
     width: 32px;
     height: 100%;
     min-height: 48px;
-    color: var(--infinity-text-muted, rgba(255, 255, 255, 0.3));
+    color: var(--luminai-text-muted, rgba(255, 255, 255, 0.3));
     cursor: grab;
     transition: all 0.2s ease;
     border-radius: 6px;
@@ -787,13 +711,13 @@
 }
 
 .lecture-drag-handle:hover {
-    color: var(--infinity-neon, #00f5ff);
+    color: var(--luminai-neon, #00f5ff);
     background: rgba(0, 245, 255, 0.1);
 }
 
 .lecture-card-wrapper[draggable="true"]:active .lecture-drag-handle {
     cursor: grabbing;
-    color: var(--infinity-neon, #00f5ff);
+    color: var(--luminai-neon, #00f5ff);
     background: rgba(0, 245, 255, 0.15);
 }
 
@@ -805,7 +729,7 @@
     width: 48px;
     height: 100%;
     min-height: 60px;
-    color: var(--infinity-text-muted, rgba(255, 255, 255, 0.3));
+    color: var(--luminai-text-muted, rgba(255, 255, 255, 0.3));
     cursor: grab;
     transition: all 0.2s ease;
     border-radius: 6px;
@@ -814,13 +738,13 @@
 }
 
 .module-drag-handle:hover {
-    color: var(--infinity-neon, #00f5ff);
+    color: var(--luminai-neon, #00f5ff);
     background: rgba(0, 245, 255, 0.1);
 }
 
 .module-wrapper[draggable="true"]:active .module-drag-handle {
     cursor: grabbing;
-    color: var(--infinity-neon, #00f5ff);
+    color: var(--luminai-neon, #00f5ff);
     background: rgba(0, 245, 255, 0.15);
 }
 
@@ -831,7 +755,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--infinity-neon, #00f5ff);
+    background: var(--luminai-neon, #00f5ff);
     border-radius: 2px;
     box-shadow: 0 0 12px rgba(0, 245, 255, 0.6);
     z-index: 10;
@@ -845,7 +769,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--infinity-neon, #00f5ff);
+    background: var(--luminai-neon, #00f5ff);
     border-radius: 2px;
     box-shadow: 0 0 12px rgba(0, 245, 255, 0.6);
     z-index: 10;
@@ -887,16 +811,16 @@
 }
 
 /* Students Table Styling */
-.infinity-table {
+.luminai-table {
     margin-bottom: 0;
 }
 
-.infinity-table thead tr {
-    border-bottom: 2px solid var(--infinity-border-color);
+.luminai-table thead tr {
+    border-bottom: 2px solid var(--luminai-border-color);
 }
 
-.infinity-table thead th {
-    color: var(--infinity-text-white);
+.luminai-table thead th {
+    color: var(--luminai-text-white);
     font-weight: 600;
     padding: 1rem 0.75rem;
     border: none;
@@ -906,27 +830,27 @@
     letter-spacing: 0.5px;
 }
 
-.infinity-table tbody tr {
+.luminai-table tbody tr {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.2s ease;
 }
 
-.infinity-table tbody tr:hover {
+.luminai-table tbody tr:hover {
     background: rgba(0, 245, 255, 0.03);
 }
 
-.infinity-table tbody tr:last-child {
+.luminai-table tbody tr:last-child {
     border-bottom: none;
 }
 
-.infinity-table tbody td {
+.luminai-table tbody td {
     padding: 1rem 0.75rem;
     border: none;
     vertical-align: middle;
 }
 
 /* Additional Button Styles */
-.infinity-btn-warning {
+.luminai-btn-warning {
     background: linear-gradient(135deg, #f59e0b, #d97706);
     color: white;
     border: none;
@@ -937,14 +861,14 @@
     box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
 }
 
-.infinity-btn-warning:hover {
+.luminai-btn-warning:hover {
     background: linear-gradient(135deg, #d97706, #b45309);
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
     transform: translateY(-1px);
     color: white;
 }
 
-.infinity-btn-success {
+.luminai-btn-success {
     background: linear-gradient(135deg, #10b981, #059669);
     color: white;
     border: none;
@@ -955,7 +879,7 @@
     box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
 
-.infinity-btn-success:hover {
+.luminai-btn-success:hover {
     background: linear-gradient(135deg, #059669, #047857);
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     transform: translateY(-1px);

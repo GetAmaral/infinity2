@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ################################################################################
-# Infinity Messenger Worker - Automated Setup Script
+# Luminai Messenger Worker - Automated Setup Script
 ################################################################################
 #
 # This script automatically configures systemd service for Messenger worker
@@ -24,14 +24,14 @@ NC='\033[0m'
 
 # Configuration
 APP_DIR="/home/user/inf/app"
-SERVICE_NAME="infinity-messenger-worker"
+SERVICE_NAME="luminai-messenger-worker"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
 PHP_BIN="/usr/bin/php"
 
 print_header() {
     echo -e "${BLUE}"
     echo "════════════════════════════════════════════════════════════════"
-    echo "  Infinity Messenger Worker - Automated Setup"
+    echo "  Luminai Messenger Worker - Automated Setup"
     echo "════════════════════════════════════════════════════════════════"
     echo -e "${NC}"
 }
@@ -113,7 +113,7 @@ create_systemd_service() {
 
     cat > "$SERVICE_FILE" << EOF
 [Unit]
-Description=Infinity Messenger Worker - Async Task Processor
+Description=Luminai Messenger Worker - Async Task Processor
 After=network.target postgresql.service
 Documentation=file://$APP_DIR/docs/ASYNC_AUDIT_LOGGING.md
 
@@ -127,7 +127,7 @@ Restart=always
 RestartSec=10
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=infinity-messenger
+SyslogIdentifier=luminai-messenger
 
 # Performance & Security
 LimitNOFILE=65536

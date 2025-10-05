@@ -164,7 +164,7 @@ export default class extends Controller {
         } else {
             this.resultsTarget.innerHTML = organizations.map(org => `
                 <div class="search-result-item p-3 d-flex align-items-center" data-org-id="${org.id}">
-                    <div class="p-2 rounded-3 me-3" style="background: var(--infinity-ai-gradient);">
+                    <div class="p-2 rounded-3 me-3" style="background: var(--luminai-ai-gradient);">
                         <i class="bi bi-building text-white"></i>
                     </div>
                     <div class="flex-grow-1">
@@ -201,9 +201,9 @@ export default class extends Controller {
         if (organizations.length === 0 && this.lastQuery.length >= this.minLengthValue) {
             targetElement.innerHTML = `
                 <div class="bento-item large">
-                    <div class="infinity-card p-5 text-center">
+                    <div class="luminai-card p-5 text-center">
                         <div class="mb-4">
-                            <i class="bi bi-search" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
+                            <i class="bi bi-search" style="font-size: 4rem; color: var(--luminai-text-muted);"></i>
                         </div>
                         <h4 class="text-white mb-3">No organizations found</h4>
                         <p class="text-secondary mb-4">Try adjusting your search terms or <a href="#" onclick="location.reload()" class="text-neon">view all organizations</a>.</p>
@@ -214,10 +214,10 @@ export default class extends Controller {
             // Update grid with filtered results
             targetElement.innerHTML = organizations.map((org, index) => `
                 <div class="bento-item ${index % 3 === 0 ? 'large' : ''}" id="organization-${org.id}">
-                    <div class="infinity-card ai-enhanced p-4 h-100">
+                    <div class="luminai-card ai-enhanced p-4 h-100">
                         <div class="d-flex align-items-start justify-content-between mb-3">
                             <div class="d-flex align-items-center">
-                                <div class="p-2 rounded-3 me-3" style="background: var(--infinity-ai-gradient);">
+                                <div class="p-2 rounded-3 me-3" style="background: var(--luminai-ai-gradient);">
                                     <i class="bi bi-building text-white fs-4"></i>
                                 </div>
                                 <div>
@@ -233,7 +233,7 @@ export default class extends Controller {
                             '<p class="text-muted mb-3 fst-italic">No description</p>'
                         }
                         <div class="d-flex justify-content-end">
-                            <a href="/organization/${org.id}" class="btn btn-sm infinity-btn-primary">
+                            <a href="/organization/${org.id}" class="btn btn-sm luminai-btn-primary">
                                 <i class="bi bi-arrow-right me-1"></i>View Details
                             </a>
                         </div>
@@ -314,7 +314,7 @@ export default class extends Controller {
             z-index: 1000;
             max-height: 400px;
             overflow-y: auto;
-            background: var(--infinity-dark-surface);
+            background: var(--luminai-dark-surface);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 0.375rem;
             margin-top: 0.25rem;

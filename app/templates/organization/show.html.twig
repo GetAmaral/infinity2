@@ -1,21 +1,13 @@
 {% extends 'base.html.twig' %}
 {% import '_macros/organization_logo.html.twig' as org_logo %}
 
-{% block title %}{{ organization.name }} - {{ 'organization.singular'|trans({}, 'organization') }} - {{ 'page.infinity.suffix'|trans }}{% endblock %}
+{% block title %}{{ organization.name }} - {{ 'organization.singular'|trans({}, 'organization') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
 
 {% block body %}
 <!-- Navigation -->
 <div class="mb-4 d-flex gap-2">
-    <a href="{{ path('organization_index') }}" class="btn infinity-btn-ai">
-        <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.list'|trans({}, 'organization') }}
-    </a>
-    <button type="button"
-            class="btn infinity-btn-ai"
-            data-controller="modal-opener"
-            data-modal-opener-url-value="{{ path('organization_edit', {id: organization.id}) }}"
-            data-action="click->modal-opener#open">
-        <i class="bi bi-pencil me-2"></i>{{ 'button.edit'|trans }}
-    </button>
+    {{ button_back(path('organization_index'), 'organization.back.to.list', 'organization') }}
+    {{ button_edit(organization.id, path('organization_edit', {id: organization.id}), 'button.edit') }}
 </div>
 
 <!-- Organization Header -->
@@ -63,7 +55,7 @@
 
     <!-- AI Insights -->
     <div class="bento-item">
-        <div class="infinity-card ai-enhanced p-4 h-100">
+        <div class="luminai-card ai-enhanced p-4 h-100">
             <div class="d-flex align-items-center mb-3">
                 <i class="bi bi-magic text-neon me-2"></i>
                 <h6 class="text-gradient mb-0">{{ 'ai.insights'|trans({}, 'insights') }}</h6>
@@ -78,12 +70,12 @@
 
     <!-- Contacts Section -->
     <div class="bento-item large">
-        <div class="infinity-card p-4">
+        <div class="luminai-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-neon mb-0">
                     <i class="bi bi-people me-2"></i>{{ 'organization.users.in.organization'|trans({}, 'organization') }} ({{ organization.users|length }})
                 </h5>
-                <button class="btn infinity-btn-primary btn-sm">
+                <button class="btn luminai-btn-primary btn-sm">
                     <i class="bi bi-person-plus me-1"></i>{{ 'button.add.contact'|trans }}
                 </button>
             </div>
@@ -92,7 +84,7 @@
                 <div class="row">
                     {% for user in organization.users %}
                         <div class="col-lg-4 col-md-6 mb-3">
-                            <div class="infinity-card p-3">
+                            <div class="luminai-card p-3">
                                 <div class="d-flex align-items-center mb-2">
                                     <div class="p-2 rounded-3 me-3" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
                                         <i class="bi bi-person-circle text-white"></i>
@@ -101,7 +93,7 @@
                                         <h6 class="text-white mb-1">{{ user.name }}</h6>
                                         <small class="text-secondary">{{ user.email }}</small>
                                     </div>
-                                    <a href="{{ path('user_show', {id: user.id}) }}" class="btn btn-sm infinity-btn-ai">
+                                    <a href="{{ path('user_show', {id: user.id}) }}" class="btn btn-sm luminai-btn-ai">
                                         <i class="bi bi-arrow-right"></i>
                                     </a>
                                 </div>
@@ -116,10 +108,10 @@
                 </div>
             {% else %}
                 <div class="text-center py-5">
-                    <i class="bi bi-person-plus" style="font-size: 3rem; color: var(--infinity-text-muted);"></i>
+                    <i class="bi bi-person-plus" style="font-size: 3rem; color: var(--luminai-text-muted);"></i>
                     <h5 class="text-white mt-3 mb-2">{{ 'empty.no.contacts.yet'|trans }}</h5>
                     <p class="text-secondary mb-4">{{ 'empty.organization.contacts.description'|trans }}</p>
-                    <button class="btn infinity-btn-primary">
+                    <button class="btn luminai-btn-primary">
                         <i class="bi bi-person-plus me-2"></i>{{ 'button.add.first.contact'|trans }}
                     </button>
                 </div>

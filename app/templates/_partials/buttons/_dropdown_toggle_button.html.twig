@@ -1,0 +1,27 @@
+{#
+/**
+ * Dropdown Toggle Button Template
+ *
+ * Renders a dropdown menu toggle button (three dots)
+ *
+ * @param array config - Button configuration from ButtonConfig
+ * @param string size - Size class (default: 'sm')
+ * @param string|null tooltip - Tooltip text
+ * @param string|null icon - Icon override
+ */
+#}
+{% set buttonIcon = icon ?? config.default_icon %}
+{% set sizeClass = size ? 'btn-' ~ size : '' %}
+{% set ariaLabel = config.aria_label|trans %}
+
+<button class="{{ config.class }} {{ sizeClass }}"
+        data-bs-toggle="dropdown"
+        aria-label="{{ ariaLabel }}"
+        {% if tooltip %}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="{{ tooltip }}"
+        {% endif %}
+        type="button">
+    <i class="{{ buttonIcon }}"></i>
+</button>

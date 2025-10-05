@@ -66,7 +66,7 @@
 {% block body %}
 <div class="container-fluid py-4">
     {# Header #}
-    <div class="infinity-card p-4 mb-4">
+    <div class="luminai-card p-4 mb-4">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="text-gradient mb-0">
                 <i class="bi bi-graph-up me-2"></i>{{ 'audit.analytics.title'|trans({}, 'audit') }}
@@ -82,25 +82,25 @@
     {# Summary Statistics #}
     <div class="row mb-4">
         <div class="col-md-3">
-            <div class="infinity-card p-4 text-center">
+            <div class="luminai-card p-4 text-center">
                 <h6 class="text-muted mb-2">{{ 'audit.analytics.total.events'|trans({}, 'audit') }}</h6>
                 <h2 class="text-gradient mb-0">{{ metrics.summary.total_events|number_format }}</h2>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="infinity-card p-4 text-center">
+            <div class="luminai-card p-4 text-center">
                 <h6 class="text-muted mb-2">{{ 'common.date.today'|trans }}</h6>
                 <h2 class="text-primary mb-0">{{ metrics.summary.events_today|number_format }}</h2>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="infinity-card p-4 text-center">
+            <div class="luminai-card p-4 text-center">
                 <h6 class="text-muted mb-2">{{ 'audit.analytics.this.week'|trans({}, 'audit') }}</h6>
                 <h2 class="text-success mb-0">{{ metrics.summary.events_week|number_format }}</h2>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="infinity-card p-4 text-center">
+            <div class="luminai-card p-4 text-center">
                 <h6 class="text-muted mb-2">{{ 'audit.analytics.anomalies'|trans({}, 'audit') }}</h6>
                 <h2 class="{{ anomalies|length > 0 ? 'text-danger' : 'text-muted' }} mb-0">
                     {{ anomalies|length }}
@@ -129,7 +129,7 @@
     {# Charts Row #}
     <div class="row mb-4">
         <div class="col-md-6 mb-4">
-            <div class="infinity-card p-4">
+            <div class="luminai-card p-4">
                 <h5 class="mb-3">
                     <i class="bi bi-clock me-2"></i>{{ 'audit.analytics.activity.by.hour'|trans({}, 'audit') }}
                 </h5>
@@ -139,7 +139,7 @@
             </div>
         </div>
         <div class="col-md-6 mb-4">
-            <div class="infinity-card p-4">
+            <div class="luminai-card p-4">
                 <h5 class="mb-3">
                     <i class="bi bi-pie-chart me-2"></i>{{ 'audit.analytics.action.breakdown'|trans({}, 'audit') }}
                 </h5>
@@ -153,7 +153,7 @@
     {# Top Users & Entities Row #}
     <div class="row mb-4">
         <div class="col-md-6 mb-4">
-            <div class="infinity-card p-4">
+            <div class="luminai-card p-4">
                 <h5 class="mb-3">
                     <i class="bi bi-people me-2"></i>{{ 'audit.analytics.top.active.users'|trans({}, 'audit') }}
                 </h5>
@@ -187,7 +187,7 @@
             </div>
         </div>
         <div class="col-md-6 mb-4">
-            <div class="infinity-card p-4">
+            <div class="luminai-card p-4">
                 <h5 class="mb-3">
                     <i class="bi bi-box me-2"></i>{{ 'audit.analytics.most.modified.entities'|trans({}, 'audit') }}
                 </h5>
@@ -225,7 +225,7 @@
     {# Predictions Row #}
     <div class="row">
         <div class="col-md-6 mb-4">
-            <div class="infinity-card p-4">
+            <div class="luminai-card p-4">
                 <h5 class="mb-3">
                     <i class="bi bi-graph-up-arrow me-2"></i>{{ 'audit.analytics.next.week.prediction'|trans({}, 'audit') }}
                 </h5>
@@ -256,7 +256,7 @@
             </div>
         </div>
         <div class="col-md-6 mb-4">
-            <div class="infinity-card p-4">
+            <div class="luminai-card p-4">
                 <h5 class="mb-3">
                     <i class="bi bi-speedometer2 me-2"></i>{{ 'audit.analytics.capacity.recommendation'|trans({}, 'audit') }}
                 </h5>

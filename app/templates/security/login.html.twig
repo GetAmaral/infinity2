@@ -5,15 +5,15 @@
 {% block body %}
 <div class="row justify-content-center mt-5">
     <div class="col-sm-10 col-md-8 col-lg-5">
-        <div class="infinity-card p-4">
+        <div class="luminai-card p-4">
             <div class="text-center mb-4">
                 <div class="d-inline-block mb-3">
-                    <img src="/infinity_logo_sm_dark.png"
-                         alt="{{ 'misc.infinity.alt'|trans }}"
+                    <img src="/luminai_logo_sm_dark.png"
+                         alt="{{ 'misc.luminai.alt'|trans }}"
                          class="login-logo-dark"
                          style="height: 60px; width: auto;">
-                    <img src="/infinity_logo_sm_light.png"
-                         alt="{{ 'misc.infinity.alt'|trans }}"
+                    <img src="/luminai_logo_sm_light.png"
+                         alt="{{ 'misc.luminai.alt'|trans }}"
                          class="login-logo-light"
                          style="height: 60px; width: auto;">
                 </div>
@@ -65,7 +65,7 @@
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                <button type="submit" class="btn infinity-btn-primary w-100 mb-3">
+                <button type="submit" class="btn luminai-btn-primary w-100 mb-3">
                     <i class="bi bi-box-arrow-in-right me-2"></i>{{ 'auth.sign.in'|trans }}
                 </button>
 
@@ -102,26 +102,26 @@
 
 /* Auth form responsive styling */
 .auth-label {
-    color: var(--infinity-text-primary) !important;
+    color: var(--luminai-text-primary) !important;
     font-weight: 500;
 }
 
 .auth-input {
-    background: var(--infinity-card-bg) !important;
+    background: var(--luminai-card-bg) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: var(--infinity-text-primary) !important;
+    color: var(--luminai-text-primary) !important;
     transition: all 0.3s ease;
 }
 
 .auth-input:focus {
-    background: var(--infinity-card-bg) !important;
-    border-color: var(--infinity-neon) !important;
-    color: var(--infinity-text-primary) !important;
+    background: var(--luminai-card-bg) !important;
+    border-color: var(--luminai-neon) !important;
+    color: var(--luminai-text-primary) !important;
     box-shadow: 0 0 0 0.2rem rgba(0, 245, 255, 0.25) !important;
 }
 
 .auth-input::placeholder {
-    color: var(--infinity-text-muted) !important;
+    color: var(--luminai-text-muted) !important;
 }
 
 /* Light theme support */

@@ -63,17 +63,17 @@ export default class extends Controller {
         const modalHtml = `
             <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content infinity-modal-content">
-                        <div class="modal-header border-bottom infinity-modal-header">
+                    <div class="modal-content luminai-modal-content">
+                        <div class="modal-header border-bottom luminai-modal-header">
                             <div class="d-flex align-items-center">
                                 <div class="p-3 rounded-3 me-3" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
                                     <i class="bi bi-exclamation-triangle text-white fs-4"></i>
                                 </div>
-                                <h5 class="modal-title infinity-modal-title mb-0">Cannot Delete Organization</h5>
+                                <h5 class="modal-title luminai-modal-title mb-0">Cannot Delete Organization</h5>
                             </div>
                         </div>
                         <div class="modal-body p-4">
-                            <div class="alert alert-warning border-0 rounded-3 infinity-alert-warning">
+                            <div class="alert alert-warning border-0 rounded-3 luminai-alert-warning">
                                 <div class="d-flex align-items-start">
                                     <i class="bi bi-info-circle me-2 mt-1"></i>
                                     <div>
@@ -86,7 +86,7 @@ export default class extends Controller {
                                 You can view and manage users by clicking the "Manage Users" option in the organization menu.
                             </p>
                         </div>
-                        <div class="modal-footer border-top infinity-modal-footer">
+                        <div class="modal-footer border-top luminai-modal-footer">
                             <button type="button" class="btn btn-modal-primary" data-dismiss-modal>
                                 <i class="bi bi-check-circle me-2"></i>I Understand
                             </button>
@@ -104,17 +104,17 @@ export default class extends Controller {
         const modalHtml = `
             <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content infinity-modal-content">
-                        <div class="modal-header border-bottom infinity-modal-header">
+                    <div class="modal-content luminai-modal-content">
+                        <div class="modal-header border-bottom luminai-modal-header">
                             <div class="d-flex align-items-center">
                                 <div class="p-3 rounded-3 me-3" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
                                     <i class="bi bi-exclamation-triangle text-white fs-4"></i>
                                 </div>
-                                <h5 class="modal-title infinity-modal-title mb-0">Confirm Deletion</h5>
+                                <h5 class="modal-title luminai-modal-title mb-0">Confirm Deletion</h5>
                             </div>
                         </div>
                         <div class="modal-body p-4">
-                            <div class="alert alert-danger border-0 rounded-3 infinity-alert-danger">
+                            <div class="alert alert-danger border-0 rounded-3 luminai-alert-danger">
                                 <div class="d-flex align-items-start">
                                     <i class="bi bi-exclamation-triangle me-2 mt-1"></i>
                                     <div>
@@ -124,7 +124,7 @@ export default class extends Controller {
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer border-top infinity-modal-footer">
+                        <div class="modal-footer border-top luminai-modal-footer">
                             <div class="d-flex gap-2 justify-content-end w-100">
                                 <button type="button" class="btn btn-modal-secondary" data-dismiss-modal>
                                     <i class="bi bi-x-circle me-2"></i>Cancel
@@ -266,66 +266,66 @@ style.textContent = `
     }
 
     /* Modal Content - Theme Responsive */
-    .infinity-modal-content {
-        background: var(--infinity-dark-bg);
+    .luminai-modal-content {
+        background: var(--luminai-dark-bg);
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
 
-    [data-theme="light"] .infinity-modal-content {
+    [data-theme="light"] .luminai-modal-content {
         background: rgba(255, 255, 255, 0.95);
         border: 1px solid rgba(0, 0, 0, 0.1);
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     }
 
     /* Modal Header - Theme Responsive */
-    .infinity-modal-header {
+    .luminai-modal-header {
         border-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    [data-theme="light"] .infinity-modal-header {
+    [data-theme="light"] .luminai-modal-header {
         border-color: rgba(0, 0, 0, 0.1) !important;
     }
 
     /* Modal Footer - Theme Responsive */
-    .infinity-modal-footer {
+    .luminai-modal-footer {
         border-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    [data-theme="light"] .infinity-modal-footer {
+    [data-theme="light"] .luminai-modal-footer {
         border-color: rgba(0, 0, 0, 0.1) !important;
     }
 
     /* Modal Title - Theme Responsive */
-    .infinity-modal-title {
+    .luminai-modal-title {
         color: #ffffff;
     }
 
-    [data-theme="light"] .infinity-modal-title {
+    [data-theme="light"] .luminai-modal-title {
         color: #1a1a1a;
     }
 
     /* Alert Danger - Theme Responsive */
-    .infinity-alert-danger {
+    .luminai-alert-danger {
         background: rgba(239, 68, 68, 0.1);
         border: 1px solid rgba(239, 68, 68, 0.3) !important;
         color: #ef4444;
     }
 
-    [data-theme="light"] .infinity-alert-danger {
+    [data-theme="light"] .luminai-alert-danger {
         background: rgba(220, 38, 38, 0.1);
         border: 1px solid rgba(220, 38, 38, 0.3) !important;
         color: #b91c1c;
     }
 
     /* Alert Warning - Theme Responsive */
-    .infinity-alert-warning {
+    .luminai-alert-warning {
         background: rgba(245, 158, 11, 0.1);
         border: 1px solid rgba(245, 158, 11, 0.3) !important;
         color: #f59e0b;
     }
 
-    [data-theme="light"] .infinity-alert-warning {
+    [data-theme="light"] .luminai-alert-warning {
         background: rgba(217, 119, 6, 0.1);
         border: 1px solid rgba(217, 119, 6, 0.3) !important;
         color: #d97706;
@@ -349,12 +349,12 @@ style.textContent = `
 
     /* Secondary Button - Theme Responsive */
     .btn-modal-secondary {
-        background: var(--infinity-btn-secondary-bg, rgba(255, 255, 255, 0.08));
-        color: var(--infinity-text-primary, rgba(255, 255, 255, 0.9));
+        background: var(--luminai-btn-secondary-bg, rgba(255, 255, 255, 0.08));
+        color: var(--luminai-text-primary, rgba(255, 255, 255, 0.9));
     }
 
     .btn-modal-secondary:hover {
-        background: var(--infinity-btn-secondary-hover, rgba(255, 255, 255, 0.12));
+        background: var(--luminai-btn-secondary-hover, rgba(255, 255, 255, 0.12));
         transform: translateY(-1px);
     }
 

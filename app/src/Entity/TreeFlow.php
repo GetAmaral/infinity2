@@ -64,6 +64,10 @@ class TreeFlow extends EntityBase
     #[Groups(['treeflow:read', 'treeflow:write'])]
     protected bool $active = true;
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['treeflow:read', 'treeflow:write'])]
+    protected ?array $canvasViewState = null;
+
     #[ORM\ManyToOne(targetEntity: Organization::class)]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['treeflow:read'])]
@@ -128,6 +132,17 @@ class TreeFlow extends EntityBase
     public function setActive(bool $active): self
     {
         $this->active = $active;
+        return $this;
+    }
+
+    public function getCanvasViewState(): ?array
+    {
+        return $this->canvasViewState;
+    }
+
+    public function setCanvasViewState(?array $canvasViewState): self
+    {
+        $this->canvasViewState = $canvasViewState;
         return $this;
     }
 

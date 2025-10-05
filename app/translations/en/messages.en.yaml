@@ -32,7 +32,7 @@ nav.courses: Courses
 nav.home: Home
 # Navigation
 # Application brand name in navigation
-nav.infinity: Infinity
+nav.brand: Luminai
 nav.language: Language
 nav.my.courses: My Courses
 nav.organizations: Organizations
@@ -53,7 +53,7 @@ auth.full.name: Full Name
 # Register link text
 # Create account heading
 # Registration invitation
-auth.join.infinity: Join Infinity
+auth.join.luminai: Join Luminai
 # Authentication
 auth.login: Login
 # Login welcome message
@@ -98,8 +98,10 @@ button.add.module: Add Module
 # Buttons
 button.add.organization: Add Organization
 button.add.user: Add User
+button.auto.layout: Auto-Layout
 button.call.contact: Call Contact
 button.cancel: Cancel
+button.canvas: Canvas
 button.clear.search: Clear search
 button.close: Close
 button.confirm: Confirm
@@ -118,7 +120,11 @@ button.edit: Edit
 button.edit.contact: Edit Contact
 button.edit.module: Edit Module
 button.filter: Filter
+button.fit.to.screen: Fit to Screen
+button.list: List
 button.refresh: Refresh Page
+button.zoom.in: Zoom In
+button.zoom.out: Zoom Out
 # Missing Button Translations
 # Generic actions button/label
 button.remove: Remove
@@ -141,8 +147,24 @@ button.update.organization: Update Organization
 button.update.user: Update User
 button.updating: Updating...
 button.view: View
+button.back.to.list: Back to List
+button.create: Create
+button.open: Open
+button.submit: Submit
+button.action: Action
+button.copy: Copy
+button.print: Print
+button.download: Download
+button.activate: Activate
+button.deactivate: Deactivate
+button.danger: Danger Action
 # Confirmation Messages
 confirm.delete.entity: Are you sure you want to delete this item?
+confirm.action: Are you sure you want to perform this action?
+# Error Messages
+error.delete.failed: Failed to delete item
+error.action.failed: Failed to perform action
+error.network: Network error occurred
 # Confirmation Messages
 confirm.delete.item: 'Are you sure you want to delete this item?'
 # Filters
@@ -254,12 +276,18 @@ form.validation.errors: Please fix the validation errors
 home.description: A complete enterprise-ready Symfony 7.3 application featuring PostgreSQL 18, Redis 7, FrankenPHP 1.9, and modern development practices.
 home.subtitle: Modern Symfony Application
 # Home Page
-home.title: Welcome to Infinity
+home.title: Welcome to Luminai
 home.view.organizations: View Organizations
 home.view.users: View Users
-page.infinity.suffix: Infinity
+page.ai.powered.crm: AI-Powered CRM Dashboard
+page.course.details: Course Details
+page.luminai.suffix: Luminai
 page.manage.users: Manage Users
+page.organization.description: Manage your business relationships with AI insights
 page.organization.details: Organization Details
+page.settings.description: Customize your Luminai experience
+page.treeflow.description: AI-powered workflow automation with intelligent decision trees
+page.user.description: AI-powered contact management and relationship insights
 
 # ================================================================================
 # Miscellaneous
@@ -271,7 +299,7 @@ action.edit: Edit
 action.save: Save
 action.view: View
 # Base Navigation & Branding
-branding.infinity.crm: Infinity CRM
+branding.luminai.crm: Luminai CRM
 developer.message.override.grid.item: Override grid_item block in child template
 # Developer Messages (for _base_entity_list.html.twig)
 developer.message.override.grid.template: Override grid_view_item_template block in {entity_name}/index.html.twig
@@ -284,7 +312,7 @@ general.not.available: N/A
 misc.ai.insights.tooltip: AI Insights
 misc.coming.soon: Coming Soon
 misc.contacts.section: Contacts
-misc.infinity.alt: Infinity Logo
+misc.luminai.alt: Luminai Logo
 misc.loading.ellipsis: "..."
 misc.quick.actions.tooltip: Quick Actions
 # Misc UI Elements
@@ -292,6 +320,11 @@ misc.voice.commands: Voice Commands
 # Missing Misc Translations
 # Waiting status message
 misc.waiting: Waiting...
+course.title: Courses
+entity.treeflows: TreeFlows
+organization.title: Organizations
+treeflow.title: TreeFlows
+user.title: Users
 ui.account: Account
 # Active status indicator
 ui.active: Active
@@ -369,4 +402,3 @@ system.security.message: All systems operational
 system.security.status: Security Status
 system.status: System Status
 system.version: Version
-

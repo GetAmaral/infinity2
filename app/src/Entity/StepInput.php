@@ -6,6 +6,8 @@ namespace App\Entity;
 
 use App\Enum\InputType;
 use App\Repository\StepInputRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -40,9 +42,23 @@ class StepInput extends EntityBase
     #[Groups(['input:read', 'input:write'])]
     protected string $name = '';
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['input:read', 'input:write'])]
+    protected ?string $slug = null;
+
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['input:read', 'input:write'])]
     protected ?string $prompt = null;
+
+    #[ORM\OneToMany(mappedBy: 'targetInput', targetEntity: StepConnection::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups(['input:read'])]
+    protected Collection $connections;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->connections = new ArrayCollection();
+    }
 
     public function getStep(): Step
     {
@@ -88,6 +104,17 @@ class StepInput extends EntityBase
         return $this;
     }
 
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
     public function getPrompt(): ?string
     {
         return $this->prompt;
@@ -121,6 +148,41 @@ class StepInput extends EntityBase
     public function acceptsAnyStatus(): bool
     {
         return $this->type === InputType::ANY;
+    }
+
+    /**
+     * @return Collection<int, StepConnection>
+     */
+    public function getConnections(): Collection
+    {
+        return $this->connections;
+    }
+
+    public function addConnection(StepConnection $connection): self
+    {
+        if (!$this->connections->contains($connection)) {
+            $this->connections->add($connection);
+            $connection->setTargetInput($this);
+        }
+        return $this;
+    }
+
+    public function removeConnection(StepConnection $connection): self
+    {
+        if ($this->connections->removeElement($connection)) {
+            if ($connection->getTargetInput() === $this) {
+                $connection->setTargetInput(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Check if this input has any connections
+     */
+    public function hasConnections(): bool
+    {
+        return !$this->connections->isEmpty();
     }
 
     public function __toString(): string

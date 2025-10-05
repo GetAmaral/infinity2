@@ -106,7 +106,7 @@
                                 'style': 'cursor: pointer;'
                             }
                         }) }}
-                        <label class="form-check-label" for="{{ form.active.vars.id }}" style="color: var(--infinity-text-primary); cursor: pointer; margin-left: 0.5rem;">
+                        <label class="form-check-label" for="{{ form.active.vars.id }}" style="color: var(--luminai-text-primary); cursor: pointer; margin-left: 0.5rem;">
                             {{ form_label(form.active) }}
                         </label>
                     </div>
@@ -118,22 +118,8 @@
 
             <!-- Footer -->
             <div class="modal-footer-bar">
-                <button type="button"
-                        class="btn-modal-secondary"
-                        data-action="crud-modal#close">
-                    {{ 'button.cancel'|trans }}
-                </button>
-                <button type="submit"
-                        class="btn-modal-primary"
-                        data-crud-modal-target="submitButton"
-                        style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-                    <i class="bi bi-{{ is_edit ? 'check2' : 'plus-lg' }} me-2"></i>
-                    {% if is_edit %}
-                        {{ 'button.save.changes'|trans }}
-                    {% else %}
-                        {{ 'course.module.button.create.module'|trans({}, 'course') }}
-                    {% endif %}
-                </button>
+                {{ button_modal_cancel() }}
+                {{ button_modal_submit(is_edit, is_edit ? 'button.save.changes' : 'course.module.button.create.module', is_edit ? null : 'course') }}
             </div>
 
         </div>
@@ -152,7 +138,7 @@
     bottom: 0;
     width: 100vw;
     height: 100vh;
-    background: var(--infinity-overlay-bg, rgba(0, 0, 0, 0.85));
+    background: var(--luminai-overlay-bg, rgba(0, 0, 0, 0.85));
     backdrop-filter: blur(8px);
     z-index: 9999;
     display: flex;
@@ -187,10 +173,10 @@
 
 /* Modal Content Box */
 .modal-content-box {
-    background: var(--infinity-card-bg, #1a1a1a);
+    background: var(--luminai-card-bg, #1a1a1a);
     border-radius: 16px;
-    border: 1px solid var(--infinity-border-color, rgba(255, 255, 255, 0.1));
-    box-shadow: 0 25px 80px var(--infinity-shadow, rgba(0, 0, 0, 0.6));
+    border: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.1));
+    box-shadow: 0 25px 80px var(--luminai-shadow, rgba(0, 0, 0, 0.6));
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -200,8 +186,8 @@
 /* Header */
 .modal-header-bar {
     padding: 1.75rem 2rem;
-    border-bottom: 1px solid var(--infinity-border-color, rgba(255, 255, 255, 0.08));
-    background: var(--infinity-modal-header-bg, linear-gradient(135deg, rgba(245, 158, 11, 0.03) 0%, rgba(217, 119, 6, 0.03) 100%));
+    border-bottom: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.08));
+    background: var(--luminai-modal-header-bg, linear-gradient(135deg, rgba(245, 158, 11, 0.03) 0%, rgba(217, 119, 6, 0.03) 100%));
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -222,7 +208,7 @@
 }
 
 .modal-title-text {
-    color: var(--infinity-text-primary, white);
+    color: var(--luminai-text-primary, white);
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
@@ -230,7 +216,7 @@
 }
 
 .modal-subtitle-text {
-    color: var(--infinity-text-secondary, rgba(255, 255, 255, 0.6));
+    color: var(--luminai-text-secondary, rgba(255, 255, 255, 0.6));
     font-size: 0.875rem;
     margin: 0.25rem 0 0 0;
 }
@@ -240,8 +226,8 @@
     height: 40px;
     border-radius: 10px;
     border: none;
-    background: var(--infinity-btn-secondary-bg, rgba(255, 255, 255, 0.08));
-    color: var(--infinity-text-secondary, rgba(255, 255, 255, 0.7));
+    background: var(--luminai-btn-secondary-bg, rgba(255, 255, 255, 0.08));
+    color: var(--luminai-text-secondary, rgba(255, 255, 255, 0.7));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -251,8 +237,8 @@
 }
 
 .modal-close-btn:hover {
-    background: var(--infinity-btn-secondary-hover, rgba(255, 255, 255, 0.15));
-    color: var(--infinity-text-primary, white);
+    background: var(--luminai-btn-secondary-hover, rgba(255, 255, 255, 0.15));
+    color: var(--luminai-text-primary, white);
     transform: rotate(90deg);
 }
 
@@ -273,7 +259,7 @@
 
 .form-label-modern {
     display: block;
-    color: var(--infinity-text-primary, rgba(255, 255, 255, 0.95));
+    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.95));
     font-weight: 600;
     font-size: 0.875rem;
     margin-bottom: 0.625rem;
@@ -282,10 +268,10 @@
 
 .form-input-modern, .form-select-modern {
     width: 100%;
-    background: var(--infinity-input-bg, rgba(255, 255, 255, 0.04));
-    border: 1.5px solid var(--infinity-border-color, rgba(255, 255, 255, 0.12));
+    background: var(--luminai-input-bg, rgba(255, 255, 255, 0.04));
+    border: 1.5px solid var(--luminai-border-color, rgba(255, 255, 255, 0.12));
     border-radius: 10px;
-    color: var(--infinity-text-primary, white);
+    color: var(--luminai-text-primary, white);
     padding: 0.875rem 1.125rem;
     font-size: 1rem;
     transition: all 0.2s;
@@ -294,13 +280,13 @@
 
 .form-input-modern:focus, .form-select-modern:focus {
     outline: none;
-    background: var(--infinity-input-focus-bg, rgba(255, 255, 255, 0.06));
+    background: var(--luminai-input-focus-bg, rgba(255, 255, 255, 0.06));
     border-color: #f59e0b;
     box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.08);
 }
 
 .form-input-modern::placeholder {
-    color: var(--infinity-text-muted, rgba(255, 255, 255, 0.3));
+    color: var(--luminai-text-muted, rgba(255, 255, 255, 0.3));
 }
 
 .input-error {
@@ -329,7 +315,7 @@
     width: 3rem;
     height: 1.5rem;
     background-color: rgba(255, 255, 255, 0.1);
-    border: 1.5px solid var(--infinity-border-color, rgba(255, 255, 255, 0.12));
+    border: 1.5px solid var(--luminai-border-color, rgba(255, 255, 255, 0.12));
 }
 
 .form-check-input:checked {
@@ -343,7 +329,7 @@
 }
 
 .form-check-label {
-    color: var(--infinity-text-primary, rgba(255, 255, 255, 0.9));
+    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.9));
     font-size: 0.9375rem;
     margin: 0;
 }
@@ -351,8 +337,8 @@
 /* Footer */
 .modal-footer-bar {
     padding: 1.5rem 2rem;
-    border-top: 1px solid var(--infinity-border-color, rgba(255, 255, 255, 0.08));
-    background: var(--infinity-modal-footer-bg, rgba(0, 0, 0, 0.2));
+    border-top: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.08));
+    background: var(--luminai-modal-footer-bg, rgba(0, 0, 0, 0.2));
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
@@ -374,12 +360,12 @@
 }
 
 .btn-modal-secondary {
-    background: var(--infinity-btn-secondary-bg, rgba(255, 255, 255, 0.08));
-    color: var(--infinity-text-primary, rgba(255, 255, 255, 0.9));
+    background: var(--luminai-btn-secondary-bg, rgba(255, 255, 255, 0.08));
+    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.9));
 }
 
 .btn-modal-secondary:hover {
-    background: var(--infinity-btn-secondary-hover, rgba(255, 255, 255, 0.12));
+    background: var(--luminai-btn-secondary-hover, rgba(255, 255, 255, 0.12));
     transform: translateY(-1px);
 }
 

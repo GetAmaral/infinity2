@@ -45,7 +45,7 @@
         <button class="btn btn-sm btn-outline-light" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-three-dots-vertical"></i>
         </button>
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="background: var(--infinity-dark-surface);">
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="background: var(--luminai-dark-surface);">
             <li>
                 <a class="dropdown-item" href="{{ path('user_show', {id: user.id}) }}">
                     <i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}
@@ -85,7 +85,7 @@
 {% block body %}
 <!-- Navigation -->
 <div class="mb-4">
-    <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn infinity-btn-ai">
+    <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn luminai-btn-ai">
         <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.organization'|trans({}, 'organization') }}
     </a>
 </div>
@@ -103,7 +103,7 @@
         <div class="d-flex gap-2">
             {% if is_granted('USER_CREATE') %}
                 <button type="button"
-                        class="btn infinity-btn-primary"
+                        class="btn luminai-btn-primary"
                         data-controller="modal-opener"
                         data-modal-opener-url-value="{{ path('user_new') }}"
                         data-action="click->modal-opener#open">
@@ -154,7 +154,7 @@
         {% if users is not empty %}
             {% for user in users %}
                 <div class="bento-item" id="user-{{ user.id }}">
-                    <div class="infinity-card ai-enhanced p-4 h-100">
+                    <div class="luminai-card ai-enhanced p-4 h-100">
                         <div class="d-flex align-items-start mb-3">
                             <div class="user-actions me-3">
                                 {{ macros.userActions(user, true) }}
@@ -182,13 +182,13 @@
             {% endfor %}
         {% else %}
             <div class="bento-item large">
-                <div class="infinity-card p-5 text-center">
-                    <i class="bi bi-person-plus" style="font-size: 4rem; color: var(--infinity-text-muted);"></i>
+                <div class="luminai-card p-5 text-center">
+                    <i class="bi bi-person-plus" style="font-size: 4rem; color: var(--luminai-text-muted);"></i>
                     <h3 class="text-white mt-4 mb-3">{{ 'empty.no.users.yet'|trans }}</h3>
                     <p class="text-secondary mb-4">{{ 'empty.organization.users.description'|trans }}</p>
                     {% if is_granted('USER_CREATE') %}
                         <button type="button"
-                                class="btn infinity-btn-primary"
+                                class="btn luminai-btn-primary"
                                 data-controller="modal-opener"
                                 data-modal-opener-url-value="{{ path('user_new') }}"
                                 data-action="click->modal-opener#open">
@@ -204,7 +204,7 @@
     <div id="users-table"
          class="table-view"
          data-view-toggle-target="tableContainer">
-        <div class="infinity-card table-card p-4">
+        <div class="luminai-card table-card p-4">
             <div class="table-responsive">
                 <table id="usersDataTable" class="table table-hover" style="width:100%">
                     <thead>
@@ -242,7 +242,7 @@
 
 <!-- Statistics Card -->
 <div class="mt-4">
-    <div class="infinity-card p-4">
+    <div class="luminai-card p-4">
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h6 class="text-neon mb-2">
@@ -255,7 +255,7 @@
                     </div>
                 </div>
             </div>
-            <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn infinity-btn-ai">
+            <a href="{{ path('organization_show', {id: organization.id}) }}" class="btn luminai-btn-ai">
                 <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.details'|trans({}, 'organization') }}
             </a>
         </div>
@@ -292,7 +292,7 @@
     overflow: visible !important;
 }
 
-.list-view .infinity-card {
+.list-view .luminai-card {
     display: flex;
     flex-direction: column;
     padding: 1.5rem !important;
@@ -305,20 +305,20 @@
     overflow: visible !important;
 }
 
-.infinity-card {
+.luminai-card {
     overflow: visible !important;
     position: relative;
 }
 
-.infinity-card.table-card {
+.luminai-card.table-card {
     overflow: visible !important;
 }
 
-.infinity-card .dropdown {
+.luminai-card .dropdown {
     position: static !important;
 }
 
-.infinity-card .dropdown-menu {
+.luminai-card .dropdown-menu {
     position: absolute !important;
     z-index: 1060 !important;
     will-change: transform;
@@ -342,13 +342,13 @@
 }
 
 .table-hover {
-    color: var(--infinity-text-primary) !important;
+    color: var(--luminai-text-primary) !important;
     background: transparent !important;
 }
 
 .table-hover thead th {
-    background: var(--infinity-dark-surface) !important;
-    color: var(--infinity-text-primary) !important;
+    background: var(--luminai-dark-surface) !important;
+    color: var(--luminai-text-primary) !important;
     border-bottom: 2px solid rgba(0, 245, 255, 0.3) !important;
     padding: 1rem !important;
     font-weight: 600;
@@ -364,7 +364,7 @@
     background: transparent !important;
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
     padding: 1rem !important;
-    color: var(--infinity-text-primary) !important;
+    color: var(--luminai-text-primary) !important;
     vertical-align: middle;
 }
 
@@ -383,7 +383,7 @@
 }
 
 .dropdown-menu .dropdown-item {
-    color: var(--infinity-text-primary);
+    color: var(--luminai-text-primary);
     padding: 10px 16px;
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -394,7 +394,7 @@
 
 .dropdown-menu .dropdown-item:hover {
     background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
-    color: var(--infinity-text-primary);
+    color: var(--luminai-text-primary);
     transform: translateX(4px);
 }
 

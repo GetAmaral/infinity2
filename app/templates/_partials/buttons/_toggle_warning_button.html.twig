@@ -1,0 +1,48 @@
+{#
+/**
+ * Toggle Warning Button Template
+ *
+ * Renders a warning toggle button (deactivate state)
+ *
+ * @param array config - Button configuration from ButtonConfig
+ * @param string url - Toggle action URL
+ * @param bool is_active - Current state
+ * @param string|null active_translation_key - Active state translation key
+ * @param string|null inactive_translation_key - Inactive state translation key
+ * @param string translation_domain - Translation domain (default: 'messages')
+ * @param string|null tooltip - Tooltip text
+ * @param string|null label - Button label (null = icon-only)
+ * @param bool is_granted - Permission check result
+ * @param string size - Size class
+ * @param string|null confirm_key - Confirmation message key
+ */
+#}
+{% set buttonText = active_translation_key ?? config.default_translation_key %}
+{% set buttonIcon = config.default_icon %}
+{% set sizeClass = size ? 'btn-' ~ size : '' %}
+
+{% if is_granted %}
+<button type="button"
+        class="{{ config.class }} {{ sizeClass }}"
+        onclick="{% if confirm_key %}if(confirm('{{ confirm_key|trans({}, translation_domain) }')){{% endif %}
+            fetch('{{ url }}', {method:'POST'})
+            .then(response => {
+                if(response.ok) {
+                    location.reload();
+                } else {
+                    alert('{{ 'error.action.failed'|trans }}');
+                }
+            })
+            .catch(() => alert('{{ 'error.network'|trans }}'));
+        {% if confirm_key %}}{% endif %}"
+        {% if tooltip %}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="{{ tooltip }}"
+        {% endif %}>
+    <i class="{{ buttonIcon }}{% if label is not null %} me-2{% endif %}"></i>
+    {% if label is not null %}
+        {{ buttonText|trans({}, translation_domain) }}
+    {% endif %}
+</button>
+{% endif %}

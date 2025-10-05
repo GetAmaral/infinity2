@@ -148,7 +148,7 @@ class UserFormType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => $isEdit ? 'button.update_user' : 'button.create_user',
                 'attr' => [
-                    'class' => 'btn infinity-btn-primary w-100',
+                    'class' => 'btn luminai-btn-primary w-100',
                     'data-loading-text' => $isEdit ? 'button.updating' : 'button.creating',
                 ],
             ]);
