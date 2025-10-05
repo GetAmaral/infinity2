@@ -58,6 +58,7 @@ input.modal.edit.subtitle: Update input configuration
 input.plural: Inputs
 # Step Input
 input.singular: Input
+input.default.name: Default input
 input.type.any: Any Status
 # Input Types
 input.type.fully.completed: Fully Completed
@@ -88,6 +89,7 @@ output.modal.edit.subtitle: Update output configuration
 output.plural: Outputs
 # Step Output
 output.singular: Output
+output.default.name: Default output
 # Question Actions
 question.add.question: Add Question
 # Question Button

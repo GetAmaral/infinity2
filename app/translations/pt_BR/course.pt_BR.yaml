@@ -4,6 +4,8 @@
 # ================================================================================
 # Course
 # ================================================================================
+course.title: Curso
+course.plural: Cursos
 certificate.back.to.course: Voltar pro Curso
 certificate.completion.date: Data de Conclusão
 certificate.course.duration: Duração do Curso
@@ -180,7 +182,6 @@ course.status: Status
 # Número de alunos inscritos
 course.students: Alunos
 # Traduções de Curso
-course.title: Cursos
 course.total.duration: Duração Total
 course.total.lectures: Total de Aulas
 course.total.length: Duração Total

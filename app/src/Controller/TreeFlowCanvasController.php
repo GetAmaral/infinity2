@@ -16,6 +16,7 @@ use App\Security\Voter\TreeFlowVoter;
 use App\Service\StepConnectionValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
@@ -324,14 +325,15 @@ final class TreeFlowCanvasController extends AbstractController
     }
 
     /**
-     * Auto-create input for a step when dragging connection to empty step
-     * POST /treeflow/{id}/step/{stepId}/input/auto
+     * Auto-create default output for a step (continuation lines feature)
+     * POST /treeflow/{id}/step/{stepId}/output/auto
      */
-    #[Route('/{id}/step/{stepId}/input/auto', name: 'treeflow_input_auto_create', methods: ['POST'])]
-    public function autoCreateInput(
+    #[Route('/{id}/step/{stepId}/output/auto', name: 'treeflow_output_auto_create', methods: ['POST'])]
+    public function autoCreateOutput(
         #[MapEntity(id: 'id')] TreeFlow $treeFlow,
         #[MapEntity(id: 'stepId')] Step $step,
-        Request $request
+        Request $request,
+        TranslatorInterface $translator
     ): JsonResponse
     {
         $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
@@ -346,11 +348,71 @@ final class TreeFlowCanvasController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        // Generate smart input name
-        $inputName = $this->generateInputName(
-            $data['outputName'] ?? null,
-            $data['sourceStepName'] ?? null
+        // Get translated name from translation key or use default
+        $outputName = $translator->trans(
+            $data['name'] ?? 'output.default.name',
+            [],
+            $data['translationDomain'] ?? 'treeflow'
         );
+
+        // Create new output
+        $output = new StepOutput();
+        $output->setStep($step);
+        $output->setName($outputName);
+        // Note: No destination step initially, will be set when connection is created
+
+        $this->entityManager->persist($output);
+        $this->entityManager->flush();
+
+        return $this->json([
+            'success' => true,
+            'output' => [
+                'id' => $output->getId()?->toString(),
+                'name' => $output->getName(),
+                'stepId' => $step->getId()?->toString(),
+            ],
+        ]);
+    }
+
+    /**
+     * Auto-create input for a step when dragging connection to empty step
+     * POST /treeflow/{id}/step/{stepId}/input/auto
+     */
+    #[Route('/{id}/step/{stepId}/input/auto', name: 'treeflow_input_auto_create', methods: ['POST'])]
+    public function autoCreateInput(
+        #[MapEntity(id: 'id')] TreeFlow $treeFlow,
+        #[MapEntity(id: 'stepId')] Step $step,
+        Request $request,
+        TranslatorInterface $translator
+    ): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
+
+        // Verify step belongs to treeflow
+        if ($step->getTreeFlow()->getId() !== $treeFlow->getId()) {
+            return $this->json([
+                'success' => false,
+                'error' => 'Step does not belong to this TreeFlow',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        // Check if we have a translation key (continuation feature) or smart name generation (drag-drop feature)
+        if (isset($data['name']) && isset($data['translationDomain'])) {
+            // Use translation key (from continuation feature)
+            $inputName = $translator->trans(
+                $data['name'],
+                [],
+                $data['translationDomain']
+            );
+        } else {
+            // Generate smart input name (from drag-drop feature)
+            $inputName = $this->generateInputName(
+                $data['outputName'] ?? null,
+                $data['sourceStepName'] ?? null
+            );
+        }
 
         // Create new input with type ANY
         $input = new StepInput();
@@ -372,6 +434,148 @@ final class TreeFlowCanvasController extends AbstractController
                 'stepId' => $step->getId()?->toString(),
             ],
         ]);
+    }
+
+    /**
+     * Create step via continuation line (n8n pattern)
+     * POST /treeflow/{id}/continuation/create-step
+     */
+    #[Route('/{id}/continuation/create-step', name: 'treeflow_continuation_create_step', methods: ['POST'])]
+    public function createStepViaContinuation(
+        #[MapEntity(id: 'id')] TreeFlow $treeFlow,
+        Request $request,
+        TranslatorInterface $translator
+    ): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
+
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['sourceStepId'])) {
+            return $this->json([
+                'success' => false,
+                'error' => 'Missing sourceStepId',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $sourceStep = $this->stepRepository->find($data['sourceStepId']);
+        if (!$sourceStep || $sourceStep->getTreeFlow()->getId() !== $treeFlow->getId()) {
+            return $this->json([
+                'success' => false,
+                'error' => 'Source step not found or does not belong to this TreeFlow',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        // Determine source output
+        $sourceOutput = null;
+        $outputCreated = false;
+
+        if (isset($data['sourceOutputId']) && $data['sourceOutputId']) {
+            // + was clicked on existing output
+            $sourceOutput = $this->outputRepository->find($data['sourceOutputId']);
+            if (!$sourceOutput || $sourceOutput->getStep()->getId() !== $sourceStep->getId()) {
+                return $this->json([
+                    'success' => false,
+                    'error' => 'Source output not found or does not belong to source step',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } else {
+            // + was clicked on step itself - create default output
+            $outputName = $translator->trans('output.default.name', [], 'treeflow');
+            $sourceOutput = new StepOutput();
+            $sourceOutput->setStep($sourceStep);
+            $sourceOutput->setName($outputName);
+            $this->entityManager->persist($sourceOutput);
+            $outputCreated = true;
+        }
+
+        // Create new step
+        $newStep = new Step();
+        $newStep->setTreeFlow($treeFlow);
+        $newStep->setName($data['name'] ?? 'New Step');
+        $newStep->setObjective($data['objective'] ?? '');
+
+        // Calculate position: 1.5x step width to the right of source step
+        $stepWidth = 280; // Standard step width from CSS
+        $newStep->setPositionX($sourceStep->getPositionX() + $stepWidth + ($stepWidth / 2));
+        $newStep->setPositionY($sourceStep->getPositionY());
+
+        $this->entityManager->persist($newStep);
+
+        // Create default input on new step
+        $inputName = $this->generateInputName(
+            $sourceOutput->getName(),
+            $sourceStep->getName()
+        );
+
+        $newInput = new StepInput();
+        $newInput->setStep($newStep);
+        $newInput->setName($inputName);
+        $newInput->setType(\App\Enum\InputType::ANY);
+
+        $this->entityManager->persist($newInput);
+
+        // Create connection
+        $connection = new StepConnection();
+        $connection->setSourceOutput($sourceOutput);
+        $connection->setTargetInput($newInput);
+
+        $user = $this->getUser();
+        if ($user && $user->getOrganization()) {
+            $connection->setOrganization($user->getOrganization());
+        }
+
+        $this->entityManager->persist($connection);
+
+        // Flush all changes
+        $this->entityManager->flush();
+
+        // Build response
+        $response = [
+            'success' => true,
+            'step' => [
+                'id' => $newStep->getId()?->toString(),
+                'name' => $newStep->getName(),
+                'objective' => $newStep->getObjective(),
+                'positionX' => $newStep->getPositionX(),
+                'positionY' => $newStep->getPositionY(),
+                'inputs' => [
+                    [
+                        'id' => $newInput->getId()?->toString(),
+                        'name' => $newInput->getName(),
+                        'type' => $newInput->getType()->value,
+                    ]
+                ],
+                'outputs' => [],
+            ],
+            'connection' => [
+                'id' => $connection->getId()?->toString(),
+                'sourceOutput' => [
+                    'id' => $sourceOutput->getId()?->toString(),
+                    'name' => $sourceOutput->getName(),
+                    'stepId' => $sourceStep->getId()?->toString(),
+                    'stepName' => $sourceStep->getName(),
+                ],
+                'targetInput' => [
+                    'id' => $newInput->getId()?->toString(),
+                    'name' => $newInput->getName(),
+                    'stepId' => $newStep->getId()?->toString(),
+                    'stepName' => $newStep->getName(),
+                    'type' => $newInput->getType()->value,
+                ],
+            ],
+        ];
+
+        // If output was created, include it in response
+        if ($outputCreated) {
+            $response['outputCreated'] = [
+                'id' => $sourceOutput->getId()?->toString(),
+                'name' => $sourceOutput->getName(),
+                'stepId' => $sourceStep->getId()?->toString(),
+            ];
+        }
+
+        return $this->json($response);
     }
 
     /**

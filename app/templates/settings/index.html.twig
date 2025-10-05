@@ -160,6 +160,51 @@
         </div>
     </div>
 
+    <!-- Session Management -->
+    <div class="bento-item">
+        <div class="luminai-card p-4 h-100">
+            <div class="mb-4">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-clock-history text-neon fs-4 me-3"></i>
+                    <h5 class="text-white mb-0">{{ 'settings.session.management'|trans }}</h5>
+                </div>
+
+                <div class="space-y-3">
+                    <!-- Sound Alerts -->
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="session_sound_enabled" data-preference="session_sound_enabled" checked>
+                        <label class="form-check-label text-secondary" for="session_sound_enabled">
+                            <i class="bi bi-volume-up me-1"></i>{{ 'settings.session.sound.alerts'|trans }}
+                        </label>
+                        <div class="text-muted small mt-1">{{ 'settings.session.sound.alerts.help'|trans }}</div>
+                    </div>
+
+                    <!-- Auto-Extend -->
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="session_auto_extend" data-preference="session_auto_extend" checked>
+                        <label class="form-check-label text-secondary" for="session_auto_extend">
+                            <i class="bi bi-arrow-repeat me-1"></i>{{ 'settings.session.auto.extend'|trans }}
+                        </label>
+                        <div class="text-muted small mt-1">{{ 'settings.session.auto.extend.help'|trans }}</div>
+                    </div>
+
+                    <!-- Session Info -->
+                    <div class="mt-4 p-3 rounded" style="background: rgba(0, 245, 255, 0.05); border: 1px solid rgba(0, 245, 255, 0.2);">
+                        <div class="text-white small">
+                            <strong><i class="bi bi-info-circle me-1"></i>{{ 'settings.session.info'|trans }}</strong>
+                            <div class="text-secondary mt-2">{{ 'settings.session.info.description'|trans }}</div>
+                        </div>
+                    </div>
+
+                    <!-- View Analytics -->
+                    <button class="btn btn-sm luminai-btn-ai w-100 mt-3" onclick="window.showSessionAnalytics()">
+                        <i class="bi bi-graph-up me-2"></i>{{ 'settings.session.view.analytics'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- AI Configuration -->
     <div class="bento-item">
         <div class="luminai-card p-4 h-100">
@@ -394,5 +439,125 @@ if (document.readyState === 'loading') {
     // DOM already loaded (Turbo navigation)
     initializeSettings();
 }
+
+// Session Analytics Viewer
+window.showSessionAnalytics = function() {
+    const analyticsData = JSON.parse(localStorage.getItem('session_analytics') || '[]');
+
+    if (analyticsData.length === 0) {
+        alert('No session analytics data available yet. Analytics will be collected as you use the system.');
+        return;
+    }
+
+    // Calculate summary statistics
+    const totalSessions = analyticsData.length;
+    const totalExtensions = analyticsData.reduce((sum, entry) => sum + (entry.extensionsRequested || 0), 0);
+    const totalWarnings = analyticsData.reduce((sum, entry) => sum + (entry.warningsShown || 0), 0);
+    const expiredSessions = analyticsData.filter(entry => entry.sessionExpired).length;
+    const avgDuration = Math.floor(analyticsData.reduce((sum, entry) => sum + (entry.sessionDuration || 0), 0) / totalSessions);
+
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1);">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-white">
+                        <i class="bi bi-graph-up text-neon me-2"></i>Session Analytics
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-white">
+                    <!-- Summary Stats -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="metric-card text-center p-3">
+                                <div class="metric-value">${totalSessions}</div>
+                                <div class="metric-label">Total Sessions</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card text-center p-3">
+                                <div class="metric-value">${totalExtensions}</div>
+                                <div class="metric-label">Extensions</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card text-center p-3">
+                                <div class="metric-value">${totalWarnings}</div>
+                                <div class="metric-label">Warnings</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card text-center p-3">
+                                <div class="metric-value">${Math.floor(avgDuration / 60)}m</div>
+                                <div class="metric-label">Avg Duration</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Sessions Table -->
+                    <h6 class="text-neon mb-3">Recent Sessions</h6>
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-dark table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Duration</th>
+                                    <th>Warnings</th>
+                                    <th>Extensions</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${analyticsData.slice(-20).reverse().map(entry => `
+                                    <tr>
+                                        <td class="small">${new Date(entry.timestamp).toLocaleString()}</td>
+                                        <td>${Math.floor(entry.sessionDuration / 60)}m</td>
+                                        <td>${entry.warningsShown || 0}</td>
+                                        <td>${entry.extensionsRequested || 0}</td>
+                                        <td>
+                                            ${entry.sessionExpired
+                                                ? '<span class="badge bg-danger">Expired</span>'
+                                                : entry.event === 'session_extended'
+                                                    ? '<span class="badge bg-success">Extended</span>'
+                                                    : '<span class="badge bg-info">Active</span>'}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Insights -->
+                    <div class="mt-4 p-3 rounded" style="background: rgba(0, 245, 255, 0.05); border: 1px solid rgba(0, 245, 255, 0.2);">
+                        <strong class="text-neon"><i class="bi bi-lightbulb me-2"></i>Insights</strong>
+                        <ul class="text-secondary small mt-2 mb-0">
+                            <li>Extension Rate: ${totalSessions > 0 ? Math.round((totalExtensions / totalSessions) * 100) : 0}%</li>
+                            <li>Expiration Rate: ${totalSessions > 0 ? Math.round((expiredSessions / totalSessions) * 100) : 0}%</li>
+                            <li>Warnings per Session: ${totalSessions > 0 ? (totalWarnings / totalSessions).toFixed(1) : 0}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" onclick="localStorage.removeItem('session_analytics'); this.closest('.modal').querySelector('[data-bs-dismiss]').click(); alert('Analytics cleared!');">
+                        Clear Analytics
+                    </button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+
+    // Remove modal from DOM after it's hidden
+    modal.addEventListener('hidden.bs.modal', () => {
+        modal.remove();
+    });
+};
 </script>
 {% endblock %}

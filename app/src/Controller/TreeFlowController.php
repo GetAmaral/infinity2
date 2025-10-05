@@ -155,7 +155,12 @@ final class TreeFlowController extends BaseApiController
                 }
 
                 $outputsData = [];
-                foreach ($step->getOutputs() as $output) {
+                // Sort outputs by ID for consistent ordering
+                $outputs = $step->getOutputs()->toArray();
+                usort($outputs, function($a, $b) {
+                    return $a->getId()?->toString() <=> $b->getId()?->toString();
+                });
+                foreach ($outputs as $output) {
                     $outputsData[] = [
                         'id' => $output->getId()?->toString(),
                         'name' => $output->getName(),

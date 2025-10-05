@@ -4,6 +4,8 @@
 # ================================================================================
 # API Tokens
 # ================================================================================
+token.singular: Token
+token.plural: Tokens
 token.access.level: Access Level
 token.active.token: Active Token
 token.active.tokens: Active Tokens

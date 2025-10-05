@@ -61,6 +61,7 @@ organization.new.organization: Nova Organização
 organization.no.users: Nenhum usuário ainda
 organization.search.placeholder: Buscar organizações...
 organization.singular: Organização
+organization.plural: Organizações
 # Traduções de Organização Faltantes
 organization.statistics: Estatísticas
 organization.status: Status

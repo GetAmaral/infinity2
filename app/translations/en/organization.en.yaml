@@ -61,6 +61,7 @@ organization.new.organization: New Organization
 organization.no.users: No users yet
 organization.search.placeholder: Search organizations...
 organization.singular: Organization
+organization.plural: Organizations
 # Missing Organization Translations
 organization.statistics: Statistics
 organization.status: Status

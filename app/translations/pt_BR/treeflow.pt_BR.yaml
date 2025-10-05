@@ -58,6 +58,7 @@ input.modal.edit.subtitle: Atualizar configuração do input
 input.plural: Inputs
 # Step Input
 input.singular: Input
+input.default.name: Input padrão
 input.type.any: Qualquer Status
 # Tipos Input
 input.type.fully.completed: Totalmente Completo
@@ -88,6 +89,7 @@ output.modal.edit.subtitle: Atualizar configuração do output
 output.plural: Outputs
 # Step Output
 output.singular: Output
+output.default.name: Output padrão
 # Ações Question
 question.add.question: Adicionar Pergunta
 # Botão Question

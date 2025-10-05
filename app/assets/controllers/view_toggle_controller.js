@@ -460,6 +460,18 @@ export default class extends Controller {
             rootEl.setAttribute('data-entity-id', item.id);
         }
 
+        // Replace {entityId} placeholder in all attributes
+        if (item.id) {
+            const allElements = clone.querySelectorAll('*');
+            allElements.forEach(el => {
+                Array.from(el.attributes).forEach(attr => {
+                    if (attr.value.includes('{entityId}')) {
+                        el.setAttribute(attr.name, attr.value.replace(/{entityId}/g, item.id));
+                    }
+                });
+            });
+        }
+
         return clone;
     }
 

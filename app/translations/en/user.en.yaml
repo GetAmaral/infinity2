@@ -35,6 +35,7 @@ user.organization: Organization
 user.select.student: Select Student
 user.select.student.placeholder: '-- Select a student --'
 user.singular: User
+user.plural: Users
 # User Pages
 user.title: Users
 user.unverified: Unverified

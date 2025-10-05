@@ -144,6 +144,11 @@ final class AuditSubscriber
         $changes = [];
         if ($action === 'entity_updated' && !empty($changeSet)) {
             $changes = $this->sanitizeChangeSet($changeSet, $entity);
+
+            // Skip audit event if no meaningful changes after sanitization
+            if (empty($changes)) {
+                return;
+            }
         }
 
         // Dispatch async message instead of logging directly
@@ -217,10 +222,13 @@ final class AuditSubscriber
                 }
             } else {
                 // Convert objects to strings for logging
-                $sanitized[$field] = [
-                    $this->serializeValue($values[0]),
-                    $this->serializeValue($values[1])
-                ];
+                $oldValue = $this->serializeValue($values[0]);
+                $newValue = $this->serializeValue($values[1]);
+
+                // Skip if both values are the same (including NULL → NULL)
+                if ($oldValue !== $newValue) {
+                    $sanitized[$field] = [$oldValue, $newValue];
+                }
             }
         }
 

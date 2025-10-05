@@ -82,6 +82,9 @@ auth.welcome.back: Que bom te ver de volta!
 # ================================================================================
 # Elementos da Interface
 # ================================================================================
+# Buttons
+button.add: Adicionar
+search.placeholder: Procurar...
 # Badges de Status
 badge.ai.enhanced: Turbinado com IA
 badge.real.time: Em tempo real
@@ -121,6 +124,7 @@ button.edit.contact: Editar Contato
 button.edit.module: Editar Módulo
 button.filter: Filtrar
 button.fit.to.screen: Ajustar à Tela
+button.fullscreen: Tela Cheia
 button.list: Lista
 button.refresh: Atualizar Página
 button.zoom.in: Aumentar Zoom
@@ -265,6 +269,7 @@ home.view.organizations: Ver Organizações
 home.view.users: Ver Usuários
 page.ai.powered.crm: Dashboard CRM Turbinado com IA
 page.course.details: Detalhes do Curso
+page.course.description: Área do professor
 page.luminai.suffix: Luminai
 page.manage.users: Gerenciar Usuários
 page.organization.description: Gerencie seus relacionamentos de negócios com insights de IA
@@ -304,7 +309,6 @@ misc.voice.commands: Comandos de Voz
 # Traduções Diversas Faltantes
 # Mensagem de status de espera
 misc.waiting: Aguardando...
-course.title: Cursos
 entity.treeflows: TreeFlows
 organization.title: Organizações
 treeflow.title: TreeFlows
@@ -389,3 +393,33 @@ system.version: Versão
 
 button.create: Criar
 button.update: Atualizar
+
+# ================================================================================
+# Gerenciamento de Sessão
+# ================================================================================
+session.expiring.soon: Sessão Expirando em Breve
+session.expiring: Sessão Expirando
+session.will.expire.in: Sua sessão vai expirar em %time%
+session.save.your.work: Salve seu trabalho!
+session.click.stay.logged.in: Clique em "Continuar Logado" ou salve seu trabalho agora!
+session.stay.logged.in: Continuar Logado
+session.logout.now: Sair Agora
+session.extended.successfully: Sessão renovada com sucesso!
+session.expired: Sua sessão expirou. Por favor, faça login novamente.
+session.auto.logout: Você será desconectado automaticamente.
+
+# Auto-Salvamento de Formulário
+form.autosave.unsaved.changes: Alterações Não Salvas Recuperadas
+form.autosave.found.changes: Encontramos alterações não salvas de %time% atrás. Gostaria de restaurá-las?
+form.autosave.restore: Restaurar
+form.autosave.discard: Descartar
+
+# Configurações de Sessão
+settings.session.management: Gerenciamento de Sessão
+settings.session.sound.alerts: Alertas Sonoros
+settings.session.sound.alerts.help: Reproduzir notificações de áudio quando a sessão estiver expirando
+settings.session.auto.extend: Renovar Sessão Automaticamente
+settings.session.auto.extend.help: Renovar automaticamente a sessão quando você estiver ativo (ativado por padrão)
+settings.session.info: Informações de Sessão
+settings.session.info.description: Sua sessão expira após 1 hora de inatividade. Com Renovação Automática ativada, sua sessão renova automaticamente enquanto você trabalha.
+settings.session.view.analytics: Ver Analytics

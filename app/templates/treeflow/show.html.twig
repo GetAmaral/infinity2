@@ -32,7 +32,7 @@
                 {{ treeflow.steps|length }} {{ 'treeflow.steps'|trans({}, 'treeflow') }}
             </div>
             {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                {{ button_edit(path('treeflow_edit', {id: treeflow.id}), 'button.edit', 'messages', true, 'btn-sm') }}
+                {{ button_edit(treeflow.id, path('treeflow_edit', {id: treeflow.id}), 'button.edit', 'messages', null, null, null, 'btn-sm') }}
             {% endif %}
             {% if is_granted('TREEFLOW_DELETE', treeflow) %}
                 {{ button_delete(path('treeflow_delete', {id: treeflow.id}), csrf_token('delete-treeflow-' ~ treeflow.id), 'confirm.delete.entity', 'messages', 'button.delete', 'messages', 'btn-sm btn-outline-danger') }}
@@ -41,34 +41,7 @@
     </div>
 </div>
 
-<!-- TreeFlow Stats -->
-<div class="bento-grid mb-4">
-    <div class="bento-item">
-        <div class="metric-card">
-            <i class="bi bi-signpost-fill text-neon fs-1"></i>
-            <div class="metric-value">{{ treeflow.steps|length }}</div>
-            <div class="metric-label">{{ 'treeflow.total.steps'|trans({}, 'treeflow') }}</div>
-        </div>
-    </div>
-
-    <div class="bento-item">
-        <div class="metric-card">
-            <i class="bi bi-{{ treeflow.active ? 'check-circle-fill' : 'x-circle-fill' }} text-neon fs-1"></i>
-            <div class="metric-value">{{ treeflow.active ? 'treeflow.status.active'|trans({}, 'treeflow') : 'treeflow.status.inactive'|trans({}, 'treeflow') }}</div>
-            <div class="metric-label">{{ 'treeflow.status'|trans({}, 'treeflow') }}</div>
-        </div>
-    </div>
-
-    <div class="bento-item">
-        <div class="metric-card">
-            <i class="bi bi-building text-neon fs-1"></i>
-            <div class="metric-value" style="font-size: 1.2rem;">{{ treeflow.organization.name }}</div>
-            <div class="metric-label">{{ 'organization.singular'|trans({}, 'organization') }}</div>
-        </div>
-    </div>
-</div>
-
-<!-- Steps Section with View Toggle -->
+<!-- Steps Section -->
 {% set stepsArray = [] %}
 {% for step in treeflow.steps %}
     {% set questionsArray = [] %}
@@ -83,7 +56,9 @@
     {% endfor %}
 
     {% set outputsArray = [] %}
-    {% for output in step.outputs %}
+    {# Sort outputs by ID for consistent ordering #}
+    {% set sortedOutputs = step.outputs|sort((a, b) => a.id <=> b.id) %}
+    {% for output in sortedOutputs %}
         {% set outputsArray = outputsArray|merge([{
             'id': output.id,
             'name': output.name,
@@ -113,7 +88,7 @@
     }]) %}
 {% endfor %}
 
-<div class="luminai-card p-4 mb-4"
+<div id="treeflow-canvas-card" class="luminai-card p-4 mb-4"
      data-controller="treeflow-canvas"
      data-treeflow-canvas-treeflow-id-value="{{ treeflow.id }}"
      data-treeflow-canvas-steps-value="{{ stepsArray|json_encode|e('html_attr') }}"
@@ -123,33 +98,23 @@
         <h2 class="text-gradient mb-0">{{ 'step.plural'|trans({}, 'treeflow') }} ({{ treeflow.steps|length }})</h2>
 
         <div class="d-flex gap-2 align-items-center">
-            <!-- View Toggle Buttons -->
-            <div class="btn-group" role="group">
-                <button type="button"
-                        class="btn luminai-btn-primary active"
-                        data-treeflow-canvas-target="listViewBtn"
-                        data-action="click->treeflow-canvas#showListView">
-                    <i class="bi bi-list-ul me-1"></i>{{ 'button.list'|trans }}
-                </button>
-                <button type="button"
-                        class="btn luminai-btn-primary"
-                        data-treeflow-canvas-target="canvasViewBtn"
-                        data-action="click->treeflow-canvas#showCanvasView">
-                    <i class="bi bi-diagram-3 me-1"></i>{{ 'button.canvas'|trans }}
-                </button>
-            </div>
-
             {% if is_granted('TREEFLOW_EDIT', treeflow) %}
                 {{ button_create(path('step_new', {treeflowId: treeflow.id}), 'step.add.step', 'treeflow', true, 'bi-plus-circle') }}
             {% endif %}
         </div>
     </div>
 
-    <!-- Canvas View (hidden by default) -->
-    <div data-treeflow-canvas-target="canvasContainer" style="display: none;">
+    <!-- Canvas View -->
+    <div data-treeflow-canvas-target="canvasContainer">
         <!-- Canvas Controls -->
         <div class="canvas-controls">
             <div class="btn-group-vertical" role="group">
+                <button type="button"
+                        class="btn btn-sm luminai-btn-primary"
+                        data-action="click->treeflow-canvas#toggleFullscreen"
+                        title="{{ 'button.fullscreen'|trans }}">
+                    <i class="bi bi-fullscreen"></i>
+                </button>
                 <button type="button"
                         class="btn btn-sm luminai-btn-primary"
                         data-action="click->treeflow-canvas#zoomIn"
@@ -179,459 +144,18 @@
 
         <div id="treeflow-canvas" data-treeflow-canvas-target="canvas"></div>
     </div>
-
-    <!-- List View (visible by default) -->
-    <div data-treeflow-canvas-target="listContainer">
-
-    {% if treeflow.steps|length > 0 %}
-        <!-- Steps Accordion -->
-        <div class="accordion" id="stepsAccordion">
-            {% for step in treeflow.steps %}
-                <div class="accordion-item luminai-card mb-3" data-step-id="{{ step.id }}">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button {{ loop.first ? '' : 'collapsed' }}"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#step-{{ step.id }}"
-                                aria-expanded="{{ loop.first ? 'true' : 'false' }}"
-                                style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.2)); color: white; border-radius: 12px;">
-                            <span class="drag-handle me-3" style="cursor: move;">
-                                <i class="bi bi-grip-vertical"></i>
-                            </span>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                                 style="width: 35px; height: 35px; min-width: 35px; background: linear-gradient(135deg, #10b981, #059669);">
-                                <i class="bi bi-signpost text-white"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <strong class="me-2">{{ step.name }}</strong>
-                                {% if step.first %}
-                                    <span class="badge bg-success">{{ 'step.first'|trans({}, 'treeflow') }}</span>
-                                {% endif %}
-                                <div class="d-flex gap-2 mt-1">
-                                    <span class="badge bg-primary">{{ step.questions|length }} {{ 'question.plural'|trans({}, 'treeflow') }}</span>
-                                    <span class="badge bg-success">{{ step.outputs|length }} {{ 'output.plural'|trans({}, 'treeflow') }}</span>
-                                    <span class="badge bg-warning text-dark">{{ step.inputs|length }} {{ 'input.plural'|trans({}, 'treeflow') }}</span>
-                                </div>
-                            </div>
-                            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                <div class="dropdown" onclick="event.stopPropagation();">
-                                    {{ button_dropdown_toggle('common.label.actions', 'btn-sm btn-outline-light') }}
-                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--luminai-dark-surface); z-index: 1060;">
-                                        <li>
-                                            {{ button_edit(path('step_edit', {treeflowId: treeflow.id, stepId: step.id}), 'button.edit', 'messages', true, 'dropdown-item') }}
-                                        </li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li>
-                                            {{ button_delete(path('step_delete', {treeflowId: treeflow.id, stepId: step.id}), csrf_token('delete-step-' ~ step.id), 'step.confirm.delete', 'treeflow', 'button.delete', 'messages', 'dropdown-item text-danger') }}
-                                        </li>
-                                    </ul>
-                                </div>
-                            {% endif %}
-                        </button>
-                    </h2>
-                    <div id="step-{{ step.id }}"
-                         class="accordion-collapse collapse {{ loop.first ? 'show' : '' }}"
-                         data-bs-parent="#stepsAccordion">
-                        <div class="accordion-body" style="background: rgba(30, 41, 59, 0.5); border-radius: 0 0 12px 12px;">
-
-                            {# Step Details #}
-                            {% if step.objective %}
-                                <div class="mb-4 p-3 rounded" style="background: rgba(139, 92, 246, 0.1); border-left: 3px solid #8b5cf6;">
-                                    <small class="text-muted d-block mb-1">{{ 'step.form.objective'|trans({}, 'treeflow') }}</small>
-                                    <p class="mb-0">{{ step.objective }}</p>
-                                </div>
-                            {% endif %}
-
-                            {% if step.prompt %}
-                                <div class="mb-4 p-3 rounded" style="background: rgba(139, 92, 246, 0.1); border-left: 3px solid #7c3aed;">
-                                    <small class="text-muted d-block mb-1">{{ 'step.form.prompt'|trans({}, 'treeflow') }}</small>
-                                    <p class="mb-0">{{ step.prompt }}</p>
-                                </div>
-                            {% endif %}
-
-                            {# Questions Section #}
-                            <div class="mb-4">
-                                <h6 class="text-primary mb-3">
-                                    <i class="bi bi-question-circle me-2"></i>{{ 'question.plural'|trans({}, 'treeflow') }} ({{ step.questions|length }})
-                                </h6>
-
-                                {% if step.questions|length > 0 %}
-                                    <div class="list-group list-group-flush" id="questions-{{ step.id }}" data-step-id="{{ step.id }}">
-                                        {% for question in step.questions|sort((a, b) => a.viewOrder <=> b.viewOrder) %}
-                                            <div class="list-group-item bg-transparent text-white border-secondary py-3" data-question-id="{{ question.id }}">
-                                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                                    <div class="flex-grow-1">
-                                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                                            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                                                <span class="drag-handle-question me-2" style="cursor: move;">
-                                                                    <i class="bi bi-grip-vertical text-muted"></i>
-                                                                </span>
-                                                            {% endif %}
-                                                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                                                 style="width: 30px; height: 30px; background: linear-gradient(135deg, #3b82f6, #2563eb);">
-                                                                <i class="bi bi-question-circle text-white small"></i>
-                                                            </div>
-                                                            <h6 class="mb-0">{{ question.name }}</h6>
-                                                            <span class="badge bg-warning text-dark">{{ 'question.importance'|trans({}, 'treeflow') }}: {{ question.importance }}</span>
-                                                        </div>
-                                                        {% if question.objective %}
-                                                            <p class="text-muted mb-1 small ms-5">{{ question.objective }}</p>
-                                                        {% endif %}
-                                                    </div>
-                                                    {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                                        <div class="dropdown">
-                                                            {{ button_dropdown_toggle('common.label.actions', 'btn-sm btn-outline-light') }}
-                                                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--luminai-dark-surface); z-index: 1060;">
-                                                                <li>
-                                                                    {{ button_edit(path('question_edit', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id}), 'button.edit', 'messages', true, 'dropdown-item') }}
-                                                                </li>
-                                                                <li>
-                                                                    {{ button_create(path('fewshot_new', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id}), 'fewshot.add.example', 'treeflow', true, 'bi-plus-circle', 'dropdown-item') }}
-                                                                </li>
-                                                                <li><hr class="dropdown-divider"></li>
-                                                                <li>
-                                                                    {{ button_delete(path('question_delete', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id}), csrf_token('delete-question-' ~ question.id), 'question.confirm.delete', 'treeflow', 'button.delete', 'messages', 'dropdown-item text-danger') }}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    {% endif %}
-                                                </div>
-
-                                                {# FewShot Examples #}
-                                                {% if question.fewShotExamples|length > 0 %}
-                                                    <div class="ms-5 mt-3">
-                                                        <div class="small text-muted mb-2">
-                                                            <i class="bi bi-lightbulb me-1"></i>{{ 'fewshot.examples'|trans({}, 'treeflow') }} ({{ question.fewShotExamples|length }})
-                                                        </div>
-                                                        <div class="row g-2">
-                                                            {% for fewshot in question.fewShotExamples %}
-                                                                <div class="col-md-6">
-                                                                    <div class="card bg-transparent border-{{ fewshot.type.value == 'positive' ? 'success' : 'danger' }} h-100">
-                                                                        <div class="card-body p-2">
-                                                                            <div class="d-flex justify-content-between align-items-start mb-1">
-                                                                                <div class="d-flex align-items-center gap-2">
-                                                                                    <span class="badge bg-{{ fewshot.type.value == 'positive' ? 'success' : 'danger' }}">
-                                                                                        {{ ('fewshot.type.' ~ fewshot.type.value)|trans }}
-                                                                                    </span>
-                                                                                    <small class="text-white">{{ fewshot.name }}</small>
-                                                                                </div>
-                                                                                {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                                                                    <div class="dropdown">
-                                                                                        {{ button_dropdown_toggle('common.label.actions', 'btn-sm btn-link text-white p-0', 'bi-three-dots') }}
-                                                                                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--luminai-dark-surface); z-index: 1060;">
-                                                                                            <li>
-                                                                                                {{ button_edit(path('fewshot_edit', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id, fewshotId: fewshot.id}), 'button.edit', 'messages', true, 'dropdown-item') }}
-                                                                                            </li>
-                                                                                            <li><hr class="dropdown-divider"></li>
-                                                                                            <li>
-                                                                                                {{ button_delete(path('fewshot_delete', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id, fewshotId: fewshot.id}), csrf_token('delete-fewshot-' ~ fewshot.id), 'fewshot.confirm.delete', 'treeflow', 'button.delete', 'messages', 'dropdown-item text-danger') }}
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                {% endif %}
-                                                                            </div>
-                                                                            {% if fewshot.description %}
-                                                                                <small class="text-muted d-block">{{ fewshot.description|u.truncate(60, 'misc.loading.ellipsis'|trans) }}</small>
-                                                                            {% endif %}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            {% endfor %}
-                                                        </div>
-                                                    </div>
-                                                {% else %}
-                                                    {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                                        <div class="ms-5 mt-2">
-                                                            {{ button_create(path('fewshot_new', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id}), 'fewshot.add.first.example', 'treeflow', true, 'bi-plus-circle', 'btn-sm btn-outline-warning') }}
-                                                        </div>
-                                                    {% endif %}
-                                                {% endif %}
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-
-                                {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                    <div class="text-center mt-3">
-                                        {{ button_create(path('question_new', {treeflowId: treeflow.id, stepId: step.id}), 'question.add.question', 'treeflow', true, 'bi-plus-circle') }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            {# Outputs Section #}
-                            <div class="mb-4">
-                                <h6 class="text-success mb-3">
-                                    <i class="bi bi-arrow-right-circle me-2"></i>{{ 'output.plural'|trans({}, 'treeflow') }} ({{ step.outputs|length }})
-                                </h6>
-
-                                {% if step.outputs|length > 0 %}
-                                    <div class="list-group list-group-flush">
-                                        {% for output in step.outputs %}
-                                            <div class="list-group-item bg-transparent text-white border-secondary py-3">
-                                                <div class="d-flex justify-content-between align-items-start">
-                                                    <div class="flex-grow-1">
-                                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                                            <strong>{{ output.name }}</strong>
-                                                            {% if output.destinationStep %}
-                                                                <span class="badge bg-success">→ {{ output.destinationStep.name }}</span>
-                                                            {% endif %}
-                                                        </div>
-                                                        {% if output.description %}
-                                                            <p class="text-muted mb-1 small">{{ output.description }}</p>
-                                                        {% endif %}
-                                                        {% if output.conditional %}
-                                                            <div class="mt-2">
-                                                                <small class="text-info">
-                                                                    <i class="bi bi-code-slash me-1"></i>
-                                                                    <code class="text-info">{{ output.conditional }}</code>
-                                                                </small>
-                                                            </div>
-                                                        {% endif %}
-                                                    </div>
-                                                    {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                                        <div class="dropdown">
-                                                            {{ button_dropdown_toggle('common.label.actions', 'btn-sm btn-outline-light') }}
-                                                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--luminai-dark-surface); z-index: 1060;">
-                                                                <li>
-                                                                    {{ button_edit(path('output_edit', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}), 'button.edit', 'messages', true, 'dropdown-item') }}
-                                                                </li>
-                                                                <li><hr class="dropdown-divider"></li>
-                                                                <li>
-                                                                    {{ button_delete(path('output_delete', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}), csrf_token('delete-output-' ~ output.id), 'output.confirm.delete', 'treeflow', 'button.delete', 'messages', 'dropdown-item text-danger') }}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-
-                                {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                    <div class="text-center mt-3">
-                                        {{ button_create(path('output_new', {treeflowId: treeflow.id, stepId: step.id}), 'output.add.output', 'treeflow', true, 'bi-plus-circle') }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            {# Inputs Section #}
-                            <div class="mb-2">
-                                <h6 class="text-warning mb-3">
-                                    <i class="bi bi-arrow-left-circle me-2"></i>{{ 'input.plural'|trans({}, 'treeflow') }} ({{ step.inputs|length }})
-                                </h6>
-
-                                {% if step.inputs|length > 0 %}
-                                    <div class="list-group list-group-flush">
-                                        {% for input in step.inputs %}
-                                            <div class="list-group-item bg-transparent text-white border-secondary py-3">
-                                                <div class="d-flex justify-content-between align-items-start">
-                                                    <div class="flex-grow-1">
-                                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                                            <strong>{{ input.name }}</strong>
-                                                            <span class="badge bg-warning text-dark">{{ ('input.type.' ~ input.type.value)|trans }}</span>
-                                                            {% if input.sourceStep %}
-                                                                <span class="badge bg-secondary">← {{ input.sourceStep.name }}</span>
-                                                            {% endif %}
-                                                        </div>
-                                                        {% if input.prompt %}
-                                                            <p class="text-muted mb-0 small">{{ input.prompt|u.truncate(100, 'misc.loading.ellipsis'|trans) }}</p>
-                                                        {% endif %}
-                                                    </div>
-                                                    {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                                        <div class="dropdown">
-                                                            {{ button_dropdown_toggle('common.label.actions', 'btn-sm btn-outline-light') }}
-                                                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: var(--luminai-dark-surface); z-index: 1060;">
-                                                                <li>
-                                                                    {{ button_edit(path('input_edit', {treeflowId: treeflow.id, stepId: step.id, inputId: input.id}), 'button.edit', 'messages', true, 'dropdown-item') }}
-                                                                </li>
-                                                                <li><hr class="dropdown-divider"></li>
-                                                                <li>
-                                                                    {{ button_delete(path('input_delete', {treeflowId: treeflow.id, stepId: step.id, inputId: input.id}), csrf_token('delete-input-' ~ input.id), 'input.confirm.delete', 'treeflow', 'button.delete', 'messages', 'dropdown-item text-danger') }}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-
-                                {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                                    <div class="text-center mt-3">
-                                        {{ button_create(path('input_new', {treeflowId: treeflow.id, stepId: step.id}), 'input.add.input', 'treeflow', true, 'bi-plus-circle') }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="text-center py-5">
-            <i class="bi bi-signpost text-muted" style="font-size: 3rem;"></i>
-            <p class="text-muted mt-3 mb-3">{{ 'treeflow.no.steps'|trans({}, 'treeflow') }}</p>
-            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                {{ button_create(path('step_new', {treeflowId: treeflow.id}), 'step.add.first.step', 'treeflow', true, 'bi-plus-circle') }}
-            {% endif %}
-        </div>
-    {% endif %}
-
-    </div><!-- end listContainer -->
 </div><!-- end card with controller -->
 
-<!-- Metadata -->
-<div class="luminai-card p-4">
-    <h3 class="text-gradient mb-3">{{ 'treeflow.metadata'|trans({}, 'treeflow') }}</h3>
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label class="text-muted small">{{ 'table.created'|trans }}</label>
-            <div class="text-white">{{ treeflow.createdAt|date('M d, Y H:i') }}</div>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="text-muted small">{{ 'table.updated'|trans }}</label>
-            <div class="text-white">{{ treeflow.updatedAt|date('M d, Y H:i') }}</div>
-        </div>
-        {% if treeflow.createdBy %}
-            <div class="col-md-6 mb-3">
-                <label class="text-muted small">{{ 'table.created.by'|trans }}</label>
-                <div class="text-white">{{ treeflow.createdBy.name }}</div>
-            </div>
-        {% endif %}
-    </div>
-</div>
 
 {% block javascripts %}
     {{ parent() }}
-    <!-- Sortable.js for drag-and-drop reordering -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const stepsAccordion = document.getElementById('stepsAccordion');
-
-            if (stepsAccordion) {
-                const sortable = new Sortable(stepsAccordion, {
-                    handle: '.drag-handle',
-                    animation: 150,
-                    ghostClass: 'sortable-ghost',
-                    dragClass: 'sortable-drag',
-                    onEnd: function(evt) {
-                        // Collect new step order
-                        const stepOrder = [...document.querySelectorAll('[data-step-id]')]
-                            .map((el, index) => ({
-                                id: el.dataset.stepId,
-                                order: index
-                            }));
-
-                        // Send reorder request to backend
-                        fetch('{{ path('step_reorder', {treeflowId: treeflow.id}) }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: JSON.stringify({ steps: stepOrder })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                console.log('Steps reordered successfully');
-                            } else {
-                                console.error('Failed to reorder steps:', data.message);
-                                // Optionally revert the UI change
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error reordering steps:', error);
-                            // Optionally revert the UI change
-                        });
-                    }
-                });
-            }
-
-            // Initialize sortable for Questions within each Step
-            document.querySelectorAll('[id^="questions-"]').forEach(function(questionsList) {
-                if (questionsList) {
-                    new Sortable(questionsList, {
-                        handle: '.drag-handle-question',
-                        animation: 150,
-                        ghostClass: 'sortable-ghost',
-                        dragClass: 'sortable-drag',
-                        onEnd: function(evt) {
-                            const stepId = questionsList.dataset.stepId;
-
-                            // Collect new question order
-                            const questionOrder = [...questionsList.querySelectorAll('[data-question-id]')]
-                                .map((el, index) => ({
-                                    id: el.dataset.questionId,
-                                    order: index
-                                }));
-
-                            // Send reorder request to backend
-                            fetch('/treeflow/{{ treeflow.id }}/step/' + stepId + '/question/reorder', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-Requested-With': 'XMLHttpRequest'
-                                },
-                                body: JSON.stringify({ questions: questionOrder })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    console.log('Questions reordered successfully');
-                                } else {
-                                    console.error('Failed to reorder questions:', data.message);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error reordering questions:', error);
-                            });
-                        }
-                    });
-                }
-            });
-        });
-    </script>
 
     <style>
-        /* Sortable.js ghost and drag classes */
-        .sortable-ghost {
-            opacity: 0.4;
-            background: rgba(139, 92, 246, 0.3);
-        }
-
-        .sortable-drag {
-            opacity: 1;
-            cursor: grabbing !important;
-        }
-
-        .drag-handle {
-            cursor: grab;
-            user-select: none;
-        }
-
-        .drag-handle:active {
-            cursor: grabbing;
-        }
-
-        .drag-handle-question {
-            cursor: grab;
-            user-select: none;
-        }
-
-        .drag-handle-question:active {
-            cursor: grabbing;
-        }
-
         /* Canvas View Styles */
         #treeflow-canvas {
             width: 100%;
-            height: 80vh;
-            min-height: 600px;
+            /* height set dynamically by JavaScript */
+            min-height: 500px;
             background:
                 radial-gradient(circle, rgba(139, 92, 246, 0.15) 1px, transparent 1px),
                 radial-gradient(circle, rgba(139, 92, 246, 0.15) 1px, transparent 1px);
@@ -675,6 +199,33 @@
             font-weight: bold;
             font-size: 1rem;
             flex-grow: 1;
+        }
+
+        .step-edit-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .step-edit-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .step-edit-btn i {
+            font-size: 0.875rem;
         }
 
         .treeflow-node-badges {
@@ -885,6 +436,47 @@
             padding: 8px 0;
         }
 
+        /* Continuation lines (n8n-style) */
+        .continuation-line {
+            position: absolute;
+            stroke: #8b5cf6;
+            stroke-width: 2;
+            stroke-dasharray: 8, 4;
+            fill: none;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .continuation-add-button {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border: 2px solid #1a1a2e;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 3;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        .continuation-add-button:hover {
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.5);
+        }
+
+        .continuation-add-button::before {
+            content: '+';
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            line-height: 1;
+        }
+
         /* Active view button */
         .btn-group .btn.active {
             background: linear-gradient(135deg, #8b5cf6, #7c3aed);
@@ -951,6 +543,12 @@
         .connection-point:hover {
             transform: scale(1.3);
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .connection-point.drag-target {
+            transform: scale(3);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.8);
+            z-index: 100;
         }
 
         .output-point {

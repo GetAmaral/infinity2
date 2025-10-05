@@ -54,8 +54,7 @@
                     {{ form_widget(form.name, {
                         'attr': {
                             'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'step.form.name.placeholder'|trans({}, 'treeflow'),
-                            'autofocus': 'autofocus'
+                            'placeholder': 'step.form.name.placeholder'|trans({}, 'treeflow')
                         }
                     }) }}
                     {{ form_errors(form.name) }}
@@ -105,6 +104,14 @@
                 </div>
 
                 {{ form_widget(form._token) }}
+
+                {# Hidden fields for continuation context #}
+                {% if sourceStepId is defined and sourceStepId %}
+                    <input type="hidden" name="sourceStepId" value="{{ sourceStepId }}">
+                {% endif %}
+                {% if sourceOutputId is defined and sourceOutputId %}
+                    <input type="hidden" name="sourceOutputId" value="{{ sourceOutputId }}">
+                {% endif %}
             </div>
 
             <!-- Footer -->

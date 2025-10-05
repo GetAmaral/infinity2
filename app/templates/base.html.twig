@@ -20,12 +20,12 @@
     <!-- Preference Manager - Load FIRST before any other scripts -->
     <script src="/preference-manager.js" data-turbo-eval="false"></script>
 </head>
-<body>
+<body {% if app.user %}data-controller="session-monitor" data-session-monitor-lifetime-value="3600" data-session-monitor-status-url-value="{{ path('api_session_status') }}" data-session-monitor-keepalive-url-value="{{ path('api_session_keepalive') }}"{% endif %}>
     <nav class="navbar luminai-navbar">
         <div class="container">
             <a class="navbar-brand text-white d-flex align-items-center" href="{{ path('app_home') }}">
-                <img src="/luminai_logo_sm_dark.png" alt="{{ 'misc.luminai.alt'|trans }}" height="32" class="logo-dark-theme">
-                <img src="/luminai_logo_sm_light.png" alt="{{ 'misc.luminai.alt'|trans }}" height="32" class="logo-light-theme">
+                <img src="/luminai_logo_sm_dark.png" alt="{{ 'misc.luminai.alt'|trans }}" height="32" class="logo-dark-theme me-3">
+                <img src="/luminai_logo_sm_light.png" alt="{{ 'misc.luminai.alt'|trans }}" height="32" class="logo-light-theme me-3">
                 <span class="fw-bold text-gradient">{{ 'nav.brand'|trans }}</span>
             </a>
 
@@ -42,54 +42,64 @@
                 </div>
                 {% endif %}
 
-                {% if can_switch_organization() %}
-                {% set orgs = available_organizations() %}
-                <!-- Organization Switcher (Admin/Super Admin Only) -->
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher.title'|trans({}, 'organization') }}">
-                        {% if current_organization() %}
+                {% if app.user and current_organization() %}
+                    {% if can_switch_organization() %}
+                        {% set orgs = available_organizations() %}
+                        <!-- Organization Switcher (Admin/Super Admin Only) -->
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher.title'|trans({}, 'organization') }}">
+                                {% if current_organization() %}
+                                    <div class="me-2">
+                                        {{ org_logo.logo(current_organization(), 'xs') }}
+                                    </div>
+                                {% else %}
+                                    <i class="bi bi-globe me-2"></i>
+                                {% endif %}
+                                <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'organization.all.organizations'|trans({}, 'organization') }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="orgDropdown" style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
+                                <li class="px-3 py-2 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+                                    <small class="org-switcher-title">{{ 'organization.switcher.title'|trans({}, 'organization')|upper }}</small>
+                                    <div class="org-switcher-subtitle" style="font-size: 0.7rem; margin-top: 0.25rem;">{{ 'organization.switcher.subtitle'|trans({}, 'organization') }}</div>
+                                </li>
+                                {% if has_active_organization() %}
+                                <li>
+                                    <form method="post" action="{{ path('app_organization_switcher_clear') }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('organization_clear') }}">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="bi bi-globe me-2"></i>{{ 'organization.all.organizations.root'|trans({}, 'organization') }}
+                                        </button>
+                                    </form>
+                                </li>
+                                <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
+                                {% endif %}
+                                {% for org in orgs %}
+                                <li>
+                                    <form method="post" action="{{ path('app_organization_switcher_switch', {'id': org.id}) }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('organization_switch_' ~ org.id) }}">
+                                        <button type="submit" class="dropdown-item d-flex align-items-center gap-2 {% if current_organization() and current_organization().id == org.id %}active{% endif %}">
+                                            <div class="flex-shrink-0">
+                                                {{ org_logo.logo(org, 'sm') }}
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                {{ org.name }}
+                                                <small class="text-muted d-block" style="font-size: 0.75rem;">{{ org.slug }}.{{ app_base_domain }}</small>
+                                            </div>
+                                        </button>
+                                    </form>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% else %}
+                        <!-- Organization Display (Non-Admin Users) -->
+                        <div class="nav-link text-white d-flex align-items-center px-3">
                             <div class="me-2">
                                 {{ org_logo.logo(current_organization(), 'xs') }}
                             </div>
-                        {% else %}
-                            <i class="bi bi-globe me-2"></i>
-                        {% endif %}
-                        <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'organization.all.organizations'|trans({}, 'organization') }}</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="orgDropdown" style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
-                        <li class="px-3 py-2 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
-                            <small class="org-switcher-title">{{ 'organization.switcher.title'|trans({}, 'organization')|upper }}</small>
-                            <div class="org-switcher-subtitle" style="font-size: 0.7rem; margin-top: 0.25rem;">{{ 'organization.switcher.subtitle'|trans({}, 'organization') }}</div>
-                        </li>
-                        {% if has_active_organization() %}
-                        <li>
-                            <form method="post" action="{{ path('app_organization_switcher_clear') }}">
-                                <input type="hidden" name="_token" value="{{ csrf_token('organization_clear') }}">
-                                <button type="submit" class="dropdown-item">
-                                    <i class="bi bi-globe me-2"></i>{{ 'organization.all.organizations.root'|trans({}, 'organization') }}
-                                </button>
-                            </form>
-                        </li>
-                        <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
-                        {% endif %}
-                        {% for org in orgs %}
-                        <li>
-                            <form method="post" action="{{ path('app_organization_switcher_switch', {'id': org.id}) }}">
-                                <input type="hidden" name="_token" value="{{ csrf_token('organization_switch_' ~ org.id) }}">
-                                <button type="submit" class="dropdown-item d-flex align-items-center gap-2 {% if current_organization() and current_organization().id == org.id %}active{% endif %}">
-                                    <div class="flex-shrink-0">
-                                        {{ org_logo.logo(org, 'sm') }}
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        {{ org.name }}
-                                        <small class="text-muted d-block" style="font-size: 0.75rem;">{{ org.slug }}.{{ app_base_domain }}</small>
-                                    </div>
-                                </button>
-                            </form>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                            <span class="d-none d-md-inline">{{ current_organization().name }}</span>
+                        </div>
+                    {% endif %}
                 {% endif %}
 
                 <!-- User Profile (Authenticated Users Only) -->

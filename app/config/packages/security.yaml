@@ -21,7 +21,7 @@ security:
 
         # API firewall for token-based authentication
         api:
-            pattern: ^/api(?!/student/progress)
+            pattern: ^/api(?!/student/progress|/session)
             stateless: true
             custom_authenticators:
                 - App\Security\ApiTokenAuthenticator

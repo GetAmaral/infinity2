@@ -32,7 +32,7 @@
         </div>
         {% block header_actions %}
             {% if enable_create_button|default(true) %}
-                {{ button_create(path(entity_name ~ '_new'), 'button.add.' ~ entity_name, 'messages', null, ('button.add.' ~ entity_name)|trans, entity_name|upper ~ '_CREATE') }}
+                {{ button_create(path(entity_name ~ '_new'), 'button.add', 'messages', null, ('button.add')|trans, entity_name|upper ~ '_CREATE') }}
             {% endif %}
         {% endblock %}
     </div>
@@ -58,7 +58,7 @@
                             <input type="text"
                                    id="{{ entity_name }}SearchInput"
                                    class="form-control"
-                                   placeholder="{{ (entity_name ~ '.search.placeholder')|trans }}"
+                                   placeholder="{{ ('search.placeholder')|trans }}"
                                    data-controller="live-search"
                                    data-live-search-url-value="{{ path(entity_name ~ '_api_search') }}"
                                    data-live-search-target-value="#{{ entity_name_plural }}-grid"
@@ -205,7 +205,7 @@
         <div class="row align-items-center">
             <div class="col-12 col-md-4">
                 <span class="text-secondary" style="font-size: 0.875rem;" id="viewInfo">
-                    {{ 'pagination.showing'|trans }} <strong id="itemsStart">1</strong> {{ 'pagination.to'|trans }} <strong id="itemsEnd">10</strong> {{ 'pagination.of'|trans }} <strong id="itemsTotal">{{ entities|length }}</strong> {{ ('entity.' ~ entity_name_plural)|trans }}
+                    {{ 'pagination.showing'|trans }} <strong id="itemsStart">1</strong> {{ 'pagination.to'|trans }} <strong id="itemsEnd">10</strong> {{ 'pagination.of'|trans }} <strong id="itemsTotal">{{ entities|length }}</strong> {{ (entity_name ~ '.plural')|trans }}
                 </span>
             </div>
             <div class="col-12 col-md-4">

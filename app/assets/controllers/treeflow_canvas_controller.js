@@ -1,25 +1,22 @@
 import { Controller } from '@hotwired/stimulus';
 
 /**
- * TreeFlow Canvas Controller - Phase 3: Visual Connections
+ * TreeFlow Canvas Controller - Visual Canvas Editor
  *
  * Provides:
- * - View toggle (List ↔ Canvas)
  * - Draggable step nodes
  * - Pan canvas (drag background)
  * - Zoom canvas (mouse wheel)
- * - Auto-save node positions
+ * - Auto-save node positions and canvas state
  * - Output/Input connection points
  * - Visual SVG connections with color coding
  * - Hover tooltips on connections
+ * - n8n-style continuation lines for unconnected outputs
  */
 export default class extends Controller {
     static targets = [
         'canvas',
-        'canvasContainer',
-        'listContainer',
-        'listViewBtn',
-        'canvasViewBtn'
+        'canvasContainer'
     ];
 
     static values = {
@@ -61,12 +58,17 @@ export default class extends Controller {
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.handleConnectionDragMove = this.handleConnectionDragMove.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.handleWindowResize = this.handleWindowResize.bind(this);
+
+        // Set up dynamic height calculation
+        this.adjustCanvasHeight();
+        window.addEventListener('resize', this.handleWindowResize);
+
+        // Initialize canvas immediately (no view toggle anymore)
+        this.initializeCanvas();
     }
 
     handleKeyDown(e) {
-        // Only handle if canvas is visible
-        if (this.canvasContainerTarget.style.display === 'none') return;
-
         // Delete key - delete selected connection
         if (e.key === 'Delete' && this.selectedConnection) {
             e.preventDefault();
@@ -95,45 +97,6 @@ export default class extends Controller {
         this.hideConnectionContextMenu();
     }
 
-    showListView() {
-        this.listContainerTarget.style.display = 'block';
-        this.canvasContainerTarget.style.display = 'none';
-
-        // Update button states
-        this.listViewBtnTarget.classList.add('active');
-        this.canvasViewBtnTarget.classList.remove('active');
-    }
-
-    showCanvasView() {
-        this.listContainerTarget.style.display = 'none';
-        this.canvasContainerTarget.style.display = 'block';
-
-        // Update button states
-        this.listViewBtnTarget.classList.remove('active');
-        this.canvasViewBtnTarget.classList.add('active');
-
-        // Initialize canvas if not already done
-        if (this.nodes.size === 0) {
-            this.initializeCanvas();
-        }
-
-        // Listen for modal close events to refresh canvas
-        this.setupModalRefresh();
-    }
-
-    setupModalRefresh() {
-        // Listen for Turbo Frame updates (when modals close and update content)
-        document.addEventListener('turbo:frame-load', (event) => {
-            // If canvas is visible, refresh it when modals close
-            if (this.canvasContainerTarget.style.display !== 'none') {
-                // Reload the page to get updated step data
-                // In a more sophisticated implementation, we could fetch just the steps data
-                setTimeout(() => {
-                    window.location.reload();
-                }, 300);
-            }
-        });
-    }
 
     async initializeCanvas() {
 
@@ -306,6 +269,9 @@ export default class extends Controller {
                     <i class="bi bi-signpost text-white"></i>
                 </div>
                 <div class="treeflow-node-title">${this.escapeHtml(step.name)}</div>
+                <button class="step-edit-btn" data-step-id="${step.id}" title="Edit step">
+                    <i class="bi bi-pencil"></i>
+                </button>
             </div>
             <div class="treeflow-node-badges">
                 ${step.first ? '<span class="badge bg-success">First</span>' : ''}
@@ -334,6 +300,15 @@ export default class extends Controller {
             this.openStepEditModal(step);
         });
 
+        // Add click handler for edit button
+        const editBtn = node.querySelector('.step-edit-btn');
+        if (editBtn) {
+            editBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.openStepEditModalAjax(step);
+            });
+        }
+
         // Store reference
         this.nodes.set(step.id, node);
 
@@ -347,6 +322,88 @@ export default class extends Controller {
     openStepEditModal(step) {
         const editUrl = `/treeflow/${this.treeflowIdValue}/step/${step.id}/edit`;
         this.openModal(editUrl);
+    }
+
+    async openStepEditModalAjax(step) {
+        const editUrl = `/treeflow/${this.treeflowIdValue}/step/${step.id}/edit`;
+        await this.openModal(editUrl);
+
+        // Add delete button to the modal after it's loaded
+        setTimeout(() => {
+            this.addDeleteButtonToEditModal(step);
+        }, 100);
+    }
+
+    addDeleteButtonToEditModal(step) {
+        const container = document.getElementById('global-modal-container');
+        if (!container) return;
+
+        const footer = container.querySelector('.modal-footer-bar');
+        if (!footer) return;
+
+        // Check if delete button already exists
+        if (footer.querySelector('.btn-delete-step')) return;
+
+        // Find the cancel button
+        const cancelBtn = footer.querySelector('.btn-modal-secondary');
+        if (!cancelBtn) return;
+
+        // Create delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'btn luminai-btn-danger btn-delete-step';
+        deleteBtn.innerHTML = '<i class="bi bi-trash me-1"></i>Delete';
+
+        // Insert delete button before cancel button
+        cancelBtn.parentNode.insertBefore(deleteBtn, cancelBtn);
+
+        // Add click handler for delete
+        deleteBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!confirm(`Are you sure you want to delete step "${step.name}"? This action cannot be undone.`)) {
+                return;
+            }
+
+            // Disable button
+            deleteBtn.disabled = true;
+            deleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Deleting...';
+
+            try {
+                const response = await fetch(`/treeflow/${this.treeflowIdValue}/step/${step.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Close modal
+                    const overlay = container.querySelector('.modal-fullscreen-overlay');
+                    if (overlay) {
+                        overlay.remove();
+                    } else {
+                        container.innerHTML = '';
+                    }
+
+                    // Refresh canvas to remove deleted step
+                    await this.refreshCanvas();
+                } else {
+                    alert(result.error || 'Failed to delete step');
+                    deleteBtn.disabled = false;
+                    deleteBtn.innerHTML = '<i class="bi bi-trash me-1"></i>Delete';
+                }
+            } catch (error) {
+                console.error('Error deleting step:', error);
+                alert('Failed to delete step. Please try again.');
+                deleteBtn.disabled = false;
+                deleteBtn.innerHTML = '<i class="bi bi-trash me-1"></i>Delete';
+            }
+        });
     }
 
     addConnectionPoints(node, step) {
@@ -401,7 +458,10 @@ export default class extends Controller {
 
         // Add output items
         if (step.outputs && step.outputs.length > 0) {
-            step.outputs.forEach((output) => {
+            // Sort outputs by ID for consistent ordering
+            const sortedOutputs = [...step.outputs].sort((a, b) => a.id.localeCompare(b.id));
+
+            sortedOutputs.forEach((output) => {
                 const outputItem = document.createElement('div');
                 outputItem.className = 'io-item output-item editable-item';
                 outputItem.dataset.itemType = 'output';
@@ -908,6 +968,9 @@ export default class extends Controller {
         this.connections.forEach(connection => {
             this.renderConnection(connection);
         });
+
+        // Render continuation lines for unconnected outputs
+        this.renderContinuationLines();
     }
 
     renderConnection(connection) {
@@ -987,6 +1050,243 @@ export default class extends Controller {
         });
 
         this.svgLayer.appendChild(path);
+    }
+
+    renderContinuationLines() {
+        // Remove existing continuation elements
+        document.querySelectorAll('.continuation-line, .continuation-add-button').forEach(el => el.remove());
+
+        const stepsArray = typeof this.stepsValue === 'string'
+            ? JSON.parse(this.stepsValue)
+            : this.stepsValue;
+
+        stepsArray.forEach(step => {
+            const node = this.nodes.get(step.id);
+            if (!node) return;
+
+            // Case 1: Step has outputs - check for unconnected ones
+            if (step.outputs && step.outputs.length > 0) {
+                // Sort outputs by ID for consistent ordering
+                const sortedOutputs = [...step.outputs].sort((a, b) => a.id.localeCompare(b.id));
+
+                sortedOutputs.forEach(output => {
+                    if (!this.isOutputConnected(output.id)) {
+                        this.renderContinuationForOutput(output, step, node);
+                    }
+                });
+            }
+            // Case 2: Step has NO outputs - render continuation from step itself
+            else {
+                this.renderContinuationForStep(step, node);
+            }
+        });
+    }
+
+    isOutputConnected(outputId) {
+        return this.connections.some(conn => conn.sourceOutput.id === outputId);
+    }
+
+    renderContinuationForOutput(output, step, node) {
+        const outputPoint = this.outputPoints.get(output.id);
+        if (!outputPoint) return;
+
+        const startPos = this.getConnectionPointPosition(outputPoint.element, step);
+        this.renderContinuationLine(startPos, step, node, { type: 'output', data: output });
+    }
+
+    renderContinuationForStep(step, node) {
+        // Get position from the right edge of the node
+        const nodeX = parseInt(node.style.left) || 0;
+        const nodeY = parseInt(node.style.top) || 0;
+        const nodeWidth = node.offsetWidth;
+        const nodeHeight = node.offsetHeight;
+
+        const startPos = {
+            x: nodeX + nodeWidth,
+            y: nodeY + (nodeHeight / 2)
+        };
+
+        this.renderContinuationLine(startPos, step, node, { type: 'step', data: step });
+    }
+
+    renderContinuationLine(startPos, step, node, source) {
+        // Calculate line length (1/4 of step width)
+        const nodeWidth = node.offsetWidth;
+        const lineLength = nodeWidth / 4;
+        const endX = startPos.x + lineLength;
+
+        // Create SVG dashed line
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', startPos.x);
+        line.setAttribute('y1', startPos.y);
+        line.setAttribute('x2', endX);
+        line.setAttribute('y2', startPos.y);
+        line.setAttribute('class', 'continuation-line');
+        this.svgLayer.appendChild(line);
+
+        // Create + button at the end
+        const button = document.createElement('div');
+        button.className = 'continuation-add-button';
+        button.style.left = `${endX - 14}px`; // Center the 28px button
+        button.style.top = `${startPos.y - 14}px`;
+        button.dataset.stepId = step.id;
+        button.dataset.sourceType = source.type; // 'output' or 'step'
+        if (source.type === 'output') {
+            button.dataset.outputId = source.data.id;
+        }
+
+        // Add click handler
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.handleContinuationClick(step, source);
+        });
+
+        this.transformContainer.appendChild(button);
+    }
+
+    async handleContinuationClick(sourceStep, source) {
+        // Open step creation modal with continuation parameters
+        let url = `/treeflow/${this.treeflowIdValue}/step/new?sourceStepId=${sourceStep.id}`;
+        if (source.type === 'output') {
+            url += `&sourceOutputId=${source.data.id}`;
+        }
+
+        await this.openModal(url);
+    }
+
+    async createDefaultOutput(step) {
+        this.showLoading();
+
+        try {
+            const response = await fetch(
+                `/treeflow/${this.treeflowIdValue}/step/${step.id}/output/auto`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        name: 'output.default.name', // Translation key
+                        translationDomain: 'treeflow'
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.success) {
+                this.hideLoading();
+                return null;
+            }
+
+            // Update step's outputs in memory
+            const stepsArray = typeof this.stepsValue === 'string'
+                ? JSON.parse(this.stepsValue)
+                : this.stepsValue;
+
+            const stepData = stepsArray.find(s => s.id === step.id);
+            if (stepData) {
+                if (!stepData.outputs) {
+                    stepData.outputs = [];
+                }
+                stepData.outputs.push(data.output);
+            }
+
+            // Refresh canvas to show new output
+            await this.refreshCanvas();
+
+            this.hideLoading();
+            return data.output;
+
+        } catch (error) {
+            console.error('Error creating default output:', error);
+            this.hideLoading();
+            return null;
+        }
+    }
+
+
+    calculateNewStepPosition(sourceStep) {
+        const node = this.nodes.get(sourceStep.id);
+        if (!node) return { x: 100, y: 100 };
+
+        const nodeX = parseInt(node.style.left) || 0;
+        const nodeY = parseInt(node.style.top) || 0;
+        const nodeWidth = node.offsetWidth;
+
+        // Position new step 1/2 step width to the right
+        return {
+            x: nodeX + nodeWidth + (nodeWidth / 2),
+            y: nodeY
+        };
+    }
+
+    async handleNewStepCreated(newStep) {
+        if (!this.pendingConnection) return;
+
+        const { sourceOutput, targetStepPosition } = this.pendingConnection;
+
+        // Position the new step
+        newStep.positionX = targetStepPosition.x;
+        newStep.positionY = targetStepPosition.y;
+
+        // Save position to backend
+        await this.saveStepPosition(newStep.id, targetStepPosition.x, targetStepPosition.y);
+
+        // Create default input on new step
+        const newInput = await this.createDefaultInput(newStep, sourceOutput);
+
+        if (newInput) {
+            // Create connection
+            await this.createConnection(
+                { element: this.outputPoints.get(sourceOutput.id)?.element, step: this.pendingConnection.sourceStep, output: sourceOutput },
+                { element: null, step: newStep, input: newInput }
+            );
+        }
+
+        // Clear pending connection
+        this.pendingConnection = null;
+
+        // Refresh canvas
+        await this.refreshCanvas();
+    }
+
+    async createDefaultInput(step, sourceOutput) {
+        try {
+            const response = await fetch(
+                `/treeflow/${this.treeflowIdValue}/step/${step.id}/input/auto`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        name: 'input.default.name', // Translation key
+                        translationDomain: 'treeflow',
+                        sourceOutputId: sourceOutput.id
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!data.success) {
+                return null;
+            }
+
+            return data.input;
+
+        } catch (error) {
+            console.error('Error creating default input:', error);
+            return null;
+        }
+    }
+
+    async refreshCanvas() {
+        // Reload the page or refresh the canvas data
+        window.location.reload();
     }
 
     getConnectionPointPosition(pointElement, step) {
@@ -1111,6 +1411,9 @@ export default class extends Controller {
             this.isDraggingConnection = true;
             this.dragSourceOutput = { element: outputPoint, step, output };
 
+            // Expand all INPUT circles (potential drop targets)
+            this.expandTargetCircles('input', outputPoint);
+
             // Create ghost line
             this.createGhostLine();
 
@@ -1127,6 +1430,9 @@ export default class extends Controller {
             this.isDraggingConnection = true;
             this.dragSourceOutput = { element: outputPoint, step, output };
 
+            // Expand all INPUT circles (potential drop targets)
+            this.expandTargetCircles('input', outputPoint);
+
             // Create ghost line
             this.createGhostLine();
         }, { passive: false });
@@ -1141,6 +1447,9 @@ export default class extends Controller {
             // Start connection drag from input
             this.isDraggingConnection = true;
             this.dragSourceInput = { element: inputPoint, step, input };
+
+            // Expand all OUTPUT circles (potential drop targets)
+            this.expandTargetCircles('output', inputPoint);
 
             // Create ghost line
             this.createGhostLine();
@@ -1157,6 +1466,9 @@ export default class extends Controller {
             // Start connection drag from input
             this.isDraggingConnection = true;
             this.dragSourceInput = { element: inputPoint, step, input };
+
+            // Expand all OUTPUT circles (potential drop targets)
+            this.expandTargetCircles('output', inputPoint);
 
             // Create ghost line
             this.createGhostLine();
@@ -1801,6 +2113,37 @@ export default class extends Controller {
         this.updateTransform();
     }
 
+    getOutputOrderForStep(stepId, step) {
+        // Find which connection targets this step (via its inputs)
+        const targetConnection = this.connections.find(conn =>
+            conn.targetInput && conn.targetInput.stepId === stepId
+        );
+
+        if (!targetConnection) {
+            return 999999; // No connection found, place at end
+        }
+
+        // Get the source step of this connection
+        const sourceStepId = targetConnection.sourceOutput.stepId;
+
+        // Get steps array
+        const stepsArray = typeof this.stepsValue === 'string'
+            ? JSON.parse(this.stepsValue)
+            : this.stepsValue;
+
+        const sourceStep = stepsArray.find(s => s.id === sourceStepId);
+        if (!sourceStep || !sourceStep.outputs) {
+            return 999999;
+        }
+
+        // Find the index of the source output in the source step's outputs
+        const outputIndex = sourceStep.outputs.findIndex(
+            output => output.id === targetConnection.sourceOutput.id
+        );
+
+        return outputIndex >= 0 ? outputIndex : 999999;
+    }
+
     fitToScreen() {
         // Calculate bounding box of all nodes
         let minX = Infinity, minY = Infinity;
@@ -1811,6 +2154,19 @@ export default class extends Controller {
             const y = parseInt(node.style.top) || 0;
             const width = node.offsetWidth || 220;
             const height = node.offsetHeight || 120;
+
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+            maxX = Math.max(maxX, x + width);
+            maxY = Math.max(maxY, y + height);
+        });
+
+        // Include continuation + buttons in bounding box
+        document.querySelectorAll('.continuation-add-button').forEach((button) => {
+            const x = parseInt(button.style.left) || 0;
+            const y = parseInt(button.style.top) || 0;
+            const width = button.offsetWidth || 28;
+            const height = button.offsetHeight || 28;
 
             minX = Math.min(minX, x);
             minY = Math.min(minY, y);
@@ -1859,15 +2215,24 @@ export default class extends Controller {
             return { id, step };
         }).filter(item => item.step);
 
-        // Level assignment (simple: first step = level 0, connected steps increment)
+        // Identify connected steps
+        const connectedSteps = new Set();
+        this.connections.forEach(conn => {
+            connectedSteps.add(conn.sourceOutput.stepId);
+            connectedSteps.add(conn.targetInput.stepId);
+        });
+
+        // Separate orphan steps (no connections)
+        const orphanSteps = steps.filter(({id}) => !connectedSteps.has(id));
+        const regularSteps = steps.filter(({id}) => connectedSteps.has(id));
+
+        // Level assignment for connected steps
         const levels = new Map();
-        const visited = new Set();
 
         // Find first step
-        const firstStep = steps.find(item => item.step.first);
+        const firstStep = regularSteps.find(item => item.step.first);
         if (firstStep) {
             levels.set(firstStep.id, 0);
-            visited.add(firstStep.id);
         }
 
         // Assign levels based on connections
@@ -1891,15 +2256,18 @@ export default class extends Controller {
             });
         }
 
-        // Position nodes
+        // Position constants
+        const stepWidth = 280;
         const horizontalSpacing = 350;
         const verticalSpacing = 150;
+        const orphanVerticalSpacing = stepWidth / 4; // 1/4 step width = 70px
         const startX = 100;
         const startY = 100;
 
         const nodesByLevel = new Map();
 
-        steps.forEach(({id, step}) => {
+        // Organize regular steps by level
+        regularSteps.forEach(({id, step}) => {
             const level = levels.get(id) ?? 0;
             if (!nodesByLevel.has(level)) {
                 nodesByLevel.set(level, []);
@@ -1907,35 +2275,83 @@ export default class extends Controller {
             nodesByLevel.get(level).push({id, step});
         });
 
-        // Position each level
+        // Position connected steps
         Array.from(nodesByLevel.keys()).sort((a, b) => a - b).forEach(level => {
             const nodesInLevel = nodesByLevel.get(level);
-            const levelHeight = nodesInLevel.length * verticalSpacing;
-            const levelStartY = startY + (verticalSpacing * 3 - levelHeight) / 2;
+
+            // Sort nodes by output order to prevent crossing connection lines
+            nodesInLevel.sort((a, b) => {
+                const orderA = this.getOutputOrderForStep(a.id, a.step);
+                const orderB = this.getOutputOrderForStep(b.id, b.step);
+                return orderA - orderB;
+            });
+
+            const x = startX + level * horizontalSpacing;
+            let currentY = startY;
 
             nodesInLevel.forEach((item, index) => {
-                const x = startX + level * horizontalSpacing;
-                const y = levelStartY + index * verticalSpacing;
-
                 const node = this.nodes.get(item.id);
                 if (node) {
+                    const y = currentY;
+
                     node.style.left = x + 'px';
                     node.style.top = y + 'px';
 
                     // Save position to backend
                     this.saveStepPosition(item.id, x, y);
+
+                    // Update currentY for next step in this level: current top + current height + spacing
+                    const nodeHeight = node.offsetHeight || 120;
+                    currentY = y + nodeHeight + orphanVerticalSpacing;
                 }
             });
         });
 
+        // Position orphan steps to the right of last connected step
+        if (orphanSteps.length > 0) {
+            // Find max level (rightmost position)
+            const maxLevel = nodesByLevel.size > 0
+                ? Math.max(...Array.from(nodesByLevel.keys()))
+                : 0;
+
+            // Place orphans at maxLevel + 1
+            const orphanX = startX + (maxLevel + 1) * horizontalSpacing;
+
+            let currentY = startY;
+
+            orphanSteps.forEach((item, index) => {
+                const node = this.nodes.get(item.id);
+                if (node) {
+                    const x = orphanX;
+                    const y = currentY;
+
+                    node.style.left = x + 'px';
+                    node.style.top = y + 'px';
+
+                    // Save position to backend
+                    this.saveStepPosition(item.id, x, y);
+
+                    // Update currentY for next orphan: current top + current height + spacing
+                    const nodeHeight = node.offsetHeight || 120;
+                    currentY = y + nodeHeight + orphanVerticalSpacing;
+                }
+            });
+        }
+
         // Re-render connections
         this.renderConnections();
+        this.renderContinuationLines();
 
-        // Fit to screen
+        // Wait for DOM updates, then fit to screen and save state
         setTimeout(() => {
             this.fitToScreen();
-            this.hideLoading();
-        }, 300);
+
+            // Save the new canvas view state
+            setTimeout(() => {
+                this.saveCanvasState();
+                this.hideLoading();
+            }, 100);
+        }, 500);
     }
 
     showLoading() {
@@ -1958,6 +2374,78 @@ export default class extends Controller {
         }
     }
 
+    handleWindowResize() {
+        this.adjustCanvasHeight();
+    }
+
+    adjustCanvasHeight() {
+        // Calculate available height: viewport height - all elements above canvas
+        const viewportHeight = window.innerHeight;
+        const card = document.getElementById('treeflow-canvas-card');
+
+        if (!card) return;
+
+        // Get the card's offset from top
+        const cardRect = card.getBoundingClientRect();
+        const cardTop = cardRect.top + window.scrollY;
+
+        // Reserve space for bottom margin and metadata section (collapsed)
+        const bottomReserve = 100; // 100px for bottom spacing
+
+        // Calculate ideal canvas height
+        const availableHeight = viewportHeight - cardTop - bottomReserve;
+
+        // Get the header inside the card (Steps title + buttons)
+        const header = card.querySelector('.d-flex.justify-content-between');
+        const headerHeight = header ? header.offsetHeight + 32 : 80; // +32 for margins
+
+        // Canvas height = available height - header - card padding
+        const canvasHeight = Math.max(500, availableHeight - headerHeight - 32); // min 500px
+
+        // Apply the height
+        if (this.canvasTarget) {
+            this.canvasTarget.style.height = `${canvasHeight}px`;
+        }
+    }
+
+    toggleFullscreen() {
+        const card = document.getElementById('treeflow-canvas-card');
+
+        if (!card) return;
+
+        if (!document.fullscreenElement) {
+            // Enter fullscreen
+            card.requestFullscreen().then(() => {
+                // Adjust height when entering fullscreen
+                setTimeout(() => {
+                    this.adjustCanvasHeight();
+                }, 100);
+            }).catch(err => {
+                console.error(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+        } else {
+            // Exit fullscreen
+            document.exitFullscreen().then(() => {
+                // Adjust height when exiting fullscreen
+                setTimeout(() => {
+                    this.adjustCanvasHeight();
+                }, 100);
+            });
+        }
+
+        // Listen for fullscreen change to update button icon
+        document.addEventListener('fullscreenchange', () => {
+            const btn = card.querySelector('[data-action="click->treeflow-canvas#toggleFullscreen"] i');
+            if (btn) {
+                if (document.fullscreenElement) {
+                    btn.className = 'bi bi-fullscreen-exit';
+                } else {
+                    btn.className = 'bi bi-fullscreen';
+                }
+            }
+        });
+    }
+
     disconnect() {
         // Clean up event listeners
         if (this.canvasTarget) {
@@ -1967,6 +2455,7 @@ export default class extends Controller {
         document.removeEventListener('mousemove', this.handleMouseMove);
         document.removeEventListener('mouseup', this.handleMouseUp);
         document.removeEventListener('keydown', this.handleKeyDown);
+        window.removeEventListener('resize', this.handleWindowResize);
 
         // Clean up tooltip
         this.hideConnectionTooltip();

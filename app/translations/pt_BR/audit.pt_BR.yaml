@@ -4,6 +4,8 @@
 # ================================================================================
 # Audit
 # ================================================================================
+audit.singular: Log de Auditoria
+audit.plural: Logs de Auditoria
 audit.action: Ação
 audit.action.count: ação(ões)
 audit.activity.breakdown: Detalhamento de Atividade
