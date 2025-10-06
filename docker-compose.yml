@@ -31,6 +31,7 @@ services:
       APP_SECRET: ${APP_SECRET}
       APP_TIMEZONE: ${APP_TIMEZONE:-UTC}
       FRANKENPHP_NUM_THREADS: ${FRANKENPHP_NUM_THREADS}
+      SESSION_COOKIE_DOMAIN: ${SESSION_COOKIE_DOMAIN}
     volumes:
       - ./app:/app
     ports:
