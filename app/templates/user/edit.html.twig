@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'action.edit'|trans }} {{ user.name }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <a href="{{ path('user_index') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>{{ 'user.back.to.list'|trans({}, 'user') }}
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-6 mx-auto">
+            <div class="infinity-card p-4">
+                <h1 class="mb-4">
+                    <i class="bi bi-person-circle me-2"></i>
+                    {{ 'action.edit'|trans }} {{ user.name }}
+                </h1>
+
+                {{ form_start(form) }}
+                    <div class="form-group-modern">
+                        {{ form_label(form.name, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-input-modern'}}) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        {{ form_label(form.email, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.email, {'attr': {'class': 'form-input-modern'}}) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+
+                    {% if form.password is defined %}
+                    <div class="form-group-modern">
+                        {{ form_label(form.password, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.password, {'attr': {'class': 'form-input-modern'}}) }}
+                        {{ form_errors(form.password) }}
+                    </div>
+                    {% endif %}
+
+                    <div class="form-group-modern">
+                        {{ form_label(form.roles, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.roles, {'attr': {'class': 'form-select-modern'}}) }}
+                        {{ form_errors(form.roles) }}
+                    </div>
+
+                    {{ form_rest(form) }}
+
+                    <div class="d-flex gap-2 mt-4">
+                        <a href="{{ path('user_index') }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-2"></i>{{ 'button.cancel'|trans }}
+                        </a>
+                        <button type="submit" class="btn infinity-btn-success">
+                            <i class="bi bi-check2 me-2"></i>{{ 'button.save.changes'|trans }}
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

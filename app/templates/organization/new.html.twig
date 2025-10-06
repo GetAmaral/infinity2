@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'organization.new.organization'|trans({}, 'organization') }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <a href="{{ path('organization_index') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>{{ 'organization.back.to.list'|trans({}, 'organization') }}
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-6 mx-auto">
+            <div class="infinity-card p-4">
+                <h1 class="mb-4">
+                    <i class="bi bi-building me-2"></i>
+                    {{ 'organization.new.organization'|trans({}, 'organization') }}
+                </h1>
+
+                {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+                    <div class="form-group-modern">
+                        {{ form_label(form.name, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-input-modern', 'placeholder': 'organization.form.name.placeholder'|trans({}, 'organization')}}) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        {{ form_label(form.slug, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.slug, {'attr': {'class': 'form-input-modern', 'placeholder': 'organization.form.slug.placeholder'|trans({}, 'organization')}}) }}
+                        {% if form.slug.vars.help %}
+                            <small class="text-muted">{{ form.slug.vars.help|trans }}</small>
+                        {% endif %}
+                        {{ form_errors(form.slug) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        {{ form_label(form.description, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'form-input-modern', 'rows': '4', 'placeholder': 'organization.form.description.placeholder'|trans({}, 'organization')}}) }}
+                        {{ form_errors(form.description) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        {{ form_label(form.logoFileLight, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.logoFileLight, {'attr': {'class': 'form-input-modern'}}) }}
+                        {% if form.logoFileLight.vars.help %}
+                            <small class="text-muted">{{ form.logoFileLight.vars.help|trans }}</small>
+                        {% endif %}
+                        {{ form_errors(form.logoFileLight) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        {{ form_label(form.logoFileDark, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.logoFileDark, {'attr': {'class': 'form-input-modern'}}) }}
+                        {% if form.logoFileDark.vars.help %}
+                            <small class="text-muted">{{ form.logoFileDark.vars.help|trans }}</small>
+                        {% endif %}
+                        {{ form_errors(form.logoFileDark) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        <div class="form-check">
+                            {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(form.isActive, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                        {% if form.isActive.vars.help %}
+                            <small class="text-muted">{{ form.isActive.vars.help|trans }}</small>
+                        {% endif %}
+                    </div>
+
+                    {{ form_rest(form) }}
+
+                    <div class="d-flex gap-2 mt-4">
+                        <a href="{{ path('organization_index') }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-2"></i>{{ 'button.cancel'|trans }}
+                        </a>
+                        <button type="submit" class="btn infinity-btn-primary">
+                            <i class="bi bi-check2 me-2"></i>{{ 'button.create.organization'|trans({}, 'organization') }}
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

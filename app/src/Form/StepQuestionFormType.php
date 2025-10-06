@@ -58,12 +58,11 @@ class StepQuestionFormType extends AbstractType
                     '3' => 3,
                 ],
                 'expanded' => true,
-                'required' => true,
+                'required' => false,
                 'attr' => [
                     'class' => 'star-rating-group',
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(),
                     new Assert\Range(min: 1, max: 3),
                 ],
             ], $isEdit ? [] : ['data' => 1])) // Default to 1 star when creating

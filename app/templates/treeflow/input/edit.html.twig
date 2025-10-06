@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'action.edit'|trans }} {{ input.name }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <a href="{{ path('treeflow_show', {id: treeflow.id}) }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>{{ 'input.back.to.treeflow'|trans({}, 'treeflow') }}
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-6 mx-auto">
+            <div class="infinity-card p-4">
+                <h1 class="mb-4">
+                    <i class="bi bi-arrow-left-circle me-2"></i>
+                    {{ 'action.edit'|trans }} {{ input.name }}
+                </h1>
+
+                {{ form_start(form) }}
+                    <div class="form-group-modern">
+                        {{ form_label(form.name, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-input-modern', 'placeholder': 'input.form.name.placeholder'|trans({}, 'treeflow')}}) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        {{ form_label(form.type, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        <div class="d-flex flex-column gap-2 mt-2">
+                            {% for choice in form.type %}
+                                <div class="form-check">
+                                    {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
+                                    {{ form_label(choice, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {{ form_errors(form.type) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        {{ form_label(form.prompt, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.prompt, {'attr': {'class': 'form-input-modern', 'rows': '4', 'placeholder': 'input.form.prompt.placeholder'|trans({}, 'treeflow')}}) }}
+                        <small class="text-muted">{{ 'input.form.prompt.help'|trans({}, 'treeflow') }}</small>
+                        {{ form_errors(form.prompt) }}
+                    </div>
+
+                    {{ form_rest(form) }}
+
+                    <div class="d-flex gap-2 mt-4">
+                        <a href="{{ path('treeflow_show', {id: treeflow.id}) }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-2"></i>{{ 'button.cancel'|trans }}
+                        </a>
+                        <button type="submit" class="btn infinity-btn-success">
+                            <i class="bi bi-check2 me-2"></i>{{ 'button.save.changes'|trans }}
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

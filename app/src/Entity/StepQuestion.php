@@ -43,10 +43,10 @@ class StepQuestion extends EntityBase
     #[Groups(['question:read', 'question:write'])]
     protected ?string $objective = null;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', nullable: true)]
     #[Assert\Range(min: 1, max: 10)]
     #[Groups(['question:read', 'question:write'])]
-    protected int $importance = 5;
+    protected ?int $importance = 1;
 
     #[ORM\Column(type: 'integer')]
     #[Groups(['question:read', 'question:write'])]
@@ -122,12 +122,12 @@ class StepQuestion extends EntityBase
 
     public function getImportance(): int
     {
-        return $this->importance;
+        return $this->importance ?? 1;
     }
 
-    public function setImportance(int $importance): self
+    public function setImportance(?int $importance): self
     {
-        $this->importance = $importance;
+        $this->importance = $importance ?? 1;
         return $this;
     }
 

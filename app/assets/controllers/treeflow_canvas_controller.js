@@ -2587,29 +2587,21 @@ export default class extends Controller {
     }
 
     adjustCanvasHeight() {
-        // Calculate available height: total viewport - navbar - header - card header
-        const viewportHeight = window.innerHeight;
-
         if (!this.canvasTarget) return;
 
-        // Get navbar height
-        const navbar = document.querySelector('.navbar');
-        const navbarHeight = navbar ? navbar.offsetHeight : 0;
+        // Get viewport height
+        const viewportHeight = window.innerHeight;
 
-        // Get page header height (the compact header with back button and title)
-        const pageHeader = document.querySelector('.d-flex.justify-content-between.align-items-center.px-2');
-        const pageHeaderHeight = pageHeader ? pageHeader.offsetHeight : 0;
+        // Get the canvas element's position from top of viewport
+        const canvasRect = this.canvasTarget.getBoundingClientRect();
+        const canvasTop = canvasRect.top;
 
-        // Get card header height (Steps title + create button)
-        const cardHeader = document.querySelector('#treeflow-canvas-card .d-flex.justify-content-between');
-        const cardHeaderHeight = cardHeader ? cardHeader.offsetHeight : 0;
+        // Bottom space (30px as requested)
+        const bottomSpace = 30;
 
-        // Get card padding (0.5rem = 8px top + 8px bottom)
-        const cardPadding = 16;
-
-        // Calculate available height for canvas
-        // viewport - navbar - page header - card header - card padding - 2px safety margin
-        const canvasHeight = Math.max(250, viewportHeight - navbarHeight - pageHeaderHeight - cardHeaderHeight - cardPadding - 2);
+        // Calculate available height: viewport - distance from top - bottom space
+        // No need for extraTopMargin since canvasTop already accounts for the margin-top
+        const canvasHeight = Math.max(250, viewportHeight - canvasTop - bottomSpace);
 
         // Apply the height
         this.canvasTarget.style.height = `${canvasHeight}px`;
