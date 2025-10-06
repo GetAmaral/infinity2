@@ -678,9 +678,17 @@ export default class extends Controller {
                 form.removeAttribute('data-controller');
                 form.removeAttribute('data-action');
 
-                // Remove orphaned Stimulus targets (submit button has data-crud-modal-target)
+                // Remove ALL crud-modal related attributes to prevent interference
                 doc.querySelectorAll('[data-crud-modal-target]').forEach(el => {
                     el.removeAttribute('data-crud-modal-target');
+                });
+
+                // Remove all data-action attributes that reference crud-modal
+                doc.querySelectorAll('[data-action]').forEach(el => {
+                    const action = el.getAttribute('data-action');
+                    if (action && action.includes('crud-modal')) {
+                        el.removeAttribute('data-action');
+                    }
                 });
 
                 // Remove inline scripts
