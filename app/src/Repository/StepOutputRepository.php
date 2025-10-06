@@ -31,16 +31,4 @@ class StepOutputRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-    /**
-     * Find outputs that lead to a specific destination
-     */
-    public function findByDestination(Step $destinationStep): array
-    {
-        return $this->createQueryBuilder('o')
-            ->where('o.destinationStep = :destination')
-            ->setParameter('destination', $destinationStep)
-            ->getQuery()
-            ->getResult();
-    }
 }

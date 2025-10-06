@@ -45,10 +45,22 @@
 
     {% if is_edit and treeflow.id %}
         <div class="form-group-modern mt-4 pt-3 border-top">
-            <button type="button" class="btn btn-sm btn-danger" onclick="showDeleteConfirmationTreeflow()">
+            <button type="button" class="btn btn-sm btn-danger" onclick="window.showDeleteConfirmationTreeflow()">
                 <i class="bi bi-trash"></i> {{ 'button.delete'|trans }}
             </button>
         </div>
+
+        <script>
+            window.showDeleteConfirmationTreeflow = function() {
+                document.getElementById('modal-default-actions-treeflow').style.display = 'none';
+                document.getElementById('modal-delete-confirmation-treeflow').style.display = 'flex';
+            };
+
+            window.cancelDeleteTreeflow = function() {
+                document.getElementById('modal-delete-confirmation-treeflow').style.display = 'none';
+                document.getElementById('modal-default-actions-treeflow').style.display = 'flex';
+            };
+        </script>
     {% endif %}
 {% endblock %}
 
@@ -60,7 +72,7 @@
 
     <div class="modal-footer-actions" id="modal-delete-confirmation-treeflow" style="display: none;">
         <div class="text-danger fw-bold">{{ 'confirm.delete.entity'|trans }}</div>
-        <button type="button" class="btn btn-sm btn-secondary" onclick="cancelDeleteTreeflow()">
+        <button type="button" class="btn btn-sm btn-secondary" onclick="window.cancelDeleteTreeflow()">
             <i class="bi bi-x-circle"></i> {{ 'button.cancel'|trans }}
         </button>
         <form method="post" action="{{ path('treeflow_delete', {id: treeflow.id}) }}" style="display: inline;">
@@ -70,16 +82,4 @@
             </button>
         </form>
     </div>
-
-    <script>
-        function showDeleteConfirmationTreeflow() {
-            document.getElementById('modal-default-actions-treeflow').style.display = 'none';
-            document.getElementById('modal-delete-confirmation-treeflow').style.display = 'flex';
-        }
-
-        function cancelDeleteTreeflow() {
-            document.getElementById('modal-delete-confirmation-treeflow').style.display = 'none';
-            document.getElementById('modal-default-actions-treeflow').style.display = 'flex';
-        }
-    </script>
 {% endblock %}

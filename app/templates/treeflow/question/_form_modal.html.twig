@@ -119,6 +119,14 @@
 
     {{ form_widget(form._token) }}
 
+    {% if is_edit and question.id %}
+        <div class="form-group-modern mt-4 pt-3 border-top">
+            <button type="button" class="btn btn-sm btn-danger" onclick="showDeleteConfirmationQuestion()">
+                <i class="bi bi-trash"></i> {{ 'button.delete'|trans }}
+            </button>
+        </div>
+    {% endif %}
+
     <style>
         /* Hide radio buttons */
         .star-rating-input-hidden {
@@ -263,11 +271,6 @@
     <div class="modal-footer-actions" id="modal-default-actions-question">
         {{ button_modal_cancel() }}
         {{ button_modal_submit(is_edit, submit_key|default(null), submit_domain|default('messages')) }}
-        {% if is_edit and question.id %}
-            <button type="button" class="btn btn-sm btn-danger ms-2" onclick="showDeleteConfirmationQuestion()">
-                <i class="bi bi-trash"></i> {{ 'button.delete'|trans }}
-            </button>
-        {% endif %}
     </div>
 
     <div class="modal-footer-actions" id="modal-delete-confirmation-question" style="display: none;">
