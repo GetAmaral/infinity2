@@ -209,6 +209,143 @@ class TreeFlow extends EntityBase
         return null;
     }
 
+    /**
+     * Export the entire TreeFlow structure as JSON
+     *
+     * @return array TreeFlow structure with steps, questions, inputs, outputs, and connections
+     */
+    public function toJsonStructure(): array
+    {
+        // Get ordered steps following canvas flow (first step, then connections)
+        $orderedSteps = $this->getOrderedSteps();
+
+        $steps = [];
+
+        foreach ($orderedSteps as $step) {
+            // Build questions array
+            $questions = [];
+            foreach ($step->getQuestions() as $question) {
+                $questions[$question->getSlug()] = [
+                    'objective' => $question->getObjective(),
+                    'prompt' => $question->getPrompt(),
+                    'importance' => $question->getImportance(),
+                    'fewShotPositive' => $question->getFewShotPositive() ?? [],
+                    'fewShotNegative' => $question->getFewShotNegative() ?? [],
+                ];
+            }
+
+            // Build inputs array
+            $inputs = [];
+            foreach ($step->getInputs() as $input) {
+                $inputs[$input->getSlug() ?? 'input-' . $input->getId()] = [
+                    'type' => $input->getType()->value,
+                    'prompt' => $input->getPrompt(),
+                ];
+            }
+
+            // Build outputs array
+            $outputs = [];
+            foreach ($step->getOutputs() as $output) {
+                $outputData = [
+                    'prompt' => $output->getDescription(),
+                    'conditional' => $output->getConditional(),
+                ];
+
+                // Check if output has a connection
+                if ($output->hasConnection()) {
+                    $connection = $output->getConnection();
+                    $targetInput = $connection->getTargetInput();
+                    $targetStep = $targetInput->getStep();
+
+                    $outputData['connectTo'] = [
+                        'stepSlug' => $targetStep->getSlug(),
+                        'inputSlug' => $targetInput->getSlug() ?? 'input-' . $targetInput->getId(),
+                    ];
+                }
+
+                $outputs[$output->getSlug() ?? 'output-' . $output->getId()] = $outputData;
+            }
+
+            // Build step structure
+            $steps[$step->getSlug()] = [
+                'objective' => $step->getObjective(),
+                'prompt' => $step->getPrompt(),
+                'questions' => $questions,
+                'inputs' => $inputs,
+                'outputs' => $outputs,
+            ];
+        }
+
+        return [
+            $this->slug => [
+                'objective' => null, // TreeFlow doesn't have objective field
+                'prompt' => null,    // TreeFlow doesn't have prompt field
+                'steps' => $steps,
+            ]
+        ];
+    }
+
+    /**
+     * Get steps ordered by canvas flow (first step, then following connections)
+     *
+     * @return array<Step> Ordered array of steps
+     */
+    private function getOrderedSteps(): array
+    {
+        $orderedSteps = [];
+        $visitedSteps = [];
+
+        // Start with the first step
+        $currentStep = $this->getFirstStep();
+
+        if (!$currentStep) {
+            // No first step defined, return all steps in default order
+            return $this->steps->toArray();
+        }
+
+        // BFS traversal following connections
+        $queue = [$currentStep];
+
+        while (!empty($queue)) {
+            $step = array_shift($queue);
+            $stepId = $step->getId()->toRfc4122();
+
+            // Skip if already visited
+            if (isset($visitedSteps[$stepId])) {
+                continue;
+            }
+
+            // Mark as visited and add to ordered list
+            $visitedSteps[$stepId] = true;
+            $orderedSteps[] = $step;
+
+            // Find all connected steps through outputs
+            foreach ($step->getOutputs() as $output) {
+                if ($output->hasConnection()) {
+                    $connection = $output->getConnection();
+                    $targetInput = $connection->getTargetInput();
+                    $targetStep = $targetInput->getStep();
+                    $targetStepId = $targetStep->getId()->toRfc4122();
+
+                    // Add to queue if not yet visited
+                    if (!isset($visitedSteps[$targetStepId])) {
+                        $queue[] = $targetStep;
+                    }
+                }
+            }
+        }
+
+        // Add any unconnected steps at the end
+        foreach ($this->steps as $step) {
+            $stepId = $step->getId()->toRfc4122();
+            if (!isset($visitedSteps[$stepId])) {
+                $orderedSteps[] = $step;
+            }
+        }
+
+        return $orderedSteps;
+    }
+
     public function __toString(): string
     {
         return $this->name . ' v' . $this->version;

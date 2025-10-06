@@ -66,7 +66,7 @@ class CourseLectureFormType extends AbstractType
                 'download_uri' => false,
                 'attr' => [
                     'class' => 'form-input-modern',
-                    'accept' => 'video/mp4,video/webm,video/ogg,video/quicktime',
+                    'accept' => 'video/mp4,video/webm,video/ogg,video/quicktime,video/mp2t',
                 ],
                 'constraints' => [
                     new Assert\File([
@@ -77,6 +77,7 @@ class CourseLectureFormType extends AbstractType
                             'video/ogg',
                             'video/quicktime',
                             'video/x-msvideo',
+                            'video/mp2t',
                         ],
                         'mimeTypesMessage' => 'course.lecture.validation.invalid_video_format',
                     ]),
