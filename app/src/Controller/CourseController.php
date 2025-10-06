@@ -101,18 +101,11 @@ final class CourseController extends BaseApiController
             return $this->redirectToRefererOrRoute($request, 'course_index');
         }
 
-        // Handle modal/AJAX requests
-        if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
-            return $this->render('course/_form_modal.html.twig', [
-                'course' => $course,
-                'form' => $form,
-                'is_edit' => false,
-            ]);
-        }
-
-        return $this->render('course/new.html.twig', [
+        // Always render modal template (courses are created via modal)
+        return $this->render('course/_form_modal.html.twig', [
             'course' => $course,
             'form' => $form,
+            'is_edit' => false,
         ]);
     }
 
@@ -168,18 +161,11 @@ final class CourseController extends BaseApiController
             return $this->redirectToRefererOrRoute($request, 'course_index');
         }
 
-        // Handle modal/AJAX requests
-        if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
-            return $this->render('course/_form_modal.html.twig', [
-                'course' => $course,
-                'form' => $form,
-                'is_edit' => true,
-            ]);
-        }
-
-        return $this->render('course/edit.html.twig', [
+        // Always render modal template (courses are edited via modal)
+        return $this->render('course/_form_modal.html.twig', [
             'course' => $course,
             'form' => $form,
+            'is_edit' => true,
         ]);
     }
 
