@@ -1008,3 +1008,31 @@ main {
 [data-theme="light"] .video-nav-controls .form-check-label {
     color: #1a1a1a;
 }
+
+/* Star Rating System */
+.star-rating-input-hidden {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.clickable-stars {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.clickable-star {
+    color: rgba(139, 92, 246, 0.2);
+    transition: all 0.2s ease;
+}
+
+.clickable-star:hover {
+    transform: scale(1.2);
+}
+
+.clickable-star.active {
+    color: #f59e0b;
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}

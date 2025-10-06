@@ -51,22 +51,29 @@
 
     <div class="form-group-modern">
         <label class="form-label-modern">{{ form_label(form.importance) }}</label>
-        <div class="star-rating-container">
+        <div class="star-rating-container" data-controller="star-rating">
             <!-- Hidden radio inputs -->
             {% for choice in form.importance %}
                 {{ form_widget(choice, {
                     'attr': {
                         'class': 'star-rating-input-hidden',
-                        'data-star-value': choice.vars.label
+                        'data-star-value': choice.vars.label,
+                        'data-star-rating-target': 'input'
                     }
                 }) }}
             {% endfor %}
 
             <!-- Visible clickable stars -->
             <div class="clickable-stars">
-                <i class="bi bi-star-fill clickable-star" data-star="1"></i>
-                <i class="bi bi-star-fill clickable-star" data-star="2"></i>
-                <i class="bi bi-star-fill clickable-star" data-star="3"></i>
+                <i class="bi bi-star-fill clickable-star" data-star="1"
+                   data-star-rating-target="star"
+                   data-action="click->star-rating#clickStar mouseenter->star-rating#hoverStar mouseleave->star-rating#leaveStar"></i>
+                <i class="bi bi-star-fill clickable-star" data-star="2"
+                   data-star-rating-target="star"
+                   data-action="click->star-rating#clickStar mouseenter->star-rating#hoverStar mouseleave->star-rating#leaveStar"></i>
+                <i class="bi bi-star-fill clickable-star" data-star="3"
+                   data-star-rating-target="star"
+                   data-action="click->star-rating#clickStar mouseenter->star-rating#hoverStar mouseleave->star-rating#leaveStar"></i>
             </div>
         </div>
         <small class="text-muted mt-1 d-block">{{ 'question.form.importance.help'|trans({}, 'treeflow') }}</small>
@@ -88,8 +95,10 @@
                     </div>
                 {% endfor %}
             </div>
-            <button type="button" class="btn btn-sm luminai-btn-success fewshot-add mt-2">
-                <i class="bi bi-plus-circle"></i> {{ 'question.button.add.positive.example'|trans({}, 'treeflow') }}
+            <button type="button" class="btn btn-sm luminai-btn-success fewshot-add mt-2"
+                    title="{{ 'question.button.add.positive.example'|trans({}, 'treeflow') }}"
+                    data-bs-toggle="tooltip">
+                <i class="bi bi-plus-circle"></i>
             </button>
         </div>
         {{ form_errors(form.fewShotPositive) }}
@@ -110,8 +119,10 @@
                     </div>
                 {% endfor %}
             </div>
-            <button type="button" class="btn btn-sm luminai-btn-success fewshot-add mt-2">
-                <i class="bi bi-plus-circle"></i> {{ 'question.button.add.negative.example'|trans({}, 'treeflow') }}
+            <button type="button" class="btn btn-sm luminai-btn-success fewshot-add mt-2"
+                    title="{{ 'question.button.add.negative.example'|trans({}, 'treeflow') }}"
+                    data-bs-toggle="tooltip">
+                <i class="bi bi-plus-circle"></i>
             </button>
         </div>
         {{ form_errors(form.fewShotNegative) }}
@@ -126,145 +137,6 @@
             </button>
         </div>
     {% endif %}
-
-    <style>
-        /* Hide radio buttons */
-        .star-rating-input-hidden {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* Clickable stars */
-        .clickable-stars {
-            display: flex;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .clickable-star {
-            color: rgba(139, 92, 246, 0.2);
-            transition: all 0.2s ease;
-        }
-
-        .clickable-star:hover {
-            transform: scale(1.2);
-        }
-
-        .clickable-star.active {
-            color: #f59e0b;
-            text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
-        }
-    </style>
-
-    <script>
-        // Use setTimeout to ensure DOM is fully rendered in modal
-        setTimeout(function() {
-            // Star Rating System
-            const stars = document.querySelectorAll('.clickable-star');
-            const radioInputs = document.querySelectorAll('.star-rating-input-hidden');
-
-            console.log('Found stars:', stars.length);
-            console.log('Found radio inputs:', radioInputs.length);
-
-            if (stars.length > 0) {
-                // Set initial state based on checked radio
-                radioInputs.forEach((radio) => {
-                    if (radio.checked) {
-                        const starValue = parseInt(radio.getAttribute('data-star-value'));
-                        console.log('Initial star value:', starValue);
-                        updateStars(starValue);
-                    }
-                });
-
-                // Click handler for stars
-                stars.forEach(star => {
-                    star.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const starValue = parseInt(this.getAttribute('data-star'));
-                        console.log('Clicked star:', starValue);
-
-                        // Update visual stars
-                        updateStars(starValue);
-
-                        // Check corresponding radio button
-                        radioInputs.forEach(radio => {
-                            const radioValue = parseInt(radio.getAttribute('data-star-value'));
-                            radio.checked = (radioValue === starValue);
-                        });
-                    });
-
-                    // Add hover effect
-                    star.addEventListener('mouseenter', function() {
-                        const starValue = parseInt(this.getAttribute('data-star'));
-                        stars.forEach((s, idx) => {
-                            if (idx < starValue) {
-                                s.style.color = '#f59e0b';
-                            }
-                        });
-                    });
-
-                    star.addEventListener('mouseleave', function() {
-                        // Restore active state
-                        radioInputs.forEach((radio) => {
-                            if (radio.checked) {
-                                const starValue = parseInt(radio.getAttribute('data-star-value'));
-                                updateStars(starValue);
-                            }
-                        });
-                    });
-                });
-            }
-
-            function updateStars(value) {
-                stars.forEach((star, idx) => {
-                    const starNumber = idx + 1;
-                    if (starNumber <= value) {
-                        star.classList.add('active');
-                    } else {
-                        star.classList.remove('active');
-                    }
-                });
-            }
-
-            // Few-Shot Collection Management
-            const addButtons = document.querySelectorAll('.fewshot-add');
-            console.log('Found add buttons:', addButtons.length);
-
-            addButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('Add button clicked');
-                    const container = this.closest('.fewshot-collection-container');
-                    const itemsContainer = container.querySelector('.fewshot-items');
-                    const prototype = container.getAttribute('data-prototype');
-                    let index = parseInt(container.getAttribute('data-index')) || 0;
-
-                    console.log('Creating new item with index:', index);
-
-                    const newItem = document.createElement('div');
-                    newItem.classList.add('fewshot-item', 'mb-2');
-                    newItem.innerHTML = prototype.replace(/__name__/g, index) +
-                        '<button type="button" class="btn btn-sm btn-danger fewshot-remove mt-1">' +
-                        '<i class="bi bi-trash"></i> {{ 'button.remove'|trans({}, 'messages') }}</button>';
-
-                    itemsContainer.appendChild(newItem);
-                    container.setAttribute('data-index', index + 1);
-                });
-            });
-
-            // Remove item from collection (event delegation)
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('fewshot-remove') || e.target.closest('.fewshot-remove')) {
-                    e.preventDefault();
-                    const button = e.target.classList.contains('fewshot-remove') ? e.target : e.target.closest('.fewshot-remove');
-                    const item = button.closest('.fewshot-item');
-                    item.remove();
-                }
-            });
-        }, 100); // Small delay to ensure modal content is rendered
-    </script>
 {% endblock %}
 
 {% block modal_footer %}
@@ -273,16 +145,18 @@
         {{ button_modal_submit(is_edit, submit_key|default(null), submit_domain|default('messages')) }}
     </div>
 
-    <div class="modal-footer-actions" id="modal-delete-confirmation-question" style="display: none;">
-        <div class="text-danger fw-bold">{{ 'confirm.delete.entity'|trans }}</div>
-        <button type="button" class="btn btn-sm btn-secondary delete-cancel-btn" data-entity-type="question">
-            <i class="bi bi-x-circle"></i> {{ 'button.cancel'|trans }}
-        </button>
-        <button type="button" class="btn btn-sm btn-danger delete-confirm-btn"
-                data-entity-type="question"
-                data-delete-url="{{ path('question_delete', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id}) }}"
-                data-csrf-token="{{ csrf_token('delete-question-' ~ question.id) }}">
-            <i class="bi bi-trash"></i> {{ 'button.confirm'|trans }}
-        </button>
-    </div>
+    {% if is_edit and question.id %}
+        <div class="modal-footer-actions" id="modal-delete-confirmation-question" style="display: none;">
+            <div class="text-danger fw-bold">{{ 'confirm.delete.entity'|trans }}</div>
+            <button type="button" class="btn btn-sm btn-secondary delete-cancel-btn" data-entity-type="question">
+                <i class="bi bi-x-circle"></i> {{ 'button.cancel'|trans }}
+            </button>
+            <button type="button" class="btn btn-sm btn-danger delete-confirm-btn"
+                    data-entity-type="question"
+                    data-delete-url="{{ path('question_delete', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id}) }}"
+                    data-csrf-token="{{ csrf_token('delete-question-' ~ question.id) }}">
+                <i class="bi bi-trash"></i> {{ 'button.confirm'|trans }}
+            </button>
+        </div>
+    {% endif %}
 {% endblock %}

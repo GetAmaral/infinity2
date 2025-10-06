@@ -98,6 +98,12 @@ export default class extends Controller {
                     // Clear and re-render canvas
                     this.clearCanvas();
                     this.renderSteps();
+
+                    // Reload and render connections
+                    await this.loadConnections();
+                    requestAnimationFrame(() => {
+                        this.renderConnections();
+                    });
                 }
             }
         } catch (error) {
@@ -410,7 +416,7 @@ export default class extends Controller {
         deleteBtn.innerHTML = '<i class="bi bi-trash me-1"></i>Delete';
 
         // Insert delete button before cancel button
-        cancelBtn.parentNode.insertBefore(deleteBtn, cancelBtn);
+        //cancelBtn.parentNode.insertBefore(deleteBtn, cancelBtn);
 
         // Add click handler for delete
         deleteBtn.addEventListener('click', async (e) => {
@@ -629,6 +635,7 @@ export default class extends Controller {
     }
 
     async openModal(url) {
+        console.log('[CANVAS] openModal called with URL:', url);
         try {
             // Fetch the modal content
             const response = await fetch(url, {
@@ -658,6 +665,7 @@ export default class extends Controller {
             if (form) {
                 // Store original action
                 const originalAction = form.getAttribute('action');
+                console.log('[CANVAS] Form action found:', originalAction);
                 form.dataset.originalAction = originalAction;
 
                 // CRITICAL: Disable Turbo Drive to prevent interception
@@ -670,6 +678,11 @@ export default class extends Controller {
                 form.removeAttribute('data-controller');
                 form.removeAttribute('data-action');
 
+                // Remove orphaned Stimulus targets (submit button has data-crud-modal-target)
+                doc.querySelectorAll('[data-crud-modal-target]').forEach(el => {
+                    el.removeAttribute('data-crud-modal-target');
+                });
+
                 // Remove inline scripts
                 const scripts = doc.querySelectorAll('script');
                 scripts.forEach(script => script.remove());
@@ -677,13 +690,15 @@ export default class extends Controller {
 
             // Insert modified HTML into global modal container
             const container = document.getElementById('global-modal-container');
+            console.log('[CANVAS] Global modal container found:', !!container);
             if (container) {
                 container.innerHTML = doc.body.innerHTML;
+                console.log('[CANVAS] HTML inserted, calling setupModalFormHandler');
 
                 // Now set up AJAX handler
                 this.setupModalFormHandler(container);
             } else {
-                console.error('Global modal container not found');
+                console.error('[CANVAS] Global modal container not found');
             }
         } catch (error) {
             console.error('Error opening modal:', error);
@@ -701,12 +716,20 @@ export default class extends Controller {
 
         // Get the original action URL
         const actionUrl = form.dataset.originalAction;
+        console.log('[CANVAS] Checking originalAction:', actionUrl);
         if (!actionUrl) {
-            console.error('[CANVAS] No original action URL found');
+            console.error('[CANVAS] No original action URL found - form dataset:', form.dataset);
             return;
         }
 
         console.log('[CANVAS] Form found, action:', actionUrl);
+
+        // Check if submit button exists
+        const submitButton = form.querySelector('button[type="submit"]');
+        console.log('[CANVAS] Submit button found:', !!submitButton);
+        if (submitButton) {
+            console.log('[CANVAS] Submit button text:', submitButton.textContent.trim());
+        }
 
         // Track form changes for confirmation dialog
         let formChanged = false;
@@ -724,6 +747,15 @@ export default class extends Controller {
         const closeModal = this.setupModalCloseHandlers(container, form, () => formChanged);
 
         // Add submit handler
+        console.log('[CANVAS] Adding submit event listener to form');
+
+        // Also add a click listener to the submit button for debugging
+        if (submitButton) {
+            submitButton.addEventListener('click', (e) => {
+                console.log('[CANVAS] Submit button clicked!');
+            }, true); // Use capture phase
+        }
+
         form.addEventListener('submit', async (e) => {
             console.log('[CANVAS] Form submit intercepted!');
             e.preventDefault();

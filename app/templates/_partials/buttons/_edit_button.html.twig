@@ -21,20 +21,20 @@
 {% set buttonIcon = icon ?? config.default_icon %}
 
 {% if is_granted %}
-<button type="button"
-        class="{{ config.class }}"
-        {% if style %}style="{{ style }}"{% endif %}
-        data-controller="{{ config.data_controller }}"
-        data-modal-opener-url-value="{{ url }}"
-        data-action="click->modal-opener#open"
-        {% if tooltip %}
-            data-bs-toggle="tooltip"
-            data-bs-placement="left"
-            title="{{ tooltip }}"
-        {% endif %}>
+<a class="dropdown-item"
+   href="#"
+   {% if style %}style="{{ style }}"{% endif %}
+   data-controller="{{ config.data_controller }}"
+   data-modal-opener-url-value="{{ url }}"
+   data-action="click->modal-opener#open"
+   {% if tooltip %}
+       data-bs-toggle="tooltip"
+       data-bs-placement="left"
+       title="{{ tooltip }}"
+   {% endif %}>
     <i class="{{ buttonIcon }}{% if label is not null %} me-2{% endif %}"></i>
     {% if label is not null %}
         {{ buttonText|trans({}, translation_domain) }}
     {% endif %}
-</button>
+</a>
 {% endif %}

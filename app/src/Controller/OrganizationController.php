@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Security\Voter\OrganizationVoter;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * @extends BaseApiController<Organization>
@@ -27,7 +28,8 @@ final class OrganizationController extends BaseApiController
         private readonly EntityManagerInterface $entityManager,
         private readonly OrganizationRepository $repository,
         private readonly ListPreferencesService $listPreferencesService,
-        private readonly SluggerInterface $slugger
+        private readonly SluggerInterface $slugger,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager
     ) {}
 
     #[Route('', name: 'organization_index', methods: ['GET'])]
@@ -296,6 +298,8 @@ final class OrganizationController extends BaseApiController
     {
         assert($entity instanceof Organization);
 
+        $organizationId = $entity->getId()?->toString() ?? '';
+
         // Calculate active courses (courses with students enrolled)
         $activeCourseCount = 0;
         foreach ($entity->getCourses() as $course) {
@@ -313,7 +317,7 @@ final class OrganizationController extends BaseApiController
         }
 
         return [
-            'id' => $entity->getId()?->toString() ?? '',
+            'id' => $organizationId,
             'name' => $entity->getName(),
             'slug' => $entity->getSlug(),
             'description' => $entity->getDescription(),
@@ -330,6 +334,7 @@ final class OrganizationController extends BaseApiController
             'createdByName' => $entity->getCreatedBy()?->getName() ?? null,
             'updatedByName' => $entity->getUpdatedBy()?->getName() ?? null,
             'isActive' => $entity->isActive(),
+            'deleteCsrfToken' => $this->csrfTokenManager->getToken('delete-organization-' . $organizationId)->getValue(),
         ];
     }
 }

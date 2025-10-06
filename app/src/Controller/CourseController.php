@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * @extends BaseApiController<Course>
@@ -41,6 +42,7 @@ final class CourseController extends BaseApiController
         private readonly UserRepository $userRepository,
         private readonly ListPreferencesService $listPreferencesService,
         private readonly MessageBusInterface $messageBus,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
         #[Autowire(param: 'app.videos.originals_path')]
         private readonly string $videosOriginalsPath
     ) {}
@@ -726,8 +728,10 @@ final class CourseController extends BaseApiController
     {
         assert($entity instanceof Course);
 
+        $courseId = $entity->getId()?->toString() ?? '';
+
         return [
-            'id' => $entity->getId()?->toString() ?? '',
+            'id' => $courseId,
             'name' => $entity->getName(),
             'description' => $entity->getDescription() ?? '',
             'active' => $entity->isActive(),
@@ -743,6 +747,7 @@ final class CourseController extends BaseApiController
             'enrolledStudentsCount' => $entity->getStudentCourses()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'createdAtFormatted' => $entity->getCreatedAt()->format('M d, Y'),
+            'deleteCsrfToken' => $this->csrfTokenManager->getToken('delete-course-' . $courseId)->getValue(),
         ];
     }
 }

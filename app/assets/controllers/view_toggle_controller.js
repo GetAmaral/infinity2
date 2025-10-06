@@ -460,6 +460,17 @@ export default class extends Controller {
             rootEl.setAttribute('data-entity-id', item.id);
         }
 
+        // Handle CSRF token binding (data-csrf-token-bind)
+        const csrfTokenElements = clone.querySelectorAll('[data-csrf-token-bind]');
+        csrfTokenElements.forEach(el => {
+            const bindKey = el.getAttribute('data-csrf-token-bind');
+            const csrfToken = this.getNestedValue(item, bindKey);
+            if (csrfToken) {
+                el.setAttribute('data-csrf-token', csrfToken);
+            }
+            el.removeAttribute('data-csrf-token-bind');
+        });
+
         // Replace {entityId} placeholder in all attributes
         if (item.id) {
             const allElements = clone.querySelectorAll('*');

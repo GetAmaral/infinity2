@@ -152,6 +152,7 @@ final class ButtonExtension extends AbstractExtension
         ?string $tooltip = null,
         ?string $label = null,
         ?string $permission = null,
+        ?string $csrfPrefix = null,
         string $size = '',
         ?string $style = null,
         ?string $icon = null
@@ -165,6 +166,7 @@ final class ButtonExtension extends AbstractExtension
             'tooltip' => $tooltip,
             'label' => $label,
             'permission' => $permission,
+            'csrf_prefix' => $csrfPrefix,
             'size' => $size,
             'style' => $style,
             'icon' => $icon,

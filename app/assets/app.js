@@ -5,6 +5,7 @@ import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import 'tom-select/dist/css/tom-select.bootstrap5.css';
 import './styles/app.css';
 import './delete-handler.js';
+import './fewshot-handler.js';
 
 // Make Bootstrap available globally
 window.bootstrap = bootstrap;

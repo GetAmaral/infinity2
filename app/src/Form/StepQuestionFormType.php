@@ -71,7 +71,7 @@ class StepQuestionFormType extends AbstractType
                 'entry_options' => [
                     'label' => false,
                     'attr' => [
-                        'class' => 'form-control fewshot-entry',
+                        'class' => 'form-input-modern fewshot-entry',
                         'rows' => 2,
                         'placeholder' => 'question.form.fewshot.positive.placeholder',
                     ],
@@ -90,7 +90,7 @@ class StepQuestionFormType extends AbstractType
                 'entry_options' => [
                     'label' => false,
                     'attr' => [
-                        'class' => 'form-control fewshot-entry',
+                        'class' => 'form-input-modern fewshot-entry',
                         'rows' => 2,
                         'placeholder' => 'question.form.fewshot.negative.placeholder',
                     ],

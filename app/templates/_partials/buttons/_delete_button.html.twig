@@ -11,7 +11,7 @@
  * @param string|null translation_key - Translation key (default: 'button.delete')
  * @param string translation_domain - Translation domain (default: 'messages')
  * @param string|null tooltip - Tooltip text
- * @param string|null label - Button label (null = icon-only)
+ * @param string|null label - Button label
  * @param bool is_granted - Permission check result
  * @param string size - Size class
  * @param string|null style - Inline CSS override
@@ -20,31 +20,18 @@
 #}
 {% set buttonText = translation_key ?? config.default_translation_key %}
 {% set buttonIcon = icon ?? config.default_icon %}
-{% set confirmMessage = confirm_key ?? config.default_confirm_key %}
 
 {% if is_granted %}
-<button type="button"
-        class="{{ config.class }}"
-        {% if style %}style="{{ style }}"{% endif %}
-        onclick="if(confirm('{{ confirmMessage|trans({}, translation_domain) }}')){
-            fetch('{{ url }}', {method:'POST'})
-            .then(response => {
-                if(response.ok) {
-                    location.reload();
-                } else {
-                    alert('{{ 'error.delete.failed'|trans }}');
-                }
-            })
-            .catch(() => alert('{{ 'error.network'|trans }}'));
-        }"
-        {% if tooltip %}
-            data-bs-toggle="tooltip"
-            data-bs-placement="left"
-            title="{{ tooltip }}"
-        {% endif %}>
-    <i class="{{ buttonIcon }}{% if label is not null %} me-2{% endif %}"></i>
-    {% if label is not null %}
-        {{ buttonText|trans({}, translation_domain) }}
-    {% endif %}
-</button>
+<a class="dropdown-item text-danger"
+   href="#"
+   data-delete-url="{{ url }}"
+   data-csrf-token-bind="deleteCsrfToken"
+   data-entity-name="{{ buttonText|trans({}, translation_domain) }}"
+   {% if tooltip %}
+       data-bs-toggle="tooltip"
+       data-bs-placement="left"
+       title="{{ tooltip }}"
+   {% endif %}>
+    <i class="{{ buttonIcon }}{% if label is not null %} me-2{% endif %}"></i>{% if label is not null %}{{ buttonText|trans({}, translation_domain) }}{% endif %}
+</a>
 {% endif %}

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * @extends BaseApiController<User>
@@ -25,7 +26,8 @@ final class UserController extends BaseApiController
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository $repository,
         private readonly ListPreferencesService $listPreferencesService,
-        private readonly UserPasswordHasherInterface $passwordHasher
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager
     ) {}
 
     #[Route('', name: 'user_index', methods: ['GET'])]
@@ -208,6 +210,8 @@ final class UserController extends BaseApiController
     {
         assert($entity instanceof User);
 
+        $userId = $entity->getId()?->toString() ?? '';
+
         // Get role names - getRoles() returns array of strings like ['ROLE_USER', 'ROLE_ADMIN']
         $roles = $entity->getRoles();
         $rolesDisplay = !empty($roles) ? implode(', ', array_map(fn($r) => ucfirst(strtolower(str_replace('ROLE_', '', $r))), $roles)) : 'User';
@@ -216,7 +220,7 @@ final class UserController extends BaseApiController
         $isLocked = $entity->getLockedUntil() && $entity->getLockedUntil() > new \DateTimeImmutable();
 
         return [
-            'id' => $entity->getId()?->toString() ?? '',
+            'id' => $userId,
             'name' => $entity->getName(),
             'email' => $entity->getEmail(),
             'organizationId' => $entity->getOrganization()?->getId()?->toString() ?? '',
@@ -230,6 +234,7 @@ final class UserController extends BaseApiController
             'enrolledCoursesCount' => $entity->getStudentCourses()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'createdAtFormatted' => $entity->getCreatedAt()->format('M d, Y'),
+            'deleteCsrfToken' => $this->csrfTokenManager->getToken('delete-user-' . $userId)->getValue(),
         ];
     }
 }
