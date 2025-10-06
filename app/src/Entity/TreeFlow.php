@@ -69,6 +69,10 @@ class TreeFlow extends EntityBase
     #[Groups(['treeflow:read', 'treeflow:write'])]
     protected ?array $canvasViewState = null;
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['treeflow:read'])]
+    protected ?array $jsonStructure = null;
+
     #[ORM\ManyToOne(targetEntity: Organization::class)]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['treeflow:read'])]
@@ -158,6 +162,17 @@ class TreeFlow extends EntityBase
         return $this;
     }
 
+    public function getJsonStructure(): ?array
+    {
+        return $this->jsonStructure;
+    }
+
+    public function setJsonStructure(?array $jsonStructure): self
+    {
+        $this->jsonStructure = $jsonStructure;
+        return $this;
+    }
+
     public function getOrganization(): Organization
     {
         return $this->organization;
@@ -210,11 +225,11 @@ class TreeFlow extends EntityBase
     }
 
     /**
-     * Export the entire TreeFlow structure as JSON
+     * Convert the entire TreeFlow structure to JSON array
      *
      * @return array TreeFlow structure with steps, questions, inputs, outputs, and connections
      */
-    public function toJsonStructure(): array
+    public function convertToJson(): array
     {
         // Get ordered steps following canvas flow (first step, then connections)
         $orderedSteps = $this->getOrderedSteps();

@@ -43,12 +43,12 @@
                 </div>
                 {% endif %}
 
-                {% if app.user and current_organization() %}
+                {% if app.user %}
                     {% if can_switch_organization() %}
                         {% set orgs = available_organizations() %}
                         <!-- Organization Switcher (Admin/Super Admin Only) -->
                         <div class="dropdown">
-                            <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher.title'|trans({}, 'organization') }}">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center org-selector-link" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher.title'|trans({}, 'organization') }}">
                                 {% if current_organization() %}
                                     <div class="me-2">
                                         {{ org_logo.logo(current_organization(), 'xs') }}
@@ -56,7 +56,7 @@
                                 {% else %}
                                     <i class="bi bi-globe me-2"></i>
                                 {% endif %}
-                                <span class="d-none d-md-inline">{{ current_organization() ? current_organization().name : 'organization.all.organizations'|trans({}, 'organization') }}</span>
+                                <span>{{ current_organization() ? current_organization().name : 'organization.all.organizations'|trans({}, 'organization') }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="orgDropdown" style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
                                 <li class="px-3 py-2 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
@@ -92,13 +92,13 @@
                                 {% endfor %}
                             </ul>
                         </div>
-                    {% else %}
+                    {% elseif current_organization() %}
                         <!-- Organization Display (Non-Admin Users) -->
-                        <div class="nav-link text-white d-flex align-items-center px-3">
+                        <div class="nav-link d-flex align-items-center px-3 org-display">
                             <div class="me-2">
                                 {{ org_logo.logo(current_organization(), 'xs') }}
                             </div>
-                            <span class="d-none d-md-inline">{{ current_organization().name }}</span>
+                            <span>{{ current_organization().name }}</span>
                         </div>
                     {% endif %}
                 {% endif %}
@@ -164,6 +164,13 @@
 
     <!-- Global Modal Container -->
     <div id="global-modal-container"></div>
+
+    <!-- Avelum Branding Card - Fixed Bottom Right -->
+    <div class="avelum-branding-card">
+        <span class="avelum-text">by</span>
+        <img src="/avelum_logo_md_dark.png" alt="Avelum" class="avelum-logo logo-dark-theme">
+        <img src="/avelum_logo_md_ligth.png" alt="Avelum" class="avelum-logo logo-light-theme">
+    </div>
 
     {% block javascripts %}{% endblock %}
 
@@ -460,6 +467,22 @@
     </script>
 
     <style>
+        /* Organization Selector - Theme Responsive Colors */
+        .org-selector-link,
+        .org-display {
+            color: #fff !important;
+        }
+
+        [data-theme="light"] .org-selector-link,
+        [data-theme="light"] .org-display {
+            color: #1a1a1a !important;
+        }
+
+        [data-theme="light"] .org-selector-link i,
+        [data-theme="light"] .org-display i {
+            color: #1a1a1a !important;
+        }
+
         /* Navbar Button Consistency */
         .navbar-menu-btn {
             background: transparent;
@@ -515,6 +538,68 @@
                 border-radius: 0 !important;
                 border-left: none !important;
                 border-right: none !important;
+            }
+        }
+
+        /* Avelum Branding Card - Fixed Bottom Right */
+        .avelum-branding-card {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--luminai-card-bg);
+            border: 1px solid var(--luminai-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .avelum-branding-card:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .avelum-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--luminai-text);
+            opacity: 0.8;
+        }
+
+        .avelum-logo {
+            height: 31px;
+            width: auto;
+            display: none;
+        }
+
+        /* Show light logo in light theme, dark logo in dark theme */
+        [data-theme="light"] .avelum-logo.logo-light-theme {
+            display: block;
+        }
+
+        [data-theme="dark"] .avelum-logo.logo-dark-theme {
+            display: block;
+        }
+
+        /* Mobile: Smaller branding card */
+        @media (max-width: 767px) {
+            .avelum-branding-card {
+                bottom: 15px;
+                right: 15px;
+                padding: 8px 12px;
+                gap: 8px;
+            }
+
+            .avelum-text {
+                font-size: 12px;
+            }
+
+            .avelum-logo {
+                height: 26px;
             }
         }
     </style>
