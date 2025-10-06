@@ -202,6 +202,8 @@ export default class extends Controller {
             this.renderConnections();
             // Apply saved canvas state transform (skip saving on init)
             this.updateTransform(true);
+            // Highlight unreachable steps on initial load
+            this.highlightUnreachableSteps();
         });
 
         // Add canvas event listeners
@@ -654,11 +656,15 @@ export default class extends Controller {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
 
-            // Remove all Stimulus controllers from overlay and form
+            // Remove ONLY crud-modal Stimulus controllers from overlay and form
             const overlay = doc.querySelector('.modal-fullscreen-overlay');
             if (overlay) {
                 overlay.removeAttribute('data-controller');
-                overlay.removeAttribute('data-action');
+                // Only remove crud-modal actions, preserve others
+                const overlayAction = overlay.getAttribute('data-action');
+                if (overlayAction && overlayAction.includes('crud-modal')) {
+                    overlay.removeAttribute('data-action');
+                }
             }
 
             const form = doc.querySelector('form');
@@ -674,20 +680,30 @@ export default class extends Controller {
                 // Remove form action to prevent default submission
                 form.removeAttribute('action');
 
-                // Remove Stimulus controllers
+                // Remove Stimulus controllers from form only
                 form.removeAttribute('data-controller');
-                form.removeAttribute('data-action');
+                // Only remove crud-modal actions from form
+                const formAction = form.getAttribute('data-action');
+                if (formAction && formAction.includes('crud-modal')) {
+                    form.removeAttribute('data-action');
+                }
 
-                // Remove ALL crud-modal related attributes to prevent interference
+                // Remove crud-modal targets and actions ONLY (preserve star-rating, etc.)
                 doc.querySelectorAll('[data-crud-modal-target]').forEach(el => {
                     el.removeAttribute('data-crud-modal-target');
                 });
 
-                // Remove all data-action attributes that reference crud-modal
-                doc.querySelectorAll('[data-action]').forEach(el => {
+                // Remove ONLY data-action attributes that reference crud-modal, keep others
+                doc.querySelectorAll('[data-action*="crud-modal"]').forEach(el => {
                     const action = el.getAttribute('data-action');
-                    if (action && action.includes('crud-modal')) {
-                        el.removeAttribute('data-action');
+                    if (action) {
+                        // Remove only the crud-modal parts, keep other actions
+                        const actions = action.split(' ').filter(a => !a.includes('crud-modal'));
+                        if (actions.length > 0) {
+                            el.setAttribute('data-action', actions.join(' '));
+                        } else {
+                            el.removeAttribute('data-action');
+                        }
                     }
                 });
 
@@ -732,27 +748,51 @@ export default class extends Controller {
 
         console.log('[CANVAS] Form found, action:', actionUrl);
 
-        // Check if submit button exists
-        const submitButton = form.querySelector('button[type="submit"]');
-        console.log('[CANVAS] Submit button found:', !!submitButton);
-        if (submitButton) {
-            console.log('[CANVAS] Submit button text:', submitButton.textContent.trim());
+        // Declare variables outside try block
+        let submitButton = null;
+        let formChanged = false;
+
+        // Wrap in try-catch to catch any errors
+        try {
+            console.log('[CANVAS] About to search for submit button...');
+
+            // Check if submit button exists
+            submitButton = form.querySelector('button[type="submit"]');
+            console.log('[CANVAS] Submit button found:', !!submitButton);
+            if (submitButton) {
+                console.log('[CANVAS] Submit button text:', submitButton.textContent.trim());
+            }
+
+            console.log('[CANVAS] Setting up form change tracking...');
+
+            // Track form changes for confirmation dialog
+            const inputs = form.querySelectorAll('input, textarea, select');
+            console.log('[CANVAS] Found', inputs.length, 'inputs to track');
+
+            inputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    formChanged = true;
+                });
+                input.addEventListener('input', () => {
+                    formChanged = true;
+                });
+            });
+
+            console.log('[CANVAS] Form change tracking complete');
+        } catch (error) {
+            console.error('[CANVAS] Error in form setup:', error);
         }
 
-        // Track form changes for confirmation dialog
-        let formChanged = false;
-        const inputs = form.querySelectorAll('input, textarea, select');
-        inputs.forEach(input => {
-            input.addEventListener('change', () => {
-                formChanged = true;
-            });
-            input.addEventListener('input', () => {
-                formChanged = true;
-            });
-        });
-
         // Add close/cancel button handlers and get closeModal function
-        const closeModal = this.setupModalCloseHandlers(container, form, () => formChanged);
+        console.log('[CANVAS] Setting up close handlers...');
+        let closeModal;
+        try {
+            closeModal = this.setupModalCloseHandlers(container, form, () => formChanged);
+            console.log('[CANVAS] Close handlers set up successfully');
+        } catch (error) {
+            console.error('[CANVAS] Error setting up close handlers:', error);
+            return;
+        }
 
         // Add submit handler
         console.log('[CANVAS] Adding submit event listener to form');
@@ -761,6 +801,17 @@ export default class extends Controller {
         if (submitButton) {
             submitButton.addEventListener('click', (e) => {
                 console.log('[CANVAS] Submit button clicked!');
+                console.log('[CANVAS] Button default prevented?', e.defaultPrevented);
+                console.log('[CANVAS] Form element:', form);
+
+                // Check if form submit event would fire
+                console.log('[CANVAS] Manually triggering form submit...');
+                e.preventDefault(); // Prevent any default behavior
+                e.stopPropagation();
+
+                // Trigger form submit event manually
+                const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                form.dispatchEvent(submitEvent);
             }, true); // Use capture phase
         }
 
@@ -1025,6 +1076,9 @@ export default class extends Controller {
             // Reload connections
             await this.loadConnections();
             this.renderConnections();
+
+            // Ensure highlighting is applied
+            this.highlightUnreachableSteps();
         }
     }
 
@@ -1066,6 +1120,9 @@ export default class extends Controller {
 
         // Render continuation lines for unconnected outputs
         this.renderContinuationLines();
+
+        // Highlight unreachable steps (not connected to first step)
+        this.highlightUnreachableSteps();
     }
 
     renderConnection(connection) {
@@ -1222,8 +1279,9 @@ export default class extends Controller {
         // Create + button at the end
         const button = document.createElement('div');
         button.className = 'continuation-add-button';
-        button.style.left = `${endX - 14}px`; // Center the 28px button
-        button.style.top = `${startPos.y - 14}px`;
+        // Button is 18px + 1.5px border on each side = 21px total
+        button.style.left = `${endX - 9}px`; // X position was already correct
+        button.style.top = `${startPos.y - 10.5}px`; // Center vertically on the line (21/2 = 10.5)
         button.dataset.stepId = step.id;
         button.dataset.sourceType = source.type; // 'output' or 'step'
         if (source.type === 'output') {
@@ -2591,6 +2649,55 @@ export default class extends Controller {
                 } else {
                     btn.className = 'bi bi-fullscreen';
                 }
+            }
+        });
+    }
+
+    highlightUnreachableSteps() {
+        const stepsArray = typeof this.stepsValue === 'string'
+            ? JSON.parse(this.stepsValue)
+            : this.stepsValue;
+
+        // Find first step
+        const firstStep = stepsArray.find(s => s.first);
+
+        if (!firstStep) {
+            // No first step defined - highlight all as unreachable
+            this.nodes.forEach((node) => {
+                node.classList.add('unreachable-step');
+            });
+            return;
+        }
+
+        // Build reachability set starting from first step
+        const reachable = new Set();
+        const queue = [firstStep.id];
+        reachable.add(firstStep.id);
+
+        // BFS traversal following connections
+        while (queue.length > 0) {
+            const currentStepId = queue.shift();
+
+            // Find all connections where this step is the source
+            this.connections.forEach(conn => {
+                if (conn.sourceOutput.stepId === currentStepId) {
+                    const targetStepId = conn.targetInput.stepId;
+                    if (!reachable.has(targetStepId)) {
+                        reachable.add(targetStepId);
+                        queue.push(targetStepId);
+                    }
+                }
+            });
+        }
+
+        // Highlight unreachable steps
+        this.nodes.forEach((node, stepId) => {
+            if (reachable.has(stepId)) {
+                // Reachable - remove highlight if present
+                node.classList.remove('unreachable-step');
+            } else {
+                // Unreachable - add highlight
+                node.classList.add('unreachable-step');
             }
         });
     }

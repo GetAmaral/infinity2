@@ -1,0 +1,76 @@
+badge.organization: Organization
+organization.all.organizations: 'All Organizations'
+organization.all.organizations.root: 'All Organizations (Root)'
+organization.api.link: API
+organization.back.to.details: 'Back to Details'
+organization.back.to.list: 'Back to Organizations'
+organization.back.to.organization: 'Back to Organization'
+organization.confirm.delete: 'Are you sure you want to delete "%name%"?'
+organization.courses: Courses
+organization.created.at: Created
+organization.created.by: 'Created By'
+organization.edit: 'Edit Organization'
+organization.flash.cannot.delete.has.users: 'Cannot delete organization with assigned users'
+organization.flash.created.successfully: 'Organization created successfully!'
+organization.flash.deleted.successfully: 'Organization deleted successfully!'
+organization.flash.save.error: 'Failed to save organization'
+organization.flash.save.success: 'Organization saved successfully'
+organization.flash.save.success.description: 'Your changes have been saved'
+organization.flash.updated.successfully: 'Organization updated successfully!'
+organization.form.current.dark.logo: 'Current dark logo'
+organization.form.current.logo: 'Current logo'
+organization.form.description.placeholder: 'Enter organization description'
+organization.form.description_placeholder: 'Enter organization description'
+organization.form.is_active: 'Active Organization'
+organization.form.is_active_help: 'Inactive organizations are hidden from users'
+organization.form.logo_dark: 'Dark Mode Logo'
+organization.form.logo_dark_help: 'Logo for dark theme (PNG, JPG, SVG - max 2MB)'
+organization.form.logo_light: 'Light Mode Logo'
+organization.form.logo_light_help: 'Logo for light theme (PNG, JPG, SVG - max 2MB)'
+organization.form.name: 'Organization Name'
+organization.form.name.placeholder: 'Enter organization name'
+organization.form.name_placeholder: 'Enter organization name'
+organization.form.preview: 'Live Preview'
+organization.form.slug: Slug
+organization.form.slug.help: 'URL-friendly identifier (lowercase letters, numbers, and hyphens only)'
+organization.form.slug.placeholder: organization-slug
+organization.form.slug_help: 'URL-friendly identifier (lowercase letters, numbers, and hyphens only)'
+organization.form.slug_placeholder: organization-slug
+organization.manage.users: 'Manage Users'
+organization.modal.create.subtitle: 'Add a new organization'
+organization.modal.create.tip: 'Organization names should be descriptive and unique within your system.'
+organization.modal.create.title: 'Create New Organization'
+organization.modal.edit.subtitle: 'Update organization information'
+organization.modal.edit.title: 'Edit %name%'
+organization.name: Name
+organization.new.organization: 'New Organization'
+organization.no.users: 'No users yet'
+organization.search.placeholder: 'Search organizations...'
+organization.singular: Organization
+organization.plural: Organizations
+organization.statistics: Statistics
+organization.status: Status
+organization.switcher.subtitle: 'This will update your account'
+organization.switcher.title: 'Change your organization'
+organization_switcher.error.invalid_token: 'Invalid security token. Please try again.'
+organization_switcher.error.not_logged_in: 'You must be logged in to switch organizations.'
+organization_switcher.error.not_found: 'Organization not found.'
+organization_switcher.success.switched: 'Successfully switched to %name%'
+organization_switcher.success.cleared: 'Organization context cleared. You now have root access.'
+organization.title: Organizations
+organization.total.users: 'Total Users'
+organization.updated.at: Updated
+organization.users: Users
+organization.users.count: Users
+organization.users.in.organization: 'Users in Organization'
+organization.users.page.title: Users
+organization.validation.description.max.length: 'Description cannot exceed 1000 characters'
+organization.validation.logo_mime_type: 'Logo must be an image (PNG, JPG, SVG)'
+organization.validation.name.max.length: 'Organization name cannot exceed 255 characters'
+organization.validation.name.min.length: 'Organization name must be at least 2 characters long'
+organization.validation.name_required: 'Organization name is required'
+organization.validation.slug.format: 'Slug can only contain lowercase letters, numbers, and hyphens'
+organization.validation.slug.max.length: 'Slug cannot exceed 255 characters'
+organization.validation.slug.min.length: 'Slug must be at least 2 characters long'
+organization.validation.slug_required: 'Organization slug is required'
+organization.active: __organization.active

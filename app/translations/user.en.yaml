@@ -1,0 +1,47 @@
+contact.active.user: 'Active User'
+contact.information: 'Contact Information'
+contact.last.activity: 'Last Activity'
+contact.member.since: 'Member Since'
+user.api.link: API
+user.back.to.list: 'Back to Users'
+user.confirm.delete: 'Are you sure you want to delete %name%?'
+user.courses: Courses
+user.courses.enrolled: Enrolled
+user.courses.label: Courses
+user.courses.owned: Owned
+user.created.at: 'Created At'
+user.email: Email
+user.form.email.placeholder: 'Enter email address'
+user.form.name.placeholder: 'Enter full name'
+user.form.password.confirm.placeholder: 'Confirm password'
+user.form.password.placeholder: 'Enter password'
+user.last.login: 'Last Login'
+user.locked: Locked
+user.modal.create.subtitle: 'Add a new user to your organization'
+user.modal.edit.subtitle: 'Update user information'
+user.name: Name
+user.never.logged.in: 'Never logged in'
+user.new.user: 'New User'
+user.organization: Organization
+user.select.student: 'Select Student'
+user.select.student.placeholder: '-- Select a student --'
+user.singular: User
+user.plural: Users
+user.title: Users
+user.unverified: Unverified
+user.updated.at: Updated
+user.verified: Verified
+user.view.organization: 'View Organization'
+user.form.email: Email
+user.form.email_placeholder: 'Enter email address'
+user.form.is_verified: 'Verified User'
+user.form.name: 'Full Name'
+user.form.name_placeholder: 'Enter full name'
+user.form.organization: Organization
+user.form.organization_placeholder: 'Select organization'
+user.form.password: Password
+user.form.password_confirm: 'Confirm Password'
+user.form.password_confirm_placeholder: 'Confirm password'
+user.form.password_placeholder: 'Enter password'
+user.form.roles: Roles
+user.modal.edit.title: __user.modal.edit.title

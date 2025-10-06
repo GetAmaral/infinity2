@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -85,10 +86,21 @@ class TreeFlow extends EntityBase
     }
 
     #[ORM\PreUpdate]
-    public function incrementVersion(): void
+    public function incrementVersion(\Doctrine\ORM\Event\PreUpdateEventArgs $event): void
     {
-        // Auto-increment version on each update
-        $this->version++;
+        // Get the changed fields
+        $changeSet = $event->getEntityChangeSet();
+
+        // Skip version increment if only canvasViewState changed
+        // (AuditSubscriber already prevents updatedAt/updatedBy from being set for canvas-only changes)
+        $nonVersionableFields = ['canvasViewState'];
+
+        $meaningfulChanges = array_diff(array_keys($changeSet), $nonVersionableFields);
+
+        // Only increment version if there are meaningful changes
+        if (!empty($meaningfulChanges)) {
+            $this->version++;
+        }
     }
 
     public function getName(): string

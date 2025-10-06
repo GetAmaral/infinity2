@@ -50,7 +50,7 @@ class StepQuestionFormType extends AbstractType
                     'placeholder' => 'question.form.objective_placeholder',
                 ],
             ])
-            ->add('importance', ChoiceType::class, [
+            ->add('importance', ChoiceType::class, array_merge([
                 'label' => 'question.form.importance',
                 'choices' => [
                     '1' => 1,
@@ -58,13 +58,15 @@ class StepQuestionFormType extends AbstractType
                     '3' => 3,
                 ],
                 'expanded' => true,
+                'required' => true,
                 'attr' => [
                     'class' => 'star-rating-group',
                 ],
                 'constraints' => [
+                    new Assert\NotBlank(),
                     new Assert\Range(min: 1, max: 3),
                 ],
-            ])
+            ], $isEdit ? [] : ['data' => 1])) // Default to 1 star when creating
             ->add('fewShotPositive', CollectionType::class, [
                 'label' => 'question.form.fewshot.positive',
                 'entry_type' => TextareaType::class,

@@ -1,0 +1,35 @@
+token.singular: Token
+token.plural: Tokens
+token.access.level: 'Access Level'
+token.active.token: 'Active Token'
+token.active.tokens: 'Active Tokens'
+token.copied: Copied
+token.copy: Copy
+token.copy.warning: "Copy this token now - you won't be able to see it again"
+token.csrf_invalid: 'Invalid security token'
+token.current.token: 'Current Token'
+token.description: 'Manage your API access tokens'
+token.expires: Expires
+token.full.api.access: 'Full API Access'
+token.generate: 'Generate New Token'
+token.generated.successfully: 'API token generated successfully!'
+token.info.title: 'API Token Information'
+token.no.active.token: 'No active token'
+token.no.token: 'No Token'
+token.regeneration: Regeneration
+token.regeneration.description: 'Generate a new token to replace the current one'
+token.revoke: 'Revoke Token'
+token.revoke.confirm: 'Are you sure you want to revoke this token?'
+token.revoked.successfully: 'API token revoked successfully'
+token.secure: Secured
+token.security.tips: 'Security Tips'
+token.tip.1: 'Never share your API token publicly'
+token.tip.2: 'Revoke tokens immediately if compromised'
+token.tip.3: 'Use environment variables to store tokens in applications'
+token.tip.4: 'Regenerate tokens periodically for better security'
+token.title: 'API Tokens'
+token.usage.description: 'Include this token in the Authorization header'
+token.usage.instructions: 'Usage Instructions'
+token.validity.30.days: '30 days'
+token.validity.period: 'Validity Period'
+token.your.token: 'Your API Token'

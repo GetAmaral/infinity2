@@ -1036,3 +1036,287 @@ main {
     color: #f59e0b;
     text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
 }
+
+/* ============================================
+   FULLSCREEN TEXTAREA EDITOR
+   ============================================ */
+
+/* Fullscreen button - always visible, positioned in container */
+.fullscreen-textarea-btn-permanent {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: linear-gradient(135deg, var(--luminai-primary), var(--luminai-secondary));
+    border: none;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 13px;
+    z-index: 100;
+    opacity: 0.7;
+}
+
+.fullscreen-textarea-btn-permanent:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.5);
+}
+
+.fullscreen-textarea-btn-permanent i {
+    color: white;
+}
+
+/* Fewshot remove button - same style as fullscreen, but red */
+.fewshot-remove-btn-permanent {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    border: none;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 13px;
+    z-index: 100;
+    opacity: 0.7;
+}
+
+.fewshot-remove-btn-permanent:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.5);
+}
+
+.fewshot-remove-btn-permanent i {
+    color: white;
+}
+
+/* Fullscreen modal overlay */
+.fullscreen-textarea-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--luminai-overlay-bg);
+    backdrop-filter: blur(10px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Fullscreen container */
+.fullscreen-textarea-container {
+    width: 100%;
+    max-width: 1400px;
+    height: 90vh;
+    background: var(--luminai-card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--luminai-border-color);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Header */
+.fullscreen-textarea-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--luminai-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--luminai-modal-header-bg);
+    border-radius: 16px 16px 0 0;
+}
+
+.fullscreen-textarea-header h3 {
+    margin: 0;
+    color: var(--luminai-text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.fullscreen-textarea-header h3 i {
+    color: var(--luminai-primary);
+}
+
+.btn-close-fullscreen {
+    background: none;
+    border: none;
+    color: var(--luminai-text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+}
+
+.btn-close-fullscreen:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--luminai-text-primary);
+}
+
+.btn-close-fullscreen i {
+    font-size: 1.25rem;
+}
+
+/* Body with textarea */
+.fullscreen-textarea-body {
+    flex: 1;
+    padding: 2rem;
+    overflow: auto;
+}
+
+.fullscreen-textarea-input {
+    width: 100%;
+    height: 100%;
+    background: var(--luminai-input-bg);
+    border: 1px solid var(--luminai-border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: var(--luminai-text-primary);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    resize: none;
+    transition: all 0.2s ease;
+}
+
+.fullscreen-textarea-input:focus {
+    outline: none;
+    background: var(--luminai-input-focus-bg);
+    border-color: var(--luminai-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.fullscreen-textarea-input::placeholder {
+    color: var(--luminai-text-muted);
+}
+
+/* Footer */
+.fullscreen-textarea-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--luminai-border-color);
+    display: flex;
+    gap: 1rem;
+    justify-content: center; /* Center single button */
+    background: var(--luminai-modal-footer-bg);
+    border-radius: 0 0 16px 16px;
+}
+
+.fullscreen-textarea-footer .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.fullscreen-textarea-footer .btn-secondary {
+    background: var(--luminai-btn-secondary-bg);
+    color: var(--luminai-text-primary);
+}
+
+.fullscreen-textarea-footer .btn-secondary:hover {
+    background: var(--luminai-btn-secondary-hover);
+    transform: translateY(-2px);
+}
+
+/* Light theme adjustments */
+[data-theme="light"] .fullscreen-textarea-modal {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .fullscreen-textarea-container {
+    background: white;
+    border-color: #e5e7eb;
+}
+
+[data-theme="light"] .fullscreen-textarea-header {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+}
+
+[data-theme="light"] .fullscreen-textarea-header h3,
+[data-theme="light"] .fullscreen-textarea-input {
+    color: #1f2937;
+}
+
+[data-theme="light"] .fullscreen-textarea-input {
+    background: #f9fafb;
+    border-color: #e5e7eb;
+}
+
+[data-theme="light"] .fullscreen-textarea-input:focus {
+    background: white;
+    border-color: var(--luminai-primary);
+}
+
+[data-theme="light"] .btn-close-fullscreen {
+    color: #6b7280;
+}
+
+[data-theme="light"] .btn-close-fullscreen:hover {
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+[data-theme="light"] .fullscreen-textarea-footer {
+    background: #f9fafb;
+}
+
+[data-theme="light"] .fullscreen-textarea-footer .btn-secondary {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+[data-theme="light"] .fullscreen-textarea-footer .btn-secondary:hover {
+    background: #d1d5db;
+}

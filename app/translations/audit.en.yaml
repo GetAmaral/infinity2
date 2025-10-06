@@ -1,0 +1,112 @@
+audit.singular: 'Audit Log'
+audit.plural: 'Audit Logs'
+audit.action: Action
+audit.action.count: action(s)
+audit.activity.breakdown: 'Activity Breakdown'
+audit.activity.timeline: 'Activity Timeline'
+audit.all.actions: 'All Actions'
+audit.analytics.action.breakdown: 'Action Breakdown'
+audit.analytics.activity.by.hour: 'Activity by Hour (Last 24h)'
+audit.analytics.anomalies: 'Anomalies Detected'
+audit.analytics.anomaly.detected: 'Anomaly Detected'
+audit.analytics.back.to.log: 'Back to Audit Log'
+audit.analytics.capacity.recommendation: 'Capacity Recommendation'
+audit.analytics.chart.events.per.hour: 'Events per Hour'
+audit.analytics.chart.hour.of.day: 'Hour of Day'
+audit.analytics.chart.number.of.events: 'Number of Events'
+audit.analytics.confidence: Confidence
+audit.analytics.entity.type: 'Entity Type'
+audit.analytics.events.count: Events
+audit.analytics.historical.data: 'Historical Data'
+audit.analytics.modifications: Modifications
+audit.analytics.most.modified.entities: 'Most Modified Entities'
+audit.analytics.next.week.prediction: 'Next Week Prediction'
+audit.analytics.no.entity.data: 'No entity modification data available'
+audit.analytics.no.user.data: 'No user activity data available'
+audit.analytics.predicted.events: 'Predicted Events'
+audit.analytics.this.week: 'This Week'
+audit.analytics.title: 'Audit Analytics Dashboard'
+audit.analytics.top.active.users: 'Top Active Users'
+audit.analytics.total.events: 'Total Events'
+audit.analytics.trend: Trend
+audit.analytics.user: User
+audit.analytics.week: Week
+audit.apply.filters: 'Apply Filters'
+audit.back.to.log: 'Back to Audit Log'
+audit.by: by
+audit.change.count: change(s)
+audit.changes: Changes
+audit.changes.label: 'Changes:'
+audit.complete.history: 'Complete History'
+audit.context: Context
+audit.entity: Entity
+audit.entity.id: 'Entity ID'
+audit.entity.timeline.title: 'Entity Audit Timeline'
+audit.entity.type: 'Entity Type'
+audit.event.count: event(s)
+audit.events: Events
+audit.events.total: 'Total Events'
+audit.export: Export
+audit.export.csv: 'Export CSV'
+audit.export.json: 'Export JSON'
+audit.export.pdf: 'Export PDF'
+audit.field: Field
+audit.field.changes: 'Field Changes'
+audit.filter.created: Created
+audit.filter.deleted: Deleted
+audit.filter.updated: Updated
+audit.filter.week: 'This Week'
+audit.filters.and.search: 'Filters & Search'
+audit.focus.search.shortcut: "Press '/' to focus search"
+audit.full.history: 'Full History'
+audit.history.modal.close: Close
+audit.history.modal.failed: 'Failed to load'
+audit.history.modal.history: History
+audit.history.modal.loading: Loading
+audit.history.modal.loading.description: 'Please wait...'
+audit.history.modal.open.link: Open
+audit.history.modal.open.new.tab: 'Open in new tab'
+audit.history.modal.title: 'Entity History'
+audit.ip.address: 'IP Address'
+audit.last.updated: 'Last updated'
+audit.live.monitoring: 'Live monitoring'
+audit.metadata.ip: 'IP:'
+audit.new.value: 'New Value'
+audit.next: Next
+audit.no.actions.recorded: 'No actions recorded for this user.'
+audit.no.events.description: 'Try adjusting your filters or search criteria'
+audit.no.events.found: 'No events found'
+audit.no.history.available: 'No audit history available for this entity.'
+audit.no.user.activity: System
+audit.of: of
+audit.old.value: 'Old Value'
+audit.previous: Previous
+audit.reset: Reset
+audit.showing: Showing
+audit.stats.all.time: 'All Time'
+audit.stats.last.hour: 'Last Hour'
+audit.stats.recent.activity: 'Recent Activity'
+audit.stats.this.week: 'This Week'
+audit.stats.total.events: 'Total Events'
+audit.system: System
+audit.table.action: Action
+audit.table.changes: Changes
+audit.table.entity: Entity
+audit.table.timestamp: Timestamp
+audit.table.user: User
+audit.timeline: Timeline
+audit.timestamp: Timestamp
+audit.title: 'Audit & Activity Log'
+audit.to: to
+audit.top.active.users: 'Top Active Users'
+audit.user.actions.title: 'User Audit Actions'
+audit.user.agent: 'User Agent'
+audit.user.email: Email
+audit.user.name: 'User Name'
+audit.view.changes: 'View Changes'
+audit.view.table: 'Table View'
+audit.view.timeline: 'View Timeline'
+page.ai.powered.crm: 'AI-Powered CRM Dashboard'
+audit.stats.last_24_hours: __audit.stats.last_24_hours
+audit.stats.last_7_days: __audit.stats.last_7_days
+audit.value.null: __audit.value.null

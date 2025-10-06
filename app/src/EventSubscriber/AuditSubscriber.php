@@ -67,6 +67,18 @@ final class AuditSubscriber
             return;
         }
 
+        // Get the changed fields
+        $changeSet = $args->getEntityChangeSet();
+
+        // Skip audit updates if only non-auditable fields changed (like canvasViewState)
+        $nonAuditableFields = ['canvasViewState'];
+        $auditableChanges = array_diff(array_keys($changeSet), $nonAuditableFields);
+
+        // If only non-auditable fields changed, skip audit updates
+        if (empty($auditableChanges)) {
+            return;
+        }
+
         // Update modification audit fields
         $entity->updateAuditTimestamp();
 
@@ -77,7 +89,7 @@ final class AuditSubscriber
         }
 
         // Log audit event even if no user (for CLI/background operations)
-        $this->logAuditEvent('entity_updated', $entity, $currentUser, $args->getEntityChangeSet());
+        $this->logAuditEvent('entity_updated', $entity, $currentUser, $changeSet);
     }
 
     /**

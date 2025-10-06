@@ -28,11 +28,18 @@ export default class extends Controller {
         this.starTargets.forEach((star, idx) => {
             if (idx < starValue) {
                 star.style.color = '#f59e0b';
+            } else {
+                star.style.color = ''; // Reset to default
             }
         });
     }
 
     leaveStar() {
+        // Reset all inline styles
+        this.starTargets.forEach(star => {
+            star.style.color = '';
+        });
+
         // Restore active state
         this.inputTargets.forEach((radio) => {
             if (radio.checked) {
@@ -43,6 +50,10 @@ export default class extends Controller {
 
     updateStars(value) {
         this.starTargets.forEach((star, idx) => {
+            // Reset inline style first
+            star.style.color = '';
+
+            // Then apply class
             if (idx + 1 <= value) {
                 star.classList.add('active');
             } else {

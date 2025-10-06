@@ -33,6 +33,7 @@
     {{ form_start(form, {
         'action': form_action,
         'attr': {
+            'class': 'modal-form',
             'data-controller': 'form-navigation',
             'data-crud-modal-target': 'form',
             'data-action': 'submit->crud-modal#submit',
@@ -64,9 +65,9 @@
                         <p class="modal-subtitle-text">
                             {% block modal_subtitle %}
                                 {% if is_edit %}
-                                    {{ subtitle_edit|trans({}, submit_domain|default('messages')) }}
+                                    {{ subtitle_edit|trans({}, subtitle_domain|default(submit_domain|default('messages'))) }}
                                 {% else %}
-                                    {{ subtitle_create|trans({}, submit_domain|default('messages')) }}
+                                    {{ subtitle_create|trans({}, subtitle_domain|default(submit_domain|default('messages'))) }}
                                 {% endif %}
                             {% endblock %}
                         </p>

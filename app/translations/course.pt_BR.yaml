@@ -1,0 +1,217 @@
+course.title: Curso
+course.plural: Cursos
+certificate.back.to.course: 'Voltar pro Curso'
+certificate.completion.date: 'Data de Conclusão'
+certificate.course.duration: 'Duração do Curso'
+certificate.credential.verification: 'Verificação de Credencial'
+certificate.document.title: Certificado
+certificate.download.pdf: 'Baixar PDF'
+certificate.footer: 'Este certificado verifica que o indivíduo acima concluiu o curso com sucesso.'
+certificate.presented.to: 'Apresentado a'
+certificate.print: 'Imprimir Certificado'
+certificate.text.has.successfully.completed: 'concluiu com sucesso o curso'
+certificate.title: 'Certificado de Conclusão'
+certificate.view.certificate: Certificado
+course.back.to.course: 'Voltar pro Curso'
+course.back.to.list: 'Voltar pros Cursos'
+course.button.create.course: 'Criar Curso'
+course.content: 'Conteúdo do Curso'
+course.created.at: 'Criado Em'
+course.date: Data
+course.duration: Duração
+course.enroll.first.student: 'Inscrever Primeiro Aluno'
+course.enroll.student: 'Inscrever Aluno'
+course.enrolled.at: 'Inscrito Em'
+course.enrolled.students: 'Alunos Inscritos'
+course.enrollment.activate: Ativar
+course.enrollment.active.immediately: 'Ativar inscrição imediatamente'
+course.enrollment.auto.deactivate.hint: 'Desmarcar um aluno vai automaticamente desativar a inscrição dele (não deletar)'
+course.enrollment.confirm.remove: 'Tem certeza que quer remover %student% deste curso?'
+course.enrollment.deactivate: Desativar
+course.enrollment.deactivate.warning: 'Remover um aluno da seleção vai desativar (não deletar) a inscrição. Eles vão perder acesso ao curso mas o progresso será preservado.'
+course.enrollment.enroll.selected: 'Inscrever Alunos Selecionados'
+course.enrollment.enrolled: Inscrito
+course.enrollment.flash.activated.successfully: 'Inscrição ativada com sucesso'
+course.enrollment.flash.already.enrolled: 'Este aluno já está inscrito neste curso'
+course.enrollment.flash.deactivated.successfully: 'Inscrição desativada com sucesso'
+course.enrollment.flash.enrolled.successfully: 'Aluno inscrito com sucesso'
+course.enrollment.flash.removed.successfully: 'Aluno removido do curso com sucesso'
+course.enrollment.flash.student.not.found: 'Aluno não encontrado'
+course.enrollment.multi.select.hint: 'Selecione vários alunos pra inscrever de uma vez'
+course.enrollment.not.enrolled: 'Não Inscrito'
+course.enrollment.save.changes: 'Salvar Alterações'
+course.enrollment.search.by.name: 'Buscar por nome...'
+course.enrollment.search.hint: 'Digite pra buscar por nome ou email'
+course.enrollment.select.hint: 'Apenas usuários da mesma organização que ainda não estão inscritos serão mostrados'
+course.enrollment.select.students: 'Selecionar Alunos'
+course.enrollment.switch.hint: 'Alterne os switches pra inscrever/desativar alunos. Clique em Confirmar pra salvar as mudanças.'
+course.flash.created.successfully: 'Curso criado com sucesso'
+course.flash.deleted.successfully: 'Curso deletado com sucesso'
+course.flash.updated.successfully: 'Curso atualizado com sucesso'
+course.form.active: 'Curso Ativo'
+course.form.description.placeholder: 'Digite a descrição do curso'
+course.form.name: 'Nome do Curso'
+course.form.name.placeholder: 'Digite o nome do curso'
+course.form.release.date: 'Data de Lançamento'
+course.form.total.length: 'Duração Total (horas)'
+course.form.total.length.placeholder: 0.0
+course.hours: horas
+course.information: 'Informações do Curso'
+course.lecture.button.add.lecture: 'Adicionar Aula'
+course.lecture.drag.to.reorder: 'Arraste pra reordenar ou mover pra outro módulo'
+course.lecture.duration: Duração
+course.lecture.failed: 'Processamento Falhou'
+course.lecture.failed.description: 'O processamento do vídeo falhou. Entre em contato com o suporte.'
+course.lecture.flash.created.successfully: 'Aula criada com sucesso'
+course.lecture.flash.deleted.successfully: 'Aula deletada com sucesso'
+course.lecture.flash.updated.successfully: 'Aula atualizada com sucesso'
+course.lecture.form.description.placeholder: 'Digite a descrição da aula'
+course.lecture.form.name: 'Nome da Aula'
+course.lecture.form.name.placeholder: 'Digite o nome da aula'
+course.lecture.form.video.file: 'Arquivo de Vídeo'
+course.lecture.form.view.order: Ordem
+course.lecture.form.view.order.placeholder: 'Ordem de exibição (ex: 1, 2, 3)'
+course.lecture.modal.create.subtitle: 'Adicionar uma nova aula a este módulo'
+course.lecture.modal.create.tip: 'Preencha os detalhes da aula abaixo. A ordem determina a sequência no curso.'
+course.lecture.modal.create.title: 'Adicionar Nova Aula'
+course.lecture.modal.edit.subtitle: 'Atualizar informações da aula'
+course.lecture.modal.edit.title: 'Editar Aula'
+course.lecture.modal.new.title: 'Adicionar Nova Aula'
+course.lecture.no.video: 'Vídeo Não Disponível'
+course.lecture.no.video.description: 'Esta aula ainda não tem um vídeo'
+course.lecture.number: Aula
+course.lecture.processing: Processando
+course.lecture.processing.description: 'Seu vídeo está sendo processado. Isso pode levar alguns minutos.'
+course.lecture.singular: Aula
+course.lecture.status.completed: Pronto
+course.lecture.status.failed: 'Processamento Falhou'
+course.lecture.status.pending: 'Aguardando Processamento'
+course.lecture.status.processing: Processando...
+course.lecture.validation.description.max.length: 'Descrição não pode ter mais de 5000 caracteres'
+course.lecture.validation.invalid.video.format: 'Por favor envie um arquivo de vídeo válido (MP4, WebM, OGG, MOV)'
+course.lecture.validation.name.max.length: 'Nome da aula não pode ter mais de 255 caracteres'
+course.lecture.validation.name.min.length: 'Nome da aula deve ter pelo menos 2 caracteres'
+course.lecture.validation.name_required: 'Nome da aula é obrigatório'
+course.lecture.validation.view.order.positive: 'Ordem deve ser zero ou positiva'
+course.lecture.watch.video: 'Assistir Vídeo'
+course.lectures: Aulas
+course.lectures.count: Aulas
+course.lectures.in.course: 'Aulas no Curso'
+course.manage.enrollments: 'Gerenciar Inscrições'
+course.manage.lectures: 'Gerenciar Aulas'
+course.minutes: minutos
+course.modal.create.subtitle: 'Adicionar um novo curso à sua organização'
+course.modal.create.tip: 'Preencha os detalhes do curso abaixo. Você pode adicionar aulas depois de criar o curso.'
+course.modal.create.title: 'Criar Novo Curso'
+course.modal.edit.subtitle: 'Atualizar informações do curso'
+course.modal.edit.title: 'Editar Curso'
+course.module: Módulo
+course.module.button.create.module: 'Criar Módulo'
+course.module.drag.to.reorder: 'Arraste pra reordenar módulo'
+course.module.flash.created.successfully: 'Módulo criado com sucesso'
+course.module.flash.delete.error: 'Não pode deletar módulo com aulas. Por favor remova todas as aulas primeiro.'
+course.module.flash.deleted.successfully: 'Módulo deletado com sucesso'
+course.module.flash.not.found: 'Módulo não encontrado'
+course.module.flash.reordered.successfully: 'Módulos reordenados com sucesso'
+course.module.flash.updated.successfully: 'Módulo atualizado com sucesso'
+course.module.form.active.label: Ativo
+course.module.form.description.label: Descrição
+course.module.form.description.placeholder: 'Digite a descrição do módulo'
+course.module.form.name.label: 'Nome do Módulo'
+course.module.form.name.placeholder: 'Digite o nome do módulo'
+course.module.form.releaseDate.label: 'Data de Lançamento'
+course.module.form.releaseDate.placeholder: 'Quando este módulo deve ficar disponível?'
+course.module.form.title.edit: 'Editar Módulo'
+course.module.form.title.new: 'Novo Módulo'
+course.module.form.viewOrder.label: 'Ordem de Visualização'
+course.module.form.viewOrder.placeholder: 'Ordem de exibição (ex: 1, 2, 3)'
+course.module.modal.create.subtitle: 'Adicionar um novo módulo a este curso'
+course.module.modal.create.title: 'Criar Novo Módulo'
+course.module.modal.edit.subtitle: 'Atualizar informações do módulo'
+course.module.modal.edit.title: 'Editar Módulo'
+course.module.validation.course_required: 'Módulo deve estar associado a um curso'
+course.module.validation.name_required: 'Nome do módulo é obrigatório'
+course.module.validation.name_too_long: 'Nome do módulo não pode ter mais de 255 caracteres'
+course.module.validation.name_too_short: 'Nome do módulo deve ter pelo menos 3 caracteres'
+course.module.validation.view_order_invalid: 'Ordem de visualização deve ser um número positivo'
+course.modules: Módulos
+course.modules.and.lectures: 'Módulos e Aulas'
+course.modules.count: Módulos
+course.name: 'Nome do Curso'
+course.no.content: 'Nenhum Conteúdo Ainda'
+course.no.content.description: 'Este curso ainda não tem módulos ou aulas'
+course.no.lectures: 'Nenhuma aula'
+course.no.lectures.description: 'Este curso ainda não tem aulas'
+course.no.release.date: 'Sem Data de Lançamento'
+course.overall.progress: 'Progresso Geral'
+course.owner: Proprietário
+course.progress: Progresso
+course.release.date: 'Data de Lançamento'
+course.singular: Curso
+course.status: Status
+course.students: Alunos
+course.total.duration: 'Duração Total'
+course.total.lectures: 'Total de Aulas'
+course.total.length: 'Duração Total'
+course.total.modules: 'Total de Módulos'
+course.updated.at: 'Atualizado Em'
+course.validation.description.max.length: 'Descrição não pode ter mais de 5000 caracteres'
+course.validation.name.max.length: 'Nome do curso não pode ter mais de 255 caracteres'
+course.validation.name.min.length: 'Nome do curso deve ter pelo menos 2 caracteres'
+course.validation.name_required: 'Nome do curso é obrigatório'
+course.validation.total.length.positive: 'Duração total deve ser zero ou positiva'
+empty.course.enrollment.description: 'Comece a montar sua turma inscrevendo alunos da sua organização'
+empty.course.lectures.description: 'Comece a montar seu curso adicionando a primeira aula.'
+empty.course.modules.description: 'Comece a organizar seu curso criando módulos pra estruturar seu conteúdo'
+empty.module.description: 'Comece a organizar seu curso criando módulos. Cada módulo pode conter várias aulas.'
+empty.no.lectures.in.module: 'Nenhuma aula neste módulo'
+empty.no.lectures.yet: 'Nenhuma aula ainda'
+page.course.details: 'Detalhes do Curso'
+empty.no.students.enrolled: 'Nenhum aluno inscrito ainda'
+student.back.to.courses: 'Voltar pros Meus Cursos'
+student.complete: Concluir
+student.completed: Concluído
+student.completed.courses: Concluído
+student.completed.lectures: 'Aulas Concluídas'
+student.continue: Continuar
+student.course.completed: 'Curso Concluído'
+student.courses.subtitle: 'Sua jornada de aprendizado'
+student.current: Atual
+student.end.course: 'Fim do Curso'
+student.enrolled: Inscrito
+student.enrolled.on: 'Inscrito em'
+student.in.progress: 'Em Progresso'
+student.in.progress.courses: 'Em Progresso'
+student.last.accessed: 'Último Acesso'
+student.my.courses: 'Área do aluno'
+student.no.courses: 'Nenhum curso ainda'
+student.no.courses.description: 'Você ainda não foi inscrito em nenhum curso'
+student.not.started: 'Não Iniciado'
+student.not.yet: 'Ainda não'
+student.overall.completion: 'Conclusão Geral'
+student.progress: Progresso
+student.restart: Reiniciar
+student.review: Revisar
+student.singular: Aluno
+student.start: 'Iniciar Curso'
+student.status: Status
+student.total.courses: 'Total de Cursos'
+student.watch.progress: 'Progresso de Visualização'
+student.watched: Assistido
+student.your.progress: 'Seu Progresso'
+course.form.description_placeholder: 'Digite a descrição do curso'
+course.form.name_placeholder: 'Digite o nome do curso'
+course.form.release_date: 'Data de Lançamento'
+course.lecture.form.description_placeholder: 'Digite a descrição da aula'
+course.lecture.form.name_placeholder: 'Digite o nome da aula'
+course.lecture.form.video_file: 'Arquivo de Vídeo'
+course.lecture.form.view_order: 'Ordem de Visualização'
+course.lecture.form.view_order_placeholder: 'Digite a ordem de exibição (ex: 1, 2, 3)'
+course.module.form.active: 'Módulo Ativo'
+course.module.form.description: Descrição
+course.module.form.description_placeholder: 'Digite a descrição do módulo'
+course.module.form.name: 'Nome do Módulo'
+course.module.form.name_placeholder: 'Digite o nome do módulo'
+course.module.form.release_date: 'Data de Lançamento'
+course.module.form.view_order: 'Ordem de Visualização'
+course.status.active: __course.status.active

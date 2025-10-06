@@ -21,9 +21,9 @@ class FewShotHandler {
             }
 
             // Handle remove button clicks
-            if (e.target.classList.contains('fewshot-remove') || e.target.closest('.fewshot-remove')) {
+            if (e.target.classList.contains('fewshot-remove-btn-permanent') || e.target.closest('.fewshot-remove-btn-permanent')) {
                 e.preventDefault();
-                const button = e.target.classList.contains('fewshot-remove') ? e.target : e.target.closest('.fewshot-remove');
+                const button = e.target.classList.contains('fewshot-remove-btn-permanent') ? e.target : e.target.closest('.fewshot-remove-btn-permanent');
                 this.removeFewShotItem(button);
                 return;
             }
@@ -43,19 +43,30 @@ class FewShotHandler {
 
         console.log('Adding few-shot item with index:', index);
 
-        // Create new item
+        // Create new item with position relative for absolute button positioning
         const newItem = document.createElement('div');
         newItem.classList.add('fewshot-item', 'mb-2');
+        newItem.style.position = 'relative';
 
         // Replace __name__ placeholder with actual index
         const itemHtml = prototype.replace(/__name__/g, index);
+        newItem.innerHTML = itemHtml;
 
-        newItem.innerHTML = `
-            ${itemHtml}
-            <button type="button" class="btn btn-sm btn-danger fewshot-remove mt-1">
-                <i class="bi bi-trash"></i> Remove
-            </button>
-        `;
+        // Update textarea class to include form-input-modern
+        const textarea = newItem.querySelector('textarea');
+        if (textarea) {
+            textarea.classList.add('form-input-modern', 'fewshot-entry');
+        }
+
+        // Create icon-only remove button with same style as fullscreen button
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'fewshot-remove-btn-permanent';
+        removeBtn.setAttribute('title', 'Remove');
+        removeBtn.setAttribute('data-bs-toggle', 'tooltip');
+        removeBtn.innerHTML = '<i class="bi bi-trash"></i>';
+
+        newItem.appendChild(removeBtn);
 
         // Append to container
         itemsContainer.appendChild(newItem);
@@ -64,7 +75,6 @@ class FewShotHandler {
         container.setAttribute('data-index', index + 1);
 
         // Focus on the new textarea
-        const textarea = newItem.querySelector('textarea');
         if (textarea) {
             textarea.focus();
         }

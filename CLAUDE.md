@@ -315,6 +315,16 @@ docker-compose exec redis redis-cli ping
 docker-compose exec redis redis-cli info memory
 ```
 
+**Nginx Issues**
+```bash
+# 502 Bad Gateway after rebuilding app container
+# Nginx cached old app IP - restart nginx to refresh DNS
+docker-compose restart nginx
+
+# Verify nginx can reach app
+docker-compose exec nginx ping -c 2 app
+```
+
 **SSL Issues**
 ```bash
 rm -rf nginx/ssl/*
@@ -492,14 +502,165 @@ SELECT schemaname, tablename, n_live_tup FROM pg_stat_user_tables;"
 
 ---
 
+## 🌐 VPS DEPLOYMENT
+
+### **VPS Server Details**
+- **IP Address**: `91.98.137.175`
+- **SSH User**: `root`
+- **SSH Key**: `/home/user/.ssh/infinity_vps`
+- **Application Path**: `/opt/infinity`
+- **Access Method**: SSH key-based authentication only
+
+### **IMPORTANT: VPS File Modification Rules**
+⚠️ **NEVER modify ANY files directly on the VPS server**
+- VPS is production environment - ALL changes must come through Git
+- Never edit, write, or delete files manually on VPS
+- Never modify Dockerfile, docker-compose.yml, or any config on VPS
+- All development happens locally at `/home/user/inf`, then deployed via Git
+- **ONLY EXCEPTION**: Migration files are created on VPS (migrations folder in `.gitignore`)
+
+### **Docker Configuration Changes**
+When Docker configuration needs updates:
+1. **Local**: Modify Dockerfile/docker-compose.yml at `/home/user/inf`
+2. **Local**: Test changes locally with `docker-compose build && docker-compose up -d`
+3. **Local**: Commit and push to Git
+4. **VPS**: Pull changes and rebuild containers
+5. **Never modify Docker files on VPS directly**
+
+### **VPS Deployment Workflow**
+
+**STEP 1: Local Development**
+```bash
+# Make entity/schema changes locally
+# Edit entities, add fields, etc.
+
+# Commit entity changes (NOT migrations)
+git add src/Entity/
+git commit -m "Add new fields to Entity"
+git push origin main
+
+# DO NOT create or run migrations locally
+# Migrations are created on VPS only
+```
+
+**STEP 2: VPS Deployment**
+```bash
+# Connect to VPS as root
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175
+
+# Navigate to application directory
+cd /opt/infinity
+
+# Pull latest changes from Git
+git pull origin main
+
+# Rebuild Docker containers if Dockerfile/docker-compose.yml changed
+docker-compose build app
+docker-compose up -d app
+
+# Create migration inside Docker container (ONLY exception to file creation rule)
+docker-compose exec -T app php bin/console make:migration --no-interaction --env=prod
+
+# Execute migration inside Docker container
+docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction --env=prod
+
+# Clear and warm cache inside Docker container
+docker-compose exec -T app php bin/console cache:clear --env=prod
+docker-compose exec -T app php bin/console cache:warmup --env=prod
+```
+
+### **VPS Deployment Command**
+When you ask Claude to "deploy to vps" or "vps deploy", Claude will automatically:
+1. **VPS**: Connect via SSH as `root` using `/home/user/.ssh/infinity_vps` key
+2. **VPS**: Navigate to `/opt/infinity`
+3. **VPS**: Execute `git pull origin main` to get latest code
+4. **VPS**: Rebuild Docker containers if needed (`docker-compose build app`)
+5. **VPS**: Run `make:migration` inside app container (CREATE migration on VPS)
+6. **VPS**: Run `doctrine:migrations:migrate` inside app container (EXECUTE migration)
+7. **VPS**: Clear and warm production cache inside app container
+8. Report deployment status
+
+**Example Usage:**
+```bash
+# User asks:
+"deploy to vps" or "vps deploy" or "vps"
+
+# Claude executes on VPS:
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && \
+  git pull origin main && \
+  docker-compose build app && \
+  docker-compose up -d app && \
+  docker-compose exec -T app php bin/console make:migration --no-interaction --env=prod && \
+  docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction --env=prod && \
+  docker-compose exec -T app php bin/console cache:clear --env=prod && \
+  docker-compose exec -T app php bin/console cache:warmup --env=prod'
+```
+
+### **VPS Deployment Checklist**
+- ✅ Local entity/schema changes committed
+- ✅ Entity changes pushed to Git
+- ✅ Run `/vps` command to deploy
+- ✅ VPS creates migration automatically
+- ✅ VPS executes migration automatically
+- ✅ Verify deployment via health endpoint
+- ✅ Monitor logs for errors
+
+### **VPS Troubleshooting**
+```bash
+# Check Docker containers status
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && docker-compose ps'
+
+# View application logs
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && docker-compose logs -f app'
+
+# Check Git status on VPS
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && git status'
+
+# Restart containers
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && docker-compose restart app'
+
+# Manual rollback (if needed) - requires rebuild
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && git reset --hard HEAD^ && docker-compose build app && docker-compose up -d app'
+
+# Check Redis PHP extension
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && docker-compose exec -T app php -m | grep redis'
+```
+
+---
+
 ## 📈 MONITORING
 
 ### **Health Checks**
 ```bash
+# Simple health check
 curl -k https://localhost/health
+
+# Comprehensive health monitoring (recommended)
 curl -k https://localhost/health/detailed | jq .
+
+# Database and performance metrics
 curl -k https://localhost/health/metrics | jq .
 ```
+
+**Comprehensive Health Monitoring (`/health/detailed`) includes:**
+1. **Database**: PostgreSQL connectivity + UUIDv7 support verification
+2. **Redis**: Connectivity, version, memory usage, clients, uptime
+3. **Messenger Queue**: Pending messages, failed message count
+4. **Disk Space**: Total, used, free, percentage with warnings (>80%: WARNING, >90%: ERROR)
+5. **Storage Directories**: Existence, writability, size for:
+   - `var/videos/originals` - Original video uploads
+   - `var/videos/hls` - HLS transcoded videos
+   - `public/uploads` - General file uploads
+   - `var/cache` - Application cache
+   - `var/log` - Application logs
+6. **PHP Extensions**: Verify all required extensions loaded (pdo_pgsql, opcache, intl, gd, redis)
+7. **Environment Variables**: Verify critical env vars configured
+8. **System Metrics**: Memory usage, load averages, PHP version
+
+**Status Levels:**
+- `OK`: All systems operational
+- `WARNING`: Non-critical issues detected (e.g., >10 failed messages, >80% disk usage)
+- `ERROR`: Critical issues requiring immediate attention (e.g., missing extensions, >90% disk, unwritable directories)
 
 ### **Log Analysis**
 ```bash
@@ -794,6 +955,130 @@ docker-compose exec app php bin/console doctrine:query:sql "SELECT u.email, o.sl
 ```
 
 ---
+
+## 🌐 VPS DEPLOYMENT
+
+### **VPS Server Details**
+- **IP Address**: `91.98.137.175`
+- **SSH User**: `root`
+- **SSH Key**: `/home/user/.ssh/infinity_vps`
+- **Application Path**: `/opt/infinity`
+- **Access Method**: SSH key-based authentication only
+
+### **IMPORTANT: VPS File Modification Rules**
+⚠️ **NEVER modify ANY files directly on the VPS server**
+- VPS is production environment - ALL changes must come through Git
+- Never edit, write, or delete files manually on VPS
+- Never modify Dockerfile, docker-compose.yml, or any config on VPS
+- All development happens locally at `/home/user/inf`, then deployed via Git
+- **ONLY EXCEPTION**: Migration files are created on VPS (migrations folder in `.gitignore`)
+
+### **Docker Configuration Changes**
+When Docker configuration needs updates:
+1. **Local**: Modify Dockerfile/docker-compose.yml at `/home/user/inf`
+2. **Local**: Test changes locally with `docker-compose build && docker-compose up -d`
+3. **Local**: Commit and push to Git
+4. **VPS**: Pull changes and rebuild containers
+5. **Never modify Docker files on VPS directly**
+
+### **VPS Deployment Workflow**
+
+**STEP 1: Local Development**
+```bash
+# Make entity/schema changes locally
+# Edit entities, add fields, etc.
+
+# Commit entity changes (NOT migrations)
+git add src/Entity/
+git commit -m "Add new fields to Entity"
+git push origin main
+
+# DO NOT create or run migrations locally
+# Migrations are created on VPS only
+```
+
+**STEP 2: VPS Deployment**
+```bash
+# Connect to VPS as root
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175
+
+# Navigate to application directory
+cd /opt/infinity
+
+# Pull latest changes from Git
+git pull origin main
+
+# Rebuild Docker containers if Dockerfile/docker-compose.yml changed
+docker-compose build app
+docker-compose up -d app
+
+# Create migration inside Docker container (ONLY exception to file creation rule)
+docker-compose exec -T app php bin/console make:migration --no-interaction
+
+# Execute migration inside Docker container
+docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction
+
+# Clear and warm cache inside Docker container
+docker-compose exec -T app php bin/console cache:clear --env=prod
+docker-compose exec -T app php bin/console cache:warmup --env=prod
+```
+
+### **VPS Deployment Command**
+When you ask Claude to "deploy to vps" or "vps deploy", Claude will automatically:
+1. **VPS**: Connect via SSH as `root` using `/home/user/.ssh/infinity_vps` key
+2. **VPS**: Navigate to `/opt/infinity`
+3. **VPS**: Execute `git pull origin main` to get latest code
+4. **VPS**: Rebuild Docker containers if needed (`docker-compose build app`)
+5. **VPS**: Run `make:migration` inside app container (CREATE migration on VPS)
+6. **VPS**: Run `doctrine:migrations:migrate` inside app container (EXECUTE migration)
+7. **VPS**: Clear and warm production cache inside app container
+8. Report deployment status
+
+**Example Usage:**
+```bash
+# User asks:
+"deploy to vps" or "vps deploy" or "vps"
+
+# Claude executes on VPS:
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && \
+  git pull origin main && \
+  docker-compose build app && \
+  docker-compose up -d app && \
+  docker-compose exec -T app php bin/console make:migration --no-interaction --env=prod && \
+  docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction --env=prod && \
+  docker-compose exec -T app php bin/console cache:clear --env=prod && \
+  docker-compose exec -T app php bin/console cache:warmup --env=prod'
+```
+
+### **VPS Deployment Checklist**
+- ✅ Local entity/schema changes committed
+- ✅ Entity changes pushed to Git
+- ✅ Run `/vps` command to deploy
+- ✅ VPS creates migration automatically
+- ✅ VPS executes migration automatically
+- ✅ Verify deployment via health endpoint
+- ✅ Monitor logs for errors
+
+### **VPS Troubleshooting**
+bash
+# Check Docker containers status
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && docker-compose ps'
+
+# View application logs
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && docker-compose logs -f app'
+
+# Check Git status on VPS
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && git status'
+
+# Restart containers
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && docker-compose restart app'
+
+# Manual rollback (if needed) - requires rebuild
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && git reset --hard HEAD^ && docker-compose build app && docker-compose up -d app'
+
+# Check Redis PHP extension
+ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && docker-compose exec -T app php -m | grep redis'
+
 
 ## 💡 BEST PRACTICES
 

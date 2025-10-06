@@ -7,6 +7,7 @@
 {% set title_create = 'input.modal.create.title' %}
 {% set subtitle_create = 'input.modal.create.subtitle' %}
 {% set subtitle_edit = 'input.modal.edit.subtitle' %}
+{% set subtitle_domain = 'treeflow' %}
 {% set submit_key = is_edit ? 'button.save.changes' : 'input.button.create.input' %}
 {% set submit_domain = is_edit ? 'messages' : 'treeflow' %}
 {% set entity = input %}
@@ -78,6 +79,7 @@
         {{ button_modal_submit(is_edit, submit_key|default(null), submit_domain|default('messages')) }}
     </div>
 
+    {% if is_edit and input.id %}
     <div class="modal-footer-actions" id="modal-delete-confirmation-input" style="display: none;">
         <div class="text-danger fw-bold">{{ 'confirm.delete.entity'|trans }}</div>
         <button type="button" class="btn btn-sm btn-secondary delete-cancel-btn" data-entity-type="input">
@@ -90,4 +92,5 @@
             <i class="bi bi-trash"></i> {{ 'button.confirm'|trans }}
         </button>
     </div>
+    {% endif %}
 {% endblock %}

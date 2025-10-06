@@ -197,6 +197,28 @@
             box-shadow: 0 4px 16px rgba(139, 92, 246, 0.5);
         }
 
+        /* Unreachable Step - Not connected to first step */
+        .treeflow-node.unreachable-step {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.9));
+            border: 2px solid rgba(239, 68, 68, 1);
+            box-shadow: 0 2px 12px rgba(239, 68, 68, 0.4);
+            animation: unreachable-pulse 2s ease-in-out infinite;
+        }
+
+        .treeflow-node.unreachable-step:hover {
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.6);
+            animation: none; /* Stop pulsing on hover */
+        }
+
+        @keyframes unreachable-pulse {
+            0%, 100% {
+                box-shadow: 0 2px 12px rgba(239, 68, 68, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(239, 68, 68, 0.7);
+            }
+        }
+
         .treeflow-node-header {
             display: flex;
             align-items: center;

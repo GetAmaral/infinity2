@@ -21,7 +21,7 @@
     <!-- Preference Manager - Load FIRST before any other scripts -->
     <script src="/preference-manager.js" data-turbo-eval="false"></script>
 </head>
-<body {% if app.user %}data-controller="session-monitor" data-session-monitor-lifetime-value="3600" data-session-monitor-status-url-value="{{ path('api_session_status') }}" data-session-monitor-keepalive-url-value="{{ path('api_session_keepalive') }}"{% endif %}>
+<body {% if app.user %}data-controller="session-monitor fullscreen-textarea" data-session-monitor-lifetime-value="3600" data-session-monitor-status-url-value="{{ path('api_session_status') }}" data-session-monitor-keepalive-url-value="{{ path('api_session_keepalive') }}"{% else %}data-controller="fullscreen-textarea"{% endif %}>
     <nav class="navbar luminai-navbar">
         <div class="container">
             <a class="navbar-brand text-white d-flex align-items-center" href="{{ path('app_home') }}">

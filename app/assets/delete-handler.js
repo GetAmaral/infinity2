@@ -3,28 +3,14 @@
  * Unified delete confirmation and AJAX deletion for all entities
  */
 
-console.log('🔴 delete-handler.js file is loading...');
-
 class DeleteHandler {
     constructor() {
-        console.log('DeleteHandler initialized');
         this.setupEventListeners();
     }
 
     setupEventListeners() {
         // Delegate click events for all delete buttons - USE CAPTURE PHASE to intercept before other handlers
         document.addEventListener('click', (e) => {
-            // Debug: log ALL clicks that have delete classes
-            const target = e.target;
-            const classList = target.classList ? Array.from(target.classList).join(', ') : 'none';
-            if (classList.includes('delete') || classList.includes('danger')) {
-                console.log('🔴 Click on element with classes:', classList, target);
-            }
-
-            // Debug: log ALL clicks on delete-trigger-btn
-            if (e.target.classList.contains('delete-trigger-btn') || e.target.closest('.delete-trigger-btn')) {
-                console.log('CLICK DETECTED on delete-trigger-btn', e.target);
-            }
             // Handle modal delete confirm buttons (check first to prevent double handling)
             const deleteConfirm = e.target.closest('.delete-confirm-btn');
             if (deleteConfirm) {
@@ -39,7 +25,6 @@ class DeleteHandler {
             if (deleteTrigger) {
                 e.preventDefault();
                 const entityType = deleteTrigger.getAttribute('data-entity-type');
-                console.log('Delete trigger clicked, entity type:', entityType);
                 this.showModalDeleteConfirmation(entityType);
                 return;
             }
@@ -94,9 +79,13 @@ class DeleteHandler {
                 // Close the modal
                 const modal = button.closest('.modal-fullscreen-overlay');
                 if (modal) {
+                    // Try crud-modal close first
                     const closeButton = modal.querySelector('[data-action*="crud-modal#close"]');
                     if (closeButton) {
                         closeButton.click();
+                    } else {
+                        // Fallback: for canvas modals, just remove the modal from DOM
+                        modal.remove();
                     }
                 }
 
@@ -133,7 +122,6 @@ class DeleteHandler {
         if (entityType === 'treeflow') {
             defaultActions = document.getElementById('modal-default-actions-treeflow');
             deleteConfirmation = document.getElementById('modal-delete-confirmation-treeflow');
-            console.log('Treeflow delete - defaultActions:', defaultActions, 'deleteConfirmation:', deleteConfirmation);
         } else if (entityType === 'step') {
             defaultActions = document.getElementById('modal-default-actions');
             deleteConfirmation = document.getElementById('modal-delete-confirmation');

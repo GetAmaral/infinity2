@@ -7,6 +7,7 @@
 {% set title_create = 'question.modal.create.title' %}
 {% set subtitle_create = 'question.modal.create.subtitle' %}
 {% set subtitle_edit = 'question.modal.edit.subtitle' %}
+{% set subtitle_domain = 'treeflow' %}
 {% set submit_key = is_edit ? 'button.save.changes' : 'question.button.create.question' %}
 {% set submit_domain = is_edit ? 'messages' : 'treeflow' %}
 {% set entity = question %}
@@ -87,10 +88,12 @@
         <div class="fewshot-collection-container" data-collection="positive" data-index="{{ form.fewShotPositive|length }}" data-prototype="{{ form_widget(form.fewShotPositive.vars.prototype)|e('html_attr') }}">
             <div class="fewshot-items">
                 {% for item in form.fewShotPositive %}
-                    <div class="fewshot-item mb-2">
-                        {{ form_widget(item) }}
-                        <button type="button" class="btn btn-sm btn-danger fewshot-remove mt-1">
-                            <i class="bi bi-trash"></i> {{ 'button.remove'|trans({}, 'messages') }}
+                    <div class="fewshot-item mb-2" style="position: relative;">
+                        {{ form_widget(item, {'attr': {'class': 'form-input-modern fewshot-entry'}}) }}
+                        <button type="button" class="fewshot-remove-btn-permanent"
+                                title="{{ 'button.remove'|trans({}, 'messages') }}"
+                                data-bs-toggle="tooltip">
+                            <i class="bi bi-trash"></i>
                         </button>
                     </div>
                 {% endfor %}
@@ -111,10 +114,12 @@
         <div class="fewshot-collection-container" data-collection="negative" data-index="{{ form.fewShotNegative|length }}" data-prototype="{{ form_widget(form.fewShotNegative.vars.prototype)|e('html_attr') }}">
             <div class="fewshot-items">
                 {% for item in form.fewShotNegative %}
-                    <div class="fewshot-item mb-2">
-                        {{ form_widget(item) }}
-                        <button type="button" class="btn btn-sm btn-danger fewshot-remove mt-1">
-                            <i class="bi bi-trash"></i> {{ 'button.remove'|trans({}, 'messages') }}
+                    <div class="fewshot-item mb-2" style="position: relative;">
+                        {{ form_widget(item, {'attr': {'class': 'form-input-modern fewshot-entry'}}) }}
+                        <button type="button" class="fewshot-remove-btn-permanent"
+                                title="{{ 'button.remove'|trans({}, 'messages') }}"
+                                data-bs-toggle="tooltip">
+                            <i class="bi bi-trash"></i>
                         </button>
                     </div>
                 {% endfor %}

@@ -115,21 +115,19 @@
     to { opacity: 1; }
 }
 
+/* Modal Form - Full Width */
+.modal-form {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Centered Dialog */
 .modal-dialog-centered {
     width: 100%;
-    max-width: 600px; /* Default width for most modals */
+    max-width: none; /* Full screen width (minus overlay padding) */
     animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* TreeFlow modals use wider width */
-.modal-dialog-centered.modal-treeflow,
-.modal-dialog-centered.modal-step,
-.modal-dialog-centered.modal-input,
-.modal-dialog-centered.modal-question,
-.modal-dialog-centered.modal-output,
-.modal-dialog-centered.modal-fewshot {
-    max-width: 700px;
 }
 
 @keyframes modalSlideUp {
@@ -153,6 +151,7 @@
     display: flex;
     flex-direction: column;
     max-height: calc(100vh - 4rem);
+    width: 100% !important; /* Override any inline styles */
 }
 
 /* ============================================

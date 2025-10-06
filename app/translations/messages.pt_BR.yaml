@@ -1,0 +1,296 @@
+common.action.view.details: 'Ver Detalhes'
+common.date.today: Hoje
+common.error.invalid.csrf: 'Token de segurança inválido'
+common.form.description: Descrição
+common.label.actions: Ações
+common.status.active: Ativo
+common.status.inactive: Inativo
+nav.admin.audit.analytics: 'Analytics de Auditoria'
+nav.admin.audit.log: 'Log de Auditoria'
+nav.admin.section: Admin
+nav.ai.chat: 'Chat com IA'
+nav.analytics: Analytics
+nav.courses: Cursos
+nav.home: Início
+nav.brand: Luminai
+nav.language: Idioma
+nav.my.courses: 'Área do aluno'
+nav.organizations: Organizações
+nav.settings: Configurações
+nav.toggle.navigation: 'Alternar navegação'
+nav.users: Usuários
+auth.already.have.account: 'Já tem uma conta?'
+auth.confirm.password: 'Confirme a Senha'
+auth.create.account: 'Criar Conta'
+auth.create.account.button: 'Criar Conta'
+auth.email: Email
+auth.full.name: 'Nome Completo'
+auth.join.luminai: 'Entre no Luminai'
+auth.login: Entrar
+auth.login.to.continue: 'Faça login pra continuar'
+auth.logout: Sair
+auth.no.account: 'Não tem uma conta?'
+auth.password: Senha
+auth.password.requirements: 'Pelo menos 8 caracteres com letras e números'
+auth.passwords.do.not.match: 'As senhas não conferem'
+auth.register: Cadastrar
+auth.register.now: 'Cadastre-se agora'
+auth.registration.failed: 'Ops, deu ruim no cadastro. Tenta de novo?'
+auth.registration.successful: 'Cadastro concluído! Agora é só fazer login.'
+auth.remember.me: 'Lembrar de mim'
+auth.sign.in: Entrar
+auth.welcome.back: 'Que bom te ver de volta!'
+button.add: Adicionar
+search.placeholder: Procurar...
+badge.ai.enhanced: 'Turbinado com IA'
+badge.real.time: 'Em tempo real'
+button.add.contact: 'Adicionar Contato'
+button.add.first.contact: 'Adicionar Primeiro Contato'
+button.add.first.lecture: 'Adicionar Primeira Aula'
+button.add.first.module: 'Adicionar Primeiro Módulo'
+button.add.first.user: 'Adicionar Primeiro Usuário'
+button.add.lecture: 'Adicionar Aula'
+button.add.module: 'Adicionar Módulo'
+button.add.organization: 'Adicionar Organização'
+button.add.user: 'Adicionar Usuário'
+button.auto.layout: 'Layout Automático'
+button.call.contact: 'Ligar pro Contato'
+button.cancel: Cancelar
+button.canvas: Canvas
+button.clear.search: 'Limpar busca'
+button.close: Fechar
+button.confirm: Confirmar
+button.create.course: 'Criar Curso'
+button.create.first.organization: 'Criar Primeira Organização'
+button.create.lecture: 'Criar Aula'
+button.create.module: 'Criar Módulo'
+button.create.organization: 'Criar Organização'
+button.create.user: 'Criar Usuário'
+button.creating: Criando...
+button.delete: Deletar
+button.delete.module: 'Deletar Módulo'
+button.edit: Editar
+button.edit.contact: 'Editar Contato'
+button.edit.module: 'Editar Módulo'
+button.filter: Filtrar
+button.fit.to.screen: 'Ajustar à Tela'
+button.fullscreen: 'Tela Cheia'
+button.list: Lista
+button.refresh: 'Atualizar Página'
+button.zoom.in: 'Aumentar Zoom'
+button.zoom.out: 'Diminuir Zoom'
+button.remove: Remover
+button.reorder.modules: 'Reordenar Módulos'
+button.reset: Resetar
+button.reset.form: 'Resetar Formulário'
+button.save: Salvar
+button.save.changes: 'Salvar Alterações'
+button.saving: Salvando...
+button.schedule.meeting: 'Agendar Reunião'
+button.send.email: 'Enviar Email'
+button.send.message: 'Enviar Mensagem'
+button.share.contact: 'Compartilhar Contato'
+button.start.ai.chat: 'Iniciar Chat com IA'
+button.update.course: 'Atualizar Curso'
+button.update.lecture: 'Atualizar Aula'
+button.update.module: 'Atualizar Módulo'
+button.update.organization: 'Atualizar Organização'
+button.update.user: 'Atualizar Usuário'
+button.updating: Atualizando...
+button.view: Visualizar
+confirm.delete.entity: 'Tem certeza que quer deletar este item?'
+confirm.delete.item: 'Tem certeza que quer deletar este item?'
+filter.active.organizations: 'Organizações Ativas'
+filter.active.users: 'Usuários Ativos'
+filter.all: Todos
+filter.by.organization: 'Por Organização'
+filter.empty.organizations: 'Organizações sem Usuários'
+filter.no: Não
+filter.yes: Sim
+modal.crud.continue.editing: 'Continuar Editando'
+modal.crud.discard.changes: 'Descartar Alterações'
+modal.crud.error.saving: 'Ocorreu um erro ao salvar. Tenta de novo?'
+modal.crud.saving: Salvando...
+modal.crud.unsaved.changes: 'Você tem alterações não salvas. Tem certeza que quer descartar?'
+modal.delete.cancel: Cancelar
+modal.delete.cannot.undo: 'Esta ação não pode ser desfeita.'
+modal.delete.confirm.message: 'Tem certeza que quer deletar'
+modal.delete.deleting: Deletando...
+modal.delete.failed: 'Falha ao deletar item'
+modal.delete.network.error: 'Erro de rede ocorreu'
+modal.delete.success: 'Item deletado com sucesso'
+modal.delete.title: 'Confirmar Exclusão'
+modal.delete.yes.delete: 'Sim, Deletar'
+modal.error.failed.to.open: 'Falha ao abrir formulário. Tenta de novo?'
+pagination.of: de
+pagination.show: Mostrar
+pagination.show.label: Mostrar
+pagination.showing: Mostrando
+pagination.to: até
+search.error.failed: 'Busca falhou. Tenta de novo?'
+search.error.failed.to.load: 'Falha ao carregar dados'
+status.active: Ativo
+status.ai.enhanced: 'Turbinado com IA'
+status.failed: Falhou
+status.pending: Pendente
+status.processing: Processando...
+status.ready: Pronto
+status.real.time: 'Tempo real'
+table.aria.label: 'tabela de usuários'
+table.created: Criado
+table.created.by: 'Criado Por'
+table.swipe.to.see.more: 'Deslize pra ver mais'
+table.updated: Atualizado
+upload.video.hint: 'Envie arquivos de vídeo (MP4, WebM ou AVI)'
+view.grid: 'Visualização em Grade'
+view.list: 'Visualização em Lista'
+view.table: 'Visualização em Tabela'
+validation.treeflow.name_too_short: 'Nome deve ter pelo menos 2 caracteres'
+validation.treeflow.name_too_long: 'Nome não pode ter mais de 255 caracteres'
+validation.treeflow.version_invalid: 'Versão deve ser um número inteiro positivo'
+validation.step.cannot_delete_first: 'Não pode deletar o primeiro step'
+validation.step.objective_too_long: 'Objetivo não pode ter mais de 1000 caracteres'
+validation.question.importance_range: 'Importância deve estar entre 1 e 10'
+validation.question.importance_required: 'Importância é obrigatória'
+validation.question.view_order_invalid: 'Ordem de visualização deve ser um número inteiro positivo'
+validation.output.destination_required: 'Step de destino é obrigatório'
+validation.output.conditional_too_long: 'Expressão condicional não pode ter mais de 1000 caracteres'
+validation.input.name_required: 'Nome do input é obrigatório'
+validation.input.type_required: 'Tipo de input é obrigatório'
+validation.input.type_invalid: 'Tipo de input inválido selecionado'
+validation.input.prompt_too_long: 'Prompt não pode ter mais de 1000 caracteres'
+form.validation.errors: 'Por favor, corrija os erros de validação'
+home.description: 'Uma aplicação Symfony 7.3 enterprise completa, com PostgreSQL 18, Redis 7, FrankenPHP 1.9 e práticas modernas de desenvolvimento.'
+home.subtitle: 'Aplicação Symfony Moderna'
+home.title: 'Bem-vindo ao Luminai'
+home.view.organizations: 'Ver Organizações'
+home.view.users: 'Ver Usuários'
+page.ai.powered.crm: 'Dashboard CRM Turbinado com IA'
+page.course.details: 'Detalhes do Curso'
+page.course.description: 'Área do professor'
+page.luminai.suffix: Luminai
+page.manage.users: 'Gerenciar Usuários'
+page.organization.description: 'Gerencie seus relacionamentos de negócios com insights de IA'
+page.organization.details: 'Detalhes da Organização'
+page.settings.description: 'Personalize sua experiência Luminai'
+page.treeflow.description: 'Automação de fluxo de trabalho turbinada com IA e árvores de decisão inteligentes'
+page.user.description: 'Gerenciamento de contatos e insights de relacionamento turbinados com IA'
+action.cancel: Cancelar
+action.delete: Deletar
+action.edit: Editar
+action.save: Salvar
+action.view: Visualizar
+branding.luminai.crm: 'Luminai CRM'
+developer.message.override.grid.item: 'Sobrescrever bloco grid_item no template filho'
+developer.message.override.grid.template: 'Sobrescrever bloco grid_view_item_template em {entity_name}/index.html.twig'
+developer.message.override.list.template: 'Sobrescrever bloco list_view_item_template em {entity_name}/index.html.twig'
+developer.message.override.table.headers: 'Sobrescrever bloco table_headers'
+developer.message.override.table.row: 'Sobrescrever bloco table_row'
+developer.message.override.table.row.template: 'Sobrescrever bloco table_view_row_template em {entity_name}/index.html.twig'
+general.not.available: N/D
+misc.ai.insights.tooltip: 'Insights de IA'
+misc.coming.soon: 'Em Breve'
+misc.contacts.section: Contatos
+misc.luminai.alt: 'Logo Luminai'
+misc.loading.ellipsis: ...
+misc.quick.actions.tooltip: 'Ações Rápidas'
+misc.voice.commands: 'Comandos de Voz'
+misc.waiting: Aguardando...
+entity.treeflows: TreeFlows
+organization.title: Organizações
+treeflow.title: TreeFlows
+user.title: Usuários
+ui.account: Conta
+ui.active: Ativo
+ui.ai: IA
+ui.back.to.dashboard: 'Voltar pro Dashboard'
+ui.dashboard: Dashboard
+date.format: d/m/Y
+date.relative.days.ago: '2 dias atrás'
+date.relative.week.ago: '1 semana atrás'
+date.relative.yesterday: Ontem
+datetime.format: 'd/m/Y H:i'
+time.d.ago: '%count%d atrás'
+time.days.ago: '%count% dia atrás|%count% dias atrás'
+time.week.ago: '1 semana atrás'
+time.yesterday: Ontem
+unit.min: min
+unit.minute: minuto
+unit.minutes: minutos
+empty.contact.description: 'Comece a construir sua rede adicionando seu primeiro contato. Nossa IA vai te ajudar a gerenciar relacionamentos e fornecer insights valiosos.'
+empty.no.contacts.yet: 'Nenhum contato ainda'
+empty.no.description: 'Sem descrição'
+empty.no.modules.yet: 'Nenhum módulo ainda'
+empty.no.organization: 'Sem organização'
+empty.no.organizations.yet: 'Nenhuma Organização Ainda'
+empty.no.users.yet: 'Nenhum usuário ainda'
+empty.organization.contacts.description: 'Comece a gerenciar seus relacionamentos de negócios adicionando contatos'
+empty.organization.description: 'Comece a construir seus relacionamentos de negócios criando sua primeira organização. Nossa IA vai te ajudar a gerenciar e crescer essas conexões.'
+empty.organization.users.description: 'Convide membros da equipe pra colaborar na sua organização'
+language.en: English
+language.pt.BR: 'Português (Brasil)'
+debug.init.bootstrap.missing: '[Init] Bootstrap não carregado, pulando inicialização de tooltip'
+debug.init.dom.loaded: '[Init] Conteúdo DOM Carregado'
+debug.init.tooltips.initialized: '[Init] Tooltips inicializados'
+system.database: 'Banco de Dados'
+system.framework: Framework
+system.information: 'Informações do Sistema'
+system.performance: 'Performance do Sistema'
+system.runtime: 'Tempo de Execução'
+system.security.message: 'Todos os sistemas operacionais'
+system.security.status: 'Status de Segurança'
+system.status: 'Status do Sistema'
+system.version: Versão
+button.create: Criar
+button.update: Atualizar
+session.expiring.soon: 'Sessão Expirando em Breve'
+session.expiring: 'Sessão Expirando'
+session.will.expire.in: 'Sua sessão vai expirar em %time%'
+session.save.your.work: 'Salve seu trabalho!'
+session.click.stay.logged.in: 'Clique em "Continuar Logado" ou salve seu trabalho agora!'
+session.stay.logged.in: 'Continuar Logado'
+session.logout.now: 'Sair Agora'
+session.extended.successfully: 'Sessão renovada com sucesso!'
+session.expired: 'Sua sessão expirou. Por favor, faça login novamente.'
+session.auto.logout: 'Você será desconectado automaticamente.'
+form.autosave.unsaved.changes: 'Alterações Não Salvas Recuperadas'
+form.autosave.found.changes: 'Encontramos alterações não salvas de %time% atrás. Gostaria de restaurá-las?'
+form.autosave.restore: Restaurar
+form.autosave.discard: Descartar
+settings.session.management: 'Gerenciamento de Sessão'
+settings.session.sound.alerts: 'Alertas Sonoros'
+settings.session.sound.alerts.help: 'Reproduzir notificações de áudio quando a sessão estiver expirando'
+settings.session.auto.extend: 'Renovar Sessão Automaticamente'
+settings.session.auto.extend.help: 'Renovar automaticamente a sessão quando você estiver ativo (ativado por padrão)'
+settings.session.info: 'Informações de Sessão'
+settings.session.info.description: 'Sua sessão expira após 1 hora de inatividade. Com Renovação Automática ativada, sua sessão renova automaticamente enquanto você trabalha.'
+settings.session.view.analytics: 'Ver Analytics'
+certificate.title: __certificate.title
+course.enrollment.confirm.remove: __course.enrollment.confirm.remove
+course.lecture.number: __course.lecture.number
+branding.ai.dashboard: __branding.ai.dashboard
+metric.month.growth: __metric.month.growth
+metric.new.count: __metric.new.count
+metric.today.growth: __metric.today.growth
+organization.users.count: __organization.users.count
+contact.information: __contact.information
+contact.last.activity: __contact.last.activity
+contact.active.user: __contact.active.user
+misc.na: __misc.na
+course.lectures: __course.lectures
+empty.no.lectures.in.module: __empty.no.lectures.in.module
+audit.view.changes: __audit.view.changes
+audit.analytics.anomaly.detected: __audit.analytics.anomaly.detected
+'Create a new organization': '__Create a new organization'
+'Edit this item': '__Edit this item'
+'Delete this item': '__Delete this item'
+'Copy text': '__Copy text'
+'Print page': '__Print page'
+'Download file': '__Download file'
+'Grid view': '__Grid view'
+'List view': '__List view'
+'Timeline view': '__Timeline view'
+Create: __Create
+Back: __Back
+Download: __Download
+Print: __Print
