@@ -466,8 +466,9 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
+function initializePageTooltips() {
+    console.log('💡 Initializing tooltips for organization users page');
+
     async function initializeTooltips() {
         if (window.bootstrapReady) {
             await window.bootstrapReady;
@@ -491,6 +492,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     initializeTooltips();
-});
+}
+
+// Support both events
+document.addEventListener('DOMContentLoaded', initializePageTooltips);
+document.addEventListener('turbo:load', initializePageTooltips);
 </script>
 {% endblock %}

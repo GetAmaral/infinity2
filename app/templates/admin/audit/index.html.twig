@@ -985,21 +985,36 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Keep the old DOMContentLoaded for other functionality
-document.addEventListener('DOMContentLoaded', function() {
+// Store handlers globally for cleanup
+let clockInterval = null;
+let keydownHandler = null;
+
+function initializeAuditPage() {
+    console.log('📊 Initializing audit page');
+
+    // Clean up previous handlers if any
+    if (clockInterval) {
+        clearInterval(clockInterval);
+        clockInterval = null;
+    }
+    if (keydownHandler) {
+        document.removeEventListener('keydown', keydownHandler);
+        keydownHandler = null;
+    }
 
     // Keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
+    keydownHandler = function(e) {
         // Ctrl+F to focus first filter
         if (e.ctrlKey && e.key === 'f') {
             e.preventDefault();
             const firstInput = document.querySelector('#filterSection select, #filterSection input');
             if (firstInput) firstInput.focus();
         }
-    });
+    };
+    document.addEventListener('keydown', keydownHandler);
 
     // Update last updated time
-    setInterval(function() {
+    clockInterval = setInterval(function() {
         const now = new Date();
         const timeStr = now.getHours().toString().padStart(2, '0') + ':' +
                        now.getMinutes().toString().padStart(2, '0') + ':' +
@@ -1009,6 +1024,23 @@ document.addEventListener('DOMContentLoaded', function() {
             lastUpdate.textContent = timeStr;
         }
     }, 1000);
+}
+
+// Support both events
+document.addEventListener('DOMContentLoaded', initializeAuditPage);
+document.addEventListener('turbo:load', initializeAuditPage);
+
+// Cleanup before navigation
+document.addEventListener('turbo:before-visit', function() {
+    console.log('🧹 Cleaning up audit page');
+    if (clockInterval) {
+        clearInterval(clockInterval);
+        clockInterval = null;
+    }
+    if (keydownHandler) {
+        document.removeEventListener('keydown', keydownHandler);
+        keydownHandler = null;
+    }
 });
 </script>
 {% endblock %}

@@ -149,7 +149,9 @@
 
 <script>
 // Handle Enter key submission
-document.addEventListener('DOMContentLoaded', function() {
+function initializeLoginForm() {
+    console.log('🔐 Initializing login form');
+
     const loginForm = document.getElementById('loginForm');
     const passwordInput = document.getElementById('password');
 
@@ -161,6 +163,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
+}
+
+// Support both events
+document.addEventListener('DOMContentLoaded', initializeLoginForm);
+document.addEventListener('turbo:load', initializeLoginForm);
 </script>
 {% endblock %}

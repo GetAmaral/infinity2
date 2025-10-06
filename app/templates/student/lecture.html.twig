@@ -313,18 +313,37 @@
 
 <script>
 // Initialize Bootstrap tooltips
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('[Init] DOM Content Loaded');
+function initializeLecturePage() {
+    console.log('[Init] Lecture page initialization');
 
     // Initialize Bootstrap tooltips if bootstrap is available
     if (typeof bootstrap !== 'undefined') {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            // Dispose existing tooltip first
+            const existing = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+            if (existing) existing.dispose();
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
-        console.log('[Init] Tooltips initialized');
+        console.log('[Init] Tooltips initialized:', tooltipList.length);
     } else {
         console.warn('[Init] Bootstrap not loaded, skipping tooltip initialization');
+    }
+}
+
+// Support both events
+document.addEventListener('DOMContentLoaded', initializeLecturePage);
+document.addEventListener('turbo:load', initializeLecturePage);
+
+// Cleanup video player before navigation
+document.addEventListener('turbo:before-visit', function() {
+    console.log('[Cleanup] Cleaning up lecture page');
+
+    // If video player exists, destroy it
+    if (window.player) {
+        console.log('[Cleanup] Destroying video player');
+        window.player.destroy();
+        window.player = null;
     }
 });
 </script>
