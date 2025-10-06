@@ -746,10 +746,16 @@
 
 {% block entity_list_scripts %}
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    // Store observer globally for cleanup
+    let entityListObserver = null;
+
+    function initializeEntityList() {
+        console.log('📋 Initializing entity list: {{ entity_name }}');
+
         const searchInput = document.getElementById('{{ entity_name }}SearchInput');
         const clearBtn = document.getElementById('clearSearchBtn');
-        const originalContent = document.getElementById('{{ entity_name_plural }}-grid').innerHTML;
+        const gridElement = document.getElementById('{{ entity_name_plural }}-grid');
+        const originalContent = gridElement?.innerHTML;
         let isSearching = false;
 
         if (searchInput && clearBtn) {
@@ -815,17 +821,26 @@
 
         function restoreOriginalContent() {
             const container = document.getElementById('{{ entity_name_plural }}-grid');
-            container.innerHTML = originalContent;
-            initializeTooltips();
+            if (container && originalContent) {
+                container.innerHTML = originalContent;
+                initializeTooltips();
+            }
         }
 
-        const observer = new MutationObserver(function() {
+        // Clean up previous observer if it exists
+        if (entityListObserver) {
+            entityListObserver.disconnect();
+            entityListObserver = null;
+        }
+
+        // Create new MutationObserver for tooltip re-initialization
+        entityListObserver = new MutationObserver(function() {
             initializeTooltips();
         });
 
         const gridContainer = document.getElementById('{{ entity_name_plural }}-grid');
         if (gridContainer) {
-            observer.observe(gridContainer, {
+            entityListObserver.observe(gridContainer, {
                 childList: true,
                 subtree: true
             });
@@ -834,6 +849,19 @@
         {% block additional_scripts %}
             {# Child templates can add entity-specific JavaScript here #}
         {% endblock %}
+    }
+
+    // Support both events
+    document.addEventListener('DOMContentLoaded', initializeEntityList);
+    document.addEventListener('turbo:load', initializeEntityList);
+
+    // Cleanup before Turbo caches page
+    document.addEventListener('turbo:before-cache', function() {
+        console.log('🧹 Cleaning up entity list');
+        if (entityListObserver) {
+            entityListObserver.disconnect();
+            entityListObserver = null;
+        }
     });
     </script>
 {% endblock %}

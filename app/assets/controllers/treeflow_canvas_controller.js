@@ -109,7 +109,12 @@ export default class extends Controller {
         } catch (error) {
             console.error('Failed to refresh canvas:', error);
             // Fallback to page reload if fetch fails
-            window.location.reload();
+            if (typeof Turbo !== 'undefined') {
+                Turbo.cache.clear();
+                Turbo.visit(window.location, { action: 'replace' });
+            } else {
+                window.location.reload();
+            }
         }
     }
 
@@ -1052,7 +1057,12 @@ export default class extends Controller {
 
         if (!response.ok) {
             // Fallback: reload page
-            window.location.reload();
+            if (typeof Turbo !== 'undefined') {
+                Turbo.cache.clear();
+                Turbo.visit(window.location, { action: 'replace' });
+            } else {
+                window.location.reload();
+            }
             return;
         }
 
@@ -1439,7 +1449,12 @@ export default class extends Controller {
 
     async refreshCanvas() {
         // Reload the page or refresh the canvas data
-        window.location.reload();
+        if (typeof Turbo !== 'undefined') {
+            Turbo.cache.clear();
+            Turbo.visit(window.location, { action: 'replace' });
+        } else {
+            window.location.reload();
+        }
     }
 
     getConnectionPointPosition(pointElement, step) {

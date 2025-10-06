@@ -116,7 +116,11 @@ export default class extends Controller {
 
             if (response.redirected) {
                 // Success - navigate to the redirected URL
-                window.location.href = response.url;
+                if (typeof Turbo !== 'undefined') {
+                    Turbo.visit(response.url);
+                } else {
+                    window.location.href = response.url;
+                }
                 return;
             }
 
@@ -133,7 +137,11 @@ export default class extends Controller {
                 this.formModified = true;
             } else if (response.ok) {
                 // Success - redirect to index
-                window.location.href = '/organization';
+                if (typeof Turbo !== 'undefined') {
+                    Turbo.visit('/organization');
+                } else {
+                    window.location.href = '/organization';
+                }
             }
         } catch (error) {
             console.error('Form submission error:', error);

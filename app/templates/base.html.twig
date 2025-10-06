@@ -166,7 +166,7 @@
     <div id="global-modal-container"></div>
 
     <!-- Avelum Branding Card - Fixed Bottom Right -->
-    <div class="avelum-branding-card">
+    <div class="avelum-branding-card" data-bs-toggle="tooltip" data-bs-title="Copyright {{ 'now'|date('Y') }} | Avelum.ia.br">
         <span class="avelum-text">by</span>
         <img src="/avelum_logo_md_dark.png" alt="Avelum" class="avelum-logo logo-dark-theme">
         <img src="/avelum_logo_md_ligth.png" alt="Avelum" class="avelum-logo logo-light-theme">
@@ -286,6 +286,71 @@
                     tooltipRenderTimeout = setTimeout(() => initGlobalTooltips(), 50);
                 });
             }
+
+            // ============================================
+            // TURBO CLEANUP (Before page is cached)
+            // ============================================
+            document.addEventListener('turbo:before-cache', function() {
+                console.log('🧹 Turbo: Cleaning up page before cache');
+
+                // Dispose all Bootstrap tooltips
+                document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+                    const tooltip = bootstrap.Tooltip.getInstance(el);
+                    if (tooltip) tooltip.dispose();
+                });
+
+                // Remove modal backdrops
+                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+
+                // Close all open dropdowns
+                document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            });
+
+            {% if app.environment == 'dev' %}
+            // ============================================
+            // TURBO EVENT LOGGING (Development Only)
+            // ============================================
+            if (typeof Turbo !== 'undefined') {
+                console.log('🎯 Turbo event logging enabled (dev mode)');
+
+                // Navigation events
+                document.addEventListener('turbo:click', (event) => {
+                    console.log('🖱️ Turbo: Link clicked', event.detail.url);
+                });
+
+                document.addEventListener('turbo:before-visit', (event) => {
+                    console.log('🚀 Turbo: Starting visit to', event.detail.url);
+                });
+
+                document.addEventListener('turbo:visit', (event) => {
+                    console.log('📡 Turbo: Fetching', event.detail.url);
+                });
+
+                document.addEventListener('turbo:before-render', (event) => {
+                    console.log('🎨 Turbo: About to render');
+                });
+
+                document.addEventListener('turbo:render', () => {
+                    console.log('✨ Turbo: Page rendered');
+                });
+
+                // Form events
+                document.addEventListener('turbo:submit-start', (event) => {
+                    console.log('📤 Turbo: Form submission started');
+                });
+
+                document.addEventListener('turbo:submit-end', (event) => {
+                    console.log('📥 Turbo: Form submission ended', event.detail.success ? '✅' : '❌');
+                });
+
+                // Error events
+                document.addEventListener('turbo:fetch-request-error', (event) => {
+                    console.error('❌ Turbo: Fetch error', event.detail);
+                });
+            }
+            {% endif %}
 
             // Close dropdowns on click outside or ESC key
             document.addEventListener('click', function(event) {

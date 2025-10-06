@@ -55,7 +55,12 @@ export default class extends Controller {
                 // Reload the page after a short delay to show the final state
                 if (data.completed) {
                     setTimeout(() => {
-                        window.location.reload();
+                        if (typeof Turbo !== 'undefined') {
+                            Turbo.cache.clear();
+                            Turbo.visit(window.location, { action: 'replace' });
+                        } else {
+                            window.location.reload();
+                        }
                     }, 2000);
                 }
             }

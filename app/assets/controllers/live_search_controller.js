@@ -181,7 +181,11 @@ export default class extends Controller {
             this.resultsTarget.querySelectorAll('.search-result-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const orgId = item.dataset.orgId;
-                    window.location.href = `/organization/${orgId}`;
+                    if (typeof Turbo !== 'undefined') {
+                        Turbo.visit(`/organization/${orgId}`);
+                    } else {
+                        window.location.href = `/organization/${orgId}`;
+                    }
                 });
 
                 item.addEventListener('mouseenter', () => {

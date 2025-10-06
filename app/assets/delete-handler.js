@@ -98,7 +98,11 @@ class DeleteHandler {
                         }));
                     } else {
                         // For treeflow deletion, redirect to list
-                        window.location.href = '/treeflow';
+                        if (typeof Turbo !== 'undefined') {
+                            Turbo.visit('/treeflow');
+                        } else {
+                            window.location.href = '/treeflow';
+                        }
                     }
                 }, 300);
             } else {
@@ -321,7 +325,14 @@ class DeleteHandler {
         }));
 
         // Reload the page after a short delay to refresh the list
-        setTimeout(() => window.location.reload(), 800);
+        setTimeout(() => {
+            if (typeof Turbo !== 'undefined') {
+                Turbo.cache.clear();
+                Turbo.visit(window.location, { action: 'replace' });
+            } else {
+                window.location.reload();
+            }
+        }, 800);
     }
 
     handleError(message) {

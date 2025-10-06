@@ -225,7 +225,12 @@ export default class extends Controller {
                     const targetModule = this.draggedLecture.closest('[data-module-lecture-reorder-target="module"]');
                     if (targetModule !== this.sourceModule) {
                         setTimeout(() => {
-                            window.location.reload();
+                            if (typeof Turbo !== 'undefined') {
+                                Turbo.cache.clear();
+                                Turbo.visit(window.location, { action: 'replace' });
+                            } else {
+                                window.location.reload();
+                            }
                         }, 1000);
                     }
                 }

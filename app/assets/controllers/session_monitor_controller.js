@@ -633,7 +633,11 @@ export default class extends Controller {
         this.autoSaveForms();
 
         // Redirect to login
-        window.location.href = '/login?expired=1';
+        if (typeof Turbo !== 'undefined') {
+            Turbo.visit('/login?expired=1');
+        } else {
+            window.location.href = '/login?expired=1';
+        }
     }
 
     /**
@@ -819,7 +823,7 @@ export default class extends Controller {
                         <p class="text-muted">Click "Stay Logged In" to continue your session, or you will be automatically logged out.</p>
                     </div>
                     <div class="modal-footer border-0">
-                        <button type="button" class="btn btn-secondary" onclick="window.location.href='/logout'">Logout Now</button>
+                        <button type="button" class="btn btn-secondary" onclick="if(typeof Turbo !== 'undefined') { Turbo.visit('/logout'); } else { window.location.href='/logout'; }">Logout Now</button>
                         <button type="button" class="btn btn-primary" onclick="this.closest('[data-controller*=\"session-monitor\"]').sessionMonitorController.keepAlive()">
                             <i class="bi bi-arrow-clockwise me-2"></i>Stay Logged In
                         </button>

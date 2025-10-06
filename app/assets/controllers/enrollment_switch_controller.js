@@ -169,7 +169,12 @@ export default class extends Controller {
 
             // Reload page after short delay
             setTimeout(() => {
-                window.location.reload();
+                if (typeof Turbo !== 'undefined') {
+                    Turbo.cache.clear();
+                    Turbo.visit(window.location, { action: 'replace' });
+                } else {
+                    window.location.reload();
+                }
             }, 1500);
 
         } catch (error) {
