@@ -746,8 +746,8 @@
 
 {% block entity_list_scripts %}
     <script>
-    // Store observer globally for cleanup
-    let entityListObserver = null;
+    // Store observer globally for cleanup (use var for Turbo compatibility - allows redeclaration)
+    var entityListObserver = null;
 
     function initializeEntityList() {
         console.log('📋 Initializing entity list: {{ entity_name }}');

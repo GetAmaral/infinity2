@@ -985,9 +985,9 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Store handlers globally for cleanup
-let clockInterval = null;
-let keydownHandler = null;
+// Store handlers globally for cleanup (use var for Turbo compatibility - allows redeclaration)
+var clockInterval = null;
+var keydownHandler = null;
 
 function initializeAuditPage() {
     console.log('📊 Initializing audit page');

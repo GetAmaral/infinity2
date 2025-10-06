@@ -1,3 +1,16 @@
+// ============================================
+// TURBO IMPORT & CONFIGURATION
+// ============================================
+import * as Turbo from '@hotwired/turbo';
+
+console.log('🚀 Turbo Drive enabled');
+
+// Turbo configuration
+Turbo.setProgressBarDelay(100); // Show progress bar after 100ms
+
+// ============================================
+// REST OF EXISTING IMPORTS
+// ============================================
 import { startStimulusApp } from '@symfony/stimulus-bundle';
 import * as bootstrap from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';

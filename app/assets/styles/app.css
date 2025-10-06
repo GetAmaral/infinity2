@@ -1320,3 +1320,49 @@ main {
 [data-theme="light"] .fullscreen-textarea-footer .btn-secondary:hover {
     background: #d1d5db;
 }
+
+/* ============================================
+   TURBO PROGRESS BAR
+   ============================================ */
+
+.turbo-progress-bar {
+    position: fixed;
+    display: block;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+    z-index: 9999;
+    transition: width 300ms ease-out, opacity 150ms 150ms ease-in;
+    transform: translate3d(0, 0, 0);
+    box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+}
+
+/* Add glow effect */
+.turbo-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
+    animation: turbo-progress-glow 2s ease-in-out infinite;
+}
+
+@keyframes turbo-progress-glow {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* Dark theme variant */
+[data-theme="dark"] .turbo-progress-bar {
+    background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+    box-shadow: 0 0 10px rgba(79, 70, 229, 0.7);
+}
+
+/* Light theme variant */
+[data-theme="light"] .turbo-progress-bar {
+    background: linear-gradient(90deg, #4338ca 0%, #6d28d9 100%);
+    box-shadow: 0 0 10px rgba(67, 56, 202, 0.5);
+}
