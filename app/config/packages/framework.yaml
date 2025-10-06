@@ -20,6 +20,7 @@ framework:
         cookie_secure: auto
         cookie_httponly: true
         cookie_samesite: lax
+        cookie_domain: '%env(default::SESSION_COOKIE_DOMAIN)%'
         gc_probability: 1
         gc_divisor: 100
         gc_maxlifetime: 3600

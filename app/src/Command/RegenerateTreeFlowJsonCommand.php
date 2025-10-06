@@ -40,7 +40,7 @@ class RegenerateTreeFlowJsonCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $force = $input->getOption('force');
 
-        $io->title('Regenerating TreeFlow JSON Cache');
+        $io->title('Regenerating TreeFlow JSON Cache (jsonStructure + talkFlow)');
 
         $treeFlows = $this->entityManager->getRepository(TreeFlow::class)->findAll();
         $total = count($treeFlows);
@@ -56,10 +56,10 @@ class RegenerateTreeFlowJsonCommand extends Command
         $skipped = 0;
 
         foreach ($treeFlows as $treeFlow) {
-            $hasCache = $treeFlow->getJsonStructure() !== null;
+            $hasBothCaches = $treeFlow->getJsonStructure() !== null && $treeFlow->getTalkFlow() !== null;
 
-            if ($hasCache && !$force) {
-                $io->writeln("⏭️  Skipped: {$treeFlow->getName()} (already has cached JSON)");
+            if ($hasBothCaches && !$force) {
+                $io->writeln("⏭️  Skipped: {$treeFlow->getName()} (already has both caches)");
                 $skipped++;
                 continue;
             }
@@ -67,12 +67,18 @@ class RegenerateTreeFlowJsonCommand extends Command
             $io->write("🔄 Regenerating: {$treeFlow->getName()}... ");
 
             try {
+                // Generate both structures
                 $jsonStructure = $treeFlow->convertToJson();
+                $talkFlow = $treeFlow->convertToTalkFlow();
+
+                // Set both caches
                 $treeFlow->setJsonStructure($jsonStructure);
+                $treeFlow->setTalkFlow($talkFlow);
+
                 $this->entityManager->flush();
 
                 $stepCount = count($jsonStructure[$treeFlow->getSlug()]['steps'] ?? []);
-                $io->writeln("✅ Done ({$stepCount} steps)");
+                $io->writeln("✅ Done ({$stepCount} steps, both caches generated)");
                 $regenerated++;
             } catch (\Exception $e) {
                 $io->writeln("❌ Failed: " . $e->getMessage());
@@ -81,13 +87,17 @@ class RegenerateTreeFlowJsonCommand extends Command
 
         $io->newLine();
         $io->success([
-            "Regenerated: {$regenerated}",
+            "Regenerated: {$regenerated} TreeFlows",
             "Skipped: {$skipped}",
-            "Total: {$total}"
+            "Total: {$total}",
+            "",
+            "Each TreeFlow now has both:",
+            "  • jsonStructure (complete data)",
+            "  • talkFlow (empty template)"
         ]);
 
         if ($skipped > 0 && !$force) {
-            $io->note('Use --force to regenerate TreeFlows that already have cached JSON');
+            $io->note('Use --force to regenerate TreeFlows that already have cached data');
         }
 
         return Command::SUCCESS;

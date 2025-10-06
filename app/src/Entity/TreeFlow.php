@@ -73,6 +73,10 @@ class TreeFlow extends EntityBase
     #[Groups(['treeflow:read'])]
     protected ?array $jsonStructure = null;
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['treeflow:read'])]
+    protected ?array $talkFlow = null;
+
     #[ORM\ManyToOne(targetEntity: Organization::class)]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['treeflow:read'])]
@@ -173,6 +177,17 @@ class TreeFlow extends EntityBase
         return $this;
     }
 
+    public function getTalkFlow(): ?array
+    {
+        return $this->talkFlow;
+    }
+
+    public function setTalkFlow(?array $talkFlow): self
+    {
+        $this->talkFlow = $talkFlow;
+        return $this;
+    }
+
     public function getOrganization(): Organization
     {
         return $this->organization;
@@ -235,6 +250,7 @@ class TreeFlow extends EntityBase
         $orderedSteps = $this->getOrderedSteps();
 
         $steps = [];
+        $order = 1;
 
         foreach ($orderedSteps as $step) {
             // Build questions array
@@ -283,18 +299,72 @@ class TreeFlow extends EntityBase
 
             // Build step structure
             $steps[$step->getSlug()] = [
+                'order' => $order,
                 'objective' => $step->getObjective(),
                 'prompt' => $step->getPrompt(),
                 'questions' => $questions,
                 'inputs' => $inputs,
                 'outputs' => $outputs,
             ];
+
+            $order++;
         }
 
         return [
             $this->slug => [
                 'objective' => null, // TreeFlow doesn't have objective field
                 'prompt' => null,    // TreeFlow doesn't have prompt field
+                'steps' => $steps,
+            ]
+        ];
+    }
+
+    /**
+     * Convert TreeFlow to TalkFlow template structure
+     *
+     * Creates an empty template with step metadata and empty fields for:
+     * - Question answers (to be filled by Talk processor)
+     * - Output selections (which path was taken)
+     * - Step completion status and timestamps
+     *
+     * @return array TalkFlow template structure
+     */
+    public function convertToTalkFlow(): array
+    {
+        // Get ordered steps following canvas flow (first step, then connections)
+        $orderedSteps = $this->getOrderedSteps();
+
+        $steps = [];
+        $order = 1;
+
+        foreach ($orderedSteps as $step) {
+            // Build questions array with empty answer fields
+            $questions = [];
+            foreach ($step->getQuestions() as $question) {
+                $questions[$question->getSlug()] = ''; // Empty - to be filled by Talk processor
+            }
+
+            // Build outputs array with empty selection fields
+            $outputs = [];
+            foreach ($step->getOutputs() as $output) {
+                $outputs[$output->getSlug() ?? 'output-' . $output->getId()] = ''; // Empty - to be filled with conditional result
+            }
+
+            // Build step template structure
+            $steps[$step->getSlug()] = [
+                'order' => $order,
+                'completed' => false,
+                'timestamp' => null,
+                'selectedOutput' => null, // Will store which output was actually taken
+                'questions' => $questions,
+                'outputs' => $outputs,
+            ];
+
+            $order++;
+        }
+
+        return [
+            $this->slug => [
                 'steps' => $steps,
             ]
         ];

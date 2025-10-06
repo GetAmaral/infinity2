@@ -54,14 +54,22 @@ class TreeFlowJsonCacheSubscriber
     {
         $entity = $args->getObject();
 
-        // Skip if this is just a jsonStructure update (to prevent infinite loops)
+        // Skip if this is just a jsonStructure or talkFlow update (to prevent infinite loops)
         if ($entity instanceof TreeFlow) {
-            if ($args->hasChangedField('jsonStructure') && count($args->getEntityChangeSet()) === 1) {
+            $changeSet = $args->getEntityChangeSet();
+            $changedFields = array_keys($changeSet);
+            $cacheFields = ['jsonStructure', 'talkFlow'];
+
+            // Skip if only cache fields changed
+            $onlyCacheFieldsChanged = !empty(array_intersect($changedFields, $cacheFields))
+                && empty(array_diff($changedFields, $cacheFields));
+
+            if ($onlyCacheFieldsChanged) {
                 return;
             }
 
             // Skip if only canvasViewState changed (canvas changes don't require JSON regeneration)
-            if ($args->hasChangedField('canvasViewState') && count($args->getEntityChangeSet()) === 1) {
+            if ($args->hasChangedField('canvasViewState') && count($changeSet) === 1) {
                 return;
             }
         }
@@ -93,8 +101,12 @@ class TreeFlowJsonCacheSubscriber
                 // Generate fresh JSON structure
                 $jsonStructure = $treeFlow->convertToJson();
 
-                // Update the cached JSON
+                // Generate fresh TalkFlow template
+                $talkFlow = $treeFlow->convertToTalkFlow();
+
+                // Update both cached structures
                 $treeFlow->setJsonStructure($jsonStructure);
+                $treeFlow->setTalkFlow($talkFlow);
             }
 
             // Clear the affected list before flush to prevent re-triggering
