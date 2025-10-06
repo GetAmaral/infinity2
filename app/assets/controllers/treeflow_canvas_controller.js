@@ -1110,9 +1110,9 @@ export default class extends Controller {
     }
 
     renderContinuationLine(startPos, step, node, source) {
-        // Calculate line length (1/4 of step width)
+        // Calculate line length (1/8 of step width - half the previous distance)
         const nodeWidth = node.offsetWidth;
-        const lineLength = nodeWidth / 4;
+        const lineLength = nodeWidth / 8;
         const endX = startPos.x + lineLength;
 
         // Create SVG dashed line
@@ -1834,10 +1834,31 @@ export default class extends Controller {
         }, 3000);
     }
 
+    expandTargetCircles(type, excludeElement) {
+        // type is 'input' or 'output'
+        // excludeElement is the circle being dragged (don't expand it)
+
+        const selector = type === 'input' ? '.input-point' : '.output-point';
+        document.querySelectorAll(selector).forEach(circle => {
+            if (circle !== excludeElement) {
+                circle.classList.add('drag-target');
+            }
+        });
+    }
+
+    resetCircleSizes() {
+        document.querySelectorAll('.connection-point.drag-target').forEach(circle => {
+            circle.classList.remove('drag-target');
+        });
+    }
+
     cleanupConnectionDrag() {
         this.isDraggingConnection = false;
         this.dragSourceOutput = null;
         this.dragSourceInput = null;
+
+        // Reset expanded circles
+        this.resetCircleSizes();
 
         if (this.ghostLine) {
             this.ghostLine.remove();
@@ -2113,14 +2134,14 @@ export default class extends Controller {
         this.updateTransform();
     }
 
-    getOutputOrderForStep(stepId, step) {
+    getConnectionInfoForStep(stepId) {
         // Find which connection targets this step (via its inputs)
         const targetConnection = this.connections.find(conn =>
             conn.targetInput && conn.targetInput.stepId === stepId
         );
 
         if (!targetConnection) {
-            return 999999; // No connection found, place at end
+            return null;
         }
 
         // Get the source step of this connection
@@ -2133,7 +2154,7 @@ export default class extends Controller {
 
         const sourceStep = stepsArray.find(s => s.id === sourceStepId);
         if (!sourceStep || !sourceStep.outputs) {
-            return 999999;
+            return null;
         }
 
         // Find the index of the source output in the source step's outputs
@@ -2141,7 +2162,15 @@ export default class extends Controller {
             output => output.id === targetConnection.sourceOutput.id
         );
 
-        return outputIndex >= 0 ? outputIndex : 999999;
+        return {
+            sourceStepId: sourceStepId,
+            outputIndex: outputIndex >= 0 ? outputIndex : 999999
+        };
+    }
+
+    getOutputOrderForStep(stepId, step) {
+        const info = this.getConnectionInfoForStep(stepId);
+        return info ? info.outputIndex : 999999;
     }
 
     fitToScreen() {
@@ -2275,12 +2304,35 @@ export default class extends Controller {
             nodesByLevel.get(level).push({id, step});
         });
 
-        // Position connected steps
+        // Position connected steps level by level
+        // Keep track of Y positions for calculating ideal positions
+        const stepYPositions = new Map();
+
         Array.from(nodesByLevel.keys()).sort((a, b) => a - b).forEach(level => {
             const nodesInLevel = nodesByLevel.get(level);
 
-            // Sort nodes by output order to prevent crossing connection lines
+            // Calculate ideal Y position for each node based on its source connection
+            nodesInLevel.forEach(item => {
+                const connInfo = this.getConnectionInfoForStep(item.id);
+                if (connInfo && stepYPositions.has(connInfo.sourceStepId)) {
+                    // Get source step's Y position
+                    const sourceY = stepYPositions.get(connInfo.sourceStepId);
+                    // Calculate ideal Y: source Y + (output index * estimated spacing)
+                    const estimatedSpacing = 200; // Estimated vertical spacing per output
+                    item.idealY = sourceY + (connInfo.outputIndex * estimatedSpacing);
+                } else {
+                    // No connection info or source not positioned yet - use large value
+                    item.idealY = 999999;
+                }
+            });
+
+            // Sort nodes by ideal Y position to minimize crossing lines
             nodesInLevel.sort((a, b) => {
+                // If both have ideal positions, sort by ideal Y
+                if (a.idealY !== 999999 && b.idealY !== 999999) {
+                    return a.idealY - b.idealY;
+                }
+                // Otherwise, sort by output order as fallback
                 const orderA = this.getOutputOrderForStep(a.id, a.step);
                 const orderB = this.getOutputOrderForStep(b.id, b.step);
                 return orderA - orderB;
@@ -2296,6 +2348,9 @@ export default class extends Controller {
 
                     node.style.left = x + 'px';
                     node.style.top = y + 'px';
+
+                    // Store this step's Y position for next level calculations
+                    stepYPositions.set(item.id, y);
 
                     // Save position to backend
                     this.saveStepPosition(item.id, x, y);
@@ -2379,33 +2434,32 @@ export default class extends Controller {
     }
 
     adjustCanvasHeight() {
-        // Calculate available height: viewport height - all elements above canvas
+        // Calculate available height: total viewport - navbar - header - card header
         const viewportHeight = window.innerHeight;
-        const card = document.getElementById('treeflow-canvas-card');
 
-        if (!card) return;
+        if (!this.canvasTarget) return;
 
-        // Get the card's offset from top
-        const cardRect = card.getBoundingClientRect();
-        const cardTop = cardRect.top + window.scrollY;
+        // Get navbar height
+        const navbar = document.querySelector('.navbar');
+        const navbarHeight = navbar ? navbar.offsetHeight : 0;
 
-        // Reserve space for bottom margin and metadata section (collapsed)
-        const bottomReserve = 100; // 100px for bottom spacing
+        // Get page header height (the compact header with back button and title)
+        const pageHeader = document.querySelector('.d-flex.justify-content-between.align-items-center.px-2');
+        const pageHeaderHeight = pageHeader ? pageHeader.offsetHeight : 0;
 
-        // Calculate ideal canvas height
-        const availableHeight = viewportHeight - cardTop - bottomReserve;
+        // Get card header height (Steps title + create button)
+        const cardHeader = document.querySelector('#treeflow-canvas-card .d-flex.justify-content-between');
+        const cardHeaderHeight = cardHeader ? cardHeader.offsetHeight : 0;
 
-        // Get the header inside the card (Steps title + buttons)
-        const header = card.querySelector('.d-flex.justify-content-between');
-        const headerHeight = header ? header.offsetHeight + 32 : 80; // +32 for margins
+        // Get card padding (0.5rem = 8px top + 8px bottom)
+        const cardPadding = 16;
 
-        // Canvas height = available height - header - card padding
-        const canvasHeight = Math.max(500, availableHeight - headerHeight - 32); // min 500px
+        // Calculate available height for canvas
+        // viewport - navbar - page header - card header - card padding - 2px safety margin
+        const canvasHeight = Math.max(250, viewportHeight - navbarHeight - pageHeaderHeight - cardHeaderHeight - cardPadding - 2);
 
         // Apply the height
-        if (this.canvasTarget) {
-            this.canvasTarget.style.height = `${canvasHeight}px`;
-        }
+        this.canvasTarget.style.height = `${canvasHeight}px`;
     }
 
     toggleFullscreen() {

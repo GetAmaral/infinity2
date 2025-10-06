@@ -111,7 +111,7 @@
                     <i class="bi bi-layers me-2"></i>{{ 'course.modules.and.lectures'|trans({}, 'course') }} ({{ modules|length }} {{ 'course.modules'|trans({}, 'course') }})
                 </h5>
                 {% if is_granted('COURSE_EDIT', course) %}
-                    {{ button_create(path('course_module_new', {courseId: course.id}), 'button.add.module', 'messages', permission='COURSE_EDIT', size='sm') }}
+                    {{ button_create(path('course_module_new', {courseId: course.id}), 'button.add.module', 'messages', tooltip='button.add.module'|trans, size='sm') }}
                 {% endif %}
             </div>
 
@@ -119,9 +119,9 @@
                 <div class="text-center py-5">
                     <i class="bi bi-layers" style="font-size: 3rem; color: var(--luminai-text-muted);"></i>
                     <h5 class="text-white mt-3 mb-2">{{ 'empty.no.modules.yet'|trans }}</h5>
-                    <p class="text-secondary mb-4">{{ 'empty.course.modules.description'|trans }}</p>
+                    <p class="text-secondary mb-4">{{ 'empty.course.modules.description'|trans({}, 'course') }}</p>
                     {% if is_granted('COURSE_EDIT', course) %}
-                        {{ button_create(path('course_module_new', {courseId: course.id}), 'button.add.first.module', 'messages', permission='COURSE_EDIT') }}
+                        {{ button_create(path('course_module_new', {courseId: course.id}), 'button.add.first.module', 'messages', tooltip='button.add.first.module'|trans) }}
                     {% endif %}
                 </div>
             {% else %}
@@ -167,8 +167,8 @@
                                 </button>
                                 {% if is_granted('COURSE_EDIT', course) %}
                                     <div class="d-flex gap-1 me-3">
-                                        {{ button_edit(module.id, path('course_module_edit', {courseId: course.id, moduleId: module.id}), permission='COURSE_EDIT') }}
-                                        {{ button_delete(module.id, path('course_module_delete', {courseId: course.id, moduleId: module.id}), permission='COURSE_DELETE') }}
+                                        {{ button_edit(module.id, path('course_module_edit', {courseId: course.id, moduleId: module.id})) }}
+                                        {{ button_delete(module.id, path('course_module_delete', {courseId: course.id, moduleId: module.id})) }}
                                     </div>
                                 {% endif %}
                             </h2>
@@ -190,7 +190,7 @@
                                             <i class="bi bi-collection me-2"></i>{{ 'course.lectures'|trans({}, 'course') }} (<span class="module-lecture-count" data-module-id="{{ module.id }}">{{ module.lectures|length }}</span>)
                                         </h6>
                                         {% if is_granted('COURSE_EDIT', course) %}
-                                            {{ button_create(path('course_module_lecture_new', {courseId: course.id, moduleId: module.id}), 'button.add.lecture', 'messages', permission='COURSE_EDIT', size='sm') }}
+                                            {{ button_create(path('course_module_lecture_new', {courseId: course.id, moduleId: module.id}), 'button.add.lecture', 'messages', tooltip='button.add.lecture'|trans, size='sm') }}
                                         {% endif %}
                                     </div>
 
@@ -198,7 +198,7 @@
                                         <!-- Empty State -->
                                         <div class="module-empty-state luminai-card p-4 text-center" data-module-id="{{ module.id }}">
                                             <i class="bi bi-collection text-muted" style="font-size: 2.5rem;"></i>
-                                            <p class="text-secondary mt-3 mb-0">{{ 'empty.no.lectures.in.module'|trans }}</p>
+                                            <p class="text-secondary mt-3 mb-0">{{ 'empty.no.lectures.in.module'|trans({}, 'course') }}</p>
                                         </div>
                                     {% else %}
                                         <!-- Lectures List -->
@@ -237,13 +237,13 @@
                                                                     {# Status Badge #}
                                                                     <span data-lecture-processing-target="status" class="badge {% if lecture.processingStatus == 'completed' %}bg-success{% elseif lecture.processingStatus == 'processing' %}bg-warning text-dark{% elseif lecture.processingStatus == 'failed' %}bg-danger{% else %}bg-secondary{% endif %}">
                                                                         {% if lecture.processingStatus == 'completed' %}
-                                                                            <i class="bi bi-check-circle me-1"></i>{{ ('course.lecture.status.completed')|trans }}
+                                                                            <i class="bi bi-check-circle me-1"></i>{{ 'course.lecture.status.completed'|trans({}, 'course') }}
                                                                         {% elseif lecture.processingStatus == 'processing' %}
-                                                                            <i class="bi bi-hourglass-split me-1"></i>{{ ('course.lecture.status.processing')|trans }}
+                                                                            <i class="bi bi-hourglass-split me-1"></i>{{ 'course.lecture.status.processing'|trans({}, 'course') }}
                                                                         {% elseif lecture.processingStatus == 'failed' %}
-                                                                            <i class="bi bi-exclamation-triangle me-1"></i>{{ ('course.lecture.status.failed')|trans }}
+                                                                            <i class="bi bi-exclamation-triangle me-1"></i>{{ 'course.lecture.status.failed'|trans({}, 'course') }}
                                                                         {% else %}
-                                                                            <i class="bi bi-clock-history me-1"></i>{{ ('course.lecture.status.pending')|trans }}
+                                                                            <i class="bi bi-clock-history me-1"></i>{{ 'course.lecture.status.pending'|trans({}, 'course') }}
                                                                         {% endif %}
                                                                     </span>
 
@@ -279,10 +279,10 @@
                                                         </div>
                                                         <div class="d-flex gap-1">
                                                             {% if is_granted('COURSE_EDIT', course) %}
-                                                                {{ button_edit(lecture.id, path('course_lecture_edit', {courseId: course.id, lectureId: lecture.id}), permission='COURSE_EDIT') }}
+                                                                {{ button_edit(lecture.id, path('course_lecture_edit', {courseId: course.id, lectureId: lecture.id})) }}
                                                             {% endif %}
                                                             {% if is_granted('COURSE_DELETE', course) %}
-                                                                {{ button_delete(lecture.id, path('course_lecture_delete', {courseId: course.id, lectureId: lecture.id}), permission='COURSE_DELETE') }}
+                                                                {{ button_delete(lecture.id, path('course_lecture_delete', {courseId: course.id, lectureId: lecture.id})) }}
                                                             {% endif %}
                                                         </div>
                                                     </div>
@@ -321,8 +321,8 @@
             {% if course.studentCourses is empty %}
                 <div class="text-center py-5">
                     <i class="bi bi-people" style="font-size: 3rem; color: var(--luminai-text-muted);"></i>
-                    <h5 class="text-white mt-3 mb-2">{{ 'empty.no.students.enrolled'|trans }}</h5>
-                    <p class="text-secondary mb-4">{{ 'empty.course.enrollment.description'|trans }}</p>
+                    <h5 class="text-white mt-3 mb-2">{{ 'empty.no.students.enrolled'|trans({}, 'course') }}</h5>
+                    <p class="text-secondary mb-4">{{ 'empty.course.enrollment.description'|trans({}, 'course') }}</p>
                     <button type="button"
                             class="btn luminai-btn-primary"
                             data-bs-toggle="modal"

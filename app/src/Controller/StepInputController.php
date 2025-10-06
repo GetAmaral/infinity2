@@ -44,14 +44,8 @@ final class StepInputController extends AbstractController
         $input = new StepInput();
         $input->setStep($step);
 
-        // Get all steps from this TreeFlow except current step
-        $availableSteps = $treeFlow->getSteps()->filter(
-            fn($s) => $s->getId()->toString() !== $stepId
-        );
-
         $form = $this->createForm(StepInputFormType::class, $input, [
             'is_edit' => false,
-            'available_steps' => $availableSteps,
         ]);
 
         $form->handleRequest($request);
@@ -128,14 +122,8 @@ final class StepInputController extends AbstractController
 
         $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
 
-        // Get all steps from this TreeFlow except current step
-        $availableSteps = $treeFlow->getSteps()->filter(
-            fn($s) => $s->getId()->toString() !== $stepId
-        );
-
         $form = $this->createForm(StepInputFormType::class, $input, [
             'is_edit' => true,
-            'available_steps' => $availableSteps,
         ]);
 
         $form->handleRequest($request);

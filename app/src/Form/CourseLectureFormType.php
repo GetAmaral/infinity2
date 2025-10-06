@@ -24,6 +24,7 @@ class CourseLectureFormType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'course.lecture.form.name',
+                'translation_domain' => 'course',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'course.lecture.form.name_placeholder',
@@ -59,6 +60,7 @@ class CourseLectureFormType extends AbstractType
             ])
             ->add('videoFile', VichFileType::class, [
                 'label' => 'course.lecture.form.video_file',
+                'translation_domain' => 'course',
                 'required' => !$isEdit,
                 'allow_delete' => false,
                 'download_uri' => false,
@@ -82,6 +84,7 @@ class CourseLectureFormType extends AbstractType
             ])
             ->add('viewOrder', IntegerType::class, [
                 'label' => 'course.lecture.form.view_order',
+                'translation_domain' => 'course',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'course.lecture.form.view_order_placeholder',

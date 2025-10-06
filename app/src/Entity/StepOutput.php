@@ -25,11 +25,6 @@ class StepOutput extends EntityBase
     #[Groups(['output:read'])]
     protected Step $step;
 
-    #[ORM\ManyToOne(targetEntity: Step::class)]
-    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    #[Groups(['output:read', 'output:write'])]
-    protected ?Step $destinationStep = null;
-
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Groups(['output:read', 'output:write'])]
@@ -59,17 +54,6 @@ class StepOutput extends EntityBase
     public function setStep(?Step $step): self
     {
         $this->step = $step;
-        return $this;
-    }
-
-    public function getDestinationStep(): ?Step
-    {
-        return $this->destinationStep;
-    }
-
-    public function setDestinationStep(?Step $destinationStep): self
-    {
-        $this->destinationStep = $destinationStep;
         return $this;
     }
 
@@ -118,14 +102,6 @@ class StepOutput extends EntityBase
     }
 
     /**
-     * Check if this output has a destination
-     */
-    public function hasDestination(): bool
-    {
-        return $this->destinationStep !== null;
-    }
-
-    /**
      * Check if this output has a conditional
      */
     public function hasConditional(): bool
@@ -165,7 +141,6 @@ class StepOutput extends EntityBase
 
     public function __toString(): string
     {
-        $destination = $this->destinationStep ? ' → ' . $this->destinationStep->getName() : '';
-        return $this->name . $destination;
+        return $this->name;
     }
 }

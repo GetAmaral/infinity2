@@ -1,0 +1,153 @@
+{#
+/**
+ * Luminai Form Theme
+ *
+ * This theme applies the modern Luminai styling to all Symfony forms.
+ * To use: {% form_theme form 'forms/luminai_theme.html.twig' %}
+ */
+#}
+
+{# Standard form row - wraps field with label, widget, errors #}
+{% block form_row %}
+    <div class="form-group-modern">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {% if form.vars.help is defined and form.vars.help %}
+            <small class="form-help-text">{{ form.vars.help|trans }}</small>
+        {% endif %}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{# Form label styling #}
+{% block form_label %}
+    {% if label is not same as(false) %}
+        <label class="form-label-modern"{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+            {{- label|trans -}}
+        </label>
+    {% endif %}
+{% endblock %}
+
+{# Text input field #}
+{% block form_widget_simple %}
+    {% set type = type|default('text') %}
+    {% set attr = attr|merge({
+        'class': (attr.class|default('') ~ ' form-input-modern' ~ (errors|length > 0 ? ' input-error' : ''))|trim
+    }) %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{% endblock %}
+
+{# Textarea widget #}
+{% block textarea_widget %}
+    {% set attr = attr|merge({
+        'class': (attr.class|default('') ~ ' form-input-modern' ~ (errors|length > 0 ? ' input-error' : ''))|trim
+    }) %}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+{% endblock %}
+
+{# Select dropdown #}
+{% block choice_widget_collapsed %}
+    {% set attr = attr|merge({
+        'class': (attr.class|default('') ~ ' form-select-modern' ~ (errors|length > 0 ? ' input-error' : ''))|trim
+    }) %}
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {% if placeholder is not none %}
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
+        {% endif %}
+        {% if preferred_choices|length > 0 %}
+            {% set options = preferred_choices %}
+            {% set render_preferred_choices = true %}
+            {{- block('choice_widget_options') -}}
+            {% if choices|length > 0 and separator is not none %}
+                <option disabled="disabled">{{ separator }}</option>
+            {% endif %}
+        {% endif %}
+        {% set options = choices %}
+        {{- block('choice_widget_options') -}}
+    </select>
+{% endblock %}
+
+{# Checkbox widget #}
+{% block checkbox_widget %}
+    {% set attr = attr|merge({
+        'class': (attr.class|default('') ~ ' form-check-input')|trim
+    }) %}
+    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{% endblock %}
+
+{# Radio widget #}
+{% block radio_widget %}
+    {% set attr = attr|merge({
+        'class': (attr.class|default('') ~ ' form-check-input')|trim
+    }) %}
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{% endblock %}
+
+{# Checkbox/Radio row (for single checkbox or radio) #}
+{% block checkbox_row %}
+    <div class="form-group-modern">
+        <div class="form-check{% if form.parent.vars.multiple|default(false) %} form-switch{% endif %}">
+            {{ form_widget(form) }}
+            {{ form_label(form, null, {label_attr: {class: 'form-check-label'}}) }}
+        </div>
+        {% if form.vars.help is defined and form.vars.help %}
+            <small class="form-help-text">{{ form.vars.help|trans }}</small>
+        {% endif %}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{% block radio_row %}
+    {{ block('checkbox_row') }}
+{% endblock %}
+
+{# Multiple checkboxes/radios (expanded choice) #}
+{% block choice_row %}
+    {% if expanded %}
+        <div class="form-group-modern">
+            {{ form_label(form) }}
+            <div class="form-check-group-modern">
+                {{ form_widget(form) }}
+            </div>
+            {% if form.vars.help is defined and form.vars.help %}
+                <small class="form-help-text">{{ form.vars.help|trans }}</small>
+            {% endif %}
+            {{ form_errors(form) }}
+        </div>
+    {% else %}
+        {{ block('form_row') }}
+    {% endif %}
+{% endblock %}
+
+{# File upload widget #}
+{% block file_widget %}
+    {% set attr = attr|merge({
+        'class': (attr.class|default('') ~ ' form-input-modern' ~ (errors|length > 0 ? ' input-error' : ''))|trim
+    }) %}
+    <input type="file" {{ block('widget_attributes') }} />
+{% endblock %}
+
+{# Password widget #}
+{% block password_widget %}
+    {% set type = 'password' %}
+    {{ block('form_widget_simple') }}
+{% endblock %}
+
+{# Form errors styling #}
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        {% for error in errors %}
+            <div class="invalid-feedback">{{ error.message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{# Range slider widget #}
+{% block range_widget %}
+    {% set type = 'range' %}
+    {% set attr = attr|merge({
+        'class': (attr.class|default('') ~ ' form-range')|trim
+    }) %}
+    {{ block('form_widget_simple') }}
+{% endblock %}
+

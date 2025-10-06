@@ -28,11 +28,6 @@ class StepInput extends EntityBase
     #[Groups(['input:read'])]
     protected Step $step;
 
-    #[ORM\ManyToOne(targetEntity: Step::class)]
-    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    #[Groups(['input:read', 'input:write'])]
-    protected ?Step $sourceStep = null;
-
     #[ORM\Column(type: 'string', enumType: InputType::class)]
     #[Groups(['input:read', 'input:write'])]
     protected InputType $type = InputType::ANY;
@@ -68,17 +63,6 @@ class StepInput extends EntityBase
     public function setStep(?Step $step): self
     {
         $this->step = $step;
-        return $this;
-    }
-
-    public function getSourceStep(): ?Step
-    {
-        return $this->sourceStep;
-    }
-
-    public function setSourceStep(?Step $sourceStep): self
-    {
-        $this->sourceStep = $sourceStep;
         return $this;
     }
 
@@ -124,14 +108,6 @@ class StepInput extends EntityBase
     {
         $this->prompt = $prompt;
         return $this;
-    }
-
-    /**
-     * Check if this input has a source step
-     */
-    public function hasSource(): bool
-    {
-        return $this->sourceStep !== null;
     }
 
     /**
@@ -187,7 +163,6 @@ class StepInput extends EntityBase
 
     public function __toString(): string
     {
-        $source = $this->sourceStep ? $this->sourceStep->getName() . ' → ' : '';
-        return $source . $this->name . ' [' . $this->type->value . ']';
+        return $this->name . ' [' . $this->type->value . ']';
     }
 }

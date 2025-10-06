@@ -1,0 +1,682 @@
+/**
+ * Luminai Modal System - Centralized Styles
+ *
+ * This file contains all modal-related styles for the application.
+ * All modals use these shared styles with entity-specific color variations.
+ */
+
+/* ============================================
+   MODAL COLOR SCHEMES (Entity-Specific)
+   ============================================ */
+:root {
+    /* User - Green */
+    --modal-user-primary: #22c55e;
+    --modal-user-secondary: #16a34a;
+    --modal-user-gradient: linear-gradient(135deg, #22c55e, #16a34a);
+    --modal-user-focus: rgba(34, 197, 94, 0.08);
+    --modal-user-header-bg: linear-gradient(135deg, rgba(34, 197, 94, 0.03) 0%, rgba(22, 163, 74, 0.03) 100%);
+
+    /* Organization - Cyan/Purple */
+    --modal-organization-primary: #00f5ff;
+    --modal-organization-secondary: #8a2be2;
+    --modal-organization-gradient: linear-gradient(135deg, #00f5ff 0%, #8a2be2 100%);
+    --modal-organization-focus: rgba(138, 43, 226, 0.08);
+    --modal-organization-header-bg: linear-gradient(135deg, rgba(0, 245, 255, 0.03) 0%, rgba(138, 43, 226, 0.03) 100%);
+
+    /* Course - Purple */
+    --modal-course-primary: #8b5cf6;
+    --modal-course-secondary: #7c3aed;
+    --modal-course-gradient: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    --modal-course-focus: rgba(139, 92, 246, 0.08);
+    --modal-course-header-bg: linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, rgba(124, 58, 237, 0.03) 100%);
+
+    /* Module - Orange */
+    --modal-module-primary: #f59e0b;
+    --modal-module-secondary: #d97706;
+    --modal-module-gradient: linear-gradient(135deg, #f59e0b, #d97706);
+    --modal-module-focus: rgba(245, 158, 11, 0.08);
+    --modal-module-header-bg: linear-gradient(135deg, rgba(245, 158, 11, 0.03) 0%, rgba(217, 119, 6, 0.03) 100%);
+
+    /* Lecture - Blue */
+    --modal-lecture-primary: #3b82f6;
+    --modal-lecture-secondary: #2563eb;
+    --modal-lecture-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+    --modal-lecture-focus: rgba(59, 130, 246, 0.08);
+    --modal-lecture-header-bg: linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(37, 99, 235, 0.03) 100%);
+
+    /* TreeFlow - Purple */
+    --modal-treeflow-primary: #8b5cf6;
+    --modal-treeflow-secondary: #7c3aed;
+    --modal-treeflow-gradient: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    --modal-treeflow-focus: rgba(139, 92, 246, 0.08);
+    --modal-treeflow-header-bg: linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, rgba(124, 58, 237, 0.03) 100%);
+
+    /* Step - Green */
+    --modal-step-primary: #10b981;
+    --modal-step-secondary: #059669;
+    --modal-step-gradient: linear-gradient(135deg, #10b981, #059669);
+    --modal-step-focus: rgba(16, 185, 129, 0.08);
+    --modal-step-header-bg: linear-gradient(135deg, rgba(16, 185, 129, 0.03) 0%, rgba(5, 150, 105, 0.03) 100%);
+
+    /* Input - Orange */
+    --modal-input-primary: #f59e0b;
+    --modal-input-secondary: #d97706;
+    --modal-input-gradient: linear-gradient(135deg, #f59e0b, #d97706);
+    --modal-input-focus: rgba(245, 158, 11, 0.08);
+    --modal-input-header-bg: linear-gradient(135deg, rgba(245, 158, 11, 0.03) 0%, rgba(217, 119, 6, 0.03) 100%);
+
+    /* Question - Blue */
+    --modal-question-primary: #3b82f6;
+    --modal-question-secondary: #2563eb;
+    --modal-question-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+    --modal-question-focus: rgba(59, 130, 246, 0.08);
+    --modal-question-header-bg: linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(37, 99, 235, 0.03) 100%);
+
+    /* Output - Green */
+    --modal-output-primary: #10b981;
+    --modal-output-secondary: #059669;
+    --modal-output-gradient: linear-gradient(135deg, #10b981, #059669);
+    --modal-output-focus: rgba(16, 185, 129, 0.08);
+    --modal-output-header-bg: linear-gradient(135deg, rgba(16, 185, 129, 0.03) 0%, rgba(5, 150, 105, 0.03) 100%);
+
+    /* FewShot - Orange */
+    --modal-fewshot-primary: #f59e0b;
+    --modal-fewshot-secondary: #d97706;
+    --modal-fewshot-gradient: linear-gradient(135deg, #f59e0b, #d97706);
+    --modal-fewshot-focus: rgba(245, 158, 11, 0.08);
+    --modal-fewshot-header-bg: linear-gradient(135deg, rgba(245, 158, 11, 0.03) 0%, rgba(217, 119, 6, 0.03) 100%);
+}
+
+/* ============================================
+   MODAL OVERLAY & STRUCTURE
+   ============================================ */
+
+/* Full Screen Modal Overlay */
+.modal-fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--luminai-overlay-bg, rgba(0, 0, 0, 0.85));
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Centered Dialog */
+.modal-dialog-centered {
+    width: 100%;
+    max-width: 600px; /* Default width for most modals */
+    animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* TreeFlow modals use wider width */
+.modal-dialog-centered.modal-treeflow,
+.modal-dialog-centered.modal-step,
+.modal-dialog-centered.modal-input,
+.modal-dialog-centered.modal-question,
+.modal-dialog-centered.modal-output,
+.modal-dialog-centered.modal-fewshot {
+    max-width: 700px;
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Modal Content Box */
+.modal-content-box {
+    background: var(--luminai-card-bg, #1a1a1a);
+    border-radius: 16px;
+    border: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.1));
+    box-shadow: 0 25px 80px var(--luminai-shadow, rgba(0, 0, 0, 0.6));
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 4rem);
+}
+
+/* ============================================
+   MODAL HEADER
+   ============================================ */
+
+.modal-header-bar {
+    padding: 1.75rem 2rem;
+    border-bottom: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.08));
+    background: var(--luminai-modal-header-bg, rgba(0, 0, 0, 0.2));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+/* Entity-specific header backgrounds */
+.modal-header-user { background: var(--modal-user-header-bg); }
+.modal-header-organization { background: var(--modal-organization-header-bg); }
+.modal-header-course { background: var(--modal-course-header-bg); }
+.modal-header-module { background: var(--modal-module-header-bg); }
+.modal-header-lecture { background: var(--modal-lecture-header-bg); }
+.modal-header-treeflow { background: var(--modal-treeflow-header-bg); }
+.modal-header-step { background: var(--modal-step-header-bg); }
+.modal-header-input { background: var(--modal-input-header-bg); }
+.modal-header-question { background: var(--modal-question-header-bg); }
+.modal-header-output { background: var(--modal-output-header-bg); }
+.modal-header-fewshot { background: var(--modal-fewshot-header-bg); }
+
+.modal-icon-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+/* Entity-specific icon gradients */
+.modal-icon-user { background: var(--modal-user-gradient); }
+.modal-icon-organization { background: var(--modal-organization-gradient); }
+.modal-icon-course { background: var(--modal-course-gradient); }
+.modal-icon-module { background: var(--modal-module-gradient); }
+.modal-icon-lecture { background: var(--modal-lecture-gradient); }
+.modal-icon-treeflow { background: var(--modal-treeflow-gradient); }
+.modal-icon-step { background: var(--modal-step-gradient); }
+.modal-icon-input { background: var(--modal-input-gradient); }
+.modal-icon-question { background: var(--modal-question-gradient); }
+.modal-icon-output { background: var(--modal-output-gradient); }
+.modal-icon-fewshot { background: var(--modal-fewshot-gradient); }
+
+.modal-title-text {
+    color: var(--luminai-text-primary, white);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.modal-subtitle-text {
+    color: var(--luminai-text-secondary, rgba(255, 255, 255, 0.6));
+    font-size: 0.875rem;
+    margin: 0.25rem 0 0 0;
+}
+
+.modal-close-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    background: var(--luminai-btn-secondary-bg, rgba(255, 255, 255, 0.08));
+    color: var(--luminai-text-secondary, rgba(255, 255, 255, 0.7));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.modal-close-btn:hover {
+    background: var(--luminai-btn-secondary-hover, rgba(255, 255, 255, 0.15));
+    color: var(--luminai-text-primary, white);
+    transform: rotate(90deg);
+}
+
+/* ============================================
+   MODAL BODY
+   ============================================ */
+
+.modal-body-content {
+    padding: 2rem;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+
+.form-group-modern {
+    margin-bottom: 1.75rem;
+}
+
+.form-group-modern:last-child {
+    margin-bottom: 0;
+}
+
+.form-label-modern {
+    display: block;
+    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.95));
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 0.625rem;
+    letter-spacing: 0.01em;
+}
+
+.form-input-modern, .form-select-modern {
+    width: 100%;
+    background: var(--luminai-input-bg, rgba(255, 255, 255, 0.04));
+    border: 1.5px solid var(--luminai-border-color, rgba(255, 255, 255, 0.12));
+    border-radius: 10px;
+    color: var(--luminai-text-primary, white);
+    padding: 0.875rem 1.125rem;
+    font-size: 1rem;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.form-input-modern:focus, .form-select-modern:focus {
+    outline: none;
+    background: var(--luminai-input-focus-bg, rgba(255, 255, 255, 0.06));
+}
+
+.form-input-modern::placeholder {
+    color: var(--luminai-text-muted, rgba(255, 255, 255, 0.3));
+}
+
+/* Entity-specific focus colors */
+.modal-user .form-input-modern:focus,
+.modal-user .form-select-modern:focus {
+    border-color: var(--modal-user-primary);
+    box-shadow: 0 0 0 4px var(--modal-user-focus);
+}
+
+.modal-organization .form-input-modern:focus,
+.modal-organization .form-select-modern:focus {
+    border-color: var(--modal-organization-secondary);
+    box-shadow: 0 0 0 4px var(--modal-organization-focus);
+}
+
+.modal-course .form-input-modern:focus,
+.modal-course .form-select-modern:focus {
+    border-color: var(--modal-course-primary);
+    box-shadow: 0 0 0 4px var(--modal-course-focus);
+}
+
+.modal-module .form-input-modern:focus,
+.modal-module .form-select-modern:focus {
+    border-color: var(--modal-module-primary);
+    box-shadow: 0 0 0 4px var(--modal-module-focus);
+}
+
+.modal-lecture .form-input-modern:focus,
+.modal-lecture .form-select-modern:focus {
+    border-color: var(--modal-lecture-primary);
+    box-shadow: 0 0 0 4px var(--modal-lecture-focus);
+}
+
+.modal-treeflow .form-input-modern:focus,
+.modal-treeflow .form-select-modern:focus {
+    border-color: var(--modal-treeflow-primary);
+    box-shadow: 0 0 0 4px var(--modal-treeflow-focus);
+}
+
+.modal-step .form-input-modern:focus,
+.modal-step .form-select-modern:focus {
+    border-color: var(--modal-step-primary);
+    box-shadow: 0 0 0 4px var(--modal-step-focus);
+}
+
+.modal-input .form-input-modern:focus,
+.modal-input .form-select-modern:focus {
+    border-color: var(--modal-input-primary);
+    box-shadow: 0 0 0 4px var(--modal-input-focus);
+}
+
+.modal-question .form-input-modern:focus,
+.modal-question .form-select-modern:focus {
+    border-color: var(--modal-question-primary);
+    box-shadow: 0 0 0 4px var(--modal-question-focus);
+}
+
+.modal-output .form-input-modern:focus,
+.modal-output .form-select-modern:focus {
+    border-color: var(--modal-output-primary);
+    box-shadow: 0 0 0 4px var(--modal-output-focus);
+}
+
+.modal-fewshot .form-input-modern:focus,
+.modal-fewshot .form-select-modern:focus {
+    border-color: var(--modal-fewshot-primary);
+    box-shadow: 0 0 0 4px var(--modal-fewshot-focus);
+}
+
+/* Error States */
+.input-error {
+    border-color: #ef4444 !important;
+}
+
+.input-error:focus {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+}
+
+.invalid-feedback {
+    display: block;
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* ============================================
+   FORM CHECKBOXES & SWITCHES
+   ============================================ */
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-check-input {
+    width: 3rem;
+    height: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid var(--luminai-border-color, rgba(255, 255, 255, 0.12));
+}
+
+/* Entity-specific checkbox colors */
+.modal-user .form-check-input:checked { background-color: var(--modal-user-primary); border-color: var(--modal-user-primary); }
+.modal-user .form-check-input:focus { border-color: var(--modal-user-primary); box-shadow: 0 0 0 4px var(--modal-user-focus); }
+
+.modal-organization .form-check-input:checked { background-color: var(--modal-organization-secondary); border-color: var(--modal-organization-secondary); }
+.modal-organization .form-check-input:focus { border-color: var(--modal-organization-secondary); box-shadow: 0 0 0 4px var(--modal-organization-focus); }
+
+.modal-course .form-check-input:checked { background-color: var(--modal-course-primary); border-color: var(--modal-course-primary); }
+.modal-course .form-check-input:focus { border-color: var(--modal-course-primary); box-shadow: 0 0 0 4px var(--modal-course-focus); }
+
+.modal-module .form-check-input:checked { background-color: var(--modal-module-primary); border-color: var(--modal-module-primary); }
+.modal-module .form-check-input:focus { border-color: var(--modal-module-primary); box-shadow: 0 0 0 4px var(--modal-module-focus); }
+
+.modal-lecture .form-check-input:checked { background-color: var(--modal-lecture-primary); border-color: var(--modal-lecture-primary); }
+.modal-lecture .form-check-input:focus { border-color: var(--modal-lecture-primary); box-shadow: 0 0 0 4px var(--modal-lecture-focus); }
+
+.modal-treeflow .form-check-input:checked { background-color: var(--modal-treeflow-primary); border-color: var(--modal-treeflow-primary); }
+.modal-treeflow .form-check-input:focus { border-color: var(--modal-treeflow-primary); box-shadow: 0 0 0 4px var(--modal-treeflow-focus); }
+
+.modal-step .form-check-input:checked { background-color: var(--modal-step-primary); border-color: var(--modal-step-primary); }
+.modal-step .form-check-input:focus { border-color: var(--modal-step-primary); box-shadow: 0 0 0 4px var(--modal-step-focus); }
+
+.modal-input .form-check-input:checked { background-color: var(--modal-input-primary); border-color: var(--modal-input-primary); }
+.modal-input .form-check-input:focus { border-color: var(--modal-input-primary); box-shadow: 0 0 0 4px var(--modal-input-focus); }
+
+.modal-question .form-check-input:checked { background-color: var(--modal-question-primary); border-color: var(--modal-question-primary); }
+.modal-question .form-check-input:focus { border-color: var(--modal-question-primary); box-shadow: 0 0 0 4px var(--modal-question-focus); }
+
+.modal-output .form-check-input:checked { background-color: var(--modal-output-primary); border-color: var(--modal-output-primary); }
+.modal-output .form-check-input:focus { border-color: var(--modal-output-primary); box-shadow: 0 0 0 4px var(--modal-output-focus); }
+
+.modal-fewshot .form-check-input:checked { background-color: var(--modal-fewshot-primary); border-color: var(--modal-fewshot-primary); }
+.modal-fewshot .form-check-input:focus { border-color: var(--modal-fewshot-primary); box-shadow: 0 0 0 4px var(--modal-fewshot-focus); }
+
+.form-check-label {
+    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.9));
+    font-size: 0.9375rem;
+    margin: 0;
+}
+
+.form-help-text {
+    display: block;
+    color: var(--luminai-text-muted, rgba(255, 255, 255, 0.5));
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.form-check-group-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.form-textarea-modern {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* ============================================
+   RANGE SLIDER (Question Importance)
+   ============================================ */
+
+.form-range {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--modal-question-primary);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.form-range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--modal-question-primary);
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.form-range::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.form-range::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* ============================================
+   MODAL FOOTER
+   ============================================ */
+
+.modal-footer-bar {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.08));
+    background: var(--luminai-modal-footer-bg, rgba(0, 0, 0, 0.2));
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.btn-modal-secondary,
+.btn-modal-primary {
+    padding: 0.75rem 1.75rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-modal-secondary {
+    background: var(--luminai-btn-secondary-bg, rgba(255, 255, 255, 0.08));
+    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.9));
+}
+
+.btn-modal-secondary:hover {
+    background: var(--luminai-btn-secondary-hover, rgba(255, 255, 255, 0.12));
+    transform: translateY(-1px);
+}
+
+.btn-modal-primary {
+    color: white;
+}
+
+/* Entity-specific button gradients */
+.modal-user .btn-modal-primary { background: var(--modal-user-gradient); }
+.modal-user .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4); }
+
+.modal-organization .btn-modal-primary { background: var(--modal-organization-gradient); }
+.modal-organization .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4); }
+
+.modal-course .btn-modal-primary { background: var(--modal-course-gradient); }
+.modal-course .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4); }
+
+.modal-module .btn-modal-primary { background: var(--modal-module-gradient); }
+.modal-module .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4); }
+
+.modal-lecture .btn-modal-primary { background: var(--modal-lecture-gradient); }
+.modal-lecture .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); }
+
+.modal-treeflow .btn-modal-primary { background: var(--modal-treeflow-gradient); }
+.modal-treeflow .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4); }
+
+.modal-step .btn-modal-primary { background: var(--modal-step-gradient); }
+.modal-step .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+
+.modal-input .btn-modal-primary { background: var(--modal-input-gradient); }
+.modal-input .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4); }
+
+.modal-question .btn-modal-primary { background: var(--modal-question-gradient); }
+.modal-question .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); }
+
+.modal-output .btn-modal-primary { background: var(--modal-output-gradient); }
+.modal-output .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+
+.modal-fewshot .btn-modal-primary { background: var(--modal-fewshot-gradient); }
+.modal-fewshot .btn-modal-primary:hover { box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4); }
+
+.btn-modal-primary:hover {
+    transform: translateY(-2px);
+}
+
+.btn-modal-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ============================================
+   STAR RATING SYSTEM (Progressive 3-Star)
+   ============================================ */
+
+.star-rating-progressive {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+.star-rating-option {
+    position: relative;
+}
+
+.star-rating-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 0;
+    height: 0;
+}
+
+.star-rating-label-progressive {
+    display: flex;
+    gap: 0.25rem;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: rgba(139, 92, 246, 0.05);
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    margin: 0;
+}
+
+.star-rating-label-progressive i {
+    font-size: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.star-rating-label-progressive i.filled {
+    color: rgba(245, 158, 11, 0.4);
+}
+
+.star-rating-label-progressive i.empty {
+    color: rgba(139, 92, 246, 0.2);
+}
+
+.star-rating-label-progressive:hover {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.4);
+    transform: translateY(-2px);
+}
+
+.star-rating-label-progressive:hover i.filled {
+    color: rgba(245, 158, 11, 0.6);
+}
+
+.star-rating-label-progressive:hover i.empty {
+    color: rgba(139, 92, 246, 0.3);
+}
+
+.star-rating-input:checked + .star-rating-label-progressive {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(124, 58, 237, 0.15));
+    border-color: rgba(139, 92, 246, 0.6);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);
+}
+
+.star-rating-input:checked + .star-rating-label-progressive i.filled {
+    color: #f59e0b;
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .modal-fullscreen-overlay {
+        padding: 1rem;
+    }
+
+    .modal-header-bar {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .modal-body-content {
+        padding: 1.5rem;
+    }
+
+    .modal-footer-bar {
+        padding: 1.25rem 1.5rem;
+        flex-direction: column;
+    }
+
+    .btn-modal-secondary,
+    .btn-modal-primary {
+        width: 100%;
+    }
+}

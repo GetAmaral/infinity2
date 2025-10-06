@@ -25,6 +25,7 @@ class CourseModuleFormType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'course.module.form.name',
+                'translation_domain' => 'course',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'course.module.form.name_placeholder',
@@ -43,6 +44,7 @@ class CourseModuleFormType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'course.module.form.description',
+                'translation_domain' => 'course',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',
@@ -60,6 +62,7 @@ class CourseModuleFormType extends AbstractType
             ])
             ->add('active', CheckboxType::class, [
                 'label' => 'course.module.form.active',
+                'translation_domain' => 'course',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-check-input',
@@ -69,6 +72,7 @@ class CourseModuleFormType extends AbstractType
             ])
             ->add('releaseDate', DateTimeType::class, [
                 'label' => 'course.module.form.release_date',
+                'translation_domain' => 'course',
                 'required' => false,
                 'widget' => 'single_text',
                 'attr' => [
@@ -79,6 +83,7 @@ class CourseModuleFormType extends AbstractType
             ])
             ->add('viewOrder', IntegerType::class, [
                 'label' => 'course.module.form.view_order',
+                'translation_domain' => 'course',
                 'attr' => [
                     'class' => 'form-control',
                     'min' => 0,

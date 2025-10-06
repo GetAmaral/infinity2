@@ -70,6 +70,7 @@ class StepFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Step::class,
             'is_edit' => false,
+            'translation_domain' => 'treeflow',
         ]);
 
         $resolver->setAllowedTypes('is_edit', 'bool');

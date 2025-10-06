@@ -24,6 +24,7 @@ class CourseFormType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'course.form.name',
+                'translation_domain' => 'course',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'course.form.name_placeholder',
@@ -59,6 +60,7 @@ class CourseFormType extends AbstractType
             ])
             ->add('active', CheckboxType::class, [
                 'label' => 'course.form.active',
+                'translation_domain' => 'course',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-check-input',
@@ -68,6 +70,7 @@ class CourseFormType extends AbstractType
             ])
             ->add('releaseDate', DateTimeType::class, [
                 'label' => 'course.form.release_date',
+                'translation_domain' => 'course',
                 'required' => false,
                 'widget' => 'single_text',
                 'attr' => [

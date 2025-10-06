@@ -6,8 +6,8 @@ namespace App\Form;
 
 use App\Entity\StepQuestion;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\RangeType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -50,17 +50,57 @@ class StepQuestionFormType extends AbstractType
                     'placeholder' => 'question.form.objective_placeholder',
                 ],
             ])
-            ->add('importance', RangeType::class, [
+            ->add('importance', ChoiceType::class, [
                 'label' => 'question.form.importance',
+                'choices' => [
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                ],
+                'expanded' => true,
                 'attr' => [
-                    'class' => 'form-range',
-                    'min' => 1,
-                    'max' => 10,
-                    'step' => 1,
-                    'oninput' => 'this.nextElementSibling.value = this.value',
+                    'class' => 'star-rating-group',
                 ],
                 'constraints' => [
-                    new Assert\Range(min: 1, max: 10),
+                    new Assert\Range(min: 1, max: 3),
+                ],
+            ])
+            ->add('fewShotPositive', CollectionType::class, [
+                'label' => 'question.form.fewshot.positive',
+                'entry_type' => TextareaType::class,
+                'entry_options' => [
+                    'label' => false,
+                    'attr' => [
+                        'class' => 'form-control fewshot-entry',
+                        'rows' => 2,
+                        'placeholder' => 'question.form.fewshot.positive.placeholder',
+                    ],
+                ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'required' => false,
+                'attr' => [
+                    'class' => 'fewshot-collection',
+                ],
+            ])
+            ->add('fewShotNegative', CollectionType::class, [
+                'label' => 'question.form.fewshot.negative',
+                'entry_type' => TextareaType::class,
+                'entry_options' => [
+                    'label' => false,
+                    'attr' => [
+                        'class' => 'form-control fewshot-entry',
+                        'rows' => 2,
+                        'placeholder' => 'question.form.fewshot.negative.placeholder',
+                    ],
+                ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'required' => false,
+                'attr' => [
+                    'class' => 'fewshot-collection',
                 ],
             ])
             ->add('submit', SubmitType::class, [
@@ -76,6 +116,7 @@ class StepQuestionFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => StepQuestion::class,
             'is_edit' => false,
+            'translation_domain' => 'treeflow',
         ]);
 
         $resolver->setAllowedTypes('is_edit', 'bool');

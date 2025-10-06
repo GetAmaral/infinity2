@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     {% block stylesheets %}{{ importmap('app') }}{% endblock %}
+    <link rel="stylesheet" href="{{ asset('styles/components/_modals.css') }}">
 
     <!-- Preference Manager - Load FIRST before any other scripts -->
     <script src="/preference-manager.js" data-turbo-eval="false"></script>

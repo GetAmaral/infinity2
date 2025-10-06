@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\StepFewShot;
 use App\Entity\StepQuestion;
 use App\Entity\Step;
 use App\Entity\StepInput;
@@ -116,10 +115,9 @@ final class TreeFlowController extends BaseApiController
             ->setParameter('id', $id)
             ->leftJoin('t.steps', 's')
             ->leftJoin('s.questions', 'q')
-            ->leftJoin('q.examples', 'e')
             ->leftJoin('s.outputs', 'o')
             ->leftJoin('s.inputs', 'i')
-            ->addSelect('s', 'q', 'e', 'o', 'i')
+            ->addSelect('s', 'q', 'o', 'i')
             ->orderBy('s.viewOrder', 'ASC')
             ->addOrderBy('q.viewOrder', 'ASC')
             ->getQuery()
@@ -161,10 +159,16 @@ final class TreeFlowController extends BaseApiController
                     return $a->getId()?->toString() <=> $b->getId()?->toString();
                 });
                 foreach ($outputs as $output) {
+                    // Get destination step from connection
+                    $destinationStepId = null;
+                    if ($output->getConnection() && $output->getConnection()->getTargetInput()) {
+                        $destinationStepId = $output->getConnection()->getTargetInput()->getStep()->getId()?->toString();
+                    }
+
                     $outputsData[] = [
                         'id' => $output->getId()?->toString(),
                         'name' => $output->getName(),
-                        'goToStep' => $output->getDestinationStep()?->getId()?->toString(),
+                        'goToStep' => $destinationStepId,
                     ];
                 }
 
@@ -310,7 +314,7 @@ final class TreeFlowController extends BaseApiController
                     'objective' => $step->getObjective(),
                     'prompt' => $step->getPrompt(),
 
-                    // Questions with FewShots
+                    // Questions with FewShot JSONB arrays
                     'questions' => array_map(function(StepQuestion $q) {
                         return [
                             'id' => $q->getId()?->toString(),
@@ -321,17 +325,9 @@ final class TreeFlowController extends BaseApiController
                             'importance' => $q->getImportance(),
                             'viewOrder' => $q->getViewOrder(),
 
-                            // FewShot Examples
-                            'examples' => array_map(function(StepFewShot $ex) {
-                                return [
-                                    'id' => $ex->getId()?->toString(),
-                                    'type' => $ex->getType()->value,
-                                    'name' => $ex->getName(),
-                                    'slug' => $ex->getSlug(),
-                                    'prompt' => $ex->getPrompt(),
-                                    'description' => $ex->getDescription(),
-                                ];
-                            }, $q->getFewShotExamples()->toArray()),
+                            // FewShot Examples (JSONB arrays)
+                            'fewShotPositive' => $q->getFewShotPositive() ?? [],
+                            'fewShotNegative' => $q->getFewShotNegative() ?? [],
                         ];
                     }, $step->getQuestions()->toArray()),
 
@@ -343,8 +339,6 @@ final class TreeFlowController extends BaseApiController
                             'slug' => $out->getSlug(),
                             'description' => $out->getDescription(),
                             'conditional' => $out->getConditional(),
-                            'destinationStepId' => $out->getDestinationStep()?->getId()?->toString(),
-                            'destinationStepName' => $out->getDestinationStep()?->getName(),
                         ];
                     }, $step->getOutputs()->toArray()),
 
@@ -355,8 +349,6 @@ final class TreeFlowController extends BaseApiController
                             'name' => $in->getName(),
                             'slug' => $in->getSlug(),
                             'type' => $in->getType()->value,
-                            'sourceStepId' => $in->getSourceStep()?->getId()?->toString(),
-                            'sourceStepName' => $in->getSourceStep()?->getName(),
                             'prompt' => $in->getPrompt(),
                         ];
                     }, $step->getInputs()->toArray()),

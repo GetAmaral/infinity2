@@ -99,8 +99,8 @@ question.confirm.delete: Tem certeza que quer deletar esta pergunta?
 question.flash.created.successfully: Pergunta criada com sucesso
 question.flash.deleted.successfully: Pergunta deletada com sucesso
 question.flash.updated.successfully: Pergunta atualizada com sucesso
-question.form.importance: Importância
-question.form.importance.help: 'Classifique de 1 (baixa) a 10 (alta)'
+question.form.importance: Nível de Importância
+question.form.importance.help: 'Selecione 1-3 estrelas (destaque progressivo)'
 # Formulário Question
 question.form.name: Nome da Pergunta
 question.form.name.placeholder: Digite o nome da pergunta
@@ -108,6 +108,14 @@ question.form.objective: Objetivo
 question.form.objective.placeholder: O que esta pergunta deve alcançar?
 question.form.prompt: Prompt
 question.form.prompt.placeholder: Instruções pra esta pergunta
+question.form.fewshot.positive: Exemplos Positivos
+question.form.fewshot.positive.help: Adicione exemplos de boas respostas pra guiar a IA
+question.form.fewshot.positive.placeholder: Digite um exemplo positivo...
+question.form.fewshot.negative: Exemplos Negativos
+question.form.fewshot.negative.help: Adicione exemplos de respostas a evitar
+question.form.fewshot.negative.placeholder: Digite um exemplo negativo...
+question.button.add.positive.example: Adicionar Exemplo Positivo
+question.button.add.negative.example: Adicionar Exemplo Negativo
 question.importance: Importância
 question.modal.create.subtitle: Adicionar uma nova pergunta a este step
 # Modal Question
@@ -182,9 +190,11 @@ treeflow.steps.reorder.success: Steps reordenados com sucesso
 treeflow.total.steps: Total de Steps
 treeflow.version: Versão
 
+# Placeholders e textos de ajuda dos formulários (formato underscore para formulários Symfony)
 fewshot.form.description_placeholder: Descreva o que torna este um bom/mau exemplo
 fewshot.form.name_placeholder: Digite o nome do exemplo
 fewshot.form.prompt_placeholder: Exemplo de prompt pra IA
+fewshot.form.description: Descrição
 input.form.name_placeholder: Digite o nome do input
 input.form.prompt_help: Instruções adicionais ao entrar por este input
 input.form.prompt_placeholder: Contexto adicional ao entrar via este input
@@ -192,6 +202,7 @@ input.form.source_help: Qual step pode rotear pra este step (opcional)
 input.form.source_placeholder: Selecione o step que pode rotear pra cá
 output.form.conditional_help: Defina condições pra este output (regex, palavras-chave ou lógica customizada)
 output.form.conditional_placeholder: 'Exemplo: regex:/urgente/i ou keywords:alta-prioridade,imediato'
+output.form.description: Descrição
 output.form.description_placeholder: Descreva o que este output representa
 output.form.destination_help: Pra onde rotear quando esta condição for atendida (opcional)
 output.form.destination_placeholder: Selecione pra onde rotear quando esta condição for atendida
@@ -199,6 +210,7 @@ output.form.name_placeholder: Digite o nome do output
 question.form.name_placeholder: Digite o nome da pergunta
 question.form.objective_placeholder: O que esta pergunta deve alcançar?
 question.form.prompt_placeholder: Instruções pra esta pergunta
+question.form.importance_help: Selecione 1-3 estrelas (destaque progressivo)
 step.form.first_help: Marque como ponto de partida do TreeFlow
 step.form.name_placeholder: Digite o nome do step
 step.form.objective_placeholder: O que este step deve alcançar?

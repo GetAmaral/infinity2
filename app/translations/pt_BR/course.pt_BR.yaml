@@ -155,6 +155,7 @@ course.module.form.viewOrder.placeholder: "Ordem de exibição (ex: 1, 2, 3)"
 course.module.modal.create.subtitle: Adicionar um novo módulo a este curso
 course.module.modal.create.title: Criar Novo Módulo
 course.module.modal.edit.subtitle: Atualizar informações do módulo
+course.module.modal.edit.title: Editar Módulo
 course.module.validation.course_required: Módulo deve estar associado a um curso
 # Validação de Módulo
 course.module.validation.name_required: Nome do módulo é obrigatório

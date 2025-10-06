@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\StepQuestionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -17,8 +15,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Questions guide the AI's decision-making process with:
  * - A prompt defining what to ask
  * - An objective explaining the purpose
- * - Importance weighting (1-10)
- * - Few-shot examples (positive and negative)
+ * - Importance weighting (1-3 stars)
+ * - Few-shot examples stored as JSONB arrays (positive and negative)
  */
 #[ORM\Entity(repositoryClass: StepQuestionRepository::class)]
 class StepQuestion extends EntityBase
@@ -54,14 +52,17 @@ class StepQuestion extends EntityBase
     #[Groups(['question:read', 'question:write'])]
     protected int $viewOrder = 1;
 
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: StepFewShot::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[Groups(['question:read'])]
-    protected Collection $examples;
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['question:read', 'question:write'])]
+    protected ?array $fewShotPositive = [];
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['question:read', 'question:write'])]
+    protected ?array $fewShotNegative = [];
 
     public function __construct()
     {
         parent::__construct();
-        $this->examples = new ArrayCollection();
     }
 
     public function getStep(): Step
@@ -141,51 +142,26 @@ class StepQuestion extends EntityBase
         return $this;
     }
 
-    /**
-     * @return Collection<int, StepFewShot>
-     */
-    public function getFewShotExamples(): Collection
+    public function getFewShotPositive(): ?array
     {
-        return $this->examples;
+        return $this->fewShotPositive ?? [];
     }
 
-    public function addFewShotExample(StepFewShot $example): self
+    public function setFewShotPositive(?array $fewShotPositive): self
     {
-        if (!$this->examples->contains($example)) {
-            $this->examples->add($example);
-            $example->setQuestion($this);
-        }
+        $this->fewShotPositive = $fewShotPositive;
         return $this;
     }
 
-    public function removeFewShotExample(StepFewShot $example): self
+    public function getFewShotNegative(): ?array
     {
-        if ($this->examples->removeElement($example)) {
-            if ($example->getQuestion() === $this) {
-                $example->setQuestion(null);
-            }
-        }
+        return $this->fewShotNegative ?? [];
+    }
+
+    public function setFewShotNegative(?array $fewShotNegative): self
+    {
+        $this->fewShotNegative = $fewShotNegative;
         return $this;
-    }
-
-    /**
-     * Get only positive few-shot examples
-     */
-    public function getPositiveFewShotExamples(): Collection
-    {
-        return $this->examples->filter(
-            fn(StepFewShot $example) => $example->getType() === \App\Enum\FewShotType::POSITIVE
-        );
-    }
-
-    /**
-     * Get only negative few-shot examples
-     */
-    public function getNegativeFewShotExamples(): Collection
-    {
-        return $this->examples->filter(
-            fn(StepFewShot $example) => $example->getType() === \App\Enum\FewShotType::NEGATIVE
-        );
     }
 
     public function __toString(): string

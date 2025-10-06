@@ -34,8 +34,5 @@
             title="{{ tooltip }}"
         {% endif %}
         {% if not is_granted %}disabled aria-disabled="true"{% endif %}>
-    <i class="{{ buttonIcon }}{% if label is not null %} me-2{% endif %}"></i>
-    {% if label is not null %}
-        {{ buttonText|trans({}, translation_domain) }}
-    {% endif %}
+    <i class="{{ buttonIcon }}{% if label is not null %} me-2{% endif %}"></i>{% if label is not null %}{{ buttonText|trans({}, translation_domain) }}{% endif %}
 </button>

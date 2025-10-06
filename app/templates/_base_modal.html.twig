@@ -1,0 +1,104 @@
+{#
+/**
+ * Base Modal Template
+ *
+ * This is the centralized modal template used by all CRUD modals in the application.
+ * All modal CSS is in /assets/styles/components/_modals.css
+ *
+ * Required Variables:
+ * @var form - Symfony Form object
+ * @var is_edit - Boolean (true for edit mode, false for create mode)
+ * @var entity - The entity being edited (required for edit mode)
+ * @var entity_type - String identifier for color scheme (user, organization, course, module, lecture, treeflow, step, input, question, output, fewshot)
+ * @var icon - Bootstrap icon class without 'bi-' prefix (e.g., 'person-circle', 'building', 'book')
+ * @var form_action - URL for form submission
+ * @var title_create - Translation key for create mode title
+ * @var subtitle_create - Translation key for create mode subtitle
+ * @var subtitle_edit - Translation key for edit mode subtitle
+ *
+ * Optional Variables:
+ * @var max_width - Modal max width (default: based on entity_type)
+ * @var enctype - Form encoding type (default: null, use 'multipart/form-data' for file uploads)
+ * @var submit_key - Translation key for submit button (default: auto-generated)
+ * @var submit_domain - Translation domain for submit button (default: 'messages')
+ */
+#}
+
+<!-- Full Screen Modal Overlay -->
+<div class="modal-fullscreen-overlay modal-{{ entity_type }}"
+     data-controller="crud-modal"
+     data-crud-modal-target="overlay"
+     data-action="click->crud-modal#backdropClick">
+
+    {{ form_start(form, {
+        'action': form_action,
+        'attr': {
+            'data-controller': 'form-navigation',
+            'data-crud-modal-target': 'form',
+            'data-action': 'submit->crud-modal#submit',
+            'enctype': enctype|default(null)
+        }
+    }) }}
+
+    <div class="modal-dialog-centered modal-{{ entity_type }}" data-action="click->crud-modal#stopPropagation">
+        <div class="modal-content-box">
+
+            <!-- Header -->
+            <div class="modal-header-bar modal-header-{{ entity_type }}">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-circle modal-icon-{{ entity_type }}">
+                        {% block modal_icon %}
+                            <i class="bi bi-{{ icon }}"></i>
+                        {% endblock %}
+                    </div>
+                    <div>
+                        <h2 class="modal-title-text">
+                            {% block modal_title %}
+                                {% if is_edit %}
+                                    {{ title_edit|default('action.edit'|trans ~ ' ' ~ entity.name) }}
+                                {% else %}
+                                    {{ title_create|trans({}, submit_domain|default('messages')) }}
+                                {% endif %}
+                            {% endblock %}
+                        </h2>
+                        <p class="modal-subtitle-text">
+                            {% block modal_subtitle %}
+                                {% if is_edit %}
+                                    {{ subtitle_edit|trans({}, submit_domain|default('messages')) }}
+                                {% else %}
+                                    {{ subtitle_create|trans({}, submit_domain|default('messages')) }}
+                                {% endif %}
+                            {% endblock %}
+                        </p>
+                    </div>
+                </div>
+                <button type="button"
+                        class="modal-close-btn"
+                        data-action="crud-modal#close"
+                        aria-label="{{ 'button.close'|trans }}">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body-content">
+                {% block modal_body %}
+                    {# Child templates must override this block with form fields #}
+                {% endblock %}
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer-bar">
+                {% block modal_footer %}
+                    {{ button_modal_cancel() }}
+                    {% block modal_submit_button %}
+                        {{ button_modal_submit(is_edit, submit_key|default(null), submit_domain|default('messages')) }}
+                    {% endblock %}
+                {% endblock %}
+            </div>
+
+        </div>
+    </div>
+
+    {{ form_end(form, {'render_rest': false}) }}
+</div>

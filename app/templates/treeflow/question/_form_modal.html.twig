@@ -1,434 +1,297 @@
-<!-- Full Screen Modal Overlay -->
-<div class="modal-fullscreen-overlay"
-     data-controller="crud-modal"
-     data-crud-modal-target="overlay"
-     data-action="click->crud-modal#backdropClick">
+{% extends '_base_modal.html.twig' %}
 
-    {{ form_start(form, {
-        'action': (is_edit and question.id) ? path('question_edit', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id}) : path('question_new', {treeflowId: treeflow.id, stepId: step.id}),
-        'attr': {
-            'data-controller': 'form-navigation',
-            'data-crud-modal-target': 'form',
-            'data-action': 'submit->crud-modal#submit'
-        }
-    }) }}
+{# Configure modal appearance and behavior #}
+{% set entity_type = 'question' %}
+{% set icon = 'question-circle' %}
+{% set form_action = (is_edit and question.id) ? path('question_edit', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id}) : path('question_new', {treeflowId: treeflow.id, stepId: step.id}) %}
+{% set title_create = 'question.modal.create.title' %}
+{% set subtitle_create = 'question.modal.create.subtitle' %}
+{% set subtitle_edit = 'question.modal.edit.subtitle' %}
+{% set submit_key = is_edit ? 'button.save.changes' : 'question.button.create.question' %}
+{% set submit_domain = is_edit ? 'messages' : 'treeflow' %}
+{% set entity = question %}
 
-    <div class="modal-dialog-centered" data-action="click->crud-modal#stopPropagation">
-        <div class="modal-content-box">
-
-            <!-- Header -->
-            <div class="modal-header-bar">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="modal-icon-circle" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
-                        <i class="bi bi-question-circle"></i>
-                    </div>
-                    <div>
-                        <h2 class="modal-title-text">
-                            {% if is_edit %}
-                                {{ 'action.edit'|trans }} {{ question.name }}
-                            {% else %}
-                                {{ 'question.modal.create.title'|trans({}, 'treeflow') }}
-                            {% endif %}
-                        </h2>
-                        <p class="modal-subtitle-text">
-                            {% if is_edit %}
-                                {{ 'question.modal.edit.subtitle'|trans({}, 'treeflow') }}
-                            {% else %}
-                                {{ 'question.modal.create.subtitle'|trans({}, 'treeflow') }}
-                            {% endif %}
-                        </p>
-                    </div>
-                </div>
-                <button type="button"
-                        class="modal-close-btn"
-                        data-action="crud-modal#close"
-                        aria-label="{{ 'button.close'|trans }}">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
-            <!-- Body -->
-            <div class="modal-body-content">
-                <div class="form-group-modern">
-                    <label class="form-label-modern">{{ form_label(form.name) }}</label>
-                    {{ form_widget(form.name, {
-                        'attr': {
-                            'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'question.form.name.placeholder'|trans({}, 'treeflow'),
-                            'autofocus': 'autofocus'
-                        }
-                    }) }}
-                    {{ form_errors(form.name) }}
-                </div>
-
-                <div class="form-group-modern">
-                    <label class="form-label-modern">{{ form_label(form.prompt) }}</label>
-                    {{ form_widget(form.prompt, {
-                        'attr': {
-                            'class': 'form-input-modern' ~ (form.prompt.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'question.form.prompt.placeholder'|trans({}, 'treeflow'),
-                            'rows': 4
-                        }
-                    }) }}
-                    {{ form_errors(form.prompt) }}
-                </div>
-
-                <div class="form-group-modern">
-                    <label class="form-label-modern">{{ form_label(form.objective) }}</label>
-                    {{ form_widget(form.objective, {
-                        'attr': {
-                            'class': 'form-input-modern' ~ (form.objective.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'question.form.objective.placeholder'|trans({}, 'treeflow'),
-                            'rows': 3
-                        }
-                    }) }}
-                    {{ form_errors(form.objective) }}
-                </div>
-
-                <div class="form-group-modern">
-                    <label class="form-label-modern">{{ form_label(form.importance) }}</label>
-                    <div class="d-flex align-items-center gap-3">
-                        {{ form_widget(form.importance, {
-                            'attr': {
-                                'class': 'form-range flex-grow-1',
-                                'style': 'height: 6px;'
-                            }
-                        }) }}
-                        <output class="badge bg-warning text-dark px-3 py-2" style="font-size: 1rem; min-width: 40px; text-align: center;">{{ form.importance.vars.value ?? 5 }}</output>
-                    </div>
-                    <small class="text-muted mt-1 d-block">{{ 'question.form.importance.help'|trans({}, 'treeflow') }}</small>
-                    {{ form_errors(form.importance) }}
-                </div>
-
-                {{ form_widget(form._token) }}
-            </div>
-
-            <!-- Footer -->
-            <div class="modal-footer-bar">
-                {{ button_modal_cancel() }}
-                {{ button_modal_submit(is_edit, is_edit ? 'button.save.changes' : 'question.button.create.question', is_edit ? 'messages' : 'treeflow') }}
-            </div>
-
-        </div>
+{# Form fields #}
+{% block modal_body %}
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.name) }}</label>
+        {{ form_widget(form.name, {
+            'attr': {
+                'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
+                'placeholder': 'question.form.name.placeholder'|trans({}, 'treeflow'),
+                'autofocus': 'autofocus'
+            }
+        }) }}
+        {{ form_errors(form.name) }}
     </div>
 
-    {{ form_end(form, {'render_rest': false}) }}
-</div>
-
-<style>
-/* Full Screen Modal Overlay */
-.modal-fullscreen-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100vw;
-    height: 100vh;
-    background: var(--luminai-overlay-bg, rgba(0, 0, 0, 0.85));
-    backdrop-filter: blur(8px);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    animation: modalFadeIn 0.2s ease-out;
-}
-
-@keyframes modalFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Centered Dialog */
-.modal-dialog-centered {
-    width: 100%;
-    max-width: 700px;
-    animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes modalSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* Modal Content Box */
-.modal-content-box {
-    background: var(--luminai-card-bg, #1a1a1a);
-    border-radius: 16px;
-    border: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.1));
-    box-shadow: 0 25px 80px var(--luminai-shadow, rgba(0, 0, 0, 0.6));
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    max-height: calc(100vh - 4rem);
-}
-
-/* Header */
-.modal-header-bar {
-    padding: 1.75rem 2rem;
-    border-bottom: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.08));
-    background: var(--luminai-modal-header-bg, linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(37, 99, 235, 0.03) 100%));
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-}
-
-.modal-icon-circle {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.75rem;
-    color: white;
-    flex-shrink: 0;
-}
-
-.modal-title-text {
-    color: var(--luminai-text-primary, white);
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-    letter-spacing: -0.02em;
-}
-
-.modal-subtitle-text {
-    color: var(--luminai-text-secondary, rgba(255, 255, 255, 0.6));
-    font-size: 0.875rem;
-    margin: 0.25rem 0 0 0;
-}
-
-.modal-close-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    border: none;
-    background: var(--luminai-btn-secondary-bg, rgba(255, 255, 255, 0.08));
-    color: var(--luminai-text-secondary, rgba(255, 255, 255, 0.7));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    flex-shrink: 0;
-}
-
-.modal-close-btn:hover {
-    background: var(--luminai-btn-secondary-hover, rgba(255, 255, 255, 0.15));
-    color: var(--luminai-text-primary, white);
-    transform: rotate(90deg);
-}
-
-/* Body */
-.modal-body-content {
-    padding: 2rem;
-    flex: 1;
-    overflow-y: auto;
-}
-
-.form-group-modern {
-    margin-bottom: 1.75rem;
-}
-
-.form-group-modern:last-child {
-    margin-bottom: 0;
-}
-
-.form-label-modern {
-    display: block;
-    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.95));
-    font-weight: 600;
-    font-size: 0.875rem;
-    margin-bottom: 0.625rem;
-    letter-spacing: 0.01em;
-}
-
-.form-input-modern, .form-select-modern {
-    width: 100%;
-    background: var(--luminai-input-bg, rgba(255, 255, 255, 0.04));
-    border: 1.5px solid var(--luminai-border-color, rgba(255, 255, 255, 0.12));
-    border-radius: 10px;
-    color: var(--luminai-text-primary, white);
-    padding: 0.875rem 1.125rem;
-    font-size: 1rem;
-    transition: all 0.2s;
-    font-family: inherit;
-}
-
-.form-input-modern:focus, .form-select-modern:focus {
-    outline: none;
-    background: var(--luminai-input-focus-bg, rgba(255, 255, 255, 0.06));
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
-}
-
-.form-input-modern::placeholder {
-    color: var(--luminai-text-muted, rgba(255, 255, 255, 0.3));
-}
-
-.input-error {
-    border-color: #ef4444;
-}
-
-.input-error:focus {
-    border-color: #ef4444;
-    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
-}
-
-.invalid-feedback {
-    display: block;
-    color: #ef4444;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-}
-
-/* Footer */
-.modal-footer-bar {
-    padding: 1.5rem 2rem;
-    border-top: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.08));
-    background: var(--luminai-modal-footer-bg, rgba(0, 0, 0, 0.2));
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    flex-shrink: 0;
-}
-
-.btn-modal-secondary,
-.btn-modal-primary {
-    padding: 0.75rem 1.75rem;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-modal-secondary {
-    background: var(--luminai-btn-secondary-bg, rgba(255, 255, 255, 0.08));
-    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.9));
-}
-
-.btn-modal-secondary:hover {
-    background: var(--luminai-btn-secondary-hover, rgba(255, 255, 255, 0.12));
-    transform: translateY(-1px);
-}
-
-.btn-modal-primary {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-}
-
-.btn-modal-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-}
-
-.btn-modal-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .modal-fullscreen-overlay {
-        padding: 1rem;
-    }
-
-    .modal-header-bar {
-        padding: 1.25rem 1.5rem;
-    }
-
-    .modal-body-content {
-        padding: 1.5rem;
-    }
-
-    .modal-footer-bar {
-        padding: 1.25rem 1.5rem;
-        flex-direction: column;
-    }
-
-    .btn-modal-secondary,
-    .btn-modal-primary {
-        width: 100%;
-    }
-}
-
-/* Importance Range Slider */
-.form-range {
-    -webkit-appearance: none;
-    appearance: none;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-    outline: none;
-}
-
-.form-range::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.form-range::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-}
-
-.form-range::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    cursor: pointer;
-    border: none;
-    transition: transform 0.2s;
-}
-
-.form-range::-moz-range-thumb:hover {
-    transform: scale(1.2);
-}
-</style>
-
-<script>
-// Loading State Handler (Enhancement)
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('[data-crud-modal-target="form"]');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            const submitButton = form.querySelector('[data-crud-modal-target="submitButton"]');
-            if (submitButton && !submitButton.disabled) {
-                const loadingText = submitButton.dataset.loadingText || 'Loading...';
-                const buttonText = submitButton.querySelector('[data-button-text]');
-                const buttonIcon = submitButton.querySelector('[data-button-icon]');
-
-                // Disable button and show loading state
-                submitButton.disabled = true;
-                if (buttonIcon) {
-                    buttonIcon.className = 'bi bi-hourglass-split me-2 spinner-grow spinner-grow-sm';
-                }
-                if (buttonText) {
-                    buttonText.textContent = loadingText;
-                }
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.prompt) }}</label>
+        {{ form_widget(form.prompt, {
+            'attr': {
+                'class': 'form-input-modern' ~ (form.prompt.vars.errors|length > 0 ? ' input-error' : ''),
+                'placeholder': 'question.form.prompt.placeholder'|trans({}, 'treeflow'),
+                'rows': 4
             }
-        });
-    }
-});
-</script>
+        }) }}
+        {{ form_errors(form.prompt) }}
+    </div>
+
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.objective) }}</label>
+        {{ form_widget(form.objective, {
+            'attr': {
+                'class': 'form-input-modern' ~ (form.objective.vars.errors|length > 0 ? ' input-error' : ''),
+                'placeholder': 'question.form.objective.placeholder'|trans({}, 'treeflow'),
+                'rows': 3
+            }
+        }) }}
+        {{ form_errors(form.objective) }}
+    </div>
+
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.importance) }}</label>
+        <div class="star-rating-container">
+            <!-- Hidden radio inputs -->
+            {% for choice in form.importance %}
+                {{ form_widget(choice, {
+                    'attr': {
+                        'class': 'star-rating-input-hidden',
+                        'data-star-value': choice.vars.label
+                    }
+                }) }}
+            {% endfor %}
+
+            <!-- Visible clickable stars -->
+            <div class="clickable-stars">
+                <i class="bi bi-star-fill clickable-star" data-star="1"></i>
+                <i class="bi bi-star-fill clickable-star" data-star="2"></i>
+                <i class="bi bi-star-fill clickable-star" data-star="3"></i>
+            </div>
+        </div>
+        <small class="text-muted mt-1 d-block">{{ 'question.form.importance.help'|trans({}, 'treeflow') }}</small>
+        {{ form_errors(form.importance) }}
+    </div>
+
+    {# Positive Few-Shot Examples #}
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.fewShotPositive) }}</label>
+        <small class="text-muted d-block mb-2">{{ 'question.form.fewshot.positive.help'|trans({}, 'treeflow') }}</small>
+        <div class="fewshot-collection-container" data-collection="positive" data-index="{{ form.fewShotPositive|length }}" data-prototype="{{ form_widget(form.fewShotPositive.vars.prototype)|e('html_attr') }}">
+            <div class="fewshot-items">
+                {% for item in form.fewShotPositive %}
+                    <div class="fewshot-item mb-2">
+                        {{ form_widget(item) }}
+                        <button type="button" class="btn btn-sm btn-danger fewshot-remove mt-1">
+                            <i class="bi bi-trash"></i> {{ 'button.remove'|trans({}, 'messages') }}
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-sm luminai-btn-success fewshot-add mt-2">
+                <i class="bi bi-plus-circle"></i> {{ 'question.button.add.positive.example'|trans({}, 'treeflow') }}
+            </button>
+        </div>
+        {{ form_errors(form.fewShotPositive) }}
+    </div>
+
+    {# Negative Few-Shot Examples #}
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.fewShotNegative) }}</label>
+        <small class="text-muted d-block mb-2">{{ 'question.form.fewshot.negative.help'|trans({}, 'treeflow') }}</small>
+        <div class="fewshot-collection-container" data-collection="negative" data-index="{{ form.fewShotNegative|length }}" data-prototype="{{ form_widget(form.fewShotNegative.vars.prototype)|e('html_attr') }}">
+            <div class="fewshot-items">
+                {% for item in form.fewShotNegative %}
+                    <div class="fewshot-item mb-2">
+                        {{ form_widget(item) }}
+                        <button type="button" class="btn btn-sm btn-danger fewshot-remove mt-1">
+                            <i class="bi bi-trash"></i> {{ 'button.remove'|trans({}, 'messages') }}
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-sm luminai-btn-success fewshot-add mt-2">
+                <i class="bi bi-plus-circle"></i> {{ 'question.button.add.negative.example'|trans({}, 'treeflow') }}
+            </button>
+        </div>
+        {{ form_errors(form.fewShotNegative) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+
+    <style>
+        /* Hide radio buttons */
+        .star-rating-input-hidden {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Clickable stars */
+        .clickable-stars {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .clickable-star {
+            color: rgba(139, 92, 246, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .clickable-star:hover {
+            transform: scale(1.2);
+        }
+
+        .clickable-star.active {
+            color: #f59e0b;
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+        }
+    </style>
+
+    <script>
+        // Use setTimeout to ensure DOM is fully rendered in modal
+        setTimeout(function() {
+            // Star Rating System
+            const stars = document.querySelectorAll('.clickable-star');
+            const radioInputs = document.querySelectorAll('.star-rating-input-hidden');
+
+            console.log('Found stars:', stars.length);
+            console.log('Found radio inputs:', radioInputs.length);
+
+            if (stars.length > 0) {
+                // Set initial state based on checked radio
+                radioInputs.forEach((radio) => {
+                    if (radio.checked) {
+                        const starValue = parseInt(radio.getAttribute('data-star-value'));
+                        console.log('Initial star value:', starValue);
+                        updateStars(starValue);
+                    }
+                });
+
+                // Click handler for stars
+                stars.forEach(star => {
+                    star.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const starValue = parseInt(this.getAttribute('data-star'));
+                        console.log('Clicked star:', starValue);
+
+                        // Update visual stars
+                        updateStars(starValue);
+
+                        // Check corresponding radio button
+                        radioInputs.forEach(radio => {
+                            const radioValue = parseInt(radio.getAttribute('data-star-value'));
+                            radio.checked = (radioValue === starValue);
+                        });
+                    });
+
+                    // Add hover effect
+                    star.addEventListener('mouseenter', function() {
+                        const starValue = parseInt(this.getAttribute('data-star'));
+                        stars.forEach((s, idx) => {
+                            if (idx < starValue) {
+                                s.style.color = '#f59e0b';
+                            }
+                        });
+                    });
+
+                    star.addEventListener('mouseleave', function() {
+                        // Restore active state
+                        radioInputs.forEach((radio) => {
+                            if (radio.checked) {
+                                const starValue = parseInt(radio.getAttribute('data-star-value'));
+                                updateStars(starValue);
+                            }
+                        });
+                    });
+                });
+            }
+
+            function updateStars(value) {
+                stars.forEach((star, idx) => {
+                    const starNumber = idx + 1;
+                    if (starNumber <= value) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
+
+            // Few-Shot Collection Management
+            const addButtons = document.querySelectorAll('.fewshot-add');
+            console.log('Found add buttons:', addButtons.length);
+
+            addButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Add button clicked');
+                    const container = this.closest('.fewshot-collection-container');
+                    const itemsContainer = container.querySelector('.fewshot-items');
+                    const prototype = container.getAttribute('data-prototype');
+                    let index = parseInt(container.getAttribute('data-index')) || 0;
+
+                    console.log('Creating new item with index:', index);
+
+                    const newItem = document.createElement('div');
+                    newItem.classList.add('fewshot-item', 'mb-2');
+                    newItem.innerHTML = prototype.replace(/__name__/g, index) +
+                        '<button type="button" class="btn btn-sm btn-danger fewshot-remove mt-1">' +
+                        '<i class="bi bi-trash"></i> {{ 'button.remove'|trans({}, 'messages') }}</button>';
+
+                    itemsContainer.appendChild(newItem);
+                    container.setAttribute('data-index', index + 1);
+                });
+            });
+
+            // Remove item from collection (event delegation)
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('fewshot-remove') || e.target.closest('.fewshot-remove')) {
+                    e.preventDefault();
+                    const button = e.target.classList.contains('fewshot-remove') ? e.target : e.target.closest('.fewshot-remove');
+                    const item = button.closest('.fewshot-item');
+                    item.remove();
+                }
+            });
+        }, 100); // Small delay to ensure modal content is rendered
+    </script>
+{% endblock %}
+
+{% block modal_footer %}
+    <div class="modal-footer-actions" id="modal-default-actions-question">
+        {{ button_modal_cancel() }}
+        {{ button_modal_submit(is_edit, submit_key|default(null), submit_domain|default('messages')) }}
+        {% if is_edit and question.id %}
+            <button type="button" class="btn btn-sm btn-danger ms-2" onclick="showDeleteConfirmationQuestion()">
+                <i class="bi bi-trash"></i> {{ 'button.delete'|trans }}
+            </button>
+        {% endif %}
+    </div>
+
+    <div class="modal-footer-actions" id="modal-delete-confirmation-question" style="display: none;">
+        <div class="text-danger fw-bold">{{ 'confirm.delete.entity'|trans }}</div>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="cancelDeleteQuestion()">
+            <i class="bi bi-x-circle"></i> {{ 'button.cancel'|trans }}
+        </button>
+        <form method="post" action="{{ path('question_delete', {treeflowId: treeflow.id, stepId: step.id, questionId: question.id}) }}" style="display: inline;">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete-question-' ~ question.id) }}">
+            <button type="submit" class="btn btn-sm btn-danger">
+                <i class="bi bi-trash"></i> {{ 'button.confirm.delete'|trans }}
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function showDeleteConfirmationQuestion() {
+            document.getElementById('modal-default-actions-question').style.display = 'none';
+            document.getElementById('modal-delete-confirmation-question').style.display = 'flex';
+        }
+
+        function cancelDeleteQuestion() {
+            document.getElementById('modal-delete-confirmation-question').style.display = 'none';
+            document.getElementById('modal-default-actions-question').style.display = 'flex';
+        }
+    </script>
+{% endblock %}

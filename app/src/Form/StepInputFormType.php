@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Entity\Step;
 use App\Entity\StepInput;
 use App\Enum\InputType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,7 +20,6 @@ class StepInputFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $isEdit = $options['is_edit'];
-        $availableSteps = $options['available_steps'];
 
         $builder
             ->add('name', TextType::class, [
@@ -38,8 +35,8 @@ class StepInputFormType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'label' => 'input.form.type',
                 'choices' => [
-                    'input.type.fully_completed' => InputType::FULLY_COMPLETED,
-                    'input.type.not_completed_after_attempts' => InputType::NOT_COMPLETED_AFTER_ATTEMPTS,
+                    'input.type.fully.completed' => InputType::FULLY_COMPLETED,
+                    'input.type.not.completed.after.attempts' => InputType::NOT_COMPLETED_AFTER_ATTEMPTS,
                     'input.type.any' => InputType::ANY,
                 ],
                 'expanded' => true, // Radio buttons
@@ -49,18 +46,6 @@ class StepInputFormType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
-            ])
-            ->add('sourceStep', EntityType::class, [
-                'class' => Step::class,
-                'choices' => $availableSteps,
-                'choice_label' => 'name',
-                'label' => 'input.form.source',
-                'required' => false,
-                'placeholder' => 'input.form.source_placeholder',
-                'attr' => [
-                    'class' => 'form-select',
-                ],
-                'help' => 'input.form.source_help',
             ])
             ->add('prompt', TextareaType::class, [
                 'label' => 'input.form.prompt',
@@ -85,10 +70,9 @@ class StepInputFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => StepInput::class,
             'is_edit' => false,
-            'available_steps' => [],
+            'translation_domain' => 'treeflow',
         ]);
 
         $resolver->setAllowedTypes('is_edit', 'bool');
-        $resolver->setAllowedTypes('available_steps', 'iterable');
     }
 }

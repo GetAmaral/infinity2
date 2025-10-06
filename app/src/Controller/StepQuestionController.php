@@ -105,12 +105,8 @@ final class StepQuestionController extends AbstractController
             ]);
         }
 
-        return $this->render('treeflow/question/new.html.twig', [
-            'question' => $question,
-            'step' => $step,
-            'treeflow' => $treeFlow,
-            'form' => $form,
-        ]);
+        // Non-AJAX request - redirect to TreeFlow page
+        return $this->redirectToRoute('treeflow_show', ['id' => $treeflowId]);
     }
 
     #[Route('/{treeflowId}/step/{stepId}/question/{questionId}/edit', name: 'question_edit', methods: ['GET', 'POST'])]
@@ -182,12 +178,8 @@ final class StepQuestionController extends AbstractController
             ]);
         }
 
-        return $this->render('treeflow/question/edit.html.twig', [
-            'question' => $question,
-            'step' => $step,
-            'treeflow' => $treeFlow,
-            'form' => $form,
-        ]);
+        // Non-AJAX request - redirect to TreeFlow page
+        return $this->redirectToRoute('treeflow_show', ['id' => $treeflowId]);
     }
 
     #[Route('/{treeflowId}/step/{stepId}/question/{questionId}/delete', name: 'question_delete', methods: ['POST'])]

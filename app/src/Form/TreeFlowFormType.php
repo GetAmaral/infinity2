@@ -52,6 +52,7 @@ class TreeFlowFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => TreeFlow::class,
             'is_edit' => false,
+            'translation_domain' => 'treeflow',
         ]);
 
         $resolver->setAllowedTypes('is_edit', 'bool');

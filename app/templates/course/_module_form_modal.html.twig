@@ -1,412 +1,82 @@
-<!-- Full Screen Modal Overlay -->
-<div class="modal-fullscreen-overlay"
-     data-controller="crud-modal"
-     data-crud-modal-target="overlay"
-     data-action="click->crud-modal#backdropClick">
+{% extends '_base_modal.html.twig' %}
 
-    {{ form_start(form, {
-        'action': (is_edit and module.id) ? path('course_module_edit', {courseId: course.id, moduleId: module.id}) : path('course_module_new', {courseId: course.id}),
-        'attr': {
-            'data-controller': 'form-navigation',
-            'data-crud-modal-target': 'form',
-            'data-action': 'submit->crud-modal#submit'
-        }
-    }) }}
+{# Configure modal appearance and behavior #}
+{% set entity_type = 'module' %}
+{% set icon = 'layers' %}
+{% set form_action = (is_edit and module.id) ? path('course_module_edit', {courseId: course.id, moduleId: module.id}) : path('course_module_new', {courseId: course.id}) %}
+{% set title_create = 'course.module.modal.create.title'|trans({}, 'course') %}
+{% set title_edit = 'course.module.modal.edit.title'|trans({}, 'course') %}
+{% set subtitle_create = 'course.module.modal.create.subtitle'|trans({}, 'course') %}
+{% set subtitle_edit = 'course.module.modal.edit.subtitle'|trans({}, 'course') %}
+{% set submit_key = is_edit ? 'button.save.changes' : 'course.module.button.create.module' %}
+{% set submit_domain = is_edit ? 'messages' : 'course' %}
+{% set entity = module %}
 
-    <div class="modal-dialog-centered" data-action="click->crud-modal#stopPropagation">
-        <div class="modal-content-box">
+{# Form fields #}
+{% block modal_body %}
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.name) }}</label>
+        {{ form_widget(form.name, {
+            'attr': {
+                'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
+                'placeholder': 'course.module.form.name.placeholder'|trans({}, 'course'),
+                'autofocus': 'autofocus'
+            }
+        }) }}
+        {{ form_errors(form.name) }}
+    </div>
 
-            <!-- Header -->
-            <div class="modal-header-bar">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="modal-icon-circle" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-                        <i class="bi bi-layers"></i>
-                    </div>
-                    <div>
-                        <h2 class="modal-title-text">
-                            {% if is_edit %}
-                                {{ 'action.edit'|trans }} {{ module.name }}
-                            {% else %}
-                                {{ 'course.module.modal.create.title'|trans({}, 'course') }}
-                            {% endif %}
-                        </h2>
-                        <p class="modal-subtitle-text">
-                            {% if is_edit %}
-                                {{ 'course.module.modal.edit.subtitle'|trans({}, 'course') }}
-                            {% else %}
-                                {{ 'course.module.modal.create.subtitle'|trans({}, 'course') }}
-                            {% endif %}
-                        </p>
-                    </div>
-                </div>
-                <button type="button"
-                        class="modal-close-btn"
-                        data-action="crud-modal#close"
-                        aria-label="{{ 'button.close'|trans }}">
-                    <i class="bi bi-x-lg"></i>
-                </button>
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.description) }}</label>
+        {{ form_widget(form.description, {
+            'attr': {
+                'class': 'form-input-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
+                'placeholder': 'course.module.form.description.placeholder'|trans({}, 'course'),
+                'rows': 4
+            }
+        }) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group-modern">
+                <label class="form-label-modern">{{ form_label(form.viewOrder) }}</label>
+                {{ form_widget(form.viewOrder, {
+                    'attr': {
+                        'class': 'form-input-modern' ~ (form.viewOrder.vars.errors|length > 0 ? ' input-error' : '')
+                    }
+                }) }}
+                {{ form_errors(form.viewOrder) }}
             </div>
-
-            <!-- Body -->
-            <div class="modal-body-content">
-                <div class="form-group-modern">
-                    <label class="form-label-modern">{{ form_label(form.name) }}</label>
-                    {{ form_widget(form.name, {
-                        'attr': {
-                            'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.module.form.name.placeholder'|trans({}, 'course'),
-                            'autofocus': 'autofocus'
-                        }
-                    }) }}
-                    {{ form_errors(form.name) }}
-                </div>
-
-                <div class="form-group-modern">
-                    <label class="form-label-modern">{{ form_label(form.description) }}</label>
-                    {{ form_widget(form.description, {
-                        'attr': {
-                            'class': 'form-input-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
-                            'placeholder': 'course.module.form.description.placeholder'|trans({}, 'course'),
-                            'rows': 4
-                        }
-                    }) }}
-                    {{ form_errors(form.description) }}
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group-modern">
-                            <label class="form-label-modern">{{ form_label(form.viewOrder) }}</label>
-                            {{ form_widget(form.viewOrder, {
-                                'attr': {
-                                    'class': 'form-input-modern' ~ (form.viewOrder.vars.errors|length > 0 ? ' input-error' : '')
-                                }
-                            }) }}
-                            {{ form_errors(form.viewOrder) }}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group-modern">
-                            <label class="form-label-modern">{{ form_label(form.releaseDate) }}</label>
-                            {{ form_widget(form.releaseDate, {
-                                'attr': {
-                                    'class': 'form-input-modern' ~ (form.releaseDate.vars.errors|length > 0 ? ' input-error' : '')
-                                }
-                            }) }}
-                            {{ form_errors(form.releaseDate) }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group-modern">
-                    <div class="form-check form-switch">
-                        {{ form_widget(form.active, {
-                            'attr': {
-                                'class': 'form-check-input',
-                                'style': 'cursor: pointer;'
-                            }
-                        }) }}
-                        <label class="form-check-label" for="{{ form.active.vars.id }}" style="color: var(--luminai-text-primary); cursor: pointer; margin-left: 0.5rem;">
-                            {{ form_label(form.active) }}
-                        </label>
-                    </div>
-                    {{ form_errors(form.active) }}
-                </div>
-
-                {{ form_widget(form._token) }}
+        </div>
+        <div class="col-md-6">
+            <div class="form-group-modern">
+                <label class="form-label-modern">{{ form_label(form.releaseDate) }}</label>
+                {{ form_widget(form.releaseDate, {
+                    'attr': {
+                        'class': 'form-input-modern' ~ (form.releaseDate.vars.errors|length > 0 ? ' input-error' : '')
+                    }
+                }) }}
+                {{ form_errors(form.releaseDate) }}
             </div>
-
-            <!-- Footer -->
-            <div class="modal-footer-bar">
-                {{ button_modal_cancel() }}
-                {{ button_modal_submit(is_edit, is_edit ? 'button.save.changes' : 'course.module.button.create.module', is_edit ? null : 'course') }}
-            </div>
-
         </div>
     </div>
 
-    {{ form_end(form, {'render_rest': false}) }}
-</div>
+    <div class="form-group-modern">
+        <div class="form-check form-switch">
+            {{ form_widget(form.active, {
+                'attr': {
+                    'class': 'form-check-input',
+                    'style': 'cursor: pointer;'
+                }
+            }) }}
+            <label class="form-check-label" for="{{ form.active.vars.id }}" style="color: var(--luminai-text-primary); cursor: pointer; margin-left: 0.5rem;">
+                {{ form_label(form.active) }}
+            </label>
+        </div>
+        {{ form_errors(form.active) }}
+    </div>
 
-<style>
-/* Full Screen Modal Overlay */
-.modal-fullscreen-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100vw;
-    height: 100vh;
-    background: var(--luminai-overlay-bg, rgba(0, 0, 0, 0.85));
-    backdrop-filter: blur(8px);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    animation: modalFadeIn 0.2s ease-out;
-}
-
-@keyframes modalFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Centered Dialog */
-.modal-dialog-centered {
-    width: 100%;
-    max-width: 600px;
-    animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes modalSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* Modal Content Box */
-.modal-content-box {
-    background: var(--luminai-card-bg, #1a1a1a);
-    border-radius: 16px;
-    border: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.1));
-    box-shadow: 0 25px 80px var(--luminai-shadow, rgba(0, 0, 0, 0.6));
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    max-height: calc(100vh - 4rem);
-}
-
-/* Header */
-.modal-header-bar {
-    padding: 1.75rem 2rem;
-    border-bottom: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.08));
-    background: var(--luminai-modal-header-bg, linear-gradient(135deg, rgba(245, 158, 11, 0.03) 0%, rgba(217, 119, 6, 0.03) 100%));
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-}
-
-.modal-icon-circle {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.75rem;
-    color: white;
-    flex-shrink: 0;
-}
-
-.modal-title-text {
-    color: var(--luminai-text-primary, white);
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-    letter-spacing: -0.02em;
-}
-
-.modal-subtitle-text {
-    color: var(--luminai-text-secondary, rgba(255, 255, 255, 0.6));
-    font-size: 0.875rem;
-    margin: 0.25rem 0 0 0;
-}
-
-.modal-close-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    border: none;
-    background: var(--luminai-btn-secondary-bg, rgba(255, 255, 255, 0.08));
-    color: var(--luminai-text-secondary, rgba(255, 255, 255, 0.7));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    flex-shrink: 0;
-}
-
-.modal-close-btn:hover {
-    background: var(--luminai-btn-secondary-hover, rgba(255, 255, 255, 0.15));
-    color: var(--luminai-text-primary, white);
-    transform: rotate(90deg);
-}
-
-/* Body */
-.modal-body-content {
-    padding: 2rem;
-    flex: 1;
-    overflow-y: auto;
-}
-
-.form-group-modern {
-    margin-bottom: 1.75rem;
-}
-
-.form-group-modern:last-child {
-    margin-bottom: 0;
-}
-
-.form-label-modern {
-    display: block;
-    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.95));
-    font-weight: 600;
-    font-size: 0.875rem;
-    margin-bottom: 0.625rem;
-    letter-spacing: 0.01em;
-}
-
-.form-input-modern, .form-select-modern {
-    width: 100%;
-    background: var(--luminai-input-bg, rgba(255, 255, 255, 0.04));
-    border: 1.5px solid var(--luminai-border-color, rgba(255, 255, 255, 0.12));
-    border-radius: 10px;
-    color: var(--luminai-text-primary, white);
-    padding: 0.875rem 1.125rem;
-    font-size: 1rem;
-    transition: all 0.2s;
-    font-family: inherit;
-}
-
-.form-input-modern:focus, .form-select-modern:focus {
-    outline: none;
-    background: var(--luminai-input-focus-bg, rgba(255, 255, 255, 0.06));
-    border-color: #f59e0b;
-    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.08);
-}
-
-.form-input-modern::placeholder {
-    color: var(--luminai-text-muted, rgba(255, 255, 255, 0.3));
-}
-
-.input-error {
-    border-color: #ef4444;
-}
-
-.input-error:focus {
-    border-color: #ef4444;
-    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
-}
-
-.invalid-feedback {
-    display: block;
-    color: #ef4444;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-}
-
-.form-check {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.form-check-input {
-    width: 3rem;
-    height: 1.5rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1.5px solid var(--luminai-border-color, rgba(255, 255, 255, 0.12));
-}
-
-.form-check-input:checked {
-    background-color: #f59e0b;
-    border-color: #f59e0b;
-}
-
-.form-check-input:focus {
-    border-color: #f59e0b;
-    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.08);
-}
-
-.form-check-label {
-    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.9));
-    font-size: 0.9375rem;
-    margin: 0;
-}
-
-/* Footer */
-.modal-footer-bar {
-    padding: 1.5rem 2rem;
-    border-top: 1px solid var(--luminai-border-color, rgba(255, 255, 255, 0.08));
-    background: var(--luminai-modal-footer-bg, rgba(0, 0, 0, 0.2));
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    flex-shrink: 0;
-}
-
-.btn-modal-secondary,
-.btn-modal-primary {
-    padding: 0.75rem 1.75rem;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-modal-secondary {
-    background: var(--luminai-btn-secondary-bg, rgba(255, 255, 255, 0.08));
-    color: var(--luminai-text-primary, rgba(255, 255, 255, 0.9));
-}
-
-.btn-modal-secondary:hover {
-    background: var(--luminai-btn-secondary-hover, rgba(255, 255, 255, 0.12));
-    transform: translateY(-1px);
-}
-
-.btn-modal-primary {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: white;
-}
-
-.btn-modal-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
-}
-
-.btn-modal-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .modal-fullscreen-overlay {
-        padding: 1rem;
-    }
-
-    .modal-header-bar {
-        padding: 1.25rem 1.5rem;
-    }
-
-    .modal-body-content {
-        padding: 1.5rem;
-    }
-
-    .modal-footer-bar {
-        padding: 1.25rem 1.5rem;
-        flex-direction: column;
-    }
-
-    .btn-modal-secondary,
-    .btn-modal-primary {
-        width: 100%;
-    }
-}
-</style>
+    {{ form_widget(form._token) }}
+{% endblock %}

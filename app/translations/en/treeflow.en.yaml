@@ -99,8 +99,8 @@ question.confirm.delete: Are you sure you want to delete this question?
 question.flash.created.successfully: Question created successfully
 question.flash.deleted.successfully: Question deleted successfully
 question.flash.updated.successfully: Question updated successfully
-question.form.importance: Importance
-question.form.importance.help: 'Rate from 1 (low) to 10 (high)'
+question.form.importance: Importance Level
+question.form.importance.help: 'Select 1-3 stars (progressive highlighting)'
 # Question Form
 question.form.name: Question Name
 question.form.name.placeholder: Enter question name
@@ -108,6 +108,14 @@ question.form.objective: Objective
 question.form.objective.placeholder: What should this question achieve?
 question.form.prompt: Prompt
 question.form.prompt.placeholder: Instructions for this question
+question.form.fewshot.positive: Positive Examples
+question.form.fewshot.positive.help: Add examples of good responses to guide the AI
+question.form.fewshot.positive.placeholder: Enter a positive example...
+question.form.fewshot.negative: Negative Examples
+question.form.fewshot.negative.help: Add examples of responses to avoid
+question.form.fewshot.negative.placeholder: Enter a negative example...
+question.button.add.positive.example: Add Positive Example
+question.button.add.negative.example: Add Negative Example
 question.importance: Importance
 question.modal.create.subtitle: Add a new question to this step
 # Question Modal
@@ -182,9 +190,11 @@ treeflow.steps.reorder.success: Steps reordered successfully
 treeflow.total.steps: Total Steps
 treeflow.version: Version
 
+# Form placeholders and help text (underscore format for Symfony forms)
 fewshot.form.description_placeholder: Describe what makes this a good/bad example
 fewshot.form.name_placeholder: Enter example name
 fewshot.form.prompt_placeholder: Example prompt for the AI
+fewshot.form.description: Description
 input.form.name_placeholder: Enter input name
 input.form.prompt_help: Additional instructions when entering through this input
 input.form.prompt_placeholder: Additional context when entering via this input
@@ -192,6 +202,7 @@ input.form.source_help: Which step can route to this step (optional)
 input.form.source_placeholder: Select the step that can route here
 output.form.conditional_help: Define conditions for this output (regex, keywords, or custom logic)
 output.form.conditional_placeholder: 'Example: regex:/urgent/i or keywords:high-priority,immediate'
+output.form.description: Description
 output.form.description_placeholder: Describe what this output represents
 output.form.destination_help: Where to route when this condition matches (optional)
 output.form.destination_placeholder: Select where to route when this condition matches
@@ -199,6 +210,7 @@ output.form.name_placeholder: Enter output name
 question.form.name_placeholder: Enter question name
 question.form.objective_placeholder: What should this question achieve?
 question.form.prompt_placeholder: Instructions for this question
+question.form.importance_help: Select 1-3 stars (progressive highlighting)
 step.form.first_help: Mark this as the starting point of the TreeFlow
 step.form.name_placeholder: Enter step name
 step.form.objective_placeholder: What should this step achieve?
