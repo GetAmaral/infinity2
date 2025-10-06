@@ -75,6 +75,7 @@ final class OrganizationContext
      * Extract organization slug from subdomain
      * Example: "acme-corporation.localhost" returns "acme-corporation"
      *          "localhost" returns null (root domain, no organization)
+     *          "www.luminai.ia.br" returns null (www is not an organization)
      *          "91.98.137.175" returns null (IP address, no organization)
      */
     public function extractSlugFromHost(string $host): ?string
@@ -89,7 +90,14 @@ final class OrganizationContext
 
         // Check if it's a subdomain (contains a dot before localhost/domain)
         if (preg_match('/^([a-z0-9\-]+)\.(localhost|.*\..+)$/i', $host, $matches)) {
-            return strtolower($matches[1]);
+            $subdomain = strtolower($matches[1]);
+
+            // Ignore "www" subdomain - treat as root domain access
+            if ($subdomain === 'www') {
+                return null;
+            }
+
+            return $subdomain;
         }
 
         // No subdomain found (root domain access)
