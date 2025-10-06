@@ -54,7 +54,7 @@
 
     {% if is_edit and output.id %}
         <div class="form-group-modern mt-4 pt-3 border-top">
-            <button type="button" class="btn btn-sm btn-danger" onclick="showDeleteConfirmationOutput()">
+            <button type="button" class="btn btn-sm btn-danger delete-trigger-btn" data-entity-type="output">
                 <i class="bi bi-trash"></i> {{ 'button.delete'|trans }}
             </button>
         </div>
@@ -69,26 +69,14 @@
 
     <div class="modal-footer-actions" id="modal-delete-confirmation-output" style="display: none;">
         <div class="text-danger fw-bold">{{ 'confirm.delete.entity'|trans }}</div>
-        <button type="button" class="btn btn-sm btn-secondary" onclick="cancelDeleteOutput()">
+        <button type="button" class="btn btn-sm btn-secondary delete-cancel-btn" data-entity-type="output">
             <i class="bi bi-x-circle"></i> {{ 'button.cancel'|trans }}
         </button>
-        <form method="post" action="{{ path('output_delete', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}) }}" style="display: inline;">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete-output-' ~ output.id) }}">
-            <button type="submit" class="btn btn-sm btn-danger">
-                <i class="bi bi-trash"></i> {{ 'button.confirm.delete'|trans }}
-            </button>
-        </form>
+        <button type="button" class="btn btn-sm btn-danger delete-confirm-btn"
+                data-entity-type="output"
+                data-delete-url="{{ path('output_delete', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}) }}"
+                data-csrf-token="{{ csrf_token('delete-output-' ~ output.id) }}">
+            <i class="bi bi-trash"></i> {{ 'button.confirm'|trans }}
+        </button>
     </div>
-
-    <script>
-        function showDeleteConfirmationOutput() {
-            document.getElementById('modal-default-actions-output').style.display = 'none';
-            document.getElementById('modal-delete-confirmation-output').style.display = 'flex';
-        }
-
-        function cancelDeleteOutput() {
-            document.getElementById('modal-delete-confirmation-output').style.display = 'none';
-            document.getElementById('modal-default-actions-output').style.display = 'flex';
-        }
-    </script>
 {% endblock %}

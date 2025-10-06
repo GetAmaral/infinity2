@@ -11,12 +11,158 @@ class DeleteHandler {
     setupEventListeners() {
         // Delegate click events for all delete buttons
         document.addEventListener('click', (e) => {
+            // Handle modal delete confirm buttons (check first to prevent double handling)
+            const deleteConfirm = e.target.closest('.delete-confirm-btn');
+            if (deleteConfirm) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.handleModalDelete(deleteConfirm);
+                return;
+            }
+
+            // Handle modal delete trigger buttons
+            const deleteTrigger = e.target.closest('.delete-trigger-btn');
+            if (deleteTrigger) {
+                e.preventDefault();
+                const entityType = deleteTrigger.getAttribute('data-entity-type');
+                this.showModalDeleteConfirmation(entityType);
+                return;
+            }
+
+            // Handle modal delete cancel buttons
+            const deleteCancel = e.target.closest('.delete-cancel-btn');
+            if (deleteCancel) {
+                e.preventDefault();
+                const entityType = deleteCancel.getAttribute('data-entity-type');
+                this.hideModalDeleteConfirmation(entityType);
+                return;
+            }
+
+            // Handle regular delete buttons (for list/card items)
             const deleteButton = e.target.closest('[data-delete-url]');
-            if (deleteButton) {
+            if (deleteButton && !deleteButton.classList.contains('delete-confirm-btn')) {
                 e.preventDefault();
                 this.handleDelete(deleteButton);
+                return;
             }
         });
+    }
+
+    async handleModalDelete(button) {
+        const url = button.getAttribute('data-delete-url');
+        const csrfToken = button.getAttribute('data-csrf-token');
+        const entityType = button.getAttribute('data-entity-type');
+
+        if (!url || !csrfToken) {
+            console.error('Missing required attributes for delete');
+            return;
+        }
+
+        // Disable button and show loading
+        button.disabled = true;
+        const originalHtml = button.innerHTML;
+        button.innerHTML = '<i class="bi bi-hourglass-split"></i> Deleting...';
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: `_token=${encodeURIComponent(csrfToken)}`
+            });
+
+            if (response.ok) {
+                this.showToast('Item deleted successfully', 'success');
+
+                // Close the modal
+                const modal = button.closest('.modal-fullscreen-overlay');
+                if (modal) {
+                    const closeButton = modal.querySelector('[data-action*="crud-modal#close"]');
+                    if (closeButton) {
+                        closeButton.click();
+                    }
+                }
+
+                // Dispatch custom event for canvas to refresh
+                setTimeout(() => {
+                    if (entityType !== 'treeflow') {
+                        // Dispatch event for canvas refresh
+                        document.dispatchEvent(new CustomEvent('treeflow-entity-deleted', {
+                            detail: { entityType }
+                        }));
+                    } else {
+                        // For treeflow deletion, redirect to list
+                        window.location.href = '/treeflow';
+                    }
+                }, 300);
+            } else {
+                const data = await response.json().catch(() => ({}));
+                this.showToast(data.message || 'Failed to delete item', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        } catch (error) {
+            console.error('Delete error:', error);
+            this.showToast('Network error occurred', 'error');
+            button.disabled = false;
+            button.innerHTML = originalHtml;
+        }
+    }
+
+    showModalDeleteConfirmation(entityType) {
+        // Find the footer elements based on entity type
+        let defaultActions, deleteConfirmation;
+
+        if (entityType === 'treeflow') {
+            defaultActions = document.getElementById('modal-default-actions-treeflow');
+            deleteConfirmation = document.getElementById('modal-delete-confirmation-treeflow');
+        } else if (entityType === 'step') {
+            defaultActions = document.getElementById('modal-default-actions');
+            deleteConfirmation = document.getElementById('modal-delete-confirmation');
+        } else if (entityType === 'question') {
+            defaultActions = document.getElementById('modal-default-actions-question');
+            deleteConfirmation = document.getElementById('modal-delete-confirmation-question');
+        } else if (entityType === 'input') {
+            defaultActions = document.getElementById('modal-default-actions-input');
+            deleteConfirmation = document.getElementById('modal-delete-confirmation-input');
+        } else if (entityType === 'output') {
+            defaultActions = document.getElementById('modal-default-actions-output');
+            deleteConfirmation = document.getElementById('modal-delete-confirmation-output');
+        }
+
+        if (defaultActions && deleteConfirmation) {
+            defaultActions.style.display = 'none';
+            deleteConfirmation.style.display = 'flex';
+        }
+    }
+
+    hideModalDeleteConfirmation(entityType) {
+        // Find the footer elements based on entity type
+        let defaultActions, deleteConfirmation;
+
+        if (entityType === 'treeflow') {
+            defaultActions = document.getElementById('modal-default-actions-treeflow');
+            deleteConfirmation = document.getElementById('modal-delete-confirmation-treeflow');
+        } else if (entityType === 'step') {
+            defaultActions = document.getElementById('modal-default-actions');
+            deleteConfirmation = document.getElementById('modal-delete-confirmation');
+        } else if (entityType === 'question') {
+            defaultActions = document.getElementById('modal-default-actions-question');
+            deleteConfirmation = document.getElementById('modal-delete-confirmation-question');
+        } else if (entityType === 'input') {
+            defaultActions = document.getElementById('modal-default-actions-input');
+            deleteConfirmation = document.getElementById('modal-delete-confirmation-input');
+        } else if (entityType === 'output') {
+            defaultActions = document.getElementById('modal-default-actions-output');
+            deleteConfirmation = document.getElementById('modal-delete-confirmation-output');
+        }
+
+        if (defaultActions && deleteConfirmation) {
+            deleteConfirmation.style.display = 'none';
+            defaultActions.style.display = 'flex';
+        }
     }
 
     handleDelete(button) {

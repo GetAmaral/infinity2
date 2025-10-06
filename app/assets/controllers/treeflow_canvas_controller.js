@@ -64,8 +64,63 @@ export default class extends Controller {
         this.adjustCanvasHeight();
         window.addEventListener('resize', this.handleWindowResize);
 
+        // Listen for entity deletion events
+        this.handleEntityDeleted = this.handleEntityDeleted.bind(this);
+        document.addEventListener('treeflow-entity-deleted', this.handleEntityDeleted);
+
         // Initialize canvas immediately (no view toggle anymore)
         this.initializeCanvas();
+    }
+
+    async handleEntityDeleted(event) {
+        // Fetch updated step data and re-render canvas without page reload
+        console.log('Entity deleted, refreshing canvas...', event.detail);
+
+        try {
+            // Fetch the current page to get updated step data
+            const response = await fetch(window.location.href, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (response.ok) {
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // Extract the updated steps data attribute
+                const canvasCard = doc.querySelector('[data-treeflow-canvas-steps-value]');
+                if (canvasCard) {
+                    const updatedStepsJson = canvasCard.getAttribute('data-treeflow-canvas-steps-value');
+                    this.stepsValue = JSON.parse(updatedStepsJson);
+
+                    // Clear and re-render canvas
+                    this.clearCanvas();
+                    this.renderSteps();
+                }
+            }
+        } catch (error) {
+            console.error('Failed to refresh canvas:', error);
+            // Fallback to page reload if fetch fails
+            window.location.reload();
+        }
+    }
+
+    clearCanvas() {
+        // Remove all nodes
+        this.nodes.forEach((node) => node.remove());
+        this.nodes.clear();
+        this.outputPoints.clear();
+        this.inputPoints.clear();
+        this.connections = [];
+
+        // Clear SVG layer
+        if (this.svgLayer) {
+            while (this.svgLayer.firstChild) {
+                this.svgLayer.removeChild(this.svgLayer.firstChild);
+            }
+        }
     }
 
     handleKeyDown(e) {
