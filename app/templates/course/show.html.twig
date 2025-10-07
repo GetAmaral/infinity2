@@ -40,7 +40,7 @@
                 {{ button_edit(course.id, path('course_edit', {id: course.id}), permission='COURSE_EDIT') }}
             {% endif %}
             {% if is_granted('COURSE_DELETE', course) %}
-                {{ button_delete(course.id, path('course_delete', {id: course.id}), permission='COURSE_DELETE') }}
+                {{ button_delete(course.id, path('course_delete', {id: course.id}), null, null, 'messages', null, null, 'COURSE_DELETE', 'delete-course') }}
             {% endif %}
         </div>
     </div>
@@ -168,7 +168,7 @@
                                 {% if is_granted('COURSE_EDIT', course) %}
                                     <div class="d-flex gap-1 me-3">
                                         {{ button_edit(module.id, path('course_module_edit', {courseId: course.id, moduleId: module.id})) }}
-                                        {{ button_delete(module.id, path('course_module_delete', {courseId: course.id, moduleId: module.id})) }}
+                                        {{ button_delete(module.id, path('course_module_delete', {courseId: course.id, moduleId: module.id}), null, null, 'messages', null, null, null, 'delete-module') }}
                                     </div>
                                 {% endif %}
                             </h2>
@@ -282,7 +282,7 @@
                                                                 {{ button_edit(lecture.id, path('course_lecture_edit', {courseId: course.id, lectureId: lecture.id})) }}
                                                             {% endif %}
                                                             {% if is_granted('COURSE_DELETE', course) %}
-                                                                {{ button_delete(lecture.id, path('course_lecture_delete', {courseId: course.id, lectureId: lecture.id})) }}
+                                                                {{ button_delete(lecture.id, path('course_lecture_delete', {courseId: course.id, lectureId: lecture.id}), null, null, 'messages', null, null, null, 'delete-lecture') }}
                                                             {% endif %}
                                                         </div>
                                                     </div>

@@ -25,7 +25,7 @@
 <a class="dropdown-item text-danger"
    href="#"
    data-delete-url="{{ url }}"
-   data-csrf-token-bind="deleteCsrfToken"
+   data-csrf-token="{{ csrf_token((csrf_prefix ?? 'delete') ~ '-' ~ entity_id) }}"
    data-entity-name="{{ buttonText|trans({}, translation_domain) }}"
    {% if tooltip %}
        data-bs-toggle="tooltip"
