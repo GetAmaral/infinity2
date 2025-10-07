@@ -240,7 +240,7 @@ class ProcessVideoHandler
             'ffmpeg -i %s ' .
             '-vf scale=%d:%d ' .
             '-c:v libx264 -preset medium -crf 23 -b:v %s -maxrate %s -bufsize %s ' .
-            '-c:a aac -b:a %s -ar 48000 -ac 2 -aac_coder twoloop ' .
+            '-c:a aac -b:a %s -ar 48000 -ac 2 -profile:a aac_low -af "aresample=async=1" ' .
             '-hls_time %d ' .
             '-hls_playlist_type vod ' .
             '-hls_segment_type mpegts ' .
@@ -281,10 +281,26 @@ class ProcessVideoHandler
         }
 
         $qualities = [
-            '360p' => ['bandwidth' => 800000, 'resolution' => '640x360'],
-            '480p' => ['bandwidth' => 1400000, 'resolution' => '854x480'],
-            '720p' => ['bandwidth' => 2800000, 'resolution' => '1280x720'],
-            '1080p' => ['bandwidth' => 5000000, 'resolution' => '1920x1080'],
+            '360p' => [
+                'bandwidth' => 800000,
+                'resolution' => '640x360',
+                'codecs' => 'avc1.64001e,mp4a.40.2' // H.264 Baseline + AAC-LC
+            ],
+            '480p' => [
+                'bandwidth' => 1400000,
+                'resolution' => '854x480',
+                'codecs' => 'avc1.64001f,mp4a.40.2' // H.264 Main + AAC-LC
+            ],
+            '720p' => [
+                'bandwidth' => 2800000,
+                'resolution' => '1280x720',
+                'codecs' => 'avc1.64001f,mp4a.40.2' // H.264 Main + AAC-LC
+            ],
+            '1080p' => [
+                'bandwidth' => 5000000,
+                'resolution' => '1920x1080',
+                'codecs' => 'avc1.640028,mp4a.40.2' // H.264 High + AAC-LC
+            ],
         ];
 
         $content = "#EXTM3U\n#EXT-X-VERSION:3\n";
@@ -299,9 +315,10 @@ class ProcessVideoHandler
 
             if (isset($qualities[$quality])) {
                 $content .= sprintf(
-                    "#EXT-X-STREAM-INF:BANDWIDTH=%d,RESOLUTION=%s\n%s\n",
+                    "#EXT-X-STREAM-INF:BANDWIDTH=%d,RESOLUTION=%s,CODECS=\"%s\"\n%s\n",
                     $qualities[$quality]['bandwidth'],
                     $qualities[$quality]['resolution'],
+                    $qualities[$quality]['codecs'],
                     $filename
                 );
             }
