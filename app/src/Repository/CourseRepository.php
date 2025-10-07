@@ -91,6 +91,21 @@ final class CourseRepository extends BaseRepository
     }
 
     /**
+     * Find course with modules and lectures eagerly loaded
+     */
+    public function findWithModulesAndLectures(string $id): ?Course
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.modules', 'm')
+            ->leftJoin('m.lectures', 'l')
+            ->addSelect('m', 'l')
+            ->where('c.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
      * Transform Course entity to array for API response
      */
     protected function entityToArray(object $entity): array

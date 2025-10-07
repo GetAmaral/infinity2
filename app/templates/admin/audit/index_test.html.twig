@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Audit Test{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Testing Variables</h1>
+
+    <h2>Stats</h2>
+    <pre>{{ dump(stats) }}</pre>
+
+    <h2>Action Breakdown</h2>
+    <pre>{{ dump(actionBreakdown) }}</pre>
+
+    <h2>Top Users</h2>
+    <pre>{{ dump(topUsers) }}</pre>
+</div>
+{% endblock %}

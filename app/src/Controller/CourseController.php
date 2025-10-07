@@ -485,7 +485,7 @@ final class CourseController extends BaseApiController
     #[Route('/{courseId}/lecture/{lectureId}/watch', name: 'course_lecture_watch', requirements: ['courseId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'lectureId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['GET'])]
     public function watchLecture(string $courseId, string $lectureId): Response
     {
-        $course = $this->repository->find($courseId);
+        $course = $this->repository->findWithModulesAndLectures($courseId);
         if (!$course) {
             throw $this->createNotFoundException('Course not found');
         }

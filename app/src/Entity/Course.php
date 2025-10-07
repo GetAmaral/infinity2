@@ -199,6 +199,21 @@ class Course extends EntityBase
     }
 
     /**
+     * Get all lectures from all modules, sorted by module order then lecture order
+     * @return array<CourseLecture>
+     */
+    public function getLectures(): array
+    {
+        $lectures = [];
+        foreach ($this->modules as $module) {
+            foreach ($module->getLectures() as $lecture) {
+                $lectures[] = $lecture;
+            }
+        }
+        return $lectures;
+    }
+
+    /**
      * @return Collection<int, StudentCourse>
      */
     public function getStudentCourses(): Collection

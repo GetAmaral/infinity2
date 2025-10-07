@@ -80,10 +80,24 @@
                                             <tr>
                                                 <td><strong>{{ field }}</strong></td>
                                                 <td>
-                                                    <code class="text-danger">{{ values[0]|default('audit.value.null'|trans({}, 'audit'))|slice(0, 100) }}</code>
+                                                    {% set oldValue = values[0]|default('audit.value.null'|trans({}, 'audit')) %}
+                                                    <code class="text-danger">
+                                                        {% if oldValue is iterable %}
+                                                            {{ oldValue|json_encode|slice(0, 100) }}
+                                                        {% else %}
+                                                            {{ oldValue|slice(0, 100) }}
+                                                        {% endif %}
+                                                    </code>
                                                 </td>
                                                 <td>
-                                                    <code class="text-success">{{ values[1]|default('audit.value.null'|trans({}, 'audit'))|slice(0, 100) }}</code>
+                                                    {% set newValue = values[1]|default('audit.value.null'|trans({}, 'audit')) %}
+                                                    <code class="text-success">
+                                                        {% if newValue is iterable %}
+                                                            {{ newValue|json_encode|slice(0, 100) }}
+                                                        {% else %}
+                                                            {{ newValue|slice(0, 100) }}
+                                                        {% endif %}
+                                                    </code>
                                                 </td>
                                             </tr>
                                             {% endfor %}

@@ -303,7 +303,10 @@ class AuditLogRepository extends ServiceEntityRepository
         foreach ($results as $row) {
             $user = $userRepository->find($row['user_id']);
             if ($user) {
-                $hydrated[] = [$user, 'action_count' => (int)$row['action_count']];
+                $hydrated[] = [
+                    'user' => $user,
+                    'action_count' => (int)$row['action_count']
+                ];
             }
         }
 
@@ -340,7 +343,7 @@ class AuditLogRepository extends ServiceEntityRepository
     public function getActionBreakdown(?\DateTimeInterface $since = null): array
     {
         $qb = $this->createQueryBuilder('a')
-            ->select('a.action', 'COUNT(a.id) as count')
+            ->select('a.action as action', 'COUNT(a.id) as count')
             ->groupBy('a.action')
             ->orderBy('count', 'DESC');
 
