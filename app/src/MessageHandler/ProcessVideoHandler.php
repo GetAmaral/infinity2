@@ -58,12 +58,24 @@ class ProcessVideoHandler
 
             $duration = $this->extractDuration($originalFile);
 
-            // Convert to HLS with multiple qualities
-            $lecture->setProcessingStep('Converting to HLS format...');
-            $lecture->setProcessingPercentage(20);
-            $this->entityManager->flush();
+            // Check if file is already .ts format
+            $fileExtension = strtolower(pathinfo($originalFile, PATHINFO_EXTENSION));
 
-            $this->convertToHLS($originalFile, $outputDir, $lecture);
+            if ($fileExtension === 'ts') {
+                // Skip conversion for .ts files - just copy and create playlist
+                $lecture->setProcessingStep('Using original .ts file (no conversion needed)...');
+                $lecture->setProcessingPercentage(50);
+                $this->entityManager->flush();
+
+                $this->copyTsFileDirectly($originalFile, $outputDir);
+            } else {
+                // Convert to HLS with multiple qualities for other formats
+                $lecture->setProcessingStep('Converting to HLS format...');
+                $lecture->setProcessingPercentage(20);
+                $this->entityManager->flush();
+
+                $this->convertToHLS($originalFile, $outputDir, $lecture);
+            }
 
             // Create master playlist
             $lecture->setProcessingStep('Creating master playlist...');
@@ -270,6 +282,51 @@ class ProcessVideoHandler
                 "FFmpeg conversion failed for {$quality}: " . implode("\n", $output)
             );
         }
+    }
+
+    private function copyTsFileDirectly(string $inputFile, string $outputDir): void
+    {
+        // Get video resolution to determine quality label
+        $resolution = $this->getVideoResolution($inputFile);
+        $height = $resolution['height'];
+
+        // Determine quality label based on height
+        $qualityLabel = match (true) {
+            $height >= 1080 => '1080p',
+            $height >= 720 => '720p',
+            $height >= 480 => '480p',
+            default => '360p'
+        };
+
+        // Copy the .ts file directly (no re-encoding!)
+        $outputTsFile = $outputDir . '/' . $qualityLabel . '_000.ts';
+        if (!copy($inputFile, $outputTsFile)) {
+            throw new \RuntimeException('Failed to copy .ts file to output directory');
+        }
+
+        // Get file duration for HLS playlist
+        $duration = $this->extractDuration($inputFile);
+
+        // Create HLS playlist for the single .ts file
+        $playlistPath = $outputDir . '/' . $qualityLabel . '.m3u8';
+        $playlistContent = "#EXTM3U\n";
+        $playlistContent .= "#EXT-X-VERSION:3\n";
+        $playlistContent .= "#EXT-X-TARGETDURATION:" . ceil($duration) . "\n";
+        $playlistContent .= "#EXT-X-MEDIA-SEQUENCE:0\n";
+        $playlistContent .= "#EXTINF:" . number_format($duration, 6) . ",\n";
+        $playlistContent .= basename($outputTsFile) . "\n";
+        $playlistContent .= "#EXT-X-ENDLIST\n";
+
+        if (file_put_contents($playlistPath, $playlistContent) === false) {
+            throw new \RuntimeException('Failed to create HLS playlist for .ts file');
+        }
+
+        $this->logger->info('Copied .ts file directly without re-encoding', [
+            'inputFile' => $inputFile,
+            'outputFile' => $outputTsFile,
+            'quality' => $qualityLabel,
+            'duration' => $duration
+        ]);
     }
 
     private function createMasterPlaylist(string $outputDir): void
