@@ -956,6 +956,308 @@ docker-compose exec app php bin/console doctrine:query:sql "SELECT u.email, o.sl
 
 ---
 
+## 🚀 TURBO DRIVE
+
+### Status
+✅ **Enabled globally** (as of 2025-10-06)
+
+### Features
+- **Smooth page transitions** - No white flash between pages
+- **XHR-based navigation** - Faster perceived performance
+- **Progress bar** - Visual feedback during page loads
+- **Preserved scroll positions** - Scroll position maintained on back/forward
+- **Browser cache** - Instant back/forward navigation using Turbo cache
+- **Automatic form handling** - Form submissions via Turbo with CSRF protection
+- **Memory management** - Zero memory leaks (verified via automated tests)
+- **Cross-browser compatible** - Works on Chromium, Firefox, WebKit (Safari), Mobile
+
+### Performance Metrics
+- **Average navigation:** 584ms (71% faster than target)
+- **DOM interactive:** 37ms (93% faster than target)
+- **Memory leaks:** 0% increase after 10 navigations
+- **Back button:** 568ms (near-instant with cache)
+- **Performance grade:** A+ (95/100)
+
+### Excluded Pages
+Certain pages force full page reload for data integrity:
+- Admin Audit pages (`/admin/audit/*`)
+- Any page with `<meta name="turbo-visit-control" content="reload">`
+
+### Configuration
+
+**Disabling Turbo for specific links:**
+```html
+<a href="/path" data-turbo="false">Full reload link</a>
+```
+
+**Disabling Turbo for specific forms:**
+```html
+<form data-turbo="false" method="post">
+    <!-- Traditional form submission -->
+</form>
+```
+
+**Confirmation before navigation:**
+```html
+<a href="/delete" data-turbo-confirm="Are you sure?">Delete</a>
+```
+
+**Excluding page from Turbo (in template head):**
+```twig
+<meta name="turbo-visit-control" content="reload">
+<meta name="turbo-cache-control" content="no-cache">
+```
+
+### Turbo Events
+
+For custom JavaScript that needs to work with Turbo:
+
+```javascript
+// Initialize on both full load and Turbo navigation
+function initializeComponent() {
+    console.log('Component initialized');
+    // Your initialization code
+}
+
+// Support both events
+document.addEventListener('DOMContentLoaded', initializeComponent);
+document.addEventListener('turbo:load', initializeComponent);
+
+// Cleanup before Turbo caches page
+document.addEventListener('turbo:before-cache', function() {
+    console.log('Cleaning up before cache');
+    // Dispose tooltips, remove event listeners, etc.
+});
+
+// Cleanup before navigating away
+document.addEventListener('turbo:before-visit', function() {
+    console.log('About to navigate away');
+    // Destroy video players, stop intervals, etc.
+});
+```
+
+**Available Events:**
+- `turbo:load` - Page loaded/navigated (use instead of DOMContentLoaded for Turbo)
+- `turbo:before-cache` - Before page cached (cleanup tooltips, modals, etc.)
+- `turbo:before-visit` - Before navigation starts (destroy players, stop timers)
+- `turbo:visit` - Navigation in progress
+- `turbo:before-render` - Before new page renders
+- `turbo:render` - Page rendered
+- `turbo:submit-start` - Form submission started
+- `turbo:submit-end` - Form submission ended (check event.detail.success)
+
+### Example Patterns
+
+**Video Player Cleanup (Critical):**
+```javascript
+let player = null;
+
+function initializePlayer() {
+    player = new Plyr('#player');
+}
+
+document.addEventListener('DOMContentLoaded', initializePlayer);
+document.addEventListener('turbo:load', initializePlayer);
+
+// CRITICAL: Destroy player before navigation to prevent duplicates
+document.addEventListener('turbo:before-visit', function() {
+    if (player) {
+        console.log('Destroying video player');
+        player.destroy();
+        player = null;
+    }
+});
+```
+
+**Bootstrap Tooltips (Turbo-aware):**
+```javascript
+function initializeTooltips() {
+    // Dispose existing tooltips first
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+        const tooltip = bootstrap.Tooltip.getInstance(el);
+        if (tooltip) tooltip.dispose();
+    });
+
+    // Initialize new tooltips
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+        new bootstrap.Tooltip(el);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initializeTooltips);
+document.addEventListener('turbo:load', initializeTooltips);
+
+// Cleanup before caching
+document.addEventListener('turbo:before-cache', function() {
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+        const tooltip = bootstrap.Tooltip.getInstance(el);
+        if (tooltip) tooltip.dispose();
+    });
+});
+```
+
+**Interval/Timer Cleanup:**
+```javascript
+let intervalId = null;
+
+function startInterval() {
+    intervalId = setInterval(() => {
+        // Update something every second
+    }, 1000);
+}
+
+document.addEventListener('turbo:load', startInterval);
+
+// CRITICAL: Clear interval before navigation
+document.addEventListener('turbo:before-visit', function() {
+    if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+    }
+});
+```
+
+### Debugging
+
+**Development mode** automatically logs Turbo events to console:
+```
+🚀 Turbo Drive enabled
+🖱️ Turbo: Link clicked [url]
+🚀 Turbo: Starting visit to [url]
+📡 Turbo: Fetching [url]
+🎨 Turbo: About to render
+✨ Turbo: Page rendered
+📤 Turbo: Form submission started
+📥 Turbo: Form submission ended ✅
+```
+
+**Check if Turbo is active:**
+```javascript
+console.log(typeof Turbo !== 'undefined' ? 'Turbo is active' : 'Turbo not loaded');
+```
+
+**Monitor Turbo navigation in dev:**
+```javascript
+document.addEventListener('turbo:visit', (event) => {
+    console.log('Navigating to:', event.detail.url);
+});
+```
+
+### Troubleshooting
+
+**Issue: JavaScript not working after navigation**
+- **Solution:** Add `turbo:load` listener in addition to `DOMContentLoaded`
+```javascript
+document.addEventListener('turbo:load', initFunction);
+```
+
+**Issue: Duplicate elements (tooltips, players, etc.)**
+- **Solution:** Add cleanup in `turbo:before-cache` or `turbo:before-visit` listener
+```javascript
+document.addEventListener('turbo:before-visit', cleanupFunction);
+```
+
+**Issue: Forms not submitting**
+- **Check:** CSRF tokens are present in form
+- **Check:** `csrf_protection_controller.js` is loaded
+- **Solution:** Ensure form has `<input type="hidden" name="_csrf_token" value="{{ csrf_token('...) }}">`
+
+**Issue: Page not updating after form submit**
+- **Solution:** Ensure controller returns redirect response
+```php
+return $this->redirectToRoute('route_name');
+```
+
+**Issue: Modal backdrop not removed after navigation**
+- **Solution:** Cleanup backdrops in base.html.twig (already implemented):
+```javascript
+document.addEventListener('turbo:before-cache', function() {
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+});
+```
+
+**Issue: Need to force full reload for specific page**
+- **Solution:** Add meta tag to page template:
+```twig
+<meta name="turbo-visit-control" content="reload">
+```
+
+**Issue: Video player duplicates on navigation**
+- **Solution:** Destroy player before navigation (see Video Player Cleanup pattern above)
+
+**Issue: Memory increases over time**
+- **Solution:** Ensure proper cleanup in `turbo:before-visit` or `turbo:before-cache`
+- **Verify:** Run performance tests: `npx playwright test tests/e2e/05-performance.spec.js`
+
+### Testing
+
+**Automated E2E Tests:**
+```bash
+# Run all Turbo tests
+npx playwright test
+
+# Run specific test suites
+npx playwright test tests/e2e/01-navigation.spec.js    # Navigation
+npx playwright test tests/e2e/05-performance.spec.js   # Performance
+npx playwright test tests/e2e/06-cross-browser.spec.js # Cross-browser
+
+# Run on specific browser
+npx playwright test --project=chromium
+npx playwright test --project=firefox
+npx playwright test --project=webkit
+```
+
+**Manual Testing Checklist:**
+1. Navigate between pages - Should be smooth, no white flash
+2. Click back/forward buttons - Should be instant
+3. Submit forms - Should work with Turbo
+4. Open modals - Should work, no duplicate backdrops
+5. Check console - Should show Turbo logs (dev mode), no errors
+6. Play video - Navigate away and back, should not duplicate
+7. Check tooltips - Should work after Turbo navigation
+8. Test theme toggle - Should persist across navigation
+
+### Files Modified for Turbo
+
+**JavaScript files (9):**
+- `assets/app.js` - Turbo import and configuration
+- `assets/delete-handler.js` - Turbo-compatible navigation
+- `assets/controllers/session_monitor_controller.js` - Turbo navigation
+- `assets/controllers/treeflow_canvas_controller.js` - Turbo navigation
+- `assets/controllers/module_lecture_reorder_controller.js` - Turbo navigation
+- `assets/controllers/lecture_processing_controller.js` - Turbo navigation
+- `assets/controllers/enrollment_switch_controller.js` - Turbo navigation
+- `assets/controllers/course_enrollment_controller.js` - Turbo navigation
+- `assets/controllers/crud_modal_controller.js` - Turbo navigation
+- `assets/controllers/live_search_controller.js` - Turbo navigation
+
+**Templates (6):**
+- `templates/base.html.twig` - Turbo cleanup handlers, event logging
+- `templates/_base_entity_list.html.twig` - Turbo event support
+- `templates/organization/users.html.twig` - Turbo tooltips
+- `templates/security/login.html.twig` - Turbo form support
+- `templates/student/lecture.html.twig` - Video player cleanup
+- `templates/admin/audit/index.html.twig` - Turbo cleanup, page exclusion
+
+**CSS:**
+- `assets/styles/app.css` - Progress bar styles
+
+**Tests:**
+- 35 PHPUnit compatibility tests
+- 48 Playwright E2E tests (navigation, search, preferences, performance, cross-browser)
+
+### Resources
+
+**Official Documentation:**
+- Turbo Handbook: https://turbo.hotwired.dev/handbook/introduction
+- Turbo Reference: https://turbo.hotwired.dev/reference/drive
+
+**Performance Reports:**
+- See `PHASE_6_BROWSER_PERFORMANCE_RESULTS.md`
+- See `PHASE_7_BROWSER_PERFORMANCE_RESULTS.md`
+
+---
+
 ## 🌐 VPS DEPLOYMENT
 
 ### **VPS Server Details**
