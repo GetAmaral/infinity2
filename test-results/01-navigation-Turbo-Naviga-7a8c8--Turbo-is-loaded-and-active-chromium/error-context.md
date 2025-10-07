@@ -1,0 +1,95 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - link "Luminai Logo Luminai" [ref=e4] [cursor=pointer]:
+      - /url: /
+      - img "Luminai Logo" [ref=e5]
+      - generic [ref=e6]: Luminai
+  - main [ref=e7]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - img "Luminai Logo" [ref=e13]
+        - heading "Welcome Back" [level=2] [ref=e14]
+        - paragraph [ref=e15]: Login to continue
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e18]:
+            - generic [ref=e19]: 
+            - text: Email Address
+          - textbox " Email Address" [active] [ref=e20]: admin@infinity.ai
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - generic [ref=e23]: 
+            - text: Password
+          - textbox " Password" [ref=e24]
+        - generic [ref=e25]:
+          - checkbox "Remember me" [ref=e26]
+          - generic [ref=e27]: Remember me
+        - button " Sign In" [ref=e28] [cursor=pointer]:
+          - generic [ref=e29]: 
+          - text: Sign In
+        - paragraph [ref=e31]:
+          - text: Don't have an account?
+          - link "Register now" [ref=e32] [cursor=pointer]:
+            - /url: /register
+  - generic [ref=e33]:
+    - generic [ref=e34]: by
+    - img "Avelum" [ref=e35]
+  - region "Symfony Web Debug Toolbar" [ref=e36]:
+    - generic [ref=e38]:
+      - link "200 @ app_login" [ref=e40] [cursor=pointer]:
+        - /url: https://localhost/_profiler/1bcdd1?panel=request
+        - generic [ref=e41]:
+          - generic [ref=e42]: "200"
+          - generic [ref=e43]: "@"
+          - generic [ref=e44]: app_login
+      - link [ref=e46] [cursor=pointer]:
+        - /url: https://localhost/_profiler/1bcdd1?panel=api_platform.data_collector.request
+        - img [ref=e48]
+      - link "23 ms" [ref=e73] [cursor=pointer]:
+        - /url: https://localhost/_profiler/1bcdd1?panel=time
+        - generic [ref=e74]:
+          - generic [ref=e75]: "23"
+          - generic [ref=e76]: ms
+      - link "4.0 MiB" [ref=e78] [cursor=pointer]:
+        - /url: https://localhost/_profiler/1bcdd1?panel=time
+        - generic [ref=e79]:
+          - generic [ref=e80]: "4.0"
+          - generic [ref=e81]: MiB
+      - link "Logger 6" [ref=e83] [cursor=pointer]:
+        - /url: https://localhost/_profiler/1bcdd1?panel=logger
+        - generic [ref=e84]:
+          - img "Logger" [ref=e85]
+          - generic [ref=e89]: "6"
+      - link "13" [ref=e91] [cursor=pointer]:
+        - /url: https://localhost/_profiler/1bcdd1?panel=translation
+        - generic [ref=e92]:
+          - img [ref=e93]
+          - generic [ref=e98]: "13"
+      - link "Security n/a" [ref=e100] [cursor=pointer]:
+        - /url: https://localhost/_profiler/1bcdd1?panel=security
+        - generic [ref=e101]:
+          - img "Security" [ref=e102]
+          - generic [ref=e106]: n/a
+      - link "Twig 3 ms" [ref=e108] [cursor=pointer]:
+        - /url: https://localhost/_profiler/1bcdd1?panel=twig
+        - generic [ref=e109]:
+          - img "Twig" [ref=e110]
+          - generic [ref=e114]: "3"
+          - generic [ref=e115]: ms
+      - link "1" [ref=e117] [cursor=pointer]:
+        - /url: https://localhost/_profiler/1bcdd1?panel=vich_uploader.mapping_collector
+        - generic [ref=e118]:
+          - img [ref=e119]
+          - generic [ref=e123]: "1"
+      - link "Symfony 7.3.4" [ref=e125] [cursor=pointer]:
+        - /url: https://localhost/_profiler/1bcdd1?panel=config
+        - generic [ref=e126]:
+          - img "Symfony" [ref=e128]
+          - generic [ref=e130]: 7.3.4
+      - button [expanded] [ref=e131] [cursor=pointer]:
+        - generic "Close Toolbar" [ref=e132]:
+          - img [ref=e133]
+```
