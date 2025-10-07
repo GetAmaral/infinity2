@@ -44,13 +44,20 @@ export default class extends Controller {
         if (Hls.isSupported() && this.videoUrlValue.endsWith('.m3u8')) {
             console.log('[HLS] HLS.js is supported, initializing...');
 
-            // Initialize HLS.js
+            // Initialize HLS.js with high-quality audio settings
             this.hls = new Hls({
                 maxBufferLength: 30,
                 maxMaxBufferLength: 60,
                 maxBufferSize: 60 * 1000 * 1000, // 60MB
                 maxBufferHole: 0.5,
-                debug: false
+                debug: false,
+                // Audio quality settings
+                enableWorker: true,
+                lowLatencyMode: false,
+                backBufferLength: 90,
+                // Ensure proper audio codec handling
+                audioCodec: undefined, // Let browser choose best
+                preferManagedMediaSource: false
             });
 
             // Track HLS.js lifecycle events
@@ -92,9 +99,57 @@ export default class extends Controller {
                 });
             });
 
-            this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            this.hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
                 console.log('[HLS] Manifest parsed, initializing Plyr');
+                console.log('[HLS] Audio tracks available:', data.audioTracks?.length || 0);
+                console.log('[HLS] Video levels:', data.levels.length);
+
+                // Force start with highest quality to ensure best audio
+                // HLS.js will adapt down if needed, but starts with best quality
+                if (data.levels && data.levels.length > 0) {
+                    const highestLevel = data.levels.length - 1;
+                    console.log('[HLS] Starting with highest quality level:', highestLevel);
+                    this.hls.currentLevel = highestLevel;
+
+                    // Log all available quality levels and their audio bitrates
+                    data.levels.forEach((level, index) => {
+                        console.log(`[HLS] Level ${index}: ${level.width}x${level.height}, bitrate: ${level.bitrate}`);
+                    });
+                }
+
                 this.initializePlyr();
+            });
+
+            // Monitor audio track changes
+            this.hls.on(Hls.Events.AUDIO_TRACK_SWITCHED, (event, data) => {
+                console.log('[HLS] Audio track switched to:', data.id);
+            });
+
+            // Log audio track loading
+            this.hls.on(Hls.Events.AUDIO_TRACK_LOADING, (event, data) => {
+                console.log('[HLS] Loading audio track:', data.id);
+            });
+
+            // Log audio track loaded
+            this.hls.on(Hls.Events.AUDIO_TRACK_LOADED, (event, data) => {
+                console.log('[HLS] Audio track loaded:', {
+                    id: data.id,
+                    fragments: data.details.fragments.length
+                });
+            });
+
+            // Monitor quality level switching (critical for debugging audio issues)
+            this.hls.on(Hls.Events.LEVEL_SWITCHING, (event, data) => {
+                console.log('[HLS] Switching to quality level:', data.level);
+            });
+
+            this.hls.on(Hls.Events.LEVEL_SWITCHED, (event, data) => {
+                const level = this.hls.levels[data.level];
+                console.log('[HLS] Quality level switched:', {
+                    level: data.level,
+                    resolution: `${level.width}x${level.height}`,
+                    bitrate: level.bitrate
+                });
             });
 
             this.hls.on(Hls.Events.ERROR, (event, data) => {
@@ -154,6 +209,10 @@ export default class extends Controller {
             error: videoElement.error
         });
 
+        // Ensure proper audio handling for Chrome
+        videoElement.volume = 1.0; // Full volume
+        videoElement.muted = false; // Ensure not muted
+
         // Initialize Plyr player
         this.player = new Plyr(videoElement, {
             controls: [
@@ -174,7 +233,9 @@ export default class extends Controller {
             tooltips: { controls: true, seek: true },
             hideControls: true,
             resetOnEnd: false,
-            blankVideo: '' // Disable external blank video to avoid CORS
+            blankVideo: '', // Disable external blank video to avoid CORS
+            volume: 1, // Ensure Plyr volume is at 100%
+            muted: false // Ensure Plyr is not muted
         });
 
         console.log('[Plyr] Player initialized successfully');
