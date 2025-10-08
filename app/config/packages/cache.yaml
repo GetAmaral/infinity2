@@ -28,24 +28,28 @@ when@prod:
     framework:
         cache:
             # Use Redis in production for better performance and clustering
+            # SECURITY: Redis now requires authentication (see REDIS_PASSWORD in .env)
             app: cache.adapter.redis
             system: cache.adapter.redis
-            default_redis_provider: redis://redis:6379/0
+            default_redis_provider: '%env(REDIS_URL)%'
 
             pools:
                 app.cache:
                     adapter: cache.adapter.redis
-                    provider: redis://redis:6379/1
+                    # Use database 1 for application cache
+                    provider: '%env(resolve:REDIS_URL)%/1'
                     default_lifetime: 3600
 
                 api.cache:
                     adapter: cache.adapter.redis
-                    provider: redis://redis:6379/2
+                    # Use database 2 for API cache
+                    provider: '%env(resolve:REDIS_URL)%/2'
                     default_lifetime: 300
 
                 app.long_term:
                     adapter: cache.adapter.redis
-                    provider: redis://redis:6379/3
+                    # Use database 3 for long-term cache
+                    provider: '%env(resolve:REDIS_URL)%/3'
                     default_lifetime: 86400
 
 when@test:
