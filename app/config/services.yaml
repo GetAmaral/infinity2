@@ -25,3 +25,60 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Generator Services - all need $projectDir parameter
+    App\Service\GeneratorOrchestrator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Entity\EntityGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\ApiPlatform\ApiPlatformGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Repository\RepositoryGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Controller\ControllerGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Voter\VoterGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Form\FormGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Template\TemplateGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Navigation\NavigationGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Translation\TranslationGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Test\EntityTestGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Test\RepositoryTestGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Test\ControllerTestGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Generator\Test\VoterTestGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
