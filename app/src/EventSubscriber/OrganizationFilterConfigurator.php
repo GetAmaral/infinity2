@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Entity\User;
 use App\Service\OrganizationContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -19,6 +21,7 @@ final class OrganizationFilterConfigurator implements EventSubscriberInterface
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly OrganizationContext $organizationContext,
+        private readonly Security $security,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -38,6 +41,7 @@ final class OrganizationFilterConfigurator implements EventSubscriberInterface
             return;
         }
 
+        $request = $event->getRequest();
         $filters = $this->entityManager->getFilters();
 
         // Enable the organization filter
@@ -46,7 +50,19 @@ final class OrganizationFilterConfigurator implements EventSubscriberInterface
             return;
         }
 
-        $organizationId = $this->organizationContext->getOrganizationId();
+        // Determine organization ID based on request type
+        $isApiRequest = str_starts_with($request->getPathInfo(), '/api/');
+
+        if ($isApiRequest) {
+            // For API requests: get organization from authenticated user
+            $user = $this->security->getUser();
+            $organizationId = ($user instanceof User && $user->getOrganization())
+                ? $user->getOrganization()->getId()->toRfc4122()
+                : null;
+        } else {
+            // For web requests: get organization from session
+            $organizationId = $this->organizationContext->getOrganizationId();
+        }
 
         if ($organizationId === null) {
             // No organization context - disable filter (root domain / admin access)
@@ -67,9 +83,11 @@ final class OrganizationFilterConfigurator implements EventSubscriberInterface
         // Always set/update the parameter
         $filter->setParameter('organization_id', $organizationId, 'string');
 
-        $this->logger->debug('Organization filter enabled', [
-            'organization_id' => $organizationId,
-            'organization_slug' => $this->organizationContext->getOrganizationSlug(),
-        ]);
+        $logContext = ['organization_id' => $organizationId];
+        if (!$isApiRequest) {
+            $logContext['organization_slug'] = $this->organizationContext->getOrganizationSlug();
+        }
+
+        $this->logger->debug('Organization filter enabled', $logContext);
     }
 }

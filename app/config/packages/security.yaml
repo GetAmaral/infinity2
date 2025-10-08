@@ -19,9 +19,9 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        # API firewall for token-based authentication
+        # API firewall for token-based authentication (excludes /api-tokens web route and session endpoints)
         api:
-            pattern: ^/api(?!/student/progress|/session)
+            pattern: ^/api/(?!student/progress|session)
             stateless: true
             custom_authenticators:
                 - App\Security\ApiTokenAuthenticator

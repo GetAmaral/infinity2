@@ -27,17 +27,31 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: TreeFlowRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
+    routePrefix: '/treeflows',
     normalizationContext: ['groups' => ['treeflow:read']],
     denormalizationContext: ['groups' => ['treeflow:write']],
     operations: [
         new Get(
+            uriTemplate: '/{id}',
             security: "is_granted('ROLE_USER')",
             normalizationContext: ['groups' => ['treeflow:read', 'step:read', 'question:read', 'fewshot:read']]
         ),
-        new GetCollection(security: "is_granted('ROLE_USER')"),
-        new Post(security: "is_granted('ROLE_ADMIN')"),
-        new Put(security: "is_granted('ROLE_ADMIN')"),
-        new Delete(security: "is_granted('ROLE_ADMIN')"),
+        new GetCollection(
+            uriTemplate: '',
+            security: "is_granted('ROLE_USER')"
+        ),
+        new Post(
+            uriTemplate: '',
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Put(
+            uriTemplate: '/{id}',
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Delete(
+            uriTemplate: '/{id}',
+            security: "is_granted('ROLE_ADMIN')"
+        ),
         // Admin endpoint with audit information
         new GetCollection(
             uriTemplate: '/admin/treeflows',
@@ -70,11 +84,11 @@ class TreeFlow extends EntityBase
     protected ?array $canvasViewState = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
-    #[Groups(['treeflow:read'])]
+    #[Groups(['treeflow:read', 'treeflow:json'])]
     protected ?array $jsonStructure = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
-    #[Groups(['treeflow:read'])]
+    #[Groups(['treeflow:read', 'treeflow:json'])]
     protected ?array $talkFlow = null;
 
     #[ORM\ManyToOne(targetEntity: Organization::class)]
@@ -109,6 +123,12 @@ class TreeFlow extends EntityBase
         if (!empty($meaningfulChanges)) {
             $this->version++;
         }
+    }
+
+    #[Groups(['treeflow:json'])]
+    public function getId(): \Symfony\Component\Uid\Uuid
+    {
+        return $this->id;
     }
 
     public function getName(): string

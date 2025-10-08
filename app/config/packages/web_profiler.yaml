@@ -5,6 +5,7 @@ when@dev:
 
     framework:
         profiler:
+            only_main_requests: true
             collect_serializer_data: true
         router:
             default_uri: 'https://localhost'
