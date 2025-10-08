@@ -334,8 +334,6 @@ class TreeFlow extends EntityBase
 
         return [
             $this->slug => [
-                'objective' => null, // TreeFlow doesn't have objective field
-                'prompt' => null,    // TreeFlow doesn't have prompt field
                 'steps' => $steps,
             ]
         ];
@@ -385,8 +383,13 @@ class TreeFlow extends EntityBase
             $order++;
         }
 
+        // Get first step slug for currentStep initialization
+        $firstStep = $this->getFirstStep();
+        $currentStepSlug = $firstStep ? $firstStep->getSlug() : null;
+
         return [
             $this->slug => [
+                'currentStep' => $currentStepSlug,
                 'steps' => $steps,
             ]
         ];
