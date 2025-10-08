@@ -42,6 +42,8 @@ class DeleteHandler {
             const deleteButton = e.target.closest('[data-delete-url]');
             if (deleteButton && !deleteButton.classList.contains('delete-confirm-btn')) {
                 e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
                 this.handleDelete(deleteButton);
                 return;
             }

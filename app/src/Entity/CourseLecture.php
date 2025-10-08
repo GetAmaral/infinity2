@@ -87,7 +87,7 @@ class CourseLecture extends EntityBase
     #[Groups(['course_lecture:read'])]
     protected CourseModule $courseModule;
 
-    #[ORM\OneToMany(mappedBy: 'courseLecture', targetEntity: StudentLecture::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'lecture', targetEntity: StudentLecture::class, cascade: ['persist', 'remove'])]
     protected Collection $studentLectures;
 
     #[ORM\OneToMany(mappedBy: 'currentLecture', targetEntity: StudentCourse::class)]

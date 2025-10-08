@@ -75,7 +75,7 @@ class StudentCourse extends EntityBase
     protected Course $course;
 
     #[ORM\ManyToOne(targetEntity: CourseLecture::class, inversedBy: 'studentCoursesOnThisLecture')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     #[Groups(['student_course:read'])]
     protected ?CourseLecture $currentLecture = null;
 

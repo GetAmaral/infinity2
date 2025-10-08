@@ -138,8 +138,18 @@ final class CourseModuleController extends AbstractController
             $this->entityManager->remove($module);
             $this->entityManager->flush();
 
+            // Return JSON for AJAX requests
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['success' => true, 'message' => 'Module deleted successfully']);
+            }
+
             $this->addFlash('success', 'course.module.flash.deleted_successfully');
         } else {
+            // Return JSON error for AJAX requests
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['success' => false, 'message' => 'Invalid CSRF token'], 400);
+            }
+
             $this->addFlash('error', 'common.error.invalid_csrf');
         }
 

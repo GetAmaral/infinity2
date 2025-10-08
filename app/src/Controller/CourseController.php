@@ -183,6 +183,11 @@ final class CourseController extends BaseApiController
             $this->entityManager->remove($course);
             $this->entityManager->flush();
 
+            // Return JSON for AJAX requests
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['success' => true, 'message' => 'Course deleted successfully']);
+            }
+
             $this->addFlash('success', 'course.flash.deleted_successfully');
 
             // Return Turbo Stream response for seamless UX
@@ -193,6 +198,11 @@ final class CourseController extends BaseApiController
                 ]);
             }
         } else {
+            // Return JSON error for AJAX requests
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['success' => false, 'message' => 'Invalid CSRF token'], 400);
+            }
+
             $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
@@ -269,6 +279,9 @@ final class CourseController extends BaseApiController
             throw $this->createNotFoundException('Lecture not found');
         }
 
+        // Store old video filename before form handling (for cleanup if replaced)
+        $oldVideoFileName = $lecture->getVideoFileName();
+
         $form = $this->createForm(CourseLectureFormType::class, $lecture, [
             'is_edit' => true
         ]);
@@ -277,6 +290,27 @@ final class CourseController extends BaseApiController
         if ($form->isSubmitted() && $form->isValid()) {
             // Check if a new video file was uploaded
             $hasNewVideo = $lecture->getVideoFile() !== null;
+
+            // If new video uploaded, delete old video files completely
+            if ($hasNewVideo && $oldVideoFileName && $oldVideoFileName !== $lecture->getVideoFileName()) {
+                // Delete old original video file
+                $oldOriginalPath = $this->videosOriginalsPath . '/' . $oldVideoFileName;
+                if (file_exists($oldOriginalPath)) {
+                    unlink($oldOriginalPath);
+                }
+
+                // Delete old HLS processed files directory
+                $oldHlsDir = $this->videosHlsPath . '/' . $lecture->getId()->toString();
+                if (is_dir($oldHlsDir)) {
+                    $this->deleteDirectory($oldHlsDir);
+                }
+
+                // Reset processing status for new video
+                $lecture->setProcessingStatus('pending');
+                $lecture->setProcessingPercentage(0);
+                $lecture->setProcessingStep(null);
+                $lecture->setLengthSeconds(0);
+            }
 
             $this->entityManager->flush();
 
@@ -323,8 +357,18 @@ final class CourseController extends BaseApiController
             $this->entityManager->remove($lecture);
             $this->entityManager->flush();
 
+            // Return JSON for AJAX requests
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['success' => true, 'message' => 'Lecture deleted successfully']);
+            }
+
             $this->addFlash('success', 'course.lecture.flash.deleted_successfully');
         } else {
+            // Return JSON error for AJAX requests
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['success' => false, 'message' => 'Invalid CSRF token'], 400);
+            }
+
             $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
@@ -749,5 +793,28 @@ final class CourseController extends BaseApiController
             'createdAtFormatted' => $entity->getCreatedAt()->format('M d, Y'),
             'deleteCsrfToken' => $this->csrfTokenManager->getToken('delete-course-' . $courseId)->getValue(),
         ];
+    }
+
+    /**
+     * Recursively delete a directory and all its contents
+     */
+    private function deleteDirectory(string $dir): bool
+    {
+        if (!is_dir($dir)) {
+            return false;
+        }
+
+        $files = array_diff(scandir($dir), ['.', '..']);
+
+        foreach ($files as $file) {
+            $path = $dir . '/' . $file;
+            if (is_dir($path)) {
+                $this->deleteDirectory($path);
+            } else {
+                unlink($path);
+            }
+        }
+
+        return rmdir($dir);
     }
 }
