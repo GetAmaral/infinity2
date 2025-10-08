@@ -695,10 +695,13 @@ Course,owner,Owner,,true,,,,false,,ManyToOne,User,ownedCourses,,,false,LAZY,,,,E
 Course,lectures,Lectures,,true,,,,false,,OneToMany,Lecture,course,,,false,LAZY,,,,EntityType,{},false,false,,true,true,true,true,false,false,true,true,"course:read,course:write",,,,{}
 Course,lengthMinutes,LengthMinutes,float,true,,,,false,,,,,,,false,LAZY,,,,NumberType,{},false,false,,true,true,true,true,false,false,true,true,"course:read,course:write",,,randomFloat,{}
 Course,userCourses,UserCourses,,true,,,,false,,OneToMany,UserCourse,course,,,false,LAZY,,,,EntityType,{},false,false,,true,true,true,true,false,false,true,true,"course:read,course:write",,,,{}
-CourseModule,name,Name,string,false,,,,false,,,,,,,false,LAZY,,"NotBlank,Length(max=255)",,TextType,{},true,false,,true,true,true,true,true,false,true,true,"module:read,module:write",,,word,{}
-CourseModule,description,Description,string,true,,,,false,,,,,,,false,LAZY,,Length(max=255),,TextType,{},false,false,,true,true,true,true,true,false,true,true,"module:read,module:write",,,word,{}
-CourseModule,enabled,Enabled,boolean,true,,,,false,,,,,,,false,LAZY,,,,TextType,{},false,false,,true,true,true,true,false,false,true,true,"module:read,module:write",,,word,{}
-CourseModule,version,Version,string,true,,,,false,,,,,,,false,LAZY,,Length(max=255),,TextType,{},false,false,,true,true,true,true,true,false,true,true,"module:read,module:write",,,word,{}
+CourseModule,name,Name,string,false,255,,,false,,,,,,,false,LAZY,,NotBlank,,TextType,{},true,false,,true,true,true,true,true,false,true,true,"coursemodule:read,coursemodule:write",,,word,{}
+CourseModule,description,Description,string,true,,,,false,,,,,,,false,LAZY,,,,TextType,{},false,false,,true,true,true,true,true,false,true,true,"coursemodule:read,coursemodule:write",,,word,{}
+CourseModule,active,Active,boolean,false,,,,false,,,,,,,false,LAZY,,NotBlank,,CheckboxType,{},true,false,,true,true,true,true,false,false,true,true,"coursemodule:read,coursemodule:write",,,boolean,{}
+CourseModule,viewOrder,ViewOrder,integer,true,,,,false,,,,,,,false,LAZY,,,,IntegerType,{},false,false,,true,true,true,true,false,false,true,true,"coursemodule:read,coursemodule:write",,,randomNumber,{}
+CourseModule,totalLengthSeconds,TotalLengthSeconds,integer,false,,,,false,,,,,,,false,LAZY,,NotBlank,,IntegerType,{},true,false,,true,true,true,true,false,false,true,true,"coursemodule:read,coursemodule:write",,,randomNumber,{}
+CourseModule,course,Course,,true,,,,false,,ManyToOne,Course,modules,,,false,LAZY,,,,EntityType,{},false,false,,false,true,true,false,false,true,true,true,"coursemodule:read,coursemodule:write",,,,{}
+CourseModule,lectures,Lectures,,true,,,,false,,OneToMany,CourseLecture,,courseModule,,false,LAZY,,,,EntityType,{},false,false,,false,true,true,false,false,true,true,true,"coursemodule:read,coursemodule:write",,,,{}
 CourseLecture,name,Name,string,false,,,,false,,,,,,,false,LAZY,,"NotBlank,Length(max=255)",,TextType,{},true,false,,true,true,true,true,true,false,true,true,"lecture:read,lecture:write",,,word,{}
 CourseLecture,organization,Organization,,true,,,,false,,ManyToOne,Organization,lectures,,,false,LAZY,,,,EntityType,{},false,false,,true,true,false,true,false,false,true,true,"lecture:read,lecture:write",,,,{}
 CourseLecture,course,Course,,true,,,,false,,ManyToOne,Course,lectures,,,false,LAZY,,,,EntityType,{},false,false,,true,true,true,true,false,false,true,true,"lecture:read,lecture:write",,,,{}
@@ -720,3 +723,8 @@ StudentLecture,lastDate,LastDate,date,true,,,,false,,,,,,,false,LAZY,,,,DateType
 StudentLecture,progress,Progress,float,true,,,,false,,,,,,,false,LAZY,,,,NumberType,{},false,false,,true,true,true,true,false,false,true,true,"userlecture:read,userlecture:write",,,randomFloat,{}
 StudentLecture,concluded,Concluded,boolean,true,,,,false,,,,,,,false,LAZY,,,,TextType,{},false,false,,true,true,true,true,false,false,true,true,"userlecture:read,userlecture:write",,,word,{}
 StudentLecture,observation,Observation,text,true,,,,false,,,,,,,false,LAZY,,,,TextareaType,{},false,false,,true,true,true,true,true,false,true,true,"userlecture:read,userlecture:write",,,paragraph,{}
+Module,name,Name,string,false,,,,false,,,,,,,false,LAZY,,"NotBlank,Length(max=255)",,TextType,{},true,false,,true,true,true,true,true,false,true,true,"module:read,module:write",,,word,{}
+Module,description,Description,string,true,,,,false,,,,,,,false,LAZY,,Length(max=255),,TextType,{},false,false,,true,true,true,true,true,false,true,true,"module:read,module:write",,,word,{}
+Module,enabled,Enabled,boolean,true,,,,false,,,,,,,false,LAZY,,,,TextType,{},false,false,,true,true,true,true,false,false,true,true,"module:read,module:write",,,word,{}
+Module,version,Version,string,true,,,,false,,,,,,,false,LAZY,,Length(max=255),,TextType,{},false,false,,true,true,true,true,true,false,true,true,"module:read,module:write",,,word,{}
+Module,name,Name,string,false,,,,false,,,,,,,false,LAZY,,"NotBlank,Length(max=255)",,TextType,{},true,false,,true,true,true,true,true,false,true,true,"module:read,module:write",,,word,{}
