@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Entity\Generated\{{ entity.entityName }}Generated;
+use App\Repository\{{ entity.entityName }}Repository;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * {{ entity.entityLabel }} Entity
+ *
+ * {{ entity.description }}
+ *
+ * This class extends the generated base and is SAFE TO EDIT.
+ * Add custom business logic, methods, and overrides here.
+ *
+ * @generated once by Luminai Code Generator
+ */
+#[ORM\Entity(repositoryClass: {{ entity.entityName }}Repository::class)]
+#[ORM\Table(name: '{{ entity.getSnakeCaseName() }}')]
+class {{ className }} extends {{ extendsClass }}
+{
+    // Add custom properties here
+
+    // Add custom methods here
+}

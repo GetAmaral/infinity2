@@ -268,6 +268,20 @@ class CsvParserService
         $property['cascade'] = $this->parseCsvList($property['cascade'] ?? '');
         $property['apiGroups'] = $this->parseCsvList($property['apiGroups'] ?? '');
 
+        // Convert empty strings to null for optional fields
+        $property['relationshipType'] = !empty($property['relationshipType']) ? $property['relationshipType'] : null;
+        $property['targetEntity'] = !empty($property['targetEntity']) ? $property['targetEntity'] : null;
+        $property['inversedBy'] = !empty($property['inversedBy']) ? $property['inversedBy'] : null;
+        $property['mappedBy'] = !empty($property['mappedBy']) ? $property['mappedBy'] : null;
+        $property['fetch'] = !empty($property['fetch']) ? $property['fetch'] : null;
+        $property['defaultValue'] = !empty($property['defaultValue']) ? $property['defaultValue'] : null;
+        $property['validationMessage'] = !empty($property['validationMessage']) ? $property['validationMessage'] : null;
+        $property['formType'] = !empty($property['formType']) ? $property['formType'] : null;
+        $property['formHelp'] = !empty($property['formHelp']) ? $property['formHelp'] : null;
+        $property['translationKey'] = !empty($property['translationKey']) ? $property['translationKey'] : null;
+        $property['formatPattern'] = !empty($property['formatPattern']) ? $property['formatPattern'] : null;
+        $property['fixtureType'] = !empty($property['fixtureType']) ? $property['fixtureType'] : null;
+
         return $property;
     }
 

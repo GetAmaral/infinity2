@@ -1,0 +1,42 @@
+# API Platform Configuration for {{ entity.entityName }}
+# This file is ALWAYS regenerated from CSV. DO NOT edit manually.
+# @see /config/EntityNew.csv for configuration
+
+resources:
+  App\Entity\{{ entity.entityName }}:
+    shortName: {{ entity.entityName }}
+    description: {{ entity.description }}
+
+{% if entity.normalizationContext %}
+{% set normGroups = entity.normalizationContext|default('')|split(',')|filter(g => g|trim|length > 0)|map(g => g|trim) %}
+{% if normGroups|length > 0 %}
+    normalizationContext:
+      groups: {{ normGroups|json_encode|raw }}
+{% endif %}
+{% endif %}
+
+{% if entity.denormalizationContext %}
+{% set denormGroups = entity.denormalizationContext|default('')|split(',')|filter(g => g|trim|length > 0)|map(g => g|trim) %}
+{% if denormGroups|length > 0 %}
+    denormalizationContext:
+      groups: {{ denormGroups|json_encode|raw }}
+{% endif %}
+{% endif %}
+
+{% if entity.paginationEnabled %}
+    paginationEnabled: true
+    paginationItemsPerPage: {{ entity.itemsPerPage }}
+{% endif %}
+
+{% if entity.order|length > 0 %}
+    order:
+{% for field, direction in entity.order %}
+      {{ field }}: {{ direction|upper }}
+{% endfor %}
+{% endif %}
+
+    operations:
+{% for operation in entity.operations %}
+      {{ operation }}:
+        security: "{{ entity.security }}"
+{% endfor %}
