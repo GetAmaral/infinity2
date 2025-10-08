@@ -1,0 +1,61 @@
+{% verbatim %}{% extends 'base.html.twig' %}
+
+{% block title %}{{ '{% endverbatim %}{{ entity.entityLabel }}{% verbatim %}'|trans }} - {{ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %} }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>
+                            <i class="{% endverbatim %}{{ entity.icon }}{% verbatim %} me-2"></i>
+                            {{ '{% endverbatim %}{{ entity.entityLabel }}{% verbatim %}'|trans }} Details
+                        </h2>
+                        <div class="btn-group">
+                            <a href="{{ path('{% endverbatim %}{{ entity.getSnakeCaseName() }}{% verbatim %}_edit', {id: {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id}) }}"
+                               class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i>
+                                {{ 'action.edit'|trans }}
+                            </a>
+                            <a href="{{ path('{% endverbatim %}{{ entity.getSnakeCaseName() }}{% verbatim %}_index') }}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                {{ 'action.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+{% endverbatim %}{% for property in entity.properties %}{% if property.showInDetail and not property.isRelationship() %}{% verbatim %}
+                        <dt class="col-sm-3">{{ '{% endverbatim %}{{ property.propertyLabel }}{% verbatim %}'|trans }}</dt>
+                        <dd class="col-sm-9">{{ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.{% endverbatim %}{{ property.propertyName }}{% verbatim %} }}</dd>
+{% endverbatim %}{% elseif property.showInDetail and property.isRelationship() and not property.isCollection() %}{% verbatim %}
+                        <dt class="col-sm-3">{{ '{% endverbatim %}{{ property.propertyLabel }}{% verbatim %}'|trans }}</dt>
+                        <dd class="col-sm-9">{{ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.{% endverbatim %}{{ property.propertyName }}{% verbatim %} }}</dd>
+{% endverbatim %}{% endif %}{% endfor %}{% verbatim %}
+                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.createdAt|date('Y-m-d H:i:s') }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.updatedAt|date('Y-m-d H:i:s') }}</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <form method="post"
+                          action="{{ path('{% endverbatim %}{{ entity.getSnakeCaseName() }}{% verbatim %}_delete', {id: {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id}) }}"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            {{ 'action.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}{% endverbatim %}

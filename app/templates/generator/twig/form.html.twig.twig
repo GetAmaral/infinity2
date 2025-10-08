@@ -1,0 +1,61 @@
+{% verbatim %}{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id %}
+        {{ 'action.edit'|trans }} {{ '{% endverbatim %}{{ entity.entityLabel }}{% verbatim %}'|trans }}
+    {% else %}
+        {{ 'action.create'|trans }} {{ '{% endverbatim %}{{ entity.entityLabel }}{% verbatim %}'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        {% if {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id %}
+                            <i class="bi bi-pencil me-2"></i>
+                            {{ 'action.edit'|trans }} {{ '{% endverbatim %}{{ entity.entityLabel }}{% verbatim %}'|trans }}
+                        {% else %}
+                            <i class="bi bi-plus-circle me-2"></i>
+                            {{ 'action.create'|trans }} {{ '{% endverbatim %}{{ entity.entityLabel }}{% verbatim %}'|trans }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
+
+                    {{ form_errors(form) }}
+
+{% endverbatim %}{% for property in entity.properties %}{% if property.showInForm and not property.isRelationship() %}{% verbatim %}
+                    <div class="mb-3">
+                        {{ form_label(form.{% endverbatim %}{{ property.propertyName }}{% verbatim %}) }}
+                        {{ form_widget(form.{% endverbatim %}{{ property.propertyName }}{% verbatim %}) }}
+                        {{ form_errors(form.{% endverbatim %}{{ property.propertyName }}{% verbatim %}) }}
+{% endverbatim %}{% if property.formHelp %}{% verbatim %}
+                        <small class="form-text text-muted">{{ '{% endverbatim %}{{ property.formHelp }}{% verbatim %}'|trans }}</small>
+{% endverbatim %}{% endif %}{% verbatim %}
+                    </div>
+{% endverbatim %}{% endif %}{% endfor %}{% verbatim %}
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('{% endverbatim %}{{ entity.getSnakeCaseName() }}{% verbatim %}_index') }}"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            {{ 'action.back'|trans }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ 'action.save'|trans }}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}{% endverbatim %}

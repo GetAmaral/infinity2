@@ -1,0 +1,42 @@
+{% verbatim %}<turbo-stream action="replace" target="{% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}-{{ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id }}">
+    <template>
+        <tr id="{% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}-{{ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id }}">
+{% endverbatim %}{% for property in entity.properties %}{% if property.showInList %}{% if property.isRelationship() and not property.isCollection() %}{% verbatim %}
+            <td>{{ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.{% endverbatim %}{{ property.propertyName }}{% verbatim %} }}</td>
+{% endverbatim %}{% elseif not property.isRelationship() %}{% verbatim %}
+            <td>{{ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.{% endverbatim %}{{ property.propertyName }}{% verbatim %} }}</td>
+{% endverbatim %}{% endif %}{% endif %}{% endfor %}{% verbatim %}
+            <td>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('{% endverbatim %}{{ entity.getSnakeCaseName() }}{% verbatim %}_show', {id: {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id}) }}"
+                       class="btn btn-sm btn-info">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('{% endverbatim %}{{ entity.getSnakeCaseName() }}{% verbatim %}_edit', {id: {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id}) }}"
+                       class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post"
+                          action="{{ path('{% endverbatim %}{{ entity.getSnakeCaseName() }}{% verbatim %}_delete', {id: {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id}) }}"
+                          style="display: inline;"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ {% endverbatim %}{{ entity.getLowercaseName() }}{% verbatim %}.id) }}">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="flash-messages">
+    <template>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ '{% endverbatim %}{{ entity.entityLabel }}{% verbatim %}'|trans }} updated successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </template>
+</turbo-stream>{% endverbatim %}
