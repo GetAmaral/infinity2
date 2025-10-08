@@ -82,7 +82,7 @@ final class TreeFlowRepository extends BaseRepository
     }
 
     /**
-     * Find active TreeFlows for an organization
+     * Find active TreeFlows for an organization (with result cache)
      */
     public function findActiveByOrganization(Organization $organization): array
     {
@@ -93,11 +93,13 @@ final class TreeFlowRepository extends BaseRepository
             ->setParameter('active', true)
             ->orderBy('t.name', 'ASC')
             ->getQuery()
+            ->useQueryCache(true)
+            ->useResultCache(true, 3600, 'treeflow_active_' . $organization->getId())
             ->getResult();
     }
 
     /**
-     * Find a TreeFlow by name and organization
+     * Find a TreeFlow by name and organization (with result cache)
      */
     public function findOneByNameAndOrganization(string $name, Organization $organization): ?TreeFlow
     {
@@ -107,6 +109,22 @@ final class TreeFlowRepository extends BaseRepository
             ->setParameter('name', $name)
             ->setParameter('organization', $organization)
             ->getQuery()
+            ->useQueryCache(true)
+            ->useResultCache(true, 3600, 'treeflow_name_' . md5($name . $organization->getId()))
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Find TreeFlow by ID with JSON structure (optimized for API)
+     */
+    public function findOneByIdWithCache(string $id): ?TreeFlow
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->useQueryCache(true)
+            ->useResultCache(true, 3600, 'treeflow_json_' . $id)
             ->getOneOrNullResult();
     }
 }

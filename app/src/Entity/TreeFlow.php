@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Cache;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -26,6 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 #[ORM\Entity(repositoryClass: TreeFlowRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[Cache(usage: 'NONSTRICT_READ_WRITE', region: 'treeflow_region')]
 #[ApiResource(
     routePrefix: '/treeflows',
     normalizationContext: ['groups' => ['treeflow:read']],

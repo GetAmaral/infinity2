@@ -53,6 +53,19 @@ when@prod:
             result_cache_driver:
                 type: pool
                 pool: doctrine.result_cache_pool
+            # Enable second-level cache for entity caching
+            second_level_cache:
+                enabled: true
+                log_enabled: false
+                region_cache_driver:
+                    type: pool
+                    pool: doctrine.second_level_cache_pool
+                regions:
+                    treeflow_region:
+                        lifetime: 3600
+                        cache_driver:
+                            type: pool
+                            pool: doctrine.second_level_cache_pool
 
     framework:
         cache:
@@ -61,3 +74,7 @@ when@prod:
                     adapter: cache.app
                 doctrine.system_cache_pool:
                     adapter: cache.system
+                doctrine.second_level_cache_pool:
+                    adapter: cache.adapter.redis
+                    provider: '%env(resolve:REDIS_URL)%/4'
+                    default_lifetime: 3600

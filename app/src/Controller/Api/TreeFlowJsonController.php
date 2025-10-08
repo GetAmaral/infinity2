@@ -23,7 +23,8 @@ class TreeFlowJsonController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function getJson(string $id): JsonResponse
     {
-        $treeFlow = $this->treeFlowRepository->find($id);
+        // Use cached repository method for better performance
+        $treeFlow = $this->treeFlowRepository->findOneByIdWithCache($id);
 
         if (!$treeFlow) {
             return new JsonResponse(
