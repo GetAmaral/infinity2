@@ -93,8 +93,7 @@ final class TreeFlowRepository extends BaseRepository
             ->setParameter('active', true)
             ->orderBy('t.name', 'ASC')
             ->getQuery()
-            ->useQueryCache(true)
-            ->useResultCache(true, 3600, 'treeflow_active_' . $organization->getId())
+            ->enableResultCache(3600, 'treeflow_active_' . $organization->getId())
             ->getResult();
     }
 
@@ -109,8 +108,7 @@ final class TreeFlowRepository extends BaseRepository
             ->setParameter('name', $name)
             ->setParameter('organization', $organization)
             ->getQuery()
-            ->useQueryCache(true)
-            ->useResultCache(true, 3600, 'treeflow_name_' . md5($name . $organization->getId()))
+            ->enableResultCache(3600, 'treeflow_name_' . md5($name . $organization->getId()))
             ->getOneOrNullResult();
     }
 
@@ -123,8 +121,7 @@ final class TreeFlowRepository extends BaseRepository
             ->where('t.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->useQueryCache(true)
-            ->useResultCache(true, 3600, 'treeflow_json_' . $id)
+            ->enableResultCache(3600, 'treeflow_json_' . $id)
             ->getOneOrNullResult();
     }
 }
