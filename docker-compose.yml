@@ -9,8 +9,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d:ro
-    # SECURITY: Port removed - database only accessible within Docker network
-    # External access must go through application container
+    ports:
+      # SECURITY: Bind to localhost only (127.0.0.1) for local development
+      # This allows DBeaver access from host machine but NOT from network/internet
+      # On VPS: Comment out or remove this ports section for production
+      - "127.0.0.1:5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
