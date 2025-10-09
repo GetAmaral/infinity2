@@ -9,7 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Test fixtures for generator testing
+ * Test fixtures for Generator testing
  *
  * Creates organizations and sample data for testing generated entities
  */
@@ -21,7 +21,7 @@ class GeneratorTestFixtures extends Fixture
         $org1 = new Organization();
         $org1->setName('Test Organization 1');
         $org1->setSlug('test-org-1');
-        $org1->setDescription('Test organization for generator testing');
+        $org1->setDescription('Test organization for Generator testing');
         $manager->persist($org1);
 
         $org2 = new Organization();

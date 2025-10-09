@@ -70,10 +70,10 @@ php scripts/performance-test.php
 - [ ] **Backup current database**
 ```bash
 # PostgreSQL
-pg_dump -U infinity_user infinity_db > backup_$(date +%Y%m%d_%H%M%S).sql
+pg_dump -U luminai_user luminai_db > backup_$(date +%Y%m%d_%H%M%S).sql
 
 # Or via Docker
-docker-compose exec -T database pg_dump -U infinity_user infinity_db > backup.sql
+docker-compose exec -T database pg_dump -U luminai_user luminai_db > backup.sql
 ```
 
 - [ ] **Migrations are ready**
@@ -139,7 +139,7 @@ df -h
 
 ```bash
 # On production server
-cd /var/www/infinity
+cd /var/www/luminai
 
 # Backup current code
 tar -czf backup_code_$(date +%Y%m%d_%H%M%S).tar.gz .
@@ -159,10 +159,10 @@ git log -1
 ```bash
 # From local machine
 rsync -avz --exclude='var/' --exclude='vendor/' \
-    ./ user@production:/var/www/infinity/
+    ./ user@production:/var/www/luminai/
 
 # On production server
-cd /var/www/infinity
+cd /var/www/luminai
 ```
 
 ### Step 2: Install Dependencies
@@ -357,7 +357,7 @@ php bin/console cache:clear --env=prod
 php bin/console doctrine:migrations:migrate prev --no-interaction
 
 # Or restore from backup
-psql -U infinity_user infinity_db < backup_TIMESTAMP.sql
+psql -U luminai_user luminai_db < backup_TIMESTAMP.sql
 ```
 
 **Step 3: Restore Generated Files**
@@ -399,15 +399,15 @@ docker-compose down
 **2. Restore Full Backup**
 ```bash
 # Code
-tar -xzf backup_code_TIMESTAMP.tar.gz -C /var/www/infinity/
+tar -xzf backup_code_TIMESTAMP.tar.gz -C /var/www/luminai/
 
 # Database
-psql -U infinity_user infinity_db < backup_TIMESTAMP.sql
+psql -U luminai_user luminai_db < backup_TIMESTAMP.sql
 ```
 
 **3. Verify Restoration**
 ```bash
-cd /var/www/infinity
+cd /var/www/luminai
 git status
 php bin/console doctrine:schema:validate
 ```
@@ -467,7 +467,7 @@ php scripts/performance-test.php
 ```yaml
 # prometheus.yml
 scrape_configs:
-  - job_name: 'infinity'
+  - job_name: 'luminai'
     scrape_interval: 30s
     metrics_path: '/health/metrics'
     static_configs:
@@ -572,7 +572,7 @@ on:
     paths:
       - 'config/Entity*.csv'
       - 'src/Service/Generator/**'
-      - 'templates/generator/**'
+      - 'templates/Generator/**'
 
 jobs:
   test:
@@ -623,7 +623,7 @@ jobs:
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
           script: |
-            cd /var/www/infinity
+            cd /var/www/luminai
             git pull origin main
             composer install --no-dev --optimize-autoloader
             php bin/console doctrine:migrations:migrate --no-interaction
@@ -657,7 +657,7 @@ echo "🚀 Starting production deployment..."
 # Configuration
 PRODUCTION_HOST="yourdomain.com"
 PRODUCTION_USER="deploy"
-PRODUCTION_PATH="/var/www/infinity"
+PRODUCTION_PATH="/var/www/luminai"
 
 # Pre-deployment checks
 echo "1️⃣ Running pre-deployment checks..."
@@ -668,7 +668,7 @@ vendor/bin/phpstan analyse src --level=8 || exit 1
 # Deploy code
 echo "2️⃣ Deploying code to production..."
 ssh ${PRODUCTION_USER}@${PRODUCTION_HOST} << 'ENDSSH'
-    cd /var/www/infinity
+    cd /var/www/luminai
     git pull origin main
     composer install --no-dev --optimize-autoloader
     php bin/console doctrine:migrations:migrate --no-interaction
@@ -785,6 +785,6 @@ grep "duration:" var/log/prod.log | sort -rn | head -10
 
 ## Next Steps
 
-- Review [User Guide](GeneratorUserGuide.md) for daily operations
-- Check [Developer Guide](GeneratorDeveloperGuide.md) for development
-- Explore [Cheat Sheets](CheatSheets.md) for quick commands
+- Review [User Guide](../app/docs/Generator/GeneratorUserGuide.md) for daily operations
+- Check [Developer Guide](../app/docs/Generator/GeneratorDeveloperGuide.md) for development
+- Explore [Cheat Sheets](../app/docs/Generator/CheatSheets.md) for quick commands

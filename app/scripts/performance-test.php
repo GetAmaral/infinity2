@@ -3,7 +3,7 @@
 
 /**
  * Performance Testing Script
- * Validates generator and runtime performance
+ * Validates Generator and runtime performance
  *
  * Usage: php scripts/performance-test.php [--full] [--report=PATH]
  *

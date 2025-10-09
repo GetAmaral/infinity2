@@ -33,6 +33,9 @@ class PropertyDefinitionDto
         public readonly bool $orphanRemoval,
         public readonly ?string $fetch,
         public readonly array $orderBy,
+        public readonly bool $indexed,
+        public readonly ?string $indexType,
+        public readonly ?string $compositeIndexWith,
         public readonly array $validationRules,
         public readonly ?string $validationMessage,
         public readonly ?string $formType,
@@ -49,6 +52,7 @@ class PropertyDefinitionDto
         public readonly bool $apiReadable,
         public readonly bool $apiWritable,
         public readonly array $apiGroups,
+        public readonly ?string $allowedRoles,
         public readonly ?string $translationKey,
         public readonly ?string $formatPattern,
         public readonly ?string $fixtureType,
@@ -79,6 +83,9 @@ class PropertyDefinitionDto
             orphanRemoval: $data['orphanRemoval'],
             fetch: $data['fetch'] ?? null,
             orderBy: $data['orderBy'],
+            indexed: $data['indexed'],
+            indexType: $data['indexType'] ?? null,
+            compositeIndexWith: $data['compositeIndexWith'] ?? null,
             validationRules: $data['validationRules'],
             validationMessage: $data['validationMessage'] ?? null,
             formType: $data['formType'] ?? null,
@@ -95,11 +102,20 @@ class PropertyDefinitionDto
             apiReadable: $data['apiReadable'],
             apiWritable: $data['apiWritable'],
             apiGroups: $data['apiGroups'],
+            allowedRoles: $data['allowedRoles'] ?? null,
             translationKey: $data['translationKey'] ?? null,
             formatPattern: $data['formatPattern'] ?? null,
             fixtureType: $data['fixtureType'] ?? null,
             fixtureOptions: $data['fixtureOptions']
         );
+    }
+
+    /**
+     * Check if property is a book
+     */
+    public function isBool(): bool
+    {
+        return $this->propertyType === "bool";
     }
 
     /**

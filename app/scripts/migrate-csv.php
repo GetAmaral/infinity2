@@ -8,7 +8,7 @@
  * Usage: php scripts/migrate-csv.php [--input=path/to/old.csv] [--dry-run]
  *
  * This script migrates from the old single-file semicolon-separated CSV format
- * to the new two-file comma-separated format used by the TURBO generator.
+ * to the new two-file comma-separated format used by the TURBO Generator.
  */
 
 declare(strict_types=1);

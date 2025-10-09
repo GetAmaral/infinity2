@@ -61,7 +61,7 @@ class EntityGenerator
         }
 
         // Render from template
-        $content = $this->twig->render('generator/php/entity_generated.php.twig', [
+        $content = $this->twig->render('Generator/php/entity_generated.php.twig', [
             'entity' => $entity,
             'namespace' => 'App\\Entity\\Generated',
             'className' => $entity->entityName . 'Generated',
@@ -94,7 +94,7 @@ class EntityGenerator
         }
 
         // Render from template
-        $content = $this->twig->render('generator/php/entity_extension.php.twig', [
+        $content = $this->twig->render('Generator/php/entity_extension.php.twig', [
             'entity' => $entity,
             'namespace' => 'App\\Entity',
             'className' => $entity->entityName,

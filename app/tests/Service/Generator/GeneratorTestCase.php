@@ -12,7 +12,7 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 /**
- * Base test case for all generator tests
+ * Base test case for all Generator tests
  * Provides common setup and utility methods
  */
 abstract class GeneratorTestCase extends TestCase

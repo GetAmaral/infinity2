@@ -24,12 +24,12 @@ class CsvParserService
         'entityName', 'propertyName', 'propertyLabel', 'propertyType',
         'nullable', 'length', 'precision', 'scale', 'unique', 'defaultValue',
         'relationshipType', 'targetEntity', 'inversedBy', 'mappedBy',
-        'cascade', 'orphanRemoval', 'fetch', 'orderBy', 'validationRules',
-        'validationMessage', 'formType', 'formOptions', 'formRequired',
-        'formReadOnly', 'formHelp', 'showInList', 'showInDetail',
-        'showInForm', 'sortable', 'searchable', 'filterable', 'apiReadable',
-        'apiWritable', 'apiGroups', 'translationKey', 'formatPattern',
-        'fixtureType', 'fixtureOptions'
+        'cascade', 'orphanRemoval', 'fetch', 'orderBy', 'indexed', 'indexType',
+        'compositeIndexWith', 'validationRules', 'validationMessage', 'formType',
+        'formOptions', 'formRequired', 'formReadOnly', 'formHelp', 'showInList',
+        'showInDetail', 'showInForm', 'sortable', 'searchable', 'filterable',
+        'apiReadable', 'apiWritable', 'apiGroups', 'allowedRoles', 'translationKey',
+        'formatPattern', 'fixtureType', 'fixtureOptions'
     ];
 
     /**
@@ -241,6 +241,7 @@ class CsvParserService
         // Boolean conversions
         $property['nullable'] = $this->parseBoolean($property['nullable'] ?? 'true');
         $property['unique'] = $this->parseBoolean($property['unique'] ?? 'false');
+        $property['indexed'] = $this->parseBoolean($property['indexed'] ?? 'false');
         $property['orphanRemoval'] = $this->parseBoolean($property['orphanRemoval'] ?? 'false');
         $property['formRequired'] = $this->parseBoolean($property['formRequired'] ?? 'true');
         $property['formReadOnly'] = $this->parseBoolean($property['formReadOnly'] ?? 'false');
@@ -274,6 +275,9 @@ class CsvParserService
         $property['inversedBy'] = !empty($property['inversedBy']) ? $property['inversedBy'] : null;
         $property['mappedBy'] = !empty($property['mappedBy']) ? $property['mappedBy'] : null;
         $property['fetch'] = !empty($property['fetch']) ? $property['fetch'] : null;
+        $property['indexType'] = !empty($property['indexType']) ? $property['indexType'] : null;
+        $property['compositeIndexWith'] = !empty($property['compositeIndexWith']) ? $property['compositeIndexWith'] : null;
+        $property['allowedRoles'] = !empty($property['allowedRoles']) ? $property['allowedRoles'] : null;
         $property['defaultValue'] = !empty($property['defaultValue']) ? $property['defaultValue'] : null;
         $property['validationMessage'] = !empty($property['validationMessage']) ? $property['validationMessage'] : null;
         $property['formType'] = !empty($property['formType']) ? $property['formType'] : null;

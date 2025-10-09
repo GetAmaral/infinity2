@@ -267,7 +267,7 @@ grep -r "targetEntity" src/Entity/Generated/
 # Debug specific test
 php bin/phpunit --filter ContactControllerTest --debug
 
-# Fix in test generator template
+# Fix in test Generator template
 ```
 
 **Issue 4: Performance Issues**

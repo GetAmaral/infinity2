@@ -3,7 +3,7 @@
 
 /**
  * Code Quality Check Script
- * Runs comprehensive code quality checks on the generator system
+ * Runs comprehensive code quality checks on the Generator system
  *
  * Usage: php scripts/code-quality-check.php [--fix] [--report=PATH]
  *

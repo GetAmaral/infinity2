@@ -47,7 +47,7 @@ class EntityTestGenerator
             'path' => $filePath
         ]);
 
-        $content = $this->twig->render('generator/test/entity_test.php.twig', [
+        $content = $this->twig->render('Generator/test/entity_test.php.twig', [
             'entity' => $entity,
         ]);
 

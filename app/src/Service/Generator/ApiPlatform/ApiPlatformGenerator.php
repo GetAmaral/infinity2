@@ -47,7 +47,7 @@ class ApiPlatformGenerator
         }
 
         // Render from template
-        $content = $this->twig->render('generator/yaml/api_platform_resource.yaml.twig', [
+        $content = $this->twig->render('Generator/yaml/api_platform_resource.yaml.twig', [
             'entity' => $entity,
         ]);
 

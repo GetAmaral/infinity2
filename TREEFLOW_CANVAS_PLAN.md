@@ -912,7 +912,7 @@ git commit -m "Add TreeFlow canvas editor with StepConnection entity"
 git push origin main
 
 # VPS: Deploy
-ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && \
+ssh -i /home/user/.ssh/luminai_vps root@91.98.137.175 'cd /opt/luminai && \
   git pull origin main && \
   docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction --env=prod && \
   docker-compose exec -T app php bin/console cache:clear --env=prod && \
@@ -930,8 +930,8 @@ curl -k https://91.98.137.175/health/detailed
 curl -I https://91.98.137.175/treeflow/{id}
 
 # Check database
-ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 \
-  'cd /opt/infinity && docker-compose exec -T app php bin/console doctrine:query:sql "SELECT COUNT(*) FROM step_connection"'
+ssh -i /home/user/.ssh/luminai_vps root@91.98.137.175 \
+  'cd /opt/luminai && docker-compose exec -T app php bin/console doctrine:query:sql "SELECT COUNT(*) FROM step_connection"'
 ```
 
 ---
@@ -1023,7 +1023,7 @@ ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 \
 13. ✅ Auto-layout to organize
 14. ✅ Works on mobile devices
 
-**This creates a professional n8n-like workflow editor within Infinity's Symfony architecture.** 🚀
+**This creates a professional n8n-like workflow editor within Luminai's Symfony architecture.** 🚀
 
 ---
 

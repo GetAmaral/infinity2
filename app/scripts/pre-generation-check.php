@@ -386,7 +386,7 @@ class PreGenerationCheck
             'src/Security/Voter/Generated',
             'src/Form/Generated',
             'config/api_platform',
-            'templates/generator',
+            'templates/Generator',
             'var/generatorBackup',
         ];
 

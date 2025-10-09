@@ -69,7 +69,7 @@ class TemplateGenerator
     {
         $filePath = $dir . '/index.html.twig';
 
-        $content = $this->twig->render('generator/twig/index.html.twig.twig', [
+        $content = $this->twig->render('Generator/twig/index.html.twig.twig', [
             'entity' => $entity,
         ]);
 
@@ -82,7 +82,7 @@ class TemplateGenerator
     {
         $filePath = $dir . '/form.html.twig';
 
-        $content = $this->twig->render('generator/twig/form.html.twig.twig', [
+        $content = $this->twig->render('Generator/twig/form.html.twig.twig', [
             'entity' => $entity,
         ]);
 
@@ -95,7 +95,7 @@ class TemplateGenerator
     {
         $filePath = $dir . '/show.html.twig';
 
-        $content = $this->twig->render('generator/twig/show.html.twig.twig', [
+        $content = $this->twig->render('Generator/twig/show.html.twig.twig', [
             'entity' => $entity,
         ]);
 
@@ -108,7 +108,7 @@ class TemplateGenerator
     {
         $filePath = $dir . '/_turbo_stream_create.html.twig';
 
-        $content = $this->twig->render('generator/twig/turbo_stream_create.html.twig.twig', [
+        $content = $this->twig->render('Generator/twig/turbo_stream_create.html.twig.twig', [
             'entity' => $entity,
         ]);
 
@@ -121,7 +121,7 @@ class TemplateGenerator
     {
         $filePath = $dir . '/_turbo_stream_update.html.twig';
 
-        $content = $this->twig->render('generator/twig/turbo_stream_update.html.twig.twig', [
+        $content = $this->twig->render('Generator/twig/turbo_stream_update.html.twig.twig', [
             'entity' => $entity,
         ]);
 
@@ -134,7 +134,7 @@ class TemplateGenerator
     {
         $filePath = $dir . '/_turbo_stream_delete.html.twig';
 
-        $content = $this->twig->render('generator/twig/turbo_stream_delete.html.twig.twig', [
+        $content = $this->twig->render('Generator/twig/turbo_stream_delete.html.twig.twig', [
             'entity' => $entity,
         ]);
 

@@ -61,7 +61,7 @@ class RepositoryGenerator
         }
 
         // Render from template
-        $content = $this->twig->render('generator/php/repository_generated.php.twig', [
+        $content = $this->twig->render('Generator/php/repository_generated.php.twig', [
             'entity' => $entity,
             'namespace' => 'App\\Repository\\Generated',
             'className' => $entity->entityName . 'RepositoryGenerated',
@@ -92,7 +92,7 @@ class RepositoryGenerator
         }
 
         // Render from template
-        $content = $this->twig->render('generator/php/repository_extension.php.twig', [
+        $content = $this->twig->render('Generator/php/repository_extension.php.twig', [
             'entity' => $entity,
             'namespace' => 'App\\Repository',
             'className' => $entity->entityName . 'Repository',

@@ -1,4 +1,4 @@
 <?php
 // turbo
 // treeflow canva
-// jsonb - yml - entity - crud - generator => POR ENQUANTO NÃO
+// jsonb - yml - entity - crud - Generator => POR ENQUANTO NÃO

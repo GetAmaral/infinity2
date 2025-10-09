@@ -145,7 +145,7 @@ class GenerationStatistics
             'voters_extension' => $this->countFiles('src/Security/Voter', '.php', ['Generated']),
             'forms_generated' => $this->countFiles('src/Form/Generated', '.php'),
             'forms_extension' => $this->countFiles('src/Form', '.php', ['Generated']),
-            'templates' => $this->countFiles('templates', '.html.twig', ['base.html.twig', 'generator']),
+            'templates' => $this->countFiles('templates', '.html.twig', ['base.html.twig', 'Generator']),
             'api_configs' => $this->countFiles('config/api_platform', '.yaml'),
             'tests' => $this->countFiles('tests', 'Test.php'),
         ];
@@ -194,7 +194,7 @@ class GenerationStatistics
         $this->stats['code']['test_lines'] = $this->countLinesInDirectory('tests');
 
         // Count template lines
-        $this->stats['code']['template_lines'] = $this->countLinesInDirectory('templates', ['base.html.twig', 'generator']);
+        $this->stats['code']['template_lines'] = $this->countLinesInDirectory('templates', ['base.html.twig', 'Generator']);
 
         $this->stats['code']['total_lines'] = $this->stats['code']['generated_lines']
             + $this->stats['code']['extension_lines']
@@ -234,7 +234,7 @@ class GenerationStatistics
     private function collectConfigurationStats(): void
     {
         $this->stats['configuration'] = [
-            'generator_templates' => $this->countFiles('templates/generator', '.twig'),
+            'generator_templates' => $this->countFiles('templates/Generator', '.twig'),
             'generator_services' => $this->countFiles('src/Service/Generator', '.php'),
             'backups' => is_dir($this->projectDir . '/var/generatorBackup')
                 ? count(glob($this->projectDir . '/var/generatorBackup/*'))

@@ -6,7 +6,7 @@ on:
     paths:
       - 'app/src/Service/Generator/**'
       - 'app/config/Entity*.csv'
-      - 'app/templates/generator/**'
+      - 'app/templates/Generator/**'
       - 'app/tests/**'
   pull_request:
     branches: [main]

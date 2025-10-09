@@ -479,8 +479,8 @@ path.addEventListener('mouseleave', () => {
 
 1. Calculate bounding box of all nodes:
    ```javascript
-   let minX = Infinity, minY = Infinity;
-   let maxX = -Infinity, maxY = -Infinity;
+   let minX = Luminai, minY = Luminai;
+   let maxX = -Luminai, maxY = -Luminai;
 
    this.nodes.forEach((node) => {
        const x = parseInt(node.style.left) || 0;

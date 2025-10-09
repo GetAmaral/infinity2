@@ -189,7 +189,7 @@ class GeneratorOrchestratorTest extends TestCase
         $backupDir = '/backups/backup-123';
         $this->backupService->method('createBackup')->willReturn($backupDir);
 
-        // Mock a generator throwing exception
+        // Mock a Generator throwing exception
         $entityGenerator = $this->createMock(EntityGenerator::class);
         $entityGenerator->method('generate')->willThrowException(
             new \RuntimeException('Generation error')
@@ -200,7 +200,7 @@ class GeneratorOrchestratorTest extends TestCase
             $this->csvParser,
             $this->csvValidator,
             $this->backupService,
-            $entityGenerator, // Use the failing generator
+            $entityGenerator, // Use the failing Generator
             $this->createMock(ApiPlatformGenerator::class),
             $this->createMock(RepositoryGenerator::class),
             $this->createMock(ControllerGenerator::class),

@@ -29,6 +29,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 #[ORM\MappedSuperclass]
 #[ORM\HasLifecycleCallbacks]
+{% set indexedScalarProperties = entity.properties|filter(p => p.indexed and not p.isRelationship()) %}
+{% for property in indexedScalarProperties %}
+{% if property.indexType == 'simple' %}
+#[ORM\Index(columns: ['{{ property.propertyName }}'])]
+{% elseif property.indexType == 'composite' and property.compositeIndexWith %}
+#[ORM\Index(columns: ['{{ property.propertyName }}', '{{ property.compositeIndexWith }}'])]
+{% elseif property.indexType == 'unique' %}
+{# Unique constraint already handled by unique column property #}
+{% endif %}
+{% endfor %}
+{% set indexedRelationships = entity.properties|filter(p => p.indexed and p.isSingleRelationship()) %}
+{% for property in indexedRelationships %}
+{% if property.indexType == 'simple' %}
+#[ORM\Index(columns: ['{{ property.propertyName }}_id'])]
+{% elseif property.indexType == 'composite' and property.compositeIndexWith %}
+#[ORM\Index(columns: ['{{ property.propertyName }}_id', '{{ property.compositeIndexWith }}'])]
+{% endif %}
+{% endfor %}
 abstract class {{ className }} extends {{ extendsClass }}
 {
 {% if usesOrganizationTrait %}
@@ -116,6 +134,13 @@ abstract class {{ className }} extends {{ extendsClass }}
         return $this;
     }
 
+    {% if property.isBool() %}
+    public function is{{ property.propertyName|capitalize }}(): boolean
+    {
+        return $this->{{ property.propertyName }} === true;
+    }
+    {% endif %}
+
 {% else %}
 {% if property.isCollection() %}
     /**
@@ -174,4 +199,4 @@ abstract class {{ className }} extends {{ extendsClass }}
         return (string) $this->getId()->toRfc4122();
 {% endif %}
     }
-}
+%}
