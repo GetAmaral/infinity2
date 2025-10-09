@@ -37,6 +37,6 @@ resources:
 
     operations:
 {% for operation in entity.operations %}
-      {{ operation }}:
+      - class: ApiPlatform\Metadata\{{ operation }}
         security: "{{ entity.security }}"
 {% endfor %}

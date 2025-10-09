@@ -62,7 +62,7 @@ class ControllerGenerator
             }
 
             // Render from template
-            $content = $this->twig->render('Generator/php/controller_generated.php.twig', [
+            $content = $this->twig->render('generator/php/controller_generated.php.twig', [
                 'entity' => $entity,
                 'namespace' => 'App\\Controller\\Generated',
                 'className' => $entity->entityName . 'ControllerGenerated',
@@ -108,7 +108,7 @@ class ControllerGenerator
 
         try {
             // Render from template
-            $content = $this->twig->render('Generator/php/controller_extension.php.twig', [
+            $content = $this->twig->render('generator/php/controller_extension.php.twig', [
                 'entity' => $entity,
                 'namespace' => 'App\\Controller',
                 'className' => $entity->entityName . 'Controller',

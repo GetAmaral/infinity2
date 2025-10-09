@@ -812,3 +812,82 @@ AIInsight,organization,Organization,,,,,,,,,,ManyToOne,Organization,,,,,LAZY,,co
 AIInsight,title,Title,string,,255,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"insight:read,insight:write",,,,word,{}
 AIInsight,description,Description,text,,,,,,,,,,,,,LAZY,,,,NotBlank,,TextareaType,{},1,,,1,1,1,,,,,,"insight:read,insight:write",,,,paragraph,{}
 AIInsight,priority,Priority,string,,50,,,,,,,,,,,LAZY,,composite,organization,NotBlank,,ChoiceType,"{""choices"":{""Low"":""low"",""Medium"":""medium"",""High"":""high"",""Critical"":""critical""}}",1,,,1,1,1,1,,,1,1,"insight:read,insight:write",,,,word,{}
+Organization,leads,Leads,,1,,,,,,OneToMany,Lead,organization,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,quotes,Quotes,,1,,,,,,OneToMany,Quote,organization,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,cases,Cases,,1,,,,,,OneToMany,Case,organization,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,activities,Activities,,1,,,,,,OneToMany,Activity,organization,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,emails,Emails,,1,,,,,,OneToMany,Email,organization,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,callLogs,"Call Logs",,1,,,,,,OneToMany,CallLog,organization,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,notes,Notes,,1,,,,,,OneToMany,Note,organization,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,territories,Territories,,1,,,,,,OneToMany,Territory,organization,,,1,LAZY,name,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,winReasons,"Win Reasons",,1,,,,,,OneToMany,WinReason,organization,,,1,LAZY,name,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,dashboards,Dashboards,,1,,,,,,OneToMany,Dashboard,organization,,,1,LAZY,name,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,reports,Reports,,1,,,,,,OneToMany,Report,organization,,,1,LAZY,name,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,predictions,Predictions,,1,,,,,,OneToMany,Prediction,organization,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,aiInsights,"AI Insights",,1,,,,,,OneToMany,AIInsight,organization,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,knowledgeArticles,"Knowledge Articles",,1,,,,,,OneToMany,KnowledgeArticle,organization,,,1,LAZY,title,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,slas,SLAs,,1,,,,,,OneToMany,SLA,organization,,,1,LAZY,name,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,entitlements,Entitlements,,1,,,,,,OneToMany,Entitlement,organization,,,1,LAZY,name,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,emailIntegrations,"Email Integrations",,1,,,,,,OneToMany,EmailIntegration,organization,,,1,LAZY,provider,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,calendarIntegrations,"Calendar Integrations",,1,,,,,,OneToMany,CalendarIntegration,organization,,,1,LAZY,provider,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,externalEvents,"External Events",,1,,,,,,OneToMany,ExternalEvent,organization,,,1,EXTRA_LAZY,startDate,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,webhookSubscriptions,Webhooks,,1,,,,,,OneToMany,WebhookSubscription,organization,,,1,LAZY,url,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+Organization,customerJourneys,"Customer Journeys",,1,,,,,,OneToMany,CustomerJourney,organization,,,1,LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"organization:read,organization:write",,,,,{}
+User,assignedLeads,"Assigned Leads",,1,,,,,,OneToMany,Lead,assignedTo,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"user:read,user:write",,,,,{}
+User,assignedCases,"Assigned Cases",,1,,,,,,OneToMany,Case,assignedTo,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"user:read,user:write",,,,,{}
+User,assignedActivities,"Assigned Activities",,1,,,,,,OneToMany,Activity,assignedTo,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"user:read,user:write",,,,,{}
+User,authoredNotes,"Authored Notes",,1,,,,,,OneToMany,Note,author,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"user:read,user:write",,,,,{}
+User,authoredCaseComments,"Case Comments",,1,,,,,,OneToMany,CaseComment,author,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"user:read,user:write",,,,,{}
+User,ownedDashboards,"My Dashboards",,1,,,,,,OneToMany,Dashboard,owner,,,1,LAZY,name,,,,,EntityType,{},,,,1,1,1,,,,,,"user:read,user:write",,,,,{}
+User,managedTerritories,"Managed Territories",,1,,,,,,OneToMany,Territory,manager,,,1,LAZY,name,,,,,EntityType,{},,,,1,1,1,,,,,,"user:read,user:write",,,,,{}
+Company,quotes,Quotes,,1,,,,,,OneToMany,Quote,account,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"company:read,company:write",,,,,{}
+Company,cases,Cases,,1,,,,,,OneToMany,Case,account,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"company:read,company:write",,,,,{}
+Contact,convertedLeads,"Converted From Leads",,1,,,,,,OneToMany,Lead,convertedToContact,,,1,LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"contact:read,contact:write",,,,,{}
+Contact,quotes,Quotes,,1,,,,,,OneToMany,Quote,contact,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"contact:read,contact:write",,,,,{}
+Contact,cases,Cases,,1,,,,,,OneToMany,Case,contact,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"contact:read,contact:write",,,,,{}
+Contact,callLogs,"Call Logs",,1,,,,,,OneToMany,CallLog,contact,,,1,EXTRA_LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"contact:read,contact:write",,,,,{}
+Deal,quotes,Quotes,,1,,,,,,OneToMany,Quote,deal,,,1,LAZY,createdAt,,,,,EntityType,{},,,,1,1,1,,,,,,"deal:read,deal:write",,,,,{}
+KnowledgeArticle,organization,Organization,,,,,,,,,,ManyToOne,Organization,knowledgeArticles,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"article:read,article:write",,,
+KnowledgeArticle,title,Title,string,,255,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"article:read,article:write",,,,word,{}
+KnowledgeArticle,content,Content,text,,,,,,,,,,,,,LAZY,,,,NotBlank,,TextareaType,{},1,,,1,1,1,,,,,,"article:read,article:write",,,,paragraph,{}
+KnowledgeArticle,category,Category,string,,50,1,,,,,,,,,,LAZY,,simple,,Length(max=50),,TextType,{},,,,1,1,1,1,,,1,1,"article:read,article:write",,,,word,{}
+KnowledgeArticle,status,Status,string,,50,,,,,,,,,,,LAZY,,composite,organization,NotBlank,,ChoiceType,"{""choices"":{""Draft"":""draft"",""Published"":""published"",""Archived"":""archived""}}",1,,,1,1,1,1,,,1,1,"article:read,article:write",,,,word,{}
+SLA,organization,Organization,,,,,,,,,,ManyToOne,Organization,slas,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"sla:read,sla:write",,,
+SLA,name,Name,string,,255,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"sla:read,sla:write",,,,word,{}
+SLA,responseTimeMinutes,"Response Time (minutes)",integer,,,,,,,,,,,,,LAZY,,,,"NotBlank,PositiveOrZero",,IntegerType,{},1,,,1,1,1,1,,,1,,"sla:read,sla:write",,,,randomNumber,{}
+SLA,resolutionTimeMinutes,"Resolution Time (minutes)",integer,,,,,,,,,,,,,LAZY,,,,"NotBlank,PositiveOrZero",,IntegerType,{},1,,,1,1,1,1,,,1,,"sla:read,sla:write",,,,randomNumber,{}
+Entitlement,organization,Organization,,,,,,,,,,ManyToOne,Organization,entitlements,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"entitlement:read,entitlement:write",,,
+Entitlement,name,Name,string,,255,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"entitlement:read,entitlement:write",,,,word,{}
+Entitlement,account,Account,,1,,,,,,ManyToOne,Company,,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"entitlement:read,entitlement:write",,,,,{}
+Entitlement,status,Status,string,,50,,,,,,,,,,,LAZY,,composite,organization,NotBlank,,ChoiceType,"{""choices"":{""Active"":""active"",""Expired"":""expired"",""Suspended"":""suspended""}}",1,,,1,1,1,1,,,1,1,"entitlement:read,entitlement:write",,,,word,{}
+EmailIntegration,organization,Organization,,,,,,,,,,ManyToOne,Organization,emailIntegrations,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"emailintegration:read,emailintegration:write",,,
+EmailIntegration,provider,Provider,string,,50,,,,,,,,,,,LAZY,,simple,,NotBlank,,ChoiceType,"{""choices"":{""Gmail"":""gmail"",""Outlook"":""outlook"",""IMAP"":""imap""}}",1,,,1,1,1,1,,,1,1,"emailintegration:read,emailintegration:write",,,,word,{}
+EmailIntegration,email,Email,string,,255,,,,,,,,,,,LAZY,,simple,,"NotBlank,Email",,EmailType,{},1,,,1,1,1,1,,,1,,"emailintegration:read,emailintegration:write",,,,word,{}
+EmailIntegration,status,Status,string,,50,,,,,,,,,,,LAZY,,composite,organization,NotBlank,,ChoiceType,"{""choices"":{""Connected"":""connected"",""Disconnected"":""disconnected"",""Error"":""error""}}",1,,,1,1,1,1,,,1,1,"emailintegration:read,emailintegration:write",,,,word,{}
+CalendarIntegration,organization,Organization,,,,,,,,,,ManyToOne,Organization,calendarIntegrations,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"calendarintegration:read,calendarintegration:write",,,
+CalendarIntegration,provider,Provider,string,,50,,,,,,,,,,,LAZY,,simple,,NotBlank,,ChoiceType,"{""choices"":{""Google Calendar"":""google"",""Outlook Calendar"":""outlook""}}",1,,,1,1,1,1,,,1,1,"calendarintegration:read,calendarintegration:write",,,,word,{}
+CalendarIntegration,email,Email,string,,255,,,,,,,,,,,LAZY,,simple,,"NotBlank,Email",,EmailType,{},1,,,1,1,1,1,,,1,,"calendarintegration:read,calendarintegration:write",,,,word,{}
+CalendarIntegration,status,Status,string,,50,,,,,,,,,,,LAZY,,composite,organization,NotBlank,,ChoiceType,"{""choices"":{""Connected"":""connected"",""Disconnected"":""disconnected"",""Error"":""error""}}",1,,,1,1,1,1,,,1,1,"calendarintegration:read,calendarintegration:write",,,,word,{}
+ExternalEvent,organization,Organization,,,,,,,,,,ManyToOne,Organization,externalEvents,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"externalevent:read,externalevent:write",,,
+ExternalEvent,title,Title,string,,255,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"externalevent:read,externalevent:write",,,,word,{}
+ExternalEvent,externalId,"External ID",string,,255,,,,,,,,,,,LAZY,,simple,,NotBlank,,TextType,{},1,,,1,1,1,,,,,,"externalevent:read,externalevent:write",,,,word,{}
+ExternalEvent,provider,Provider,string,,50,,,,,,,,,,,LAZY,,simple,,NotBlank,,TextType,{},1,,,1,1,1,1,,,1,,"externalevent:read,externalevent:write",,,,word,{}
+ExternalEvent,startDate,"Start Date",datetime,,,,,,,,,,,,,LAZY,,simple,,NotBlank,,DateTimeType,{},1,,,1,1,1,1,,,1,,"externalevent:read,externalevent:write",,,,dateTime,{}
+WebhookSubscription,organization,Organization,,,,,,,,,,ManyToOne,Organization,webhookSubscriptions,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"webhook:read,webhook:write",,,
+WebhookSubscription,url,URL,string,,500,,,,,,,,,,,LAZY,,simple,,"NotBlank,Url",,UrlType,{},1,,,1,1,1,1,,,1,,"webhook:read,webhook:write",,,,word,{}
+WebhookSubscription,event,Event,string,,100,,,,,,,,,,,LAZY,,simple,,NotBlank,,TextType,{},1,,,1,1,1,1,,,1,,"webhook:read,webhook:write",,,,word,{}
+WebhookSubscription,isActive,"Is Active",boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},1,,,1,1,1,,,,,,"webhook:read,webhook:write",,,,boolean,{}
+CustomerJourney,organization,Organization,,,,,,,,,,ManyToOne,Organization,customerJourneys,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"journey:read,journey:write",,,
+CustomerJourney,contact,Contact,,1,,,,,,ManyToOne,Contact,,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"journey:read,journey:write",,,,,{}
+CustomerJourney,stage,Stage,string,,50,,,,,,,,,,,LAZY,,composite,organization,NotBlank,,ChoiceType,"{""choices"":{""Awareness"":""awareness"",""Consideration"":""consideration"",""Decision"":""decision"",""Retention"":""retention""}}",1,,,1,1,1,1,,,1,1,"journey:read,journey:write",,,,word,{}
+Chart,organization,Organization,,,,,,,,,,ManyToOne,Organization,,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"chart:read,chart:write",,,
+Chart,name,Name,string,,255,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"chart:read,chart:write",,,,word,{}
+Chart,type,Type,string,,50,,,,,,,,,,,LAZY,,composite,organization,NotBlank,,ChoiceType,"{""choices"":{""Bar"":""bar"",""Line"":""line"",""Pie"":""pie"",""Area"":""area""}}",1,,,1,1,1,1,,,1,1,"chart:read,chart:write",,,,word,{}
+LeadScoreModel,name,Name,string,,255,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"leadscore:read,leadscore:write",,,,word,{}
+LeadScoreModel,version,Version,string,,50,,,,,,,,,,,LAZY,,simple,,NotBlank,,TextType,{},1,,,1,1,1,1,,,1,,"leadscore:read,leadscore:write",,,,word,{}
+LeadScoreModel,isActive,"Is Active",boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},1,,,1,1,1,,,,,,"leadscore:read,leadscore:write",,,,boolean,{}
+SentimentAnalysis,organization,Organization,,,,,,,,,,ManyToOne,Organization,,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"sentiment:read,sentiment:write",,,
+SentimentAnalysis,relatedToType,"Related To Type",string,,50,,,,,,,,,,,LAZY,,composite,relatedToId,NotBlank,,TextType,{},,,,1,1,1,,,,,,"sentiment:read,sentiment:write",,,,word,{}
+SentimentAnalysis,relatedToId,"Related To ID",string,,36,,,,,,,,,,,LAZY,,composite,relatedToType,"NotBlank,Uuid",,TextType,{},,,,1,1,1,,,,,,"sentiment:read,sentiment:write",,,,word,{}
+SentimentAnalysis,sentiment,Sentiment,string,,50,,,,,,,,,,,LAZY,,composite,organization,NotBlank,,ChoiceType,"{""choices"":{""Positive"":""positive"",""Neutral"":""neutral"",""Negative"":""negative""}}",1,,,1,1,1,1,,,1,1,"sentiment:read,sentiment:write",,,,word,{}
+SentimentAnalysis,score,Score,decimal,,3,2,,,,,,,,,,LAZY,,,,"NotBlank,Range(min=-1,max=1)",,NumberType,{},1,,,1,1,1,1,,,1,,"sentiment:read,sentiment:write",,,,randomNumber,{}

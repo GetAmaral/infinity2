@@ -47,7 +47,7 @@ class RepositoryTestGenerator
             'path' => $filePath
         ]);
 
-        $content = $this->twig->render('Generator/test/repository_test.php.twig', [
+        $content = $this->twig->render('generator/test/repository_test.php.twig', [
             'entity' => $entity,
         ]);
 

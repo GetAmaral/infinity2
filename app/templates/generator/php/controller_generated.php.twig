@@ -38,7 +38,8 @@ abstract class {{ className }} extends AbstractController
      */
     #[Route('', name: '{{ entity.getSnakeCaseName() }}_index', methods: ['GET'])]
 {% if entity.security %}
-    #[IsGranted({{ entity.security|raw }})]
+    {% set security_role = entity.security starts with 'is_granted(' ? entity.security|slice(11, -1) : entity.security %}
+    #[IsGranted({{ security_role|raw }})]
 {% else %}
     #[IsGranted('ROLE_USER')]
 {% endif %}
@@ -74,7 +75,8 @@ abstract class {{ className }} extends AbstractController
      */
     #[Route('/{id}', name: '{{ entity.getSnakeCaseName() }}_show', methods: ['GET'])]
 {% if entity.security %}
-    #[IsGranted({{ entity.security|raw }})]
+    {% set security_role = entity.security starts with 'is_granted(' ? entity.security|slice(11, -1) : entity.security %}
+    #[IsGranted({{ security_role|raw }})]
 {% else %}
     #[IsGranted('ROLE_USER')]
 {% endif %}
@@ -94,7 +96,8 @@ abstract class {{ className }} extends AbstractController
      */
     #[Route('/new', name: '{{ entity.getSnakeCaseName() }}_new', methods: ['GET', 'POST'])]
 {% if entity.security %}
-    #[IsGranted({{ entity.security|raw }})]
+    {% set security_role = entity.security starts with 'is_granted(' ? entity.security|slice(11, -1) : entity.security %}
+    #[IsGranted({{ security_role|raw }})]
 {% else %}
     #[IsGranted('ROLE_USER')]
 {% endif %}
@@ -133,7 +136,8 @@ abstract class {{ className }} extends AbstractController
      */
     #[Route('/{id}/edit', name: '{{ entity.getSnakeCaseName() }}_edit', methods: ['GET', 'POST'])]
 {% if entity.security %}
-    #[IsGranted({{ entity.security|raw }})]
+    {% set security_role = entity.security starts with 'is_granted(' ? entity.security|slice(11, -1) : entity.security %}
+    #[IsGranted({{ security_role|raw }})]
 {% else %}
     #[IsGranted('ROLE_USER')]
 {% endif %}
@@ -166,7 +170,8 @@ abstract class {{ className }} extends AbstractController
      */
     #[Route('/{id}', name: '{{ entity.getSnakeCaseName() }}_delete', methods: ['POST'])]
 {% if entity.security %}
-    #[IsGranted({{ entity.security|raw }})]
+    {% set security_role = entity.security starts with 'is_granted(' ? entity.security|slice(11, -1) : entity.security %}
+    #[IsGranted({{ security_role|raw }})]
 {% else %}
     #[IsGranted('ROLE_USER')]
 {% endif %}

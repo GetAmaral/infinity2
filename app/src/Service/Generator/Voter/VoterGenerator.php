@@ -66,7 +66,7 @@ class VoterGenerator
         }
 
         // Render from template
-        $content = $this->twig->render('Generator/php/voter_generated.php.twig', [
+        $content = $this->twig->render('generator/php/voter_generated.php.twig', [
             'entity' => $entity,
             'namespace' => 'App\\Security\\Voter\\Generated',
             'className' => $entity->entityName . 'VoterGenerated',
@@ -97,7 +97,7 @@ class VoterGenerator
         }
 
         // Render from template
-        $content = $this->twig->render('Generator/php/voter_extension.php.twig', [
+        $content = $this->twig->render('generator/php/voter_extension.php.twig', [
             'entity' => $entity,
             'namespace' => 'App\\Security\\Voter',
             'className' => $entity->entityName . 'Voter',

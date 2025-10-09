@@ -8,8 +8,8 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 class CsvParserService
 {
-    private const ENTITY_CSV_PATH = __DIR__ . '/../../../../../config/EntityNew.csv';
-    private const PROPERTY_CSV_PATH = __DIR__ . '/../../../../../config/PropertyNew.csv';
+    private const ENTITY_CSV_PATH = __DIR__ . '/../../../../config/EntityNew.csv';
+    private const PROPERTY_CSV_PATH = __DIR__ . '/../../../../config/PropertyNew.csv';
 
     private const ENTITY_COLUMNS = [
         'entityName', 'entityLabel', 'pluralLabel', 'icon', 'description',
@@ -156,14 +156,21 @@ class CsvParserService
                 continue;
             }
 
-            // Validate column count
+            // Validate column count - pad with empty strings if needed or skip row
             if (count($row) !== count($headers)) {
-                throw new \RuntimeException(sprintf(
-                    'Property.csv line %d: Expected %d columns, got %d',
-                    $lineNumber,
-                    count($headers),
-                    count($row)
-                ));
+                if (count($row) < count($headers)) {
+                    // Pad with empty strings
+                    $row = array_pad($row, count($headers), '');
+                } else {
+                    // Too many columns - skip this row to avoid data corruption
+                    error_log(sprintf(
+                        'Property.csv line %d: Expected %d columns, got %d - SKIPPING ROW',
+                        $lineNumber,
+                        count($headers),
+                        count($row)
+                    ));
+                    continue;
+                }
             }
 
             // Combine headers with row data

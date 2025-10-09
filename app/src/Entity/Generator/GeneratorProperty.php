@@ -76,7 +76,7 @@ class GeneratorProperty
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $scale = null;
 
-    #[ORM\Column(options: ['default' => false])]
+    #[ORM\Column(name: 'is_unique', options: ['default' => false])]
     private bool $unique = false;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -98,16 +98,16 @@ class GeneratorProperty
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $mappedBy = null;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(name: 'cascade_actions', type: 'json', nullable: true)]
     private ?array $cascade = null;       // ['persist', 'remove']
 
     #[ORM\Column(options: ['default' => false])]
     private bool $orphanRemoval = false;
 
-    #[ORM\Column(length: 20, nullable: true, options: ['default' => 'LAZY'])]
+    #[ORM\Column(name: 'fetch_type', length: 20, nullable: true, options: ['default' => 'LAZY'])]
     private ?string $fetch = 'LAZY';      // 'LAZY', 'EAGER', 'EXTRA_LAZY'
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(name: 'order_by_fields', type: 'json', nullable: true)]
     private ?array $orderBy = null;       // {"name": "ASC"}
 
     // ====================================

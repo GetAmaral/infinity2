@@ -62,7 +62,7 @@ class FormGenerator
             }
 
             // Render from template
-            $content = $this->twig->render('Generator/php/form_generated.php.twig', [
+            $content = $this->twig->render('generator/php/form_generated.php.twig', [
                 'entity' => $entity,
                 'namespace' => 'App\\Form\\Generated',
                 'className' => $entity->entityName . 'TypeGenerated',
@@ -108,7 +108,7 @@ class FormGenerator
 
         try {
             // Render from template
-            $content = $this->twig->render('Generator/php/form_extension.php.twig', [
+            $content = $this->twig->render('generator/php/form_extension.php.twig', [
                 'entity' => $entity,
                 'namespace' => 'App\\Form',
                 'className' => $entity->entityName . 'Type',

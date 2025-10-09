@@ -6,18 +6,34 @@ namespace App\Service\Generator;
 
 use App\Entity\Generator\GeneratorEntity;
 use App\Entity\Generator\GeneratorProperty;
+use App\Service\Generator\Csv\EntityDefinitionDto;
+use App\Service\Generator\Csv\PropertyDefinitionDto;
+use App\Service\Generator\Entity\EntityGenerator;
+use App\Service\Generator\Controller\ControllerGenerator;
+use App\Service\Generator\Form\FormGenerator;
+use App\Service\Generator\Repository\RepositoryGenerator;
+use App\Service\Generator\Template\TemplateGenerator;
+use App\Service\Generator\ApiPlatform\ApiPlatformGenerator;
+use App\Service\Generator\Voter\VoterGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * DatabaseDefinitionService
  *
  * Converts GeneratorEntity and GeneratorProperty from database
- * into definition arrays compatible with existing Generator services
+ * into DTOs compatible with existing Generator services
  */
 class DatabaseDefinitionService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
+        private readonly EntityGenerator $entityGenerator,
+        private readonly ControllerGenerator $controllerGenerator,
+        private readonly FormGenerator $formGenerator,
+        private readonly RepositoryGenerator $repositoryGenerator,
+        private readonly TemplateGenerator $templateGenerator,
+        private readonly ApiPlatformGenerator $apiPlatformGenerator,
+        private readonly VoterGenerator $voterGenerator,
     ) {
     }
 
@@ -31,36 +47,36 @@ class DatabaseDefinitionService
             'entityLabel' => $entity->getEntityLabel(),
             'pluralLabel' => $entity->getPluralLabel(),
             'icon' => $entity->getIcon(),
-            'description' => $entity->getDescription(),
+            'description' => $entity->getDescription() ?? '',
             'hasOrganization' => $entity->isHasOrganization(),
 
-            // API
+            // API (map database field names to DTO field names)
             'apiEnabled' => $entity->isApiEnabled(),
-            'apiOperations' => $entity->getApiOperations() ?? [],
-            'apiSecurity' => $entity->getApiSecurity(),
-            'apiNormalizationContext' => $entity->getApiNormalizationContext(),
-            'apiDenormalizationContext' => $entity->getApiDenormalizationContext(),
-            'apiPaginationEnabled' => $entity->isApiPaginationEnabled(),
-            'apiItemsPerPage' => $entity->getApiItemsPerPage(),
-            'apiDefaultOrder' => $entity->getApiDefaultOrder(),
-            'apiSearchableFields' => $entity->getApiSearchableFields(),
-            'apiFilterableFields' => $entity->getApiFilterableFields(),
+            'operations' => $entity->getApiOperations() ?? ['GetCollection', 'Get', 'Post', 'Put', 'Delete'],
+            'security' => $entity->getApiSecurity() ?? "is_granted('ROLE_USER')",
+            'normalizationContext' => $entity->getApiNormalizationContext() ?? '',
+            'denormalizationContext' => $entity->getApiDenormalizationContext() ?? '',
+            'paginationEnabled' => $entity->isApiPaginationEnabled(),
+            'itemsPerPage' => $entity->getApiItemsPerPage() ?? 30,
+            'order' => $entity->getApiDefaultOrder() ?? [],
+            'searchableFields' => $entity->getApiSearchableFields() ?? [],
+            'filterableFields' => $entity->getApiFilterableFields() ?? [],
 
             // Security
             'voterEnabled' => $entity->isVoterEnabled(),
             'voterAttributes' => $entity->getVoterAttributes() ?? ['VIEW', 'EDIT', 'DELETE'],
 
             // Form
-            'formTheme' => $entity->getFormTheme(),
+            'formTheme' => $entity->getFormTheme() ?? 'bootstrap_5_layout.html.twig',
 
             // Templates
-            'customIndexTemplate' => $entity->getCustomIndexTemplate(),
-            'customFormTemplate' => $entity->getCustomFormTemplate(),
-            'customShowTemplate' => $entity->getCustomShowTemplate(),
+            'indexTemplate' => $entity->getCustomIndexTemplate() ?? '',
+            'formTemplate' => $entity->getCustomFormTemplate() ?? '',
+            'showTemplate' => $entity->getCustomShowTemplate() ?? '',
 
             // Navigation
-            'menuGroup' => $entity->getMenuGroup(),
-            'menuOrder' => $entity->getMenuOrder(),
+            'menuGroup' => $entity->getMenuGroup() ?? '',
+            'menuOrder' => $entity->getMenuOrder() ?? 0,
 
             // Testing
             'testEnabled' => $entity->isTestEnabled(),
@@ -70,7 +86,7 @@ class DatabaseDefinitionService
         ];
 
         foreach ($entity->getProperties() as $property) {
-            $definition['properties'][] = $this->buildPropertyDefinition($property);
+            $definition['properties'][] = $this->buildPropertyDefinition($property, $entity->getEntityName());
         }
 
         return $definition;
@@ -79,9 +95,10 @@ class DatabaseDefinitionService
     /**
      * Build property definition from database property
      */
-    private function buildPropertyDefinition(GeneratorProperty $property): array
+    private function buildPropertyDefinition(GeneratorProperty $property, string $entityName): array
     {
         return [
+            'entityName' => $entityName,
             'propertyName' => $property->getPropertyName(),
             'propertyLabel' => $property->getPropertyLabel(),
             'propertyType' => $property->getPropertyType(),
@@ -100,18 +117,18 @@ class DatabaseDefinitionService
             'targetEntity' => $property->getTargetEntity(),
             'inversedBy' => $property->getInversedBy(),
             'mappedBy' => $property->getMappedBy(),
-            'cascade' => $property->getCascade(),
+            'cascade' => $property->getCascade() ?? [],
             'orphanRemoval' => $property->isOrphanRemoval(),
             'fetch' => $property->getFetch(),
-            'orderBy' => $property->getOrderBy(),
+            'orderBy' => $property->getOrderBy() ?? [],
 
             // Validation
-            'validationRules' => $property->getValidationRules(),
+            'validationRules' => $property->getValidationRules() ?? [],
             'validationMessage' => $property->getValidationMessage(),
 
             // Form
             'formType' => $property->getFormType(),
-            'formOptions' => $property->getFormOptions(),
+            'formOptions' => $property->getFormOptions() ?? [],
             'formRequired' => $property->isFormRequired(),
             'formReadOnly' => $property->isFormReadOnly(),
             'formHelp' => $property->getFormHelp(),
@@ -127,7 +144,15 @@ class DatabaseDefinitionService
             // API
             'apiReadable' => $property->isApiReadable(),
             'apiWritable' => $property->isApiWritable(),
-            'apiGroups' => $property->getApiGroups(),
+            'apiGroups' => $property->getApiGroups() ?? [],
+
+            // Indexing (not yet in database schema)
+            'indexed' => false,
+            'indexType' => null,
+            'compositeIndexWith' => null,
+
+            // Roles (not yet in database schema)
+            'allowedRoles' => null,
 
             // Localization
             'translationKey' => $property->getTranslationKey(),
@@ -135,117 +160,153 @@ class DatabaseDefinitionService
 
             // Fixtures
             'fixtureType' => $property->getFixtureType(),
-            'fixtureOptions' => $property->getFixtureOptions(),
+            'fixtureOptions' => $property->getFixtureOptions() ?? [],
         ];
     }
 
     /**
-     * Generate entity PHP code (placeholder - will integrate with existing generators)
+     * Convert database GeneratorEntity to EntityDefinitionDto for generators
      */
-    public function generateEntityCode(array $definition): string
+    public function buildEntityDto(GeneratorEntity $entity): EntityDefinitionDto
     {
-        return sprintf("// Entity: %s\n// TODO: Integrate with EntityGenerator", $definition['entityName']);
-    }
-
-    /**
-     * Generate repository PHP code (placeholder - will integrate with existing generators)
-     */
-    public function generateRepositoryCode(array $definition): string
-    {
-        return sprintf("// Repository: %sRepository\n// TODO: Integrate with RepositoryGenerator", $definition['entityName']);
-    }
-
-    /**
-     * Generate form PHP code (placeholder - will integrate with existing generators)
-     */
-    public function generateFormCode(array $definition): string
-    {
-        return sprintf("// Form: %sFormType\n// TODO: Integrate with FormGenerator", $definition['entityName']);
-    }
-
-    /**
-     * Generate controller PHP code (placeholder - will integrate with existing generators)
-     */
-    public function generateControllerCode(array $definition): string
-    {
-        return sprintf("// Controller: %sController\n// TODO: Integrate with ControllerGenerator", $definition['entityName']);
-    }
-
-    /**
-     * Generate templates code (placeholder - will integrate with existing generators)
-     */
-    public function generateTemplatesCode(array $definition): array
-    {
-        return [
-            'index' => sprintf("<!-- Index template for %s -->", $definition['entityName']),
-            'show' => sprintf("<!-- Show template for %s -->", $definition['entityName']),
-            'form' => sprintf("<!-- Form template for %s -->", $definition['entityName']),
-        ];
-    }
-
-    /**
-     * Generate API Platform configuration (placeholder)
-     */
-    public function generateApiPlatformCode(array $definition): ?string
-    {
-        if (!$definition['apiEnabled']) {
-            return null;
+        $propertyDtos = [];
+        foreach ($entity->getProperties() as $property) {
+            $propertyDtos[] = $this->buildPropertyDto($property, $entity->getEntityName());
         }
 
-        return sprintf("// API Platform for %s\n// TODO: Integrate with ApiPlatformGenerator", $definition['entityName']);
+        return new EntityDefinitionDto(
+            entityName: $entity->getEntityName(),
+            entityLabel: $entity->getEntityLabel(),
+            pluralLabel: $entity->getPluralLabel(),
+            icon: $entity->getIcon(),
+            description: $entity->getDescription() ?? '',
+            hasOrganization: $entity->isHasOrganization(),
+            apiEnabled: $entity->isApiEnabled(),
+            operations: $entity->getApiOperations() ?? ['GetCollection', 'Get', 'Post', 'Put', 'Delete'],
+            security: $entity->getApiSecurity() ?? "is_granted('ROLE_USER')",
+            normalizationContext: $entity->getApiNormalizationContext() ?? '',
+            denormalizationContext: $entity->getApiDenormalizationContext() ?? '',
+            paginationEnabled: $entity->isApiPaginationEnabled(),
+            itemsPerPage: $entity->getApiItemsPerPage(),
+            order: $entity->getApiDefaultOrder() ?? [],
+            searchableFields: $entity->getApiSearchableFields() ?? [],
+            filterableFields: $entity->getApiFilterableFields() ?? [],
+            voterEnabled: $entity->isVoterEnabled(),
+            voterAttributes: $entity->getVoterAttributes() ?? ['VIEW', 'EDIT', 'DELETE'],
+            formTheme: $entity->getFormTheme(),
+            indexTemplate: $entity->getCustomIndexTemplate() ?? '',
+            formTemplate: $entity->getCustomFormTemplate() ?? '',
+            showTemplate: $entity->getCustomShowTemplate() ?? '',
+            menuGroup: $entity->getMenuGroup() ?? '',
+            menuOrder: $entity->getMenuOrder(),
+            testEnabled: $entity->isTestEnabled(),
+            properties: $propertyDtos
+        );
     }
 
     /**
-     * Generate Security Voter (placeholder)
+     * Convert database GeneratorProperty to PropertyDefinitionDto
      */
-    public function generateVoterCode(array $definition): ?string
+    private function buildPropertyDto(GeneratorProperty $property, string $entityName): PropertyDefinitionDto
     {
-        if (!$definition['voterEnabled']) {
-            return null;
-        }
-
-        return sprintf("// Voter: %sVoter\n// TODO: Integrate with VoterGenerator", $definition['entityName']);
+        return new PropertyDefinitionDto(
+            entityName: $entityName,
+            propertyName: $property->getPropertyName(),
+            propertyLabel: $property->getPropertyLabel(),
+            propertyType: $property->getPropertyType(),
+            nullable: $property->isNullable(),
+            length: $property->getLength(),
+            precision: $property->getPrecision(),
+            scale: $property->getScale(),
+            unique: $property->isUnique(),
+            defaultValue: $property->getDefaultValue(),
+            relationshipType: $property->getRelationshipType(),
+            targetEntity: $property->getTargetEntity(),
+            inversedBy: $property->getInversedBy(),
+            mappedBy: $property->getMappedBy(),
+            cascade: $property->getCascade() ?? [],
+            orphanRemoval: $property->isOrphanRemoval(),
+            fetch: $property->getFetch(),
+            orderBy: $property->getOrderBy() ?? [],
+            indexed: false, // Not in database yet
+            indexType: null,
+            compositeIndexWith: null,
+            validationRules: $property->getValidationRules() ?? [],
+            validationMessage: $property->getValidationMessage(),
+            formType: $property->getFormType(),
+            formOptions: $property->getFormOptions() ?? [],
+            formRequired: $property->isFormRequired(),
+            formReadOnly: $property->isFormReadOnly(),
+            formHelp: $property->getFormHelp(),
+            showInList: $property->isShowInList(),
+            showInDetail: $property->isShowInDetail(),
+            showInForm: $property->isShowInForm(),
+            sortable: $property->isSortable(),
+            searchable: $property->isSearchable(),
+            filterable: $property->isFilterable(),
+            apiReadable: $property->isApiReadable(),
+            apiWritable: $property->isApiWritable(),
+            apiGroups: $property->getApiGroups() ?? [],
+            allowedRoles: null,
+            translationKey: $property->getTranslationKey(),
+            formatPattern: $property->getFormatPattern(),
+            fixtureType: $property->getFixtureType(),
+            fixtureOptions: $property->getFixtureOptions() ?? []
+        );
     }
 
     /**
-     * Generate Tests (placeholder)
-     */
-    public function generateTestCode(array $definition): ?string
-    {
-        if (!$definition['testEnabled']) {
-            return null;
-        }
-
-        return sprintf("// Tests for %s\n// TODO: Integrate with Test Generators", $definition['entityName']);
-    }
-
-    /**
-     * Generate all files and write to disk (placeholder - will integrate with existing generators)
+     * Generate all files and write to disk using existing generators
      */
     public function generateAllFiles(array $definition): array
     {
-        // For now, return placeholders
-        // TODO: Integrate with actual generator services
-        $generatedFiles = [
-            'entity' => sprintf('src/Entity/%s.php', $definition['entityName']),
-            'repository' => sprintf('src/Repository/%sRepository.php', $definition['entityName']),
-            'form' => sprintf('src/Form/%sFormType.php', $definition['entityName']),
-            'controller' => sprintf('src/Controller/%sController.php', $definition['entityName']),
-            'templates' => [
-                'index' => sprintf('templates/%s/index.html.twig', strtolower($definition['entityName'])),
-                'show' => sprintf('templates/%s/show.html.twig', strtolower($definition['entityName'])),
-            ],
-        ];
+        // Convert to DTO first
+        $entityDto = EntityDefinitionDto::fromArray($definition);
 
-        if ($definition['apiEnabled']) {
-            $generatedFiles['api'] = 'API Platform integrated in entity';
+        $generatedFiles = [];
+
+        try {
+            // Generate Entity (both Generated base and extension)
+            $entityFiles = $this->entityGenerator->generate($entityDto);
+            $generatedFiles['entity'] = $entityFiles;
+
+            // Generate Repository
+            $repositoryFiles = $this->repositoryGenerator->generate($entityDto);
+            $generatedFiles['repository'] = $repositoryFiles;
+
+            // Generate Form
+            $formFiles = $this->formGenerator->generate($entityDto);
+            $generatedFiles['form'] = $formFiles;
+
+            // Generate Controller
+            $controllerFiles = $this->controllerGenerator->generate($entityDto);
+            $generatedFiles['controller'] = $controllerFiles;
+
+            // Generate Templates
+            $templateFiles = $this->templateGenerator->generate($entityDto);
+            $generatedFiles['templates'] = $templateFiles;
+
+            // Generate API Platform (if enabled)
+            if ($entityDto->apiEnabled) {
+                $apiFiles = $this->apiPlatformGenerator->generate($entityDto);
+                $generatedFiles['api'] = $apiFiles;
+            }
+
+            // Generate Voter (if enabled)
+            if ($entityDto->voterEnabled) {
+                $voterFiles = $this->voterGenerator->generate($entityDto);
+                $generatedFiles['voter'] = $voterFiles;
+            }
+
+            return $generatedFiles;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException(
+                sprintf('Failed to generate files for %s: %s', $definition['entityName'], $e->getMessage()),
+                0,
+                $e
+            );
         }
-
-        if ($definition['voterEnabled']) {
-            $generatedFiles['voter'] = sprintf('src/Security/Voter/%sVoter.php', $definition['entityName']);
-        }
-
-        return $generatedFiles;
     }
 
     /**
@@ -253,15 +314,38 @@ class DatabaseDefinitionService
      */
     public function previewGeneration(array $definition): array
     {
-        return [
-            'entity' => $this->generateEntityCode($definition),
-            'repository' => $this->generateRepositoryCode($definition),
-            'form' => $this->generateFormCode($definition),
-            'controller' => $this->generateControllerCode($definition),
-            'templates' => $this->generateTemplatesCode($definition),
-            'api' => $this->generateApiPlatformCode($definition),
-            'voter' => $this->generateVoterCode($definition),
-            'test' => $this->generateTestCode($definition),
+        // For preview, we just show the file paths that would be generated
+        $entityDto = EntityDefinitionDto::fromArray($definition);
+
+        $preview = [
+            'entity' => [
+                'Generated/' . $entityDto->entityName . 'Generated.php',
+                $entityDto->entityName . '.php',
+            ],
+            'repository' => [
+                $entityDto->entityName . 'Repository.php',
+            ],
+            'form' => [
+                $entityDto->entityName . 'FormType.php',
+            ],
+            'controller' => [
+                $entityDto->entityName . 'Controller.php',
+            ],
+            'templates' => [
+                'index.html.twig',
+                'show.html.twig',
+                '_form.html.twig',
+            ],
         ];
+
+        if ($entityDto->apiEnabled) {
+            $preview['api'] = 'Integrated in entity class';
+        }
+
+        if ($entityDto->voterEnabled) {
+            $preview['voter'] = [$entityDto->entityName . 'Voter.php'];
+        }
+
+        return $preview;
     }
 }

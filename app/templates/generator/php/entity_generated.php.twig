@@ -15,6 +15,16 @@ use Doctrine\Common\Collections\Collection;
 {% endif %}
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+{% set relationshipProperties = entity.properties|filter(p => p.isRelationship() and (not usesOrganizationTrait or p.propertyName != 'organization')) %}
+{% set targetEntities = [] %}
+{% for property in relationshipProperties %}
+    {% if property.targetEntity not in targetEntities %}
+        {% set targetEntities = targetEntities|merge([property.targetEntity]) %}
+    {% endif %}
+{% endfor %}
+{% for targetEntity in targetEntities %}
+use App\Entity\{{ targetEntity }};
+{% endfor %}
 
 /**
  * {{ entity.entityLabel }} Entity (Generated Base Class)
@@ -54,43 +64,27 @@ abstract class {{ className }} extends {{ extendsClass }}
 
 {% endif %}
 {% for property in entity.properties %}
-{% if not property.isRelationship() %}
-    #[ORM\Column(
-        type: '{{ property.propertyType }}'
-{%- if property.length %}, length: {{ property.length }}{% endif %}
-{%- if property.precision %}, precision: {{ property.precision }}{% endif %}
-{%- if property.scale %}, scale: {{ property.scale }}{% endif %}
-{%- if property.nullable %}, nullable: true{% endif %}
-{%- if property.unique %}, unique: true{% endif %}
-    )]
+{% if usesOrganizationTrait and property.propertyName == 'organization' %}
+{# Skip organization property - provided by OrganizationTrait #}
+{% elseif not property.isRelationship() %}
+    #[ORM\Column(type: '{{ property.propertyType }}'{% if property.length %}, length: {{ property.length }}{% endif %}{% if property.precision %}, precision: {{ property.precision }}{% endif %}{% if property.scale %}, scale: {{ property.scale }}{% endif %}{% if property.nullable %}, nullable: true{% endif %}{% if property.unique %}, unique: true{% endif %})]
 {% for rule in property.validationRules %}
-    #[Assert\{{ rule }}]
+    #[Assert\{{ rule|replace({'=': ': '}) }}]
 {% endfor %}
 {% if property.apiGroups|length > 0 %}
-{% for group in property.apiGroups %}
-    #[Groups(['{{ group }}'])]
-{% endfor %}
+    #[Groups([{% for group in property.apiGroups %}'{{ group }}'{% if not loop.last %}, {% endif %}{% endfor %}])]
 {% endif %}
-    protected {{ property.getPhpType() }}{% if property.nullable %}?{% endif %} ${{ property.propertyName }}{% if property.defaultValue %} = {{ property.defaultValue }}{% elseif property.nullable %} = null{% endif %};
+    protected {% if property.nullable %}?{% endif %}{{ property.getPhpType() }} ${{ property.propertyName }}{% if property.defaultValue %} = {{ property.defaultValue }}{% elseif property.nullable %} = null{% endif %};
 
 {% else %}
 {# Relationship properties #}
 {% if property.isCollection() %}
-    #[ORM\{{ property.relationshipType }}(
-        targetEntity: {{ property.targetEntity }}::class
-{%- if property.mappedBy %}, mappedBy: '{{ property.mappedBy }}'{% endif %}
-{%- if property.inversedBy %}, inversedBy: '{{ property.inversedBy }}'{% endif %}
-{%- if property.cascade|length > 0 %}, cascade: [{% for op in property.cascade %}'{{ op }}'{% if not loop.last %}, {% endif %}{% endfor %}]{% endif %}
-{%- if property.orphanRemoval %}, orphanRemoval: true{% endif %}
-{%- if property.fetch %}, fetch: '{{ property.fetch }}'{% endif %}
-    )]
+    #[ORM\{{ property.relationshipType }}(targetEntity: {{ property.targetEntity }}::class{% if property.relationshipType == 'OneToMany' %}{% if property.mappedBy %}, mappedBy: '{{ property.mappedBy }}'{% elseif property.inversedBy %}, mappedBy: '{{ property.inversedBy }}'{% endif %}{% else %}{% if property.mappedBy %}, mappedBy: '{{ property.mappedBy }}'{% endif %}{% if property.inversedBy %}, inversedBy: '{{ property.inversedBy }}'{% endif %}{% endif %}{% if property.cascade|length > 0 %}, cascade: [{% for op in property.cascade %}'{{ op }}'{% if not loop.last %}, {% endif %}{% endfor %}]{% endif %}{% if property.orphanRemoval %}, orphanRemoval: true{% endif %}{% if property.fetch %}, fetch: '{{ property.fetch }}'{% endif %})]
 {% if property.orderBy|length > 0 %}
     #[ORM\OrderBy([{% for field, direction in property.orderBy %}'{{ field }}' => '{{ direction|upper }}'{% if not loop.last %}, {% endif %}{% endfor %}])]
 {% endif %}
 {% if property.apiGroups|length > 0 %}
-{% for group in property.apiGroups %}
-    #[Groups(['{{ group }}'])]
-{% endfor %}
+    #[Groups([{% for group in property.apiGroups %}'{{ group }}'{% if not loop.last %}, {% endif %}{% endfor %}])]
 {% endif %}
     protected Collection ${{ property.propertyName }};
 
@@ -101,9 +95,7 @@ abstract class {{ className }} extends {{ extendsClass }}
     #[ORM\JoinColumn(nullable: false)]
 {% endif %}
 {% if property.apiGroups|length > 0 %}
-{% for group in property.apiGroups %}
-    #[Groups(['{{ group }}'])]
-{% endfor %}
+    #[Groups([{% for group in property.apiGroups %}'{{ group }}'{% if not loop.last %}, {% endif %}{% endfor %}])]
 {% endif %}
     protected {% if property.nullable %}?{% endif %}{{ property.targetEntity }} ${{ property.propertyName }}{% if property.nullable %} = null{% endif %};
 
@@ -122,7 +114,9 @@ abstract class {{ className }} extends {{ extendsClass }}
     }
 
 {% for property in entity.properties %}
-{% if not property.isRelationship() %}
+{% if usesOrganizationTrait and property.propertyName == 'organization' %}
+{# Skip organization methods - provided by OrganizationTrait #}
+{% elseif not property.isRelationship() %}
     public function get{{ property.propertyName|capitalize }}(): {% if property.nullable %}?{% endif %}{{ property.getPhpType() }}
     {
         return $this->{{ property.propertyName }};
@@ -174,6 +168,8 @@ abstract class {{ className }} extends {{ extendsClass }}
         return $this;
     }
 
+{% elseif usesOrganizationTrait and property.propertyName == 'organization' %}
+{# Skip organization relationship methods - provided by OrganizationTrait #}
 {% else %}
     public function get{{ property.propertyName|capitalize }}(): {% if property.nullable %}?{% endif %}{{ property.targetEntity }}
     {
@@ -199,4 +195,4 @@ abstract class {{ className }} extends {{ extendsClass }}
         return (string) $this->getId()->toRfc4122();
 {% endif %}
     }
-%}
+}

@@ -1,0 +1,316 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Talks'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="bi-circle me-2"></i>
+            {{ 'Talks'|trans }}
+        </h1>
+        <a href="{{ path('talk_new') }}"
+           class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            {{ 'action.create'|trans }}
+        </a>
+    </div>
+
+    {# Search and Filter #}
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" data-turbo="true">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="search"
+                               name="q"
+                               value="{{ app.request.query.get('q') }}"
+                               class="form-control"
+                               placeholder="{{ 'action.search'|trans }}...">
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-secondary w-100">
+                            <i class="bi bi-search me-1"></i>
+                            {{ 'action.search'|trans }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Data Table #}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'organization', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Organization'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'contact', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Contact'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'users', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Users'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'agents', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Agents'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'deal', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Deal'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'talkType', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'TalkType'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'campaigns', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Campaigns'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'dateStart', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'DateStart'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'dateLastMessage', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'DateLastMessage'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'status', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Status'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'summary', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Summary'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'subject', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Subject'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'messages', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Messages'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'outcome', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Outcome'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'priority', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Priority'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'channel', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Channel'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'durationSeconds', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'DurationSeconds'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'recordingUrl', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'RecordingUrl'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('talk_index', {sort: 'isArchived', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'IsArchived'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>{{ 'action.label'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="talk-list">
+                        {% for item in items %}
+                        <tr id="talk-{{ item.id }}">
+
+                            <td>{{ item.organization }}</td>
+
+                            <td>{{ item.contact }}</td>
+
+                            <td>{{ item.deal }}</td>
+
+                            <td>{{ item.talkType }}</td>
+
+                            <td>{{ item.dateStart }}</td>
+
+                            <td>{{ item.dateLastMessage }}</td>
+
+                            <td>{{ item.status }}</td>
+
+                            <td>{{ item.summary }}</td>
+
+                            <td>{{ item.subject }}</td>
+
+                            <td>{{ item.outcome }}</td>
+
+                            <td>{{ item.priority }}</td>
+
+                            <td>{{ item.channel }}</td>
+
+                            <td>{{ item.durationSeconds }}</td>
+
+                            <td>{{ item.recordingUrl }}</td>
+
+                            <td>{{ item.isArchived }}</td>
+
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('talk_show', {id: item.id}) }}"
+                                       class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ path('talk_edit', {id: item.id}) }}"
+                                       class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form method="post"
+                                          action="{{ path('talk_delete', {id: item.id}) }}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Pagination #}
+            {% if items.haveToPaginate %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {{ knp_pagination_render(items) }}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

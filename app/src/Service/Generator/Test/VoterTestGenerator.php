@@ -49,7 +49,7 @@ class VoterTestGenerator
             'path' => $filePath
         ]);
 
-        $content = $this->twig->render('Generator/test/voter_test.php.twig', [
+        $content = $this->twig->render('generator/test/voter_test.php.twig', [
             'entity' => $entity,
         ]);
 
