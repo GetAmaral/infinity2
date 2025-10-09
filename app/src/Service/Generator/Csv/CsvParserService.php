@@ -341,6 +341,11 @@ class CsvParserService
             ));
         }
 
+        // Ensure we return array (json_decode with associative=true should return array, but check type)
+        if (!is_array($decoded)) {
+            return [$decoded];  // Wrap scalars in array
+        }
+
         return $decoded;
     }
 

@@ -68,7 +68,7 @@ Module,enabled,Enabled,boolean,1,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,1
 Module,version,Version,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"module:read,module:write",,,,word,{}
 User,name,Name,string,,,,,,,,,,,,,LAZY,,composite,organization,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"user:read,user:write",MANAGER,,,word,{}
 User,organization,Organization,,1,,,,,,ManyToOne,Organization,users,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"user:read,user:write",,,,,{}
-User,email,Email,string,,,,,1,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"user:read,user:write",,,,word,{}
+User,email,Email,string,,,,,1,,,,,,,,LAZY,,composite,organization,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"user:read,user:write",,,,word,{}
 User,password,Password,string,,,,,,,,,,,,,LAZY,,,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"user:read,user:write",,,,word,{}
 User,celPhone,CelPhone,string,1,20,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"user:read,user:write",,,,word,{}
 User,grantedRoles,GrantedRoles,,1,,,,,,ManyToMany,Role,,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"user:read,user:write",,,,,{}
@@ -148,7 +148,7 @@ Contact,accountManager,AccountManager,,1,,,,,,ManyToOne,User,managedContacts,,,,
 Contact,accountTeam,AccountTeam,,1,,,,,,ManyToMany,User,contacts,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
 Contact,nickname,Nickname,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,ranking,Ranking,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,randomNumber,{}
-Contact,email,Email,string,1,,,,1,,,,,,,,LAZY,,simple,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
+Contact,email,Email,string,1,,,,1,,,,,,,,LAZY,,unique,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,phone,Phone,string,1,20,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,address,Address,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,neighborhood,Neighborhood,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
@@ -177,7 +177,7 @@ Contact,campaigns,Campaigns,,1,,,,,,ManyToMany,Campaign,contacts,,,,LAZY,,,,,,En
 Company,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"company:read,company:write",CLIENT,,,word,{}
 Company,organization,Organization,,1,,,,,,ManyToOne,Organization,companies,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"company:read,company:write",,,,,{}
 Company,accountManager,AccountManager,,1,,,,,,ManyToOne,User,managedCompanies,,,,LAZY,,composite,organization|status,,,EntityType,{},,,,1,1,1,1,,,1,1,"company:read,company:write",,,,,{}
-Company,email,Email,string,1,,,,1,,,,,,,,LAZY,,simple,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
+Company,email,Email,string,1,,,,1,,,,,,,,LAZY,,unique,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
 Company,document,Document,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
 Company,address,Address,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
 Company,city,City,,1,,,,,,ManyToOne,City,,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"company:read,company:write",,,,,{}
@@ -525,7 +525,7 @@ Campaign,plannedEndDate,PlannedEndDate,datetime,1,,,,,,,,,,,,LAZY,,,,,,DateTimeT
 Campaign,endDate,EndDate,datetime,1,,,,,,,,,,,,LAZY,,composite,organization,,,DateTimeType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,dateTime,{}
 Campaign,plannedDuration,PlannedDuration,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,randomNumber,{}
 Campaign,duration,Duration,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,randomNumber,{}
-Campaign,manager,Manager,,1,,,,,,ManyToOne,User,managedCampaigns,,,,LAZY,,composite,organization,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
+Campaign,manager,Manager,,1,,,,,,ManyToOne,User,managedCampaigns,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
 Campaign,team,Team,,1,,,,,,ManyToMany,User,campaigns,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
 Campaign,contacts,Contacts,,1,,,,,,ManyToMany,Contact,campaigns,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
 Campaign,companies,Companies,,1,,,,,,ManyToMany,Company,campaigns,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
@@ -597,7 +597,7 @@ EventAttendee,event,Event,,1,,,,,,ManyToOne,Event,attendees,,,,LAZY,,simple,,,,E
 EventAttendee,user,User,,1,,,,,,ManyToOne,User,eventAttendances,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"eventattendee:read,eventattendee:write",,,,,{}
 EventAttendee,contact,Contact,,1,,,,,,ManyToOne,Contact,eventAttendances,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"eventattendee:read,eventattendee:write",,,,,{}
 EventAttendee,notifications,Notifications,,1,,,,,,OneToMany,Notification,attendee,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"eventattendee:read,eventattendee:write",,,,,{}
-EventAttendee,email,Email,string,1,,,,1,,,,,,,,LAZY,,simple,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"eventattendee:read,eventattendee:write",,,,word,{}
+EventAttendee,email,Email,string,1,,,,1,,,,,,,,LAZY,,unique,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"eventattendee:read,eventattendee:write",,,,word,{}
 EventAttendee,phone,Phone,string,1,50,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"eventattendee:read,eventattendee:write",,,,word,{}
 EventAttendee,attendeeStatus,AttendeeStatus,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"eventattendee:read,eventattendee:write",,,,randomNumber,{}
 EventAttendee,comment,Comment,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"eventattendee:read,eventattendee:write",,,,paragraph,{}
@@ -691,15 +691,15 @@ CommunicationMethod,function,Function,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255
 CommunicationMethod,property,Property,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"communicationmethod:read,communicationmethod:write",,,,word,{}
 CommunicationMethod,reminders,Reminders,,1,,,,,,OneToMany,Reminder,communicationMethod,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"communicationmethod:read,communicationmethod:write",,,,,{}
 CommunicationMethod,notifications,Notifications,,1,,,,,,OneToMany,Notification,communicationMethod,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"communicationmethod:read,communicationmethod:write",,,,,{}
-Course,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"course:read,course:write",TEACHER,,,word,{}
+Course,name,Name,string,,,,,,,,,,,,,LAZY,,,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"course:read,course:write",TEACHER,,,word,{}
 Course,organization,Organization,,1,,,,,,ManyToOne,Organization,courses,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"course:read,course:write",,,,,{}
 Course,description,Description,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"course:read,course:write",,,,paragraph,{}
 Course,status,Status,boolean,1,,,,,,,,,,,,LAZY,,composite,organization,,,CheckboxType,{},,,,1,1,1,1,,,1,1,"course:read,course:write",,,,boolean,{}
-Course,owner,Owner,,1,,,,,,ManyToOne,User,ownedCourses,,,,LAZY,,composite,organization,,,EntityType,{},,,,1,1,1,1,,,1,1,"course:read,course:write",,,,,{}
+Course,owner,Owner,,1,,,,,,ManyToOne,User,ownedCourses,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"course:read,course:write",,,,,{}
 Course,lectures,Lectures,,1,,,,,,OneToMany,Lecture,course,,"persist,remove",1,LAZY,order,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"course:read,course:write",,,,,{}
 Course,lengthMinutes,LengthMinutes,float,1,,,,,,,,,,,,LAZY,,,,,,TextType,{},,,,1,1,1,1,,,1,1,"course:read,course:write",,,,word,{}
 Course,userCourses,UserCourses,,1,,,,,,OneToMany,UserCourse,course,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"course:read,course:write",,,,,{}
-Lecture,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"lecture:read,lecture:write",TEACHER,,,word,{}
+Lecture,name,Name,string,,,,,,,,,,,,,LAZY,,,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"lecture:read,lecture:write",TEACHER,,,word,{}
 Lecture,organization,Organization,,1,,,,,,ManyToOne,Organization,lectures,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"lecture:read,lecture:write",,,,,{}
 Lecture,course,Course,,1,,,,,,ManyToOne,Course,lectures,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"lecture:read,lecture:write",,,,,{}
 Lecture,userLectures,UserLectures,,1,,,,,,OneToMany,UserLecture,lecture,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"lecture:read,lecture:write",,,,,{}

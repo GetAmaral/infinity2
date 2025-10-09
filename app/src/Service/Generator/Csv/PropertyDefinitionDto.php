@@ -13,6 +13,7 @@ class PropertyDefinitionDto
      * @param array<string, string> $orderBy
      * @param array<string> $apiGroups
      * @param array<string, mixed> $fixtureOptions
+     * @param array<string>|string|null $compositeIndexWith - Support both array (new format with |) and string (legacy)
      */
     public function __construct(
         public readonly string $entityName,
@@ -35,7 +36,7 @@ class PropertyDefinitionDto
         public readonly array $orderBy,
         public readonly bool $indexed,
         public readonly ?string $indexType,
-        public readonly ?string $compositeIndexWith,
+        public readonly array|string|null $compositeIndexWith,
         public readonly array $validationRules,
         public readonly ?string $validationMessage,
         public readonly ?string $formType,
