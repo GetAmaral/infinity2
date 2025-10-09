@@ -1,0 +1,374 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Generator Studio - Visual Database Designer{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Generator Canvas Styles */
+        .generator-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+        }
+
+        .generator-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: default;
+            overflow: visible;
+        }
+
+        /* Canvas Background Grid */
+        .generator-canvas::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .generator-canvas-transform {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Entity Nodes */
+        .generator-entity-node {
+            position: absolute;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: move;
+            min-width: 280px;
+            max-width: 350px;
+            transition: box-shadow 0.2s, border-color 0.2s;
+            z-index: 10;
+        }
+
+        .generator-entity-node:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            border-color: #0d6efd;
+        }
+
+        /* Entity Header */
+        .entity-node-header {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            color: white;
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: move;
+            font-weight: 600;
+        }
+
+        .entity-node-header i {
+            font-size: 1.2rem;
+        }
+
+        .node-title {
+            flex: 1;
+            font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .entity-edit-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .entity-edit-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Entity Badges */
+        .entity-node-badges {
+            padding: 8px 16px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .entity-node-badges .badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+        }
+
+        /* Entity Body - Properties List */
+        .entity-node-body {
+            padding: 12px 16px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .properties-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .property-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+
+        .property-item:hover {
+            background: #e9ecef;
+        }
+
+        .property-item .type {
+            color: #6c757d;
+            font-size: 0.75rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .property-item .badge-rel {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            margin-left: 6px;
+        }
+
+        .empty-list {
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Relationship Lines (SVG) */
+        #connections-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: visible;
+        }
+
+        .relationship-line {
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+            cursor: pointer;
+            transition: stroke-width 0.2s;
+        }
+
+        /* Canvas Controls */
+        .canvas-controls {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .canvas-control-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .canvas-control-btn:hover {
+            background: #f8f9fa;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .canvas-zoom-display {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Canvas Legend */
+        .canvas-legend {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .legend-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 0.813rem;
+        }
+
+        .legend-line {
+            display: inline-block;
+            width: 30px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        /* Loading Overlay */
+        .canvas-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .canvas-loading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e9ecef;
+            border-top-color: #0d6efd;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .canvas-empty-state {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid" id="generator-studio-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>
+            <i class="bi bi-diagram-3 me-2"></i>
+            Generator Studio
+        </h1>
+
+        <div class="btn-group">
+            <a href="{{ path('admin_generator_entity_create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> New Entity
+            </a>
+            <button type="button" class="btn btn-outline-secondary" data-action="click->generator-canvas#autoLayout">
+                <i class="bi bi-grid-3x3"></i> Auto Layout
+            </button>
+            <button type="button" class="btn btn-outline-secondary" data-action="click->generator-canvas#fitToScreen">
+                <i class="bi bi-arrows-angle-expand"></i> Fit to Screen
+            </button>
+            <button type="button" class="btn btn-outline-secondary" data-action="click->generator-canvas#toggleFullscreen">
+                <i class="bi bi-fullscreen"></i> Fullscreen
+            </button>
+        </div>
+    </div>
+
+    <div class="luminai-card p-0 position-relative"
+         data-controller="generator-canvas"
+         data-generator-canvas-entities-value="{{ entities|json_encode|e('html_attr') }}"
+         data-generator-canvas-canvas-state-value="{{ {scale: canvasState.scale, offsetX: canvasState.offsetX, offsetY: canvasState.offsetY}|json_encode|e('html_attr') }}">
+
+        {# Canvas Controls #}
+        <div class="canvas-controls">
+            <button type="button" class="canvas-control-btn" data-action="click->generator-canvas#zoomIn" title="Zoom In">
+                <i class="bi bi-zoom-in"></i>
+            </button>
+            <button type="button" class="canvas-control-btn" data-action="click->generator-canvas#zoomOut" title="Zoom Out">
+                <i class="bi bi-zoom-out"></i>
+            </button>
+            <button type="button" class="canvas-control-btn" data-action="click->generator-canvas#fitToScreen" title="Fit to Screen">
+                <i class="bi bi-arrows-fullscreen"></i>
+            </button>
+            <div class="canvas-zoom-display">
+                <span id="zoom-percentage">100%</span>
+            </div>
+        </div>
+
+        {# Main Canvas #}
+        <div class="generator-canvas-container" data-generator-canvas-target="canvasContainer">
+            <div class="generator-canvas" data-generator-canvas-target="canvas">
+                {# Entities and connections will be rendered here by Stimulus #}
+            </div>
+        </div>
+
+        {# Legend #}
+        <div class="canvas-legend">
+            <div class="legend-title">Relationships</div>
+            <div class="legend-item">
+                <span class="legend-line" style="background: #3b82f6;"></span>
+                <span>ManyToOne</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-line" style="background: #10b981;"></span>
+                <span>OneToMany</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-line" style="background: #8b5cf6;"></span>
+                <span>ManyToMany</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-line" style="background: #f59e0b;"></span>
+                <span>OneToOne</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

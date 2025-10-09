@@ -10,7 +10,7 @@ Organization,geo,Geo,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,
 Organization,celPhone,CelPhone,string,1,20,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"organization:read,organization:write",,,,word,{}
 Organization,businessPhone,BusinessPhone,string,1,20,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"organization:read,organization:write",,,,word,{}
 Organization,contactName,ContactName,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"organization:read,organization:write",,,,word,{}
-Organization,website,Website,string,1,,,,,,,,,,,,LAZY,,,,"Url,Length(max=255)",,TextType,{},,,,1,1,1,1,1,,1,1,"organization:read,organization:write",,,,word,{}
+Organization,website,Website,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"organization:read,organization:write",,,,word,{}
 Organization,logoUrl,LogoUrl,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"organization:read,organization:write",,,,word,{}
 Organization,branding,Branding,json,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,word,{}
 Organization,navConfig,NavConfig,json,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,word,{}
@@ -25,8 +25,8 @@ Organization,industry,Industry,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,Text
 Organization,companySize,CompanySize,integer,1,10,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,randomNumber,{}
 Organization,socialMedias,SocialMedias,,1,,,,,,OneToMany,SocialMedia,organization,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
 Organization,modules,Modules,,1,,,,,,ManyToMany,Module,,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
-Organization,users,Users,,1,,,,,,OneToMany,User,organization,,,,EXTRA_LAZY,"{""createdAt"": ""asc""}",,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
-Organization,contacts,Contacts,,1,,,,,,OneToMany,Contact,organization,,,,EXTRA_LAZY,"{""createdAt"": ""desc""}",,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
+Organization,users,Users,,1,,,,,,OneToMany,User,organization,,,,EXTRA_LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
+Organization,contacts,Contacts,,1,,,,,,OneToMany,Contact,organization,,,,EXTRA_LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
 Organization,companies,Companies,,1,,,,,,OneToMany,Company,organization,,,,EXTRA_LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
 Organization,profiles,Profiles,,1,,,,,,OneToMany,Profile,organization,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
 Organization,flags,Flags,,1,,,,,,OneToMany,Flag,organization,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
@@ -34,7 +34,7 @@ Organization,agents,Agents,,1,,,,,,OneToMany,Agent,organization,,,,LAZY,name,,,,
 Organization,talks,Talks,,1,,,,,,OneToMany,Talk,organization,,,,EXTRA_LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
 Organization,talkTypes,TalkTypes,,1,,,,,,OneToMany,TalkType,organization,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
 Organization,talkMessages,TalkMessages,,1,,,,,,OneToMany,TalkMessage,organization,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
-Organization,deals,Deals,,1,,,,,,OneToMany,Deal,organization,,,,EXTRA_LAZY,"{""createdAt"": ""desc""}",,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
+Organization,deals,Deals,,1,,,,,,OneToMany,Deal,organization,,,,EXTRA_LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
 Organization,dealStages,DealStages,,1,,,,,,OneToMany,DealStage,organization,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
 Organization,pipelines,Pipelines,,1,,,,,,OneToMany,Pipeline,organization,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
 Organization,pipelineStages,PipelineStages,,1,,,,,,OneToMany,PipelineStage,organization,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"organization:read,organization:write",,,,,{}
@@ -68,7 +68,7 @@ Module,enabled,Enabled,boolean,1,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,1
 Module,version,Version,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"module:read,module:write",,,,word,{}
 User,name,Name,string,,,,,,,,,,,,,LAZY,,composite,organization,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"user:read,user:write",MANAGER,,,word,{}
 User,organization,Organization,,1,,,,,,ManyToOne,Organization,users,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"user:read,user:write",,,,,{}
-User,email,Email,string,,,,,1,,,,,,,,LAZY,,simple,,"NotBlank,Email,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"user:read,user:write",,,,word,{}
+User,email,Email,string,,,,,1,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"user:read,user:write",,,,word,{}
 User,password,Password,string,,,,,,,,,,,,,LAZY,,,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"user:read,user:write",,,,word,{}
 User,celPhone,CelPhone,string,1,20,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"user:read,user:write",,,,word,{}
 User,grantedRoles,GrantedRoles,,1,,,,,,ManyToMany,Role,,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"user:read,user:write",,,,,{}
@@ -141,15 +141,15 @@ SocialMedia,contact,Contact,,1,,,,,,ManyToOne,Contact,socialMedias,,,,LAZY,,simp
 SocialMedia,company,Company,,1,,,,,,ManyToOne,Company,socialMedias,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"socialmedia:read,socialmedia:write",,,,,{}
 SocialMedia,campaigns,Campaigns,,1,,,,,,ManyToMany,Campaign,socialMedias,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"socialmedia:read,socialmedia:write",,,,,{}
 Contact,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"contact:read,contact:write",CLIENT,,,word,{}
-Contact,organization,Organization,,,,,,,,ManyToOne,Organization,contacts,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"contact:read,contact:write",,,,,{}
+Contact,organization,Organization,,1,,,,,,ManyToOne,Organization,contacts,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"contact:read,contact:write",,,,,{}
 Contact,company,Company,,1,,,,,,ManyToOne,Company,contacts,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
 Contact,origin,Origin,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,accountManager,AccountManager,,1,,,,,,ManyToOne,User,managedContacts,,,,LAZY,,composite,organization|status,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
 Contact,accountTeam,AccountTeam,,1,,,,,,ManyToMany,User,contacts,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
 Contact,nickname,Nickname,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,ranking,Ranking,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,randomNumber,{}
-Contact,email,Email,string,1,,,,1,,,,,,,,LAZY,,simple,,"Email,Length(max=255)",,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
-Contact,phone,Phone,string,1,20,,,,,,,,,,,LAZY,,,,"Regex(pattern=""/^[\d\s\+\-\(\)]+$/"",message=""Invalid phone"")",,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
+Contact,email,Email,string,1,,,,1,,,,,,,,LAZY,,simple,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
+Contact,phone,Phone,string,1,20,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,address,Address,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,neighborhood,Neighborhood,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,city,City,,1,,,,,,ManyToOne,City,,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
@@ -160,9 +160,9 @@ Contact,gender,Gender,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,
 Contact,document,Document,string,1,20,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,score,Score,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,randomNumber,{}
 Contact,notes,Notes,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,paragraph,{}
-Contact,socialMedias,SocialMedias,,1,,,,,,OneToMany,SocialMedia,contact,,"persist,remove",1,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
-Contact,flags,Flags,,1,,,,,,OneToMany,Flag,contact,,"persist,remove",1,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
-Contact,talks,Talks,,1,,,,,,OneToMany,Talk,contact,,persist,,EXTRA_LAZY,"{""createdAt"": ""desc""}",,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
+Contact,socialMedias,SocialMedias,,1,,,,,,OneToMany,SocialMedia,contact,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
+Contact,flags,Flags,,1,,,,,,OneToMany,Flag,contact,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
+Contact,talks,Talks,,1,,,,,,OneToMany,Talk,contact,,,,EXTRA_LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
 Contact,firstTalkDate,FirstTalkDate,datetime,1,,,,,,,,,,,,LAZY,,,,,,DateTimeType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,dateTime,{}
 Contact,lastTalkDate,LastTalkDate,datetime,1,,,,,,,,,,,,LAZY,,,,,,DateTimeType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,dateTime,{}
 Contact,profilePictureUrl,ProfilePictureUrl,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
@@ -170,12 +170,12 @@ Contact,status,Status,integer,1,,,,,,,,,,,,LAZY,,composite,organization|accountM
 Contact,billingAddress,BillingAddress,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"contact:read,contact:write",,,,word,{}
 Contact,billingCity,BillingCity,,1,,,,,,ManyToOne,City,,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
 Contact,primaryDeals,PrimaryDeals,,1,,,,,,OneToMany,Deal,primaryContact,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
-Contact,tasks,Tasks,,1,,,,,,OneToMany,Task,contact,,,,EXTRA_LAZY,"{""dueDate"": ""asc""}",,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
+Contact,tasks,Tasks,,1,,,,,,OneToMany,Task,contact,,,,EXTRA_LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
 Contact,eventAttendances,EventAttendances,,1,,,,,,OneToMany,EventAttendee,contact,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
-Contact,deals,Deals,,1,,,,,,ManyToMany,Deal,contacts,,,,EXTRA_LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
+Contact,deals,Deals,,1,,,,,,ManyToMany,Deal,contacts,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
 Contact,campaigns,Campaigns,,1,,,,,,ManyToMany,Campaign,contacts,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"contact:read,contact:write",,,,,{}
 Company,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"company:read,company:write",CLIENT,,,word,{}
-Company,organization,Organization,,,,,,,,ManyToOne,Organization,companies,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"company:read,company:write",,,,,{}
+Company,organization,Organization,,1,,,,,,ManyToOne,Organization,companies,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"company:read,company:write",,,,,{}
 Company,accountManager,AccountManager,,1,,,,,,ManyToOne,User,managedCompanies,,,,LAZY,,composite,organization|status,,,EntityType,{},,,,1,1,1,1,,,1,1,"company:read,company:write",,,,,{}
 Company,email,Email,string,1,,,,1,,,,,,,,LAZY,,simple,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
 Company,document,Document,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
@@ -186,10 +186,10 @@ Company,geo,Geo,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,
 Company,celPhone,CelPhone,string,1,20,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
 Company,businesPhone,BusinesPhone,string,1,20,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
 Company,contactName,ContactName,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
-Company,website,Website,string,1,,,,,,,,,,,,LAZY,,,,"Url,Length(max=255)",,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
-Company,socialMedias,SocialMedias,,1,,,,,,OneToMany,SocialMedia,company,,"persist,remove",1,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"company:read,company:write",,,,,{}
+Company,website,Website,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
+Company,socialMedias,SocialMedias,,1,,,,,,OneToMany,SocialMedia,company,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"company:read,company:write",,,,,{}
 Company,contacts,Contacts,,1,,,,,,OneToMany,Contact,company,,,,EXTRA_LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"company:read,company:write",,,,,{}
-Company,flags,Flags,,1,,,,,,OneToMany,Flag,company,,"persist,remove",1,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"company:read,company:write",,,,,{}
+Company,flags,Flags,,1,,,,,,OneToMany,Flag,company,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"company:read,company:write",,,,,{}
 Company,deals,Deals,,1,,,,,,OneToMany,Deal,company,,,,EXTRA_LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"company:read,company:write",,,,,{}
 Company,campaigns,Campaigns,,1,,,,,,ManyToMany,Campaign,companies,,,,LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"company:read,company:write",,,,,{}
 Company,industry,Industry,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"company:read,company:write",,,,word,{}
@@ -269,7 +269,7 @@ Agent,agentPrompt,AgentPrompt,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1
 Agent,talks,Talks,,1,,,,,,ManyToMany,Talk,agents,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"agent:read,agent:write",,,,,{}
 Deal,dealNumber,DealNumber,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"deal:read,deal:write",,,,word,{}
 Deal,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"deal:read,deal:write",,,,word,{}
-Deal,organization,Organization,,,,,,,,ManyToOne,Organization,deals,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"deal:read,deal:write",,,,,{}
+Deal,organization,Organization,,1,,,,,,ManyToOne,Organization,deals,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"deal:read,deal:write",,,,,{}
 Deal,manager,Manager,,1,,,,,,ManyToOne,User,managedDeals,,,,LAZY,,composite,organization|dealStatus,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
 Deal,team,Team,,1,,,,,,ManyToMany,User,deals,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
 Deal,company,Company,,1,,,,,,ManyToOne,Company,deals,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
@@ -278,7 +278,7 @@ Deal,primaryContact,PrimaryContact,,1,,,,,,ManyToOne,Contact,primaryDeals,,,,LAZ
 Deal,dealStatus,DealStatus,integer,1,,,,,,,,,,,,LAZY,,composite,organization|currentStage,,,IntegerType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,randomNumber,{}
 Deal,currentStage,CurrentStage,,1,,,,,,ManyToOne,PipelineStage,deals,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
 Deal,daysInCurrentStage,DaysInCurrentStage,float,1,,,,,,,,,,,,LAZY,,,,,,TextType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,word,{}
-Deal,dealStages,DealStages,,1,,,,,,OneToMany,DealStage,deal,,"persist,remove",1,LAZY,"{""lastUpdatedAt"": ""desc""}",,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
+Deal,dealStages,DealStages,,1,,,,,,OneToMany,DealStage,deal,,,,LAZY,lastUpdatedAt,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
 Deal,dealType,DealType,,1,,,,,,ManyToOne,DealType,deals,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
 Deal,leadSource,LeadSource,,1,,,,,,ManyToOne,LeadSource,deals,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
 Deal,campaign,Campaign,,1,,,,,,ManyToOne,Campaign,deals,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
@@ -307,8 +307,8 @@ Deal,lostReason,LostReason,,1,,,,,,ManyToOne,LostReason,deals,,,,LAZY,,simple,,,
 Deal,winReason,WinReason,,1,,,,,,ManyToOne,WinReason,deals,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
 Deal,tags,Tags,,1,,,,,,ManyToMany,Tag,deals,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
 Deal,customFields,CustomFields,json,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,word,{}
-Deal,talks,Talks,,1,,,,,,OneToMany,Talk,deal,,persist,,EXTRA_LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
-Deal,tasks,Tasks,,1,,,,,,OneToMany,Task,deal,,persist,,EXTRA_LAZY,"{""scheduledDate"": ""asc""}",,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
+Deal,talks,Talks,,1,,,,,,OneToMany,Talk,deal,,,,EXTRA_LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
+Deal,tasks,Tasks,,1,,,,,,OneToMany,Task,deal,,,,EXTRA_LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
 Deal,notes,Notes,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"deal:read,deal:write",,,,paragraph,{}
 Deal,competitors,Competitors,,1,,,,,,ManyToMany,Competitor,deals,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"deal:read,deal:write",,,,,{}
 DealStage,pipelineStage,PipelineStage,,1,,,,,,ManyToOne,PipelineStage,dealStages,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"dealstage:read,dealstage:write",,,,,{}
@@ -353,12 +353,12 @@ PipelineStageTemplate,pipelineTemplate,PipelineTemplate,,1,,,,,,ManyToOne,Pipeli
 PipelineStageTemplate,description,Description,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"pipelinestagetemplate:read,pipelinestagetemplate:write",,,,word,{}
 PipelineStageTemplate,order,Order,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"pipelinestagetemplate:read,pipelinestagetemplate:write",,,,randomNumber,{}
 PipelineStageTemplate,tasks,Tasks,,1,,,,,,OneToMany,TaskTemplate,pipelineStageTemplate,,,,EXTRA_LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"pipelinestagetemplate:read,pipelinestagetemplate:write",,,,,{}
-Task,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=500)",,TextType,{},1,,,1,1,1,1,1,,1,1,"task:read,task:write",,,,word,{}
-Task,organization,Organization,,,,,,,,ManyToOne,Organization,tasks,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"task:read,task:write",,,,,{}
+Task,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"task:read,task:write",,,,word,{}
+Task,organization,Organization,,1,,,,,,ManyToOne,Organization,tasks,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"task:read,task:write",,,,,{}
 Task,pipelineStage,PipelineStage,,1,,,,,,ManyToOne,PipelineStage,tasks,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"task:read,task:write",,,,,{}
 Task,deal,Deal,,1,,,,,,ManyToOne,Deal,tasks,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"task:read,task:write",,,,,{}
 Task,contact,Contact,,1,,,,,,ManyToOne,Contact,tasks,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"task:read,task:write",,,,,{}
-Task,user,User,,,,,,,,ManyToOne,User,tasks,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"task:read,task:write",,,,,{}
+Task,user,User,,1,,,,,,ManyToOne,User,tasks,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"task:read,task:write",,,,,{}
 Task,command,Command,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"task:read,task:write",,,,paragraph,{}
 Task,periodicityInterval,PeriodicityInterval,float,1,,,,,,,,,,,,LAZY,,,,,,TextType,{},,,,1,1,1,1,,,1,1,"task:read,task:write",,,,word,{}
 Task,periodicityTimeframe,PeriodicityTimeframe,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"task:read,task:write",,,,randomNumber,{}
@@ -527,9 +527,9 @@ Campaign,plannedDuration,PlannedDuration,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerT
 Campaign,duration,Duration,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,randomNumber,{}
 Campaign,manager,Manager,,1,,,,,,ManyToOne,User,managedCampaigns,,,,LAZY,,composite,organization,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
 Campaign,team,Team,,1,,,,,,ManyToMany,User,campaigns,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
-Campaign,contacts,Contacts,,1,,,,,,ManyToMany,Contact,campaigns,,persist,,EXTRA_LAZY,"{""createdAt"": ""desc""}",,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
-Campaign,companies,Companies,,1,,,,,,ManyToMany,Company,campaigns,,persist,,EXTRA_LAZY,"{""createdAt"": ""desc""}",,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
-Campaign,deals,Deals,,1,,,,,,OneToMany,Deal,campaign,,persist,,EXTRA_LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
+Campaign,contacts,Contacts,,1,,,,,,ManyToMany,Contact,campaigns,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
+Campaign,companies,Companies,,1,,,,,,ManyToMany,Company,campaigns,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
+Campaign,deals,Deals,,1,,,,,,OneToMany,Deal,campaign,,,,EXTRA_LAZY,name,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
 Campaign,talks,Talks,,1,,,,,,ManyToMany,Talk,campaigns,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,,{}
 Campaign,plannedBudget,PlannedBudget,float,1,,,,,,,,,,,,LAZY,,,,,,TextType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,word,{}
 Campaign,actualBudget,ActualBudget,float,1,,,,,,,,,,,,LAZY,,,,,,TextType,{},,,,1,1,1,1,,,1,1,"campaign:read,campaign:write",,,,word,{}
@@ -558,7 +558,7 @@ CalendarExternalLink,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length
 CalendarExternalLink,url,Url,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"calendarexternallink:read,calendarexternallink:write",,,,word,{}
 CalendarExternalLink,calendars,Calendars,,1,,,,,,OneToMany,Calendar,externalLink,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"calendarexternallink:read,calendarexternallink:write",,,,,{}
 Event,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"event:read,event:write",,,,word,{}
-Event,organization,Organization,,,,,,,,ManyToOne,Organization,events,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"event:read,event:write",,,,,{}
+Event,organization,Organization,,1,,,,,,ManyToOne,Organization,events,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"event:read,event:write",,,,,{}
 Event,calendar,Calendar,,1,,,,,,ManyToOne,Calendar,events,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"event:read,event:write",,,,,{}
 Event,description,Description,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"event:read,event:write",,,,paragraph,{}
 Event,location,Location,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"event:read,event:write",,,,word,{}
@@ -578,7 +578,7 @@ Event,sequence,Sequence,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1
 Event,categories,Categories,,1,,,,,,ManyToMany,EventCategory,events,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"event:read,event:write",,,,,{}
 Event,parentEvent,ParentEvent,,1,,,,,,ManyToOne,Event,childrenEvents,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"event:read,event:write",,,,,{}
 Event,childrenEvents,ChildrenEvents,,1,,,,,,OneToMany,Event,parentEvent,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"event:read,event:write",,,,,{}
-Event,organizer,Organizer,,,,,,,,ManyToOne,User,organizedEvents,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"event:read,event:write",,,,,{}
+Event,organizer,Organizer,,1,,,,,,ManyToOne,User,organizedEvents,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"event:read,event:write",,,,,{}
 Event,attendees,Attendees,,1,,,,,,OneToMany,EventAttendee,event,,"persist,remove",1,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"event:read,event:write",,,,,{}
 Event,attachments,Attachments,,1,,,,,,OneToMany,Attachment,event,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"event:read,event:write",,,,,{}
 Event,reminders,Reminders,,1,,,,,,OneToMany,Reminder,event,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"event:read,event:write",,,,,{}

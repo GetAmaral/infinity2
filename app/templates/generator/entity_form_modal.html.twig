@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ isEdit ? 'Edit Entity' : 'Create Entity' }} - Generator Studio{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="luminai-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="bi bi-table me-2"></i>
+                        {{ isEdit ? 'Edit Entity' : 'Create New Entity' }}
+                    </h4>
+                    <a href="{{ path('admin_generator_studio') }}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-x-lg"></i> Cancel
+                    </a>
+                </div>
+
+                <div class="card-body">
+                    {{ form_start(form) }}
+
+                    {# Basic Information #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Basic Information
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.entityName) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.entityLabel) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.pluralLabel) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.icon) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_row(form.description) }}
+                        </div>
+                    </div>
+
+                    {# Multi-Tenancy #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-building me-2"></i>
+                            Multi-Tenancy
+                        </h5>
+
+                        <div class="form-check mb-3">
+                            {{ form_widget(form.hasOrganization) }}
+                            {{ form_label(form.hasOrganization) }}
+                            <div class="form-text">{{ form.hasOrganization.vars.help }}</div>
+                        </div>
+                    </div>
+
+                    {# API Configuration #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-cloud me-2"></i>
+                            API Configuration
+                        </h5>
+
+                        <div class="form-check mb-3">
+                            {{ form_widget(form.apiEnabled) }}
+                            {{ form_label(form.apiEnabled) }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.apiOperations) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.apiSecurity) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check mb-2">
+                                    {{ form_widget(form.apiPaginationEnabled) }}
+                                    {{ form_label(form.apiPaginationEnabled) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.apiItemsPerPage) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Security #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-shield-check me-2"></i>
+                            Security
+                        </h5>
+
+                        <div class="form-check mb-3">
+                            {{ form_widget(form.voterEnabled) }}
+                            {{ form_label(form.voterEnabled) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_row(form.voterAttributes) }}
+                        </div>
+                    </div>
+
+                    {# Navigation #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-signpost-2 me-2"></i>
+                            Navigation
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.menuGroup) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.menuOrder) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Testing #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-check2-square me-2"></i>
+                            Testing
+                        </h5>
+
+                        <div class="form-check mb-3">
+                            {{ form_widget(form.testEnabled) }}
+                            {{ form_label(form.testEnabled) }}
+                        </div>
+                    </div>
+
+                    {# Submit Button #}
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="{{ path('admin_generator_studio') }}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                        {{ form_widget(form.submit) }}
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

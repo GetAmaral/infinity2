@@ -1,0 +1,246 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ isEdit ? 'Edit Property' : 'Create Property' }} - {{ entity.entityName }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="luminai-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="bi bi-list-ul me-2"></i>
+                        {{ isEdit ? 'Edit Property' : 'Add Property' }} - {{ entity.entityName }}
+                    </h4>
+                    <a href="{{ path('admin_generator_studio') }}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-x-lg"></i> Cancel
+                    </a>
+                </div>
+
+                <div class="card-body">
+                    {{ form_start(form) }}
+
+                    {# Basic Information #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Basic Information
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.propertyName) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.propertyLabel) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.propertyType) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.propertyOrder) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Database Configuration #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-database me-2"></i>
+                            Database Configuration
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.nullable) }}
+                                    {{ form_label(form.nullable) }}
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.unique) }}
+                                    {{ form_label(form.unique) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.defaultValue) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                {{ form_row(form.length) }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form_row(form.precision) }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form_row(form.scale) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Relationships #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-arrow-left-right me-2"></i>
+                            Relationships
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.relationshipType) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.targetEntity) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.inversedBy) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.mappedBy) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.orphanRemoval) }}
+                                    {{ form_label(form.orphanRemoval) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.fetch) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Form Configuration #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-input-cursor me-2"></i>
+                            Form Configuration
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.formType) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            {{ form_widget(form.formRequired) }}
+                                            {{ form_label(form.formRequired) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            {{ form_widget(form.formReadOnly) }}
+                                            {{ form_label(form.formReadOnly) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_row(form.formHelp) }}
+                        </div>
+                    </div>
+
+                    {# UI Display #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-eye me-2"></i>
+                            UI Display
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.showInList) }}
+                                    {{ form_label(form.showInList) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.showInDetail) }}
+                                    {{ form_label(form.showInDetail) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.showInForm) }}
+                                    {{ form_label(form.showInForm) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.sortable) }}
+                                    {{ form_label(form.sortable) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.searchable) }}
+                                    {{ form_label(form.searchable) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.filterable) }}
+                                    {{ form_label(form.filterable) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# API Configuration #}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="bi bi-cloud me-2"></i>
+                            API Configuration
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.apiReadable) }}
+                                    {{ form_label(form.apiReadable) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form_widget(form.apiWritable) }}
+                                    {{ form_label(form.apiWritable) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Submit Button #}
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="{{ path('admin_generator_studio') }}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                        {{ form_widget(form.submit) }}
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
