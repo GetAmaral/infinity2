@@ -1,0 +1,250 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'EventResources'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="bi-circle me-2"></i>
+            {{ 'EventResources'|trans }}
+        </h1>
+        <a href="{{ path('event_resource_new') }}"
+           class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            {{ 'action.create'|trans }}
+        </a>
+    </div>
+
+    {# Search and Filter #}
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" data-turbo="true">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="search"
+                               name="q"
+                               value="{{ app.request.query.get('q') }}"
+                               class="form-control"
+                               placeholder="{{ 'action.search'|trans }}...">
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-secondary w-100">
+                            <i class="bi bi-search me-1"></i>
+                            {{ 'action.search'|trans }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Data Table #}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'name', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Name'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'organization', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Organization'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'description', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Description'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'type', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Type'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'location', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Location'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'city', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'City'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'geo', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Geo'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'capacity', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Capacity'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'equipment', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Equipment'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'bookingRules', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'BookingRules'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'availabilitySchedule', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'AvailabilitySchedule'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'active', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Active'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('event_resource_index', {sort: 'eventBookings', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'EventBookings'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>{{ 'action.label'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eventresource-list">
+                        {% for item in items %}
+                        <tr id="eventresource-{{ item.id }}">
+
+                            <td>{{ item.name }}</td>
+
+                            <td>{{ item.organization }}</td>
+
+                            <td>{{ item.description }}</td>
+
+                            <td>{{ item.type }}</td>
+
+                            <td>{{ item.location }}</td>
+
+                            <td>{{ item.city }}</td>
+
+                            <td>{{ item.geo }}</td>
+
+                            <td>{{ item.capacity }}</td>
+
+                            <td>{{ item.equipment }}</td>
+
+                            <td>{{ item.bookingRules }}</td>
+
+                            <td>{{ item.availabilitySchedule }}</td>
+
+                            <td>{{ item.active }}</td>
+
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('event_resource_show', {id: item.id}) }}"
+                                       class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ path('event_resource_edit', {id: item.id}) }}"
+                                       class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form method="post"
+                                          action="{{ path('event_resource_delete', {id: item.id}) }}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Pagination #}
+            {% if items.haveToPaginate %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {{ knp_pagination_render(items) }}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

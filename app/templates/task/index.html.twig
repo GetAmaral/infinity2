@@ -1,0 +1,312 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Tasks'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="bi-circle me-2"></i>
+            {{ 'Tasks'|trans }}
+        </h1>
+        <a href="{{ path('task_new') }}"
+           class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            {{ 'action.create'|trans }}
+        </a>
+    </div>
+
+    {# Search and Filter #}
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" data-turbo="true">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="search"
+                               name="q"
+                               value="{{ app.request.query.get('q') }}"
+                               class="form-control"
+                               placeholder="{{ 'action.search'|trans }}...">
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-secondary w-100">
+                            <i class="bi bi-search me-1"></i>
+                            {{ 'action.search'|trans }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Data Table #}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'name', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Name'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'organization', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Organization'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'pipelineStage', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'PipelineStage'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'deal', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Deal'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'contact', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Contact'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'user', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'User'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'command', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Command'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'periodicityInterval', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'PeriodicityInterval'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'periodicityTimeframe', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'PeriodicityTimeframe'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'active', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Active'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'type', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Type'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'description', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Description'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'scheduledDate', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ScheduledDate'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'completedDate', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'CompletedDate'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'taskStatus', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'TaskStatus'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'priority', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Priority'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'durationMinutes', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'DurationMinutes'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('task_index', {sort: 'location', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Location'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>{{ 'action.label'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="task-list">
+                        {% for item in items %}
+                        <tr id="task-{{ item.id }}">
+
+                            <td>{{ item.name }}</td>
+
+                            <td>{{ item.organization }}</td>
+
+                            <td>{{ item.pipelineStage }}</td>
+
+                            <td>{{ item.deal }}</td>
+
+                            <td>{{ item.contact }}</td>
+
+                            <td>{{ item.user }}</td>
+
+                            <td>{{ item.command }}</td>
+
+                            <td>{{ item.periodicityInterval }}</td>
+
+                            <td>{{ item.periodicityTimeframe }}</td>
+
+                            <td>{{ item.active }}</td>
+
+                            <td>{{ item.type }}</td>
+
+                            <td>{{ item.description }}</td>
+
+                            <td>{{ item.scheduledDate }}</td>
+
+                            <td>{{ item.completedDate }}</td>
+
+                            <td>{{ item.taskStatus }}</td>
+
+                            <td>{{ item.priority }}</td>
+
+                            <td>{{ item.durationMinutes }}</td>
+
+                            <td>{{ item.location }}</td>
+
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('task_show', {id: item.id}) }}"
+                                       class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ path('task_edit', {id: item.id}) }}"
+                                       class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form method="post"
+                                          action="{{ path('task_delete', {id: item.id}) }}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Pagination #}
+            {% if items.haveToPaginate %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {{ knp_pagination_render(items) }}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

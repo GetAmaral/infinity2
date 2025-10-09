@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'MeetingData'|trans }} - {{ meetingdata }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>
+                            <i class="bi-circle me-2"></i>
+                            {{ 'MeetingData'|trans }} Details
+                        </h2>
+                        <div class="btn-group">
+                            <a href="{{ path('meeting_data_edit', {id: meetingdata.id}) }}"
+                               class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i>
+                                {{ 'action.edit'|trans }}
+                            </a>
+                            <a href="{{ path('meeting_data_index') }}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                {{ 'action.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+
+                        <dt class="col-sm-3">{{ 'Platform'|trans }}</dt>
+                        <dd class="col-sm-9">{{ meetingdata.platform }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Event'|trans }}</dt>
+                        <dd class="col-sm-9">{{ meetingdata.event }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Url'|trans }}</dt>
+                        <dd class="col-sm-9">{{ meetingdata.url }}</dd>
+
+                        <dt class="col-sm-3">{{ 'MeetingId'|trans }}</dt>
+                        <dd class="col-sm-9">{{ meetingdata.meetingId }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Secret'|trans }}</dt>
+                        <dd class="col-sm-9">{{ meetingdata.secret }}</dd>
+
+                        <dt class="col-sm-3">{{ 'RecordUrl'|trans }}</dt>
+                        <dd class="col-sm-9">{{ meetingdata.recordUrl }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ meetingdata.createdAt|date('Y-m-d H:i:s') }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ meetingdata.updatedAt|date('Y-m-d H:i:s') }}</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <form method="post"
+                          action="{{ path('meeting_data_delete', {id: meetingdata.id}) }}"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ meetingdata.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            {{ 'action.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

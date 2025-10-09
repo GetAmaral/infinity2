@@ -1,0 +1,390 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Companys'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="bi-circle me-2"></i>
+            {{ 'Companys'|trans }}
+        </h1>
+        <a href="{{ path('company_new') }}"
+           class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            {{ 'action.create'|trans }}
+        </a>
+    </div>
+
+    {# Search and Filter #}
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" data-turbo="true">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="search"
+                               name="q"
+                               value="{{ app.request.query.get('q') }}"
+                               class="form-control"
+                               placeholder="{{ 'action.search'|trans }}...">
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-secondary w-100">
+                            <i class="bi bi-search me-1"></i>
+                            {{ 'action.search'|trans }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Data Table #}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'name', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Name'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'organization', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Organization'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'accountManager', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'AccountManager'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'email', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Email'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'document', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Document'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'address', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Address'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'city', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'City'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'postalCode', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'PostalCode'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'geo', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Geo'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'celPhone', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'CelPhone'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'businesPhone', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'BusinesPhone'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'contactName', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ContactName'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'website', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Website'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'socialMedias', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'SocialMedias'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'contacts', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Contacts'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'flags', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Flags'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'deals', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Deals'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'campaigns', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Campaigns'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'industry', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Industry'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'companySize', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'CompanySize'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'notes', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Notes'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'status', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Status'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'manufacturedProducts', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ManufacturedProducts'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'suppliedProducts', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'SuppliedProducts'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'manufacturedBrands', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ManufacturedBrands'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('company_index', {sort: 'suppliedBrands', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'SuppliedBrands'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>{{ 'action.label'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="company-list">
+                        {% for item in items %}
+                        <tr id="company-{{ item.id }}">
+
+                            <td>{{ item.name }}</td>
+
+                            <td>{{ item.organization }}</td>
+
+                            <td>{{ item.accountManager }}</td>
+
+                            <td>{{ item.email }}</td>
+
+                            <td>{{ item.document }}</td>
+
+                            <td>{{ item.address }}</td>
+
+                            <td>{{ item.city }}</td>
+
+                            <td>{{ item.postalCode }}</td>
+
+                            <td>{{ item.geo }}</td>
+
+                            <td>{{ item.celPhone }}</td>
+
+                            <td>{{ item.businesPhone }}</td>
+
+                            <td>{{ item.contactName }}</td>
+
+                            <td>{{ item.website }}</td>
+
+                            <td>{{ item.industry }}</td>
+
+                            <td>{{ item.companySize }}</td>
+
+                            <td>{{ item.notes }}</td>
+
+                            <td>{{ item.status }}</td>
+
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('company_show', {id: item.id}) }}"
+                                       class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ path('company_edit', {id: item.id}) }}"
+                                       class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form method="post"
+                                          action="{{ path('company_delete', {id: item.id}) }}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Pagination #}
+            {% if items.haveToPaginate %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {{ knp_pagination_render(items) }}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

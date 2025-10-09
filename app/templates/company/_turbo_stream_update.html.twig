@@ -1,0 +1,72 @@
+<turbo-stream action="replace" target="company-{{ company.id }}">
+    <template>
+        <tr id="company-{{ company.id }}">
+
+            <td>{{ company.name }}</td>
+
+            <td>{{ company.organization }}</td>
+
+            <td>{{ company.accountManager }}</td>
+
+            <td>{{ company.email }}</td>
+
+            <td>{{ company.document }}</td>
+
+            <td>{{ company.address }}</td>
+
+            <td>{{ company.city }}</td>
+
+            <td>{{ company.postalCode }}</td>
+
+            <td>{{ company.geo }}</td>
+
+            <td>{{ company.celPhone }}</td>
+
+            <td>{{ company.businesPhone }}</td>
+
+            <td>{{ company.contactName }}</td>
+
+            <td>{{ company.website }}</td>
+
+            <td>{{ company.industry }}</td>
+
+            <td>{{ company.companySize }}</td>
+
+            <td>{{ company.notes }}</td>
+
+            <td>{{ company.status }}</td>
+
+            <td>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('company_show', {id: company.id}) }}"
+                       class="btn btn-sm btn-info">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('company_edit', {id: company.id}) }}"
+                       class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post"
+                          action="{{ path('company_delete', {id: company.id}) }}"
+                          style="display: inline;"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ company.id) }}">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="flash-messages">
+    <template>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ 'Company'|trans }} updated successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </template>
+</turbo-stream>

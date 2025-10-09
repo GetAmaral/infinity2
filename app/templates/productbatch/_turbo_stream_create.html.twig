@@ -1,0 +1,74 @@
+<turbo-stream action="prepend" target="productbatch-list">
+    <template>
+        <tr id="productbatch-{{ productbatch.id }}">
+
+            <td>{{ productbatch.name }}</td>
+
+            <td>{{ productbatch.organization }}</td>
+
+            <td>{{ productbatch.product }}</td>
+
+            <td>{{ productbatch.listPrice }}</td>
+
+            <td>{{ productbatch.costPrice }}</td>
+
+            <td>{{ productbatch.minimumPrice }}</td>
+
+            <td>{{ productbatch.maximumDiscount }}</td>
+
+            <td>{{ productbatch.discountAmount }}</td>
+
+            <td>{{ productbatch.discountPercentage }}</td>
+
+            <td>{{ productbatch.commissionRate }}</td>
+
+            <td>{{ productbatch.commissionAmount }}</td>
+
+            <td>{{ productbatch.currency }}</td>
+
+            <td>{{ productbatch.exchangeRate }}</td>
+
+            <td>{{ productbatch.marginPercentage }}</td>
+
+            <td>{{ productbatch.stockQuantity }}</td>
+
+            <td>{{ productbatch.reservedQuantity }}</td>
+
+            <td>{{ productbatch.availableQuantity }}</td>
+
+            <td>{{ productbatch.expirationDate }}</td>
+
+            <td>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('product_batch_show', {id: productbatch.id}) }}"
+                       class="btn btn-sm btn-info">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('product_batch_edit', {id: productbatch.id}) }}"
+                       class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post"
+                          action="{{ path('product_batch_delete', {id: productbatch.id}) }}"
+                          style="display: inline;"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ productbatch.id) }}">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="flash-messages">
+    <template>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ 'ProductBatch'|trans }} created successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </template>
+</turbo-stream>

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if country.id %}
+        {{ 'action.edit'|trans }} {{ 'Country'|trans }}
+    {% else %}
+        {{ 'action.create'|trans }} {{ 'Country'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        {% if country.id %}
+                            <i class="bi bi-pencil me-2"></i>
+                            {{ 'action.edit'|trans }} {{ 'Country'|trans }}
+                        {% else %}
+                            <i class="bi bi-plus-circle me-2"></i>
+                            {{ 'action.create'|trans }} {{ 'Country'|trans }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
+
+                    {{ form_errors(form) }}
+
+
+                    <div class="mb-3">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.dialingCode) }}
+                        {{ form_widget(form.dialingCode) }}
+                        {{ form_errors(form.dialingCode) }}
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('country_index') }}"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            {{ 'action.back'|trans }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ 'action.save'|trans }}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

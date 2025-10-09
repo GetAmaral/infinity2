@@ -1,0 +1,150 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if company.id %}
+        {{ 'action.edit'|trans }} {{ 'Company'|trans }}
+    {% else %}
+        {{ 'action.create'|trans }} {{ 'Company'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        {% if company.id %}
+                            <i class="bi bi-pencil me-2"></i>
+                            {{ 'action.edit'|trans }} {{ 'Company'|trans }}
+                        {% else %}
+                            <i class="bi bi-plus-circle me-2"></i>
+                            {{ 'action.create'|trans }} {{ 'Company'|trans }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
+
+                    {{ form_errors(form) }}
+
+
+                    <div class="mb-3">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.document) }}
+                        {{ form_widget(form.document) }}
+                        {{ form_errors(form.document) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.address) }}
+                        {{ form_widget(form.address) }}
+                        {{ form_errors(form.address) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.postalCode) }}
+                        {{ form_widget(form.postalCode) }}
+                        {{ form_errors(form.postalCode) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.geo) }}
+                        {{ form_widget(form.geo) }}
+                        {{ form_errors(form.geo) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.celPhone) }}
+                        {{ form_widget(form.celPhone) }}
+                        {{ form_errors(form.celPhone) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.businesPhone) }}
+                        {{ form_widget(form.businesPhone) }}
+                        {{ form_errors(form.businesPhone) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.contactName) }}
+                        {{ form_widget(form.contactName) }}
+                        {{ form_errors(form.contactName) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.website) }}
+                        {{ form_widget(form.website) }}
+                        {{ form_errors(form.website) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.industry) }}
+                        {{ form_widget(form.industry) }}
+                        {{ form_errors(form.industry) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.companySize) }}
+                        {{ form_widget(form.companySize) }}
+                        {{ form_errors(form.companySize) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.notes) }}
+                        {{ form_widget(form.notes) }}
+                        {{ form_errors(form.notes) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.status) }}
+                        {{ form_widget(form.status) }}
+                        {{ form_errors(form.status) }}
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('company_index') }}"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            {{ 'action.back'|trans }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ 'action.save'|trans }}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

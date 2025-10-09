@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Task'|trans }} - {{ task }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>
+                            <i class="bi-circle me-2"></i>
+                            {{ 'Task'|trans }} Details
+                        </h2>
+                        <div class="btn-group">
+                            <a href="{{ path('task_edit', {id: task.id}) }}"
+                               class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i>
+                                {{ 'action.edit'|trans }}
+                            </a>
+                            <a href="{{ path('task_index') }}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                {{ 'action.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+
+                        <dt class="col-sm-3">{{ 'Name'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.name }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Organization'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.organization }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PipelineStage'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.pipelineStage }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Deal'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.deal }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Contact'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.contact }}</dd>
+
+                        <dt class="col-sm-3">{{ 'User'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.user }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Command'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.command }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PeriodicityInterval'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.periodicityInterval }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PeriodicityTimeframe'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.periodicityTimeframe }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Active'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.active }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Type'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.type }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Description'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.description }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ScheduledDate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.scheduledDate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'CompletedDate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.completedDate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'TaskStatus'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.taskStatus }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Priority'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.priority }}</dd>
+
+                        <dt class="col-sm-3">{{ 'DurationMinutes'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.durationMinutes }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Location'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.location }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.createdAt|date('Y-m-d H:i:s') }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ task.updatedAt|date('Y-m-d H:i:s') }}</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <form method="post"
+                          action="{{ path('task_delete', {id: task.id}) }}"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            {{ 'action.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'TaskTemplate'|trans }} - {{ tasktemplate }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>
+                            <i class="bi-circle me-2"></i>
+                            {{ 'TaskTemplate'|trans }} Details
+                        </h2>
+                        <div class="btn-group">
+                            <a href="{{ path('task_template_edit', {id: tasktemplate.id}) }}"
+                               class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i>
+                                {{ 'action.edit'|trans }}
+                            </a>
+                            <a href="{{ path('task_template_index') }}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                {{ 'action.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+
+                        <dt class="col-sm-3">{{ 'Name'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.name }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PipelineStageTemplate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.pipelineStageTemplate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Command'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.command }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PeriodicityInterval'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.periodicityInterval }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PeriodicityTimeframe'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.periodicityTimeframe }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Active'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.active }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Type'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.type }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Description'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.description }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Priority'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.priority }}</dd>
+
+                        <dt class="col-sm-3">{{ 'DurationMinutes'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.durationMinutes }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Location'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.location }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.createdAt|date('Y-m-d H:i:s') }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ tasktemplate.updatedAt|date('Y-m-d H:i:s') }}</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <form method="post"
+                          action="{{ path('task_template_delete', {id: tasktemplate.id}) }}"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tasktemplate.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            {{ 'action.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+<turbo-stream action="replace" target="dealstage-{{ dealstage.id }}">
+    <template>
+        <tr id="dealstage-{{ dealstage.id }}">
+
+            <td>{{ dealstage.pipelineStage }}</td>
+
+            <td>{{ dealstage.organization }}</td>
+
+            <td>{{ dealstage.deal }}</td>
+
+            <td>{{ dealstage.startedAt }}</td>
+
+            <td>{{ dealstage.lastUpdatedAt }}</td>
+
+            <td>{{ dealstage.endedAt }}</td>
+
+            <td>{{ dealstage.notes }}</td>
+
+            <td>{{ dealstage.daysInStage }}</td>
+
+            <td>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('deal_stage_show', {id: dealstage.id}) }}"
+                       class="btn btn-sm btn-info">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('deal_stage_edit', {id: dealstage.id}) }}"
+                       class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post"
+                          action="{{ path('deal_stage_delete', {id: dealstage.id}) }}"
+                          style="display: inline;"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dealstage.id) }}">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="flash-messages">
+    <template>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ 'DealStage'|trans }} updated successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </template>
+</turbo-stream>

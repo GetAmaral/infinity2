@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if eventresource.id %}
+        {{ 'action.edit'|trans }} {{ 'EventResource'|trans }}
+    {% else %}
+        {{ 'action.create'|trans }} {{ 'EventResource'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        {% if eventresource.id %}
+                            <i class="bi bi-pencil me-2"></i>
+                            {{ 'action.edit'|trans }} {{ 'EventResource'|trans }}
+                        {% else %}
+                            <i class="bi bi-plus-circle me-2"></i>
+                            {{ 'action.create'|trans }} {{ 'EventResource'|trans }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
+
+                    {{ form_errors(form) }}
+
+
+                    <div class="mb-3">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description) }}
+                        {{ form_errors(form.description) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.location) }}
+                        {{ form_widget(form.location) }}
+                        {{ form_errors(form.location) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.geo) }}
+                        {{ form_widget(form.geo) }}
+                        {{ form_errors(form.geo) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.capacity) }}
+                        {{ form_widget(form.capacity) }}
+                        {{ form_errors(form.capacity) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.equipment) }}
+                        {{ form_widget(form.equipment) }}
+                        {{ form_errors(form.equipment) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.bookingRules) }}
+                        {{ form_widget(form.bookingRules) }}
+                        {{ form_errors(form.bookingRules) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.availabilitySchedule) }}
+                        {{ form_widget(form.availabilitySchedule) }}
+                        {{ form_errors(form.availabilitySchedule) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.active) }}
+                        {{ form_widget(form.active) }}
+                        {{ form_errors(form.active) }}
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('event_resource_index') }}"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            {{ 'action.back'|trans }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ 'action.save'|trans }}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

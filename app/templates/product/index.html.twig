@@ -1,0 +1,736 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Products'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="bi-circle me-2"></i>
+            {{ 'Products'|trans }}
+        </h1>
+        <a href="{{ path('product_new') }}"
+           class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            {{ 'action.create'|trans }}
+        </a>
+    </div>
+
+    {# Search and Filter #}
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" data-turbo="true">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="search"
+                               name="q"
+                               value="{{ app.request.query.get('q') }}"
+                               class="form-control"
+                               placeholder="{{ 'action.search'|trans }}...">
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-secondary w-100">
+                            <i class="bi bi-search me-1"></i>
+                            {{ 'action.search'|trans }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Data Table #}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'productCode', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ProductCode'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'name', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Name'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'organization', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Organization'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'description', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Description'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'shortDescription', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ShortDescription'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'category', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Category'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'productLine', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ProductLine'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'productType', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ProductType'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'brand', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Brand'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'manufacturer', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Manufacturer'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'supplier', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Supplier'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'deals', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Deals'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'listPrice', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ListPrice'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'costPrice', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'CostPrice'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'minimumPrice', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'MinimumPrice'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'maximumDiscount', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'MaximumDiscount'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'discountAmount', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'DiscountAmount'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'discountPercentage', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'DiscountPercentage'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'commissionRate', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'CommissionRate'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'commissionAmount', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'CommissionAmount'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'currency', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Currency'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'exchangeRate', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ExchangeRate'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'unitOfMeasure', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'UnitOfMeasure'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'weight', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Weight'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'dimensions', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Dimensions'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'taxCategory', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'TaxCategory'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'marginPercentage', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'MarginPercentage'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'stockQuantity', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'StockQuantity'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'reservedQuantity', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'ReservedQuantity'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'availableQuantity', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'AvailableQuantity'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'warrantyPeriod', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'WarrantyPeriod'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'supportPeriod', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'SupportPeriod'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'lifecycleStage', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'LifecycleStage'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'launchDate', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'LaunchDate'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'endOfLifeDate', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'EndOfLifeDate'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'active', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Active'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'sellable', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Sellable'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'purchasable', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Purchasable'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'requiresApproval', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'RequiresApproval'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'subscription', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Subscription'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'subscriptionPeriod', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'SubscriptionPeriod'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'billingFrequency', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'BillingFrequency'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'setupFee', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'SetupFee'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'recurringFee', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'RecurringFee'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'cancellationFee', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'CancellationFee'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'relatedTo', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'RelatedTo'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'relatedFrom', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'RelatedFrom'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'substituteTo', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'SubstituteTo'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'substituteFrom', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'SubstituteFrom'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'attachments', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Attachments'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'specifications', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Specifications'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'features', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Features'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'customFields', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'CustomFields'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'tags', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Tags'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>
+
+                                <a href="{{ path('product_index', {sort: 'batches', direction: app.request.query.get('direction') == 'asc' ? 'desc' : 'asc'}) }}"
+                                   data-turbo="true">
+                                    {{ 'Batches'|trans }}
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+
+                            </th>
+
+                            <th>{{ 'action.label'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-list">
+                        {% for item in items %}
+                        <tr id="product-{{ item.id }}">
+
+                            <td>{{ item.productCode }}</td>
+
+                            <td>{{ item.name }}</td>
+
+                            <td>{{ item.organization }}</td>
+
+                            <td>{{ item.description }}</td>
+
+                            <td>{{ item.shortDescription }}</td>
+
+                            <td>{{ item.category }}</td>
+
+                            <td>{{ item.productLine }}</td>
+
+                            <td>{{ item.productType }}</td>
+
+                            <td>{{ item.brand }}</td>
+
+                            <td>{{ item.listPrice }}</td>
+
+                            <td>{{ item.costPrice }}</td>
+
+                            <td>{{ item.minimumPrice }}</td>
+
+                            <td>{{ item.maximumDiscount }}</td>
+
+                            <td>{{ item.discountAmount }}</td>
+
+                            <td>{{ item.discountPercentage }}</td>
+
+                            <td>{{ item.commissionRate }}</td>
+
+                            <td>{{ item.commissionAmount }}</td>
+
+                            <td>{{ item.currency }}</td>
+
+                            <td>{{ item.exchangeRate }}</td>
+
+                            <td>{{ item.unitOfMeasure }}</td>
+
+                            <td>{{ item.weight }}</td>
+
+                            <td>{{ item.dimensions }}</td>
+
+                            <td>{{ item.taxCategory }}</td>
+
+                            <td>{{ item.marginPercentage }}</td>
+
+                            <td>{{ item.stockQuantity }}</td>
+
+                            <td>{{ item.reservedQuantity }}</td>
+
+                            <td>{{ item.availableQuantity }}</td>
+
+                            <td>{{ item.warrantyPeriod }}</td>
+
+                            <td>{{ item.supportPeriod }}</td>
+
+                            <td>{{ item.lifecycleStage }}</td>
+
+                            <td>{{ item.launchDate }}</td>
+
+                            <td>{{ item.endOfLifeDate }}</td>
+
+                            <td>{{ item.active }}</td>
+
+                            <td>{{ item.sellable }}</td>
+
+                            <td>{{ item.purchasable }}</td>
+
+                            <td>{{ item.requiresApproval }}</td>
+
+                            <td>{{ item.subscription }}</td>
+
+                            <td>{{ item.subscriptionPeriod }}</td>
+
+                            <td>{{ item.billingFrequency }}</td>
+
+                            <td>{{ item.setupFee }}</td>
+
+                            <td>{{ item.recurringFee }}</td>
+
+                            <td>{{ item.cancellationFee }}</td>
+
+                            <td>{{ item.specifications }}</td>
+
+                            <td>{{ item.features }}</td>
+
+                            <td>{{ item.customFields }}</td>
+
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('product_show', {id: item.id}) }}"
+                                       class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ path('product_edit', {id: item.id}) }}"
+                                       class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form method="post"
+                                          action="{{ path('product_delete', {id: item.id}) }}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Pagination #}
+            {% if items.haveToPaginate %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {{ knp_pagination_render(items) }}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

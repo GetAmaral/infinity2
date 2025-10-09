@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if notification.id %}
+        {{ 'action.edit'|trans }} {{ 'Notification'|trans }}
+    {% else %}
+        {{ 'action.create'|trans }} {{ 'Notification'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        {% if notification.id %}
+                            <i class="bi bi-pencil me-2"></i>
+                            {{ 'action.edit'|trans }} {{ 'Notification'|trans }}
+                        {% else %}
+                            <i class="bi bi-plus-circle me-2"></i>
+                            {{ 'action.create'|trans }} {{ 'Notification'|trans }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
+
+                    {{ form_errors(form) }}
+
+
+                    <div class="mb-3">
+                        {{ form_label(form.sentAt) }}
+                        {{ form_widget(form.sentAt) }}
+                        {{ form_errors(form.sentAt) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.notificationStatus) }}
+                        {{ form_widget(form.notificationStatus) }}
+                        {{ form_errors(form.notificationStatus) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.message) }}
+                        {{ form_widget(form.message) }}
+                        {{ form_errors(form.message) }}
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('notification_index') }}"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            {{ 'action.back'|trans }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ 'action.save'|trans }}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if dealstage.id %}
+        {{ 'action.edit'|trans }} {{ 'DealStage'|trans }}
+    {% else %}
+        {{ 'action.create'|trans }} {{ 'DealStage'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        {% if dealstage.id %}
+                            <i class="bi bi-pencil me-2"></i>
+                            {{ 'action.edit'|trans }} {{ 'DealStage'|trans }}
+                        {% else %}
+                            <i class="bi bi-plus-circle me-2"></i>
+                            {{ 'action.create'|trans }} {{ 'DealStage'|trans }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
+
+                    {{ form_errors(form) }}
+
+
+                    <div class="mb-3">
+                        {{ form_label(form.startedAt) }}
+                        {{ form_widget(form.startedAt) }}
+                        {{ form_errors(form.startedAt) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.lastUpdatedAt) }}
+                        {{ form_widget(form.lastUpdatedAt) }}
+                        {{ form_errors(form.lastUpdatedAt) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.endedAt) }}
+                        {{ form_widget(form.endedAt) }}
+                        {{ form_errors(form.endedAt) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.notes) }}
+                        {{ form_widget(form.notes) }}
+                        {{ form_errors(form.notes) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.daysInStage) }}
+                        {{ form_widget(form.daysInStage) }}
+                        {{ form_errors(form.daysInStage) }}
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('deal_stage_index') }}"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            {{ 'action.back'|trans }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ 'action.save'|trans }}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

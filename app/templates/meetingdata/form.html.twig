@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if meetingdata.id %}
+        {{ 'action.edit'|trans }} {{ 'MeetingData'|trans }}
+    {% else %}
+        {{ 'action.create'|trans }} {{ 'MeetingData'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        {% if meetingdata.id %}
+                            <i class="bi bi-pencil me-2"></i>
+                            {{ 'action.edit'|trans }} {{ 'MeetingData'|trans }}
+                        {% else %}
+                            <i class="bi bi-plus-circle me-2"></i>
+                            {{ 'action.create'|trans }} {{ 'MeetingData'|trans }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
+
+                    {{ form_errors(form) }}
+
+
+                    <div class="mb-3">
+                        {{ form_label(form.platform) }}
+                        {{ form_widget(form.platform) }}
+                        {{ form_errors(form.platform) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.url) }}
+                        {{ form_widget(form.url) }}
+                        {{ form_errors(form.url) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.meetingId) }}
+                        {{ form_widget(form.meetingId) }}
+                        {{ form_errors(form.meetingId) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.secret) }}
+                        {{ form_widget(form.secret) }}
+                        {{ form_errors(form.secret) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.recordUrl) }}
+                        {{ form_widget(form.recordUrl) }}
+                        {{ form_errors(form.recordUrl) }}
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('meeting_data_index') }}"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            {{ 'action.back'|trans }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ 'action.save'|trans }}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

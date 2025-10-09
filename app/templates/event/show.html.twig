@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Event'|trans }} - {{ event }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>
+                            <i class="bi-circle me-2"></i>
+                            {{ 'Event'|trans }} Details
+                        </h2>
+                        <div class="btn-group">
+                            <a href="{{ path('event_edit', {id: event.id}) }}"
+                               class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i>
+                                {{ 'action.edit'|trans }}
+                            </a>
+                            <a href="{{ path('event_index') }}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                {{ 'action.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+
+                        <dt class="col-sm-3">{{ 'Name'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.name }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Organization'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.organization }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Calendar'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.calendar }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Description'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.description }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Location'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.location }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Geo'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.geo }}</dd>
+
+                        <dt class="col-sm-3">{{ 'StartTime'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.startTime }}</dd>
+
+                        <dt class="col-sm-3">{{ 'EndTime'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.endTime }}</dd>
+
+                        <dt class="col-sm-3">{{ 'AllDay'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.allDay }}</dd>
+
+                        <dt class="col-sm-3">{{ 'EventStatus'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.eventStatus }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Visibility'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.visibility }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Priority'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.priority }}</dd>
+
+                        <dt class="col-sm-3">{{ 'RecurrenceInterval'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.recurrenceInterval }}</dd>
+
+                        <dt class="col-sm-3">{{ 'RecurrenceFrequency'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.recurrenceFrequency }}</dd>
+
+                        <dt class="col-sm-3">{{ 'RecurrenceEndDate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.recurrenceEndDate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'RecurrenceCount'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.recurrenceCount }}</dd>
+
+                        <dt class="col-sm-3">{{ 'OriginalStartTime'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.originalStartTime }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Sequence'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.sequence }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ParentEvent'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.parentEvent }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Organizer'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.organizer }}</dd>
+
+                        <dt class="col-sm-3">{{ 'HangoutLink'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.hangoutLink }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ConferenceData'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.conferenceData }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ExtendedProperties'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.extendedProperties }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Source'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.source }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Notes'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.notes }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.createdAt|date('Y-m-d H:i:s') }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ event.updatedAt|date('Y-m-d H:i:s') }}</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <form method="post"
+                          action="{{ path('event_delete', {id: event.id}) }}"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            {{ 'action.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

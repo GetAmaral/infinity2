@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Campaign'|trans }} - {{ campaign }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>
+                            <i class="bi-circle me-2"></i>
+                            {{ 'Campaign'|trans }} Details
+                        </h2>
+                        <div class="btn-group">
+                            <a href="{{ path('campaign_edit', {id: campaign.id}) }}"
+                               class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i>
+                                {{ 'action.edit'|trans }}
+                            </a>
+                            <a href="{{ path('campaign_index') }}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                {{ 'action.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+
+                        <dt class="col-sm-3">{{ 'Name'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.name }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Organization'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.organization }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Description'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.description }}</dd>
+
+                        <dt class="col-sm-3">{{ 'CampaignStatus'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.campaignStatus }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PlannedStartDate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.plannedStartDate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'StartDate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.startDate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PlannedEndDate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.plannedEndDate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'EndDate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.endDate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PlannedDuration'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.plannedDuration }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Duration'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.duration }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Manager'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.manager }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PlannedBudget'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.plannedBudget }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ActualBudget'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.actualBudget }}</dd>
+
+                        <dt class="col-sm-3">{{ 'PlannedReturn'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.plannedReturn }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ActualReturn'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.actualReturn }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Roi'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.roi }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.createdAt|date('Y-m-d H:i:s') }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ campaign.updatedAt|date('Y-m-d H:i:s') }}</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <form method="post"
+                          action="{{ path('campaign_delete', {id: campaign.id}) }}"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ campaign.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            {{ 'action.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

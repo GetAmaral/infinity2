@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'EventAttendee'|trans }} - {{ eventattendee }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>
+                            <i class="bi-circle me-2"></i>
+                            {{ 'EventAttendee'|trans }} Details
+                        </h2>
+                        <div class="btn-group">
+                            <a href="{{ path('event_attendee_edit', {id: eventattendee.id}) }}"
+                               class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i>
+                                {{ 'action.edit'|trans }}
+                            </a>
+                            <a href="{{ path('event_attendee_index') }}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                {{ 'action.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+
+                        <dt class="col-sm-3">{{ 'Name'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.name }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Event'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.event }}</dd>
+
+                        <dt class="col-sm-3">{{ 'User'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.user }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Contact'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.contact }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Email'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.email }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Phone'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.phone }}</dd>
+
+                        <dt class="col-sm-3">{{ 'AttendeeStatus'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.attendeeStatus }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Comment'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.comment }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Organizer'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.organizer }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Optional'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.optional }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.createdAt|date('Y-m-d H:i:s') }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ eventattendee.updatedAt|date('Y-m-d H:i:s') }}</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <form method="post"
+                          action="{{ path('event_attendee_delete', {id: eventattendee.id}) }}"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ eventattendee.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            {{ 'action.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Flag'|trans }} - {{ flag }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>
+                            <i class="bi-circle me-2"></i>
+                            {{ 'Flag'|trans }} Details
+                        </h2>
+                        <div class="btn-group">
+                            <a href="{{ path('flag_edit', {id: flag.id}) }}"
+                               class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i>
+                                {{ 'action.edit'|trans }}
+                            </a>
+                            <a href="{{ path('flag_index') }}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                {{ 'action.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+
+                        <dt class="col-sm-3">{{ 'Name'|trans }}</dt>
+                        <dd class="col-sm-9">{{ flag.name }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Organization'|trans }}</dt>
+                        <dd class="col-sm-9">{{ flag.organization }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Sentiment'|trans }}</dt>
+                        <dd class="col-sm-9">{{ flag.sentiment }}</dd>
+
+                        <dt class="col-sm-3">{{ 'User'|trans }}</dt>
+                        <dd class="col-sm-9">{{ flag.user }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Contact'|trans }}</dt>
+                        <dd class="col-sm-9">{{ flag.contact }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Company'|trans }}</dt>
+                        <dd class="col-sm-9">{{ flag.company }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Color'|trans }}</dt>
+                        <dd class="col-sm-9">{{ flag.color }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Icon'|trans }}</dt>
+                        <dd class="col-sm-9">{{ flag.icon }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ flag.createdAt|date('Y-m-d H:i:s') }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ flag.updatedAt|date('Y-m-d H:i:s') }}</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <form method="post"
+                          action="{{ path('flag_delete', {id: flag.id}) }}"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ flag.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            {{ 'action.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

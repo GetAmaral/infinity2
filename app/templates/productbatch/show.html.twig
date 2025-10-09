@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'ProductBatch'|trans }} - {{ productbatch }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>
+                            <i class="bi-circle me-2"></i>
+                            {{ 'ProductBatch'|trans }} Details
+                        </h2>
+                        <div class="btn-group">
+                            <a href="{{ path('product_batch_edit', {id: productbatch.id}) }}"
+                               class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i>
+                                {{ 'action.edit'|trans }}
+                            </a>
+                            <a href="{{ path('product_batch_index') }}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                {{ 'action.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+
+                        <dt class="col-sm-3">{{ 'Name'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.name }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Organization'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.organization }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Product'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.product }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ListPrice'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.listPrice }}</dd>
+
+                        <dt class="col-sm-3">{{ 'CostPrice'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.costPrice }}</dd>
+
+                        <dt class="col-sm-3">{{ 'MinimumPrice'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.minimumPrice }}</dd>
+
+                        <dt class="col-sm-3">{{ 'MaximumDiscount'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.maximumDiscount }}</dd>
+
+                        <dt class="col-sm-3">{{ 'DiscountAmount'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.discountAmount }}</dd>
+
+                        <dt class="col-sm-3">{{ 'DiscountPercentage'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.discountPercentage }}</dd>
+
+                        <dt class="col-sm-3">{{ 'CommissionRate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.commissionRate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'CommissionAmount'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.commissionAmount }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Currency'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.currency }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ExchangeRate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.exchangeRate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'MarginPercentage'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.marginPercentage }}</dd>
+
+                        <dt class="col-sm-3">{{ 'StockQuantity'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.stockQuantity }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ReservedQuantity'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.reservedQuantity }}</dd>
+
+                        <dt class="col-sm-3">{{ 'AvailableQuantity'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.availableQuantity }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ExpirationDate'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.expirationDate }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.createdAt|date('Y-m-d H:i:s') }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ productbatch.updatedAt|date('Y-m-d H:i:s') }}</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <form method="post"
+                          action="{{ path('product_batch_delete', {id: productbatch.id}) }}"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ productbatch.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            {{ 'action.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

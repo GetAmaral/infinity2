@@ -1,0 +1,60 @@
+<turbo-stream action="replace" target="tasktemplate-{{ tasktemplate.id }}">
+    <template>
+        <tr id="tasktemplate-{{ tasktemplate.id }}">
+
+            <td>{{ tasktemplate.name }}</td>
+
+            <td>{{ tasktemplate.pipelineStageTemplate }}</td>
+
+            <td>{{ tasktemplate.command }}</td>
+
+            <td>{{ tasktemplate.periodicityInterval }}</td>
+
+            <td>{{ tasktemplate.periodicityTimeframe }}</td>
+
+            <td>{{ tasktemplate.active }}</td>
+
+            <td>{{ tasktemplate.type }}</td>
+
+            <td>{{ tasktemplate.description }}</td>
+
+            <td>{{ tasktemplate.priority }}</td>
+
+            <td>{{ tasktemplate.durationMinutes }}</td>
+
+            <td>{{ tasktemplate.location }}</td>
+
+            <td>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('task_template_show', {id: tasktemplate.id}) }}"
+                       class="btn btn-sm btn-info">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('task_template_edit', {id: tasktemplate.id}) }}"
+                       class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post"
+                          action="{{ path('task_template_delete', {id: tasktemplate.id}) }}"
+                          style="display: inline;"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tasktemplate.id) }}">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="flash-messages">
+    <template>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ 'TaskTemplate'|trans }} updated successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </template>
+</turbo-stream>

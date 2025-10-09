@@ -1,0 +1,88 @@
+<turbo-stream action="replace" target="contact-{{ contact.id }}">
+    <template>
+        <tr id="contact-{{ contact.id }}">
+
+            <td>{{ contact.name }}</td>
+
+            <td>{{ contact.organization }}</td>
+
+            <td>{{ contact.company }}</td>
+
+            <td>{{ contact.origin }}</td>
+
+            <td>{{ contact.accountManager }}</td>
+
+            <td>{{ contact.nickname }}</td>
+
+            <td>{{ contact.ranking }}</td>
+
+            <td>{{ contact.email }}</td>
+
+            <td>{{ contact.phone }}</td>
+
+            <td>{{ contact.address }}</td>
+
+            <td>{{ contact.neighborhood }}</td>
+
+            <td>{{ contact.city }}</td>
+
+            <td>{{ contact.postalCode }}</td>
+
+            <td>{{ contact.geo }}</td>
+
+            <td>{{ contact.birthDate }}</td>
+
+            <td>{{ contact.gender }}</td>
+
+            <td>{{ contact.document }}</td>
+
+            <td>{{ contact.score }}</td>
+
+            <td>{{ contact.notes }}</td>
+
+            <td>{{ contact.firstTalkDate }}</td>
+
+            <td>{{ contact.lastTalkDate }}</td>
+
+            <td>{{ contact.profilePictureUrl }}</td>
+
+            <td>{{ contact.status }}</td>
+
+            <td>{{ contact.billingAddress }}</td>
+
+            <td>{{ contact.billingCity }}</td>
+
+            <td>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('contact_show', {id: contact.id}) }}"
+                       class="btn btn-sm btn-info">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('contact_edit', {id: contact.id}) }}"
+                       class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post"
+                          action="{{ path('contact_delete', {id: contact.id}) }}"
+                          style="display: inline;"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="flash-messages">
+    <template>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ 'Contact'|trans }} updated successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </template>
+</turbo-stream>

@@ -1,0 +1,325 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if product.id %}
+        {{ 'action.edit'|trans }} {{ 'Product'|trans }}
+    {% else %}
+        {{ 'action.create'|trans }} {{ 'Product'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        {% if product.id %}
+                            <i class="bi bi-pencil me-2"></i>
+                            {{ 'action.edit'|trans }} {{ 'Product'|trans }}
+                        {% else %}
+                            <i class="bi bi-plus-circle me-2"></i>
+                            {{ 'action.create'|trans }} {{ 'Product'|trans }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
+
+                    {{ form_errors(form) }}
+
+
+                    <div class="mb-3">
+                        {{ form_label(form.productCode) }}
+                        {{ form_widget(form.productCode) }}
+                        {{ form_errors(form.productCode) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description) }}
+                        {{ form_errors(form.description) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.shortDescription) }}
+                        {{ form_widget(form.shortDescription) }}
+                        {{ form_errors(form.shortDescription) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.productType) }}
+                        {{ form_widget(form.productType) }}
+                        {{ form_errors(form.productType) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.listPrice) }}
+                        {{ form_widget(form.listPrice) }}
+                        {{ form_errors(form.listPrice) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.costPrice) }}
+                        {{ form_widget(form.costPrice) }}
+                        {{ form_errors(form.costPrice) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.minimumPrice) }}
+                        {{ form_widget(form.minimumPrice) }}
+                        {{ form_errors(form.minimumPrice) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.maximumDiscount) }}
+                        {{ form_widget(form.maximumDiscount) }}
+                        {{ form_errors(form.maximumDiscount) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.discountAmount) }}
+                        {{ form_widget(form.discountAmount) }}
+                        {{ form_errors(form.discountAmount) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.discountPercentage) }}
+                        {{ form_widget(form.discountPercentage) }}
+                        {{ form_errors(form.discountPercentage) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.commissionRate) }}
+                        {{ form_widget(form.commissionRate) }}
+                        {{ form_errors(form.commissionRate) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.commissionAmount) }}
+                        {{ form_widget(form.commissionAmount) }}
+                        {{ form_errors(form.commissionAmount) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.currency) }}
+                        {{ form_widget(form.currency) }}
+                        {{ form_errors(form.currency) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.exchangeRate) }}
+                        {{ form_widget(form.exchangeRate) }}
+                        {{ form_errors(form.exchangeRate) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.unitOfMeasure) }}
+                        {{ form_widget(form.unitOfMeasure) }}
+                        {{ form_errors(form.unitOfMeasure) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.weight) }}
+                        {{ form_widget(form.weight) }}
+                        {{ form_errors(form.weight) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.dimensions) }}
+                        {{ form_widget(form.dimensions) }}
+                        {{ form_errors(form.dimensions) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.marginPercentage) }}
+                        {{ form_widget(form.marginPercentage) }}
+                        {{ form_errors(form.marginPercentage) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.stockQuantity) }}
+                        {{ form_widget(form.stockQuantity) }}
+                        {{ form_errors(form.stockQuantity) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.reservedQuantity) }}
+                        {{ form_widget(form.reservedQuantity) }}
+                        {{ form_errors(form.reservedQuantity) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.availableQuantity) }}
+                        {{ form_widget(form.availableQuantity) }}
+                        {{ form_errors(form.availableQuantity) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.warrantyPeriod) }}
+                        {{ form_widget(form.warrantyPeriod) }}
+                        {{ form_errors(form.warrantyPeriod) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.supportPeriod) }}
+                        {{ form_widget(form.supportPeriod) }}
+                        {{ form_errors(form.supportPeriod) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.lifecycleStage) }}
+                        {{ form_widget(form.lifecycleStage) }}
+                        {{ form_errors(form.lifecycleStage) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.launchDate) }}
+                        {{ form_widget(form.launchDate) }}
+                        {{ form_errors(form.launchDate) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.endOfLifeDate) }}
+                        {{ form_widget(form.endOfLifeDate) }}
+                        {{ form_errors(form.endOfLifeDate) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.active) }}
+                        {{ form_widget(form.active) }}
+                        {{ form_errors(form.active) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.sellable) }}
+                        {{ form_widget(form.sellable) }}
+                        {{ form_errors(form.sellable) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.purchasable) }}
+                        {{ form_widget(form.purchasable) }}
+                        {{ form_errors(form.purchasable) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.requiresApproval) }}
+                        {{ form_widget(form.requiresApproval) }}
+                        {{ form_errors(form.requiresApproval) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.subscription) }}
+                        {{ form_widget(form.subscription) }}
+                        {{ form_errors(form.subscription) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.subscriptionPeriod) }}
+                        {{ form_widget(form.subscriptionPeriod) }}
+                        {{ form_errors(form.subscriptionPeriod) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.setupFee) }}
+                        {{ form_widget(form.setupFee) }}
+                        {{ form_errors(form.setupFee) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.recurringFee) }}
+                        {{ form_widget(form.recurringFee) }}
+                        {{ form_errors(form.recurringFee) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.cancellationFee) }}
+                        {{ form_widget(form.cancellationFee) }}
+                        {{ form_errors(form.cancellationFee) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.specifications) }}
+                        {{ form_widget(form.specifications) }}
+                        {{ form_errors(form.specifications) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.features) }}
+                        {{ form_widget(form.features) }}
+                        {{ form_errors(form.features) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.customFields) }}
+                        {{ form_widget(form.customFields) }}
+                        {{ form_errors(form.customFields) }}
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('product_index') }}"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            {{ 'action.back'|trans }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ 'action.save'|trans }}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

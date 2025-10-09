@@ -1,0 +1,50 @@
+<turbo-stream action="prepend" target="pipeline-list">
+    <template>
+        <tr id="pipeline-{{ pipeline.id }}">
+
+            <td>{{ pipeline.name }}</td>
+
+            <td>{{ pipeline.organization }}</td>
+
+            <td>{{ pipeline.manager }}</td>
+
+            <td>{{ pipeline.description }}</td>
+
+            <td>{{ pipeline.active }}</td>
+
+            <td>{{ pipeline.default }}</td>
+
+            <td>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('pipeline_show', {id: pipeline.id}) }}"
+                       class="btn btn-sm btn-info">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('pipeline_edit', {id: pipeline.id}) }}"
+                       class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post"
+                          action="{{ path('pipeline_delete', {id: pipeline.id}) }}"
+                          style="display: inline;"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pipeline.id) }}">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="flash-messages">
+    <template>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ 'Pipeline'|trans }} created successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </template>
+</turbo-stream>

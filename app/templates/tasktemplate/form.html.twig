@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if tasktemplate.id %}
+        {{ 'action.edit'|trans }} {{ 'TaskTemplate'|trans }}
+    {% else %}
+        {{ 'action.create'|trans }} {{ 'TaskTemplate'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        {% if tasktemplate.id %}
+                            <i class="bi bi-pencil me-2"></i>
+                            {{ 'action.edit'|trans }} {{ 'TaskTemplate'|trans }}
+                        {% else %}
+                            <i class="bi bi-plus-circle me-2"></i>
+                            {{ 'action.create'|trans }} {{ 'TaskTemplate'|trans }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
+
+                    {{ form_errors(form) }}
+
+
+                    <div class="mb-3">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.command) }}
+                        {{ form_widget(form.command) }}
+                        {{ form_errors(form.command) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.periodicityInterval) }}
+                        {{ form_widget(form.periodicityInterval) }}
+                        {{ form_errors(form.periodicityInterval) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.periodicityTimeframe) }}
+                        {{ form_widget(form.periodicityTimeframe) }}
+                        {{ form_errors(form.periodicityTimeframe) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.active) }}
+                        {{ form_widget(form.active) }}
+                        {{ form_errors(form.active) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description) }}
+                        {{ form_errors(form.description) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.priority) }}
+                        {{ form_widget(form.priority) }}
+                        {{ form_errors(form.priority) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.durationMinutes) }}
+                        {{ form_widget(form.durationMinutes) }}
+                        {{ form_errors(form.durationMinutes) }}
+
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.location) }}
+                        {{ form_widget(form.location) }}
+                        {{ form_errors(form.location) }}
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('task_template_index') }}"
+                           class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            {{ 'action.back'|trans }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ 'action.save'|trans }}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

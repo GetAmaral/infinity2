@@ -1,0 +1,58 @@
+<turbo-stream action="replace" target="eventattendee-{{ eventattendee.id }}">
+    <template>
+        <tr id="eventattendee-{{ eventattendee.id }}">
+
+            <td>{{ eventattendee.name }}</td>
+
+            <td>{{ eventattendee.event }}</td>
+
+            <td>{{ eventattendee.user }}</td>
+
+            <td>{{ eventattendee.contact }}</td>
+
+            <td>{{ eventattendee.email }}</td>
+
+            <td>{{ eventattendee.phone }}</td>
+
+            <td>{{ eventattendee.attendeeStatus }}</td>
+
+            <td>{{ eventattendee.comment }}</td>
+
+            <td>{{ eventattendee.organizer }}</td>
+
+            <td>{{ eventattendee.optional }}</td>
+
+            <td>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('event_attendee_show', {id: eventattendee.id}) }}"
+                       class="btn btn-sm btn-info">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('event_attendee_edit', {id: eventattendee.id}) }}"
+                       class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post"
+                          action="{{ path('event_attendee_delete', {id: eventattendee.id}) }}"
+                          style="display: inline;"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ eventattendee.id) }}">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="flash-messages">
+    <template>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ 'EventAttendee'|trans }} updated successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </template>
+</turbo-stream>

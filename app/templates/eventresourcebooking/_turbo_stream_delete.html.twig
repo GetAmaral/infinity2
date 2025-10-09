@@ -1,0 +1,12 @@
+<turbo-stream action="remove" target="eventresourcebooking-{{ eventresourcebooking.id }}">
+</turbo-stream>
+
+<turbo-stream action="update" target="flash-messages">
+    <template>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="bi bi-trash me-2"></i>
+            {{ 'EventResourceBooking'|trans }} deleted successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </template>
+</turbo-stream>

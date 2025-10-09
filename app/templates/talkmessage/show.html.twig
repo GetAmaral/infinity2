@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'TalkMessage'|trans }} - {{ talkmessage }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>
+                            <i class="bi-circle me-2"></i>
+                            {{ 'TalkMessage'|trans }} Details
+                        </h2>
+                        <div class="btn-group">
+                            <a href="{{ path('talk_message_edit', {id: talkmessage.id}) }}"
+                               class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i>
+                                {{ 'action.edit'|trans }}
+                            </a>
+                            <a href="{{ path('talk_message_index') }}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                {{ 'action.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+
+                        <dt class="col-sm-3">{{ 'Organization'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.organization }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Talk'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.talk }}</dd>
+
+                        <dt class="col-sm-3">{{ 'FromContact'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.fromContact }}</dd>
+
+                        <dt class="col-sm-3">{{ 'FromUser'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.fromUser }}</dd>
+
+                        <dt class="col-sm-3">{{ 'FromAgent'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.fromAgent }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Date'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.date }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Text'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.text }}</dd>
+
+                        <dt class="col-sm-3">{{ 'MessageType'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.messageType }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Read'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.read }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ReadAt'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.readAt }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Sentiment'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.sentiment }}</dd>
+
+                        <dt class="col-sm-3">{{ 'ParentMessage'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.parentMessage }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Edited'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.edited }}</dd>
+
+                        <dt class="col-sm-3">{{ 'Notification'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.notification }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.createdAt|date('Y-m-d H:i:s') }}</dd>
+
+                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
+                        <dd class="col-sm-9">{{ talkmessage.updatedAt|date('Y-m-d H:i:s') }}</dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <form method="post"
+                          action="{{ path('talk_message_delete', {id: talkmessage.id}) }}"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ talkmessage.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            {{ 'action.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

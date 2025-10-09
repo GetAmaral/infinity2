@@ -1,0 +1,54 @@
+<turbo-stream action="prepend" target="socialmedia-list">
+    <template>
+        <tr id="socialmedia-{{ socialmedia.id }}">
+
+            <td>{{ socialmedia.name }}</td>
+
+            <td>{{ socialmedia.url }}</td>
+
+            <td>{{ socialmedia.apiKey }}</td>
+
+            <td>{{ socialmedia.socialMediaType }}</td>
+
+            <td>{{ socialmedia.organization }}</td>
+
+            <td>{{ socialmedia.user }}</td>
+
+            <td>{{ socialmedia.contact }}</td>
+
+            <td>{{ socialmedia.company }}</td>
+
+            <td>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('social_media_show', {id: socialmedia.id}) }}"
+                       class="btn btn-sm btn-info">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('social_media_edit', {id: socialmedia.id}) }}"
+                       class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post"
+                          action="{{ path('social_media_delete', {id: socialmedia.id}) }}"
+                          style="display: inline;"
+                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ socialmedia.id) }}">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="flash-messages">
+    <template>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ 'SocialMedia'|trans }} created successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </template>
+</turbo-stream>

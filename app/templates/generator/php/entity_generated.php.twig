@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 {% set relationshipProperties = entity.properties|filter(p => p.isRelationship() and (not usesOrganizationTrait or p.propertyName != 'organization')) %}
 {% set targetEntities = [] %}
 {% for property in relationshipProperties %}
-    {% if property.targetEntity not in targetEntities %}
+    {% if property.targetEntity and property.targetEntity|length > 0 and property.targetEntity not in targetEntities %}
         {% set targetEntities = targetEntities|merge([property.targetEntity]) %}
     {% endif %}
 {% endfor %}
