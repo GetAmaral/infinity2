@@ -54,24 +54,39 @@ class ControllerGenerator
             $entity->entityName
         );
 
-        // Create directory
-        $dir = dirname($filePath);
-        if (!is_dir($dir)) {
-            $this->filesystem->mkdir($dir, 0755);
+        try {
+            // Create directory
+            $dir = dirname($filePath);
+            if (!is_dir($dir)) {
+                $this->filesystem->mkdir($dir, 0755);
+            }
+
+            // Render from template
+            $content = $this->twig->render('Generator/php/controller_generated.php.twig', [
+                'entity' => $entity,
+                'namespace' => 'App\\Controller\\Generated',
+                'className' => $entity->entityName . 'ControllerGenerated',
+            ]);
+
+            // Atomic write using Filesystem component
+            $this->filesystem->dumpFile($filePath, $content);
+
+            $this->logger->info('Generated controller base class', ['file' => $filePath]);
+
+            return $filePath;
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to generate controller base class', [
+                'entity' => $entity->entityName,
+                'file' => $filePath,
+                'error' => $e->getMessage()
+            ]);
+            throw new \RuntimeException(
+                "Failed to generate controller base class {$entity->entityName}: {$e->getMessage()}",
+                0,
+                $e
+            );
         }
-
-        // Render from template
-        $content = $this->twig->render('Generator/php/controller_generated.php.twig', [
-            'entity' => $entity,
-            'namespace' => 'App\\Controller\\Generated',
-            'className' => $entity->entityName . 'ControllerGenerated',
-        ]);
-
-        file_put_contents($filePath, $content);
-
-        $this->logger->info('Generated controller base class', ['file' => $filePath]);
-
-        return $filePath;
     }
 
     /**
@@ -91,18 +106,33 @@ class ControllerGenerator
             return null;
         }
 
-        // Render from template
-        $content = $this->twig->render('Generator/php/controller_extension.php.twig', [
-            'entity' => $entity,
-            'namespace' => 'App\\Controller',
-            'className' => $entity->entityName . 'Controller',
-            'extendsClass' => $entity->entityName . 'ControllerGenerated',
-        ]);
+        try {
+            // Render from template
+            $content = $this->twig->render('Generator/php/controller_extension.php.twig', [
+                'entity' => $entity,
+                'namespace' => 'App\\Controller',
+                'className' => $entity->entityName . 'Controller',
+                'extendsClass' => $entity->entityName . 'ControllerGenerated',
+            ]);
 
-        file_put_contents($filePath, $content);
+            // Atomic write using Filesystem component
+            $this->filesystem->dumpFile($filePath, $content);
 
-        $this->logger->info('Generated controller extension class', ['file' => $filePath]);
+            $this->logger->info('Generated controller extension class', ['file' => $filePath]);
 
-        return $filePath;
+            return $filePath;
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to generate controller extension class', [
+                'entity' => $entity->entityName,
+                'file' => $filePath,
+                'error' => $e->getMessage()
+            ]);
+            throw new \RuntimeException(
+                "Failed to generate controller extension class {$entity->entityName}: {$e->getMessage()}",
+                0,
+                $e
+            );
+        }
     }
 }

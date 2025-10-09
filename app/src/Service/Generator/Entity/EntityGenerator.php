@@ -54,26 +54,41 @@ class EntityGenerator
             $entity->entityName
         );
 
-        // Create directory
-        $dir = dirname($filePath);
-        if (!is_dir($dir)) {
-            $this->filesystem->mkdir($dir, 0755);
+        try {
+            // Create directory
+            $dir = dirname($filePath);
+            if (!is_dir($dir)) {
+                $this->filesystem->mkdir($dir, 0755);
+            }
+
+            // Render from template
+            $content = $this->twig->render('Generator/php/entity_generated.php.twig', [
+                'entity' => $entity,
+                'namespace' => 'App\\Entity\\Generated',
+                'className' => $entity->entityName . 'Generated',
+                'extendsClass' => 'EntityBase',
+                'usesOrganizationTrait' => $entity->hasOrganization,
+            ]);
+
+            // Atomic write using Filesystem component
+            $this->filesystem->dumpFile($filePath, $content);
+
+            $this->logger->info('Generated entity base class', ['file' => $filePath]);
+
+            return $filePath;
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to generate entity base class', [
+                'entity' => $entity->entityName,
+                'file' => $filePath,
+                'error' => $e->getMessage()
+            ]);
+            throw new \RuntimeException(
+                "Failed to generate entity base class {$entity->entityName}: {$e->getMessage()}",
+                0,
+                $e
+            );
         }
-
-        // Render from template
-        $content = $this->twig->render('Generator/php/entity_generated.php.twig', [
-            'entity' => $entity,
-            'namespace' => 'App\\Entity\\Generated',
-            'className' => $entity->entityName . 'Generated',
-            'extendsClass' => 'EntityBase',
-            'usesOrganizationTrait' => $entity->hasOrganization,
-        ]);
-
-        file_put_contents($filePath, $content);
-
-        $this->logger->info('Generated entity base class', ['file' => $filePath]);
-
-        return $filePath;
     }
 
     /**
@@ -93,18 +108,33 @@ class EntityGenerator
             return null;
         }
 
-        // Render from template
-        $content = $this->twig->render('Generator/php/entity_extension.php.twig', [
-            'entity' => $entity,
-            'namespace' => 'App\\Entity',
-            'className' => $entity->entityName,
-            'extendsClass' => $entity->entityName . 'Generated',
-        ]);
+        try {
+            // Render from template
+            $content = $this->twig->render('Generator/php/entity_extension.php.twig', [
+                'entity' => $entity,
+                'namespace' => 'App\\Entity',
+                'className' => $entity->entityName,
+                'extendsClass' => $entity->entityName . 'Generated',
+            ]);
 
-        file_put_contents($filePath, $content);
+            // Atomic write using Filesystem component
+            $this->filesystem->dumpFile($filePath, $content);
 
-        $this->logger->info('Generated entity extension class', ['file' => $filePath]);
+            $this->logger->info('Generated entity extension class', ['file' => $filePath]);
 
-        return $filePath;
+            return $filePath;
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to generate entity extension class', [
+                'entity' => $entity->entityName,
+                'file' => $filePath,
+                'error' => $e->getMessage()
+            ]);
+            throw new \RuntimeException(
+                "Failed to generate entity extension class {$entity->entityName}: {$e->getMessage()}",
+                0,
+                $e
+            );
+        }
     }
 }

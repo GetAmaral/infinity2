@@ -37,7 +37,11 @@ abstract class {{ className }} extends AbstractController
      * List all {{ entity.pluralLabel }}
      */
     #[Route('', name: '{{ entity.getSnakeCaseName() }}_index', methods: ['GET'])]
+{% if entity.security %}
+    #[IsGranted({{ entity.security|raw }})]
+{% else %}
     #[IsGranted('ROLE_USER')]
+{% endif %}
     public function index(Request $request): Response
     {
         $page = max(1, $request->query->getInt('page', 1));
@@ -69,7 +73,11 @@ abstract class {{ className }} extends AbstractController
      * Show {{ entity.entityLabel }} details
      */
     #[Route('/{id}', name: '{{ entity.getSnakeCaseName() }}_show', methods: ['GET'])]
+{% if entity.security %}
+    #[IsGranted({{ entity.security|raw }})]
+{% else %}
     #[IsGranted('ROLE_USER')]
+{% endif %}
     public function show({{ entity.entityName }} ${{ entity.getLowercaseName() }}): Response
     {
 {% if entity.voterEnabled %}
@@ -85,7 +93,11 @@ abstract class {{ className }} extends AbstractController
      * Create new {{ entity.entityLabel }}
      */
     #[Route('/new', name: '{{ entity.getSnakeCaseName() }}_new', methods: ['GET', 'POST'])]
+{% if entity.security %}
+    #[IsGranted({{ entity.security|raw }})]
+{% else %}
     #[IsGranted('ROLE_USER')]
+{% endif %}
     public function new(Request $request): Response
     {
         ${{ entity.getLowercaseName() }} = new {{ entity.entityName }}();
@@ -120,7 +132,11 @@ abstract class {{ className }} extends AbstractController
      * Edit {{ entity.entityLabel }}
      */
     #[Route('/{id}/edit', name: '{{ entity.getSnakeCaseName() }}_edit', methods: ['GET', 'POST'])]
+{% if entity.security %}
+    #[IsGranted({{ entity.security|raw }})]
+{% else %}
     #[IsGranted('ROLE_USER')]
+{% endif %}
     public function edit(Request $request, {{ entity.entityName }} ${{ entity.getLowercaseName() }}): Response
     {
 {% if entity.voterEnabled %}
@@ -149,7 +165,11 @@ abstract class {{ className }} extends AbstractController
      * Delete {{ entity.entityLabel }}
      */
     #[Route('/{id}', name: '{{ entity.getSnakeCaseName() }}_delete', methods: ['POST'])]
+{% if entity.security %}
+    #[IsGranted({{ entity.security|raw }})]
+{% else %}
     #[IsGranted('ROLE_USER')]
+{% endif %}
     public function delete(Request $request, {{ entity.entityName }} ${{ entity.getLowercaseName() }}): Response
     {
 {% if entity.voterEnabled %}

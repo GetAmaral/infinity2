@@ -89,8 +89,8 @@
                                     </a>
                                     <form method="post"
                                           action="{{ path('{% endverbatim %}{{ entity.getSnakeCaseName() }}{% verbatim %}_delete', {id: item.id}) }}"
-                                          style="display: inline;"
-                                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
+                                          class="d-inline"
+                                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}')">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
                                         <button type="submit" class="btn btn-sm btn-danger">
                                             <i class="bi bi-trash"></i>

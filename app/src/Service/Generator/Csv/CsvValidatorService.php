@@ -221,6 +221,34 @@ class CsvValidatorService
             $errors[] = "Property '{$context}': Invalid form type '{$property['formType']}'";
         }
 
+        // Validate index configuration
+        if ($property['indexed']) {
+            if (empty($property['indexType'])) {
+                $errors[] = "Property '{$context}': indexed=true requires indexType";
+            } elseif (!in_array($property['indexType'], ['simple', 'composite', 'unique'], true)) {
+                $errors[] = "Property '{$context}': indexType must be 'simple', 'composite', or 'unique'";
+            }
+
+            // Composite indexes must specify the second column
+            if ($property['indexType'] === 'composite') {
+                if (empty($property['compositeIndexWith'])) {
+                    $errors[] = "Property '{$context}': indexType='composite' requires compositeIndexWith";
+                }
+                // Note: We can't validate if compositeIndexWith column exists here
+                // because we don't have access to all properties of the entity in this context
+            }
+
+            // Unique indexes should also have unique=true column
+            if ($property['indexType'] === 'unique' && !$property['unique']) {
+                $errors[] = "Property '{$context}': indexType='unique' should also have unique=true";
+            }
+        }
+
+        // If compositeIndexWith is specified, indexed must be true
+        if (!empty($property['compositeIndexWith']) && !$property['indexed']) {
+            $errors[] = "Property '{$context}': compositeIndexWith requires indexed=true";
+        }
+
         return $errors;
     }
 

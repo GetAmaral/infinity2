@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\CourseLecture;
 use App\Entity\CourseModule;
 use App\Form\CourseModuleFormType;
+use App\Message\ProcessVideoMessage;
 use App\Repository\CourseRepository;
 use App\Repository\CourseModuleRepository;
+use App\Repository\CourseLectureRepository;
 use App\Security\Voter\CourseVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/course/{courseId}/module', requirements: ['courseId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'])]
 final class CourseModuleController extends AbstractController
@@ -22,6 +29,11 @@ final class CourseModuleController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly CourseRepository $courseRepository,
         private readonly CourseModuleRepository $moduleRepository,
+        private readonly CourseLectureRepository $lectureRepository,
+        private readonly MessageBusInterface $messageBus,
+        private readonly SluggerInterface $slugger,
+        #[Autowire(param: 'app.videos.originals_path')]
+        private readonly string $videosOriginalsPath
     ) {}
 
     #[Route('/new', name: 'course_module_new', methods: ['GET', 'POST'])]
@@ -95,6 +107,60 @@ final class CourseModuleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle bulk video uploads if any
+            /** @var UploadedFile[]|null $bulkVideoFiles */
+            $bulkVideoFiles = $form->get('bulkVideoFiles')->getData();
+
+            if ($bulkVideoFiles && count($bulkVideoFiles) > 0) {
+                // Get current max viewOrder for lectures in this module
+                $existingLectures = $this->lectureRepository->findBy(['courseModule' => $module], ['viewOrder' => 'DESC'], 1);
+                $nextViewOrder = $existingLectures ? $existingLectures[0]->getViewOrder() + 1 : 1;
+
+                $uploadedCount = 0;
+                $newLectures = [];
+
+                foreach ($bulkVideoFiles as $videoFile) {
+                    // Generate safe filename
+                    $originalFilename = pathinfo($videoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $this->slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $videoFile->guessExtension();
+
+                    // Move file to originals directory
+                    $videoFile->move($this->videosOriginalsPath, $newFilename);
+
+                    // Create new lecture
+                    $lecture = new CourseLecture();
+                    $lecture->setCourseModule($module);
+                    $lecture->setName($originalFilename); // Use original filename as lecture name
+                    $lecture->setViewOrder($nextViewOrder++);
+                    $lecture->setVideoFileName($newFilename);
+                    $lecture->setProcessingStatus('pending');
+                    $lecture->setProcessingPercentage(0);
+
+                    $this->entityManager->persist($lecture);
+                    $newLectures[] = $lecture;
+                    $uploadedCount++;
+                }
+
+                // Flush all lectures first to generate IDs
+                $this->entityManager->flush();
+
+                // Dispatch video processing messages for all uploaded videos
+                foreach ($newLectures as $lecture) {
+                    $originalPath = $this->videosOriginalsPath . '/' . $lecture->getVideoFileName();
+                    $this->messageBus->dispatch(new ProcessVideoMessage(
+                        $lecture->getId()->toString(),
+                        $originalPath
+                    ));
+                }
+
+                // Recalculate module and course lengths
+                $module->calculateTotalLengthSeconds();
+                $course->calculateTotalLengthSeconds();
+
+                $this->addFlash('info', sprintf('%d video(s) uploaded and queued for processing.', $uploadedCount));
+            }
+
             $this->entityManager->flush();
 
             $this->addFlash('success', 'course.module.flash.updated_successfully');

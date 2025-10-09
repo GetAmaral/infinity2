@@ -214,4 +214,8 @@ course.module.form.name: 'Module Name'
 course.module.form.name_placeholder: 'Enter module name'
 course.module.form.release_date: 'Release Date'
 course.module.form.view_order: 'View Order'
+course.module.form.bulk_video_upload: 'Bulk Video Upload (Optional)'
+course.module.form.bulk_video_upload.hint: 'Upload multiple videos at once. Each video will create a new lecture in this module with the video filename as the lecture name.'
+course.module.form.bulk_video_upload.max_hint: 'Maximum %max% videos per upload'
+course.module.validation.bulk_videos_max_count: 'You can upload a maximum of 50 videos at once'
 course.status.active: __course.status.active

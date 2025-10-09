@@ -54,24 +54,39 @@ class FormGenerator
             $entity->entityName
         );
 
-        // Create directory
-        $dir = dirname($filePath);
-        if (!is_dir($dir)) {
-            $this->filesystem->mkdir($dir, 0755);
+        try {
+            // Create directory
+            $dir = dirname($filePath);
+            if (!is_dir($dir)) {
+                $this->filesystem->mkdir($dir, 0755);
+            }
+
+            // Render from template
+            $content = $this->twig->render('Generator/php/form_generated.php.twig', [
+                'entity' => $entity,
+                'namespace' => 'App\\Form\\Generated',
+                'className' => $entity->entityName . 'TypeGenerated',
+            ]);
+
+            // Atomic write using Filesystem component
+            $this->filesystem->dumpFile($filePath, $content);
+
+            $this->logger->info('Generated form base class', ['file' => $filePath]);
+
+            return $filePath;
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to generate form base class', [
+                'entity' => $entity->entityName,
+                'file' => $filePath,
+                'error' => $e->getMessage()
+            ]);
+            throw new \RuntimeException(
+                "Failed to generate form base class {$entity->entityName}: {$e->getMessage()}",
+                0,
+                $e
+            );
         }
-
-        // Render from template
-        $content = $this->twig->render('Generator/php/form_generated.php.twig', [
-            'entity' => $entity,
-            'namespace' => 'App\\Form\\Generated',
-            'className' => $entity->entityName . 'TypeGenerated',
-        ]);
-
-        file_put_contents($filePath, $content);
-
-        $this->logger->info('Generated form base class', ['file' => $filePath]);
-
-        return $filePath;
     }
 
     /**
@@ -91,18 +106,33 @@ class FormGenerator
             return null;
         }
 
-        // Render from template
-        $content = $this->twig->render('Generator/php/form_extension.php.twig', [
-            'entity' => $entity,
-            'namespace' => 'App\\Form',
-            'className' => $entity->entityName . 'Type',
-            'extendsClass' => $entity->entityName . 'TypeGenerated',
-        ]);
+        try {
+            // Render from template
+            $content = $this->twig->render('Generator/php/form_extension.php.twig', [
+                'entity' => $entity,
+                'namespace' => 'App\\Form',
+                'className' => $entity->entityName . 'Type',
+                'extendsClass' => $entity->entityName . 'TypeGenerated',
+            ]);
 
-        file_put_contents($filePath, $content);
+            // Atomic write using Filesystem component
+            $this->filesystem->dumpFile($filePath, $content);
 
-        $this->logger->info('Generated form extension class', ['file' => $filePath]);
+            $this->logger->info('Generated form extension class', ['file' => $filePath]);
 
-        return $filePath;
+            return $filePath;
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to generate form extension class', [
+                'entity' => $entity->entityName,
+                'file' => $filePath,
+                'error' => $e->getMessage()
+            ]);
+            throw new \RuntimeException(
+                "Failed to generate form extension class {$entity->entityName}: {$e->getMessage()}",
+                0,
+                $e
+            );
+        }
     }
 }

@@ -8,6 +8,7 @@ use App\Entity\CourseModule;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -93,14 +94,53 @@ class CourseModuleFormType extends AbstractType
                 'constraints' => [
                     new Assert\PositiveOrZero(message: 'course.module.validation.view_order_positive'),
                 ],
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => $isEdit ? 'button.update_module' : 'button.create_module',
+            ]);
+
+        // Add bulk video upload field only when editing
+        if ($isEdit) {
+            $builder->add('bulkVideoFiles', FileType::class, [
+                'label' => 'course.module.form.bulk_video_upload',
+                'translation_domain' => 'course',
+                'required' => false,
+                'multiple' => true,
+                'mapped' => false,
                 'attr' => [
-                    'class' => 'btn luminai-btn-primary w-100',
-                    'data-loading-text' => $isEdit ? 'button.updating' : 'button.creating',
+                    'class' => 'form-control',
+                    'accept' => 'video/mp4,video/webm,video/ogg,video/quicktime,video/mp2t,video/x-matroska,.ts,.mp4,.webm,.ogg,.mov,.avi,.mkv',
+                ],
+                'constraints' => [
+                    new Assert\Count(
+                        max: 50,
+                        maxMessage: 'course.module.validation.bulk_videos_max_count'
+                    ),
+                    new Assert\All([
+                        new Assert\File([
+                            'maxSize' => '4G',
+                            'mimeTypes' => [
+                                'video/mp4',
+                                'video/webm',
+                                'video/ogg',
+                                'video/quicktime',
+                                'video/x-msvideo',
+                                'video/mp2t',
+                                'video/MP2T',
+                                'video/x-matroska',
+                                'application/octet-stream',
+                            ],
+                            'mimeTypesMessage' => 'course.lecture.validation.invalid_video_format',
+                        ]),
+                    ]),
                 ],
             ]);
+        }
+
+        $builder->add('submit', SubmitType::class, [
+            'label' => $isEdit ? 'button.update_module' : 'button.create_module',
+            'attr' => [
+                'class' => 'btn luminai-btn-primary w-100',
+                'data-loading-text' => $isEdit ? 'button.updating' : 'button.creating',
+            ],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -646,7 +646,7 @@ The Turbo Drive migration is **100% COMPLETE** and **PRODUCTION-READY**.
 2. **Deploy to Production** 🚀
    ```bash
    # Deploy to VPS
-   ssh -i /home/user/.ssh/infinity_vps root@91.98.137.175 'cd /opt/infinity && git pull origin main'
+   ssh -i /home/user/.ssh/luminai_vps root@91.98.137.175 'cd /opt/luminai && git pull origin main'
    ```
 
 3. **Monitor Production**

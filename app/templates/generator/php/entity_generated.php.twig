@@ -34,7 +34,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 {% if property.indexType == 'simple' %}
 #[ORM\Index(columns: ['{{ property.propertyName }}'])]
 {% elseif property.indexType == 'composite' and property.compositeIndexWith %}
-#[ORM\Index(columns: ['{{ property.propertyName }}', '{{ property.compositeIndexWith }}'])]
+#[ORM\Index(columns: ['{{ property.propertyName }}'{% if property.compositeIndexWith is iterable %}{% for col in property.compositeIndexWith %}, '{{ col }}'{% endfor %}{% else %}, '{{ property.compositeIndexWith }}'{% endif %}])]
 {% elseif property.indexType == 'unique' %}
 {# Unique constraint already handled by unique column property #}
 {% endif %}
@@ -44,7 +44,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 {% if property.indexType == 'simple' %}
 #[ORM\Index(columns: ['{{ property.propertyName }}_id'])]
 {% elseif property.indexType == 'composite' and property.compositeIndexWith %}
-#[ORM\Index(columns: ['{{ property.propertyName }}_id', '{{ property.compositeIndexWith }}'])]
+#[ORM\Index(columns: ['{{ property.propertyName }}_id'{% if property.compositeIndexWith is iterable %}{% for col in property.compositeIndexWith %}, '{{ col }}'{% endfor %}{% else %}, '{{ property.compositeIndexWith }}'{% endif %}])]
 {% endif %}
 {% endfor %}
 abstract class {{ className }} extends {{ extendsClass }}

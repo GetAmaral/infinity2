@@ -11,6 +11,7 @@
 {% set submit_key = is_edit ? 'button.save.changes' : 'course.module.button.create.module' %}
 {% set submit_domain = is_edit ? 'messages' : 'course' %}
 {% set entity = module %}
+{% set enctype = is_edit ? 'multipart/form-data' : null %}
 
 {# Form fields #}
 {% block modal_body %}
@@ -77,6 +78,28 @@
         </div>
         {{ form_errors(form.active) }}
     </div>
+
+    {% if is_edit %}
+        <div class="form-group-modern">
+            <label class="form-label-modern">
+                <i class="bi bi-upload me-2"></i>{{ form_label(form.bulkVideoFiles) }}
+            </label>
+            {{ form_widget(form.bulkVideoFiles, {
+                'attr': {
+                    'class': 'form-input-modern' ~ (form.bulkVideoFiles.vars.errors|length > 0 ? ' input-error' : '')
+                }
+            }) }}
+            {{ form_errors(form.bulkVideoFiles) }}
+            <small class="form-text text-muted mt-2 d-block">
+                <i class="bi bi-info-circle me-1"></i>
+                {{ 'course.module.form.bulk_video_upload.hint'|trans({}, 'course') }}
+            </small>
+            <small class="form-text text-muted d-block">
+                <i class="bi bi-exclamation-triangle me-1"></i>
+                {{ 'course.module.form.bulk_video_upload.max_hint'|trans({'%max%': 50}, 'course') }}
+            </small>
+        </div>
+    {% endif %}
 
     {{ form_widget(form._token) }}
 {% endblock %}

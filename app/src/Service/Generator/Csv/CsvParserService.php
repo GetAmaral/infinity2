@@ -24,7 +24,7 @@ class CsvParserService
         'entityName', 'propertyName', 'propertyLabel', 'propertyType',
         'nullable', 'length', 'precision', 'scale', 'unique', 'defaultValue',
         'relationshipType', 'targetEntity', 'inversedBy', 'mappedBy',
-        'cascade', 'orphanRemoval', 'fetch', 'orderBy', 'indexed', 'indexType',
+        'cascade', 'orphanRemoval', 'fetch', 'orderBy', 'indexType',
         'compositeIndexWith', 'validationRules', 'validationMessage', 'formType',
         'formOptions', 'formRequired', 'formReadOnly', 'formHelp', 'showInList',
         'showInDetail', 'showInForm', 'sortable', 'searchable', 'filterable',
@@ -240,19 +240,22 @@ class CsvParserService
     {
         // Boolean conversions
         $property['nullable'] = $this->parseBoolean($property['nullable'] ?? 'true');
-        $property['unique'] = $this->parseBoolean($property['unique'] ?? 'false');
-        $property['indexed'] = $this->parseBoolean($property['indexed'] ?? 'false');
-        $property['orphanRemoval'] = $this->parseBoolean($property['orphanRemoval'] ?? 'false');
+        $property['unique'] = $this->parseBoolean($property['unique'] ?? '');
+        $property['orphanRemoval'] = $this->parseBoolean($property['orphanRemoval'] ?? '');
         $property['formRequired'] = $this->parseBoolean($property['formRequired'] ?? 'true');
-        $property['formReadOnly'] = $this->parseBoolean($property['formReadOnly'] ?? 'false');
+        $property['formReadOnly'] = $this->parseBoolean($property['formReadOnly'] ?? '');
         $property['showInList'] = $this->parseBoolean($property['showInList'] ?? 'true');
         $property['showInDetail'] = $this->parseBoolean($property['showInDetail'] ?? 'true');
         $property['showInForm'] = $this->parseBoolean($property['showInForm'] ?? 'true');
         $property['sortable'] = $this->parseBoolean($property['sortable'] ?? 'true');
-        $property['searchable'] = $this->parseBoolean($property['searchable'] ?? 'false');
-        $property['filterable'] = $this->parseBoolean($property['filterable'] ?? 'false');
+        $property['searchable'] = $this->parseBoolean($property['searchable'] ?? '');
+        $property['filterable'] = $this->parseBoolean($property['filterable'] ?? '');
         $property['apiReadable'] = $this->parseBoolean($property['apiReadable'] ?? 'true');
         $property['apiWritable'] = $this->parseBoolean($property['apiWritable'] ?? 'true');
+
+        // Determine if indexed based on indexType (replaces old 'indexed' column)
+        $indexType = trim($property['indexType'] ?? '');
+        $property['indexed'] = !empty($indexType);
 
         // Integer conversions
         $property['length'] = $property['length'] !== '' ? (int)$property['length'] : null;
@@ -260,7 +263,7 @@ class CsvParserService
         $property['scale'] = $property['scale'] !== '' ? (int)$property['scale'] : null;
 
         // JSON field conversions
-        $property['orderBy'] = $this->parseJson($property['orderBy'] ?? '{}', $lineNumber, 'orderBy');
+        $property['orderBy'] = $this->parseOrderBy($property['orderBy'] ?? '', $lineNumber);
         $property['formOptions'] = $this->parseJson($property['formOptions'] ?? '{}', $lineNumber, 'formOptions');
         $property['fixtureOptions'] = $this->parseJson($property['fixtureOptions'] ?? '{}', $lineNumber, 'fixtureOptions');
 
@@ -276,7 +279,14 @@ class CsvParserService
         $property['mappedBy'] = !empty($property['mappedBy']) ? $property['mappedBy'] : null;
         $property['fetch'] = !empty($property['fetch']) ? $property['fetch'] : null;
         $property['indexType'] = !empty($property['indexType']) ? $property['indexType'] : null;
-        $property['compositeIndexWith'] = !empty($property['compositeIndexWith']) ? $property['compositeIndexWith'] : null;
+
+        // Parse compositeIndexWith - supports multiple columns separated by "|"
+        if (!empty($property['compositeIndexWith'])) {
+            $compositeColumns = array_map('trim', explode('|', $property['compositeIndexWith']));
+            $property['compositeIndexWith'] = $compositeColumns;
+        } else {
+            $property['compositeIndexWith'] = null;
+        }
         $property['allowedRoles'] = !empty($property['allowedRoles']) ? $property['allowedRoles'] : null;
         $property['defaultValue'] = !empty($property['defaultValue']) ? $property['defaultValue'] : null;
         $property['validationMessage'] = !empty($property['validationMessage']) ? $property['validationMessage'] : null;
@@ -291,11 +301,24 @@ class CsvParserService
 
     /**
      * Parse boolean value from CSV
+     * New pattern: empty string = false, "1" = true
+     * Legacy support: "true", "yes", "y" = true
      */
     private function parseBoolean(string $value): bool
     {
-        $normalized = strtolower(trim($value));
-        return in_array($normalized, ['true', '1', 'yes', 'y'], true);
+        $trimmed = trim($value);
+
+        // New pattern: empty = false, "1" = true
+        if ($trimmed === '') {
+            return false;
+        }
+        if ($trimmed === '1') {
+            return true;
+        }
+
+        // Legacy support for backwards compatibility
+        $normalized = strtolower($trimmed);
+        return in_array($normalized, ['true', 'yes', 'y'], true);
     }
 
     /**
@@ -332,5 +355,24 @@ class CsvParserService
         }
 
         return array_map('trim', explode(',', $trimmed));
+    }
+
+    /**
+     * Parse orderBy field - supports both JSON and simple field name
+     */
+    private function parseOrderBy(string $value, int $lineNumber): array|string
+    {
+        $trimmed = trim($value);
+        if ($trimmed === '') {
+            return [];
+        }
+
+        // If it starts with {, treat as JSON
+        if (str_starts_with($trimmed, '{')) {
+            return $this->parseJson($trimmed, $lineNumber, 'orderBy');
+        }
+
+        // Otherwise, convert simple field name to {"field": "ASC"}
+        return [$trimmed => 'ASC'];
     }
 }
