@@ -1,9 +1,9 @@
 :root {
-    --luminai-primary: #4f46e5;
-    --luminai-secondary: #7c3aed;
+    --luminai-primary: #6D28D9;
+    --luminai-secondary: #A78BFA;
     --luminai-accent: #f59e0b;
-    --luminai-neon: #00f5ff;
-    --luminai-neon-purple: #bf00ff;
+    --luminai-neon: #6D28D9;
+    --luminai-neon-purple: #A78BFA;
     --luminai-glass: rgba(255, 255, 255, 0.1);
     --luminai-glass-border: rgba(255, 255, 255, 0.2);
     --luminai-dark-bg: #0a0a0b;
@@ -12,7 +12,7 @@
     --luminai-text-primary: #ffffff;
     --luminai-text-secondary: #b8b8b8;
     --luminai-text-muted: #9ca3af;
-    --luminai-ai-gradient: linear-gradient(135deg, var(--luminai-neon), var(--luminai-neon-purple));
+    --luminai-ai-gradient: linear-gradient(135deg, #6D28D9, #A78BFA);
     --luminai-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
 
     /* Modal variables - Dark theme defaults */
@@ -20,7 +20,7 @@
     --luminai-card-bg: #1a1a1a;
     --luminai-border-color: rgba(255, 255, 255, 0.1);
     --luminai-shadow: rgba(0, 0, 0, 0.6);
-    --luminai-modal-header-bg: linear-gradient(135deg, rgba(0, 245, 255, 0.03) 0%, rgba(138, 43, 226, 0.03) 100%);
+    --luminai-modal-header-bg: linear-gradient(135deg, rgba(109, 40, 217, 0.03) 0%, rgba(167, 139, 250, 0.03) 100%);
     --luminai-modal-footer-bg: rgba(0, 0, 0, 0.2);
     --luminai-input-bg: rgba(255, 255, 255, 0.04);
     --luminai-input-focus-bg: rgba(255, 255, 255, 0.06);
@@ -179,13 +179,13 @@
 }
 
 .dropdown-item:hover {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.2), rgba(167, 139, 250, 0.2));
     color: var(--luminai-text-primary);
     transform: translateX(4px);
 }
 
 .dropdown-item:active {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(124, 58, 237, 0.3));
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.3), rgba(167, 139, 250, 0.3));
 }
 
 .dropdown-item i {
@@ -220,9 +220,9 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 20% 20%, rgba(79, 70, 229, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 60%, rgba(0, 245, 255, 0.05) 0%, transparent 50%);
+    background: radial-gradient(circle at 20% 20%, rgba(109, 40, 217, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
     pointer-events: none;
     z-index: -1;
     transition: opacity 0.3s ease;
@@ -311,12 +311,12 @@ body::before {
 }
 
 [data-theme="light"] .dropdown-item:hover {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1)) !important;
-    color: #4f46e5 !important;
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.1), rgba(167, 139, 250, 0.1)) !important;
+    color: #6D28D9 !important;
 }
 
 [data-theme="light"] .dropdown-item:active {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(124, 58, 237, 0.15)) !important;
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.15), rgba(167, 139, 250, 0.15)) !important;
 }
 
 [data-theme="light"] .dropdown-divider {
@@ -338,12 +338,12 @@ body::before {
 
 /* Light Theme - Button Adjustments */
 [data-theme="light"] .luminai-btn-ai {
-    background: linear-gradient(135deg, #0066cc, #004499);
-    border: 1px solid rgba(0, 102, 204, 0.3);
+    background: linear-gradient(135deg, #6D28D9, #A78BFA);
+    border: 1px solid rgba(109, 40, 217, 0.3);
 }
 
 [data-theme="light"] .luminai-btn-ai:hover {
-    background: linear-gradient(135deg, #004499, #0066cc);
+    background: linear-gradient(135deg, #5B21B6, #9333EA);
 }
 
 .luminai-navbar {
@@ -406,8 +406,8 @@ body::before {
 }
 
 .luminai-card.ai-enhanced {
-    border: 1px solid rgba(0, 245, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 245, 255, 0.1), var(--luminai-glass-shadow);
+    border: 1px solid rgba(109, 40, 217, 0.3);
+    box-shadow: 0 8px 32px rgba(109, 40, 217, 0.1), var(--luminai-glass-shadow);
 }
 
 .luminai-card.ai-enhanced::after {
@@ -419,7 +419,7 @@ body::before {
     height: 8px;
     border-radius: 50%;
     background: var(--luminai-ai-gradient);
-    box-shadow: 0 0 12px rgba(0, 245, 255, 0.8);
+    box-shadow: 0 0 12px rgba(109, 40, 217, 0.8);
     animation: aiPulse 2s ease-in-out infinite;
 }
 
@@ -445,8 +445,8 @@ body::before {
 }
 
 .luminai-btn-primary {
-    background: var(--luminai-ai-gradient);
-    border: 1px solid rgba(0, 245, 255, 0.3);
+    background: linear-gradient(135deg, #6D28D9, #A78BFA);
+    border: 1px solid rgba(109, 40, 217, 0.3);
     color: var(--luminai-text-primary);
     padding: 12px 24px;
     border-radius: 12px;
@@ -457,7 +457,7 @@ body::before {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0, 245, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(109, 40, 217, 0.3);
 }
 
 .luminai-btn-primary::before {
@@ -472,8 +472,8 @@ body::before {
 }
 
 .luminai-btn-ai {
-    background: linear-gradient(135deg, var(--luminai-primary), var(--luminai-secondary));
-    border: 1px solid rgba(79, 70, 229, 0.3);
+    background: linear-gradient(135deg, #6D28D9, #A78BFA);
+    border: 1px solid rgba(109, 40, 217, 0.3);
     color: var(--luminai-text-primary);
     padding: 10px 20px;
     border-radius: 10px;
@@ -485,8 +485,9 @@ body::before {
 
 .luminai-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0, 245, 255, 0.4);
-    border-color: rgba(0, 245, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(109, 40, 217, 0.5);
+    border-color: rgba(167, 139, 250, 0.6);
+    background: linear-gradient(135deg, #5B21B6, #9333EA);
 }
 
 .luminai-btn-primary:hover::before {
@@ -495,8 +496,8 @@ body::before {
 
 .luminai-btn-ai:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(79, 70, 229, 0.4);
-    background: linear-gradient(135deg, #5b21b6, var(--luminai-primary));
+    box-shadow: 0 8px 24px rgba(109, 40, 217, 0.5);
+    background: linear-gradient(135deg, #5B21B6, #9333EA);
 }
 
 /* Luminai Button Variants - Consistent Sizing */
@@ -613,7 +614,7 @@ body::before {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, var(--luminai-primary), var(--luminai-secondary));
+    background: linear-gradient(135deg, #6D28D9, #A78BFA);
     border-radius: 4px;
 }
 
@@ -674,12 +675,12 @@ body::before {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: rgba(0, 245, 255, 0.1);
-    border: 1px solid rgba(0, 245, 255, 0.3);
+    background: rgba(109, 40, 217, 0.1);
+    border: 1px solid rgba(109, 40, 217, 0.3);
     border-radius: 2rem;
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--luminai-neon);
+    color: #A78BFA;
 }
 
 .ai-status-indicator::before {
@@ -701,8 +702,8 @@ body::before {
 }
 
 .text-neon {
-    color: var(--luminai-neon);
-    text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+    color: #A78BFA;
+    text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
 }
 
 /* Real-time Data Indicators */
@@ -841,13 +842,13 @@ main {
 }
 
 .navbar-collapse .nav-link:hover {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.2), rgba(167, 139, 250, 0.2));
     color: var(--luminai-text-primary);
     transform: translateX(4px);
 }
 
 .navbar-collapse .nav-link:active {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(124, 58, 237, 0.3));
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.3), rgba(167, 139, 250, 0.3));
 }
 
 .navbar-collapse .nav-link i {
@@ -870,8 +871,8 @@ main {
 }
 
 [data-theme="light"] .navbar-collapse .nav-link:hover {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
-    color: #4f46e5;
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.1), rgba(167, 139, 250, 0.1));
+    color: #6D28D9;
 }
 
 /* Organization Switcher Styling */
@@ -897,7 +898,7 @@ main {
     --luminai-card-bg: #ffffff;
     --luminai-border-color: rgba(0, 0, 0, 0.1);
     --luminai-shadow: rgba(0, 0, 0, 0.2);
-    --luminai-modal-header-bg: linear-gradient(135deg, rgba(79, 70, 229, 0.03) 0%, rgba(124, 58, 237, 0.03) 100%);
+    --luminai-modal-header-bg: linear-gradient(135deg, rgba(109, 40, 217, 0.03) 0%, rgba(167, 139, 250, 0.03) 100%);
     --luminai-modal-footer-bg: rgba(0, 0, 0, 0.03);
     --luminai-text-primary: #1a1a1a;
     --luminai-text-secondary: #4a5568;
@@ -1046,7 +1047,7 @@ main {
     position: absolute;
     bottom: 8px;
     right: 8px;
-    background: linear-gradient(135deg, var(--luminai-primary), var(--luminai-secondary));
+    background: linear-gradient(135deg, #6D28D9, #A78BFA);
     border: none;
     border-radius: 6px;
     width: 28px;
@@ -1066,7 +1067,7 @@ main {
 .fullscreen-textarea-btn-permanent:hover {
     opacity: 1;
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.5);
+    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.5);
 }
 
 .fullscreen-textarea-btn-permanent i {
@@ -1281,7 +1282,7 @@ main {
 }
 
 [data-theme="light"] .fullscreen-textarea-header {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.05) 0%, rgba(167, 139, 250, 0.05) 100%);
 }
 
 [data-theme="light"] .fullscreen-textarea-header h3,
@@ -1331,11 +1332,11 @@ main {
     top: 0;
     left: 0;
     height: 3px;
-    background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+    background: linear-gradient(90deg, #6D28D9 0%, #A78BFA 100%);
     z-index: 9999;
     transition: width 300ms ease-out, opacity 150ms 150ms ease-in;
     transform: translate3d(0, 0, 0);
-    box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+    box-shadow: 0 0 10px rgba(109, 40, 217, 0.5);
 }
 
 /* Add glow effect */
@@ -1357,12 +1358,12 @@ main {
 
 /* Dark theme variant */
 [data-theme="dark"] .turbo-progress-bar {
-    background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
-    box-shadow: 0 0 10px rgba(79, 70, 229, 0.7);
+    background: linear-gradient(90deg, #6D28D9 0%, #A78BFA 100%);
+    box-shadow: 0 0 10px rgba(109, 40, 217, 0.7);
 }
 
 /* Light theme variant */
 [data-theme="light"] .turbo-progress-bar {
-    background: linear-gradient(90deg, #4338ca 0%, #6d28d9 100%);
-    box-shadow: 0 0 10px rgba(67, 56, 202, 0.5);
+    background: linear-gradient(90deg, #5B21B6 0%, #9333EA 100%);
+    box-shadow: 0 0 10px rgba(91, 33, 182, 0.5);
 }
