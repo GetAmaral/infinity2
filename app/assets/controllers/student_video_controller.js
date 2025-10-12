@@ -104,6 +104,9 @@ export default class extends Controller {
                 console.log('[HLS] Audio tracks available:', data.audioTracks?.length || 0);
                 console.log('[HLS] Video levels:', data.levels.length);
 
+                // Store levels for quality selector
+                this.hlsLevels = data.levels;
+
                 // Force start with highest quality to ensure best audio
                 // HLS.js will adapt down if needed, but starts with best quality
                 if (data.levels && data.levels.length > 0) {
@@ -190,6 +193,11 @@ export default class extends Controller {
         } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
             // Native HLS support (Safari)
             console.log('[HLS] Using native HLS support (Safari)');
+
+            // Enable Safari-specific features
+            videoElement.setAttribute('playsinline', '');
+            videoElement.setAttribute('webkit-playsinline', '');
+
             videoElement.src = this.videoUrlValue;
             this.initializePlyr();
         } else {
@@ -213,6 +221,9 @@ export default class extends Controller {
         videoElement.volume = 1.0; // Full volume
         videoElement.muted = false; // Ensure not muted
 
+        // Build quality options from HLS levels
+        const qualityOptions = this.buildQualityOptions();
+
         // Initialize Plyr player
         this.player = new Plyr(videoElement, {
             controls: [
@@ -228,6 +239,7 @@ export default class extends Controller {
                 'fullscreen'
             ],
             settings: ['quality', 'speed'],
+            quality: qualityOptions,
             speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] },
             keyboard: { focused: true, global: false },
             tooltips: { controls: true, seek: true },
@@ -235,10 +247,29 @@ export default class extends Controller {
             resetOnEnd: false,
             blankVideo: '', // Disable external blank video to avoid CORS
             volume: 1, // Ensure Plyr volume is at 100%
-            muted: false // Ensure Plyr is not muted
+            muted: false, // Ensure Plyr is not muted
+            fullscreen: {
+                enabled: true,
+                fallback: true,
+                iosNative: true // Use native fullscreen on iOS/Safari
+            },
+            i18n: {
+                qualityLabel: {
+                    '-1': 'Auto',
+                    ...this.buildQualityLabels()
+                }
+            }
         });
 
         console.log('[Plyr] Player initialized successfully');
+
+        // Safari-specific PiP fix
+        if (this.isSafari()) {
+            this.setupSafariPiP();
+        }
+
+        // Setup quality change listener
+        this.setupQualityChangeListener();
 
         // Setup event listeners
         this.player.on('ready', () => {
@@ -301,6 +332,139 @@ export default class extends Controller {
 
         this.player.on('statechange', (event) => {
             console.log('[Plyr] State change:', event.detail);
+        });
+    }
+
+    buildQualityOptions() {
+        // If HLS is available, build quality options from levels
+        if (this.hls && this.hlsLevels && this.hlsLevels.length > 0) {
+            console.log('[Quality] Building quality options from HLS levels');
+
+            return {
+                default: -1,
+                options: [-1, ...this.hlsLevels.map((_, index) => index)],
+                forced: true,
+                onChange: (quality) => {
+                    console.log('[Quality] User selected quality:', quality);
+                    this.changeQuality(quality);
+                }
+            };
+        }
+
+        // Fallback for native HLS (Safari)
+        return {
+            default: 0,
+            options: [0],
+            forced: true
+        };
+    }
+
+    setupQualityChangeListener() {
+        if (!this.hls) return;
+
+        // Listen to Plyr quality change events
+        this.player.on('qualitychange', (event) => {
+            const quality = event.detail.quality;
+            console.log('[Quality] Quality change event:', quality);
+        });
+
+        // Update quality labels dynamically after player is ready
+        this.player.on('ready', () => {
+            this.updateQualityLabels();
+        });
+    }
+
+    buildQualityLabels() {
+        if (!this.hlsLevels) return {};
+
+        const labels = {};
+        this.hlsLevels.forEach((level, index) => {
+            labels[index] = `${level.height}p`;
+        });
+
+        console.log('[Quality] Built quality labels:', labels);
+        return labels;
+    }
+
+    updateQualityLabels() {
+        if (!this.hlsLevels) return;
+
+        // Update quality menu labels to show resolution
+        setTimeout(() => {
+            const qualityMenu = this.element.querySelector('[data-plyr="menu"][id*="quality"]');
+            if (!qualityMenu) return;
+
+            const qualityOptions = qualityMenu.querySelectorAll('[role="menuitemradio"]');
+
+            qualityOptions.forEach((option) => {
+                const value = parseInt(option.getAttribute('value'));
+                const labelSpan = option.querySelector('span:last-child');
+
+                if (!labelSpan) return;
+
+                if (value === -1) {
+                    labelSpan.textContent = 'Auto';
+                } else if (this.hlsLevels[value]) {
+                    const level = this.hlsLevels[value];
+                    labelSpan.textContent = `${level.height}p`;
+                }
+            });
+
+            console.log('[Quality] Labels updated');
+        }, 200);
+    }
+
+    changeQuality(newQuality) {
+        if (!this.hls) return;
+
+        const quality = parseInt(newQuality);
+
+        if (quality === -1) {
+            // Auto quality
+            console.log('[Quality] Switching to Auto quality');
+            this.hls.currentLevel = -1;
+        } else {
+            // Manual quality
+            console.log('[Quality] Switching to quality level:', quality);
+            this.hls.currentLevel = quality;
+        }
+    }
+
+    isSafari() {
+        return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    }
+
+    setupSafariPiP() {
+        const videoElement = this.playerTarget;
+
+        // Check if PiP is supported
+        if (!videoElement.webkitSupportsPresentationMode) {
+            console.log('[Safari] PiP not supported');
+            return;
+        }
+
+        console.log('[Safari] Setting up PiP support');
+
+        // Listen for PiP button clicks from Plyr
+        this.player.on('enterpip', () => {
+            if (videoElement.webkitSetPresentationMode) {
+                videoElement.webkitSetPresentationMode('picture-in-picture');
+            }
+        });
+
+        this.player.on('leavepip', () => {
+            if (videoElement.webkitSetPresentationMode) {
+                videoElement.webkitSetPresentationMode('inline');
+            }
+        });
+
+        // Sync Safari's native PiP events with Plyr
+        videoElement.addEventListener('webkitpresentationmodechanged', () => {
+            if (videoElement.webkitPresentationMode === 'picture-in-picture') {
+                console.log('[Safari] Entered PiP mode');
+            } else {
+                console.log('[Safari] Exited PiP mode');
+            }
         });
     }
 

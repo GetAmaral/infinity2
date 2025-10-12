@@ -30,6 +30,7 @@ export default class extends Controller {
         // Initialize state
         this.lastActivity = Date.now();
         this.sessionStart = Date.now();
+        this.isRedirecting = false; // Guard flag to prevent infinite redirect loop
         this.warnings = {
             fiveMinute: false,
             twoMinute: false,
@@ -356,13 +357,26 @@ export default class extends Controller {
      * Check session status on server (does NOT extend session)
      */
     async checkServerSession() {
+        // Don't check if already redirecting
+        if (this.isRedirecting) {
+            return;
+        }
+
         try {
             const response = await fetch(this.statusUrlValue, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                 },
+                redirect: 'manual', // Don't follow redirects automatically
             });
+
+            // If we get a redirect (302), session is likely expired
+            if (response.type === 'opaqueredirect' || response.status === 302 || response.status === 0) {
+                console.warn('Session check returned redirect - session likely expired');
+                this.handleSessionExpired();
+                return;
+            }
 
             if (!response.ok) {
                 console.error('Session status check failed:', response.status);
@@ -396,6 +410,11 @@ export default class extends Controller {
      * Check remaining time and trigger warnings
      */
     checkRemainingTime() {
+        // Don't check if already redirecting
+        if (this.isRedirecting) {
+            return;
+        }
+
         const remaining = this.getRemainingTime();
 
         // 5-minute warning (dismissible toast)
@@ -491,6 +510,11 @@ export default class extends Controller {
      */
     startCountdown() {
         this.countdownInterval = setInterval(() => {
+            // Don't check if already redirecting
+            if (this.isRedirecting) {
+                return;
+            }
+
             const remaining = this.getRemainingTime();
 
             if (remaining <= 0) {
@@ -616,6 +640,12 @@ export default class extends Controller {
      * Handle session expiration
      */
     handleSessionExpired() {
+        // Guard against multiple simultaneous calls
+        if (this.isRedirecting) {
+            return;
+        }
+        this.isRedirecting = true;
+
         console.log('❌ Session expired - redirecting to login');
 
         this.analytics.sessionExpired = true;
@@ -631,6 +661,26 @@ export default class extends Controller {
 
         // Auto-save forms before redirect
         this.autoSaveForms();
+
+        // CRITICAL: Stop all intervals BEFORE redirecting to prevent infinite loop
+        if (this.serverPollInterval) {
+            clearInterval(this.serverPollInterval);
+            this.serverPollInterval = null;
+        }
+        if (this.clientCheckInterval) {
+            clearInterval(this.clientCheckInterval);
+            this.clientCheckInterval = null;
+        }
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+            this.countdownInterval = null;
+        }
+        if (this.indicatorInterval) {
+            clearInterval(this.indicatorInterval);
+            this.indicatorInterval = null;
+        }
+
+        console.log('🛑 All session monitoring intervals stopped');
 
         // Redirect to login
         if (typeof Turbo !== 'undefined') {

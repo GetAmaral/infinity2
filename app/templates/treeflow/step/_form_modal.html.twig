@@ -89,16 +89,18 @@
         {{ button_modal_submit(is_edit, submit_key|default(null), submit_domain|default('messages')) }}
     </div>
 
-    <div class="modal-footer-actions" id="modal-delete-confirmation" style="display: none;">
-        <div class="text-danger fw-bold">{{ 'confirm.delete.entity'|trans }}</div>
-        <button type="button" class="btn btn-sm btn-secondary delete-cancel-btn" data-entity-type="step">
-            <i class="bi bi-x-circle"></i> {{ 'button.cancel'|trans }}
-        </button>
-        <button type="button" class="btn btn-sm btn-danger delete-confirm-btn"
-                data-entity-type="step"
-                data-delete-url="{{ path('step_delete', {treeflowId: treeflow.id, stepId: step.id}) }}"
-                data-csrf-token="{{ csrf_token('delete-step-' ~ step.id) }}">
-            <i class="bi bi-trash"></i> {{ 'button.confirm'|trans }}
-        </button>
-    </div>
+    {% if is_edit and step.id %}
+        <div class="modal-footer-actions" id="modal-delete-confirmation" style="display: none;">
+            <div class="text-danger fw-bold">{{ 'confirm.delete.entity'|trans }}</div>
+            <button type="button" class="btn btn-sm btn-secondary delete-cancel-btn" data-entity-type="step">
+                <i class="bi bi-x-circle"></i> {{ 'button.cancel'|trans }}
+            </button>
+            <button type="button" class="btn btn-sm btn-danger delete-confirm-btn"
+                    data-entity-type="step"
+                    data-delete-url="{{ path('step_delete', {treeflowId: treeflow.id, stepId: step.id}) }}"
+                    data-csrf-token="{{ csrf_token('delete-step-' ~ step.id) }}">
+                <i class="bi bi-trash"></i> {{ 'button.confirm'|trans }}
+            </button>
+        </div>
+    {% endif %}
 {% endblock %}

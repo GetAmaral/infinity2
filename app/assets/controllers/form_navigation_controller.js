@@ -16,6 +16,7 @@ import { Controller } from "@hotwired/stimulus";
  */
 export default class extends Controller {
     connect() {
+        console.log('[form-navigation] Controller connected to form:', this.element);
         this.element.addEventListener('keydown', this.handleKeyDown.bind(this));
 
         // Auto-focus first field (if not already focused and no autofocus attribute exists)
@@ -57,17 +58,21 @@ export default class extends Controller {
         }
 
         const activeElement = document.activeElement;
+        console.log('[form-navigation] Enter pressed on:', activeElement, 'tagName:', activeElement?.tagName, 'type:', activeElement?.type);
 
         // Allow natural Enter behavior in textareas and CKEditor
         if (this.isMultilineField(activeElement)) {
+            console.log('[form-navigation] Multiline field detected, allowing default');
             return; // Let default behavior happen (new line)
         }
 
         // Allow Enter on submit buttons
         if (activeElement.type === 'submit' || activeElement.hasAttribute('data-allow-enter-submit')) {
+            console.log('[form-navigation] Submit button, allowing default');
             return; // Let form submit naturally
         }
 
+        console.log('[form-navigation] Preventing default and processing navigation');
         // Prevent default form submission
         event.preventDefault();
 
@@ -143,7 +148,7 @@ export default class extends Controller {
      */
     getFocusableFields() {
         const selector = `
-            input:not([type="hidden"]):not([disabled]):not([readonly]),
+            input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([disabled]):not([readonly]),
             select:not([disabled]):not([readonly]),
             textarea:not([disabled]):not([readonly]),
             button[type="submit"]:not([disabled]),
@@ -167,8 +172,10 @@ export default class extends Controller {
      */
     focusNextField(currentElement) {
         const fields = this.getFocusableFields();
+        console.log('[form-navigation] Found', fields.length, 'focusable fields:', fields.map(f => `${f.tagName}[${f.name || f.id}]`));
 
         if (fields.length === 0) {
+            console.log('[form-navigation] No focusable fields found!');
             return;
         }
 
@@ -197,17 +204,21 @@ export default class extends Controller {
             }
         }
 
+        console.log('[form-navigation] Current field index:', currentIndex, 'of', fields.length - 1);
+
         // Move to next field or submit if last
         if (currentIndex === -1) {
             // Focus first field if we can't determine current
+            console.log('[form-navigation] Could not find current, focusing first field');
             fields[0]?.focus();
         } else if (currentIndex === fields.length - 1) {
             // Last field - submit the form
-            console.log('Last field reached, submitting form');
+            console.log('[form-navigation] Last field reached, submitting form');
             this.submitForm();
         } else {
             // Focus next field
             const nextField = fields[currentIndex + 1];
+            console.log('[form-navigation] Moving to next field:', nextField.tagName, nextField.name || nextField.id);
             this.focusField(nextField);
         }
     }

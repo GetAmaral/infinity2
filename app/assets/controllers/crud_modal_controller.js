@@ -17,11 +17,8 @@ export default class extends Controller {
             this.setupFormChangeTracking();
         }, 200);
 
-        // Focus first input
-        setTimeout(() => {
-            const firstInput = this.formTarget?.querySelector('input:not([type=hidden]), textarea, select');
-            firstInput?.focus();
-        }, 100);
+        // Focus first available input field
+        this.focusFirstField();
 
         // ESC key handler
         this.boundHandleEscape = this.handleEscape.bind(this);
@@ -31,6 +28,46 @@ export default class extends Controller {
     disconnect() {
         document.body.style.overflow = '';
         document.removeEventListener('keydown', this.boundHandleEscape);
+    }
+
+    /**
+     * Focus on the first available input field
+     */
+    focusFirstField() {
+        setTimeout(() => {
+            if (!this.hasFormTarget) return;
+
+            // Find all focusable elements
+            const focusableSelectors = [
+                'input:not([type=hidden]):not([disabled]):not([readonly])',
+                'textarea:not([disabled]):not([readonly])',
+                'select:not([disabled])'
+            ];
+
+            const focusableElements = this.formTarget.querySelectorAll(focusableSelectors.join(', '));
+
+            // Find the first visible and enabled field
+            for (let element of focusableElements) {
+                if (this.isVisible(element)) {
+                    element.focus();
+                    // Also select text if it's a text input
+                    if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || element.type === 'tel')) {
+                        element.select();
+                    }
+                    break;
+                }
+            }
+        }, 150);
+    }
+
+    /**
+     * Check if element is visible
+     */
+    isVisible(element) {
+        return element.offsetWidth > 0 &&
+               element.offsetHeight > 0 &&
+               getComputedStyle(element).visibility !== 'hidden' &&
+               getComputedStyle(element).display !== 'none';
     }
 
     /**
@@ -132,6 +169,14 @@ export default class extends Controller {
                 const container = document.getElementById('global-modal-container');
                 if (container) {
                     container.innerHTML = html;
+                    // Focus on first error field or first input
+                    setTimeout(() => {
+                        const firstError = container.querySelector('.input-error, .is-invalid');
+                        if (firstError) {
+                            firstError.focus();
+                            firstError.select?.();
+                        }
+                    }, 100);
                 }
                 // Mark as modified again since save failed
                 this.formModified = true;

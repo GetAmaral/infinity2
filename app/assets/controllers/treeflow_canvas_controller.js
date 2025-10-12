@@ -177,7 +177,7 @@ export default class extends Controller {
         this.svgLayer.style.left = '0';
         this.svgLayer.style.width = '100%';
         this.svgLayer.style.height = '100%';
-        this.svgLayer.style.pointerEvents = 'none'; // SVG doesn't block clicks
+        this.svgLayer.style.pointerEvents = 'auto'; // Allow path interactions
         this.svgLayer.style.transformOrigin = '0 0';
         this.svgLayer.style.zIndex = '1'; // Below nodes
         this.svgLayer.style.overflow = 'visible'; // Ensure SVG content isn't clipped
@@ -193,6 +193,7 @@ export default class extends Controller {
         container.style.zIndex = '2'; // Above SVG
         container.style.background = 'transparent'; // Explicitly transparent
         container.style.overflow = 'visible'; // Don't clip child nodes
+        container.style.pointerEvents = 'none'; // Don't block clicks - let nodes handle their own events
         this.canvasTarget.appendChild(container);
         this.transformContainer = container;
 
@@ -291,6 +292,7 @@ export default class extends Controller {
         const node = document.createElement('div');
         node.className = 'treeflow-node';
         node.dataset.stepId = step.id;
+        node.style.pointerEvents = 'auto'; // Enable events for nodes (parent container has none)
 
         // Calculate smart position
         let x = step.positionX;
@@ -721,11 +723,40 @@ export default class extends Controller {
             const container = document.getElementById('global-modal-container');
             console.log('[CANVAS] Global modal container found:', !!container);
             if (container) {
-                container.innerHTML = doc.body.innerHTML;
-                console.log('[CANVAS] HTML inserted, calling setupModalFormHandler');
+                // Debug: Check raw HTML for data-controller attribute
+                const rawHTML = doc.body.innerHTML;
+                console.log('[CANVAS] Raw HTML contains "data-controller":', rawHTML.includes('data-controller'));
+                console.log('[CANVAS] Raw HTML sample (first 500 chars):', rawHTML.substring(0, 500));
 
-                // Now set up AJAX handler
-                this.setupModalFormHandler(container);
+                container.innerHTML = rawHTML;
+                console.log('[CANVAS] HTML inserted');
+
+                // Ensure form has data-controller attribute for form-navigation
+                const form = container.querySelector('form');
+                console.log('[CANVAS] Form found:', !!form);
+                if (form) {
+                    const existingController = form.getAttribute('data-controller');
+                    console.log('[CANVAS] Form data-controller BEFORE fix:', existingController);
+
+                    // Manually add form-navigation controller if missing
+                    if (!existingController || !existingController.includes('form-navigation')) {
+                        const controllers = existingController ? existingController + ' form-navigation' : 'form-navigation';
+                        form.setAttribute('data-controller', controllers);
+                        console.log('[CANVAS] Form data-controller AFTER fix:', form.getAttribute('data-controller'));
+                        console.log('[CANVAS] Stimulus MutationObserver will auto-detect the new attribute');
+                    }
+                }
+
+                // Delay to ensure Stimulus MutationObserver detects and connects controllers
+                setTimeout(() => {
+                    console.log('[CANVAS] Setting up modal handlers (after Stimulus connection)');
+
+                    // Focus first field in modal
+                    this.focusFirstFieldInModal(container);
+
+                    // Now set up AJAX handler
+                    this.setupModalFormHandler(container);
+                }, 150);
             } else {
                 console.error('[CANVAS] Global modal container not found');
             }
@@ -733,6 +764,41 @@ export default class extends Controller {
             console.error('Error opening modal:', error);
             alert('Failed to open form. Please try again.');
         }
+    }
+
+    focusFirstFieldInModal(container) {
+        setTimeout(() => {
+            const form = container.querySelector('form');
+            if (!form) return;
+
+            // Find all focusable elements
+            const focusableSelectors = [
+                'input:not([type=hidden]):not([disabled]):not([readonly])',
+                'textarea:not([disabled]):not([readonly])',
+                'select:not([disabled])'
+            ];
+
+            const focusableElements = form.querySelectorAll(focusableSelectors.join(', '));
+
+            // Find the first visible and enabled field
+            for (let element of focusableElements) {
+                if (this.isElementVisible(element)) {
+                    element.focus();
+                    // Also select text if it's a text input
+                    if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || element.type === 'tel')) {
+                        element.select();
+                    }
+                    break;
+                }
+            }
+        }, 150);
+    }
+
+    isElementVisible(element) {
+        return element.offsetWidth > 0 &&
+               element.offsetHeight > 0 &&
+               getComputedStyle(element).visibility !== 'hidden' &&
+               getComputedStyle(element).display !== 'none';
     }
 
     setupModalFormHandler(container) {
@@ -868,6 +934,18 @@ export default class extends Controller {
                     // Show validation errors
                     if (result.html) {
                         container.innerHTML = result.html;
+                        // Focus on first error field or first input
+                        setTimeout(() => {
+                            const firstError = container.querySelector('.input-error, .is-invalid');
+                            if (firstError) {
+                                firstError.focus();
+                                if (firstError.select) {
+                                    firstError.select();
+                                }
+                            } else {
+                                this.focusFirstFieldInModal(container);
+                            }
+                        }, 100);
                         this.setupModalFormHandler(container);
                     } else if (result.error) {
                         alert(result.error);
@@ -1094,11 +1172,14 @@ export default class extends Controller {
 
     async loadConnections() {
         try {
-            const response = await fetch(`/treeflow/${this.treeflowIdValue}/connections`, {
+            // Add cache busting parameter to prevent browser caching
+            const response = await fetch(`/treeflow/${this.treeflowIdValue}/connections?_=${Date.now()}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache'
                 }
             });
 
@@ -1289,6 +1370,7 @@ export default class extends Controller {
         // Create + button at the end
         const button = document.createElement('div');
         button.className = 'continuation-add-button';
+        button.style.pointerEvents = 'auto'; // Enable events (parent container has none)
         // Button is 18px + 1.5px border on each side = 21px total
         button.style.left = `${endX - 9}px`; // X position was already correct
         button.style.top = `${startPos.y - 10.5}px`; // Center vertically on the line (21/2 = 10.5)
@@ -1938,8 +2020,13 @@ export default class extends Controller {
                 this.connections.splice(index, 1);
             }
 
-            // Re-render connections
+            // Re-render connections and continuation lines
             this.renderConnections();
+
+            // Clear Turbo cache to ensure fresh data on page navigation
+            if (typeof Turbo !== 'undefined') {
+                Turbo.cache.clear();
+            }
 
         } catch (error) {
             console.error('Error deleting connection:', error);
@@ -2119,8 +2206,14 @@ export default class extends Controller {
     }
 
     handleMouseDown(e) {
-        // Only start panning if clicking on canvas background
-        if (e.target === this.canvasTarget || e.target === this.transformContainer || e.target === this.svgLayer) {
+        // Only start panning if clicking on canvas background or SVG empty space
+        // Connection paths and nodes will handle their own events
+        const isBackgroundClick = (
+            e.target === this.canvasTarget ||
+            e.target === this.svgLayer
+        );
+
+        if (isBackgroundClick) {
             this.isPanning = true;
             this.panStartX = e.clientX - this.offsetX;
             this.panStartY = e.clientY - this.offsetY;

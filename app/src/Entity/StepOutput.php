@@ -42,7 +42,7 @@ class StepOutput extends EntityBase
     #[Groups(['output:read', 'output:write'])]
     protected ?string $conditional = null;
 
-    #[ORM\OneToOne(mappedBy: 'sourceOutput', targetEntity: StepConnection::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToOne(mappedBy: 'sourceOutput', targetEntity: StepConnection::class, cascade: ['remove'], orphanRemoval: true)]
     #[Groups(['output:read'])]
     protected ?StepConnection $connection = null;
 

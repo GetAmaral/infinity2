@@ -52,6 +52,8 @@ final class TreeFlowCanvasController extends AbstractController
     {
         $this->denyAccessUnlessGranted(TreeFlowVoter::VIEW, $treeFlow);
 
+        error_log("[LIST CONNECTIONS] Loading connections for TreeFlow: {$treeFlow->getId()}");
+
         $connections = $this->entityManager->getRepository(StepConnection::class)
             ->createQueryBuilder('c')
             ->join('c.sourceOutput', 'so')
@@ -63,6 +65,11 @@ final class TreeFlowCanvasController extends AbstractController
             ->addSelect('so', 'ti', 'ss', 'ts')
             ->getQuery()
             ->getResult();
+
+        error_log("[LIST CONNECTIONS] Found " . count($connections) . " connections");
+        foreach ($connections as $connection) {
+            error_log("[LIST CONNECTIONS] - {$connection->getId()}: {$connection->getSourceOutput()->getName()} -> {$connection->getTargetInput()->getName()}");
+        }
 
         $connectionsData = [];
         foreach ($connections as $connection) {
@@ -212,6 +219,8 @@ final class TreeFlowCanvasController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
+        error_log("[CREATE CONNECTION] Request received - outputId: " . ($data['outputId'] ?? 'null') . ", inputId: " . ($data['inputId'] ?? 'null'));
+
         if (!isset($data['outputId']) || !isset($data['inputId'])) {
             return $this->json([
                 'success' => false,
@@ -269,6 +278,8 @@ final class TreeFlowCanvasController extends AbstractController
         $this->entityManager->persist($connection);
         $this->entityManager->flush();
 
+        error_log("[CREATE CONNECTION] SUCCESS - Created connection ID: " . $connection->getId()?->toString());
+
         return $this->json([
             'success' => true,
             'connection' => [
@@ -302,6 +313,7 @@ final class TreeFlowCanvasController extends AbstractController
         $connection = $this->entityManager->getRepository(StepConnection::class)->find($connectionId);
 
         if (!$connection) {
+            error_log("[DELETE] Connection not found: {$connectionId}");
             return $this->json([
                 'success' => false,
                 'error' => 'Connection not found',
@@ -310,14 +322,22 @@ final class TreeFlowCanvasController extends AbstractController
 
         // Verify connection belongs to this treeflow
         if ($connection->getSourceOutput()->getStep()->getTreeFlow()->getId() !== $treeFlow->getId()) {
+            error_log("[DELETE] Connection does not belong to treeflow: {$connectionId}");
             return $this->json([
                 'success' => false,
                 'error' => 'Connection does not belong to this TreeFlow',
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        error_log("[DELETE] BEFORE DELETE - Deleting connection: {$connectionId} ({$connection->getSourceOutput()->getName()} -> {$connection->getTargetInput()->getName()})");
+
         $this->entityManager->remove($connection);
+
+        error_log("[DELETE] After remove(), before flush()");
+
         $this->entityManager->flush();
+
+        error_log("[DELETE] AFTER FLUSH - Connection should be deleted from DB: {$connectionId}");
 
         return $this->json([
             'success' => true,
@@ -524,6 +544,8 @@ final class TreeFlowCanvasController extends AbstractController
         if ($user && $user->getOrganization()) {
             $connection->setOrganization($user->getOrganization());
         }
+
+        error_log("[CREATE CONNECTION VIA CONTINUATION] Creating connection: {$sourceOutput->getName()} -> {$newInput->getName()}");
 
         $this->entityManager->persist($connection);
 

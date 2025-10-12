@@ -93,10 +93,16 @@ class TreeFlowJsonCacheSubscriber
         $entityManager = $args->getObjectManager();
 
         try {
+            error_log("[TreeFlowJsonCacheSubscriber] postFlush - Regenerating JSON for " . count($this->affectedTreeFlows) . " TreeFlows");
+
             // Regenerate JSON for all affected TreeFlows
             foreach ($this->affectedTreeFlows as $treeFlow) {
+                error_log("[TreeFlowJsonCacheSubscriber] BEFORE refresh - TreeFlow: {$treeFlow->getId()}");
+
                 // Refresh the entity to get the latest state with all relations
                 $entityManager->refresh($treeFlow);
+
+                error_log("[TreeFlowJsonCacheSubscriber] AFTER refresh, BEFORE convertToJson");
 
                 // Generate fresh JSON structure
                 $jsonStructure = $treeFlow->convertToJson();
@@ -107,13 +113,19 @@ class TreeFlowJsonCacheSubscriber
                 // Update both cached structures
                 $treeFlow->setJsonStructure($jsonStructure);
                 $treeFlow->setTalkFlow($talkFlow);
+
+                error_log("[TreeFlowJsonCacheSubscriber] JSON generated, BEFORE second flush");
             }
 
             // Clear the affected list before flush to prevent re-triggering
             $this->affectedTreeFlows = [];
 
+            error_log("[TreeFlowJsonCacheSubscriber] About to call second flush()");
+
             // Persist the JSON updates
             $entityManager->flush();
+
+            error_log("[TreeFlowJsonCacheSubscriber] Second flush() completed");
         } finally {
             $this->isRegenerating = false;
         }
