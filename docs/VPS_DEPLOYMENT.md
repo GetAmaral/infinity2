@@ -99,6 +99,7 @@ ssh -i /home/user/.ssh/luminai_vps root@91.98.137.175 'cd /opt/luminai && \
   docker-compose up -d app && \
   docker-compose exec -T app php bin/console make:migration --no-interaction --env=prod && \
   docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction --env=prod && \
+  docker-compose exec -T app php bin/console asset-map:compile --env=prod && \
   docker-compose exec -T app php bin/console cache:clear --env=prod && \
   docker-compose exec -T app php bin/console cache:warmup --env=prod'
 ```
@@ -144,13 +145,20 @@ Why migrations are created on VPS:
 docker-compose exec -T app php bin/console doctrine:migrations:migrate --no-interaction --env=prod
 ```
 
-**6. Clear and Warm Cache**
+**6. Compile Assets**
+```bash
+docker-compose exec -T app php bin/console asset-map:compile --env=prod
+```
+
+This compiles all JavaScript, CSS, and other assets (including Tom Select and Stimulus controllers) for production use.
+
+**7. Clear and Warm Cache**
 ```bash
 docker-compose exec -T app php bin/console cache:clear --env=prod
 docker-compose exec -T app php bin/console cache:warmup --env=prod
 ```
 
-**7. Verify Deployment**
+**8. Verify Deployment**
 ```bash
 curl -k https://91.98.137.175/health/detailed | jq .
 ```
