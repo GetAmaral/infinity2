@@ -37,6 +37,7 @@
         {{ form_errors(form.email) }}
     </div>
 
+    {% if form.organization is defined %}
     <div class="form-group-modern">
         <label class="form-label-modern">{{ form_label(form.organization) }}</label>
         {{ form_widget(form.organization, {
@@ -46,13 +47,16 @@
         }) }}
         {{ form_errors(form.organization) }}
     </div>
+    {% endif %}
 
     {% if form.roleEntities is defined %}
     <div class="form-group-modern">
         <label class="form-label-modern">{{ form_label(form.roleEntities) }}</label>
-        <div class="form-check-group-modern">
-            {{ form_widget(form.roleEntities) }}
-        </div>
+        {{ form_widget(form.roleEntities, {
+            'attr': {
+                'class': 'form-input-modern form-select-modern' ~ (form.roleEntities.vars.errors|length > 0 ? ' input-error' : '')
+            }
+        }) }}
         {{ form_errors(form.roleEntities) }}
     </div>
     {% endif %}

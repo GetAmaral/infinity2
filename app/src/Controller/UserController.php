@@ -7,7 +7,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
+use App\Repository\OrganizationRepository;
 use App\Service\ListPreferencesService;
+use App\Service\OrganizationContext;
 use App\Security\Voter\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,9 +27,11 @@ final class UserController extends BaseApiController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository $repository,
+        private readonly OrganizationRepository $organizationRepository,
         private readonly ListPreferencesService $listPreferencesService,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly CsrfTokenManagerInterface $csrfTokenManager
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
+        private readonly OrganizationContext $organizationContext
     ) {}
 
     #[Route('', name: 'user_index', methods: ['GET'])]
@@ -61,13 +65,34 @@ final class UserController extends BaseApiController
         $this->denyAccessUnlessGranted(UserVoter::CREATE);
 
         $user = new User();
+
+        // Check if there's an active organization context
+        // Only show organization field if no context (root access without active organization)
+        $hasActiveOrganization = $this->organizationContext->hasActiveOrganization();
+        $showOrganizationField = !$hasActiveOrganization;
+
+        // Get active organization if available
+        $activeOrganization = null;
+        if ($hasActiveOrganization) {
+            $orgId = $this->organizationContext->getOrganizationId();
+            if ($orgId) {
+                $activeOrganization = $this->organizationRepository->find($orgId);
+            }
+        }
+
         $form = $this->createForm(UserFormType::class, $user, [
             'is_edit' => false,
+            'show_organization_field' => $showOrganizationField,
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // If organization field is not shown, automatically set from context
+            if (!$showOrganizationField && $activeOrganization) {
+                $user->setOrganization($activeOrganization);
+            }
+
             // Hash password if provided
             if ($form->has('plainPassword') && $plainPassword = $form->get('plainPassword')->getData()) {
                 $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
@@ -113,13 +138,34 @@ final class UserController extends BaseApiController
     {
         $this->denyAccessUnlessGranted(UserVoter::EDIT, $user);
 
+        // Check if there's an active organization context
+        // Only show organization field if no context (root access without active organization)
+        $hasActiveOrganization = $this->organizationContext->hasActiveOrganization();
+        $showOrganizationField = !$hasActiveOrganization;
+
+        // Get active organization if available
+        $activeOrganization = null;
+        if ($hasActiveOrganization) {
+            $orgId = $this->organizationContext->getOrganizationId();
+            if ($orgId) {
+                $activeOrganization = $this->organizationRepository->find($orgId);
+            }
+        }
+
         $form = $this->createForm(UserFormType::class, $user, [
             'is_edit' => true,
+            'show_organization_field' => $showOrganizationField,
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // If organization field is not shown, ensure organization remains from context
+            // (don't change it during edit if context is active)
+            if (!$showOrganizationField && $activeOrganization && !$user->getOrganization()) {
+                $user->setOrganization($activeOrganization);
+            }
+
             // Hash password if provided
             if ($form->has('plainPassword') && $plainPassword = $form->get('plainPassword')->getData()) {
                 $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);

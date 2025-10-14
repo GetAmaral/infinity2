@@ -65,24 +65,40 @@ final class CourseVoter extends Voter
     }
 
     /**
-     * Can the user list courses?
-     * All authenticated users can list courses (filtered by organization)
+     * Can the user list courses in course management?
+     * Only instructors, education admins, organization admins, and admins
+     * Students access courses via student portal, not course management
      */
     private function canList(User $user): bool
     {
-        return true; // All authenticated users can list courses
+        $roles = $user->getRoles();
+
+        // Block students from accessing course management
+        if (in_array('ROLE_STUDENT', $roles, true)) {
+            return false;
+        }
+
+        // Allow instructors, education admins, managers, org admins, and system admins
+        return in_array('ROLE_INSTRUCTOR', $roles, true)
+            || in_array('ROLE_EDUCATION_ADMIN', $roles, true)
+            || in_array('ROLE_MANAGER', $roles, true)
+            || in_array('ROLE_ORGANIZATION_ADMIN', $roles, true)
+            || in_array('ROLE_ADMIN', $roles, true)
+            || in_array('ROLE_SUPER_ADMIN', $roles, true);
     }
 
     /**
      * Can the user create a new course?
-     * ADMIN, SUPER_ADMIN, and ORGANIZATION_ADMIN can create
+     * Instructors, education admins, managers, organization admins, and system admins can create
      */
     private function canCreate(User $user): bool
     {
-        return in_array('ROLE_ADMIN', $user->getRoles(), true)
-            || in_array('ROLE_SUPER_ADMIN', $user->getRoles(), true)
+        return in_array('ROLE_INSTRUCTOR', $user->getRoles(), true)
+            || in_array('ROLE_EDUCATION_ADMIN', $user->getRoles(), true)
+            || in_array('ROLE_MANAGER', $user->getRoles(), true)
             || in_array('ROLE_ORGANIZATION_ADMIN', $user->getRoles(), true)
-            || in_array('ROLE_MANAGER', $user->getRoles(), true);
+            || in_array('ROLE_ADMIN', $user->getRoles(), true)
+            || in_array('ROLE_SUPER_ADMIN', $user->getRoles(), true);
     }
 
     /**
@@ -113,10 +129,11 @@ final class CourseVoter extends Voter
             return false;
         }
 
-        // ORGANIZATION_ADMIN can view all courses in their organization
-        if (in_array('ROLE_ORGANIZATION_ADMIN', $currentUser->getRoles(), true)) {
-            return true;
-        }else if (in_array('ROLE_MANAGER', $currentUser->getRoles(), true)) {
+        // ORGANIZATION_ADMIN, EDUCATION_ADMIN, INSTRUCTOR, and MANAGER can view courses in their organization
+        if (in_array('ROLE_ORGANIZATION_ADMIN', $currentUser->getRoles(), true)
+            || in_array('ROLE_EDUCATION_ADMIN', $currentUser->getRoles(), true)
+            || in_array('ROLE_INSTRUCTOR', $currentUser->getRoles(), true)
+            || in_array('ROLE_MANAGER', $currentUser->getRoles(), true)) {
             return true;
         }
 
@@ -156,10 +173,11 @@ final class CourseVoter extends Voter
             return false;
         }
 
-        // ORGANIZATION_ADMIN can edit all courses in their organization
-        if (in_array('ROLE_ORGANIZATION_ADMIN', $currentUser->getRoles(), true)) {
-            return true;
-        }else if (in_array('ROLE_MANAGER', $currentUser->getRoles(), true)) {
+        // ORGANIZATION_ADMIN, EDUCATION_ADMIN, INSTRUCTOR, and MANAGER can edit courses in their organization
+        if (in_array('ROLE_ORGANIZATION_ADMIN', $currentUser->getRoles(), true)
+            || in_array('ROLE_EDUCATION_ADMIN', $currentUser->getRoles(), true)
+            || in_array('ROLE_INSTRUCTOR', $currentUser->getRoles(), true)
+            || in_array('ROLE_MANAGER', $currentUser->getRoles(), true)) {
             return true;
         }
 
@@ -194,8 +212,9 @@ final class CourseVoter extends Voter
             return false;
         }
 
-        // ORGANIZATION_ADMIN can delete all courses in their organization
-        if (in_array('ROLE_ORGANIZATION_ADMIN', $currentUser->getRoles(), true)) {
+        // ORGANIZATION_ADMIN and EDUCATION_ADMIN can delete courses in their organization
+        if (in_array('ROLE_ORGANIZATION_ADMIN', $currentUser->getRoles(), true)
+            || in_array('ROLE_EDUCATION_ADMIN', $currentUser->getRoles(), true)) {
             return true;
         }
 
@@ -229,12 +248,10 @@ final class CourseVoter extends Voter
             return false;
         }
 
-        // ORGANIZATION_ADMIN can manage enrollments in their organization
-        if (in_array('ROLE_ORGANIZATION_ADMIN', $currentUser->getRoles(), true)){
-            return true;
-        } else if (in_array('ROLE_MANAGER', $currentUser->getRoles(), true)){
-            return true;
-        }
-        return false;
+        // ORGANIZATION_ADMIN, EDUCATION_ADMIN, INSTRUCTOR, and MANAGER can manage enrollments in their organization
+        return in_array('ROLE_ORGANIZATION_ADMIN', $currentUser->getRoles(), true)
+            || in_array('ROLE_EDUCATION_ADMIN', $currentUser->getRoles(), true)
+            || in_array('ROLE_INSTRUCTOR', $currentUser->getRoles(), true)
+            || in_array('ROLE_MANAGER', $currentUser->getRoles(), true);
     }
 }

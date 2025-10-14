@@ -28,6 +28,7 @@ class UserFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $isEdit = $options['is_edit'];
+        $showOrganizationField = $options['show_organization_field'];
 
         $builder
             ->add('name', TextType::class, [
@@ -60,8 +61,11 @@ class UserFormType extends AbstractType
                     new Assert\NotBlank(message: 'user.validation.email_required'),
                     new Assert\Email(message: 'user.validation.email_invalid'),
                 ],
-            ])
-            ->add('organization', EntityType::class, [
+            ]);
+
+        // Only add organization field if explicitly requested (root access without active organization)
+        if ($showOrganizationField) {
+            $builder->add('organization', EntityType::class, [
                 'class' => Organization::class,
                 'choice_label' => 'name',
                 'label' => 'user.form.organization',
@@ -76,24 +80,26 @@ class UserFormType extends AbstractType
                     return $er->createQueryBuilder('o')
                         ->orderBy('o.name', 'ASC');
                 },
-            ])
+            ]);
+        }
+
+        $builder
             ->add('roleEntities', EntityType::class, [
                 'class' => Role::class,
                 'choice_label' => 'name',
                 'label' => 'user.form.roles',
                 'multiple' => true,
-                'expanded' => true,
+                'expanded' => false,
                 'required' => false,
                 'attr' => [
-                    'class' => 'form-check-group',
+                    'class' => 'form-select',
+                    'data-controller' => 'tom-select',
+                    'data-tom-select-options-value' => json_encode([
+                        'plugins' => ['remove_button'],
+                        'maxItems' => null,
+                        'placeholder' => 'Select roles...',
+                    ]),
                 ],
-                'choice_attr' => function (Role $role) {
-                    return [
-                        'class' => 'form-check-input',
-                        'data-live-name-value' => 'roles',
-                        'data-action' => 'live#update',
-                    ];
-                },
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
                         ->orderBy('r.name', 'ASC');
@@ -171,6 +177,7 @@ class UserFormType extends AbstractType
             'data_class' => User::class,
             'is_edit' => false,
             'include_password' => false,
+            'show_organization_field' => false, // Only show when no organization context
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
                 return $data && $data->getId() ? ['Default'] : ['Default', 'create'];
@@ -184,5 +191,6 @@ class UserFormType extends AbstractType
 
         $resolver->setAllowedTypes('is_edit', 'bool');
         $resolver->setAllowedTypes('include_password', 'bool');
+        $resolver->setAllowedTypes('show_organization_field', 'bool');
     }
 }

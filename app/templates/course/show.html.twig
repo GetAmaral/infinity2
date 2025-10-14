@@ -181,7 +181,7 @@
                                      data-module-lecture-reorder-target="module"
                                      data-module-id="{{ module.id }}">
                                     {% if module.description %}
-                                        <p class="text-secondary mb-3">{{ module.description }}</p>
+                                        <p class="text-secondary mb-3" style="white-space: pre-wrap;">{{ module.description }}</p>
                                     {% endif %}
 
                                     <!-- Lectures Header with Add Button -->
@@ -216,7 +216,7 @@
                                                         <div class="flex-grow-1">
                                                             <h6 class="text-white mb-1">{{ lecture.name }}</h6>
                                                             {% if lecture.description %}
-                                                                <small class="text-secondary d-block mb-2">{{ lecture.description|length > 80 ? lecture.description|slice(0, 80) ~ '...' : lecture.description }}</small>
+                                                                <small class="text-secondary d-block mb-2" style="white-space: pre-wrap;">{{ lecture.description|length > 80 ? lecture.description|slice(0, 80) ~ '...' : lecture.description }}</small>
                                                             {% endif %}
                                                             <div class="d-flex gap-2 flex-wrap align-items-center">
                                                                 {% if lecture.lengthSeconds > 0 %}

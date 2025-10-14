@@ -13,6 +13,7 @@ class RoleFixtures extends Fixture
     public const USER_ROLE_REFERENCE = 'role-user';
     public const ADMIN_ROLE_REFERENCE = 'role-admin';
     public const MANAGER_ROLE_REFERENCE = 'role-manager';
+    public const STUDENT_ROLE_REFERENCE = 'role-student';
 
     public function load(ObjectManager $manager): void
     {
