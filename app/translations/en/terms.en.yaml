@@ -80,3 +80,35 @@ terms.student.section4.content: >
   to grade assignments according to their criteria. Grade disputes should be resolved through
   proper channels with your instructor. Final grades are determined by your instructor based on
   course requirements and your performance.
+
+terms.student.section5.title: 5. Development Environment and Resources
+terms.student.section5.content: >
+  Certain courses may provide you with access to an Avelum development environment for educational purposes,
+  including but not limited to: (a) individual account access to Avelum's VPS development server;
+  (b) automation and integration tools such as N8N and other development platforms; and
+  (c) an individual OpenAI API key provisioned from Avelum's OpenAI account for use in course projects and studies.
+  <br><br>
+  <strong>Responsible Use:</strong> All provided resources must be used exclusively for educational purposes
+  related to your enrolled courses. You agree to follow industry best practices, security guidelines, and
+  applicable laws, including but not limited to data protection regulations and intellectual property rights.
+  You are responsible for safeguarding your credentials and must not share access with unauthorized individuals.
+  <br><br>
+  <strong>Usage Limits and Monitoring:</strong> Resource usage, including API token consumption, server utilization,
+  and storage, may be monitored and subject to reasonable usage limits as determined by Avelum. You will be
+  notified of any limits applicable to your account.
+  <br><br>
+  <strong>Prohibited Activities:</strong> The following activities are strictly prohibited: (a) using resources
+  for commercial purposes or personal projects unrelated to your coursework; (b) cryptocurrency mining or
+  similar resource-intensive operations; (c) unauthorized access attempts, security testing, or penetration
+  testing without explicit written permission; (d) storage or distribution of illegal, malicious, or
+  inappropriate content; (e) activities that violate third-party terms of service, including OpenAI's usage policies.
+  <br><br>
+  <strong>Consequences of Misuse:</strong> Any violation of these terms or misuse of provided resources may
+  result in: (a) immediate suspension or termination of environment access; (b) financial liability for
+  excessive or unauthorized usage costs; (c) suspension or removal from the course; (d) termination of your
+  Luminai account; and (e) referral to appropriate legal authorities for serious violations. Avelum reserves
+  the right to determine what constitutes misuse at its sole discretion.
+  <br><br>
+  <strong>Data and Backups:</strong> You are solely responsible for backing up your work and projects.
+  Avelum does not guarantee data persistence and is not liable for any data loss. Development environments
+  may be deprovisioned at the end of your course enrollment period.

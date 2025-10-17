@@ -121,6 +121,11 @@ final class NavigationConfig
                 'route' => 'app_settings',
                 'icon' => 'bi-gear',
             ],
+            'terms' => [
+                'label' => 'nav.terms',
+                'route' => 'app_terms',
+                'icon' => 'bi-file-text',
+            ],
             'logout_divider' => [
                 'divider_before' => true,
             ],

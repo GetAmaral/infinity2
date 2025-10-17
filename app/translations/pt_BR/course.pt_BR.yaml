@@ -242,6 +242,15 @@ student.total.courses: Total de Cursos
 student.watch.progress: Progresso de Visualização
 student.watched: Assistido
 student.your.progress: Seu Progresso
+# Chave API OpenAI do Aluno
+student.openai.api.key: Chave API OpenAI
+student.openai.api.key.description: Acesse sua chave API de desenvolvimento para projetos do curso
+student.show.api.key: Mostrar Chave API
+student.api.key.warning: Mantenha esta chave segura. Não a compartilhe com ninguém ou a exponha em código público.
+student.your.api.key: Sua Chave API
+student.copy: Copiar
+student.copied: Copiado!
+student.api.key.keep.safe: Mantenha esta chave privada e segura. Use-a apenas para seus projetos do curso.
 
 course.form.description_placeholder: Digite a descrição do curso
 course.form.name_placeholder: Digite o nome do curso

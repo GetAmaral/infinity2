@@ -242,6 +242,15 @@ student.total.courses: Total Courses
 student.watch.progress: Watch Progress
 student.watched: Watched
 student.your.progress: Your Progress
+# Student OpenAI API Key
+student.openai.api.key: OpenAI API Key
+student.openai.api.key.description: Access your development API key for course projects
+student.show.api.key: Show API Key
+student.api.key.warning: Keep this key secure. Do not share it with anyone or expose it in public code.
+student.your.api.key: Your API Key
+student.copy: Copy
+student.copied: Copied!
+student.api.key.keep.safe: Keep this key private and secure. Use it only for your course projects.
 
 course.form.description_placeholder: Enter course description
 course.form.name_placeholder: Enter course name

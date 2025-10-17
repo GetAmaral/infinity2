@@ -59,20 +59,10 @@
                             <span class="badge bg-info" data-bind-if="organizationName">
                                 <i class="bi bi-building me-1"></i><span data-bind="organizationName" data-bind-text></span>
                             </span>
-                            <span class="badge bg-secondary" data-bind="roles" data-bind-text></span>
+                            <div class="user-roles-container d-inline-flex gap-1 flex-wrap">
+                                <span class="user-roles-data d-none" data-bind="roles" data-bind-text></span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-3 p-3 rounded" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
-                <div class="row g-2 text-center">
-                    <div class="col-6">
-                        <div class="text-muted" style="font-size: 0.7rem;">{{ 'user.courses.owned'|trans({}, 'user') }}</div>
-                        <div class="text-white fw-bold" data-bind="ownedCoursesCount" data-bind-text></div>
-                    </div>
-                    <div class="col-6">
-                        <div class="text-muted" style="font-size: 0.7rem;">{{ 'user.courses.enrolled'|trans({}, 'user') }}</div>
-                        <div class="text-white fw-bold" data-bind="enrolledCoursesCount" data-bind-text></div>
                     </div>
                 </div>
             </div>
@@ -116,7 +106,9 @@
                         <span class="badge bg-info" data-bind-if="organizationName">
                             <i class="bi bi-building me-1"></i><span data-bind="organizationName" data-bind-text></span>
                         </span>
-                        <span class="badge bg-secondary" data-bind="roles" data-bind-text></span>
+                        <div class="user-roles-container d-inline-flex gap-1 flex-wrap">
+                            <span class="user-roles-data d-none" data-bind="roles" data-bind-text></span>
+                        </div>
                     </div>
                     <div class="text-muted" style="font-size: 0.85rem;">
                         <span data-bind="email" data-bind-text></span>
@@ -139,6 +131,7 @@
     <th style="width: 60px;">{{ 'common.label.actions'|trans }}</th>
     <th data-sort-field="name">{{ 'user.name'|trans({}, 'user') }}</th>
     <th data-sort-field="email">{{ 'user.email'|trans({}, 'user') }}</th>
+    <th class="d-none d-lg-table-cell">{{ 'user.roles'|trans({}, 'user') }}</th>
     <th class="d-none d-md-table-cell text-center" data-sort-field="isVerified" data-field-type="boolean">{{ 'user.verified'|trans({}, 'user') }}</th>
     <th class="d-none d-xl-table-cell text-center">{{ 'user.courses'|trans({}, 'user') }}</th>
     <th class="d-none d-xl-table-cell" data-sort-field="lastLoginAt" data-field-type="date">{{ 'user.last.login'|trans({}, 'user') }}</th>
@@ -170,6 +163,11 @@
             </div>
         </td>
         <td class="text-muted" data-bind="email" data-bind-text></td>
+        <td class="d-none d-lg-table-cell">
+            <div class="user-roles-container d-inline-flex gap-1 flex-wrap">
+                <span class="user-roles-data d-none" data-bind="roles" data-bind-text></span>
+            </div>
+        </td>
         <td class="d-none d-md-table-cell text-center">
             <span class="badge bg-success" data-bind-if="isVerified">
                 <i class="bi bi-patch-check-fill me-1"></i>{{ 'user.verified'|trans({}, 'user') }}
@@ -195,4 +193,185 @@
             <span data-bind-if="!lastLoginFormatted" class="fst-italic">{{ 'user.never.logged.in'|trans({}, 'user') }}</span>
         </td>
     </tr>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+// Process roles display - show max 3 roles with tooltip for rest
+function processRoleContainer(container) {
+    // Skip if already processed
+    if (container.dataset.processed === 'true') {
+        return;
+    }
+
+    // Find the hidden data element
+    const dataElement = container.querySelector('.user-roles-data');
+    if (!dataElement) {
+        return;
+    }
+
+    const rolesText = dataElement.textContent.trim();
+    if (!rolesText) {
+        return;
+    }
+
+    const rolesArray = rolesText.split(',').map(r => r.trim()).filter(r => r);
+    if (rolesArray.length === 0) {
+        return;
+    }
+
+    // Mark as processed
+    container.dataset.processed = 'true';
+
+    // Show first 3 roles
+    const visibleRoles = rolesArray.slice(0, 3);
+    visibleRoles.forEach(function(role) {
+        const badge = document.createElement('span');
+        badge.className = 'badge bg-secondary me-1';
+        badge.textContent = role;
+        badge.style.fontSize = '0.7rem';
+        badge.style.padding = '0.25rem 0.5rem';
+        container.appendChild(badge);
+    });
+
+    // Add "+N more" badge with tooltip if needed
+    if (rolesArray.length > 3) {
+        const remaining = rolesArray.length - 3;
+        const moreBadge = document.createElement('span');
+        moreBadge.className = 'badge bg-dark';
+        moreBadge.textContent = '+' + remaining;
+        moreBadge.style.fontSize = '0.7rem';
+        moreBadge.style.padding = '0.25rem 0.5rem';
+        moreBadge.style.cursor = 'help';
+        moreBadge.setAttribute('data-bs-toggle', 'tooltip');
+        moreBadge.setAttribute('data-bs-html', 'true');
+        moreBadge.setAttribute('data-bs-placement', 'top');
+        moreBadge.setAttribute('title', '<strong>All Roles:</strong><br>' + rolesArray.join('<br>'));
+
+        container.appendChild(moreBadge);
+
+        // Initialize Bootstrap tooltip
+        if (window.bootstrap && window.bootstrap.Tooltip) {
+            new bootstrap.Tooltip(moreBadge);
+        }
+    }
+}
+
+// Watch for role data elements to be populated by data-bind
+function watchRoleContainers() {
+    const containers = document.querySelectorAll('.user-roles-container');
+
+    containers.forEach(function(container) {
+        const dataElement = container.querySelector('.user-roles-data');
+        if (!dataElement) {
+            return;
+        }
+
+        const rolesText = dataElement.textContent.trim();
+
+        // Process immediately if already has content
+        if (rolesText) {
+            processRoleContainer(container);
+        } else {
+            // Watch for content to be added to the data element
+            const observer = new MutationObserver(function(mutations) {
+                const newText = dataElement.textContent.trim();
+                if (newText) {
+                    processRoleContainer(container);
+                    observer.disconnect();
+                }
+            });
+
+            observer.observe(dataElement, {
+                childList: true,
+                characterData: true,
+                subtree: true
+            });
+        }
+    });
+}
+
+// Global observer for role containers
+const roleObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        mutation.addedNodes.forEach(function(node) {
+            if (node.nodeType === 1) { // Element node
+                // Check if the node itself is a role container
+                if (node.classList && node.classList.contains('user-roles-container')) {
+                    const dataElement = node.querySelector('.user-roles-data');
+                    if (dataElement && dataElement.textContent.trim()) {
+                        processRoleContainer(node);
+                    } else if (dataElement) {
+                        // Watch this specific data element
+                        const dataObserver = new MutationObserver(function() {
+                            if (dataElement.textContent.trim()) {
+                                processRoleContainer(node);
+                                dataObserver.disconnect();
+                            }
+                        });
+                        dataObserver.observe(dataElement, {
+                            childList: true,
+                            characterData: true,
+                            subtree: true
+                        });
+                    }
+                }
+                // Check descendants for role containers
+                if (node.querySelectorAll) {
+                    const containers = node.querySelectorAll('.user-roles-container');
+                    containers.forEach(function(container) {
+                        const dataElement = container.querySelector('.user-roles-data');
+                        if (dataElement && dataElement.textContent.trim()) {
+                            processRoleContainer(container);
+                        } else if (dataElement) {
+                            // Watch this specific data element
+                            const dataObserver = new MutationObserver(function() {
+                                if (dataElement.textContent.trim()) {
+                                    processRoleContainer(container);
+                                    dataObserver.disconnect();
+                                }
+                            });
+                            dataObserver.observe(dataElement, {
+                                childList: true,
+                                characterData: true,
+                                subtree: true
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    });
+});
+
+// Run on various events
+document.addEventListener('DOMContentLoaded', function() {
+    watchRoleContainers();
+
+    // Observe the entire document body for new containers
+    roleObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+});
+
+document.addEventListener('turbo:load', function() {
+    watchRoleContainers();
+});
+
+document.addEventListener('list:updated', function() {
+    // Reset processed flags and re-watch on list update
+    document.querySelectorAll('.user-roles-container').forEach(function(container) {
+        container.dataset.processed = 'false';
+        // Remove existing badges but keep the data element
+        Array.from(container.children).forEach(function(child) {
+            if (!child.classList.contains('user-roles-data')) {
+                child.remove();
+            }
+        });
+    });
+    watchRoleContainers();
+});
+</script>
 {% endblock %}

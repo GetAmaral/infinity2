@@ -9,6 +9,17 @@ when@dev:
             collect_serializer_data: true
         router:
             default_uri: 'https://localhost'
+when@prod:
+    web_profiler:
+        toolbar: fale
+        intercept_redirects: false
+
+    framework:
+        profiler:
+            only_main_requests: false
+            collect_serializer_data: false
+        router:
+            default_uri: 'https://avelum.com.br'
 
 when@test:
     framework:

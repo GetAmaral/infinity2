@@ -80,3 +80,37 @@ terms.student.section4.content: >
   Os instrutores reservam o direito de avaliar as tarefas de acordo com seus critérios. Disputas de notas
   devem ser resolvidas através dos canais adequados com seu instrutor. As notas finais são determinadas
   pelo seu instrutor com base nos requisitos do curso e seu desempenho.
+
+terms.student.section5.title: 5. Ambiente de Desenvolvimento e Recursos
+terms.student.section5.content: >
+  Determinados cursos podem fornecer acesso a um ambiente de desenvolvimento Avelum para fins educacionais,
+  incluindo mas não limitado a: (a) acesso de conta individual ao servidor VPS de desenvolvimento da Avelum;
+  (b) ferramentas de automação e integração como N8N e outras plataformas de desenvolvimento; e
+  (c) uma chave API OpenAI individual provisionada da conta OpenAI da Avelum para uso em projetos e estudos do curso.
+  <br><br>
+  <strong>Uso Responsável:</strong> Todos os recursos fornecidos devem ser usados exclusivamente para fins
+  educacionais relacionados aos seus cursos matriculados. Você concorda em seguir as melhores práticas da
+  indústria, diretrizes de segurança e leis aplicáveis, incluindo mas não limitado a regulamentos de proteção
+  de dados e direitos de propriedade intelectual. Você é responsável por proteger suas credenciais e não deve
+  compartilhar o acesso com indivíduos não autorizados.
+  <br><br>
+  <strong>Limites de Uso e Monitoramento:</strong> O uso de recursos, incluindo consumo de tokens de API,
+  utilização do servidor e armazenamento, pode ser monitorado e sujeito a limites razoáveis de uso conforme
+  determinado pela Avelum. Você será notificado de quaisquer limites aplicáveis à sua conta.
+  <br><br>
+  <strong>Atividades Proibidas:</strong> As seguintes atividades são estritamente proibidas: (a) usar recursos
+  para fins comerciais ou projetos pessoais não relacionados ao seu curso; (b) mineração de criptomoedas ou
+  operações similares intensivas em recursos; (c) tentativas de acesso não autorizado, testes de segurança ou
+  testes de penetração sem permissão explícita por escrito; (d) armazenamento ou distribuição de conteúdo
+  ilegal, malicioso ou inadequado; (e) atividades que violem os termos de serviço de terceiros, incluindo
+  as políticas de uso da OpenAI.
+  <br><br>
+  <strong>Consequências do Uso Indevido:</strong> Qualquer violação destes termos ou uso indevido dos recursos
+  fornecidos pode resultar em: (a) suspensão ou encerramento imediato do acesso ao ambiente; (b) responsabilidade
+  financeira por custos de uso excessivo ou não autorizado; (c) suspensão ou remoção do curso; (d) encerramento
+  de sua conta Luminai; e (e) encaminhamento às autoridades legais apropriadas para violações graves. A Avelum
+  reserva-se o direito de determinar o que constitui uso indevido a seu exclusivo critério.
+  <br><br>
+  <strong>Dados e Backups:</strong> Você é o único responsável por fazer backup de seu trabalho e projetos.
+  A Avelum não garante a persistência de dados e não é responsável por qualquer perda de dados. Ambientes de
+  desenvolvimento podem ser desprovisionados ao final do período de matrícula do seu curso.

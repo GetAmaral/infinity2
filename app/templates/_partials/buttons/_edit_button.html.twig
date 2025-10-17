@@ -2,7 +2,7 @@
 /**
  * Edit Button Template
  *
- * Renders a dropdown item edit button (modal trigger)
+ * Renders an edit button (modal trigger) - supports both dropdown and standalone
  *
  * @param array config - Button configuration from ButtonConfig
  * @param string entity_id - Entity ID
@@ -10,31 +10,52 @@
  * @param string|null translation_key - Translation key (default: 'button.edit')
  * @param string translation_domain - Translation domain (default: 'messages')
  * @param string|null tooltip - Tooltip text
- * @param string|null label - Button label (null = icon-only)
+ * @param string|null label - Button label (null = icon-only for dropdown, always shown for standalone)
  * @param bool is_granted - Permission check result
  * @param string size - Size class
  * @param string|null style - Inline CSS override
  * @param string|null icon - Icon override
+ * @param bool is_dropdown_item - True for dropdown item, false for standalone button (default: true)
  */
 #}
 {% set buttonText = translation_key ?? config.default_translation_key %}
 {% set buttonIcon = icon ?? config.default_icon %}
+{% set isDropdown = is_dropdown_item ?? true %}
 
 {% if is_granted %}
-<a class="dropdown-item"
-   href="#"
-   {% if style %}style="{{ style }}"{% endif %}
-   data-controller="{{ config.data_controller }}"
-   data-modal-opener-url-value="{{ url }}"
-   data-action="click->modal-opener#open"
-   {% if tooltip %}
-       data-bs-toggle="tooltip"
-       data-bs-placement="left"
-       title="{{ tooltip }}"
-   {% endif %}>
-    <i class="{{ buttonIcon }}{% if label is not null %} me-2{% endif %}"></i>
-    {% if label is not null %}
-        {{ buttonText|trans({}, translation_domain) }}
+    {% if isDropdown %}
+        {# Dropdown item version #}
+        <a class="dropdown-item"
+           href="#"
+           {% if style %}style="{{ style }}"{% endif %}
+           data-controller="{{ config.data_controller }}"
+           data-modal-opener-url-value="{{ url }}"
+           data-action="click->modal-opener#open"
+           {% if tooltip %}
+               data-bs-toggle="tooltip"
+               data-bs-placement="left"
+               title="{{ tooltip }}"
+           {% endif %}>
+            <i class="{{ buttonIcon }}{% if label is not null %} me-2{% endif %}"></i>
+            {% if label is not null %}
+                {{ buttonText|trans({}, translation_domain) }}
+            {% endif %}
+        </a>
+    {% else %}
+        {# Standalone button version #}
+        {% set sizeClass = size ? 'btn-' ~ size : '' %}
+        <button type="button"
+                class="btn luminai-btn-ai {{ sizeClass }}"
+                {% if style %}style="{{ style }}"{% endif %}
+                data-controller="{{ config.data_controller }}"
+                data-modal-opener-url-value="{{ url }}"
+                data-action="click->modal-opener#open"
+                {% if tooltip %}
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="{{ tooltip }}"
+                {% endif %}>
+            <i class="{{ buttonIcon }} me-2"></i>{{ buttonText|trans({}, translation_domain) }}
+        </button>
     {% endif %}
-</a>
 {% endif %}

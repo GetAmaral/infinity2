@@ -5,9 +5,9 @@
 
 {% block body %}
 <!-- Navigation -->
-<div class="mb-4 d-flex gap-2">
+<div class="mb-4 d-flex gap-2 align-items-center">
     {{ button_back(path('organization_index'), 'organization.back.to.list', 'organization') }}
-    {{ button_edit(organization.id, path('organization_edit', {id: organization.id}), 'button.edit') }}
+    {{ button_edit(organization.id, path('organization_edit', {id: organization.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
 </div>
 
 <!-- Organization Header -->

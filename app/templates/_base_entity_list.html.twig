@@ -205,7 +205,7 @@
         <div class="row align-items-center">
             <div class="col-12 col-md-4">
                 <span class="text-secondary" style="font-size: 0.875rem;" id="viewInfo">
-                    {{ 'pagination.showing'|trans }} <strong id="itemsStart">1</strong> {{ 'pagination.to'|trans }} <strong id="itemsEnd">10</strong> {{ 'pagination.of'|trans }} <strong id="itemsTotal">{{ entities|length }}</strong> {{ (entity_name ~ '.plural')|trans }}
+                    {{ 'pagination.showing'|trans }} <strong id="itemsStart">1</strong> {{ 'pagination.to'|trans }} <strong id="itemsEnd">10</strong> {{ 'pagination.of'|trans }} <strong id="itemsTotal">{{ entities|length }}</strong> {{ (entity_name ~ '.plural')|trans({},entity_name) }}
                 </span>
             </div>
             <div class="col-12 col-md-4">

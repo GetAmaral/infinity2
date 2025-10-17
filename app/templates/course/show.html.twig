@@ -5,8 +5,11 @@
 
 {% block body %}
 <!-- Navigation -->
-<div class="mb-4">
+<div class="mb-4 d-flex gap-2 align-items-center">
     {{ button_back(path('course_index'), 'course.back.to.list', 'course') }}
+    {% if is_granted('COURSE_EDIT', course) %}
+        {{ button_edit(course.id, path('course_edit', {id: course.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+    {% endif %}
 </div>
 
 <!-- Course Header -->
@@ -36,12 +39,6 @@
                 {% endfor %}
                 {{ modules|length }} {{ 'course.modules'|trans({}, 'course') }} • {{ totalLectures }} {{ 'course.lectures'|trans({}, 'course') }}
             </div>
-            {% if is_granted('COURSE_EDIT', course) %}
-                {{ button_edit(course.id, path('course_edit', {id: course.id}), permission='COURSE_EDIT') }}
-            {% endif %}
-            {% if is_granted('COURSE_DELETE', course) %}
-                {{ button_delete(course.id, path('course_delete', {id: course.id}), null, null, 'messages', null, null, 'COURSE_DELETE', 'delete-course') }}
-            {% endif %}
         </div>
     </div>
 </div>
@@ -495,7 +492,7 @@
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid var(--luminai-border-color);">
-                {{ button_modal_cancel() }}
+                {{ button_modal_cancel(null, 'messages', true) }}
                 <button type="button"
                         class="btn luminai-btn-primary"
                         data-enrollment-switch-target="confirmButton"

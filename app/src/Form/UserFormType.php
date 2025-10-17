@@ -113,6 +113,17 @@ class UserFormType extends AbstractType
                     'data-live-name-value' => 'isVerified',
                     'data-action' => 'live#update',
                 ],
+            ])
+            ->add('openAiApiKey', TextType::class, [
+                'label' => 'user.form.openai_api_key',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'user.form.openai_api_key_placeholder',
+                    'data-live-name-value' => 'openAiApiKey',
+                    'data-action' => 'live#update',
+                ],
+                'help' => 'user.form.openai_api_key_help',
             ]);
 
         // Add password field only for new users or when explicitly requested
@@ -178,6 +189,7 @@ class UserFormType extends AbstractType
             'is_edit' => false,
             'include_password' => false,
             'show_organization_field' => false, // Only show when no organization context
+            'translation_domain' => 'user',
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
                 return $data && $data->getId() ? ['Default'] : ['Default', 'create'];

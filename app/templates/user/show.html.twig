@@ -5,8 +5,9 @@
 
 {% block body %}
 <!-- Navigation -->
-<div class="mb-4">
+<div class="mb-4 d-flex gap-2 align-items-center">
     {{ button_back(path('user_index'), 'user.back.to.list', 'user') }}
+    {{ button_edit(user.id, path('user_edit', {id: user.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
 </div>
 
 <!-- Contact Header -->
@@ -24,14 +25,6 @@
             <div>
                 <h1 class="text-gradient mb-2">{{ user.name }}</h1>
                 <p class="text-secondary mb-0 fs-5">{{ user.email }}</p>
-                {% if user.organization %}
-                    <div class="mt-2">
-                        <a href="{{ path('organization_show', {id: user.organization.id}) }}" class="real-time-badge text-decoration-none d-inline-flex align-items-center gap-2">
-                            {{ org_logo.logo(user.organization, 'xs') }}
-                            {{ user.organization.name }}
-                        </a>
-                    </div>
-                {% endif %}
             </div>
         </div>
         <div class="d-flex gap-2">
@@ -50,117 +43,171 @@
     <!-- Contact Information -->
     <div class="bento-item large">
         <div class="luminai-card ai-enhanced p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="text-neon mb-0">
-                    <i class="bi bi-person-lines-fill me-2"></i>{{ 'contact.information'|trans }}
-                </h5>
-                {{ button_edit(user.id, path('user_edit', {id: user.id}), 'button.edit.contact', 'messages', '', '', '', 'sm') }}
-            </div>
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-person-lines-fill me-2"></i>{{ 'contact.information'|trans({}, 'user') }}
+            </h5>
 
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="luminai-card p-3">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="bi bi-envelope text-neon me-2"></i>
-                            <h6 class="text-white mb-0">{{ 'user.email'|trans({}, 'user') }}</h6>
-                        </div>
-                        <p class="text-secondary mb-0">{{ user.email }}</p>
-                        <div class="mt-2">
-                            <button class="btn btn-sm luminai-btn-ai">
-                                <i class="bi bi-envelope me-1"></i>{{ 'button.send.email'|trans }}
-                            </button>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-envelope text-neon fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-1">{{ 'user.email'|trans({}, 'user') }}</div>
+                            <div class="text-white">{{ user.email }}</div>
                         </div>
                     </div>
                 </div>
 
                 {% if user.organization %}
-                <div class="col-md-6 mb-4">
-                    <div class="luminai-card p-3">
-                        <div class="d-flex align-items-center mb-2">
-                            {{ org_logo.logo(user.organization, 'xs', 'me-2') }}
-                            <h6 class="text-white mb-0">{{ 'user.organization'|trans({}, 'user') }}</h6>
-                        </div>
-                        <p class="text-secondary mb-0">{{ user.organization.name }}</p>
-                        <div class="mt-2">
-                            <a href="{{ path('organization_show', {id: user.organization.id}) }}" class="btn btn-sm luminai-btn-primary d-inline-flex align-items-center gap-2">
-                                {{ org_logo.logo(user.organization, 'xs') }}
-                                {{ 'user.view.organization'|trans({}, 'user') }}
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-building text-neon fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-1">{{ 'user.organization'|trans({}, 'user') }}</div>
+                            <a href="{{ path('organization_show', {id: user.organization.id}) }}" class="text-white text-decoration-none">
+                                {{ user.organization.name }}
+                                <i class="bi bi-arrow-right ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
                 {% endif %}
 
-                <div class="col-md-6 mb-4">
-                    <div class="luminai-card p-3">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="bi bi-calendar text-neon me-2"></i>
-                            <h6 class="text-white mb-0">{{ 'user.created.at'|trans({}, 'user') }}</h6>
-                        </div>
-                        <p class="text-secondary mb-0">{{ user.createdAt|date('F j, Y') }}</p>
-                        <small class="text-muted">{{ user.createdAt|date('g:i A') }}</small>
-                    </div>
-                </div>
-
-                <div class="col-md-6 mb-4">
-                    <div class="luminai-card p-3">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="bi bi-activity text-neon me-2"></i>
-                            <h6 class="text-white mb-0">{{ 'contact.last.activity'|trans }}</h6>
-                        </div>
-                        <p class="text-secondary mb-0">{{ random(['common.date.today'|trans, 'date.relative.yesterday'|trans, 'date.relative.days.ago'|trans, 'date.relative.week.ago'|trans]) }}</p>
-                        <div class="mt-2">
-                            <span class="real-time-badge">
-                                {{ 'contact.active.user'|trans }}
-                            </span>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-calendar text-neon fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-1">{{ 'user.created.at'|trans({}, 'user') }}</div>
+                            <div class="text-white">{{ user.createdAt|date('F j, Y, g:i A') }}</div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- AI Insights -->
-    <div class="bento-item">
-        <div class="luminai-card ai-enhanced p-4 h-100">
-            <div class="d-flex align-items-center mb-3">
-                <i class="bi bi-magic text-neon me-2"></i>
-                <h6 class="text-gradient mb-0">{{ 'ai.insights'|trans({}, 'insights') }}</h6>
-            </div>
-            <div class="text-secondary">
-                <p class="mb-3"><i class="bi bi-check-circle text-success me-2"></i>{{ 'insight.high.engagement'|trans({}, 'insights') }}</p>
-                <p class="mb-3"><i class="bi bi-trending-up text-neon me-2"></i>{{ 'insight.active.communicator'|trans({}, 'insights') }}</p>
-                <p class="mb-3"><i class="bi bi-star text-warning me-2"></i>{{ 'insight.key.relationship'|trans({}, 'insights') }}</p>
-                <div class="mt-4">
-                    <button class="btn luminai-btn-ai btn-sm w-100">
-                        <i class="bi bi-robot me-1"></i>{{ 'button.start.ai.chat'|trans }}
-                    </button>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-shield-check text-neon fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-1">{{ 'user.verified'|trans({}, 'user') }}</div>
+                            <div>
+                                {% if user.isVerified %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>{{ 'user.verified'|trans({}, 'user') }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-warning">
+                                        <i class="bi bi-exclamation-circle me-1"></i>{{ 'user.unverified'|trans({}, 'user') }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-person-badge text-neon fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-1">{{ 'user.roles'|trans({}, 'user') }}</div>
+                            <div class="d-flex gap-1 flex-wrap">
+                                {% set allRoles = user.roles %}
+                                {% for role in allRoles|slice(0, 3) %}
+                                    <span class="badge bg-secondary">{{ role }}</span>
+                                {% endfor %}
+                                {% if allRoles|length > 3 %}
+                                    <span class="badge bg-dark"
+                                          data-bs-toggle="tooltip"
+                                          data-bs-html="true"
+                                          data-bs-placement="top"
+                                          title="<strong>All Roles:</strong><br>{{ allRoles|join('<br>') }}"
+                                          style="cursor: help;">
+                                        +{{ allRoles|length - 3 }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="bento-item">
-        <div class="luminai-card p-4 h-100">
-            <h6 class="text-neon mb-3">
-                <i class="bi bi-lightning me-2"></i>{{ 'ai.quick.actions'|trans({}, 'insights') }}
-            </h6>
-            <div class="d-grid gap-2">
-                <button class="btn luminai-btn-primary btn-sm">
-                    <i class="bi bi-chat-dots me-2"></i>{{ 'button.send.message'|trans }}
-                </button>
-                <button class="btn luminai-btn-ai btn-sm">
-                    <i class="bi bi-telephone me-2"></i>{{ 'button.call.contact'|trans }}
-                </button>
-                <button class="btn luminai-btn-ai btn-sm">
-                    <i class="bi bi-calendar-plus me-2"></i>{{ 'button.schedule.meeting'|trans }}
-                </button>
-                <button class="btn luminai-btn-ai btn-sm">
-                    <i class="bi bi-share me-2"></i>{{ 'button.share.contact'|trans }}
-                </button>
+    <!-- Course Enrollments Section (ROLE_STUDENT only) -->
+    {% if isStudent and availableCourses|length > 0 %}
+    <div class="bento-item large">
+        <div class="luminai-card p-4"
+             data-controller="user-course-enrollment"
+             data-user-course-enrollment-user-id-value="{{ user.id }}"
+             data-user-course-enrollment-enroll-url-value="{{ path('user_course_enrollment_toggle', {userId: user.id}) }}">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="text-neon mb-0">
+                    <i class="bi bi-book-fill me-2"></i>{{ 'user.course.enrollments'|trans({}, 'user') }} ({{ user.studentCourses|length }}/{{ availableCourses|length }})
+                </h5>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle luminai-table">
+                    <thead>
+                        <tr>
+                            <th><i class="bi bi-book me-2"></i>{{ 'course.name'|trans({}, 'course') }}</th>
+                            <th class="d-none d-md-table-cell"><i class="bi bi-layers me-2"></i>{{ 'course.modules'|trans({}, 'course') }}</th>
+                            <th class="d-none d-lg-table-cell"><i class="bi bi-clock me-2"></i>{{ 'course.duration'|trans({}, 'course') }}</th>
+                            <th class="text-center"><i class="bi bi-toggle-on me-2"></i>{{ 'course.status'|trans({}, 'course') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set enrolledCourseIds = user.studentCourses|filter(sc => sc.active)|map(sc => sc.course.id.toString) %}
+                        {% for course in availableCourses %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="p-2 rounded-3 me-3" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                                        <i class="bi bi-book text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-white mb-0">{{ course.name }}</h6>
+                                        {% if course.description %}
+                                            <small class="text-muted">{{ course.description|slice(0, 60) }}{% if course.description|length > 60 %}...{% endif %}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="d-none d-md-table-cell text-secondary">
+                                {{ course.modules|length }} {{ 'course.modules'|trans({}, 'course') }}
+                            </td>
+                            <td class="d-none d-lg-table-cell text-secondary">
+                                {{ course.totalLengthFormatted }}
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center align-items-center gap-3">
+                                    {% if course.id.toString in enrolledCourseIds %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i>{{ 'course.enrollment.enrolled'|trans({}, 'course') }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            {{ 'course.enrollment.not.enrolled'|trans({}, 'course') }}
+                                        </span>
+                                    {% endif %}
+                                    <div class="form-check form-switch mb-0">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               role="switch"
+                                               id="course-switch-{{ course.id }}"
+                                               data-user-course-enrollment-target="courseSwitch"
+                                               data-course-id="{{ course.id }}"
+                                               {{ course.id.toString in enrolledCourseIds ? 'checked' : '' }}
+                                               data-action="change->user-course-enrollment#toggle"
+                                               style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

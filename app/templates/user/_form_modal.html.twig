@@ -9,7 +9,7 @@
 {% set subtitle_create = 'user.modal.create.subtitle'|trans({}, 'user') %}
 {% set subtitle_edit = 'user.modal.edit.subtitle'|trans({}, 'user') %}
 {% set submit_key = is_edit ? 'button.update.user' : 'button.create.user' %}
-{% set submit_domain = 'user' %}
+{% set submit_domain = 'messages' %}
 {% set entity = user %}
 
 {# Form fields #}
@@ -74,6 +74,22 @@
             </label>
         </div>
         {{ form_errors(form.isVerified) }}
+    </div>
+    {% endif %}
+
+    {% if form.openAiApiKey is defined %}
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.openAiApiKey) }}</label>
+        {{ form_widget(form.openAiApiKey, {
+            'attr': {
+                'class': 'form-input-modern font-monospace' ~ (form.openAiApiKey.vars.errors|length > 0 ? ' input-error' : ''),
+                'placeholder': 'user.form.openai_api_key_placeholder'|trans({}, 'user')
+            }
+        }) }}
+        {% if form.openAiApiKey.vars.help is defined and form.openAiApiKey.vars.help %}
+        <small class="form-text text-muted">{{ form.openAiApiKey.vars.help|trans({}, 'user') }}</small>
+        {% endif %}
+        {{ form_errors(form.openAiApiKey) }}
     </div>
     {% endif %}
 

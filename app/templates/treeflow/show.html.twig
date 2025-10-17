@@ -32,7 +32,7 @@
     </div>
     <div class="d-flex gap-1 align-items-center">
         {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-            {{ button_edit(treeflow.id, path('treeflow_edit', {id: treeflow.id}), 'button.edit', 'messages', null, null, null, 'btn-sm') }}
+            {{ button_edit(treeflow.id, path('treeflow_edit', {id: treeflow.id}), 'button.edit', 'messages', null, null, null, 'btn-sm', null, null, false) }}
         {% endif %}
     </div>
 </div>

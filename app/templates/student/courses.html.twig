@@ -25,6 +25,33 @@
     </div>
 </div>
 
+<!-- OpenAI API Key Card -->
+{% if app.user.openAiApiKey %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="luminai-card ai-enhanced p-4">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="p-3 rounded-3 me-3" style="background: linear-gradient(135deg, #10A37F 0%, #1A7F64 100%);">
+                        <i class="bi bi-key-fill text-white fs-3"></i>
+                    </div>
+                    <div>
+                        <h5 class="text-white mb-1">{{ 'student.openai.api.key'|trans({}, 'course') }}</h5>
+                        <p class="text-secondary mb-0">{{ 'student.openai.api.key.description'|trans({}, 'course') }}</p>
+                    </div>
+                </div>
+                <button type="button"
+                        class="btn luminai-btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#openaiApiKeyModal">
+                    <i class="bi bi-eye me-2"></i>{{ 'student.show.api.key'|trans({}, 'course') }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% if enrollments is empty %}
     <!-- Empty State -->
     <div class="luminai-card p-5 text-center">
@@ -171,5 +198,101 @@
             </div>
         </div>
     </div>
+{% endif %}
+
+<!-- OpenAI API Key Modal -->
+{% if app.user.openAiApiKey %}
+<div class="modal fade" id="openaiApiKeyModal" tabindex="-1" aria-labelledby="openaiApiKeyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 600px; margin: 1.75rem auto;">
+        <div class="modal-content luminai-card">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-gradient" id="openaiApiKeyModalLabel">
+                    <i class="bi bi-key-fill me-2"></i>{{ 'student.openai.api.key'|trans({}, 'course') }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info border-0 mb-3" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3) !important; color: #60a5fa;">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <small>{{ 'student.api.key.warning'|trans({}, 'course') }}</small>
+                </div>
+
+                <label class="form-label text-white mb-2">{{ 'student.your.api.key'|trans({}, 'course') }}</label>
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control font-monospace"
+                           id="apiKeyInput"
+                           value="{{ app.user.openAiApiKey }}"
+                           readonly
+                           style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #10A37F; font-size: 0.9rem;">
+                    <button class="btn luminai-btn-primary" type="button" id="copyApiKeyBtn">
+                        <i class="bi bi-clipboard me-1"></i>{{ 'student.copy'|trans({}, 'course') }}
+                    </button>
+                </div>
+
+                <div class="mt-3">
+                    <small class="text-secondary">
+                        <i class="bi bi-shield-check me-1"></i>{{ 'student.api.key.keep.safe'|trans({}, 'course') }}
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn luminai-btn-secondary" data-bs-dismiss="modal">
+                    {{ 'button.close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const copyBtn = document.getElementById('copyApiKeyBtn');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+
+    if (copyBtn && apiKeyInput) {
+        copyBtn.addEventListener('click', function() {
+            apiKeyInput.select();
+            apiKeyInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(apiKeyInput.value).then(function() {
+                const originalHtml = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="bi bi-check-circle me-1"></i>{{ 'student.copied'|trans({}, 'course') }}';
+                copyBtn.classList.add('btn-success');
+                copyBtn.classList.remove('luminai-btn-primary');
+
+                setTimeout(function() {
+                    copyBtn.innerHTML = originalHtml;
+                    copyBtn.classList.remove('btn-success');
+                    copyBtn.classList.add('luminai-btn-primary');
+                }, 2000);
+            });
+        });
+    }
+});
+
+document.addEventListener('turbo:load', function() {
+    const copyBtn = document.getElementById('copyApiKeyBtn');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+
+    if (copyBtn && apiKeyInput) {
+        copyBtn.addEventListener('click', function() {
+            apiKeyInput.select();
+            apiKeyInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(apiKeyInput.value).then(function() {
+                const originalHtml = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="bi bi-check-circle me-1"></i>{{ 'student.copied'|trans({}, 'course') }}';
+                copyBtn.classList.add('btn-success');
+                copyBtn.classList.remove('luminai-btn-primary');
+
+                setTimeout(function() {
+                    copyBtn.innerHTML = originalHtml;
+                    copyBtn.classList.remove('btn-success');
+                    copyBtn.classList.add('luminai-btn-primary');
+                }, 2000);
+            });
+        });
+    }
+});
+</script>
 {% endif %}
 {% endblock %}

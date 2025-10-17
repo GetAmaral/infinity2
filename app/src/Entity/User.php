@@ -83,6 +83,10 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $apiTokenExpiresAt = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $openAiApiKey = null;
+
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastLoginAt = null;
 
@@ -317,6 +321,18 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     {
         $this->apiToken = null;
         $this->apiTokenExpiresAt = null;
+        return $this;
+    }
+
+    // OpenAI API Key methods
+    public function getOpenAiApiKey(): ?string
+    {
+        return $this->openAiApiKey;
+    }
+
+    public function setOpenAiApiKey(?string $openAiApiKey): self
+    {
+        $this->openAiApiKey = $openAiApiKey;
         return $this;
     }
 

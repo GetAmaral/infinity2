@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\StudentCourse;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use App\Repository\OrganizationRepository;
+use App\Repository\CourseRepository;
+use App\Repository\StudentCourseRepository;
 use App\Service\ListPreferencesService;
 use App\Service\OrganizationContext;
 use App\Security\Voter\UserVoter;
@@ -28,6 +31,8 @@ final class UserController extends BaseApiController
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository $repository,
         private readonly OrganizationRepository $organizationRepository,
+        private readonly CourseRepository $courseRepository,
+        private readonly StudentCourseRepository $studentCourseRepository,
         private readonly ListPreferencesService $listPreferencesService,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
@@ -104,8 +109,12 @@ final class UserController extends BaseApiController
 
             $this->addFlash('success', 'user.flash.created_successfully');
 
-            // Redirect back to referer if it's an organization users page
-            return $this->redirectToRefererOrRoute($request, 'user_index');
+            // Redirect to user show page if student (for course enrollment), otherwise to user list
+            if ($user->hasRole('student')) {
+                return $this->redirectToRoute('user_show', ['id' => $user->getId()]);
+            }
+
+            return $this->redirectToRoute('user_index');
         }
 
         // Handle modal/AJAX requests
@@ -128,8 +137,24 @@ final class UserController extends BaseApiController
     {
         $this->denyAccessUnlessGranted(UserVoter::VIEW, $user);
 
+        // Check if user has ROLE_STUDENT
+        $isStudent = $user->hasRole('student');
+
+        // Get all courses from user's organization for enrollment management
+        $availableCourses = [];
+        if ($isStudent && $user->getOrganization()) {
+            $availableCourses = $this->courseRepository->createQueryBuilder('c')
+                ->where('c.organization = :organization')
+                ->setParameter('organization', $user->getOrganization())
+                ->orderBy('c.name', 'ASC')
+                ->getQuery()
+                ->getResult();
+        }
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
+            'isStudent' => $isStudent,
+            'availableCourses' => $availableCourses,
         ]);
     }
 
@@ -231,6 +256,87 @@ final class UserController extends BaseApiController
         // Use parent class implementation (BaseApiController)
         // All logic delegated to UserRepository via BaseRepository
         return $this->apiSearchAction($request);
+    }
+
+    #[Route('/{userId}/course-enrollment/toggle', name: 'user_course_enrollment_toggle', requirements: ['userId' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['POST'])]
+    public function toggleCourseEnrollment(Request $request, string $userId): Response
+    {
+        $user = $this->repository->find($userId);
+        if (!$user) {
+            return $this->json(['success' => false, 'message' => 'User not found'], 404);
+        }
+
+        $this->denyAccessUnlessGranted(UserVoter::EDIT, $user);
+
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['courseId'])) {
+            return $this->json(['success' => false, 'message' => 'Course ID is required'], 400);
+        }
+
+        $courseId = $data['courseId'];
+        $shouldEnroll = $data['enroll'] ?? false;
+
+        $course = $this->courseRepository->find($courseId);
+        if (!$course) {
+            return $this->json(['success' => false, 'message' => 'Course not found'], 404);
+        }
+
+        // Check if enrollment already exists
+        $enrollment = $this->studentCourseRepository->findOneBy([
+            'student' => $user,
+            'course' => $course
+        ]);
+
+        if ($shouldEnroll) {
+            // Enroll or reactivate
+            if ($enrollment) {
+                // Reactivate if inactive
+                if (!$enrollment->isActive()) {
+                    $enrollment->setActive(true);
+                    $this->entityManager->flush();
+                    return $this->json([
+                        'success' => true,
+                        'message' => 'Student enrollment reactivated successfully'
+                    ]);
+                }
+                return $this->json([
+                    'success' => true,
+                    'message' => 'Student already enrolled'
+                ]);
+            }
+
+            // Create new enrollment
+            $newEnrollment = new StudentCourse();
+            $newEnrollment->setStudent($user);
+            $newEnrollment->setCourse($course);
+            $newEnrollment->setOrganization($course->getOrganization());
+            $newEnrollment->setActive(true);
+
+            $this->entityManager->persist($newEnrollment);
+            $this->entityManager->flush();
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Student enrolled successfully'
+            ]);
+        } else {
+            // Unenroll (deactivate)
+            if ($enrollment && $enrollment->isActive()) {
+                $enrollment->setActive(false);
+                $this->entityManager->flush();
+
+                return $this->json([
+                    'success' => true,
+                    'message' => 'Student unenrolled successfully'
+                ]);
+            }
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Student was not enrolled'
+            ]);
+        }
     }
 
     /**

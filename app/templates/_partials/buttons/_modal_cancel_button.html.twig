@@ -7,12 +7,17 @@
  * @param array config - Button configuration from ButtonConfig
  * @param string|null translation_key - Translation key (default: 'button.cancel')
  * @param string translation_domain - Translation domain (default: 'messages')
+ * @param bool use_bootstrap_dismiss - Use Bootstrap modal dismiss instead of Stimulus controller
  */
 #}
 {% set buttonText = translation_key ?? config.default_translation_key %}
 
 <button type="button"
         class="{{ config.class }}"
-        data-action="{{ config.data_action }}">
+        {% if use_bootstrap_dismiss|default(false) %}
+            data-bs-dismiss="modal"
+        {% else %}
+            data-action="{{ config.data_action }}"
+        {% endif %}>
     {{ buttonText|trans({}, translation_domain) }}
 </button>

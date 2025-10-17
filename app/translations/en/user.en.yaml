@@ -26,9 +26,11 @@ user.form.password.placeholder: Enter password
 user.last.login: Last Login
 user.locked: Locked
 user.modal.create.subtitle: Add a new user to your organization
+user.modal.edit.title: Edit User
 user.modal.edit.subtitle: Update user information
 user.name: Name
 user.never.logged.in: Never logged in
+user.roles: Roles
 # User Form
 user.new.user: New User
 user.organization: Organization
@@ -42,6 +44,7 @@ user.unverified: Unverified
 user.updated.at: Updated
 user.verified: Verified
 user.view.organization: View Organization
+user.course.enrollments: Course Enrollments
 
 user.form.email: Email
 user.form.email_placeholder: Enter email address
@@ -55,6 +58,19 @@ user.form.password_confirm: Confirm Password
 user.form.password_confirm_placeholder: Confirm password
 user.form.password_placeholder: Enter password
 user.form.roles: Roles
+user.form.openai_api_key: OpenAI API Key
+user.form.openai_api_key_placeholder: sk-proj-...
+user.form.openai_api_key_help: Provide an OpenAI API key for student course projects and development
+
+# Validation
+user.validation.name_required: Name is required
+user.validation.name_min_length: Name must be at least 2 characters
+user.validation.name_max_length: Name cannot exceed 255 characters
+user.validation.email_required: Email is required
+user.validation.email_invalid: Please enter a valid email address
+user.validation.password_required: Password is required
+user.validation.password_min_length: Password must be at least 6 characters
+user.validation.password_mismatch: Passwords do not match
 
 # Security / Authentication Errors
 user.auth.error.root_domain_access: You must access the system through your organization subdomain.

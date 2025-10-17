@@ -112,7 +112,7 @@ final class ButtonExtension extends AbstractExtension
     }
 
     /**
-     * Render edit button (modal trigger dropdown item)
+     * Render edit button (modal trigger - dropdown item or standalone button)
      */
     public function buttonEdit(
         string $entityId,
@@ -124,7 +124,8 @@ final class ButtonExtension extends AbstractExtension
         ?string $permission = null,
         string $size = '',
         ?string $style = null,
-        ?string $icon = null
+        ?string $icon = null,
+        bool $isDropdownItem = true
     ): string {
         return $this->renderButton('edit', [
             'entity_id' => $entityId,
@@ -137,6 +138,7 @@ final class ButtonExtension extends AbstractExtension
             'size' => $size,
             'style' => $style,
             'icon' => $icon,
+            'is_dropdown_item' => $isDropdownItem,
         ]);
     }
 
@@ -306,11 +308,13 @@ final class ButtonExtension extends AbstractExtension
      */
     public function buttonModalCancel(
         ?string $translationKey = null,
-        string $translationDomain = 'messages'
+        string $translationDomain = 'messages',
+        bool $useBootstrapDismiss = false
     ): string {
         return $this->renderButton('modal_cancel', [
             'translation_key' => $translationKey,
             'translation_domain' => $translationDomain,
+            'use_bootstrap_dismiss' => $useBootstrapDismiss,
         ]);
     }
 
