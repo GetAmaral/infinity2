@@ -55,3 +55,8 @@ user.form.password_confirm: Confirme a Senha
 user.form.password_confirm_placeholder: Confirme a senha
 user.form.password_placeholder: Digite a senha
 user.form.roles: Permissões
+
+# Security / Authentication Errors
+user.auth.error.root_domain_access: Você deve acessar o sistema através do subdomínio da sua organização.
+user.auth.error.root_domain_access_contact_admin: Você deve acessar o sistema através do subdomínio da sua organização. Entre em contato com seu administrador.
+user.auth.error.wrong_organization: Você não tem acesso a esta organização. Por favor, use o subdomínio da sua organização.

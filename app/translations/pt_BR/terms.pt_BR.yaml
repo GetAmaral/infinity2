@@ -1,0 +1,82 @@
+# Traduções dos Termos de Uso - Português Brasil
+
+# ================================================================================
+# Termos de Uso - Principal
+# ================================================================================
+terms.title: Termos de Uso
+terms.header: Termos de Uso
+terms.subtitle: Por favor, leia e aceite nossos termos para continuar usando o Luminai
+terms.must.accept: Você deve ler e aceitar os termos de uso antes de continuar usando o sistema.
+terms.already.accepted: 'Você já aceitou os termos de uso em %date%'
+terms.tab.general: Termos Gerais
+terms.tab.student: Termos do Aluno
+terms.accept: Li e aceito todos os termos de uso
+terms.button.accept: Aceitar Termos e Continuar
+terms.error.invalid.csrf: Token de segurança inválido. Tente novamente.
+terms.error.must.accept.all: Você deve aceitar todos os termos obrigatórios para continuar.
+terms.success.accepted: Termos de uso aceitos com sucesso. Bem-vindo ao Luminai!
+
+# ================================================================================
+# Conteúdo dos Termos Gerais
+# ================================================================================
+terms.general.title: Termos Gerais de Uso do Luminai
+terms.general.section1.title: 1. Aceitação dos Termos
+terms.general.section1.content: >
+  Ao acessar e usar o Luminai, você aceita e concorda em estar vinculado a estes Termos de Uso.
+  Se você não concordar com estes termos, não deve usar esta plataforma.
+
+terms.general.section2.title: 2. Uso do Serviço
+terms.general.section2.content: >
+  Você concorda em usar o Luminai apenas para fins legais e de acordo com estes Termos.
+  Você é responsável por manter a confidencialidade de sua conta e senha.
+  Você concorda em aceitar a responsabilidade por todas as atividades que ocorram sob sua conta.
+
+terms.general.section3.title: 3. Privacidade e Proteção de Dados
+terms.general.section3.content: >
+  Estamos comprometidos em proteger sua privacidade. Seus dados pessoais serão processados de acordo
+  com as leis de proteção de dados aplicáveis. Coletamos e usamos suas informações para fornecer e melhorar
+  nossos serviços. Seus dados não serão compartilhados com terceiros sem seu consentimento, exceto quando
+  exigido por lei.
+
+terms.general.section4.title: 4. Propriedade Intelectual
+terms.general.section4.content: >
+  Todo o conteúdo, recursos e funcionalidades do Luminai são de nossa propriedade e são protegidos por
+  leis internacionais de direitos autorais, marcas registradas e outras leis de propriedade intelectual.
+  Você não pode copiar, modificar, distribuir ou fazer engenharia reversa de qualquer parte do nosso serviço
+  sem permissão explícita.
+
+terms.general.section5.title: 5. Limitação de Responsabilidade
+terms.general.section5.content: >
+  O Luminai é fornecido "como está" sem garantias de qualquer tipo. Não seremos responsáveis por quaisquer
+  danos indiretos, incidentais, especiais, consequenciais ou punitivos resultantes do seu uso ou
+  incapacidade de usar o serviço.
+
+# ================================================================================
+# Conteúdo dos Termos do Aluno
+# ================================================================================
+terms.student.title: Termos de Uso do Aluno
+terms.student.section1.title: 1. Responsabilidades do Aluno
+terms.student.section1.content: >
+  Como aluno no Luminai, você concorda em se envolver nos trabalhos do curso de forma honesta e ética.
+  Você é responsável por completar tarefas e avaliações no prazo e da melhor forma possível.
+  Qualquer forma de plágio ou desonestidade acadêmica é estritamente proibida.
+
+terms.student.section2.title: 2. Acesso e Matrícula em Cursos
+terms.student.section2.content: >
+  Uma vez matriculado em um curso, você terá acesso aos materiais do curso pela duração especificada
+  pelo seu instrutor ou organização. O acesso pode ser revogado se você violar estes termos ou os
+  termos gerais de uso. Certificados de conclusão de curso serão emitidos após a conclusão bem-sucedida
+  de todos os requisitos.
+
+terms.student.section3.title: 3. Conduta e Comunicação
+terms.student.section3.content: >
+  Você concorda em se comunicar respeitosamente com instrutores, administradores e colegas estudantes.
+  Assédio, discriminação ou comportamento inadequado não serão tolerados e podem resultar em suspensão
+  ou encerramento de sua conta. Todas as discussões do curso devem permanecer relevantes e profissionais.
+
+terms.student.section4.title: 4. Avaliação e Notas
+terms.student.section4.content: >
+  Todas as avaliações devem ser de sua própria autoria, a menos que especificado de outra forma.
+  Os instrutores reservam o direito de avaliar as tarefas de acordo com seus critérios. Disputas de notas
+  devem ser resolvidas através dos canais adequados com seu instrutor. As notas finais são determinadas
+  pelo seu instrutor com base nos requisitos do curso e seu desempenho.

@@ -1,0 +1,378 @@
+# Portuguese (Brazil) Translations for Public Pages
+# Avelum Institutional Website
+
+nav:
+  about: "Sobre"
+  solutions: "Soluções"
+  products: "Produtos"
+  education: "Educação"
+  contact: "Contato"
+  login: "Entrar"
+  toggle_theme: "Alternar Tema"
+
+social:
+  instagram:
+    follow: "Siga-nos no Instagram @avelum.ai"
+
+landing:
+  meta:
+    title: "Avelum - Soluções Inteligentes de IA para Empresas"
+
+  hero:
+    badge: "A inteligência artificial não é o futuro. É o agora."
+    title: "O elo entre sua empresa"
+    title_highlight: "e soluções inteligentes"
+    subtitle: "A ponte que conecta você à automação, eficiência e escala, por meio da inteligência artificial. Agentes de IA personalizados desenvolvidos exclusivamente para a sua demanda, com o seu jeito, os seus dados e o seu objetivo."
+
+  cta:
+    contact_sales: "Fale com Vendas"
+    learn_more: "Saiba Mais"
+    contact_now: "Entre em Contato Agora"
+
+  trust:
+    enterprise_security: "Segurança Empresarial"
+    custom_ai: "IA Personalizada"
+    proven_results: "Resultados Comprovados"
+
+  benefits:
+    title: "Por que adotar IA agora?"
+    subtitle: "Empresas que adotam IA ganham vantagens competitivas"
+
+    speed:
+      title: "Velocidade"
+      description: "Menos tempo para mais resultados"
+
+    scale:
+      title: "Escala"
+      description: "Sua equipe foca no estratégico, a IA cuida do operacional"
+
+    productivity:
+      title: "Produtividade"
+      description: "Mais tarefas feitas, com mais precisão"
+
+    cost_reduction:
+      title: "Redução de Custos"
+      description: "Mais resultado com menos recursos"
+
+    organization:
+      title: "Organização"
+      description: "Processos claros, automatizados e sem erros"
+
+  products:
+    title: "Nossos Produtos"
+    learn_more: "Saiba Mais"
+
+    luminai:
+      badge: "Plataforma Completa"
+      description: "Sistema completo de gestão empresarial com CRM potencializado por IA e agentes inteligentes"
+      feature_1: "CRM Completo com IA"
+      feature_2: "Agentes de IA Personalizados"
+      feature_3: "Automação de Processos"
+      feature_4: "Analytics e BI em Tempo Real"
+
+    sdr:
+      badge: "Automação Comercial"
+      description: "SDRs inteligentes que conversam com leads, qualificam oportunidades e agendam reuniões automaticamente"
+      feature_1: "Atendimento 24/7"
+      feature_2: "Qualificação Automática de Leads"
+      feature_3: "Follow-ups Personalizados"
+      feature_4: "Integração com CRM"
+
+  social_proof:
+    title: "Empresas que já usam Inteligência Artificial"
+    subtitle: "A IA já é realidade nas maiores empresas do Brasil e do mundo. Se elas estão usando, por que sua empresa ainda não?"
+
+    brazilian_title: "Empresas brasileiras que já usam IA"
+    brazilian_1: "Com a assistente virtual Lu, automatiza vendas e atendimento ao cliente"
+    brazilian_2: "Usa IA para atendimento, prevenção de fraudes e análise de dados em tempo real"
+    brazilian_3: "Aplica IA na análise de crédito, automação de processos e experiência do cliente"
+
+    global_title: "Empresas globais que já usam IA"
+    global_1: "Usa IA na Alexa, logística, atendimento automatizado e recomendações de compra"
+    global_2: "Integra IA em todos os seus produtos, de buscas a e-mails e assistentes"
+    global_3: "Com o Copilot, automatiza tarefas no Word, Excel, Outlook e outros"
+
+  urgency:
+    attention: "Atenção Empresário"
+    title: "O futuro está diante de você"
+    message: "Enquanto alguns ainda pensam 'um dia eu implemento', outros estão dominando o mercado com decisões mais inteligentes. Quem usa IA hoje, lidera amanhã."
+    quote: "Não decidir também é uma decisão. Implemente IA no seu negócio agora. Faça parte do futuro — ou será engolido por ele."
+    no_cost_diagnosis: "Diagnóstico gratuito e sem compromisso"
+
+about:
+  meta:
+    title: "Sobre a Avelum - Quem Somos"
+  title: "Sobre a Avelum"
+  subtitle: "Nós somos o elo entre empresas e soluções inteligentes"
+
+  who_we_are:
+    title: "Quem Somos?"
+    tagline: "A ponte que conecta você à automação, eficiência e escala"
+    description: "A Avelum é uma empresa especializada em soluções de inteligência artificial para empresas. Não oferecemos produtos de prateleira — desenvolvemos IA exclusivamente para a sua demanda, com o seu jeito, os seus dados e o seu objetivo."
+
+  mission:
+    title: "Missão"
+    description: "Transformar empresas através da inteligência artificial, criando soluções personalizadas que geram resultados reais e mensuráveis."
+
+  vision:
+    title: "Visão"
+    description: "Ser a principal referência em soluções de IA empresarial no Brasil, ajudando empresas a conquistarem vantagem competitiva através da tecnologia."
+
+  values:
+    title: "Valores"
+    description: "Inovação, personalização, resultados, transparência e parceria com nossos clientes."
+
+  cta:
+    title: "Pronto para transformar sua empresa?"
+    description: "Faça um diagnóstico gratuito e descubra como a IA pode revolucionar seus negócios."
+
+solutions:
+  meta:
+    title: "Soluções de IA - Avelum"
+  title: "Nossas Soluções"
+  subtitle: "O que a IA pode fazer por sua empresa?"
+
+  intelligence:
+    title: "Soluções de Inteligência e BI"
+    feature_1_title: "Análise de Dados em Tempo Real"
+    feature_1_description: "Análises de dados em tempo real para decisões mais rápidas"
+    feature_2_title: "Relatórios Automáticos"
+    feature_2_description: "Relatórios automáticos com insights claros e visuais"
+    feature_3_title: "Padrões de Comportamento"
+    feature_3_description: "Identificação de padrões de comportamento de clientes"
+    feature_4_title: "Previsões de Vendas"
+    feature_4_description: "Previsões de vendas e de demanda com base em histórico"
+    feature_5_title: "Alertas Inteligentes"
+    feature_5_description: "Alertas inteligentes para anomalias ou oportunidades"
+
+  commercial:
+    title: "Soluções Comerciais"
+    feature_1_title: "Atendimento 24/7"
+    feature_1_description: "Atendimento 24/7 com linguagem humanizada"
+    feature_2_title: "SDRs Inteligentes"
+    feature_2_description: "SDRs inteligentes que conversam com leads e qualificam oportunidades"
+    feature_3_title: "Follow-ups Automáticos"
+    feature_3_description: "Follow-ups automáticos no tempo certo, com personalização"
+    feature_4_title: "Agendamento de Reuniões"
+    feature_4_description: "Agendamento de reuniões direto na agenda do time comercial"
+    feature_5_title: "Recuperação de Leads"
+    feature_5_description: "Recuperação de leads frios com réguas de comunicação automatizadas"
+    feature_6_title: "Respostas Instantâneas"
+    feature_6_description: "Respostas instantâneas a dúvidas comuns de clientes e prospects"
+    feature_7_title: "Prospecção Automatizada"
+    feature_7_description: "Prospecção automatizada por e-mail, WhatsApp ou redes sociais"
+
+  operational:
+    title: "Soluções Operacionais & de Processos"
+    feature_1_title: "Respostas Automáticas"
+    feature_1_description: "Respostas automáticas a e-mails internos e externos"
+    feature_2_title: "Geração de Documentos"
+    feature_2_description: "Geração de documentos e propostas com base em modelos"
+    feature_3_title: "Gestão de Tarefas"
+    feature_3_description: "Gestão de tarefas e prazos com agentes que acompanham o time"
+    feature_4_title: "Organização de Fluxos"
+    feature_4_description: "Organização de fluxos internos com bots integrados aos sistemas"
+    feature_5_title: "Treinamento de Colaboradores"
+    feature_5_description: "Treinamento de novos colaboradores com IA como suporte técnico"
+
+  cta:
+    title: "Interessado em alguma dessas soluções?"
+    description: "Entre em contato e descubra como podemos ajudar sua empresa."
+
+products:
+  meta:
+    title: "Produtos - Luminai e SDR AI First"
+  title: "Nossos Produtos"
+  subtitle: "Conheça nossas plataformas de IA empresarial"
+
+  luminai:
+    badge: "Gestão Completa"
+    tagline: "Plataforma completa de gestão empresarial potencializada por IA"
+    description_full: "O Luminai é um sistema completo de CRM e gestão empresarial que integra agentes de IA personalizados para automatizar processos, gerar insights e aumentar a produtividade da sua equipe."
+    features_title: "Principais Funcionalidades"
+    feature_1_title: "CRM Completo"
+    feature_1_description: "Gestão de contatos, empresas, deals e pipeline de vendas"
+    feature_2_title: "Agentes de IA Personalizados"
+    feature_2_description: "Crie agentes inteligentes adaptados ao seu negócio"
+    feature_3_title: "Automação de Processos"
+    feature_3_description: "Automatize tarefas repetitivas e ganhe eficiência"
+    feature_4_title: "Analytics e BI"
+    feature_4_description: "Dashboards em tempo real com insights acionáveis"
+    feature_5_title: "Integrações Nativas"
+    feature_5_description: "Conecte com suas ferramentas favoritas"
+    feature_6_title: "Multi-tenant"
+    feature_6_description: "Gerencie múltiplas organizações em um único sistema"
+
+  sdr:
+    badge: "Vendas Inteligentes"
+    tagline: "Seu time de SDRs trabalhando 24/7"
+    description_full: "O SDR AI First é uma solução de automação comercial que utiliza agentes de IA para prospectar, qualificar leads e agendar reuniões automaticamente, liberando seu time comercial para focar em fechar negócios."
+    features_title: "Principais Funcionalidades"
+    feature_1_title: "Prospecção Automatizada"
+    feature_1_description: "Encontre e aborde leads qualificados automaticamente"
+    feature_2_title: "Qualificação Inteligente"
+    feature_2_description: "IA conversa e qualifica leads com perguntas personalizadas"
+    feature_3_title: "Follow-up Automático"
+    feature_3_description: "Nunca perca uma oportunidade com follow-ups no tempo certo"
+    feature_4_title: "Agendamento de Reuniões"
+    feature_4_description: "Agende reuniões diretamente na agenda do seu time"
+    feature_5_title: "Multi-canal"
+    feature_5_description: "Atue em e-mail, WhatsApp, LinkedIn e outros canais"
+    feature_6_title: "Integração com CRM"
+    feature_6_description: "Sincronize automaticamente com seu CRM existente"
+
+  cta:
+    title: "Quer conhecer melhor nossos produtos?"
+    description: "Agende uma demonstração gratuita e veja como podem transformar seu negócio."
+
+contact:
+  meta:
+    title: "Contato - Fale com a Avelum"
+  title: "Entre em Contato"
+  subtitle: "Estamos prontos para transformar sua empresa com IA"
+
+  form:
+    title: "Envie sua mensagem"
+    description: "Preencha o formulário abaixo e nossa equipe entrará em contato em breve."
+    name: "Nome"
+    email: "E-mail"
+    phone: "Telefone (opcional)"
+    message: "Mensagem"
+    send: "Enviar Mensagem"
+
+  methods:
+    title: "Outras formas de contato"
+    email: "E-mail"
+    whatsapp: "WhatsApp"
+    whatsapp_button: "Conversar no WhatsApp"
+    whatsapp_note: "Número do WhatsApp será adicionado em breve"
+
+  message_sent: "Mensagem enviada com sucesso! Entraremos em contato em breve."
+  message_failed: "Erro ao enviar mensagem. Por favor, tente novamente."
+  required_fields: "Por favor, preencha todos os campos obrigatórios."
+  invalid_token: "Token de segurança inválido. Por favor, tente novamente."
+
+privacy:
+  meta:
+    title: "Política de Privacidade - Avelum"
+  title: "Política de Privacidade"
+  subtitle: "Última atualização: Outubro de 2025"
+
+  section_1:
+    title: "1. Coleta de Informações"
+    content: "Coletamos informações que você nos fornece diretamente, como nome, e-mail e telefone através de formulários de contato. Também coletamos dados de uso automaticamente através de cookies e tecnologias similares."
+
+  section_2:
+    title: "2. Uso das Informações"
+    content: "Utilizamos as informações coletadas para responder às suas solicitações, melhorar nossos serviços, enviar comunicações relevantes e cumprir obrigações legais."
+
+  section_3:
+    title: "3. Compartilhamento de Informações"
+    content: "Não vendemos, alugamos ou compartilhamos suas informações pessoais com terceiros, exceto quando necessário para prestação de serviços ou quando exigido por lei."
+
+  section_4:
+    title: "4. Segurança"
+    content: "Implementamos medidas de segurança técnicas e organizacionais para proteger suas informações contra acesso não autorizado, perda ou alteração."
+
+  section_5:
+    title: "5. Seus Direitos (LGPD)"
+    content: "Você tem direito a acessar, corrigir, excluir ou solicitar a portabilidade de seus dados pessoais. Também pode revogar consentimentos ou solicitar a anonimização de dados."
+
+  section_6:
+    title: "6. Contato"
+    content: "Para questões relacionadas à privacidade ou para exercer seus direitos, entre em contato conosco:"
+
+education:
+  meta:
+    title: "Educação - Formando Desenvolvedores de IA"
+  title: "Avelum Educação"
+  subtitle: "Formando a próxima geração de desenvolvedores de IA para o futuro da tecnologia"
+
+  hero:
+    badge: "Educação & Impacto Social"
+
+  mission:
+    title: "Nossa Missão Educacional"
+    tagline: "Transformando vidas através da educação em tecnologia"
+    description: "A Avelum está comprometida em formar jovens desenvolvedores em parceria com universidades e programas sociais como o SENAI no Brasil. Nosso foco é o desenvolvimento de aplicações de IA, começando pelo n8n como porta de entrada e expandindo para desenvolvimento de sistemas full stack, criando futuras parcerias em empregos e produtos."
+
+  partners:
+    title: "Programas Parceiros"
+    subtitle: "Trabalhamos com instituições de referência para oferecer educação de qualidade"
+    universities:
+      title: "Parcerias com Universidades"
+      description: "Colaboramos com universidades para oferecer cursos práticos de desenvolvimento de IA, conectando teoria acadêmica com a realidade do mercado."
+    social:
+      title: "Programas Sociais"
+      description: "Parcerias com instituições como o SENAI para fornecer capacitação tecnológica acessível a jovens de diversas origens."
+
+  learning_path:
+    title: "Jornada de Aprendizado"
+    subtitle: "Um caminho estruturado de iniciante a especialista em IA"
+
+    level_1:
+      badge: "Nível 1"
+      title: "Fundamentos de n8n"
+      subtitle: "Porta de entrada - Automação low-code"
+      topic_1: "Automação de workflows visuais"
+      topic_2: "Integração de APIs e webhooks"
+      topic_3: "Lógica básica e condicionais"
+      topic_4: "Integração com IA (OpenAI, Claude)"
+
+    level_2:
+      badge: "Nível 2"
+      title: "Desenvolvimento Full Stack"
+      subtitle: "Desenvolvimento web profissional"
+      topic_1: "Frontend: HTML, CSS, JavaScript, React"
+      topic_2: "Backend: PHP, Symfony, APIs"
+      topic_3: "Banco de Dados: PostgreSQL, Redis"
+      topic_4: "DevOps: Docker, Git, CI/CD"
+
+    level_3:
+      badge: "Nível 3"
+      title: "Especialista em IA"
+      subtitle: "Desenvolvimento avançado de aplicações de IA"
+      topic_1: "Integração de LLMs e engenharia de prompts"
+      topic_2: "Sistemas RAG e bancos vetoriais"
+      topic_3: "Orquestração de agentes de IA"
+      topic_4: "Sistemas de IA prontos para produção"
+
+  opportunities:
+    title: "Oportunidades de Carreira"
+    subtitle: "Construindo seu futuro com a Avelum"
+
+    jobs:
+      title: "Oportunidades de Emprego"
+      description: "Alunos de melhor desempenho têm a oportunidade de se juntar à equipe Avelum e trabalhar em projetos reais de IA para clientes empresariais."
+      benefit_1: "Estágios e posições júnior"
+      benefit_2: "Mentoria de desenvolvedores sênior"
+      benefit_3: "Salários e benefícios competitivos"
+
+    products:
+      title: "Parcerias em Produtos"
+      description: "Alunos podem co-desenvolver produtos e soluções de IA com a Avelum, compartilhando do sucesso e aprendendo empreendedorismo."
+      benefit_1: "Oportunidades de compartilhamento de receita"
+      benefit_2: "Experiência real com produtos"
+      benefit_3: "Orientação em empreendedorismo"
+
+  ecosystem:
+    title: "Nosso Ecossistema de Aprendizado"
+    subtitle: "Uma plataforma completa para educação em IA dentro da Avelum"
+
+    courses:
+      title: "Cursos Interativos"
+      description: "Cursos completos com vídeos, exercícios e projetos práticos cobrindo todos os aspectos do desenvolvimento de IA."
+
+    projects:
+      title: "Projetos Reais"
+      description: "Trabalhe em projetos reais de clientes sob supervisão, ganhando experiência prática com sistemas em produção."
+
+    mentorship:
+      title: "Mentoria Especializada"
+      description: "Orientação individual de desenvolvedores e especialistas em IA da Avelum durante toda sua jornada de aprendizado."
+
+  cta:
+    title: "Pronto para Começar Sua Jornada em Desenvolvimento de IA?"
+    description: "Seja você um estudante, universidade ou programa social, adoraríamos fazer parceria com você."
+    partner_button: "Tornar-se Parceiro"
+    student_button: "Inscrever-se como Aluno"

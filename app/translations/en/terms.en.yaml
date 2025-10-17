@@ -1,0 +1,82 @@
+# Terms of Use Translations - English
+
+# ================================================================================
+# Terms of Use - Main
+# ================================================================================
+terms.title: Terms of Use
+terms.header: Terms of Use
+terms.subtitle: Please read and accept our terms to continue using Luminai
+terms.must.accept: You must read and accept the terms of use before continuing to use the system.
+terms.already.accepted: 'You already accepted the terms of use on %date%'
+terms.tab.general: General Terms
+terms.tab.student: Student Terms
+terms.accept: I have read and accept all terms of use
+terms.button.accept: Accept Terms and Continue
+terms.error.invalid.csrf: Invalid security token. Please try again.
+terms.error.must.accept.all: You must accept all required terms to continue.
+terms.success.accepted: Terms of use accepted successfully. Welcome to Luminai!
+
+# ================================================================================
+# General Terms Content
+# ================================================================================
+terms.general.title: Luminai General Terms of Use
+terms.general.section1.title: 1. Acceptance of Terms
+terms.general.section1.content: >
+  By accessing and using Luminai, you accept and agree to be bound by these Terms of Use.
+  If you do not agree to these terms, you should not use this platform.
+
+terms.general.section2.title: 2. Use of Service
+terms.general.section2.content: >
+  You agree to use Luminai only for lawful purposes and in accordance with these Terms.
+  You are responsible for maintaining the confidentiality of your account and password.
+  You agree to accept responsibility for all activities that occur under your account.
+
+terms.general.section3.title: 3. Privacy and Data Protection
+terms.general.section3.content: >
+  We are committed to protecting your privacy. Your personal data will be processed in accordance
+  with applicable data protection laws. We collect and use your information to provide and improve
+  our services. Your data will not be shared with third parties without your consent, except as
+  required by law.
+
+terms.general.section4.title: 4. Intellectual Property
+terms.general.section4.content: >
+  All content, features, and functionality of Luminai are owned by us and are protected by
+  international copyright, trademark, and other intellectual property laws. You may not copy,
+  modify, distribute, or reverse engineer any part of our service without explicit permission.
+
+terms.general.section5.title: 5. Limitation of Liability
+terms.general.section5.content: >
+  Luminai is provided "as is" without warranties of any kind. We shall not be liable for any
+  indirect, incidental, special, consequential, or punitive damages resulting from your use
+  or inability to use the service.
+
+# ================================================================================
+# Student Terms Content
+# ================================================================================
+terms.student.title: Student Terms of Use
+terms.student.section1.title: 1. Student Responsibilities
+terms.student.section1.content: >
+  As a student on Luminai, you agree to engage in coursework honestly and ethically. You are
+  responsible for completing assignments and assessments on time and to the best of your ability.
+  Any form of plagiarism or academic dishonesty is strictly prohibited.
+
+terms.student.section2.title: 2. Course Access and Enrollment
+terms.student.section2.content: >
+  Once enrolled in a course, you will have access to course materials for the duration specified
+  by your instructor or organization. Access may be revoked if you violate these terms or the
+  general terms of use. Course completion certificates will be issued upon successful completion
+  of all requirements.
+
+terms.student.section3.title: 3. Conduct and Communication
+terms.student.section3.content: >
+  You agree to communicate respectfully with instructors, administrators, and fellow students.
+  Harassment, discrimination, or inappropriate behavior will not be tolerated and may result
+  in suspension or termination of your account. All course discussions should remain relevant
+  and professional.
+
+terms.student.section4.title: 4. Assessment and Grading
+terms.student.section4.content: >
+  All assessments must be your own work unless otherwise specified. Instructors reserve the right
+  to grade assignments according to their criteria. Grade disputes should be resolved through
+  proper channels with your instructor. Final grades are determined by your instructor based on
+  course requirements and your performance.

@@ -31,44 +31,40 @@
 <body {% if app.user %}data-controller="session-monitor fullscreen-textarea" data-session-monitor-lifetime-value="3600" data-session-monitor-status-url-value="{{ path('api_session_status') }}" data-session-monitor-keepalive-url-value="{{ path('api_session_keepalive') }}"{% else %}data-controller="fullscreen-textarea"{% endif %}>
     <nav class="navbar luminai-navbar">
         <div class="container">
-            <a class="navbar-brand text-white d-flex align-items-center" href="{{ path('app_home') }}">
-                <img src="/luminai_logo_sm_dark.png" alt="{{ 'misc.luminai.alt'|trans }}" height="32" class="logo-dark-theme me-3">
-                <img src="/luminai_logo_sm_light.png" alt="{{ 'misc.luminai.alt'|trans }}" height="32" class="logo-light-theme me-3">
-                <span class="fw-bold text-gradient">{{ 'nav.brand'|trans }}</span>
-            </a>
-
-            <div class="d-flex align-items-center ms-auto gap-2">
+            <!-- Dual-Brand Layout: Platform (subtle) + Organization (prominent) -->
+            <div class="navbar-brand d-flex align-items-center gap-0">
                 {% if app.user %}
-                <!-- Hamburger Menu Button -->
-                <div class="dropdown">
-                    <button class="nav-link text-white d-flex align-items-center navbar-menu-btn" type="button" id="navDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'nav.toggle.navigation'|trans }}">
-                        <i class="bi bi-list fs-4"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navDropdown" style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 200px;">
-                        {{ render_main_menu()|raw }}
-                    </ul>
-                </div>
-                {% endif %}
+                    <!-- Platform Branding (Subtle) -->
+                    <a href="{{ path('app_dashboard') }}" class="platform-brand d-flex align-items-center text-decoration-none">
+                        <img src="/luminai_logo_sm_dark.png" alt="Luminai" height="24" class="logo-dark-theme me-2">
+                        <img src="/luminai_logo_sm_light.png" alt="Luminai" height="24" class="logo-light-theme me-2">
+                        <span class="platform-brand-text">Luminai</span>
+                    </a>
 
-                {% if app.user %}
+                    <!-- Brand Divider -->
+                    <div class="brand-divider mx-3"></div>
+
+                    <!-- Organization Branding (Prominent) -->
                     {% if can_switch_organization() %}
                         {% set orgs = available_organizations() %}
-                        <!-- Organization Switcher (Admin/Super Admin Only) -->
-                        <div class="dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center org-selector-link" href="#" id="orgDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" data-bs-toggle="tooltip" title="{{ 'organization.switcher.title'|trans({}, 'organization') }}">
+                        <!-- Organization Switcher Dropdown (Admin/Super Admin) -->
+                        <div class="dropdown org-brand-dropdown">
+                            <a class="org-brand-button d-flex align-items-center" href="#" id="orgBrandDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 {% if current_organization() %}
-                                    <div class="me-2">
-                                        {{ org_logo.logo(current_organization(), 'xs') }}
+                                    <div class="org-logo-container me-2">
+                                        {{ org_logo.logo(current_organization(), 'sm') }}
                                     </div>
+                                    <span class="org-brand-name">{{ current_organization().name }}</span>
                                 {% else %}
-                                    <i class="bi bi-globe me-2"></i>
+                                    <i class="bi bi-globe me-2 fs-5"></i>
+                                    <span class="org-brand-name">{{ 'organization.all.organizations'|trans({}, 'organization') }}</span>
                                 {% endif %}
-                                <span>{{ current_organization() ? current_organization().name : 'organization.all.organizations'|trans({}, 'organization') }}</span>
+                                <i class="bi bi-chevron-down ms-2 org-brand-arrow"></i>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="orgDropdown" style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
-                                <li class="px-3 py-2 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+                            <ul class="dropdown-menu org-brand-dropdown-menu" aria-labelledby="orgBrandDropdown">
+                                <li class="px-3 py-2 border-bottom org-dropdown-header">
                                     <small class="org-switcher-title">{{ 'organization.switcher.title'|trans({}, 'organization')|upper }}</small>
-                                    <div class="org-switcher-subtitle" style="font-size: 0.7rem; margin-top: 0.25rem;">{{ 'organization.switcher.subtitle'|trans({}, 'organization') }}</div>
+                                    <div class="org-switcher-subtitle">{{ 'organization.switcher.subtitle'|trans({}, 'organization') }}</div>
                                 </li>
                                 {% if has_active_organization() %}
                                 <li>
@@ -79,7 +75,7 @@
                                         </button>
                                     </form>
                                 </li>
-                                <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
+                                <li><hr class="dropdown-divider org-dropdown-divider"></li>
                                 {% endif %}
                                 {% for org in orgs %}
                                 <li>
@@ -91,7 +87,7 @@
                                             </div>
                                             <div class="flex-grow-1">
                                                 {{ org.name }}
-                                                <small class="text-muted d-block" style="font-size: 0.75rem;">{{ org.slug }}.{{ app_base_domain }}</small>
+                                                <small class="text-muted d-block org-slug-text">{{ org.slug }}.{{ app_base_domain }}</small>
                                             </div>
                                         </button>
                                     </form>
@@ -101,20 +97,76 @@
                         </div>
                     {% elseif current_organization() %}
                         <!-- Organization Display (Non-Admin Users) -->
-                        <div class="nav-link d-flex align-items-center px-3 org-display">
-                            <div class="me-2">
-                                {{ org_logo.logo(current_organization(), 'xs') }}
+                        <div class="org-brand-static d-flex align-items-center">
+                            <div class="org-logo-container me-2">
+                                {{ org_logo.logo(current_organization(), 'sm') }}
                             </div>
-                            <span>{{ current_organization().name }}</span>
+                            <span class="org-brand-name">{{ current_organization().name }}</span>
                         </div>
                     {% endif %}
+                {% else %}
+                    <!-- Public Pages: Show Avelum Branding -->
+                    <a href="{{ path('app_home') }}" class="d-flex align-items-center text-decoration-none">
+                        <img src="/avelum_logo_md_dark.png" alt="Avelum" height="32" class="logo-dark-theme me-3">
+                        <img src="/avelum_logo_md_ligth.png" alt="Avelum" height="32" class="logo-light-theme me-3">
+                        <span class="fw-bold text-gradient">Avelum</span>
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="d-flex align-items-center ms-auto gap-3">
+                {% if not app.user %}
+                {# Public Navigation for Guests #}
+                <nav class="navbar-nav d-none d-lg-flex flex-row align-items-center gap-3">
+                    <a href="{{ path('public_about') }}" class="nav-link">{{ 'nav.about'|trans({}, 'public') }}</a>
+                    <a href="{{ path('public_solutions') }}" class="nav-link">{{ 'nav.solutions'|trans({}, 'public') }}</a>
+                    <a href="{{ path('public_products') }}" class="nav-link">{{ 'nav.products'|trans({}, 'public') }}</a>
+                    <a href="{{ path('public_education') }}" class="nav-link">{{ 'nav.education'|trans({}, 'public') }}</a>
+                    <a href="{{ path('public_contact') }}" class="nav-link">{{ 'nav.contact'|trans({}, 'public') }}</a>
+                </nav>
+
+                {# Theme Toggle for Public Pages #}
+                <button onclick="toggleThemeQuick()" class="btn btn-sm btn-outline-secondary d-none d-lg-inline-flex align-items-center" title="Toggle theme">
+                    <i id="publicThemeIcon" class="bi bi-sun-fill"></i>
+                </button>
+
+                <a href="{{ path('app_login') }}" class="btn btn-sm luminai-btn-outline d-none d-lg-inline-block">{{ 'nav.login'|trans({}, 'public') }}</a>
+                <a href="{{ path('public_contact') }}" class="btn btn-sm luminai-btn-primary">{{ 'landing.cta.contact_sales'|trans({}, 'public') }}</a>
+
+                {# Mobile menu for public navigation #}
+                <div class="dropdown d-lg-none">
+                    <button class="btn btn-outline-secondary" type="button" id="navDropdownPublic" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-list fs-5"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navDropdownPublic">
+                        <li><a class="dropdown-item" href="{{ path('public_about') }}">{{ 'nav.about'|trans({}, 'public') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('public_solutions') }}">{{ 'nav.solutions'|trans({}, 'public') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('public_products') }}">{{ 'nav.products'|trans({}, 'public') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('public_education') }}">{{ 'nav.education'|trans({}, 'public') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('public_contact') }}">{{ 'nav.contact'|trans({}, 'public') }}</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="toggleThemeQuick()"><i class="bi bi-circle-half me-2"></i>{{ 'nav.toggle_theme'|trans({}, 'public') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_login') }}">{{ 'nav.login'|trans({}, 'public') }}</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                {# Authenticated Navigation #}
+                <!-- Hamburger Menu Button -->
+                <div class="dropdown">
+                    <button class="nav-link text-white d-flex align-items-center navbar-menu-btn" type="button" id="navDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'nav.toggle.navigation'|trans }}">
+                        <i class="bi bi-list fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navDropdown" style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 200px;">
+                        {{ render_main_menu()|raw }}
+                    </ul>
+                </div>
                 {% endif %}
 
                 <!-- User Profile (Authenticated Users Only) -->
                 {% if app.user %}
                 <div class="dropdown">
                     <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
-                        <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px; background: var(--luminai-ai-gradient);">
+                        <div class="user-avatar d-flex align-items-center justify-content-center me-2">
                             <i class="bi bi-person-fill text-white"></i>
                         </div>
                         <div class="d-none d-md-block">
@@ -129,7 +181,7 @@
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown" style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px;">
                         <li class="px-3 py-2 border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
                             <div class="d-flex align-items-center">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 44px; height: 44px; background: var(--luminai-ai-gradient);">
+                                <div class="user-avatar user-avatar-lg d-flex align-items-center justify-content-center me-3">
                                     <i class="bi bi-person-fill text-white fs-5"></i>
                                 </div>
                                 <div>
@@ -171,6 +223,19 @@
 
     <!-- Global Modal Container -->
     <div id="global-modal-container"></div>
+
+    <!-- Instagram Floating Button - Fixed Bottom Left (Public Pages Only) -->
+    {% if not app.user %}
+    <a href="https://www.instagram.com/avelum.ai"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="instagram-floating-btn"
+       data-bs-toggle="tooltip"
+       data-bs-title="{{ 'social.instagram.follow'|trans({}, 'public') }}"
+       aria-label="{{ 'social.instagram.follow'|trans({}, 'public') }}">
+        <i class="bi bi-instagram"></i>
+    </a>
+    {% endif %}
 
     <!-- Avelum Branding Card - Fixed Bottom Right -->
     <div class="avelum-branding-card" data-bs-toggle="tooltip" data-bs-title="Copyright {{ 'now'|date('Y') }} | Avelum.ia.br">
@@ -229,13 +294,16 @@
             updateNavbar() {
                 const icon = document.getElementById('navThemeIcon');
                 const text = document.getElementById('navThemeText');
+                const publicIcon = document.getElementById('publicThemeIcon');
 
                 if (this.current === 'light') {
                     if (icon) icon.className = 'bi bi-moon-stars me-2';
                     if (text) text.textContent = '{{ 'theme.switch.to.dark'|trans({}, 'settings') }}';
+                    if (publicIcon) publicIcon.className = 'bi bi-moon-fill';
                 } else {
                     if (icon) icon.className = 'bi bi-sun me-2';
                     if (text) text.textContent = '{{ 'theme.switch.to.light'|trans({}, 'settings') }}';
+                    if (publicIcon) publicIcon.className = 'bi bi-sun-fill';
                 }
             }
             };
@@ -539,20 +607,187 @@
     </script>
 
     <style>
-        /* Organization Selector - Theme Responsive Colors */
-        .org-selector-link,
-        .org-display {
-            color: #fff !important;
+        /* ========================================
+           DUAL-BRAND LAYOUT (Luminai + Organization)
+           ======================================== */
+
+        /* Platform Branding (Subtle) */
+        .platform-brand {
+            transition: opacity 0.2s ease;
         }
 
-        [data-theme="light"] .org-selector-link,
-        [data-theme="light"] .org-display {
-            color: #1a1a1a !important;
+        .platform-brand:hover {
+            opacity: 0.8;
         }
 
-        [data-theme="light"] .org-selector-link i,
-        [data-theme="light"] .org-display i {
-            color: #1a1a1a !important;
+        .platform-brand-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        [data-theme="light"] .platform-brand-text {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Brand Divider */
+        .brand-divider {
+            width: 1px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme="light"] .brand-divider {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Organization Branding (Prominent) */
+        .org-brand-button,
+        .org-brand-static {
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .org-brand-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .org-brand-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme="light"] .org-brand-button {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .org-brand-button:hover {
+            background: rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        .org-brand-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        [data-theme="light"] .org-brand-name {
+            color: #1a1a1a;
+        }
+
+        .org-brand-arrow {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            transition: transform 0.2s ease;
+        }
+
+        .org-brand-button[aria-expanded="true"] .org-brand-arrow {
+            transform: rotate(180deg);
+        }
+
+        .org-logo-container {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Organization Dropdown Menu */
+        .org-brand-dropdown-menu {
+            background: var(--luminai-dark-surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 280px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border-radius: 0.75rem;
+            padding: 0.5rem 0;
+        }
+
+        [data-theme="light"] .org-brand-dropdown-menu {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .org-dropdown-header {
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        [data-theme="light"] .org-dropdown-header {
+            border-color: rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .org-switcher-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        [data-theme="light"] .org-switcher-title {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .org-switcher-subtitle {
+            font-size: 0.7rem;
+            margin-top: 0.25rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        [data-theme="light"] .org-switcher-subtitle {
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        .org-slug-text {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        [data-theme="light"] .org-slug-text {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .org-dropdown-divider {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="light"] .org-dropdown-divider {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 991px) {
+            .brand-divider {
+                display: none;
+            }
+
+            .platform-brand {
+                display: none !important;
+            }
+
+            .org-brand-name {
+                max-width: 150px;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .org-brand-name {
+                max-width: 100px;
+            }
+
+            .org-brand-dropdown-menu {
+                min-width: 90vw !important;
+            }
         }
 
         /* Navbar Button Consistency */
@@ -613,7 +848,86 @@
             }
         }
 
-        /* Avelum Branding Card - Fixed Bottom Right */
+        /* ========================================
+           INSTAGRAM FLOATING BUTTON
+           ======================================== */
+
+        .instagram-floating-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #833AB4 0%, #FD1D1D 50%, #FCB045 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 28px;
+            box-shadow: 0 4px 20px rgba(131, 58, 180, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            animation: instagram-pulse 3s ease-in-out infinite;
+        }
+
+        .instagram-floating-btn:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 8px 30px rgba(131, 58, 180, 0.6);
+            color: #ffffff;
+            animation: none;
+        }
+
+        .instagram-floating-btn:active {
+            transform: scale(0.95) translateY(0);
+        }
+
+        /* Pulse animation to draw attention */
+        @keyframes instagram-pulse {
+            0%, 100% {
+                box-shadow: 0 4px 20px rgba(131, 58, 180, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 30px rgba(131, 58, 180, 0.7), 0 0 0 10px rgba(131, 58, 180, 0.1);
+            }
+        }
+
+        /* Light theme: Add subtle border for contrast */
+        [data-theme="light"] .instagram-floating-btn {
+            box-shadow: 0 4px 20px rgba(131, 58, 180, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        [data-theme="light"] .instagram-floating-btn:hover {
+            box-shadow: 0 8px 30px rgba(131, 58, 180, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Mobile: Smaller button, bottom spacing to avoid Avelum card */
+        @media (max-width: 767px) {
+            .instagram-floating-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+                bottom: 80px; /* Position above Avelum branding card on mobile */
+                left: 15px;
+            }
+        }
+
+        /* Extra small screens: Even more compact */
+        @media (max-width: 375px) {
+            .instagram-floating-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+                bottom: 75px;
+                left: 10px;
+            }
+        }
+
+        /* ========================================
+           AVELUM BRANDING CARD
+           ======================================== */
+
         .avelum-branding-card {
             position: fixed;
             bottom: 20px;

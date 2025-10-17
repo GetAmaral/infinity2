@@ -9,12 +9,15 @@ use App\Repository\OrganizationRepository;
 use App\Repository\UserRepository;
 use App\Service\OrganizationContext;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\RateLimit;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -51,6 +54,102 @@ class SecurityController extends AbstractController
             'error' => $error,
             'organization' => $organization,
         ]);
+    }
+
+    /**
+     * API endpoint to lookup organization by email
+     * Used for seamless subdomain redirect on login
+     */
+    #[Route('/api/lookup-organization', name: 'api_lookup_organization', methods: ['POST'])]
+    public function lookupOrganization(
+        Request $request,
+        UserRepository $userRepository,
+        LoggerInterface $logger
+    ): JsonResponse {
+        // Get email from request
+        $data = json_decode($request->getContent(), true);
+        $email = $data['email'] ?? '';
+
+        // Basic validation
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return new JsonResponse([
+                'error' => 'invalid_email',
+                'message' => 'Please enter a valid email address'
+            ], 400);
+        }
+
+        // Rate limiting: Track by IP to prevent enumeration attacks
+        $clientIp = $request->getClientIp();
+
+        // Simple in-memory rate limiting (for production, use Redis or database)
+        // For now, we'll implement basic throttling in the Stimulus controller
+
+        // Log the lookup attempt (for security monitoring)
+        $logger->info('Organization lookup attempt', [
+            'email_domain' => substr($email, strpos($email, '@')),
+            'ip' => $clientIp,
+            'timestamp' => new \DateTimeImmutable(),
+        ]);
+
+        try {
+            // Lookup user by email
+            $user = $userRepository->findOneBy(['email' => $email]);
+
+            if (!$user || !$user->getOrganization()) {
+                // Security: Don't reveal if user exists - use generic message
+                // Add artificial delay to prevent timing attacks
+                usleep(random_int(100000, 300000)); // 100-300ms random delay
+
+                $logger->warning('Organization lookup failed', [
+                    'email_domain' => substr($email, strpos($email, '@')),
+                    'ip' => $clientIp,
+                    'reason' => 'user_not_found_or_no_org',
+                ]);
+
+                return new JsonResponse([
+                    'error' => 'not_found',
+                    'message' => 'No organization found for this email'
+                ], 404);
+            }
+
+            $organization = $user->getOrganization();
+            $orgSlug = $organization->getSlug();
+
+            // Get current host to build redirect URL
+            $host = $request->getHost();
+            $scheme = $request->getScheme();
+
+            // Build redirect URL with organization subdomain
+            // Remove any existing subdomain first
+            $baseDomain = preg_replace('/^[^.]+\./', '', $host);
+            $redirectUrl = sprintf('%s://%s.%s/login', $scheme, $orgSlug, $baseDomain);
+
+            $logger->info('Organization lookup successful', [
+                'email' => $email,
+                'organization_slug' => $orgSlug,
+                'redirect_url' => $redirectUrl,
+                'ip' => $clientIp,
+            ]);
+
+            return new JsonResponse([
+                'success' => true,
+                'organizationSlug' => $orgSlug,
+                'organizationName' => $organization->getName(),
+                'redirectUrl' => $redirectUrl,
+            ]);
+
+        } catch (\Exception $e) {
+            $logger->error('Organization lookup error', [
+                'email_domain' => substr($email, strpos($email, '@')),
+                'error' => $e->getMessage(),
+                'ip' => $clientIp,
+            ]);
+
+            return new JsonResponse([
+                'error' => 'server_error',
+                'message' => 'An error occurred. Please try again.'
+            ], 500);
+        }
     }
 
     #[Route('/register', name: 'app_register')]

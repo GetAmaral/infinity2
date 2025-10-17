@@ -67,6 +67,13 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[ORM\Column(type: 'boolean')]
     protected bool $isVerified = false;
 
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['user:read'])]
+    protected bool $termsSigned = false;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $termsSignedAt = null;
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $verificationToken = null;
 
@@ -239,6 +246,32 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     public function setVerificationToken(?string $verificationToken): self
     {
         $this->verificationToken = $verificationToken;
+        return $this;
+    }
+
+    // Terms methods
+    public function hasSignedTerms(): bool
+    {
+        return $this->termsSigned;
+    }
+
+    public function setTermsSigned(bool $termsSigned): self
+    {
+        $this->termsSigned = $termsSigned;
+        if ($termsSigned && $this->termsSignedAt === null) {
+            $this->termsSignedAt = new \DateTimeImmutable();
+        }
+        return $this;
+    }
+
+    public function getTermsSignedAt(): ?\DateTimeImmutable
+    {
+        return $this->termsSignedAt;
+    }
+
+    public function setTermsSignedAt(?\DateTimeImmutable $termsSignedAt): self
+    {
+        $this->termsSignedAt = $termsSignedAt;
         return $this;
     }
 

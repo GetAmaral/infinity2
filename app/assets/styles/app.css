@@ -61,6 +61,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .org-logo-light {
@@ -83,12 +85,26 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
+    border-radius: 8px;
     background: var(--luminai-ai-gradient);
 }
 
 .org-icon-fallback i {
     color: white;
+}
+
+/* User Avatar - Rounded Square Pattern */
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--luminai-ai-gradient);
+    border-radius: 8px;
+}
+
+.user-avatar-lg {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
 }
 
 /* Three Dots Button - Theme Aware */

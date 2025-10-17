@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'about.meta.title'|trans({}, 'public') }}{% endblock %}
+
+{% block body %}
+<div class="public-page">
+    {# Hero Section #}
+    <section class="page-hero">
+        <div class="container py-4 text-center">
+            <h1 class="display-4 mb-3">{{ 'about.title'|trans({}, 'public') }}</h1>
+            <p class="lead">{{ 'about.subtitle'|trans({}, 'public') }}</p>
+        </div>
+    </section>
+
+    {# Mission Section #}
+    <section class="mission-section">
+        <div class="container py-4">
+            <div class="row align-items-center mb-4">
+                <div class="col-lg-6">
+                    <h2 class="mb-3">{{ 'about.who_we_are.title'|trans({}, 'public') }}</h2>
+                    <p class="lead mb-3">{{ 'about.who_we_are.tagline'|trans({}, 'public') }}</p>
+                    <p>{{ 'about.who_we_are.description'|trans({}, 'public') }}</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ai-glow-effect-about"></div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="luminai-card p-4 text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-bullseye fs-1 text-neon"></i>
+                        </div>
+                        <h4>{{ 'about.mission.title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'about.mission.description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="luminai-card p-4 text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-eye fs-1 text-neon"></i>
+                        </div>
+                        <h4>{{ 'about.vision.title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'about.vision.description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="luminai-card p-4 text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-heart fs-1 text-neon"></i>
+                        </div>
+                        <h4>{{ 'about.values.title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'about.values.description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# CTA Section #}
+    <section class="cta-section">
+        <div class="container py-4 text-center">
+            <h2 class="mb-3">{{ 'about.cta.title'|trans({}, 'public') }}</h2>
+            <p class="lead mb-3">{{ 'about.cta.description'|trans({}, 'public') }}</p>
+            <a href="{{ path('public_contact') }}" class="btn luminai-btn-primary btn-lg">
+                {{ 'landing.cta.contact_sales'|trans({}, 'public') }}
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

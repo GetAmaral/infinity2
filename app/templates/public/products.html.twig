@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'products.meta.title'|trans({}, 'public') }}{% endblock %}
+
+{% block body %}
+<div class="public-page">
+    {# Hero Section #}
+    <section class="page-hero">
+        <div class="container py-4 text-center">
+            <h1 class="display-4 mb-3">{{ 'products.title'|trans({}, 'public') }}</h1>
+            <p class="lead">{{ 'products.subtitle'|trans({}, 'public') }}</p>
+        </div>
+    </section>
+
+    {# Luminai Product #}
+    <section class="product-detail-section">
+        <div class="container py-4">
+            <div class="row align-items-center mb-4">
+                <div class="col-lg-6">
+                    <div class="product-badge mb-3">{{ 'products.luminai.badge'|trans({}, 'public') }}</div>
+                    <h2 class="display-5 mb-3">Luminai</h2>
+                    <p class="lead mb-3">{{ 'products.luminai.tagline'|trans({}, 'public') }}</p>
+                    <p>{{ 'products.luminai.description_full'|trans({}, 'public') }}</p>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="product-logo-container">
+                        <img src="{{ asset('luminai_logo_sm_dark.png') }}" alt="Luminai Logo" class="product-logo logo-dark-theme">
+                        <img src="{{ asset('luminai_logo_sm_light.png') }}" alt="Luminai Logo" class="product-logo logo-light-theme">
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mb-4">{{ 'products.luminai.features_title'|trans({}, 'public') }}</h3>
+            <div class="row g-4">
+                {% for i in 1..6 %}
+                <div class="col-md-6">
+                    <div class="feature-item">
+                        <i class="bi bi-check-circle-fill text-neon me-2"></i>
+                        <strong>{{ ('products.luminai.feature_' ~ i ~ '_title')|trans({}, 'public') }}:</strong>
+                        {{ ('products.luminai.feature_' ~ i ~ '_description')|trans({}, 'public') }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {# SDR AI First Product #}
+    <section class="product-detail-section product-detail-alt">
+        <div class="container py-4">
+            <div class="row align-items-center mb-4">
+                <div class="col-lg-6 order-lg-2">
+                    <div class="product-badge mb-3">{{ 'products.sdr.badge'|trans({}, 'public') }}</div>
+                    <h2 class="display-5 mb-3">SDR AI First</h2>
+                    <p class="lead mb-3">{{ 'products.sdr.tagline'|trans({}, 'public') }}</p>
+                    <p>{{ 'products.sdr.description_full'|trans({}, 'public') }}</p>
+                </div>
+                <div class="col-lg-6 order-lg-1 text-center">
+                    <div class="sdr-logo-container">
+                        <div class="sdr-icon-badge">
+                            <i class="bi bi-robot"></i>
+                        </div>
+                        <h3 class="sdr-logo-text mt-4">SDR AI First</h3>
+                        <p class="sdr-logo-tagline">Intelligent Sales Automation</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mb-4">{{ 'products.sdr.features_title'|trans({}, 'public') }}</h3>
+            <div class="row g-4">
+                {% for i in 1..6 %}
+                <div class="col-md-6">
+                    <div class="feature-item">
+                        <i class="bi bi-check-circle-fill text-neon me-2"></i>
+                        <strong>{{ ('products.sdr.feature_' ~ i ~ '_title')|trans({}, 'public') }}:</strong>
+                        {{ ('products.sdr.feature_' ~ i ~ '_description')|trans({}, 'public') }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {# CTA Section #}
+    <section class="cta-section">
+        <div class="container py-4 text-center">
+            <h2 class="mb-3">{{ 'products.cta.title'|trans({}, 'public') }}</h2>
+            <p class="lead mb-3">{{ 'products.cta.description'|trans({}, 'public') }}</p>
+            <a href="{{ path('public_contact') }}" class="btn luminai-btn-primary btn-lg">
+                {{ 'landing.cta.contact_sales'|trans({}, 'public') }}
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

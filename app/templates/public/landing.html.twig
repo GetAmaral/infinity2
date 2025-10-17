@@ -1,0 +1,258 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'landing.meta.title'|trans({}, 'public') }}{% endblock %}
+
+{% block body %}
+<div data-controller="landing">
+    {# Hero Section #}
+    <section class="hero-section">
+        <div class="container py-4">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    {# Badge: "AI is not the future. It's NOW" #}
+                    <div class="hero-badge mb-4" data-landing-target="badge">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                        {{ 'landing.hero.badge'|trans({}, 'public') }}
+                    </div>
+
+                    {# Main Headline #}
+                    <h1 class="hero-title mb-4" data-landing-target="title">
+                        {{ 'landing.hero.title'|trans({}, 'public') }}
+                        <span class="text-gradient d-block">{{ 'landing.hero.title_highlight'|trans({}, 'public') }}</span>
+                    </h1>
+
+                    {# Subheadline #}
+                    <p class="hero-subtitle mb-4" data-landing-target="subtitle">
+                        {{ 'landing.hero.subtitle'|trans({}, 'public') }}
+                    </p>
+
+                    {# CTAs #}
+                    <div class="hero-ctas mb-4">
+                        <a href="{{ path('public_contact') }}" class="btn luminai-btn-primary btn-lg me-3 mb-2">
+                            <i class="bi bi-chat-dots-fill me-2"></i>
+                            {{ 'landing.cta.contact_sales'|trans({}, 'public') }}
+                        </a>
+                        <a href="{{ path('public_solutions') }}" class="btn luminai-btn-outline btn-lg mb-2">
+                            {{ 'landing.cta.learn_more'|trans({}, 'public') }}
+                            <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+
+                    {# Trust Signals #}
+                    <div class="trust-signals">
+                        <div class="trust-item">
+                            <i class="bi bi-shield-check-fill text-neon"></i>
+                            <span>{{ 'landing.trust.enterprise_security'|trans({}, 'public') }}</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="bi bi-lightning-fill text-neon"></i>
+                            <span>{{ 'landing.trust.custom_ai'|trans({}, 'public') }}</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="bi bi-graph-up-arrow text-neon"></i>
+                            <span>{{ 'landing.trust.proven_results'|trans({}, 'public') }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="hero-visual">
+                        <div class="ai-glow-effect"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Benefits Section - Why AI Now #}
+    <section class="benefits-section">
+        <div class="container py-4">
+            <div class="text-center mb-4">
+                <h2 class="section-title mb-3">{{ 'landing.benefits.title'|trans({}, 'public') }}</h2>
+                <p class="section-subtitle">{{ 'landing.benefits.subtitle'|trans({}, 'public') }}</p>
+            </div>
+
+            <div class="benefits-grid">
+                {# Velocidade #}
+                <div class="benefit-card" data-landing-target="benefit">
+                    <div class="benefit-icon">
+                        <i class="bi bi-speedometer2"></i>
+                    </div>
+                    <h3 class="benefit-title">{{ 'landing.benefits.speed.title'|trans({}, 'public') }}</h3>
+                    <p class="benefit-description">{{ 'landing.benefits.speed.description'|trans({}, 'public') }}</p>
+                </div>
+
+                {# Escala #}
+                <div class="benefit-card" data-landing-target="benefit">
+                    <div class="benefit-icon">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <h3 class="benefit-title">{{ 'landing.benefits.scale.title'|trans({}, 'public') }}</h3>
+                    <p class="benefit-description">{{ 'landing.benefits.scale.description'|trans({}, 'public') }}</p>
+                </div>
+
+                {# Produtividade #}
+                <div class="benefit-card" data-landing-target="benefit">
+                    <div class="benefit-icon">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+                    <h3 class="benefit-title">{{ 'landing.benefits.productivity.title'|trans({}, 'public') }}</h3>
+                    <p class="benefit-description">{{ 'landing.benefits.productivity.description'|trans({}, 'public') }}</p>
+                </div>
+
+                {# Redução de custos #}
+                <div class="benefit-card" data-landing-target="benefit">
+                    <div class="benefit-icon">
+                        <i class="bi bi-piggy-bank-fill"></i>
+                    </div>
+                    <h3 class="benefit-title">{{ 'landing.benefits.cost_reduction.title'|trans({}, 'public') }}</h3>
+                    <p class="benefit-description">{{ 'landing.benefits.cost_reduction.description'|trans({}, 'public') }}</p>
+                </div>
+
+                {# Organização #}
+                <div class="benefit-card" data-landing-target="benefit">
+                    <div class="benefit-icon">
+                        <i class="bi bi-diagram-3-fill"></i>
+                    </div>
+                    <h3 class="benefit-title">{{ 'landing.benefits.organization.title'|trans({}, 'public') }}</h3>
+                    <p class="benefit-description">{{ 'landing.benefits.organization.description'|trans({}, 'public') }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Products Showcase #}
+    <section class="products-section">
+        <div class="container py-4">
+            <div class="text-center mb-4">
+                <h2 class="section-title mb-3">{{ 'landing.products.title'|trans({}, 'public') }}</h2>
+            </div>
+
+            <div class="row g-4">
+                {# Luminai Product #}
+                <div class="col-lg-6">
+                    <div class="product-card luminai-product" data-landing-target="product">
+                        <div class="product-badge">{{ 'landing.products.luminai.badge'|trans({}, 'public') }}</div>
+                        <h3 class="product-name">Luminai</h3>
+                        <p class="product-description">{{ 'landing.products.luminai.description'|trans({}, 'public') }}</p>
+                        <ul class="product-features">
+                            <li><i class="bi bi-check-circle-fill text-neon"></i> {{ 'landing.products.luminai.feature_1'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon"></i> {{ 'landing.products.luminai.feature_2'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon"></i> {{ 'landing.products.luminai.feature_3'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon"></i> {{ 'landing.products.luminai.feature_4'|trans({}, 'public') }}</li>
+                        </ul>
+                        <a href="{{ path('public_products') }}" class="btn luminai-btn-primary w-100 mt-3">
+                            {{ 'landing.products.learn_more'|trans({}, 'public') }}
+                        </a>
+                    </div>
+                </div>
+
+                {# SDR AI First Product #}
+                <div class="col-lg-6">
+                    <div class="product-card sdr-product" data-landing-target="product">
+                        <div class="product-badge">{{ 'landing.products.sdr.badge'|trans({}, 'public') }}</div>
+                        <h3 class="product-name">SDR AI First</h3>
+                        <p class="product-description">{{ 'landing.products.sdr.description'|trans({}, 'public') }}</p>
+                        <ul class="product-features">
+                            <li><i class="bi bi-check-circle-fill text-neon"></i> {{ 'landing.products.sdr.feature_1'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon"></i> {{ 'landing.products.sdr.feature_2'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon"></i> {{ 'landing.products.sdr.feature_3'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon"></i> {{ 'landing.products.sdr.feature_4'|trans({}, 'public') }}</li>
+                        </ul>
+                        <a href="{{ path('public_products') }}" class="btn luminai-btn-primary w-100 mt-3">
+                            {{ 'landing.products.learn_more'|trans({}, 'public') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Social Proof #}
+    <section class="social-proof-section">
+        <div class="container py-4">
+            <div class="text-center mb-4">
+                <h2 class="section-title mb-3">{{ 'landing.social_proof.title'|trans({}, 'public') }}</h2>
+                <p class="section-subtitle">{{ 'landing.social_proof.subtitle'|trans({}, 'public') }}</p>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-lg-12">
+                    <h4 class="text-center text-neon mb-4">{{ 'landing.social_proof.brazilian_title'|trans({}, 'public') }}</h4>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="social-proof-card">
+                                <h5>Magazine Luiza</h5>
+                                <p>{{ 'landing.social_proof.brazilian_1'|trans({}, 'public') }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="social-proof-card">
+                                <h5>Nubank</h5>
+                                <p>{{ 'landing.social_proof.brazilian_2'|trans({}, 'public') }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="social-proof-card">
+                                <h5>Itaú Unibanco</h5>
+                                <p>{{ 'landing.social_proof.brazilian_3'|trans({}, 'public') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4 class="text-center text-neon mb-4">{{ 'landing.social_proof.global_title'|trans({}, 'public') }}</h4>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="social-proof-card">
+                                <h5>Amazon</h5>
+                                <p>{{ 'landing.social_proof.global_1'|trans({}, 'public') }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="social-proof-card">
+                                <h5>Google</h5>
+                                <p>{{ 'landing.social_proof.global_2'|trans({}, 'public') }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="social-proof-card">
+                                <h5>Microsoft</h5>
+                                <p>{{ 'landing.social_proof.global_3'|trans({}, 'public') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Urgency CTA Section #}
+    <section class="urgency-cta-section">
+        <div class="container py-4 text-center">
+            <div class="urgency-content">
+                <div class="urgency-badge mb-4">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    {{ 'landing.urgency.attention'|trans({}, 'public') }}
+                </div>
+                <h2 class="urgency-title mb-4">{{ 'landing.urgency.title'|trans({}, 'public') }}</h2>
+                <p class="urgency-message mb-4">{{ 'landing.urgency.message'|trans({}, 'public') }}</p>
+                <p class="urgency-quote mb-5">
+                    <i class="bi bi-quote"></i>
+                    {{ 'landing.urgency.quote'|trans({}, 'public') }}
+                    <i class="bi bi-quote"></i>
+                </p>
+                <div class="urgency-cta">
+                    <a href="{{ path('public_contact') }}" class="btn btn-light btn-lg px-5 py-3">
+                        <i class="bi bi-rocket-takeoff-fill me-2"></i>
+                        {{ 'landing.cta.contact_now'|trans({}, 'public') }}
+                    </a>
+                    <p class="mt-3 text-white-50"><small>{{ 'landing.urgency.no_cost_diagnosis'|trans({}, 'public') }}</small></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -48,18 +48,15 @@ final class SubdomainOrganizationSubscriber implements EventSubscriberInterface
 
         if ($slug === null) {
             // Root domain access (no subdomain)
-            // Keep organization if it was set via switcher (admin functionality)
-            // Only log if there's no active organization
-            if (!$this->organizationContext->hasActiveOrganization()) {
-                $this->logger->info('Root domain access, no organization context set', [
-                    'host' => $host,
-                ]);
-            } else {
-                $this->logger->debug('Root domain access, keeping manually selected organization', [
-                    'host' => $host,
-                    'organization_slug' => $this->organizationContext->getOrganizationSlug(),
-                ]);
-            }
+            // Clear organization context to enforce admin-only access at root
+            $beforeClear = $this->organizationContext->getOrganizationId();
+            $this->organizationContext->clearOrganization();
+            $afterClear = $this->organizationContext->getOrganizationId();
+            $this->logger->info('Root domain access, organization context cleared', [
+                'host' => $host,
+                'before_clear' => $beforeClear,
+                'after_clear' => $afterClear,
+            ]);
             return;
         }
 

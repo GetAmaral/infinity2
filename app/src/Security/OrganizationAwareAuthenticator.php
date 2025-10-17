@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -21,6 +22,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Custom authenticator that validates user belongs to organization from subdomain
@@ -35,7 +37,9 @@ final class OrganizationAwareAuthenticator extends AbstractLoginFormAuthenticato
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly OrganizationContext $organizationContext,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly UserProviderInterface $userProvider,
+        private readonly TranslatorInterface $translator
     ) {
     }
 
@@ -47,8 +51,29 @@ final class OrganizationAwareAuthenticator extends AbstractLoginFormAuthenticato
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
+        // Check if this is root domain access (no organization context)
+        $organizationId = $this->organizationContext->getOrganizationId();
+
         return new Passport(
-            new UserBadge($email),
+            new UserBadge($email, function($userIdentifier) use ($organizationId) {
+                // This callback is executed to load the user
+                // We'll verify admin access here for root domain (BEFORE session is created)
+                $user = $this->userProvider->loadUserByIdentifier($userIdentifier);
+
+                // If root domain (no organization), user must be admin
+                if ($organizationId === null) {
+                    $isAdmin = in_array('ROLE_ADMIN', $user->getRoles(), true);
+                    $isSuperAdmin = in_array('ROLE_SUPER_ADMIN', $user->getRoles(), true);
+
+                    if (!$isAdmin && !$isSuperAdmin) {
+                        throw new CustomUserMessageAuthenticationException(
+                            $this->translator->trans('user.auth.error.root_domain_access', [], 'user')
+                        );
+                    }
+                }
+
+                return $user;
+            }),
             new PasswordCredentials($password),
             [
                 new CsrfTokenBadge('authenticate', $csrfToken),
@@ -69,6 +94,22 @@ final class OrganizationAwareAuthenticator extends AbstractLoginFormAuthenticato
         $isAdmin = in_array('ROLE_ADMIN', $user->getRoles(), true);
         $isSuperAdmin = in_array('ROLE_SUPER_ADMIN', $user->getRoles(), true);
 
+        error_log('=== AUTH SUCCESS DEBUG ===');
+        error_log('User: ' . $user->getUserIdentifier());
+        error_log('OrgID: ' . ($organizationId ?? 'NULL'));
+        error_log('IsAdmin: ' . ($isAdmin ? 'YES' : 'NO'));
+        error_log('IsSuperAdmin: ' . ($isSuperAdmin ? 'YES' : 'NO'));
+        error_log('Host: ' . $request->getHost());
+
+        $this->logger->info('Authentication check', [
+            'email' => $user->getUserIdentifier(),
+            'organizationId' => $organizationId,
+            'organizationSlug' => $organizationSlug,
+            'isAdmin' => $isAdmin,
+            'isSuperAdmin' => $isSuperAdmin,
+            'host' => $request->getHost(),
+        ]);
+
         if ($organizationId === null) {
             // Root domain access - only allow admins and super admins
             if (!$isAdmin && !$isSuperAdmin) {
@@ -76,7 +117,7 @@ final class OrganizationAwareAuthenticator extends AbstractLoginFormAuthenticato
                     'email' => $user->getUserIdentifier(),
                 ]);
                 throw new CustomUserMessageAuthenticationException(
-                    'You must access the system through your organization subdomain. Please contact your administrator.'
+                    $this->translator->trans('user.auth.error.root_domain_access_contact_admin', [], 'user')
                 );
             }
 
@@ -97,7 +138,7 @@ final class OrganizationAwareAuthenticator extends AbstractLoginFormAuthenticato
                         'subdomain_slug' => $organizationSlug,
                     ]);
                     throw new CustomUserMessageAuthenticationException(
-                        'You do not have access to this organization. Please use your organization subdomain.'
+                        $this->translator->trans('user.auth.error.wrong_organization', [], 'user')
                     );
                 }
             }
@@ -111,7 +152,10 @@ final class OrganizationAwareAuthenticator extends AbstractLoginFormAuthenticato
 
         // Redirect to target path or default
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
+            // Don't redirect to AJAX endpoints or API routes
+            if (!str_contains($targetPath, '/ajax/') && !str_contains($targetPath, '/api/')) {
+                return new RedirectResponse($targetPath);
+            }
         }
 
         return new RedirectResponse($this->urlGenerator->generate('app_home'));

@@ -1,0 +1,378 @@
+# English Translations for Public Pages
+# Avelum Institutional Website
+
+nav:
+  about: "About"
+  solutions: "Solutions"
+  products: "Products"
+  education: "Education"
+  contact: "Contact"
+  login: "Login"
+  toggle_theme: "Toggle Theme"
+
+social:
+  instagram:
+    follow: "Follow us on Instagram @avelum.ai"
+
+landing:
+  meta:
+    title: "Avelum - Intelligent AI Solutions for Businesses"
+
+  hero:
+    badge: "AI is not the future. It's NOW."
+    title: "The link between your company"
+    title_highlight: "and intelligent solutions"
+    subtitle: "The bridge that connects you to automation, efficiency, and scale through artificial intelligence. Custom AI agents developed exclusively for your demand, your way, your data, and your objective."
+
+  cta:
+    contact_sales: "Contact Sales"
+    learn_more: "Learn More"
+    contact_now: "Contact Us Now"
+
+  trust:
+    enterprise_security: "Enterprise Security"
+    custom_ai: "Custom AI"
+    proven_results: "Proven Results"
+
+  benefits:
+    title: "Why adopt AI now?"
+    subtitle: "Companies that adopt AI gain competitive advantages"
+
+    speed:
+      title: "Speed"
+      description: "Less time for more results"
+
+    scale:
+      title: "Scale"
+      description: "Your team focuses on strategic, AI handles operational"
+
+    productivity:
+      title: "Productivity"
+      description: "More tasks done with more precision"
+
+    cost_reduction:
+      title: "Cost Reduction"
+      description: "More results with fewer resources"
+
+    organization:
+      title: "Organization"
+      description: "Clear, automated, error-free processes"
+
+  products:
+    title: "Our Products"
+    learn_more: "Learn More"
+
+    luminai:
+      badge: "Complete Platform"
+      description: "Complete business management system with AI-powered CRM and intelligent agents"
+      feature_1: "Complete AI-Powered CRM"
+      feature_2: "Custom AI Agents"
+      feature_3: "Process Automation"
+      feature_4: "Real-time Analytics & BI"
+
+    sdr:
+      badge: "Sales Automation"
+      description: "Intelligent SDRs that converse with leads, qualify opportunities, and schedule meetings automatically"
+      feature_1: "24/7 Service"
+      feature_2: "Automatic Lead Qualification"
+      feature_3: "Personalized Follow-ups"
+      feature_4: "CRM Integration"
+
+  social_proof:
+    title: "Companies Already Using Artificial Intelligence"
+    subtitle: "AI is already a reality in the largest companies in Brazil and the world. If they're using it, why isn't your company?"
+
+    brazilian_title: "Brazilian companies already using AI"
+    brazilian_1: "With virtual assistant Lu, automates sales and customer service"
+    brazilian_2: "Uses AI for service, fraud prevention, and real-time data analysis"
+    brazilian_3: "Applies AI in credit analysis, process automation, and customer experience"
+
+    global_title: "Global companies already using AI"
+    global_1: "Uses AI in Alexa, logistics, automated service, and purchase recommendations"
+    global_2: "Integrates AI in all its products, from search to emails and assistants"
+    global_3: "With Copilot, automates tasks in Word, Excel, Outlook, and more"
+
+  urgency:
+    attention: "Business Owner, Attention"
+    title: "The future is ahead of you"
+    message: "While some still think 'one day I'll implement it', others are dominating the market with smarter decisions. Who uses AI today, leads tomorrow."
+    quote: "Not deciding is also a decision. Implement AI in your business now. Be part of the future — or be swallowed by it."
+    no_cost_diagnosis: "Free diagnosis with no commitment"
+
+about:
+  meta:
+    title: "About Avelum - Who We Are"
+  title: "About Avelum"
+  subtitle: "We are the link between companies and intelligent solutions"
+
+  who_we_are:
+    title: "Who We Are?"
+    tagline: "The bridge that connects you to automation, efficiency, and scale"
+    description: "Avelum is a company specialized in artificial intelligence solutions for businesses. We don't offer off-the-shelf products — we develop AI exclusively for your demand, your way, your data, and your objective."
+
+  mission:
+    title: "Mission"
+    description: "Transform companies through artificial intelligence, creating customized solutions that generate real and measurable results."
+
+  vision:
+    title: "Vision"
+    description: "Be the main reference in enterprise AI solutions in Brazil, helping companies achieve competitive advantage through technology."
+
+  values:
+    title: "Values"
+    description: "Innovation, customization, results, transparency, and partnership with our clients."
+
+  cta:
+    title: "Ready to transform your company?"
+    description: "Get a free diagnosis and discover how AI can revolutionize your business."
+
+solutions:
+  meta:
+    title: "AI Solutions - Avelum"
+  title: "Our Solutions"
+  subtitle: "What can AI do for your company?"
+
+  intelligence:
+    title: "Intelligence & BI Solutions"
+    feature_1_title: "Real-time Data Analysis"
+    feature_1_description: "Real-time data analysis for faster decisions"
+    feature_2_title: "Automatic Reports"
+    feature_2_description: "Automatic reports with clear visual insights"
+    feature_3_title: "Behavior Patterns"
+    feature_3_description: "Customer behavior pattern identification"
+    feature_4_title: "Sales Forecasts"
+    feature_4_description: "Sales and demand forecasts based on history"
+    feature_5_title: "Intelligent Alerts"
+    feature_5_description: "Intelligent alerts for anomalies or opportunities"
+
+  commercial:
+    title: "Commercial Solutions"
+    feature_1_title: "24/7 Service"
+    feature_1_description: "24/7 service with humanized language"
+    feature_2_title: "Intelligent SDRs"
+    feature_2_description: "Intelligent SDRs that converse with leads and qualify opportunities"
+    feature_3_title: "Automatic Follow-ups"
+    feature_3_description: "Automatic follow-ups at the right time, personalized"
+    feature_4_title: "Meeting Scheduling"
+    feature_4_description: "Meeting scheduling directly in the sales team's calendar"
+    feature_5_title: "Lead Recovery"
+    feature_5_description: "Cold lead recovery with automated communication rules"
+    feature_6_title: "Instant Responses"
+    feature_6_description: "Instant responses to common customer and prospect questions"
+    feature_7_title: "Automated Prospecting"
+    feature_7_description: "Automated prospecting via email, WhatsApp, or social media"
+
+  operational:
+    title: "Operational & Process Solutions"
+    feature_1_title: "Automatic Responses"
+    feature_1_description: "Automatic responses to internal and external emails"
+    feature_2_title: "Document Generation"
+    feature_2_description: "Document and proposal generation based on templates"
+    feature_3_title: "Task Management"
+    feature_3_description: "Task and deadline management with agents that accompany the team"
+    feature_4_title: "Workflow Organization"
+    feature_4_description: "Internal workflow organization with bots integrated into systems"
+    feature_5_title: "Employee Training"
+    feature_5_description: "New employee training with AI as technical support"
+
+  cta:
+    title: "Interested in any of these solutions?"
+    description: "Contact us and discover how we can help your company."
+
+products:
+  meta:
+    title: "Products - Luminai and SDR AI First"
+  title: "Our Products"
+  subtitle: "Discover our enterprise AI platforms"
+
+  luminai:
+    badge: "Complete Management"
+    tagline: "Complete business management platform powered by AI"
+    description_full: "Luminai is a complete CRM and business management system that integrates custom AI agents to automate processes, generate insights, and increase your team's productivity."
+    features_title: "Key Features"
+    feature_1_title: "Complete CRM"
+    feature_1_description: "Contact, company, deal, and sales pipeline management"
+    feature_2_title: "Custom AI Agents"
+    feature_2_description: "Create intelligent agents adapted to your business"
+    feature_3_title: "Process Automation"
+    feature_3_description: "Automate repetitive tasks and gain efficiency"
+    feature_4_title: "Analytics & BI"
+    feature_4_description: "Real-time dashboards with actionable insights"
+    feature_5_title: "Native Integrations"
+    feature_5_description: "Connect with your favorite tools"
+    feature_6_title: "Multi-tenant"
+    feature_6_description: "Manage multiple organizations in a single system"
+
+  sdr:
+    badge: "Intelligent Sales"
+    tagline: "Your SDR team working 24/7"
+    description_full: "SDR AI First is a sales automation solution that uses AI agents to prospect, qualify leads, and schedule meetings automatically, freeing your sales team to focus on closing deals."
+    features_title: "Key Features"
+    feature_1_title: "Automated Prospecting"
+    feature_1_description: "Find and approach qualified leads automatically"
+    feature_2_title: "Intelligent Qualification"
+    feature_2_description: "AI converses and qualifies leads with personalized questions"
+    feature_3_title: "Automatic Follow-up"
+    feature_3_description: "Never miss an opportunity with timely follow-ups"
+    feature_4_title: "Meeting Scheduling"
+    feature_4_description: "Schedule meetings directly in your team's calendar"
+    feature_5_title: "Multi-channel"
+    feature_5_description: "Operate across email, WhatsApp, LinkedIn, and other channels"
+    feature_6_title: "CRM Integration"
+    feature_6_description: "Automatically sync with your existing CRM"
+
+  cta:
+    title: "Want to learn more about our products?"
+    description: "Schedule a free demo and see how they can transform your business."
+
+contact:
+  meta:
+    title: "Contact - Speak with Avelum"
+  title: "Get in Touch"
+  subtitle: "We're ready to transform your company with AI"
+
+  form:
+    title: "Send your message"
+    description: "Fill out the form below and our team will contact you soon."
+    name: "Name"
+    email: "Email"
+    phone: "Phone (optional)"
+    message: "Message"
+    send: "Send Message"
+
+  methods:
+    title: "Other contact methods"
+    email: "Email"
+    whatsapp: "WhatsApp"
+    whatsapp_button: "Chat on WhatsApp"
+    whatsapp_note: "WhatsApp number will be added soon"
+
+  message_sent: "Message sent successfully! We'll be in touch soon."
+  message_failed: "Error sending message. Please try again."
+  required_fields: "Please fill in all required fields."
+  invalid_token: "Invalid security token. Please try again."
+
+privacy:
+  meta:
+    title: "Privacy Policy - Avelum"
+  title: "Privacy Policy"
+  subtitle: "Last updated: October 2025"
+
+  section_1:
+    title: "1. Information Collection"
+    content: "We collect information you provide to us directly, such as name, email, and phone through contact forms. We also collect usage data automatically through cookies and similar technologies."
+
+  section_2:
+    title: "2. Use of Information"
+    content: "We use collected information to respond to your requests, improve our services, send relevant communications, and comply with legal obligations."
+
+  section_3:
+    title: "3. Information Sharing"
+    content: "We do not sell, rent, or share your personal information with third parties, except when necessary for service provision or when required by law."
+
+  section_4:
+    title: "4. Security"
+    content: "We implement technical and organizational security measures to protect your information against unauthorized access, loss, or alteration."
+
+  section_5:
+    title: "5. Your Rights (LGPD)"
+    content: "You have the right to access, correct, delete, or request portability of your personal data. You can also revoke consents or request data anonymization."
+
+  section_6:
+    title: "6. Contact"
+    content: "For privacy-related questions or to exercise your rights, contact us:"
+
+education:
+  meta:
+    title: "Education - Training AI Developers"
+  title: "Avelum Education"
+  subtitle: "Training the next generation of AI developers for the future of technology"
+
+  hero:
+    badge: "Education & Social Impact"
+
+  mission:
+    title: "Our Educational Mission"
+    tagline: "Transforming lives through technology education"
+    description: "Avelum is committed to training young developers in partnership with universities and social programs like SENAI in Brazil. We focus on AI application development, starting from n8n as an entry point and expanding to full-stack system development, creating future partnerships in jobs and products."
+
+  partners:
+    title: "Partner Programs"
+    subtitle: "We work with leading institutions to provide quality education"
+    universities:
+      title: "University Partnerships"
+      description: "We collaborate with universities to offer practical AI development courses, connecting academic theory with market reality."
+    social:
+      title: "Social Programs"
+      description: "Partnerships with institutions like SENAI to provide accessible technology training for young people from diverse backgrounds."
+
+  learning_path:
+    title: "Learning Journey"
+    subtitle: "A structured path from beginner to AI specialist"
+
+    level_1:
+      badge: "Level 1"
+      title: "n8n Fundamentals"
+      subtitle: "Entry point - Low-code automation"
+      topic_1: "Visual workflow automation"
+      topic_2: "API integration and webhooks"
+      topic_3: "Basic logic and conditionals"
+      topic_4: "AI integration (OpenAI, Claude)"
+
+    level_2:
+      badge: "Level 2"
+      title: "Full Stack Development"
+      subtitle: "Professional web development"
+      topic_1: "Frontend: HTML, CSS, JavaScript, React"
+      topic_2: "Backend: PHP, Symfony, APIs"
+      topic_3: "Database: PostgreSQL, Redis"
+      topic_4: "DevOps: Docker, Git, CI/CD"
+
+    level_3:
+      badge: "Level 3"
+      title: "AI Specialist"
+      subtitle: "Advanced AI application development"
+      topic_1: "LLM integration and prompt engineering"
+      topic_2: "RAG systems and vector databases"
+      topic_3: "AI agent orchestration"
+      topic_4: "Production-ready AI systems"
+
+  opportunities:
+    title: "Career Opportunities"
+    subtitle: "Building your future with Avelum"
+
+    jobs:
+      title: "Employment Opportunities"
+      description: "Top-performing students have the opportunity to join the Avelum team and work on real AI projects for enterprise clients."
+      benefit_1: "Internships and junior positions"
+      benefit_2: "Mentorship from senior developers"
+      benefit_3: "Competitive salaries and benefits"
+
+    products:
+      title: "Product Partnerships"
+      description: "Students can co-develop AI products and solutions with Avelum, sharing in the success and learning entrepreneurship."
+      benefit_1: "Revenue sharing opportunities"
+      benefit_2: "Real-world product experience"
+      benefit_3: "Entrepreneurship guidance"
+
+  ecosystem:
+    title: "Our Learning Ecosystem"
+    subtitle: "A complete platform for AI education inside Avelum"
+
+    courses:
+      title: "Interactive Courses"
+      description: "Comprehensive courses with videos, exercises, and practical projects covering all aspects of AI development."
+
+    projects:
+      title: "Real Projects"
+      description: "Work on actual client projects under supervision, gaining practical experience with production systems."
+
+    mentorship:
+      title: "Expert Mentorship"
+      description: "One-on-one guidance from Avelum developers and AI specialists throughout your learning journey."
+
+  cta:
+    title: "Ready to Start Your AI Development Journey?"
+    description: "Whether you're a student, university, or social program, we'd love to partner with you."
+    partner_button: "Become a Partner"
+    student_button: "Apply as Student"

@@ -46,9 +46,24 @@ security:
 
     # Access control rules
     access_control:
-        # Public routes
+        # Public institutional pages
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        - { path: ^/sobre, roles: PUBLIC_ACCESS }
+        - { path: ^/about, roles: PUBLIC_ACCESS }
+        - { path: ^/solucoes, roles: PUBLIC_ACCESS }
+        - { path: ^/solutions, roles: PUBLIC_ACCESS }
+        - { path: ^/produtos, roles: PUBLIC_ACCESS }
+        - { path: ^/products, roles: PUBLIC_ACCESS }
+        - { path: ^/educacao, roles: PUBLIC_ACCESS }
+        - { path: ^/education, roles: PUBLIC_ACCESS }
+        - { path: ^/contato, roles: PUBLIC_ACCESS }
+        - { path: ^/contact, roles: PUBLIC_ACCESS }
+        - { path: ^/privacidade, roles: PUBLIC_ACCESS }
+        - { path: ^/privacy, roles: PUBLIC_ACCESS }
+        - { path: ^/terms, roles: PUBLIC_ACCESS }
         - { path: ^/login$, roles: PUBLIC_ACCESS }
         - { path: ^/register$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/lookup-organization$, roles: PUBLIC_ACCESS }
         - { path: ^/health, roles: PUBLIC_ACCESS }
 
         # API routes require authentication
@@ -58,6 +73,7 @@ security:
         - { path: ^/videos, roles: ROLE_USER }
 
         # Protected routes
+        - { path: ^/dashboard, roles: ROLE_USER }
         - { path: ^/organization, roles: ROLE_USER }
         - { path: ^/user, roles: ROLE_USER }
         - { path: ^/settings, roles: ROLE_USER }

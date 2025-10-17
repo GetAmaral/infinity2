@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'contact.meta.title'|trans({}, 'public') }}{% endblock %}
+
+{% block body %}
+<div class="public-page">
+    {# Hero Section #}
+    <section class="page-hero">
+        <div class="container py-4 text-center">
+            <h1 class="display-4 mb-3">{{ 'contact.title'|trans({}, 'public') }}</h1>
+            <p class="lead">{{ 'contact.subtitle'|trans({}, 'public') }}</p>
+        </div>
+    </section>
+
+    {# Contact Form Section #}
+    <section class="contact-form-section">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success border-0 rounded-3 mb-4">
+                            <i class="bi bi-check-circle me-2"></i>{{ message|trans({}, 'public') }}
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger border-0 rounded-3 mb-4">
+                            <i class="bi bi-exclamation-triangle me-2"></i>{{ message|trans({}, 'public') }}
+                        </div>
+                    {% endfor %}
+
+                    <div class="luminai-card p-5">
+                        <h3 class="mb-4">{{ 'contact.form.title'|trans({}, 'public') }}</h3>
+                        <p class="mb-4">{{ 'contact.form.description'|trans({}, 'public') }}</p>
+
+                        <form method="post" action="{{ path('public_contact') }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('contact_form') }}">
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label">{{ 'contact.form.name'|trans({}, 'public') }}*</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">{{ 'contact.form.email'|trans({}, 'public') }}*</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">{{ 'contact.form.phone'|trans({}, 'public') }}</label>
+                                <input type="tel" class="form-control" id="phone" name="phone">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="message" class="form-label">{{ 'contact.form.message'|trans({}, 'public') }}*</label>
+                                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn luminai-btn-primary btn-lg w-100">
+                                <i class="bi bi-send-fill me-2"></i>
+                                {{ 'contact.form.send'|trans({}, 'public') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Alternative Contact Methods #}
+    <section class="contact-methods-section">
+        <div class="container py-4">
+            <h3 class="text-center mb-4">{{ 'contact.methods.title'|trans({}, 'public') }}</h3>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-4">
+                    <div class="contact-method-card text-center p-4">
+                        <i class="bi bi-envelope-fill fs-1 text-neon mb-3"></i>
+                        <h5>{{ 'contact.methods.email'|trans({}, 'public') }}</h5>
+                        <a href="mailto:contact@avelum.com.br" class="text-neon">contact@avelum.com.br</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="contact-method-card text-center p-4">
+                        <i class="bi bi-whatsapp fs-1 text-neon mb-3"></i>
+                        <h5>{{ 'contact.methods.whatsapp'|trans({}, 'public') }}</h5>
+                        <a href="https://wa.me/WHATSAPP_NUMBER_HERE" target="_blank" class="btn luminai-btn-outline btn-sm mt-2">
+                            <i class="bi bi-whatsapp me-2"></i>
+                            {{ 'contact.methods.whatsapp_button'|trans({}, 'public') }}
+                        </a>
+                        <p class="text-muted mt-2"><small>{{ 'contact.methods.whatsapp_note'|trans({}, 'public') }}</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

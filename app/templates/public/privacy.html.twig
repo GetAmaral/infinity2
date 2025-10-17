@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'privacy.meta.title'|trans({}, 'public') }}{% endblock %}
+
+{% block body %}
+<div class="public-page">
+    {# Hero Section #}
+    <section class="page-hero">
+        <div class="container py-4 text-center">
+            <h1 class="display-4 mb-3">{{ 'privacy.title'|trans({}, 'public') }}</h1>
+            <p class="lead">{{ 'privacy.subtitle'|trans({}, 'public') }}</p>
+        </div>
+    </section>
+
+    {# Privacy Content #}
+    <section class="privacy-content-section">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="luminai-card p-5">
+                        <div class="mb-4">
+                            <h2>{{ 'privacy.section_1.title'|trans({}, 'public') }}</h2>
+                            <p>{{ 'privacy.section_1.content'|trans({}, 'public') }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h2>{{ 'privacy.section_2.title'|trans({}, 'public') }}</h2>
+                            <p>{{ 'privacy.section_2.content'|trans({}, 'public') }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h2>{{ 'privacy.section_3.title'|trans({}, 'public') }}</h2>
+                            <p>{{ 'privacy.section_3.content'|trans({}, 'public') }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h2>{{ 'privacy.section_4.title'|trans({}, 'public') }}</h2>
+                            <p>{{ 'privacy.section_4.content'|trans({}, 'public') }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h2>{{ 'privacy.section_5.title'|trans({}, 'public') }}</h2>
+                            <p>{{ 'privacy.section_5.content'|trans({}, 'public') }}</p>
+                        </div>
+
+                        <div>
+                            <h2>{{ 'privacy.section_6.title'|trans({}, 'public') }}</h2>
+                            <p>{{ 'privacy.section_6.content'|trans({}, 'public') }}</p>
+                            <p class="mb-0">
+                                <strong>Email:</strong> <a href="mailto:contact@avelum.com.br">contact@avelum.com.br</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

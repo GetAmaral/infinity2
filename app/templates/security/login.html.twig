@@ -33,7 +33,13 @@
                 </div>
             {% endif %}
 
-            <form method="post" action="{{ path('app_login') }}" id="loginForm">
+            {# Error message container for AJAX errors #}
+            <div data-login-target="errorMessage" class="d-none"></div>
+
+            {# Loading message container #}
+            <div data-login-target="loadingMessage" class="d-none"></div>
+
+            <form method="post" action="{{ path('app_login') }}" id="loginForm" data-controller="login" data-login-lookup-url-value="/api/lookup-organization">
                 <div class="mb-3">
                     <label for="email" class="form-label auth-label">
                         <i class="bi bi-envelope me-1"></i>{{ 'auth.email'|trans }}
@@ -46,10 +52,14 @@
                         value="{{ last_username }}"
                         required
                         autofocus
+                        data-login-target="email"
+                        data-action="keypress->login#handleEmailKeypress"
+                        placeholder="your.email@company.com"
                     >
                 </div>
 
-                <div class="mb-3">
+                {# Password field - hidden initially if no organization context #}
+                <div class="mb-3 {% if not organization %}d-none{% endif %}" data-login-target="passwordGroup">
                     <label for="password" class="form-label auth-label">
                         <i class="bi bi-lock me-1"></i>{{ 'auth.password'|trans }}
                     </label>
@@ -58,11 +68,12 @@
                         class="form-control auth-input"
                         id="password"
                         name="password"
-                        required
+                        data-login-target="password"
+                        data-action="keypress->login#handlePasswordKeypress"
                     >
                 </div>
 
-                <div class="mb-3 form-check">
+                <div class="mb-3 form-check {% if not organization %}d-none{% endif %}" data-login-target="passwordGroup">
                     <input type="checkbox" class="form-check-input" id="remember_me" name="_remember_me">
                     <label class="form-check-label text-secondary" for="remember_me">
                         {{ 'auth.remember.me'|trans }}
@@ -71,7 +82,22 @@
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                <button type="submit" class="btn luminai-btn-primary w-100 mb-3">
+                {# Lookup button - shown on root domain #}
+                <button
+                    type="button"
+                    class="btn luminai-btn-primary w-100 mb-3 {% if organization %}d-none{% endif %}"
+                    data-login-target="lookupButton"
+                    data-action="click->login#lookupOrganization"
+                >
+                    <i class="bi bi-search me-2"></i>Continue
+                </button>
+
+                {# Submit button - shown on organization subdomain or after lookup failure #}
+                <button
+                    type="submit"
+                    class="btn luminai-btn-primary w-100 mb-3 {% if not organization %}d-none{% endif %}"
+                    data-login-target="submitButton"
+                >
                     <i class="bi bi-box-arrow-in-right me-2"></i>{{ 'auth.sign.in'|trans }}
                 </button>
 
@@ -152,27 +178,4 @@
     color: #9ca3af !important;
 }
 </style>
-
-<script>
-// Handle Enter key submission
-function initializeLoginForm() {
-    console.log('🔐 Initializing login form');
-
-    const loginForm = document.getElementById('loginForm');
-    const passwordInput = document.getElementById('password');
-
-    if (passwordInput && loginForm) {
-        passwordInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                loginForm.submit();
-            }
-        });
-    }
-}
-
-// Support both events
-document.addEventListener('DOMContentLoaded', initializeLoginForm);
-document.addEventListener('turbo:load', initializeLoginForm);
-</script>
 {% endblock %}

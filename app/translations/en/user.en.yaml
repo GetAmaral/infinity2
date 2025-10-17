@@ -55,3 +55,8 @@ user.form.password_confirm: Confirm Password
 user.form.password_confirm_placeholder: Confirm password
 user.form.password_placeholder: Enter password
 user.form.roles: Roles
+
+# Security / Authentication Errors
+user.auth.error.root_domain_access: You must access the system through your organization subdomain.
+user.auth.error.root_domain_access_contact_admin: You must access the system through your organization subdomain. Please contact your administrator.
+user.auth.error.wrong_organization: You do not have access to this organization. Please use your organization subdomain.

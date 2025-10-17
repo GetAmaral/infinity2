@@ -8,6 +8,7 @@ use App\Repository\StudentCourseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class HomeController extends AbstractController
 {
@@ -17,6 +18,21 @@ final class HomeController extends AbstractController
 
     #[Route('/', name: 'app_home')]
     public function index(): Response
+    {
+        $user = $this->getUser();
+
+        // Guests see the public landing page
+        if (!$user) {
+            return $this->render('public/landing.html.twig');
+        }
+
+        // Authenticated users are redirected to dashboard
+        return $this->redirectToRoute('app_dashboard');
+    }
+
+    #[Route('/dashboard', name: 'app_dashboard')]
+    #[IsGranted('ROLE_USER')]
+    public function dashboard(): Response
     {
         $user = $this->getUser();
 

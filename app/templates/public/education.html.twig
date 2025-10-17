@@ -1,0 +1,361 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'education.meta.title'|trans({}, 'public') }}{% endblock %}
+
+{% block body %}
+<div class="public-page">
+    {# Hero Section #}
+    <section class="page-hero">
+        <div class="container py-4 text-center">
+            <div class="hero-badge mb-4">
+                <i class="bi bi-mortarboard-fill me-2"></i>
+                {{ 'education.hero.badge'|trans({}, 'public') }}
+            </div>
+            <h1 class="display-4 mb-3">{{ 'education.title'|trans({}, 'public') }}</h1>
+            <p class="lead">{{ 'education.subtitle'|trans({}, 'public') }}</p>
+        </div>
+    </section>
+
+    {# Mission Section #}
+    <section class="mission-section">
+        <div class="container py-4">
+            <div class="row align-items-center mb-4">
+                <div class="col-lg-6">
+                    <h2 class="mb-3">{{ 'education.mission.title'|trans({}, 'public') }}</h2>
+                    <p class="lead mb-3">{{ 'education.mission.tagline'|trans({}, 'public') }}</p>
+                    <p>{{ 'education.mission.description'|trans({}, 'public') }}</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ai-glow-effect-about"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Partner Programs Section #}
+    <section class="partners-section">
+        <div class="container py-4">
+            <h2 class="text-center mb-4">{{ 'education.partners.title'|trans({}, 'public') }}</h2>
+            <p class="text-center mb-4 lead">{{ 'education.partners.subtitle'|trans({}, 'public') }}</p>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="luminai-card p-4">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-bank2 fs-1 text-neon me-3"></i>
+                            <div>
+                                <h4>{{ 'education.partners.universities.title'|trans({}, 'public') }}</h4>
+                                <p>{{ 'education.partners.universities.description'|trans({}, 'public') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="luminai-card p-4">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-tools fs-1 text-neon me-3"></i>
+                            <div>
+                                <h4>{{ 'education.partners.social.title'|trans({}, 'public') }}</h4>
+                                <p>{{ 'education.partners.social.description'|trans({}, 'public') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Learning Path Section #}
+    <section class="learning-path-section">
+        <div class="container py-4">
+            <h2 class="text-center mb-4">{{ 'education.learning_path.title'|trans({}, 'public') }}</h2>
+            <p class="text-center mb-4 lead">{{ 'education.learning_path.subtitle'|trans({}, 'public') }}</p>
+
+            <div class="row g-4">
+                {# Level 1: n8n Entrance #}
+                <div class="col-lg-4">
+                    <div class="learning-level-card">
+                        <div class="level-badge level-1">{{ 'education.learning_path.level_1.badge'|trans({}, 'public') }}</div>
+                        <div class="level-icon">
+                            <i class="bi bi-lightning-charge-fill"></i>
+                        </div>
+                        <h3>{{ 'education.learning_path.level_1.title'|trans({}, 'public') }}</h3>
+                        <p class="level-subtitle">{{ 'education.learning_path.level_1.subtitle'|trans({}, 'public') }}</p>
+                        <ul class="level-topics">
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_1.topic_1'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_1.topic_2'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_1.topic_3'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_1.topic_4'|trans({}, 'public') }}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                {# Level 2: Full Stack Development #}
+                <div class="col-lg-4">
+                    <div class="learning-level-card level-featured">
+                        <div class="level-badge level-2">{{ 'education.learning_path.level_2.badge'|trans({}, 'public') }}</div>
+                        <div class="level-icon">
+                            <i class="bi bi-code-slash"></i>
+                        </div>
+                        <h3>{{ 'education.learning_path.level_2.title'|trans({}, 'public') }}</h3>
+                        <p class="level-subtitle">{{ 'education.learning_path.level_2.subtitle'|trans({}, 'public') }}</p>
+                        <ul class="level-topics">
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_2.topic_1'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_2.topic_2'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_2.topic_3'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_2.topic_4'|trans({}, 'public') }}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                {# Level 3: AI Specialist #}
+                <div class="col-lg-4">
+                    <div class="learning-level-card">
+                        <div class="level-badge level-3">{{ 'education.learning_path.level_3.badge'|trans({}, 'public') }}</div>
+                        <div class="level-icon">
+                            <i class="bi bi-robot"></i>
+                        </div>
+                        <h3>{{ 'education.learning_path.level_3.title'|trans({}, 'public') }}</h3>
+                        <p class="level-subtitle">{{ 'education.learning_path.level_3.subtitle'|trans({}, 'public') }}</p>
+                        <ul class="level-topics">
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_3.topic_1'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_3.topic_2'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_3.topic_3'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-check-circle-fill text-neon me-2"></i>{{ 'education.learning_path.level_3.topic_4'|trans({}, 'public') }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Partnership Opportunities Section #}
+    <section class="opportunities-section">
+        <div class="container py-4">
+            <h2 class="text-center mb-4">{{ 'education.opportunities.title'|trans({}, 'public') }}</h2>
+            <p class="text-center mb-4 lead">{{ 'education.opportunities.subtitle'|trans({}, 'public') }}</p>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="opportunity-card">
+                        <i class="bi bi-briefcase-fill fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'education.opportunities.jobs.title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'education.opportunities.jobs.description'|trans({}, 'public') }}</p>
+                        <ul class="opportunity-benefits">
+                            <li><i class="bi bi-arrow-right-circle-fill text-neon me-2"></i>{{ 'education.opportunities.jobs.benefit_1'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-arrow-right-circle-fill text-neon me-2"></i>{{ 'education.opportunities.jobs.benefit_2'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-arrow-right-circle-fill text-neon me-2"></i>{{ 'education.opportunities.jobs.benefit_3'|trans({}, 'public') }}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="opportunity-card">
+                        <i class="bi bi-lightbulb-fill fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'education.opportunities.products.title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'education.opportunities.products.description'|trans({}, 'public') }}</p>
+                        <ul class="opportunity-benefits">
+                            <li><i class="bi bi-arrow-right-circle-fill text-neon me-2"></i>{{ 'education.opportunities.products.benefit_1'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-arrow-right-circle-fill text-neon me-2"></i>{{ 'education.opportunities.products.benefit_2'|trans({}, 'public') }}</li>
+                            <li><i class="bi bi-arrow-right-circle-fill text-neon me-2"></i>{{ 'education.opportunities.products.benefit_3'|trans({}, 'public') }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Course Ecosystem Section #}
+    <section class="ecosystem-section">
+        <div class="container py-4">
+            <h2 class="text-center mb-4">{{ 'education.ecosystem.title'|trans({}, 'public') }}</h2>
+            <p class="text-center mb-4 lead">{{ 'education.ecosystem.subtitle'|trans({}, 'public') }}</p>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="ecosystem-card text-center">
+                        <i class="bi bi-book-fill fs-1 text-neon mb-3"></i>
+                        <h5>{{ 'education.ecosystem.courses.title'|trans({}, 'public') }}</h5>
+                        <p>{{ 'education.ecosystem.courses.description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ecosystem-card text-center">
+                        <i class="bi bi-journal-code fs-1 text-neon mb-3"></i>
+                        <h5>{{ 'education.ecosystem.projects.title'|trans({}, 'public') }}</h5>
+                        <p>{{ 'education.ecosystem.projects.description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ecosystem-card text-center">
+                        <i class="bi bi-people-fill fs-1 text-neon mb-3"></i>
+                        <h5>{{ 'education.ecosystem.mentorship.title'|trans({}, 'public') }}</h5>
+                        <p>{{ 'education.ecosystem.mentorship.description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# CTA Section #}
+    <section class="cta-section">
+        <div class="container py-4 text-center">
+            <h2 class="mb-3">{{ 'education.cta.title'|trans({}, 'public') }}</h2>
+            <p class="lead mb-3">{{ 'education.cta.description'|trans({}, 'public') }}</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{{ path('public_contact') }}" class="btn luminai-btn-primary btn-lg">
+                    <i class="bi bi-send-fill me-2"></i>
+                    {{ 'education.cta.partner_button'|trans({}, 'public') }}
+                </a>
+                <a href="{{ path('public_contact') }}" class="btn luminai-btn-outline btn-lg">
+                    <i class="bi bi-person-plus-fill me-2"></i>
+                    {{ 'education.cta.student_button'|trans({}, 'public') }}
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+/* Learning Path Cards */
+.learning-level-card {
+    background: var(--luminai-card-bg);
+    border: 1px solid var(--luminai-border);
+    border-radius: 12px;
+    padding: 2rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.learning-level-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+}
+
+.learning-level-card.level-featured {
+    border: 2px solid var(--neon-purple);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.level-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.level-badge.level-1 {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.level-badge.level-2 {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+}
+
+.level-badge.level-3 {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.level-icon {
+    font-size: 3rem;
+    color: var(--neon-purple);
+    margin-bottom: 1rem;
+}
+
+.learning-level-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.level-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.level-topics {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.level-topics li {
+    padding: 0.5rem 0;
+    color: var(--text-primary);
+}
+
+/* Opportunity Cards */
+.opportunity-card {
+    background: var(--luminai-card-bg);
+    border: 1px solid var(--luminai-border);
+    border-radius: 12px;
+    padding: 2rem;
+    height: 100%;
+    text-align: center;
+}
+
+.opportunity-benefits {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.opportunity-benefits li {
+    padding: 0.5rem 0;
+    color: var(--text-primary);
+}
+
+/* Ecosystem Cards */
+.ecosystem-card {
+    background: var(--luminai-card-bg);
+    border: 1px solid var(--luminai-border);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.ecosystem-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+}
+
+/* Section Backgrounds */
+.learning-path-section {
+    background: var(--section-alt-bg);
+}
+
+.ecosystem-section {
+    background: var(--section-alt-bg);
+}
+
+/* Hero Badge */
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid var(--neon-purple);
+    border-radius: 30px;
+    color: var(--neon-purple);
+    font-weight: 600;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'solutions.meta.title'|trans({}, 'public') }}{% endblock %}
+
+{% block body %}
+<div class="public-page">
+    {# Hero Section #}
+    <section class="page-hero">
+        <div class="container py-4 text-center">
+            <h1 class="display-4 mb-3">{{ 'solutions.title'|trans({}, 'public') }}</h1>
+            <p class="lead">{{ 'solutions.subtitle'|trans({}, 'public') }}</p>
+        </div>
+    </section>
+
+    {# Intelligence & BI Solutions #}
+    <section class="solutions-category">
+        <div class="container py-4">
+            <h2 class="text-center mb-4">{{ 'solutions.intelligence.title'|trans({}, 'public') }}</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-graph-up-arrow fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.intelligence.feature_1_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.intelligence.feature_1_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-file-earmark-bar-graph fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.intelligence.feature_2_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.intelligence.feature_2_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-people fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.intelligence.feature_3_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.intelligence.feature_3_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-graph-down fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.intelligence.feature_4_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.intelligence.feature_4_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-bell fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.intelligence.feature_5_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.intelligence.feature_5_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Commercial Solutions #}
+    <section class="solutions-category solutions-category-alt">
+        <div class="container py-4">
+            <h2 class="text-center mb-4">{{ 'solutions.commercial.title'|trans({}, 'public') }}</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-headset fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.commercial.feature_1_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.commercial.feature_1_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-robot fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.commercial.feature_2_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.commercial.feature_2_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-arrow-repeat fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.commercial.feature_3_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.commercial.feature_3_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-calendar-check fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.commercial.feature_4_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.commercial.feature_4_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-arrow-clockwise fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.commercial.feature_5_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.commercial.feature_5_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-chat-text fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.commercial.feature_6_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.commercial.feature_6_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-send fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.commercial.feature_7_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.commercial.feature_7_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Operational & Process Solutions #}
+    <section class="solutions-category">
+        <div class="container py-4">
+            <h2 class="text-center mb-4">{{ 'solutions.operational.title'|trans({}, 'public') }}</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-envelope-check fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.operational.feature_1_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.operational.feature_1_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-file-earmark-text fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.operational.feature_2_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.operational.feature_2_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-list-check fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.operational.feature_3_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.operational.feature_3_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-diagram-3 fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.operational.feature_4_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.operational.feature_4_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="solution-card">
+                        <i class="bi bi-mortarboard fs-1 text-neon mb-3"></i>
+                        <h4>{{ 'solutions.operational.feature_5_title'|trans({}, 'public') }}</h4>
+                        <p>{{ 'solutions.operational.feature_5_description'|trans({}, 'public') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# CTA Section #}
+    <section class="cta-section">
+        <div class="container py-4 text-center">
+            <h2 class="mb-3">{{ 'solutions.cta.title'|trans({}, 'public') }}</h2>
+            <p class="lead mb-3">{{ 'solutions.cta.description'|trans({}, 'public') }}</p>
+            <a href="{{ path('public_contact') }}" class="btn luminai-btn-primary btn-lg">
+                {{ 'landing.cta.contact_sales'|trans({}, 'public') }}
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

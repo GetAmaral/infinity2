@@ -1,0 +1,269 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'terms.title'|trans({}, 'terms') }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-9">
+            <div class="luminai-card p-4">
+                <div class="text-center mb-4">
+                    <h1 class="text-gradient mb-2">
+                        <i class="bi bi-file-text me-2"></i>
+                        {{ 'terms.header'|trans({}, 'terms') }}
+                    </h1>
+                    <p class="text-secondary">{{ 'terms.subtitle'|trans({}, 'terms') }}</p>
+                </div>
+
+                {% if hasSignedTerms %}
+                    <div class="alert alert-success border-0 rounded-3 mb-4" style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3) !important; color: #22c55e;">
+                        <i class="bi bi-check-circle me-2"></i>
+                        {{ 'terms.already.accepted'|trans({'%date%': user.termsSignedAt|date('M d, Y H:i')}, 'terms') }}
+                    </div>
+
+                    <div class="text-center">
+                        <a href="{{ path('app_home') }}" class="btn luminai-btn-primary">
+                            <i class="bi bi-house me-2"></i>{{ 'error.go.to.home'|trans }}
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning border-0 rounded-3 mb-4" style="background: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.3) !important; color: #eab308;">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        {{ 'terms.must.accept'|trans({}, 'terms') }}
+                    </div>
+
+                    <form method="post" action="{{ path('app_terms_accept') }}" id="termsForm">
+                        {% if isStudent %}
+                            {# Tabs for students #}
+                            <ul class="nav nav-tabs mb-3" id="termsTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">
+                                        <i class="bi bi-file-text me-1"></i>
+                                        {{ 'terms.tab.general'|trans({}, 'terms') }}
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="student-tab" data-bs-toggle="tab" data-bs-target="#student" type="button" role="tab" aria-controls="student" aria-selected="false">
+                                        <i class="bi bi-mortarboard me-1"></i>
+                                        {{ 'terms.tab.student'|trans({}, 'terms') }}
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="termsTabContent">
+                                {# General Terms Tab #}
+                                <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                                    <div class="terms-content mb-4" style="max-height: 400px; overflow-y: auto; padding: 20px; background: var(--luminai-card-bg); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;">
+                                        <h3>{{ 'terms.general.title'|trans({}, 'terms') }}</h3>
+
+                                        <h4 class="mt-4">{{ 'terms.general.section1.title'|trans({}, 'terms') }}</h4>
+                                        <p>{{ 'terms.general.section1.content'|trans({}, 'terms')|raw }}</p>
+
+                                        <h4 class="mt-4">{{ 'terms.general.section2.title'|trans({}, 'terms') }}</h4>
+                                        <p>{{ 'terms.general.section2.content'|trans({}, 'terms')|raw }}</p>
+
+                                        <h4 class="mt-4">{{ 'terms.general.section3.title'|trans({}, 'terms') }}</h4>
+                                        <p>{{ 'terms.general.section3.content'|trans({}, 'terms')|raw }}</p>
+
+                                        <h4 class="mt-4">{{ 'terms.general.section4.title'|trans({}, 'terms') }}</h4>
+                                        <p>{{ 'terms.general.section4.content'|trans({}, 'terms')|raw }}</p>
+
+                                        <h4 class="mt-4">{{ 'terms.general.section5.title'|trans({}, 'terms') }}</h4>
+                                        <p>{{ 'terms.general.section5.content'|trans({}, 'terms')|raw }}</p>
+                                    </div>
+                                </div>
+
+                                {# Student Terms Tab #}
+                                <div class="tab-pane fade" id="student" role="tabpanel" aria-labelledby="student-tab">
+                                    <div class="terms-content mb-4" style="max-height: 400px; overflow-y: auto; padding: 20px; background: var(--luminai-card-bg); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;">
+                                        <h3>{{ 'terms.student.title'|trans({}, 'terms') }}</h3>
+
+                                        <h4 class="mt-4">{{ 'terms.student.section1.title'|trans({}, 'terms') }}</h4>
+                                        <p>{{ 'terms.student.section1.content'|trans({}, 'terms')|raw }}</p>
+
+                                        <h4 class="mt-4">{{ 'terms.student.section2.title'|trans({}, 'terms') }}</h4>
+                                        <p>{{ 'terms.student.section2.content'|trans({}, 'terms')|raw }}</p>
+
+                                        <h4 class="mt-4">{{ 'terms.student.section3.title'|trans({}, 'terms') }}</h4>
+                                        <p>{{ 'terms.student.section3.content'|trans({}, 'terms')|raw }}</p>
+
+                                        <h4 class="mt-4">{{ 'terms.student.section4.title'|trans({}, 'terms') }}</h4>
+                                        <p>{{ 'terms.student.section4.content'|trans({}, 'terms')|raw }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {# Single checkbox for both terms #}
+                            <div class="form-check mb-3 mt-4">
+                                <input type="checkbox" class="form-check-input" id="all_terms_accepted" name="general_terms_accepted" value="1" required>
+                                <input type="hidden" name="student_terms_accepted" value="1">
+                                <label class="form-check-label" for="all_terms_accepted">
+                                    {{ 'terms.accept'|trans({}, 'terms') }}
+                                </label>
+                            </div>
+                        {% else %}
+                            {# Single terms for non-students #}
+                            <div class="terms-content mb-4" style="max-height: 400px; overflow-y: auto; padding: 20px; background: var(--luminai-card-bg); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;">
+                                <h3>{{ 'terms.general.title'|trans({}, 'terms') }}</h3>
+
+                                <h4 class="mt-4">{{ 'terms.general.section1.title'|trans({}, 'terms') }}</h4>
+                                <p>{{ 'terms.general.section1.content'|trans({}, 'terms')|raw }}</p>
+
+                                <h4 class="mt-4">{{ 'terms.general.section2.title'|trans({}, 'terms') }}</h4>
+                                <p>{{ 'terms.general.section2.content'|trans({}, 'terms')|raw }}</p>
+
+                                <h4 class="mt-4">{{ 'terms.general.section3.title'|trans({}, 'terms') }}</h4>
+                                <p>{{ 'terms.general.section3.content'|trans({}, 'terms')|raw }}</p>
+
+                                <h4 class="mt-4">{{ 'terms.general.section4.title'|trans({}, 'terms') }}</h4>
+                                <p>{{ 'terms.general.section4.content'|trans({}, 'terms')|raw }}</p>
+
+                                <h4 class="mt-4">{{ 'terms.general.section5.title'|trans({}, 'terms') }}</h4>
+                                <p>{{ 'terms.general.section5.content'|trans({}, 'terms')|raw }}</p>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="general_terms_accepted" name="general_terms_accepted" value="1" required>
+                                <label class="form-check-label" for="general_terms_accepted">
+                                    {{ 'terms.accept'|trans({}, 'terms') }}
+                                </label>
+                            </div>
+                        {% endif %}
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('accept_terms') }}">
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn luminai-btn-primary" id="acceptButton" disabled>
+                                <i class="bi bi-check-circle me-2"></i>{{ 'terms.button.accept'|trans({}, 'terms') }}
+                            </button>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Terms content styling */
+.terms-content h3 {
+    color: var(--luminai-text-primary);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.terms-content h4 {
+    color: var(--luminai-text-primary);
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.terms-content p {
+    color: var(--luminai-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/* Tabs styling */
+.nav-tabs {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-tabs .nav-link {
+    color: var(--luminai-text-secondary);
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--luminai-text-primary);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--luminai-neon);
+    border-color: var(--luminai-neon);
+    background: transparent;
+}
+
+/* Light theme support */
+[data-theme="light"] .terms-content h3,
+[data-theme="light"] .terms-content h4 {
+    color: #1a1a1a;
+}
+
+[data-theme="light"] .terms-content p {
+    color: #4b5563;
+}
+
+[data-theme="light"] .nav-tabs {
+    border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .nav-tabs .nav-link {
+    color: #6b7280;
+}
+
+[data-theme="light"] .nav-tabs .nav-link:hover {
+    color: #1a1a1a;
+    border-color: #e5e7eb;
+}
+
+[data-theme="light"] .nav-tabs .nav-link.active {
+    color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+[data-theme="light"] .terms-content {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+[data-theme="light"] .alert-warning {
+    background: rgba(234, 179, 8, 0.15) !important;
+    border-color: rgba(234, 179, 8, 0.5) !important;
+    color: #92400e !important;
+}
+
+[data-theme="light"] .alert-success {
+    background: rgba(34, 197, 94, 0.15) !important;
+    border-color: rgba(34, 197, 94, 0.5) !important;
+    color: #166534 !important;
+}
+</style>
+
+<script>
+function initializeTermsForm() {
+    console.log('📋 Initializing terms form');
+
+    const form = document.getElementById('termsForm');
+    const acceptButton = document.getElementById('acceptButton');
+    const isStudent = {{ isStudent ? 'true' : 'false' }};
+
+    let termsCheckbox;
+    if (isStudent) {
+        termsCheckbox = document.getElementById('all_terms_accepted');
+    } else {
+        termsCheckbox = document.getElementById('general_terms_accepted');
+    }
+
+    function updateButtonState() {
+        const termsAccepted = termsCheckbox ? termsCheckbox.checked : false;
+        acceptButton.disabled = !termsAccepted;
+    }
+
+    if (termsCheckbox) {
+        termsCheckbox.addEventListener('change', updateButtonState);
+    }
+
+    // Initial state
+    updateButtonState();
+}
+
+// Support both events
+document.addEventListener('DOMContentLoaded', initializeTermsForm);
+document.addEventListener('turbo:load', initializeTermsForm);
+</script>
+{% endblock %}
