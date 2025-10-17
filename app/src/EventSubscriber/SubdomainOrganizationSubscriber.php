@@ -8,8 +8,10 @@ use App\Repository\OrganizationRepository;
 use App\Service\OrganizationContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Twig\Environment;
 
 /**
  * Detects organization from subdomain and sets it in OrganizationContext
@@ -19,7 +21,8 @@ final class SubdomainOrganizationSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly OrganizationContext $organizationContext,
         private readonly OrganizationRepository $organizationRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly Environment $twig
     ) {
     }
 
@@ -73,12 +76,24 @@ final class SubdomainOrganizationSubscriber implements EventSubscriberInterface
         $organization = $this->organizationRepository->findOneBy(['slug' => $slug]);
 
         if ($organization === null) {
-            // Organization not found - clear context
+            // Organization not found - clear context and show error page
             $this->organizationContext->clearOrganization();
             $this->logger->warning('Organization not found for subdomain', [
                 'slug' => $slug,
                 'host' => $host,
             ]);
+
+            // Extract root domain from host
+            $rootDomain = preg_replace('/^' . preg_quote($slug, '/') . '\./', '', $host);
+
+            // Show error page
+            $content = $this->twig->render('error/organization_not_found.html.twig', [
+                'slug' => $slug,
+                'rootDomain' => $rootDomain,
+            ]);
+
+            $response = new Response($content, Response::HTTP_NOT_FOUND);
+            $event->setResponse($response);
             return;
         }
 

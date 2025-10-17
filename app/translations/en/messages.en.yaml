@@ -78,6 +78,7 @@ auth.remember.me: Remember me
 # Security & Authentication (Dot Notation Aliases)
 auth.sign.in: Sign In
 auth.welcome.back: Welcome Back
+auth.welcome.to: 'Welcome to %organization%'
 
 # ================================================================================
 # UI Elements
@@ -169,6 +170,11 @@ confirm.action: Are you sure you want to perform this action?
 error.delete.failed: Failed to delete item
 error.action.failed: Failed to perform action
 error.network: Network error occurred
+error.organization.not.found: Organization Not Found
+error.organization.not.found.description: 'The organization subdomain "%slug%" does not exist or is not available.'
+error.organization.not.found.help: 'Please check the URL or contact your administrator for the correct organization subdomain.'
+error.go.to.home: Go to Home
+error.go.back: Go Back
 # Confirmation Messages
 confirm.delete.item: 'Are you sure you want to delete this item?'
 # Filters

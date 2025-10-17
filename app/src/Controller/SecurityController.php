@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\OrganizationRepository;
 use App\Repository\UserRepository;
+use App\Service\OrganizationContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,8 +23,11 @@ class SecurityController extends AbstractController
 {
     #[Route('/login', name: 'app_login')]
     // #[RateLimit('auth_login', limit: 5, interval: '15 minutes')] // TODO: Install symfony/lock
-    public function login(AuthenticationUtils $authenticationUtils): Response
-    {
+    public function login(
+        AuthenticationUtils $authenticationUtils,
+        OrganizationContext $organizationContext,
+        OrganizationRepository $organizationRepository
+    ): Response {
         // If user is already logged in, redirect to home
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
@@ -34,9 +39,17 @@ class SecurityController extends AbstractController
         // Last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        // Get the current organization from context (if any)
+        $organization = null;
+        $organizationId = $organizationContext->getOrganizationId();
+        if ($organizationId !== null) {
+            $organization = $organizationRepository->find($organizationId);
+        }
+
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
+            'organization' => $organization,
         ]);
     }
 

@@ -17,7 +17,13 @@
                          class="login-logo-light"
                          style="height: 60px; width: auto;">
                 </div>
-                <h2 class="text-gradient mb-2">{{ 'auth.welcome.back'|trans }}</h2>
+                <h2 class="text-gradient mb-2">
+                    {% if organization %}
+                        {{ 'auth.welcome.to'|trans({'%organization%': organization.name}) }}
+                    {% else %}
+                        {{ 'auth.welcome.back'|trans }}
+                    {% endif %}
+                </h2>
                 <p class="text-secondary">{{ 'auth.login.to.continue'|trans }}</p>
             </div>
 

@@ -89,13 +89,13 @@ final class OrganizationContext
             return null;
         }
 
-        // Ignore apex domain luminai.ia.br - treat as root domain access
-        if (preg_match('/^luminai\.ia\.br$/i', $host)) {
+        // Ignore apex domains - treat as root domain access
+        if (preg_match('/^(avelum\.com\.br|luminai\.ia\.br)$/i', $host)) {
             return null;
         }
 
         // Check if it's a subdomain (contains a dot before localhost/domain)
-        if (preg_match('/^([a-z0-9\-]+)\.(localhost|luminai\.ia\.br)$/i', $host, $matches)) {
+        if (preg_match('/^([a-z0-9\-]+)\.(localhost|avelum\.com\.br|luminai\.ia\.br)$/i', $host, $matches)) {
             $subdomain = strtolower($matches[1]);
 
             // Ignore "www" subdomain - treat as root domain access

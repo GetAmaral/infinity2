@@ -78,6 +78,7 @@ auth.remember.me: Lembrar de mim
 # Segurança e Autenticação (Aliases com Notação de Ponto)
 auth.sign.in: Entrar
 auth.welcome.back: Que bom te ver de volta!
+auth.welcome.to: 'Bem-vindo à %organization%'
 
 # ================================================================================
 # Elementos da Interface
@@ -153,6 +154,16 @@ button.updating: Atualizando...
 button.view: Visualizar
 # Mensagens de Confirmação
 confirm.delete.entity: Tem certeza que quer deletar este item?
+confirm.action: Tem certeza que quer executar esta ação?
+# Mensagens de Erro
+error.delete.failed: Falha ao deletar item
+error.action.failed: Falha ao executar ação
+error.network: Erro de rede ocorreu
+error.organization.not.found: Organização Não Encontrada
+error.organization.not.found.description: 'O subdomínio da organização "%slug%" não existe ou não está disponível.'
+error.organization.not.found.help: 'Por favor, verifique a URL ou entre em contato com seu administrador para obter o subdomínio correto da organização.'
+error.go.to.home: Ir para Início
+error.go.back: Voltar
 # Mensagens de Confirmação
 confirm.delete.item: 'Tem certeza que quer deletar este item?'
 # Filtros
