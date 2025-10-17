@@ -2,9 +2,17 @@
 # Modern Symfony UX Application with Docker
 
 ###> Symfony Framework ###
+/.env
+/.env.dev
+/.env.test
 /.env.local
 /.env.local.php
 /.env.*.local
+/app/.env
+/app/.env.dev
+/app/.env.test
+/app/.env.local
+/app/.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
