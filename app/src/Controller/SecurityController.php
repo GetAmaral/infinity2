@@ -115,13 +115,11 @@ class SecurityController extends AbstractController
             $organization = $user->getOrganization();
             $orgSlug = $organization->getSlug();
 
-            // Get current host to build redirect URL
-            $host = $request->getHost();
+            // Get base domain from environment configuration
+            $baseDomain = $_ENV['APP_BASE_DOMAIN'] ?? 'localhost';
             $scheme = $request->getScheme();
 
             // Build redirect URL with organization subdomain
-            // Remove any existing subdomain first
-            $baseDomain = preg_replace('/^[^.]+\./', '', $host);
             $redirectUrl = sprintf('%s://%s.%s/login', $scheme, $orgSlug, $baseDomain);
 
             $logger->info('Organization lookup successful', [
