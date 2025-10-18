@@ -1,0 +1,181 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Review User Import{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <a href="{{ path('user_import_cancel') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Cancel Import
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="infinity-card p-4">
+                <h1 class="mb-4">
+                    <i class="bi bi-eye me-2"></i>
+                    Review Import
+                </h1>
+
+                {% if organization %}
+                    <div class="alert alert-info mb-4">
+                        <i class="bi bi-building me-2"></i>
+                        <strong>Organization:</strong> {{ organization.name }}
+                    </div>
+                {% endif %}
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card bg-success bg-opacity-10 border-success">
+                            <div class="card-body">
+                                <h5 class="card-title text-success">
+                                    <i class="bi bi-check-circle me-2"></i>Valid Users
+                                </h5>
+                                <p class="display-4 fw-bold text-success mb-0">{{ total_users }}</p>
+                                <small class="text-muted">Ready to import</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-danger bg-opacity-10 border-danger">
+                            <div class="card-body">
+                                <h5 class="card-title text-danger">
+                                    <i class="bi bi-x-circle me-2"></i>Errors
+                                </h5>
+                                <p class="display-4 fw-bold text-danger mb-0">{{ total_errors }}</p>
+                                <small class="text-muted">Rows with validation errors</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if total_errors > 0 %}
+                    <div class="alert alert-danger">
+                        <h5 class="alert-heading">
+                            <i class="bi bi-exclamation-triangle me-2"></i>Validation Errors Found
+                        </h5>
+                        <p class="mb-0">Please fix the errors below and re-upload the file. Rows with errors will not be imported.</p>
+                    </div>
+
+                    <div class="card border-danger mb-4">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="bi bi-bug me-2"></i>Errors ({{ total_errors }} rows)</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="width: 60px;">Row</th>
+                                            <th>Email</th>
+                                            <th>Name</th>
+                                            <th>Roles</th>
+                                            <th>Errors</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for error in errors %}
+                                            <tr>
+                                                <td><span class="badge bg-danger">{{ error.row }}</span></td>
+                                                <td><code>{{ error.data.email ?? 'N/A' }}</code></td>
+                                                <td>{{ error.data.name ?? 'N/A' }}</td>
+                                                <td>
+                                                    {% if error.data.roles is not empty %}
+                                                        {{ error.data.roles|join(', ') }}
+                                                    {% else %}
+                                                        <span class="text-muted">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <ul class="mb-0 text-danger">
+                                                        {% for errorMsg in error.errors %}
+                                                            <li>{{ errorMsg }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if total_users > 0 %}
+                    <div class="card border-success mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-check2-all me-2"></i>Valid Users ({{ total_users }} users)</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="width: 60px;">Row</th>
+                                            <th>Email</th>
+                                            <th>Name</th>
+                                            <th>Roles</th>
+                                            <th>OpenAI Key</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in users %}
+                                            <tr>
+                                                <td><span class="badge bg-success">{{ user.row }}</span></td>
+                                                <td><code>{{ user.data.email }}</code></td>
+                                                <td>{{ user.data.name }}</td>
+                                                <td>
+                                                    {% if user.data.roles is not empty %}
+                                                        {% for role in user.data.roles %}
+                                                            <span class="badge bg-primary">{{ role }}</span>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <span class="text-muted">No roles</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if user.data.openAiApiKey %}
+                                                        <i class="bi bi-check-circle text-success"></i>
+                                                    {% else %}
+                                                        <span class="text-muted">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle me-1"></i>Verified
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="d-flex gap-2 mt-4">
+                    <a href="{{ path('user_import_cancel') }}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </a>
+                    <a href="{{ path('user_import_upload') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>Upload Different File
+                    </a>
+                    {% if total_users > 0 %}
+                        <form method="post" action="{{ path('user_import_confirm') }}" class="ms-auto">
+                            <button type="submit" class="btn infinity-btn-primary btn-lg">
+                                <i class="bi bi-download me-2"></i>Import {{ total_users }} User(s)
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

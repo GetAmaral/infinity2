@@ -75,7 +75,7 @@ class GeneratorEntity
     private bool $hasOrganization = true;
 
     // ====================================
-    // API CONFIGURATION (10 fields)
+    // API CONFIGURATION (8 fields)
     // ====================================
 
     #[ORM\Column(options: ['default' => false])]
@@ -92,12 +92,6 @@ class GeneratorEntity
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $apiDenormalizationContext = null;
-
-    #[ORM\Column(options: ['default' => true])]
-    private bool $apiPaginationEnabled = true;
-
-    #[ORM\Column(type: 'integer', options: ['default' => 30])]
-    private int $apiItemsPerPage = 30;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $apiDefaultOrder = null;  // {"name": "asc"}
@@ -232,10 +226,6 @@ class GeneratorEntity
     public function setApiNormalizationContext(?string $apiNormalizationContext): self { $this->apiNormalizationContext = $apiNormalizationContext; return $this; }
     public function getApiDenormalizationContext(): ?string { return $this->apiDenormalizationContext; }
     public function setApiDenormalizationContext(?string $apiDenormalizationContext): self { $this->apiDenormalizationContext = $apiDenormalizationContext; return $this; }
-    public function isApiPaginationEnabled(): bool { return $this->apiPaginationEnabled; }
-    public function setApiPaginationEnabled(bool $apiPaginationEnabled): self { $this->apiPaginationEnabled = $apiPaginationEnabled; return $this; }
-    public function getApiItemsPerPage(): int { return $this->apiItemsPerPage; }
-    public function setApiItemsPerPage(int $apiItemsPerPage): self { $this->apiItemsPerPage = $apiItemsPerPage; return $this; }
     public function getApiDefaultOrder(): ?array { return $this->apiDefaultOrder; }
     public function setApiDefaultOrder(?array $apiDefaultOrder): self { $this->apiDefaultOrder = $apiDefaultOrder; return $this; }
     public function getApiSearchableFields(): ?array { return $this->apiSearchableFields; }

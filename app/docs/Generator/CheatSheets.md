@@ -40,6 +40,10 @@ php scripts/batch-generate.php --batch=10
 
 # With options
 php scripts/batch-generate.php --batch=5 --continue-on-error --skip-tests
+
+# Export database definitions to CSV backup
+php bin/console generator:export-csv
+# Creates timestamped files in app/config/backup/
 ```
 
 ### Feature Flags

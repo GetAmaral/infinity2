@@ -25,6 +25,16 @@
 {# Customize page icon #}
 {% block page_icon %}<i class="bi bi-people text-neon fs-2 me-3"></i>{% endblock %}
 
+{# Add import button next to create button #}
+{% block header_actions %}
+    <div class="d-flex gap-2">
+        <a href="{{ path('user_import_upload') }}" class="btn btn-outline-primary">
+            <i class="bi bi-upload me-2"></i>Import Users
+        </a>
+        {{ button_create(path('user_new'), 'button.add', 'messages', null, ('button.add')|trans, 'USER_CREATE') }}
+    </div>
+{% endblock %}
+
 {# Grid View Template #}
 {% block grid_view_item_template %}
     <div class="col">

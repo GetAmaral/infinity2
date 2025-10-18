@@ -9,8 +9,9 @@ RUN apk add --no-cache \
     freetype-dev \
     libjpeg-turbo-dev \
     libpng-dev \
+    libzip-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_pgsql opcache intl gd \
+    && docker-php-ext-install pdo_pgsql opcache intl gd zip \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && pecl install redis \
     && docker-php-ext-enable redis \

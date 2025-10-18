@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Import Users{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <a href="{{ path('user_index') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Users
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-6 mx-auto">
+            <div class="infinity-card p-4">
+                <h1 class="mb-4">
+                    <i class="bi bi-upload me-2"></i>
+                    Import Users from XLSX
+                </h1>
+
+                {% if organization %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-building me-2"></i>
+                        <strong>Organization:</strong> {{ organization.name }}
+                        <br>
+                        <small class="text-muted">All imported users will be added to this organization.</small>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        No organization context. Please select an organization first.
+                    </div>
+                {% endif %}
+
+                <div class="card bg-light border-0 mb-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-info-circle me-2"></i>XLSX File Format</h6>
+                        <p class="mb-2">Your XLSX file must have the following columns (first row as header):</p>
+                        <ul class="mb-3">
+                            <li><strong>email</strong> <span class="badge bg-danger">Required</span> - User email address (must be unique)</li>
+                            <li><strong>name</strong> <span class="badge bg-danger">Required</span> - Full name</li>
+                            <li><strong>password</strong> <span class="badge bg-danger">Required</span> - Plain text password (min 6 chars)</li>
+                            <li><strong>roles</strong> <span class="badge bg-secondary">Optional</span> - Comma-separated role names (e.g., "instructor,admin")</li>
+                            <li><strong>openai_api_key</strong> <span class="badge bg-secondary">Optional</span> - OpenAI API key</li>
+                        </ul>
+
+                        <div class="alert alert-success mb-0">
+                            <small>
+                                <strong>Auto-set fields:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li><code>isVerified</code> = <strong>true</strong> (all imported users are verified)</li>
+                                    <li><code>termsSigned</code> = <strong>false</strong> (users must accept terms on first login)</li>
+                                </ul>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="post" enctype="multipart/form-data">
+                    <div class="form-group-modern mb-4">
+                        <label for="xlsx_file" class="form-label-modern">
+                            <i class="bi bi-file-earmark-spreadsheet me-2"></i>Select XLSX File
+                        </label>
+                        <input
+                            type="file"
+                            name="xlsx_file"
+                            id="xlsx_file"
+                            class="form-control form-input-modern"
+                            accept=".xlsx,.xls"
+                            required
+                        >
+                        <small class="text-muted">Maximum file size: 5MB</small>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <a href="{{ path('user_index') }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn infinity-btn-primary" {% if not organization %}disabled{% endif %}>
+                            <i class="bi bi-upload me-2"></i>Upload and Review
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

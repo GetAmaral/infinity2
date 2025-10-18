@@ -32,12 +32,6 @@ class StepConnection extends EntityBase
     #[Groups(['connection:read'])]
     protected StepInput $targetInput;
 
-    #[ORM\ManyToOne(targetEntity: Organization::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[Assert\NotNull]
-    #[Groups(['connection:read'])]
-    protected Organization $organization;
-
     public function getSourceOutput(): StepOutput
     {
         return $this->sourceOutput;
@@ -57,17 +51,6 @@ class StepConnection extends EntityBase
     public function setTargetInput(?StepInput $targetInput): self
     {
         $this->targetInput = $targetInput;
-        return $this;
-    }
-
-    public function getOrganization(): Organization
-    {
-        return $this->organization;
-    }
-
-    public function setOrganization(Organization $organization): self
-    {
-        $this->organization = $organization;
         return $this;
     }
 
