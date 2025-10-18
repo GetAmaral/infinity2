@@ -27,7 +27,7 @@ services:
     # please note that last definitions always *replace* previous ones
 
     # Generator Services - all need $projectDir parameter
-    App\Service\GeneratorOrchestrator:
+    App\Service\Generator\GeneratorOrchestrator:
         arguments:
             $projectDir: '%kernel.project_dir%'
 

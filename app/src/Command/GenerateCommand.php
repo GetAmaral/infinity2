@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\GeneratorOrchestrator;
+use App\Service\Generator\GeneratorOrchestrator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,10 +13,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:generate-from-csv',
-    description: 'Generate complete CRUD code from CSV definition files'
+    name: 'app:generate',
+    description: 'Generate complete CRUD code from database definitions (or legacy CSV)',
+    aliases: ['gen']
 )]
-class GenerateFromCsvCommand extends Command
+class GenerateCommand extends Command
 {
     public function __construct(
         private readonly GeneratorOrchestrator $orchestrator
@@ -39,6 +40,12 @@ class GenerateFromCsvCommand extends Command
                 InputOption::VALUE_NONE,
                 'Preview changes without modifying any files'
             )
+            ->addOption(
+                'from-csv',
+                null,
+                InputOption::VALUE_NONE,
+                'LEGACY: Use CSV files instead of database (deprecated)'
+            )
         ;
     }
 
@@ -48,6 +55,7 @@ class GenerateFromCsvCommand extends Command
 
         $entity = $input->getOption('entity');
         $dryRun = $input->getOption('dry-run');
+        $fromCsv = $input->getOption('from-csv');
 
         // Display header
         $io->title('TURBO Code Generator');
@@ -56,11 +64,16 @@ class GenerateFromCsvCommand extends Command
             $io->warning('DRY RUN MODE: No files will be modified');
         }
 
+        if ($fromCsv) {
+            $io->warning('LEGACY MODE: Using CSV files (deprecated - use database instead)');
+        }
+
         // Show what will be generated
+        $source = $fromCsv ? 'CSV files' : 'DATABASE';
         if ($entity) {
-            $io->section(sprintf('Generating code for entity: %s', $entity));
+            $io->section(sprintf('Generating code for entity: %s (from %s)', $entity, $source));
         } else {
-            $io->section('Generating code for ALL entities from CSV');
+            $io->section(sprintf('Generating code for ALL entities from %s', $source));
         }
 
         // Confirmation prompt (skip if dry-run)
@@ -73,7 +86,10 @@ class GenerateFromCsvCommand extends Command
         $io->section('Starting code generation...');
 
         try {
-            $result = $this->orchestrator->generate($entity, $dryRun);
+            // Use database by default, CSV only if --from-csv is passed
+            $result = $fromCsv
+                ? $this->orchestrator->generateFromCsv($entity, $dryRun)
+                : $this->orchestrator->generateFromDatabase($entity, $dryRun);
 
             if ($result['success']) {
                 $this->displaySuccessResults($io, $result, $dryRun);
@@ -161,10 +177,11 @@ class GenerateFromCsvCommand extends Command
 
         $io->section('Troubleshooting');
         $io->listing([
-            'Check CSV files for validation errors',
+            'Check database entities (GeneratorEntity table) for validation errors',
             'Ensure all required directories exist and are writable',
             'Review error messages above',
             'Check logs in var/log/app.log',
+            'If using --from-csv: check CSV files for validation errors',
         ]);
     }
 }

@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Service\GeneratorOrchestrator;
+use App\Service\Generator\GeneratorOrchestrator;
 use App\Service\Generator\Csv\CsvParserService;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

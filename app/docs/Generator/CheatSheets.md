@@ -7,33 +7,59 @@ Quick reference for common tasks and commands.
 ## Table of Contents
 
 1. [CLI Commands](#cli-commands)
-2. [CSV Column Reference](#csv-column-reference)
+2. [Database Tables Reference](#database-tables-reference)
 3. [Doctrine Types → Form Types](#doctrine-types--form-types)
 4. [Common Validation Rules](#common-validation-rules)
 5. [Troubleshooting](#troubleshooting)
 6. [Performance Tips](#performance-tips)
+7. [Legacy CSV Reference](#legacy-csv-reference)
 
 ---
 
 ## CLI Commands
 
-### Generation
+### Generation (Database-First - Default)
 
 ```bash
-# Generate all entities
-php bin/console app:generate-from-csv
+# Generate all entities from database
+php bin/console app:generate
+# or use short alias:
+php bin/console gen
 
 # Generate single entity
-php bin/console app:generate-from-csv --entity=Contact
+php bin/console gen --entity=Contact
 
 # Dry run (preview only)
-php bin/console app:generate-from-csv --dry-run
+php bin/console gen --dry-run
 
-# Batch generation
+# Legacy: Generate from CSV (deprecated)
+php bin/console gen --from-csv
+
+# Batch generation (if available)
 php scripts/batch-generate.php --batch=10
 
 # With options
 php scripts/batch-generate.php --batch=5 --continue-on-error --skip-tests
+```
+
+### Feature Flags
+
+Located in `/app/src/Service/Generator/GeneratorOrchestrator.php`:
+
+```php
+// Currently Active
+private const ENTITY_ACTIVE = true;      // ✅
+
+// To enable other generators, change false to true:
+private const REPOSITORY_ACTIVE = false; // Change to true
+private const CONTROLLER_ACTIVE = false; // Change to true
+private const FORM_ACTIVE = false;       // Change to true
+private const TEMPLATE_ACTIVE = false;   // Change to true
+private const VOTER_ACTIVE = false;      // Change to true
+private const API_ACTIVE = false;        // Change to true
+private const NAVIGATION_ACTIVE = false; // Change to true
+private const TRANSLATION_ACTIVE = false;// Change to true
+private const TESTS_ACTIVE = false;      // Change to true
 ```
 
 ### Validation & Testing
@@ -148,42 +174,57 @@ composer audit
 
 ---
 
-## CSV Column Reference
+## Database Tables Reference
 
-### Entity.csv Quick Reference
+### generator_entity Table - Quick Reference
 
 | Column | Type | Example | Notes |
 |--------|------|---------|-------|
-| `entityName` | string | `Contact` | PascalCase, required |
-| `entityLabel` | string | `Contact` | Singular label |
-| `pluralLabel` | string | `Contacts` | Plural label |
+| `entity_name` | string | `Contact` | PascalCase, required, unique |
+| `entity_label` | string | `Contact` | Singular label |
+| `plural_label` | string | `Contacts` | Plural label |
 | `icon` | string | `bi-person` | Bootstrap icon |
-| `hasOrganization` | boolean | `true` | Multi-tenant |
-| `apiEnabled` | boolean | `true` | Expose API |
-| `operations` | string | `GetCollection,Get,Post` | API operations |
-| `searchableFields` | string | `name,email` | Search fields |
-| `filterableFields` | string | `status,active` | Filter fields |
-| `voterEnabled` | boolean | `true` | Generate voter |
-| `menuGroup` | string | `CRM` | Menu group |
-| `menuOrder` | int | `10` | Menu position |
+| `has_organization` | boolean | `true` | Multi-tenant |
+| `api_enabled` | boolean | `true` | Expose API |
+| `api_operations` | json | `["GetCollection","Get"]` | API operations |
+| `api_searchable_fields` | json | `["name","email"]` | Search fields |
+| `api_filterable_fields` | json | `["status"]` | Filter fields |
+| `voter_enabled` | boolean | `true` | Generate voter |
+| `menu_group` | string | `CRM` | Menu group |
+| `menu_order` | int | `10` | Menu position |
+| `canvas_x` | int | `100` | Canvas X position |
+| `canvas_y` | int | `100` | Canvas Y position |
 
-### Property.csv Quick Reference
+### generator_property Table - Quick Reference
 
 | Column | Type | Example | Notes |
 |--------|------|---------|-------|
-| `entityName` | string | `Contact` | Parent entity |
-| `propertyName` | string | `email` | camelCase, required |
-| `propertyType` | string | `string` | Doctrine type |
+| `property_name` | string | `email` | camelCase, required |
+| `property_label` | string | `Email Address` | Display label |
+| `property_type` | string | `string` | Doctrine type |
 | `nullable` | boolean | `false` | Allow NULL |
 | `length` | int | `255` | For strings |
 | `unique` | boolean | `true` | Unique constraint |
-| `relationshipType` | string | `ManyToOne` | Relation type |
-| `targetEntity` | string | `Organization` | Related entity |
-| `validationRules` | string | `NotBlank,Email` | Constraints |
-| `formType` | string | `EmailType` | Form type |
-| `showInList` | boolean | `true` | Show in list |
+| `relationship_type` | string | `ManyToOne` | Relation type |
+| `target_entity` | string | `Organization` | Related entity |
+| `validation_rules` | json | `["NotBlank","Email"]` | Constraints |
+| `form_type` | string | `EmailType` | Form type |
+| `show_in_list` | boolean | `true` | Show in list |
 | `searchable` | boolean | `true` | Searchable |
-| `apiReadable` | boolean | `true` | API readable |
+| `api_readable` | boolean | `true` | API readable |
+
+### Quick Database Queries
+
+```bash
+# View all entities
+php bin/console doctrine:query:sql "SELECT entity_name, menu_group FROM generator_entity ORDER BY menu_group, menu_order"
+
+# View properties for an entity
+php bin/console doctrine:query:sql "SELECT property_name, property_type FROM generator_property WHERE entity_id = (SELECT id FROM generator_entity WHERE entity_name = 'Contact')"
+
+# Count entities
+php bin/console doctrine:query:sql "SELECT COUNT(*) FROM generator_entity"
+```
 
 ---
 
@@ -293,27 +334,30 @@ Range(min=0,max=100),Positive
 
 ## Troubleshooting
 
-### CSV Validation Errors
+### Database Errors
+
+**Error**: `No entities found in database`
+```bash
+# Check if generator tables exist
+php bin/console doctrine:schema:validate
+
+# Run migrations
+php bin/console doctrine:migrations:migrate
+
+# Verify data
+php bin/console doctrine:query:sql "SELECT COUNT(*) FROM generator_entity"
+```
 
 **Error**: `Invalid entity name`
 ```bash
-# Fix: Use PascalCase
-entityName: contact ❌
-entityName: Contact ✅
+# Fix: Use PascalCase in database
+UPDATE generator_entity SET entity_name = 'Contact' WHERE entity_name = 'contact';
 ```
 
 **Error**: `Target entity does not exist`
 ```bash
-# Fix: Ensure target entity is in Entity.csv
-targetEntity: Organisation ❌ (typo)
-targetEntity: Organization ✅
-```
-
-**Error**: `Invalid property type`
-```bash
-# Fix: Use valid Doctrine type
-propertyType: String ❌
-propertyType: string ✅
+# Fix: Ensure target entity exists in database
+SELECT entity_name FROM generator_entity WHERE entity_name = 'Organization';
 ```
 
 ### Generation Errors
@@ -322,7 +366,7 @@ propertyType: string ✅
 ```bash
 # Solution: Remove old file or regenerate
 rm src/Entity/Contact.php
-php bin/console app:generate-from-csv --entity=Contact
+php bin/console gen --entity=Contact
 ```
 
 **Error**: `Template not found`
@@ -431,57 +475,74 @@ composer audit
 
 ---
 
-## Common Patterns
+## Common Patterns (Database)
 
 ### Simple Entity
 
-```csv
-# Entity.csv
-Contact,Contact,Contacts,bi-person,,true,true,"GetCollection,Get,Post,Put,Delete",is_granted('ROLE_USER'),,,,true,30,"{""name"": ""asc""}","name,email","status",true,"VIEW,EDIT,DELETE",,,,CRM,10,true
+```sql
+-- Insert entity
+INSERT INTO generator_entity (id, entity_name, entity_label, plural_label, icon, has_organization, api_enabled, voter_enabled, menu_group, menu_order, test_enabled)
+VALUES (gen_random_uuid(), 'Contact', 'Contact', 'Contacts', 'bi-person', true, true, true, 'CRM', 10, true);
 
-# Property.csv (name field)
-Contact,name,Name,string,false,255,,,false,,,,,,,,,,"NotBlank,Length(min=2,max=255)",,TextType,,,true,true,true,true,true,true,true,true,true,,,,name,
+-- Insert property (name field)
+INSERT INTO generator_property (id, entity_id, property_name, property_label, property_type, nullable, length, show_in_list, show_in_detail, show_in_form, searchable)
+VALUES (gen_random_uuid(), (SELECT id FROM generator_entity WHERE entity_name = 'Contact'), 'name', 'Name', 'string', false, 255, true, true, true, true);
 ```
 
 ### Entity with Organization
 
-```csv
-# Entity.csv
-Contact,Contact,Contacts,bi-person,,true,true,"GetCollection,Get,Post,Put,Delete",is_granted('ROLE_USER'),,,,true,30,"{""name"": ""asc""}","name,email","status",true,"VIEW,EDIT,DELETE",,,,CRM,10,true
-
-# Auto-adds OrganizationTrait when hasOrganization=true
+```sql
+-- When has_organization = true, OrganizationTrait is automatically added
+INSERT INTO generator_entity (id, entity_name, entity_label, plural_label, icon, has_organization)
+VALUES (gen_random_uuid(), 'Contact', 'Contact', 'Contacts', 'bi-person', true);
 ```
 
 ### ManyToOne Relationship
 
-```csv
-# Property.csv
-Contact,organization,Organization,,,,,,,,,ManyToOne,Organization,,,,,,,,NotBlank,,,EntityType,"{""class"": ""App\\Entity\\Organization"", ""choice_label"": ""name""}",true,false,,true,true,true,false,false,false,true,false,,,,,
+```sql
+-- Add organization relationship property
+INSERT INTO generator_property (id, entity_id, property_name, property_label, relationship_type, target_entity, form_type)
+VALUES (gen_random_uuid(),
+        (SELECT id FROM generator_entity WHERE entity_name = 'Contact'),
+        'organization',
+        'Organization',
+        'ManyToOne',
+        'Organization',
+        'EntityType');
 ```
 
 ### Searchable Text Field
 
-```csv
-# Property.csv
-Contact,description,Description,text,true,,,,false,,,,,,,,,,"Length(max=1000)",,TextareaType,"{""attr"": {""rows"": 5}}",false,false,Detailed description,true,true,false,false,true,false,true,true,,,,,text,
+```sql
+-- Add searchable description field
+INSERT INTO generator_property (id, entity_id, property_name, property_label, property_type, nullable, show_in_list, searchable, form_type)
+VALUES (gen_random_uuid(),
+        (SELECT id FROM generator_entity WHERE entity_name = 'Contact'),
+        'description',
+        'Description',
+        'text',
+        true,
+        true,
+        true,
+        'TextareaType');
 ```
 
 ---
 
 ## Quick Workflows
 
-### Add New Entity
+### Add New Entity (Database-First)
 
-1. Add row to `Entity.csv`
-2. Add properties to `Property.csv`
-3. Generate: `php bin/console app:generate-from-csv --entity=NewEntity`
+1. Insert into `generator_entity` table (via UI or SQL)
+2. Add properties to `generator_property` table
+3. Generate: `php bin/console gen --entity=NewEntity`
 4. Migrate: `php bin/console make:migration && php bin/console doctrine:migrations:migrate`
 5. Test: `php bin/phpunit tests/Entity/NewEntityTest.php`
 
 ### Update Existing Entity
 
-1. Edit `Entity.csv` or `Property.csv`
-2. Regenerate: `php bin/console app:generate-from-csv --entity=Contact`
+1. Edit `generator_entity` or `generator_property` table
+2. Regenerate: `php bin/console gen --entity=Contact`
 3. Create migration: `php bin/console make:migration`
 4. Review migration: `cat migrations/Version*.php`
 5. Apply: `php bin/console doctrine:migrations:migrate`
@@ -532,12 +593,48 @@ sf make:entity     # make:entity
 
 ---
 
+## Legacy CSV Reference
+
+**⚠️ DEPRECATED** - For legacy CSV mode only (`--from-csv` flag)
+
+### CSV Files Location
+
+- `config/EntityNew.csv` - Entity definitions
+- `config/PropertyNew.csv` - Property definitions
+
+### CSV Quick Reference
+
+```csv
+# Entity.csv example
+Contact,Contact,Contacts,bi-person,,true,true,"GetCollection,Get,Post,Put,Delete",...
+
+# Property.csv example (name field)
+Contact,name,Name,string,false,255,,,false,,,,,,,,,,"NotBlank,Length(min=2,max=255)",...
+```
+
+### Migrating from CSV to Database
+
+```bash
+# Import existing CSV data into database
+php bin/console app:import-csv-to-database
+
+# Verify import
+php bin/console doctrine:query:sql "SELECT COUNT(*) FROM generator_entity"
+
+# Generate from database (new default)
+php bin/console gen
+```
+
+For complete CSV column reference, see `GENERATOR_V2_DATABASE_PLAN.md`.
+
+---
+
 ## Resources
 
-- **User Guide**: `docs/GeneratorUserGuide.md`
-- **Developer Guide**: `docs/GeneratorDeveloperGuide.md`
+- **User Guide**: `docs/Generator/GeneratorUserGuide.md`
+- **Developer Guide**: `docs/Generator/GeneratorDeveloperGuide.md`
 - **Deployment**: `docs/ProductionDeployment.md`
-- **Phase Plans**: `docs/GeneratorPlan/*.md`
+- **Database Plan**: `GENERATOR_V2_DATABASE_PLAN.md`
 
 ---
 
