@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Import Users{% endblock %}
+{% block title %}{{ 'user.import.title'|trans({}, 'user') }}{% endblock %}
 
 {% block body %}
 <div class="container-fluid py-4">
     <div class="row mb-4">
         <div class="col">
             <a href="{{ path('user_index') }}" class="btn btn-sm btn-outline-secondary">
-                <i class="bi bi-arrow-left me-2"></i>Back to Users
+                <i class="bi bi-arrow-left me-2"></i>{{ 'user.import.back_to_users'|trans({}, 'user') }}
             </a>
         </div>
     </div>
@@ -17,41 +17,52 @@
             <div class="infinity-card p-4">
                 <h1 class="mb-4">
                     <i class="bi bi-upload me-2"></i>
-                    Import Users from XLSX
+                    {{ 'user.import.title'|trans({}, 'user') }}
                 </h1>
 
                 {% if organization %}
                     <div class="alert alert-info">
                         <i class="bi bi-building me-2"></i>
-                        <strong>Organization:</strong> {{ organization.name }}
+                        <strong>{{ 'user.import.organization_label'|trans({}, 'user') }}:</strong> {{ organization.name }}
                         <br>
-                        <small class="text-muted">All imported users will be added to this organization.</small>
+                        <small class="text-muted">{{ 'user.import.organization_info'|trans({}, 'user') }}</small>
                     </div>
                 {% else %}
                     <div class="alert alert-warning">
                         <i class="bi bi-exclamation-triangle me-2"></i>
-                        No organization context. Please select an organization first.
+                        {{ 'user.import.no_organization_warning'|trans({}, 'user') }}
                     </div>
                 {% endif %}
 
+                <div class="alert alert-primary d-flex align-items-center mb-4">
+                    <i class="bi bi-download fs-3 me-3"></i>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1 fw-bold">{{ 'user.import.download_template'|trans({}, 'user') }}</h6>
+                        <p class="mb-0 small">{{ 'user.import.download_template_description'|trans({}, 'user') }}</p>
+                    </div>
+                    <a href="{{ asset('templates/user_import_template.xlsx') }}" class="btn btn-primary" download>
+                        <i class="bi bi-file-earmark-spreadsheet me-2"></i>{{ 'user.import.download_template'|trans({}, 'user') }}
+                    </a>
+                </div>
+
                 <div class="card bg-light border-0 mb-4">
                     <div class="card-body">
-                        <h6 class="fw-bold mb-3"><i class="bi bi-info-circle me-2"></i>XLSX File Format</h6>
-                        <p class="mb-2">Your XLSX file must have the following columns (first row as header):</p>
+                        <h6 class="fw-bold mb-3"><i class="bi bi-info-circle me-2"></i>{{ 'user.import.file_format_title'|trans({}, 'user') }}</h6>
+                        <p class="mb-2">{{ 'user.import.file_format_description'|trans({}, 'user') }}:</p>
                         <ul class="mb-3">
-                            <li><strong>email</strong> <span class="badge bg-danger">Required</span> - User email address (must be unique)</li>
-                            <li><strong>name</strong> <span class="badge bg-danger">Required</span> - Full name</li>
-                            <li><strong>password</strong> <span class="badge bg-danger">Required</span> - Plain text password (min 6 chars)</li>
-                            <li><strong>roles</strong> <span class="badge bg-secondary">Optional</span> - Comma-separated role names (e.g., "instructor,admin")</li>
-                            <li><strong>openai_api_key</strong> <span class="badge bg-secondary">Optional</span> - OpenAI API key</li>
+                            <li><strong>email</strong> <span class="badge bg-danger">{{ 'user.import.required'|trans({}, 'user') }}</span> - {{ 'user.import.field.email_description'|trans({}, 'user') }}</li>
+                            <li><strong>name</strong> <span class="badge bg-danger">{{ 'user.import.required'|trans({}, 'user') }}</span> - {{ 'user.import.field.name'|trans({}, 'user') }}</li>
+                            <li><strong>password</strong> <span class="badge bg-danger">{{ 'user.import.required'|trans({}, 'user') }}</span> - {{ 'user.import.field.password'|trans({}, 'user') }}</li>
+                            <li><strong>roles</strong> <span class="badge bg-secondary">{{ 'user.import.optional'|trans({}, 'user') }}</span> - {{ 'user.import.field.roles'|trans({}, 'user') }}</li>
+                            <li><strong>openai_api_key</strong> <span class="badge bg-secondary">{{ 'user.import.optional'|trans({}, 'user') }}</span> - {{ 'user.import.field.openai_api_key'|trans({}, 'user') }}</li>
                         </ul>
 
                         <div class="alert alert-success mb-0">
                             <small>
-                                <strong>Auto-set fields:</strong>
+                                <strong>{{ 'user.import.auto_set_fields'|trans({}, 'user') }}:</strong>
                                 <ul class="mb-0 mt-2">
-                                    <li><code>isVerified</code> = <strong>true</strong> (all imported users are verified)</li>
-                                    <li><code>termsSigned</code> = <strong>false</strong> (users must accept terms on first login)</li>
+                                    <li><code>isVerified</code> = <strong>true</strong> ({{ 'user.import.auto_set_verified'|trans({}, 'user') }})</li>
+                                    <li><code>termsSigned</code> = <strong>false</strong> ({{ 'user.import.auto_set_terms'|trans({}, 'user') }})</li>
                                 </ul>
                             </small>
                         </div>
@@ -61,7 +72,7 @@
                 <form method="post" enctype="multipart/form-data">
                     <div class="form-group-modern mb-4">
                         <label for="xlsx_file" class="form-label-modern">
-                            <i class="bi bi-file-earmark-spreadsheet me-2"></i>Select XLSX File
+                            <i class="bi bi-file-earmark-spreadsheet me-2"></i>{{ 'user.import.select_file'|trans({}, 'user') }}
                         </label>
                         <input
                             type="file"
@@ -71,15 +82,15 @@
                             accept=".xlsx,.xls"
                             required
                         >
-                        <small class="text-muted">Maximum file size: 5MB</small>
+                        <small class="text-muted">{{ 'user.import.max_file_size'|trans({}, 'user') }}</small>
                     </div>
 
                     <div class="d-flex gap-2 mt-4">
                         <a href="{{ path('user_index') }}" class="btn btn-secondary">
-                            <i class="bi bi-x-circle me-2"></i>Cancel
+                            <i class="bi bi-x-circle me-2"></i>{{ 'user.import.button.cancel'|trans({}, 'user') }}
                         </a>
                         <button type="submit" class="btn infinity-btn-primary" {% if not organization %}disabled{% endif %}>
-                            <i class="bi bi-upload me-2"></i>Upload and Review
+                            <i class="bi bi-upload me-2"></i>{{ 'user.import.button.upload'|trans({}, 'user') }}
                         </button>
                     </div>
                 </form>

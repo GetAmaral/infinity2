@@ -76,3 +76,54 @@ user.validation.password_mismatch: Passwords do not match
 user.auth.error.root_domain_access: You must access the system through your organization subdomain.
 user.auth.error.root_domain_access_contact_admin: You must access the system through your organization subdomain. Please contact your administrator.
 user.auth.error.wrong_organization: You do not have access to this organization. Please use your organization subdomain.
+
+# User Import
+user.import.title: Import Users from XLSX
+user.import.button: Import Users
+user.import.back_to_users: Back to Users
+user.import.organization_label: Organization
+user.import.organization_info: All imported users will be added to this organization.
+user.import.no_organization_warning: No organization context. Please select an organization first.
+user.import.file_format_title: XLSX File Format
+user.import.file_format_description: Your XLSX file must have the following columns (first row as header)
+user.import.download_template: Download Template
+user.import.download_template_description: Download a pre-formatted XLSX template with headers and instructions
+user.import.field.email: Email
+user.import.field.email_description: User email address (must be unique)
+user.import.field.name: Full name
+user.import.field.password: 'Plain text password (min 6 chars)'
+user.import.field.roles: 'Comma-separated role names (e.g., instructor,admin)'
+user.import.field.openai_api_key: OpenAI API key
+user.import.required: Required
+user.import.optional: Optional
+user.import.auto_set_fields: Auto-set fields
+user.import.auto_set_verified: all imported users are verified
+user.import.auto_set_terms: users must accept terms on first login
+user.import.select_file: Select XLSX File
+user.import.max_file_size: 'Maximum file size: 5MB'
+user.import.button.upload: Upload and Review
+user.import.button.cancel: Cancel
+user.import.button.import: Import %count% User(s)
+user.import.button.upload_different: Upload Different File
+user.import.review.title: Review Import
+user.import.review.valid_users: Valid Users
+user.import.review.ready_to_import: Ready to import
+user.import.review.errors: Errors
+user.import.review.rows_with_errors: Rows with validation errors
+user.import.review.errors_found: Validation Errors Found
+user.import.review.errors_description: Please fix the errors below and re-upload the file. Rows with errors will not be imported.
+user.import.review.errors_table_title: Errors (%count% rows)
+user.import.review.valid_users_table_title: Valid Users (%count% users)
+user.import.review.row: Row
+user.import.review.no_roles: No roles
+user.import.review.verified_status: Verified
+user.import.flash.no_file: Please select an XLSX file to upload.
+user.import.flash.invalid_type: Invalid file type. Please upload an XLSX or XLS file.
+user.import.flash.file_too_large: File size exceeds 5MB limit.
+user.import.flash.parse_error: 'Error parsing file: %error%'
+user.import.flash.no_data: No import data found. Please upload a file first.
+user.import.flash.no_organization: Organization not found.
+user.import.flash.import_error: 'Error importing users: %error%'
+user.import.flash.import_success: '%count% user(s) imported successfully.'
+user.import.flash.import_warning: '%count% user(s) failed to import.'
+user.import.flash.cancelled: Import cancelled.

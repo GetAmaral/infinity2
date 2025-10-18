@@ -29,7 +29,7 @@
 {% block header_actions %}
     <div class="d-flex gap-2">
         <a href="{{ path('user_import_upload') }}" class="btn btn-outline-primary">
-            <i class="bi bi-upload me-2"></i>Import Users
+            <i class="bi bi-upload me-2"></i>{{ 'user.import.button'|trans({}, 'user') }}
         </a>
         {{ button_create(path('user_new'), 'button.add', 'messages', null, ('button.add')|trans, 'USER_CREATE') }}
     </div>

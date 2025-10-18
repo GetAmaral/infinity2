@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/user/import')]
 final class UserImportController extends AbstractController
@@ -22,7 +23,8 @@ final class UserImportController extends AbstractController
         private readonly UserImportService $userImportService,
         private readonly OrganizationContext $organizationContext,
         private readonly OrganizationRepository $organizationRepository,
-        private readonly RequestStack $requestStack
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator
     ) {
     }
 
@@ -54,20 +56,20 @@ final class UserImportController extends AbstractController
             $file = $request->files->get('xlsx_file');
 
             if ($file === null) {
-                $this->addFlash('error', 'Please select an XLSX file to upload.');
+                $this->addFlash('error', $this->translator->trans('user.import.flash.no_file', [], 'user'));
                 return $this->redirectToRoute('user_import_upload');
             }
 
             // Validate file extension
             $extension = $file->getClientOriginalExtension();
             if (!in_array(strtolower($extension), ['xlsx', 'xls'])) {
-                $this->addFlash('error', 'Invalid file type. Please upload an XLSX or XLS file.');
+                $this->addFlash('error', $this->translator->trans('user.import.flash.invalid_type', [], 'user'));
                 return $this->redirectToRoute('user_import_upload');
             }
 
             // Validate file size (max 5MB)
             if ($file->getSize() > 5 * 1024 * 1024) {
-                $this->addFlash('error', 'File size exceeds 5MB limit.');
+                $this->addFlash('error', $this->translator->trans('user.import.flash.file_too_large', [], 'user'));
                 return $this->redirectToRoute('user_import_upload');
             }
 
@@ -89,7 +91,7 @@ final class UserImportController extends AbstractController
 
                 return $this->redirectToRoute('user_import_review');
             } catch (\Exception $e) {
-                $this->addFlash('error', 'Error parsing file: ' . $e->getMessage());
+                $this->addFlash('error', $this->translator->trans('user.import.flash.parse_error', ['%error%' => $e->getMessage()], 'user'));
                 return $this->redirectToRoute('user_import_upload');
             }
         }
@@ -110,7 +112,7 @@ final class UserImportController extends AbstractController
         $importData = $this->getSession()->get('user_import_data');
 
         if ($importData === null) {
-            $this->addFlash('error', 'No import data found. Please upload a file first.');
+            $this->addFlash('error', $this->translator->trans('user.import.flash.no_data', [], 'user'));
             return $this->redirectToRoute('user_import_upload');
         }
 
@@ -139,7 +141,7 @@ final class UserImportController extends AbstractController
         $importData = $this->getSession()->get('user_import_data');
 
         if ($importData === null) {
-            $this->addFlash('error', 'No import data found. Please upload a file first.');
+            $this->addFlash('error', $this->translator->trans('user.import.flash.no_data', [], 'user'));
             return $this->redirectToRoute('user_import_upload');
         }
 
@@ -149,7 +151,7 @@ final class UserImportController extends AbstractController
         }
 
         if ($organization === null) {
-            $this->addFlash('error', 'Organization not found.');
+            $this->addFlash('error', $this->translator->trans('user.import.flash.no_organization', [], 'user'));
             return $this->redirectToRoute('user_import_upload');
         }
 
@@ -173,18 +175,18 @@ final class UserImportController extends AbstractController
             $failedCount = count($result['failed']);
 
             if ($importedCount > 0) {
-                $this->addFlash('success', "{$importedCount} user(s) imported successfully.");
+                $this->addFlash('success', $this->translator->trans('user.import.flash.import_success', ['%count%' => $importedCount], 'user'));
             }
 
             if ($failedCount > 0) {
-                $this->addFlash('warning', "{$failedCount} user(s) failed to import.");
+                $this->addFlash('warning', $this->translator->trans('user.import.flash.import_warning', ['%count%' => $failedCount], 'user'));
                 // Store failed imports in session for display
                 $this->getSession()->set('user_import_failed', $result['failed']);
             }
 
             return $this->redirectToRoute('user_index');
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Error importing users: ' . $e->getMessage());
+            $this->addFlash('error', $this->translator->trans('user.import.flash.import_error', ['%error%' => $e->getMessage()], 'user'));
             return $this->redirectToRoute('user_import_review');
         }
     }
@@ -205,7 +207,7 @@ final class UserImportController extends AbstractController
         // Clear session data
         $this->getSession()->remove('user_import_data');
 
-        $this->addFlash('info', 'Import cancelled.');
+        $this->addFlash('info', $this->translator->trans('user.import.flash.cancelled', [], 'user'));
         return $this->redirectToRoute('user_index');
     }
 }

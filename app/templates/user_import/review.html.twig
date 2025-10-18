@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Review User Import{% endblock %}
+{% block title %}{{ 'user.import.review.title'|trans({}, 'user') }}{% endblock %}
 
 {% block body %}
 <div class="container-fluid py-4">
     <div class="row mb-4">
         <div class="col">
             <a href="{{ path('user_import_cancel') }}" class="btn btn-sm btn-outline-secondary">
-                <i class="bi bi-arrow-left me-2"></i>Cancel Import
+                <i class="bi bi-arrow-left me-2"></i>{{ 'user.import.button.cancel'|trans({}, 'user') }}
             </a>
         </div>
     </div>
@@ -17,13 +17,13 @@
             <div class="infinity-card p-4">
                 <h1 class="mb-4">
                     <i class="bi bi-eye me-2"></i>
-                    Review Import
+                    {{ 'user.import.review.title'|trans({}, 'user') }}
                 </h1>
 
                 {% if organization %}
                     <div class="alert alert-info mb-4">
                         <i class="bi bi-building me-2"></i>
-                        <strong>Organization:</strong> {{ organization.name }}
+                        <strong>{{ 'user.import.organization_label'|trans({}, 'user') }}:</strong> {{ organization.name }}
                     </div>
                 {% endif %}
 
@@ -32,10 +32,10 @@
                         <div class="card bg-success bg-opacity-10 border-success">
                             <div class="card-body">
                                 <h5 class="card-title text-success">
-                                    <i class="bi bi-check-circle me-2"></i>Valid Users
+                                    <i class="bi bi-check-circle me-2"></i>{{ 'user.import.review.valid_users'|trans({}, 'user') }}
                                 </h5>
                                 <p class="display-4 fw-bold text-success mb-0">{{ total_users }}</p>
-                                <small class="text-muted">Ready to import</small>
+                                <small class="text-muted">{{ 'user.import.review.ready_to_import'|trans({}, 'user') }}</small>
                             </div>
                         </div>
                     </div>
@@ -43,10 +43,10 @@
                         <div class="card bg-danger bg-opacity-10 border-danger">
                             <div class="card-body">
                                 <h5 class="card-title text-danger">
-                                    <i class="bi bi-x-circle me-2"></i>Errors
+                                    <i class="bi bi-x-circle me-2"></i>{{ 'user.import.review.errors'|trans({}, 'user') }}
                                 </h5>
                                 <p class="display-4 fw-bold text-danger mb-0">{{ total_errors }}</p>
-                                <small class="text-muted">Rows with validation errors</small>
+                                <small class="text-muted">{{ 'user.import.review.rows_with_errors'|trans({}, 'user') }}</small>
                             </div>
                         </div>
                     </div>
@@ -55,25 +55,25 @@
                 {% if total_errors > 0 %}
                     <div class="alert alert-danger">
                         <h5 class="alert-heading">
-                            <i class="bi bi-exclamation-triangle me-2"></i>Validation Errors Found
+                            <i class="bi bi-exclamation-triangle me-2"></i>{{ 'user.import.review.errors_found'|trans({}, 'user') }}
                         </h5>
-                        <p class="mb-0">Please fix the errors below and re-upload the file. Rows with errors will not be imported.</p>
+                        <p class="mb-0">{{ 'user.import.review.errors_description'|trans({}, 'user') }}</p>
                     </div>
 
                     <div class="card border-danger mb-4">
                         <div class="card-header bg-danger text-white">
-                            <h5 class="mb-0"><i class="bi bi-bug me-2"></i>Errors ({{ total_errors }} rows)</h5>
+                            <h5 class="mb-0"><i class="bi bi-bug me-2"></i>{{ 'user.import.review.errors_table_title'|trans({'%count%': total_errors}, 'user') }}</h5>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="width: 60px;">Row</th>
-                                            <th>Email</th>
-                                            <th>Name</th>
-                                            <th>Roles</th>
-                                            <th>Errors</th>
+                                            <th style="width: 60px;">{{ 'user.import.review.row'|trans({}, 'user') }}</th>
+                                            <th>{{ 'user.email'|trans({}, 'user') }}</th>
+                                            <th>{{ 'user.name'|trans({}, 'user') }}</th>
+                                            <th>{{ 'user.roles'|trans({}, 'user') }}</th>
+                                            <th>{{ 'user.import.review.errors'|trans({}, 'user') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -108,18 +108,18 @@
                 {% if total_users > 0 %}
                     <div class="card border-success mb-4">
                         <div class="card-header bg-success text-white">
-                            <h5 class="mb-0"><i class="bi bi-check2-all me-2"></i>Valid Users ({{ total_users }} users)</h5>
+                            <h5 class="mb-0"><i class="bi bi-check2-all me-2"></i>{{ 'user.import.review.valid_users_table_title'|trans({'%count%': total_users}, 'user') }}</h5>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="width: 60px;">Row</th>
-                                            <th>Email</th>
-                                            <th>Name</th>
-                                            <th>Roles</th>
-                                            <th>OpenAI Key</th>
+                                            <th style="width: 60px;">{{ 'user.import.review.row'|trans({}, 'user') }}</th>
+                                            <th>{{ 'user.email'|trans({}, 'user') }}</th>
+                                            <th>{{ 'user.name'|trans({}, 'user') }}</th>
+                                            <th>{{ 'user.roles'|trans({}, 'user') }}</th>
+                                            <th>{{ 'user.form.openai_api_key'|trans({}, 'user') }}</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -135,7 +135,7 @@
                                                             <span class="badge bg-primary">{{ role }}</span>
                                                         {% endfor %}
                                                     {% else %}
-                                                        <span class="text-muted">No roles</span>
+                                                        <span class="text-muted">{{ 'user.import.review.no_roles'|trans({}, 'user') }}</span>
                                                     {% endif %}
                                                 </td>
                                                 <td>
@@ -147,7 +147,7 @@
                                                 </td>
                                                 <td>
                                                     <span class="badge bg-success">
-                                                        <i class="bi bi-check-circle me-1"></i>Verified
+                                                        <i class="bi bi-check-circle me-1"></i>{{ 'user.import.review.verified_status'|trans({}, 'user') }}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -161,15 +161,15 @@
 
                 <div class="d-flex gap-2 mt-4">
                     <a href="{{ path('user_import_cancel') }}" class="btn btn-secondary">
-                        <i class="bi bi-x-circle me-2"></i>Cancel
+                        <i class="bi bi-x-circle me-2"></i>{{ 'user.import.button.cancel'|trans({}, 'user') }}
                     </a>
                     <a href="{{ path('user_import_upload') }}" class="btn btn-outline-primary">
-                        <i class="bi bi-arrow-counterclockwise me-2"></i>Upload Different File
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>{{ 'user.import.button.upload_different'|trans({}, 'user') }}
                     </a>
                     {% if total_users > 0 %}
                         <form method="post" action="{{ path('user_import_confirm') }}" class="ms-auto">
                             <button type="submit" class="btn infinity-btn-primary btn-lg">
-                                <i class="bi bi-download me-2"></i>Import {{ total_users }} User(s)
+                                <i class="bi bi-download me-2"></i>{{ 'user.import.button.import'|trans({'%count%': total_users}, 'user') }}
                             </button>
                         </form>
                     {% endif %}

@@ -76,3 +76,54 @@ user.validation.password_mismatch: As senhas não coincidem
 user.auth.error.root_domain_access: Você deve acessar o sistema através do subdomínio da sua organização.
 user.auth.error.root_domain_access_contact_admin: Você deve acessar o sistema através do subdomínio da sua organização. Entre em contato com seu administrador.
 user.auth.error.wrong_organization: Você não tem acesso a esta organização. Por favor, use o subdomínio da sua organização.
+
+# Importação de Usuários
+user.import.title: Importar Usuários de XLSX
+user.import.button: Importar Usuários
+user.import.back_to_users: Voltar aos Usuários
+user.import.organization_label: Organização
+user.import.organization_info: Todos os usuários importados serão adicionados a esta organização.
+user.import.no_organization_warning: Nenhum contexto de organização. Por favor, selecione uma organização primeiro.
+user.import.file_format_title: Formato do Arquivo XLSX
+user.import.file_format_description: Seu arquivo XLSX deve ter as seguintes colunas (primeira linha como cabeçalho)
+user.import.download_template: Baixar Modelo
+user.import.download_template_description: Baixe um modelo XLSX pré-formatado com cabeçalhos e instruções
+user.import.field.email: Email
+user.import.field.email_description: Endereço de email do usuário (deve ser único)
+user.import.field.name: Nome completo
+user.import.field.password: 'Senha em texto simples (mín 6 caracteres)'
+user.import.field.roles: 'Nomes de permissões separados por vírgula (ex: instructor,admin)'
+user.import.field.openai_api_key: Chave API OpenAI
+user.import.required: Obrigatório
+user.import.optional: Opcional
+user.import.auto_set_fields: Campos configurados automaticamente
+user.import.auto_set_verified: todos os usuários importados são verificados
+user.import.auto_set_terms: usuários devem aceitar termos no primeiro login
+user.import.select_file: Selecionar Arquivo XLSX
+user.import.max_file_size: 'Tamanho máximo do arquivo: 5MB'
+user.import.button.upload: Enviar e Revisar
+user.import.button.cancel: Cancelar
+user.import.button.import: Importar %count% Usuário(s)
+user.import.button.upload_different: Enviar Arquivo Diferente
+user.import.review.title: Revisar Importação
+user.import.review.valid_users: Usuários Válidos
+user.import.review.ready_to_import: Pronto para importar
+user.import.review.errors: Erros
+user.import.review.rows_with_errors: Linhas com erros de validação
+user.import.review.errors_found: Erros de Validação Encontrados
+user.import.review.errors_description: Por favor, corrija os erros abaixo e reenvie o arquivo. Linhas com erros não serão importadas.
+user.import.review.errors_table_title: Erros (%count% linhas)
+user.import.review.valid_users_table_title: Usuários Válidos (%count% usuários)
+user.import.review.row: Linha
+user.import.review.no_roles: Sem permissões
+user.import.review.verified_status: Verificado
+user.import.flash.no_file: Por favor, selecione um arquivo XLSX para enviar.
+user.import.flash.invalid_type: Tipo de arquivo inválido. Por favor, envie um arquivo XLSX ou XLS.
+user.import.flash.file_too_large: O tamanho do arquivo excede o limite de 5MB.
+user.import.flash.parse_error: 'Erro ao processar arquivo: %error%'
+user.import.flash.no_data: Nenhum dado de importação encontrado. Por favor, envie um arquivo primeiro.
+user.import.flash.no_organization: Organização não encontrada.
+user.import.flash.import_error: 'Erro ao importar usuários: %error%'
+user.import.flash.import_success: '%count% usuário(s) importado(s) com sucesso.'
+user.import.flash.import_warning: '%count% usuário(s) falharam ao importar.'
+user.import.flash.cancelled: Importação cancelada.
