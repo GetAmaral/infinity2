@@ -7,6 +7,7 @@ namespace App\Service\Genmax;
 use App\Entity\Generator\GeneratorEntity;
 use App\Repository\Generator\GeneratorEntityRepository;
 use App\Service\BackupService;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -44,6 +45,7 @@ class GenmaxOrchestrator
         #[Autowire(param: 'genmax.paths')]
         private readonly array $paths,
         private readonly GeneratorEntityRepository $generatorEntityRepository,
+        private readonly EntityManagerInterface $entityManager,
         private readonly BackupService $backupService,
         private readonly EntityGenerator $entityGenerator,
         private readonly ApiGenerator $apiGenerator,
@@ -214,7 +216,7 @@ class GenmaxOrchestrator
 
             // 7. Persist entity generation status
             if (!$dryRun) {
-                $this->generatorEntityRepository->flush();
+                $this->entityManager->flush();
             }
 
             $this->logger->info('[GENMAX] Code generation completed successfully', [

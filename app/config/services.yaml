@@ -82,3 +82,16 @@ services:
     App\Service\Generator\Test\VoterTestGenerator:
         arguments:
             $projectDir: '%kernel.project_dir%'
+
+    # Genmax Services - new code generator
+    App\Service\Genmax\GenmaxOrchestrator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Genmax\EntityGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Genmax\ApiGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'

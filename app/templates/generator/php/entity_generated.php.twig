@@ -192,7 +192,7 @@ abstract class {{ className }} extends {{ extendsClass }}
 {% if nameProperty %}
         return $this->name ?? '';
 {% else %}
-        return (string) $this->getId()->toRfc4122();
+        return $this->getId()?->toRfc4122() ?? '';
 {% endif %}
     }
 }

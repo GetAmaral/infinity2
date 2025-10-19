@@ -54,9 +54,11 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
 {% elseif not property.getRelationshipType() %}
 {# Scalar properties #}
     #[ORM\Column(type: '{{ property.getPropertyType() }}'{% if property.getLength() %}, length: {{ property.getLength() }}{% endif %}{% if property.getPrecision() %}, precision: {{ property.getPrecision() }}{% endif %}{% if property.getScale() %}, scale: {{ property.getScale() }}{% endif %}{% if property.isNullable() %}, nullable: true{% endif %}{% if property.isUnique() %}, unique: true{% endif %})]
-{% if property.getValidationRules() %}
+{% if property.getValidationRules() and property.getValidationRules() is iterable %}
 {% for ruleName, ruleConfig in property.getValidationRules() %}
-    #[Assert\{{ ruleName }}{% if ruleConfig is iterable and ruleConfig|length > 0 %}({% for key, value in ruleConfig %}{{ key }}: {% if value is string %}'{{ value }}'{% else %}{{ value }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}){% endif %}]
+{% if ruleName is not same as(0) and ruleName is not same as(1) and ruleName is not same as(2) %}
+    #[Assert\{{ ruleName }}{% if ruleConfig is iterable and ruleConfig|length > 0 %}({% for key, value in ruleConfig %}{{ key }}: {% if value is iterable %}'{{ value|join(', ') }}'{% elseif value is same as(true) %}true{% elseif value is same as(false) %}false{% elseif value is null %}null{% elseif value matches '/^[0-9]+$/' %}{{ value }}{% else %}'{{ value }}'{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}){% endif %}]
+{% endif %}
 {% endfor %}
 {% endif %}
     protected {% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' or property.getPropertyType() == 'decimal' %}float{% elseif property.getPropertyType() == 'datetime' or property.getPropertyType() == 'datetime_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'date' or property.getPropertyType() == 'date_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %} ${{ property.getPropertyName() }}{% if property.getDefaultValue() is not null %} = {{ property.getDefaultValue() }}{% elseif property.isNullable() %} = null{% endif %};
@@ -180,13 +182,13 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
 {% endif %}
 {% endfor %}
 {% if nameProperty %}
-        return $this->name ?? {% if labelProperty %}$this->label ?? {% endif %}{% if titleProperty %}$this->title ?? {% endif %}(string) $this->getId()->toRfc4122();
+        return $this->name ?? {% if labelProperty %}$this->label ?? {% endif %}{% if titleProperty %}$this->title ?? {% endif %}($this->getId()?->toRfc4122() ?? '');
 {% elseif labelProperty %}
-        return $this->label ?? {% if titleProperty %}$this->title ?? {% endif %}(string) $this->getId()->toRfc4122();
+        return $this->label ?? {% if titleProperty %}$this->title ?? {% endif %}($this->getId()?->toRfc4122() ?? '');
 {% elseif titleProperty %}
-        return $this->title ?? (string) $this->getId()->toRfc4122();
+        return $this->title ?? ($this->getId()?->toRfc4122() ?? '');
 {% else %}
-        return (string) $this->getId()->toRfc4122();
+        return $this->getId()?->toRfc4122() ?? '';
 {% endif %}
     }
 }
