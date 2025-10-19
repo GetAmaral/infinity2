@@ -153,40 +153,84 @@ class ExportCsvCommand extends Command
             'property_label',
             'property_type',
             'property_order',
+            // Database Configuration
             'nullable',
             'length',
             'precision',
             'scale',
-            'is_unique',
+            'unique',
             'default_value',
+            'indexed',
+            'index_type',
+            'composite_index_with',
+            // Enum Support
+            'is_enum',
+            'enum_class',
+            'enum_values',
+            // Computed/Virtual Properties
+            'is_virtual',
+            'compute_expression',
+            'use_property_hook',
+            // PostgreSQL-Specific Features
+            'is_jsonb',
+            'use_full_text_search',
+            'is_array_type',
+            'pg_array_type',
+            'check_constraint',
+            // Relationships
             'relationship_type',
             'target_entity',
             'inversed_by',
             'mapped_by',
-            'cascade_actions',
+            'cascade',
             'orphan_removal',
-            'fetch_type',
-            'order_by_fields',
+            'fetch',
+            'order_by',
+            // Embedded Objects
+            'is_embedded',
+            'embedded_class',
+            'embedded_prefix',
+            // Validation
             'validation_rules',
             'validation_message',
+            'validation_groups',
+            'custom_validator',
+            'validation_condition',
+            // Form Configuration
             'form_type',
             'form_options',
             'form_required',
             'form_read_only',
             'form_help',
+            // UI Display
             'show_in_list',
             'show_in_detail',
             'show_in_form',
             'sortable',
             'searchable',
             'filterable',
+            // API Configuration
             'api_readable',
             'api_writable',
             'api_groups',
+            'is_subresource',
+            'subresource_path',
+            'expose_iri',
+            'api_description',
+            'api_example',
+            // Field-Level Security
+            'allowed_roles',
+            // Localization
             'translation_key',
             'format_pattern',
+            // Serialization Control
+            'serializer_context',
+            'serializer_method',
+            'denormalizer',
+            // Fixtures
             'fixture_type',
             'fixture_options',
+            // Audit
             'created_at',
             'updated_at',
         ]);
@@ -202,12 +246,31 @@ class ExportCsvCommand extends Command
                     $property->getPropertyLabel(),
                     $property->getPropertyType(),
                     $property->getPropertyOrder(),
+                    // Database Configuration
                     $property->isNullable() ? '1' : '0',
                     $property->getLength(),
                     $property->getPrecision(),
                     $property->getScale(),
                     $property->isUnique() ? '1' : '0',
-                    $property->getDefaultValue(),
+                    json_encode($property->getDefaultValue()),
+                    $property->isIndexed() ? '1' : '0',
+                    $property->getIndexType(),
+                    json_encode($property->getCompositeIndexWith()),
+                    // Enum Support
+                    $property->isEnum() ? '1' : '0',
+                    $property->getEnumClass(),
+                    json_encode($property->getEnumValues()),
+                    // Computed/Virtual Properties
+                    $property->isVirtual() ? '1' : '0',
+                    $property->getComputeExpression(),
+                    $property->isUsePropertyHook() ? '1' : '0',
+                    // PostgreSQL-Specific Features
+                    $property->isJsonb() ? '1' : '0',
+                    $property->isUseFullTextSearch() ? '1' : '0',
+                    $property->isArrayType() ? '1' : '0',
+                    $property->getPgArrayType(),
+                    $property->getCheckConstraint(),
+                    // Relationships
                     $property->getRelationshipType(),
                     $property->getTargetEntity(),
                     $property->getInversedBy(),
@@ -216,26 +279,51 @@ class ExportCsvCommand extends Command
                     $property->isOrphanRemoval() ? '1' : '0',
                     $property->getFetch(),
                     json_encode($property->getOrderBy()),
+                    // Embedded Objects
+                    $property->isEmbedded() ? '1' : '0',
+                    $property->getEmbeddedClass(),
+                    $property->getEmbeddedPrefix(),
+                    // Validation
                     json_encode($property->getValidationRules()),
                     $property->getValidationMessage(),
+                    json_encode($property->getValidationGroups()),
+                    $property->getCustomValidator(),
+                    $property->getValidationCondition(),
+                    // Form Configuration
                     $property->getFormType(),
                     json_encode($property->getFormOptions()),
                     $property->isFormRequired() ? '1' : '0',
                     $property->isFormReadOnly() ? '1' : '0',
                     $property->getFormHelp(),
+                    // UI Display
                     $property->isShowInList() ? '1' : '0',
                     $property->isShowInDetail() ? '1' : '0',
                     $property->isShowInForm() ? '1' : '0',
                     $property->isSortable() ? '1' : '0',
                     $property->isSearchable() ? '1' : '0',
                     $property->isFilterable() ? '1' : '0',
+                    // API Configuration
                     $property->isApiReadable() ? '1' : '0',
                     $property->isApiWritable() ? '1' : '0',
                     json_encode($property->getApiGroups()),
+                    $property->isSubresource() ? '1' : '0',
+                    $property->getSubresourcePath(),
+                    $property->isExposeIri() ? '1' : '0',
+                    $property->getApiDescription(),
+                    $property->getApiExample(),
+                    // Field-Level Security
+                    json_encode($property->getAllowedRoles()),
+                    // Localization
                     $property->getTranslationKey(),
                     $property->getFormatPattern(),
+                    // Serialization Control
+                    json_encode($property->getSerializerContext()),
+                    $property->getSerializerMethod(),
+                    $property->getDenormalizer(),
+                    // Fixtures
                     $property->getFixtureType(),
                     json_encode($property->getFixtureOptions()),
+                    // Audit
                     $property->getCreatedAt()->format('Y-m-d H:i:s'),
                     $property->getUpdatedAt()->format('Y-m-d H:i:s'),
                 ]);

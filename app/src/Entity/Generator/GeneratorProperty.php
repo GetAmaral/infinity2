@@ -45,7 +45,7 @@ class GeneratorProperty
     private GeneratorEntity $entity;
 
     // ====================================
-    // BASIC INFORMATION (4 fields)
+    // BASIC INFORMATION
     // ====================================
 
     #[ORM\Column(length: 100)]
@@ -61,10 +61,10 @@ class GeneratorProperty
     private int $propertyOrder = 0;       // Display order
 
     // ====================================
-    // DATABASE CONFIGURATION (6 fields)
+    // DATABASE CONFIGURATION
     // ====================================
 
-    #[ORM\Column(options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $nullable = false;
 
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -76,14 +76,69 @@ class GeneratorProperty
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $scale = null;
 
-    #[ORM\Column(name: 'is_unique', options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $unique = false;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $defaultValue = null;
+    #[ORM\Column(type: 'json', nullable: true)]
+    private mixed $defaultValue = null;
+
+    // Database Indexing
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $indexed = false;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $indexType = null;       // 'INDEX', 'UNIQUE', 'FULLTEXT', 'SPATIAL'
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $compositeIndexWith = null;  // ['property1', 'property2'] for composite indexes
 
     // ====================================
-    // RELATIONSHIPS (8 fields)
+    // ENUM SUPPORT (PHP 8.1+)
+    // ====================================
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isEnum = false;            // Property is a PHP enum
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $enumClass = null;       // Full enum class name, e.g., 'App\Enum\StatusEnum'
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $enumValues = null;       // Fallback enum values if not using PHP enum class
+
+    // ====================================
+    // COMPUTED/VIRTUAL PROPERTIES (PHP 8.4+)
+    // ====================================
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isVirtual = false;         // Not persisted to database, computed on-the-fly
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $computeExpression = null;  // Expression for computing value, e.g., "firstName + ' ' + lastName"
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $usePropertyHook = false;   // Use PHP 8.4 property hooks for get/set logic
+
+    // ====================================
+    // POSTGRESQL-SPECIFIC FEATURES
+    // ====================================
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isJsonb = false;        // Use JSONB instead of JSON (PostgreSQL)
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $useFullTextSearch = false;  // Enable trgm/ts_vector full-text search
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isArrayType = false;    // Use PostgreSQL native array type
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $pgArrayType = null;  // 'text[]', 'integer[]', 'uuid[]'
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $checkConstraint = null;  // SQL CHECK constraint, e.g., "value > 0 AND value < 100"
+
+    // ====================================
+    // RELATIONSHIPS
     // ====================================
 
     #[ORM\Column(length: 50, nullable: true)]
@@ -98,20 +153,33 @@ class GeneratorProperty
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $mappedBy = null;
 
-    #[ORM\Column(name: 'cascade_actions', type: 'json', nullable: true)]
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $cascade = null;       // ['persist', 'remove']
 
-    #[ORM\Column(options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $orphanRemoval = false;
 
-    #[ORM\Column(name: 'fetch_type', length: 20, nullable: true, options: ['default' => 'LAZY'])]
+    #[ORM\Column(length: 20, nullable: true, options: ['default' => 'LAZY'])]
     private ?string $fetch = 'LAZY';      // 'LAZY', 'EAGER', 'EXTRA_LAZY'
 
-    #[ORM\Column(name: 'order_by_fields', type: 'json', nullable: true)]
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $orderBy = null;       // {"name": "ASC"}
 
     // ====================================
-    // VALIDATION (2 fields)
+    // EMBEDDED OBJECTS (Value Objects / Embeddables)
+    // ====================================
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isEmbedded = false;     // Property is an embedded value object
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $embeddedClass = null;  // Embedded class name, e.g., 'App\ValueObject\Address'
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $embeddedPrefix = null;  // Column prefix for embedded properties, e.g., 'billing_', 'shipping_'
+
+    // ====================================
+    // VALIDATION
     // ====================================
 
     #[ORM\Column(type: 'json', nullable: true)]
@@ -120,8 +188,18 @@ class GeneratorProperty
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $validationMessage = null;
 
+    // Enhanced Validation
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $validationGroups = null;  // ['create', 'update', 'admin'] - context-aware validation
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $customValidator = null;  // Custom validator class, e.g., 'App\Validator\CustomValidator'
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $validationCondition = null;  // Conditional validation, e.g., "entity.status == 'active'"
+
     // ====================================
-    // FORM CONFIGURATION (5 fields)
+    // FORM CONFIGURATION
     // ====================================
 
     #[ORM\Column(length: 100, nullable: true)]
@@ -130,52 +208,75 @@ class GeneratorProperty
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $formOptions = null;   // {"attr": {"placeholder": "Enter email"}}
 
-    #[ORM\Column(options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $formRequired = false;
 
-    #[ORM\Column(options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $formReadOnly = false;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $formHelp = null;
 
     // ====================================
-    // UI DISPLAY (6 fields)
+    // UI DISPLAY
     // ====================================
 
-    #[ORM\Column(options: ['default' => true])]
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $showInList = true;
 
-    #[ORM\Column(options: ['default' => true])]
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $showInDetail = true;
 
-    #[ORM\Column(options: ['default' => true])]
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $showInForm = true;
 
-    #[ORM\Column(options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $sortable = false;
 
-    #[ORM\Column(options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $searchable = false;
 
-    #[ORM\Column(options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $filterable = false;
 
     // ====================================
-    // API CONFIGURATION (3 fields)
+    // API CONFIGURATION
     // ====================================
 
-    #[ORM\Column(options: ['default' => true])]
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $apiReadable = true;
 
-    #[ORM\Column(options: ['default' => true])]
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $apiWritable = true;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $apiGroups = null;     // ["contact:read", "contact:write"]
 
+    // API Platform Advanced Features
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isSubresource = false;  // Expose as API subresource
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $subresourcePath = null;  // e.g., '/contacts/{id}/addresses'
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $exposeIri = false;      // Expose as IRI instead of embedded object
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $apiDescription = null;  // OpenAPI field description
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $apiExample = null;   // Example value for API documentation
+
     // ====================================
-    // LOCALIZATION (2 fields)
+    // FIELD-LEVEL SECURITY
+    // ====================================
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $allowedRoles = null;  // ['ROLE_ADMIN', 'ROLE_USER'] - roles that can view/edit this field
+
+    // ====================================
+    // LOCALIZATION
     // ====================================
 
     #[ORM\Column(length: 100, nullable: true)]
@@ -185,7 +286,20 @@ class GeneratorProperty
     private ?string $formatPattern = null;
 
     // ====================================
-    // FIXTURES (2 fields)
+    // SERIALIZATION CONTROL
+    // ====================================
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $serializerContext = null;  // Additional Symfony Serializer context options
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $serializerMethod = null;  // Custom accessor method for serialization, e.g., 'getName'
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $denormalizer = null;      // Custom denormalizer class for complex type conversions
+
+    // ====================================
+    // FIXTURES
     // ====================================
 
     #[ORM\Column(length: 50, nullable: true)]
@@ -195,7 +309,7 @@ class GeneratorProperty
     private ?array $fixtureOptions = null;
 
     // ====================================
-    // AUDIT (2 fields)
+    // AUDIT
     // ====================================
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -238,8 +352,8 @@ class GeneratorProperty
     public function setScale(?int $scale): self { $this->scale = $scale; return $this; }
     public function isUnique(): bool { return $this->unique; }
     public function setUnique(bool $unique): self { $this->unique = $unique; return $this; }
-    public function getDefaultValue(): ?string { return $this->defaultValue; }
-    public function setDefaultValue(?string $defaultValue): self { $this->defaultValue = $defaultValue; return $this; }
+    public function getDefaultValue(): mixed { return $this->defaultValue; }
+    public function setDefaultValue(mixed $defaultValue): self { $this->defaultValue = $defaultValue; return $this; }
     public function getRelationshipType(): ?string { return $this->relationshipType; }
     public function setRelationshipType(?string $relationshipType): self { $this->relationshipType = $relationshipType; return $this; }
     public function getTargetEntity(): ?string { return $this->targetEntity; }
@@ -298,4 +412,78 @@ class GeneratorProperty
     public function setFixtureOptions(?array $fixtureOptions): self { $this->fixtureOptions = $fixtureOptions; return $this; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
+
+    // New getters and setters for indexed, indexType, compositeIndexWith, allowedRoles
+    public function isIndexed(): bool { return $this->indexed; }
+    public function setIndexed(bool $indexed): self { $this->indexed = $indexed; return $this; }
+    public function getIndexType(): ?string { return $this->indexType; }
+    public function setIndexType(?string $indexType): self { $this->indexType = $indexType; return $this; }
+    public function getCompositeIndexWith(): ?array { return $this->compositeIndexWith; }
+    public function setCompositeIndexWith(?array $compositeIndexWith): self { $this->compositeIndexWith = $compositeIndexWith; return $this; }
+    public function getAllowedRoles(): ?array { return $this->allowedRoles; }
+    public function setAllowedRoles(?array $allowedRoles): self { $this->allowedRoles = $allowedRoles; return $this; }
+
+    // API Platform advanced features getters and setters
+    public function isSubresource(): bool { return $this->isSubresource; }
+    public function setIsSubresource(bool $isSubresource): self { $this->isSubresource = $isSubresource; return $this; }
+    public function getSubresourcePath(): ?string { return $this->subresourcePath; }
+    public function setSubresourcePath(?string $subresourcePath): self { $this->subresourcePath = $subresourcePath; return $this; }
+    public function isExposeIri(): bool { return $this->exposeIri; }
+    public function setExposeIri(bool $exposeIri): self { $this->exposeIri = $exposeIri; return $this; }
+    public function getApiDescription(): ?string { return $this->apiDescription; }
+    public function setApiDescription(?string $apiDescription): self { $this->apiDescription = $apiDescription; return $this; }
+    public function getApiExample(): ?string { return $this->apiExample; }
+    public function setApiExample(?string $apiExample): self { $this->apiExample = $apiExample; return $this; }
+
+    // PostgreSQL-specific features getters and setters
+    public function isJsonb(): bool { return $this->isJsonb; }
+    public function setIsJsonb(bool $isJsonb): self { $this->isJsonb = $isJsonb; return $this; }
+    public function isUseFullTextSearch(): bool { return $this->useFullTextSearch; }
+    public function setUseFullTextSearch(bool $useFullTextSearch): self { $this->useFullTextSearch = $useFullTextSearch; return $this; }
+    public function isArrayType(): bool { return $this->isArrayType; }
+    public function setIsArrayType(bool $isArrayType): self { $this->isArrayType = $isArrayType; return $this; }
+    public function getPgArrayType(): ?string { return $this->pgArrayType; }
+    public function setPgArrayType(?string $pgArrayType): self { $this->pgArrayType = $pgArrayType; return $this; }
+    public function getCheckConstraint(): ?string { return $this->checkConstraint; }
+    public function setCheckConstraint(?string $checkConstraint): self { $this->checkConstraint = $checkConstraint; return $this; }
+
+    // Enum support getters and setters
+    public function isEnum(): bool { return $this->isEnum; }
+    public function setIsEnum(bool $isEnum): self { $this->isEnum = $isEnum; return $this; }
+    public function getEnumClass(): ?string { return $this->enumClass; }
+    public function setEnumClass(?string $enumClass): self { $this->enumClass = $enumClass; return $this; }
+    public function getEnumValues(): ?array { return $this->enumValues; }
+    public function setEnumValues(?array $enumValues): self { $this->enumValues = $enumValues; return $this; }
+
+    // Computed/virtual properties getters and setters
+    public function isVirtual(): bool { return $this->isVirtual; }
+    public function setIsVirtual(bool $isVirtual): self { $this->isVirtual = $isVirtual; return $this; }
+    public function getComputeExpression(): ?string { return $this->computeExpression; }
+    public function setComputeExpression(?string $computeExpression): self { $this->computeExpression = $computeExpression; return $this; }
+    public function isUsePropertyHook(): bool { return $this->usePropertyHook; }
+    public function setUsePropertyHook(bool $usePropertyHook): self { $this->usePropertyHook = $usePropertyHook; return $this; }
+
+    // Enhanced validation getters and setters
+    public function getValidationGroups(): ?array { return $this->validationGroups; }
+    public function setValidationGroups(?array $validationGroups): self { $this->validationGroups = $validationGroups; return $this; }
+    public function getCustomValidator(): ?string { return $this->customValidator; }
+    public function setCustomValidator(?string $customValidator): self { $this->customValidator = $customValidator; return $this; }
+    public function getValidationCondition(): ?string { return $this->validationCondition; }
+    public function setValidationCondition(?string $validationCondition): self { $this->validationCondition = $validationCondition; return $this; }
+
+    // Embedded objects getters and setters
+    public function isEmbedded(): bool { return $this->isEmbedded; }
+    public function setIsEmbedded(bool $isEmbedded): self { $this->isEmbedded = $isEmbedded; return $this; }
+    public function getEmbeddedClass(): ?string { return $this->embeddedClass; }
+    public function setEmbeddedClass(?string $embeddedClass): self { $this->embeddedClass = $embeddedClass; return $this; }
+    public function getEmbeddedPrefix(): ?string { return $this->embeddedPrefix; }
+    public function setEmbeddedPrefix(?string $embeddedPrefix): self { $this->embeddedPrefix = $embeddedPrefix; return $this; }
+
+    // Serialization control getters and setters
+    public function getSerializerContext(): ?array { return $this->serializerContext; }
+    public function setSerializerContext(?array $serializerContext): self { $this->serializerContext = $serializerContext; return $this; }
+    public function getSerializerMethod(): ?string { return $this->serializerMethod; }
+    public function setSerializerMethod(?string $serializerMethod): self { $this->serializerMethod = $serializerMethod; return $this; }
+    public function getDenormalizer(): ?string { return $this->denormalizer; }
+    public function setDenormalizer(?string $denormalizer): self { $this->denormalizer = $denormalizer; return $this; }
 }

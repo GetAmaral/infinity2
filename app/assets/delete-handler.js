@@ -286,13 +286,25 @@ class DeleteHandler {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'text/vnd.turbo-stream.html',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: `_token=${encodeURIComponent(csrfToken)}`
             });
 
             if (response.ok) {
-                this.handleSuccess(button);
+                // Check if response is Turbo Stream
+                const contentType = response.headers.get('Content-Type');
+                if (contentType && contentType.includes('turbo-stream')) {
+                    // Let Turbo handle the stream response
+                    const html = await response.text();
+                    if (typeof Turbo !== 'undefined') {
+                        Turbo.renderStreamMessage(html);
+                    }
+                    this.showToast('Item deleted successfully', 'success');
+                } else {
+                    this.handleSuccess(button);
+                }
             } else {
                 const data = await response.json().catch(() => ({}));
                 this.handleError(data.message || 'Failed to delete item');

@@ -302,43 +302,22 @@ function watchRoleContainers() {
     });
 }
 
-// Global observer for role containers
-const roleObserver = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-        mutation.addedNodes.forEach(function(node) {
-            if (node.nodeType === 1) { // Element node
-                // Check if the node itself is a role container
-                if (node.classList && node.classList.contains('user-roles-container')) {
-                    const dataElement = node.querySelector('.user-roles-data');
-                    if (dataElement && dataElement.textContent.trim()) {
-                        processRoleContainer(node);
-                    } else if (dataElement) {
-                        // Watch this specific data element
-                        const dataObserver = new MutationObserver(function() {
-                            if (dataElement.textContent.trim()) {
-                                processRoleContainer(node);
-                                dataObserver.disconnect();
-                            }
-                        });
-                        dataObserver.observe(dataElement, {
-                            childList: true,
-                            characterData: true,
-                            subtree: true
-                        });
-                    }
-                }
-                // Check descendants for role containers
-                if (node.querySelectorAll) {
-                    const containers = node.querySelectorAll('.user-roles-container');
-                    containers.forEach(function(container) {
-                        const dataElement = container.querySelector('.user-roles-data');
+// Global observer for role containers (use window to avoid redeclaration issues with Turbo)
+if (!window.userRoleObserver) {
+    window.userRoleObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1) { // Element node
+                    // Check if the node itself is a role container
+                    if (node.classList && node.classList.contains('user-roles-container')) {
+                        const dataElement = node.querySelector('.user-roles-data');
                         if (dataElement && dataElement.textContent.trim()) {
-                            processRoleContainer(container);
+                            processRoleContainer(node);
                         } else if (dataElement) {
                             // Watch this specific data element
                             const dataObserver = new MutationObserver(function() {
                                 if (dataElement.textContent.trim()) {
-                                    processRoleContainer(container);
+                                    processRoleContainer(node);
                                     dataObserver.disconnect();
                                 }
                             });
@@ -348,22 +327,47 @@ const roleObserver = new MutationObserver(function(mutations) {
                                 subtree: true
                             });
                         }
-                    });
+                    }
+                    // Check descendants for role containers
+                    if (node.querySelectorAll) {
+                        const containers = node.querySelectorAll('.user-roles-container');
+                        containers.forEach(function(container) {
+                            const dataElement = container.querySelector('.user-roles-data');
+                            if (dataElement && dataElement.textContent.trim()) {
+                                processRoleContainer(container);
+                            } else if (dataElement) {
+                                // Watch this specific data element
+                                const dataObserver = new MutationObserver(function() {
+                                    if (dataElement.textContent.trim()) {
+                                        processRoleContainer(container);
+                                        dataObserver.disconnect();
+                                    }
+                                });
+                                dataObserver.observe(dataElement, {
+                                    childList: true,
+                                    characterData: true,
+                                    subtree: true
+                                });
+                            }
+                        });
+                    }
                 }
-            }
+            });
         });
     });
-});
+}
 
 // Run on various events
 document.addEventListener('DOMContentLoaded', function() {
     watchRoleContainers();
 
     // Observe the entire document body for new containers
-    roleObserver.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    if (window.userRoleObserver) {
+        window.userRoleObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
 });
 
 document.addEventListener('turbo:load', function() {

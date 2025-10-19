@@ -235,11 +235,13 @@ final class UserController extends BaseApiController
             $this->addFlash('success', 'user.flash.deleted_successfully');
 
             // Return Turbo Stream response for seamless UX
-            if ($request->headers->get('Accept') === 'text/vnd.turbo-stream.html') {
-                return $this->render('user/_turbo_stream_deleted.html.twig', [
+            if (str_contains($request->headers->get('Accept', ''), 'turbo-stream')) {
+                $response = $this->render('user/_turbo_stream_deleted.html.twig', [
                     'userId' => $userId,
                     'userName' => $userName,
                 ]);
+                $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+                return $response;
             }
         } else {
             $this->addFlash('error', 'common.error.invalid_csrf');
