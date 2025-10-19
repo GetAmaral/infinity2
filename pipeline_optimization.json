@@ -1,0 +1,324 @@
+{
+  "entity": "Pipeline",
+  "optimizations": [
+    {
+      "action": "rename",
+      "property": "active",
+      "new_name": "isActive",
+      "reason": "Consistent boolean naming convention (is* prefix)"
+    },
+    {
+      "action": "rename",
+      "property": "default",
+      "new_name": "isDefault",
+      "reason": "Consistent boolean naming convention (is* prefix), avoid PHP reserved word"
+    },
+    {
+      "action": "rename",
+      "property": "manager",
+      "new_name": "owner",
+      "reason": "Standard CRM terminology - pipeline owner (aligns with HubSpot/Salesforce)"
+    },
+    {
+      "action": "add_index",
+      "property": "name",
+      "reason": "Frequent lookups by pipeline name in dropdowns and filters"
+    },
+    {
+      "action": "add_index",
+      "property": "isActive",
+      "reason": "Frequent filtering for active pipelines only"
+    },
+    {
+      "action": "add_index",
+      "property": "isDefault",
+      "reason": "Quick lookup of default pipeline per organization"
+    },
+    {
+      "action": "add",
+      "property": "pipelineType",
+      "type": "string",
+      "nullable": false,
+      "default": "Sales",
+      "indexed": true,
+      "reason": "Classification for different pipeline purposes (Sales, Pre-Sales, Post-Sales, Channel, Support) - HubSpot/Salesforce best practice"
+    },
+    {
+      "action": "add",
+      "property": "displayOrder",
+      "type": "integer",
+      "nullable": false,
+      "default": 0,
+      "indexed": false,
+      "reason": "Control pipeline ordering in UI displays - standard CRM feature"
+    },
+    {
+      "action": "add",
+      "property": "team",
+      "type": "ManyToOne",
+      "target": "Team",
+      "nullable": true,
+      "indexed": true,
+      "reason": "Assign pipeline to specific team for access control and filtering"
+    },
+    {
+      "action": "add",
+      "property": "forecastEnabled",
+      "type": "boolean",
+      "nullable": false,
+      "default": true,
+      "indexed": false,
+      "reason": "Control whether pipeline is included in sales forecasting - Salesforce best practice"
+    },
+    {
+      "action": "add",
+      "property": "autoAdvanceStages",
+      "type": "boolean",
+      "nullable": false,
+      "default": false,
+      "indexed": false,
+      "reason": "Automatic stage progression based on deal criteria - automation feature"
+    },
+    {
+      "action": "add",
+      "property": "rottenDealThreshold",
+      "type": "integer",
+      "nullable": true,
+      "indexed": false,
+      "reason": "Days after which a deal is marked as stale/rotten - HubSpot pipeline hygiene feature"
+    },
+    {
+      "action": "add",
+      "property": "avgDealSize",
+      "type": "float",
+      "nullable": true,
+      "indexed": false,
+      "reason": "Calculated metric: average deal value in this pipeline - key performance metric"
+    },
+    {
+      "action": "add",
+      "property": "avgCycleTime",
+      "type": "integer",
+      "nullable": true,
+      "indexed": false,
+      "reason": "Calculated metric: average days from start to close - velocity metric"
+    },
+    {
+      "action": "add",
+      "property": "winRate",
+      "type": "float",
+      "nullable": true,
+      "indexed": false,
+      "reason": "Calculated metric: percentage of won deals - conversion metric"
+    },
+    {
+      "action": "add",
+      "property": "conversionRate",
+      "type": "float",
+      "nullable": true,
+      "indexed": false,
+      "reason": "Calculated metric: overall conversion rate across stages - pipeline health metric"
+    },
+    {
+      "action": "add",
+      "property": "totalDealsCount",
+      "type": "integer",
+      "nullable": false,
+      "default": 0,
+      "indexed": false,
+      "reason": "Cached count of total deals in pipeline - performance optimization"
+    },
+    {
+      "action": "add",
+      "property": "activeDealsCount",
+      "type": "integer",
+      "nullable": false,
+      "default": 0,
+      "indexed": false,
+      "reason": "Cached count of active deals in pipeline - performance optimization"
+    },
+    {
+      "action": "add",
+      "property": "totalPipelineValue",
+      "type": "float",
+      "nullable": false,
+      "default": 0,
+      "indexed": false,
+      "reason": "Cached sum of all deal values - pipeline value metric"
+    },
+    {
+      "action": "add",
+      "property": "currency",
+      "type": "string",
+      "nullable": false,
+      "default": "USD",
+      "indexed": false,
+      "reason": "Default currency for deals in this pipeline - SendPulse CRM feature"
+    },
+    {
+      "action": "add",
+      "property": "color",
+      "type": "string",
+      "nullable": true,
+      "indexed": false,
+      "reason": "UI color for pipeline visualization - HubSpot/Pipedrive feature"
+    },
+    {
+      "action": "add",
+      "property": "icon",
+      "type": "string",
+      "nullable": true,
+      "indexed": false,
+      "reason": "Bootstrap icon class for pipeline display - UI enhancement"
+    },
+    {
+      "action": "add",
+      "property": "archivedAt",
+      "type": "datetime",
+      "nullable": true,
+      "indexed": true,
+      "reason": "Soft delete timestamp for archived pipelines - data retention"
+    },
+    {
+      "action": "add",
+      "property": "createdBy",
+      "type": "ManyToOne",
+      "target": "User",
+      "nullable": true,
+      "indexed": false,
+      "reason": "Track who created the pipeline - audit trail"
+    },
+    {
+      "action": "add",
+      "property": "deals",
+      "type": "OneToMany",
+      "target": "Deal",
+      "mapped_by": "pipeline",
+      "nullable": true,
+      "indexed": false,
+      "reason": "Bi-directional relationship to Deal entities - navigation"
+    },
+    {
+      "action": "modify_relationship",
+      "property": "stages",
+      "cascade": ["persist", "remove"],
+      "order_by": {"order": "ASC"},
+      "reason": "Cascade operations for stage management, ordered by stage sequence"
+    },
+    {
+      "action": "add_validation",
+      "property": "name",
+      "validations": [
+        {"type": "NotBlank"},
+        {"type": "Length", "min": 2, "max": 100}
+      ],
+      "reason": "Ensure pipeline has a valid name"
+    },
+    {
+      "action": "add_validation",
+      "property": "pipelineType",
+      "validations": [
+        {"type": "Choice", "choices": ["Sales", "Pre-Sales", "Post-Sales", "Channel", "Partner", "Support", "Success", "Custom"]}
+      ],
+      "reason": "Restrict to valid pipeline types based on industry standards"
+    },
+    {
+      "action": "add_validation",
+      "property": "displayOrder",
+      "validations": [
+        {"type": "PositiveOrZero"}
+      ],
+      "reason": "Display order must be non-negative"
+    },
+    {
+      "action": "add_validation",
+      "property": "rottenDealThreshold",
+      "validations": [
+        {"type": "Positive"}
+      ],
+      "reason": "Threshold must be positive days if specified"
+    },
+    {
+      "action": "add_validation",
+      "property": "currency",
+      "validations": [
+        {"type": "Currency"}
+      ],
+      "reason": "Validate ISO 4217 currency codes"
+    },
+    {
+      "action": "add_method",
+      "method": "isArchived",
+      "return_type": "bool",
+      "implementation": "return $this->archivedAt !== null;",
+      "reason": "Helper method to check if pipeline is archived"
+    },
+    {
+      "action": "add_method",
+      "method": "archive",
+      "return_type": "self",
+      "implementation": "$this->archivedAt = new \\DateTimeImmutable(); $this->isActive = false; return $this;",
+      "reason": "Archive pipeline with automatic deactivation"
+    },
+    {
+      "action": "add_method",
+      "method": "unarchive",
+      "return_type": "self",
+      "implementation": "$this->archivedAt = null; return $this;",
+      "reason": "Restore archived pipeline"
+    },
+    {
+      "action": "add_method",
+      "method": "getActiveDeals",
+      "return_type": "Collection",
+      "implementation": "return $this->deals->filter(fn($deal) => $deal->getDealStatus() !== Deal::STATUS_CLOSED_WON && $deal->getDealStatus() !== Deal::STATUS_CLOSED_LOST);",
+      "reason": "Get only active (not closed) deals in pipeline"
+    },
+    {
+      "action": "add_method",
+      "method": "calculateMetrics",
+      "return_type": "void",
+      "implementation": "// Calculate avgDealSize, avgCycleTime, winRate, conversionRate from deals",
+      "reason": "Recalculate all pipeline metrics from deal data"
+    },
+    {
+      "action": "add_method",
+      "method": "updateCachedCounts",
+      "return_type": "void",
+      "implementation": "$this->totalDealsCount = $this->deals->count(); $this->activeDealsCount = $this->getActiveDeals()->count(); $this->totalPipelineValue = array_sum($this->getActiveDeals()->map(fn($d) => $d->getExpectedAmount())->toArray());",
+      "reason": "Update cached counters for performance"
+    }
+  ],
+  "summary": {
+    "total_optimizations": 38,
+    "renames": 3,
+    "new_properties": 21,
+    "new_indexes": 5,
+    "new_relationships": 3,
+    "new_validations": 5,
+    "new_methods": 6,
+    "key_improvements": [
+      "Pipeline type classification (Sales, Pre-Sales, Post-Sales, Channel, Support, Success, Partner, Custom)",
+      "Team-based pipeline assignment for access control",
+      "Sales forecasting configuration (forecastEnabled)",
+      "Pipeline health metrics (avgDealSize, avgCycleTime, winRate, conversionRate)",
+      "Automatic stage advancement capability",
+      "Rotten deal threshold for pipeline hygiene",
+      "Cached performance metrics (totalDealsCount, activeDealsCount, totalPipelineValue)",
+      "Pipeline archival with soft delete pattern",
+      "UI customization (color, icon)",
+      "Default currency per pipeline",
+      "Display ordering for multiple pipelines",
+      "Audit trail with createdBy tracking",
+      "Bi-directional Deal relationship",
+      "Cascade operations for stage management"
+    ],
+    "industry_alignment": [
+      "Salesforce: Multiple pipeline types, forecast categories, stage probability",
+      "HubSpot: Pipeline consolidation with custom properties, deal stage alignment, pipeline hygiene",
+      "Pipedrive: Pipeline visualization with colors and icons, custom fields",
+      "SendPulse: Currency selection, kanban board display",
+      "General CRM: Owner/team assignment, metrics tracking, soft delete"
+    ]
+  }
+}

@@ -8,3 +8,4 @@ framework:
         stateless_token_ids:
             - submit
             - logout
+            - delete  # Stateless delete token for all delete operations

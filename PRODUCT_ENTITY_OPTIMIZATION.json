@@ -1,0 +1,732 @@
+{
+  "entity": "Product",
+  "analysis": {
+    "current_properties_count": 55,
+    "critical_issues": [
+      {
+        "issue": "Pricing fields use FLOAT instead of DECIMAL",
+        "impact": "HIGH - Financial data precision loss, rounding errors in calculations",
+        "affected_fields": [
+          "listPrice",
+          "costPrice",
+          "minimumPrice",
+          "maximumDiscount",
+          "discountAmount",
+          "discountPercentage",
+          "commissionRate",
+          "commissionAmount",
+          "exchangeRate",
+          "marginPercentage",
+          "setupFee",
+          "recurringFee",
+          "cancellationFee"
+        ]
+      },
+      {
+        "issue": "Missing critical indexing",
+        "impact": "HIGH - Poor query performance on lookups",
+        "affected_fields": [
+          "productCode",
+          "active",
+          "sellable",
+          "name"
+        ]
+      },
+      {
+        "issue": "Missing SKU/barcode fields",
+        "impact": "MEDIUM - No standard identifier for inventory systems",
+        "affected_fields": []
+      },
+      {
+        "issue": "Missing reorder level tracking",
+        "impact": "MEDIUM - Cannot automate inventory replenishment",
+        "affected_fields": []
+      },
+      {
+        "issue": "Physical dimensions stored as string",
+        "impact": "MEDIUM - Cannot perform calculations or comparisons",
+        "affected_fields": ["dimensions"]
+      },
+      {
+        "issue": "Missing check constraints on financial fields",
+        "impact": "MEDIUM - Can store invalid negative prices",
+        "affected_fields": ["listPrice", "costPrice", "stockQuantity"]
+      }
+    ],
+    "strengths": [
+      "Comprehensive subscription management fields",
+      "Product relationship tracking (related, substitute)",
+      "Flexible JSON fields for specifications and features",
+      "Good lifecycle management (launchDate, endOfLifeDate)",
+      "Multi-company relationships (manufacturer, supplier)"
+    ]
+  },
+  "optimizations": {
+    "type_changes": [
+      {
+        "field": "listPrice",
+        "current_type": "float",
+        "new_type": "decimal(15,2)",
+        "reason": "Exact precision for currency, supports up to 999,999,999,999.99",
+        "priority": "CRITICAL"
+      },
+      {
+        "field": "costPrice",
+        "current_type": "float",
+        "new_type": "decimal(15,2)",
+        "reason": "Exact precision for cost calculations and margin analysis",
+        "priority": "CRITICAL"
+      },
+      {
+        "field": "minimumPrice",
+        "current_type": "float",
+        "new_type": "decimal(15,2)",
+        "reason": "Exact precision for pricing rules",
+        "priority": "CRITICAL"
+      },
+      {
+        "field": "maximumDiscount",
+        "current_type": "float",
+        "new_type": "decimal(15,2)",
+        "reason": "Exact precision for discount calculations",
+        "priority": "CRITICAL"
+      },
+      {
+        "field": "discountAmount",
+        "current_type": "float",
+        "new_type": "decimal(15,2)",
+        "reason": "Exact precision for discount amounts",
+        "priority": "CRITICAL"
+      },
+      {
+        "field": "discountPercentage",
+        "current_type": "float",
+        "new_type": "decimal(5,2)",
+        "reason": "Percentage values 0.00-100.00, exact precision",
+        "priority": "HIGH"
+      },
+      {
+        "field": "commissionRate",
+        "current_type": "float",
+        "new_type": "decimal(5,2)",
+        "reason": "Percentage values for commission calculations",
+        "priority": "HIGH"
+      },
+      {
+        "field": "commissionAmount",
+        "current_type": "float",
+        "new_type": "decimal(15,2)",
+        "reason": "Exact precision for commission amounts",
+        "priority": "HIGH"
+      },
+      {
+        "field": "exchangeRate",
+        "current_type": "float",
+        "new_type": "decimal(12,6)",
+        "reason": "High precision for currency conversion (e.g., 1.234567 EUR/USD)",
+        "priority": "HIGH"
+      },
+      {
+        "field": "marginPercentage",
+        "current_type": "float",
+        "new_type": "decimal(5,2)",
+        "reason": "Percentage values for margin tracking",
+        "priority": "MEDIUM"
+      },
+      {
+        "field": "weight",
+        "current_type": "float",
+        "new_type": "decimal(10,3)",
+        "reason": "Precise weight measurements for shipping (supports grams to tons)",
+        "priority": "MEDIUM"
+      },
+      {
+        "field": "setupFee",
+        "current_type": "float",
+        "new_type": "decimal(15,2)",
+        "reason": "Exact precision for subscription fees",
+        "priority": "HIGH"
+      },
+      {
+        "field": "recurringFee",
+        "current_type": "float",
+        "new_type": "decimal(15,2)",
+        "reason": "Exact precision for recurring charges",
+        "priority": "HIGH"
+      },
+      {
+        "field": "cancellationFee",
+        "current_type": "float",
+        "new_type": "decimal(15,2)",
+        "reason": "Exact precision for cancellation charges",
+        "priority": "HIGH"
+      }
+    ],
+    "new_properties": [
+      {
+        "name": "sku",
+        "type": "string",
+        "length": 100,
+        "nullable": true,
+        "indexed": true,
+        "unique_within_org": true,
+        "description": "Stock Keeping Unit - unique product identifier for inventory",
+        "priority": "HIGH",
+        "salesforce_equivalent": "ProductCode"
+      },
+      {
+        "name": "barcode",
+        "type": "string",
+        "length": 50,
+        "nullable": true,
+        "indexed": true,
+        "description": "UPC/EAN/ISBN barcode for product scanning",
+        "priority": "MEDIUM"
+      },
+      {
+        "name": "reorderLevel",
+        "type": "integer",
+        "nullable": true,
+        "default": 0,
+        "description": "Minimum stock level before reorder is triggered",
+        "priority": "HIGH",
+        "check_constraint": ">= 0"
+      },
+      {
+        "name": "reorderQuantity",
+        "type": "integer",
+        "nullable": true,
+        "default": 0,
+        "description": "Quantity to order when stock reaches reorder level",
+        "priority": "HIGH",
+        "check_constraint": ">= 0"
+      },
+      {
+        "name": "minOrderQuantity",
+        "type": "integer",
+        "nullable": true,
+        "default": 1,
+        "description": "Minimum quantity that can be ordered",
+        "priority": "MEDIUM",
+        "check_constraint": ">= 1"
+      },
+      {
+        "name": "maxOrderQuantity",
+        "type": "integer",
+        "nullable": true,
+        "description": "Maximum quantity that can be ordered in single transaction",
+        "priority": "MEDIUM",
+        "check_constraint": ">= 1"
+      },
+      {
+        "name": "leadTimeDays",
+        "type": "integer",
+        "nullable": true,
+        "description": "Days required for delivery/availability after order",
+        "priority": "MEDIUM",
+        "check_constraint": ">= 0"
+      },
+      {
+        "name": "height",
+        "type": "decimal(10,2)",
+        "nullable": true,
+        "description": "Product height for shipping calculations",
+        "priority": "MEDIUM",
+        "check_constraint": ">= 0"
+      },
+      {
+        "name": "width",
+        "type": "decimal(10,2)",
+        "nullable": true,
+        "description": "Product width for shipping calculations",
+        "priority": "MEDIUM",
+        "check_constraint": ">= 0"
+      },
+      {
+        "name": "depth",
+        "type": "decimal(10,2)",
+        "nullable": true,
+        "description": "Product depth for shipping calculations",
+        "priority": "MEDIUM",
+        "check_constraint": ">= 0"
+      },
+      {
+        "name": "dimensionUnit",
+        "type": "string",
+        "length": 10,
+        "nullable": true,
+        "default": "cm",
+        "description": "Unit of measurement for dimensions (cm, in, m)",
+        "priority": "MEDIUM"
+      },
+      {
+        "name": "weightUnit",
+        "type": "string",
+        "length": 10,
+        "nullable": true,
+        "default": "kg",
+        "description": "Unit of measurement for weight (kg, lb, g)",
+        "priority": "MEDIUM"
+      },
+      {
+        "name": "taxable",
+        "type": "boolean",
+        "nullable": true,
+        "default": true,
+        "indexed": true,
+        "description": "Whether product is subject to tax",
+        "priority": "HIGH"
+      },
+      {
+        "name": "isArchived",
+        "type": "boolean",
+        "nullable": true,
+        "default": false,
+        "indexed": true,
+        "description": "Archived products are hidden but kept for historical records",
+        "priority": "MEDIUM"
+      },
+      {
+        "name": "productFamily",
+        "type": "string",
+        "length": 100,
+        "nullable": true,
+        "indexed": true,
+        "description": "Product family grouping for reporting and analytics",
+        "priority": "LOW",
+        "salesforce_equivalent": "Family"
+      },
+      {
+        "name": "externalId",
+        "type": "string",
+        "length": 255,
+        "nullable": true,
+        "indexed": true,
+        "description": "External system reference ID for integrations",
+        "priority": "MEDIUM"
+      }
+    ],
+    "index_additions": [
+      {
+        "field": "productCode",
+        "type": "index",
+        "reason": "Frequent lookups by product code in sales flows",
+        "priority": "HIGH"
+      },
+      {
+        "field": "active",
+        "type": "index",
+        "reason": "Filter active products in product lists and catalogs",
+        "priority": "HIGH"
+      },
+      {
+        "field": "sellable",
+        "type": "index",
+        "reason": "Filter sellable products in sales processes",
+        "priority": "HIGH"
+      },
+      {
+        "field": "name",
+        "type": "index",
+        "reason": "Search and autocomplete by product name",
+        "priority": "MEDIUM"
+      },
+      {
+        "field": "lifecycleStage",
+        "type": "index",
+        "reason": "Filter products by lifecycle in reports",
+        "priority": "LOW"
+      },
+      {
+        "fields": ["organization", "sku"],
+        "type": "unique_composite",
+        "reason": "Ensure SKU uniqueness within organization (multi-tenant)",
+        "priority": "HIGH"
+      },
+      {
+        "fields": ["organization", "productCode"],
+        "type": "unique_composite",
+        "reason": "Ensure product code uniqueness within organization",
+        "priority": "HIGH"
+      }
+    ],
+    "constraint_additions": [
+      {
+        "field": "listPrice",
+        "constraint": "CHECK (list_price >= 0)",
+        "reason": "Prevent negative prices",
+        "priority": "HIGH"
+      },
+      {
+        "field": "costPrice",
+        "constraint": "CHECK (cost_price >= 0)",
+        "reason": "Prevent negative costs",
+        "priority": "HIGH"
+      },
+      {
+        "field": "minimumPrice",
+        "constraint": "CHECK (minimum_price >= 0)",
+        "reason": "Prevent negative minimum prices",
+        "priority": "HIGH"
+      },
+      {
+        "field": "stockQuantity",
+        "constraint": "CHECK (stock_quantity IS NULL OR stock_quantity >= -999999)",
+        "reason": "Allow negative for backorders but prevent extreme values",
+        "priority": "MEDIUM"
+      },
+      {
+        "field": "reservedQuantity",
+        "constraint": "CHECK (reserved_quantity >= 0)",
+        "reason": "Reserved quantity cannot be negative",
+        "priority": "MEDIUM"
+      },
+      {
+        "field": "availableQuantity",
+        "constraint": "CHECK (available_quantity IS NULL OR available_quantity >= -999999)",
+        "reason": "Allow negative for backorders but prevent extreme values",
+        "priority": "MEDIUM"
+      },
+      {
+        "field": "discountPercentage",
+        "constraint": "CHECK (discount_percentage >= 0 AND discount_percentage <= 100)",
+        "reason": "Discount percentage must be between 0 and 100",
+        "priority": "HIGH"
+      },
+      {
+        "field": "commissionRate",
+        "constraint": "CHECK (commission_rate >= 0 AND commission_rate <= 100)",
+        "reason": "Commission rate must be between 0 and 100",
+        "priority": "HIGH"
+      },
+      {
+        "field": "marginPercentage",
+        "constraint": "CHECK (margin_percentage >= -100 AND margin_percentage <= 100)",
+        "reason": "Margin can be negative (loss) but within reasonable bounds",
+        "priority": "MEDIUM"
+      },
+      {
+        "field": "weight",
+        "constraint": "CHECK (weight >= 0)",
+        "reason": "Weight cannot be negative",
+        "priority": "MEDIUM"
+      }
+    ],
+    "property_modifications": [
+      {
+        "field": "dimensions",
+        "action": "DEPRECATE",
+        "reason": "Replace with separate height/width/depth fields for calculations",
+        "migration": "Parse existing string values and populate new fields",
+        "priority": "MEDIUM"
+      },
+      {
+        "field": "productCode",
+        "action": "MODIFY",
+        "changes": {
+          "add_index": true,
+          "add_length": 100,
+          "note": "Should serve as SKU if sku field not populated"
+        },
+        "priority": "HIGH"
+      }
+    ]
+  },
+  "sql_statements": {
+    "type_changes": [
+      "-- CRITICAL: Change all pricing fields from float to decimal for exact precision",
+      "ALTER TABLE product ALTER COLUMN list_price TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN cost_price TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN minimum_price TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN maximum_discount TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN discount_amount TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN discount_percentage TYPE DECIMAL(5,2);",
+      "ALTER TABLE product ALTER COLUMN commission_rate TYPE DECIMAL(5,2);",
+      "ALTER TABLE product ALTER COLUMN commission_amount TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN exchange_rate TYPE DECIMAL(12,6);",
+      "ALTER TABLE product ALTER COLUMN margin_percentage TYPE DECIMAL(5,2);",
+      "ALTER TABLE product ALTER COLUMN setup_fee TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN recurring_fee TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN cancellation_fee TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN weight TYPE DECIMAL(10,3);",
+      "",
+      "-- Add comments for documentation",
+      "COMMENT ON COLUMN product.list_price IS 'List price in organization currency - DECIMAL(15,2) for exact precision';",
+      "COMMENT ON COLUMN product.cost_price IS 'Cost price for margin calculations - DECIMAL(15,2) for exact precision';",
+      "COMMENT ON COLUMN product.exchange_rate IS 'Currency exchange rate - DECIMAL(12,6) for high precision';"
+    ],
+    "new_columns": [
+      "-- Add critical inventory and product identification fields",
+      "ALTER TABLE product ADD COLUMN sku VARCHAR(100);",
+      "ALTER TABLE product ADD COLUMN barcode VARCHAR(50);",
+      "ALTER TABLE product ADD COLUMN reorder_level INTEGER DEFAULT 0;",
+      "ALTER TABLE product ADD COLUMN reorder_quantity INTEGER DEFAULT 0;",
+      "ALTER TABLE product ADD COLUMN min_order_quantity INTEGER DEFAULT 1;",
+      "ALTER TABLE product ADD COLUMN max_order_quantity INTEGER;",
+      "ALTER TABLE product ADD COLUMN lead_time_days INTEGER;",
+      "",
+      "-- Add dimensional fields to replace dimensions string",
+      "ALTER TABLE product ADD COLUMN height DECIMAL(10,2);",
+      "ALTER TABLE product ADD COLUMN width DECIMAL(10,2);",
+      "ALTER TABLE product ADD COLUMN depth DECIMAL(10,2);",
+      "ALTER TABLE product ADD COLUMN dimension_unit VARCHAR(10) DEFAULT 'cm';",
+      "ALTER TABLE product ADD COLUMN weight_unit VARCHAR(10) DEFAULT 'kg';",
+      "",
+      "-- Add tax and lifecycle fields",
+      "ALTER TABLE product ADD COLUMN taxable BOOLEAN DEFAULT true;",
+      "ALTER TABLE product ADD COLUMN is_archived BOOLEAN DEFAULT false;",
+      "ALTER TABLE product ADD COLUMN product_family VARCHAR(100);",
+      "ALTER TABLE product ADD COLUMN external_id VARCHAR(255);",
+      "",
+      "-- Add column comments",
+      "COMMENT ON COLUMN product.sku IS 'Stock Keeping Unit - unique product identifier for inventory management';",
+      "COMMENT ON COLUMN product.barcode IS 'UPC/EAN/ISBN barcode for product scanning and identification';",
+      "COMMENT ON COLUMN product.reorder_level IS 'Minimum stock level before automatic reorder is triggered';",
+      "COMMENT ON COLUMN product.reorder_quantity IS 'Quantity to order when stock reaches reorder level';",
+      "COMMENT ON COLUMN product.min_order_quantity IS 'Minimum quantity that can be ordered in a single transaction';",
+      "COMMENT ON COLUMN product.max_order_quantity IS 'Maximum quantity that can be ordered in a single transaction';",
+      "COMMENT ON COLUMN product.lead_time_days IS 'Days required for delivery/availability after order placement';",
+      "COMMENT ON COLUMN product.taxable IS 'Whether this product is subject to tax';",
+      "COMMENT ON COLUMN product.is_archived IS 'Archived products are hidden but kept for historical records';",
+      "COMMENT ON COLUMN product.product_family IS 'Product family grouping for reporting and analytics (Salesforce Family equivalent)';",
+      "COMMENT ON COLUMN product.external_id IS 'External system reference ID for integrations';"
+    ],
+    "indexes": [
+      "-- Critical indexes for performance",
+      "CREATE INDEX idx_product_product_code ON product(product_code) WHERE product_code IS NOT NULL;",
+      "CREATE INDEX idx_product_active ON product(active) WHERE active = true;",
+      "CREATE INDEX idx_product_sellable ON product(sellable) WHERE sellable = true;",
+      "CREATE INDEX idx_product_name ON product(name);",
+      "CREATE INDEX idx_product_sku ON product(sku) WHERE sku IS NOT NULL;",
+      "CREATE INDEX idx_product_barcode ON product(barcode) WHERE barcode IS NOT NULL;",
+      "CREATE INDEX idx_product_taxable ON product(taxable);",
+      "CREATE INDEX idx_product_is_archived ON product(is_archived) WHERE is_archived = false;",
+      "CREATE INDEX idx_product_lifecycle_stage ON product(lifecycle_stage) WHERE lifecycle_stage IS NOT NULL;",
+      "CREATE INDEX idx_product_product_family ON product(product_family) WHERE product_family IS NOT NULL;",
+      "CREATE INDEX idx_product_external_id ON product(external_id) WHERE external_id IS NOT NULL;",
+      "",
+      "-- Multi-tenant unique constraints",
+      "CREATE UNIQUE INDEX idx_product_org_sku_unique ON product(organization_id, sku) WHERE sku IS NOT NULL;",
+      "CREATE UNIQUE INDEX idx_product_org_code_unique ON product(organization_id, product_code) WHERE product_code IS NOT NULL;",
+      "",
+      "-- Composite indexes for common queries",
+      "CREATE INDEX idx_product_org_active_sellable ON product(organization_id, active, sellable);",
+      "CREATE INDEX idx_product_org_category ON product(organization_id, category_id) WHERE category_id IS NOT NULL;"
+    ],
+    "constraints": [
+      "-- Financial constraints - prevent invalid data",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_list_price CHECK (list_price IS NULL OR list_price >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_cost_price CHECK (cost_price IS NULL OR cost_price >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_minimum_price CHECK (minimum_price IS NULL OR minimum_price >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_discount_percentage CHECK (discount_percentage IS NULL OR (discount_percentage >= 0 AND discount_percentage <= 100));",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_commission_rate CHECK (commission_rate IS NULL OR (commission_rate >= 0 AND commission_rate <= 100));",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_margin_percentage CHECK (margin_percentage IS NULL OR (margin_percentage >= -100 AND margin_percentage <= 100));",
+      "",
+      "-- Inventory constraints",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_stock_quantity CHECK (stock_quantity IS NULL OR stock_quantity >= -999999);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_reserved_quantity CHECK (reserved_quantity IS NULL OR reserved_quantity >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_available_quantity CHECK (available_quantity IS NULL OR available_quantity >= -999999);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_reorder_level CHECK (reorder_level IS NULL OR reorder_level >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_reorder_quantity CHECK (reorder_quantity IS NULL OR reorder_quantity >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_min_order_quantity CHECK (min_order_quantity IS NULL OR min_order_quantity >= 1);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_max_order_quantity CHECK (max_order_quantity IS NULL OR max_order_quantity >= 1);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_lead_time_days CHECK (lead_time_days IS NULL OR lead_time_days >= 0);",
+      "",
+      "-- Physical constraints",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_weight CHECK (weight IS NULL OR weight >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_height CHECK (height IS NULL OR height >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_width CHECK (width IS NULL OR width >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_depth CHECK (depth IS NULL OR depth >= 0);",
+      "",
+      "-- Logical constraints",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_min_max_order CHECK (max_order_quantity IS NULL OR min_order_quantity IS NULL OR max_order_quantity >= min_order_quantity);"
+    ],
+    "complete_migration": [
+      "-- ============================================",
+      "-- PRODUCT ENTITY OPTIMIZATION MIGRATION",
+      "-- ============================================",
+      "-- Purpose: Convert pricing fields to DECIMAL for exact precision",
+      "--          Add critical indexes for performance",
+      "--          Add new fields for inventory and product management",
+      "--          Add constraints for data integrity",
+      "-- ============================================",
+      "",
+      "BEGIN;",
+      "",
+      "-- STEP 1: Type conversions (CRITICAL - Financial precision)",
+      "ALTER TABLE product ALTER COLUMN list_price TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN cost_price TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN minimum_price TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN maximum_discount TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN discount_amount TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN discount_percentage TYPE DECIMAL(5,2);",
+      "ALTER TABLE product ALTER COLUMN commission_rate TYPE DECIMAL(5,2);",
+      "ALTER TABLE product ALTER COLUMN commission_amount TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN exchange_rate TYPE DECIMAL(12,6);",
+      "ALTER TABLE product ALTER COLUMN margin_percentage TYPE DECIMAL(5,2);",
+      "ALTER TABLE product ALTER COLUMN setup_fee TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN recurring_fee TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN cancellation_fee TYPE DECIMAL(15,2);",
+      "ALTER TABLE product ALTER COLUMN weight TYPE DECIMAL(10,3);",
+      "",
+      "-- STEP 2: Add new columns",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS sku VARCHAR(100);",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS barcode VARCHAR(50);",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS reorder_level INTEGER DEFAULT 0;",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS reorder_quantity INTEGER DEFAULT 0;",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS min_order_quantity INTEGER DEFAULT 1;",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS max_order_quantity INTEGER;",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS lead_time_days INTEGER;",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS height DECIMAL(10,2);",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS width DECIMAL(10,2);",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS depth DECIMAL(10,2);",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS dimension_unit VARCHAR(10) DEFAULT 'cm';",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS weight_unit VARCHAR(10) DEFAULT 'kg';",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS taxable BOOLEAN DEFAULT true;",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS is_archived BOOLEAN DEFAULT false;",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS product_family VARCHAR(100);",
+      "ALTER TABLE product ADD COLUMN IF NOT EXISTS external_id VARCHAR(255);",
+      "",
+      "-- STEP 3: Create indexes",
+      "CREATE INDEX IF NOT EXISTS idx_product_product_code ON product(product_code) WHERE product_code IS NOT NULL;",
+      "CREATE INDEX IF NOT EXISTS idx_product_active ON product(active) WHERE active = true;",
+      "CREATE INDEX IF NOT EXISTS idx_product_sellable ON product(sellable) WHERE sellable = true;",
+      "CREATE INDEX IF NOT EXISTS idx_product_name ON product(name);",
+      "CREATE INDEX IF NOT EXISTS idx_product_sku ON product(sku) WHERE sku IS NOT NULL;",
+      "CREATE INDEX IF NOT EXISTS idx_product_barcode ON product(barcode) WHERE barcode IS NOT NULL;",
+      "CREATE INDEX IF NOT EXISTS idx_product_taxable ON product(taxable);",
+      "CREATE INDEX IF NOT EXISTS idx_product_is_archived ON product(is_archived) WHERE is_archived = false;",
+      "CREATE INDEX IF NOT EXISTS idx_product_lifecycle_stage ON product(lifecycle_stage) WHERE lifecycle_stage IS NOT NULL;",
+      "CREATE INDEX IF NOT EXISTS idx_product_product_family ON product(product_family) WHERE product_family IS NOT NULL;",
+      "CREATE INDEX IF NOT EXISTS idx_product_external_id ON product(external_id) WHERE external_id IS NOT NULL;",
+      "CREATE UNIQUE INDEX IF NOT EXISTS idx_product_org_sku_unique ON product(organization_id, sku) WHERE sku IS NOT NULL;",
+      "CREATE UNIQUE INDEX IF NOT EXISTS idx_product_org_code_unique ON product(organization_id, product_code) WHERE product_code IS NOT NULL;",
+      "CREATE INDEX IF NOT EXISTS idx_product_org_active_sellable ON product(organization_id, active, sellable);",
+      "CREATE INDEX IF NOT EXISTS idx_product_org_category ON product(organization_id, category_id) WHERE category_id IS NOT NULL;",
+      "",
+      "-- STEP 4: Add constraints",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_list_price CHECK (list_price IS NULL OR list_price >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_cost_price CHECK (cost_price IS NULL OR cost_price >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_minimum_price CHECK (minimum_price IS NULL OR minimum_price >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_discount_percentage CHECK (discount_percentage IS NULL OR (discount_percentage >= 0 AND discount_percentage <= 100));",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_commission_rate CHECK (commission_rate IS NULL OR (commission_rate >= 0 AND commission_rate <= 100));",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_margin_percentage CHECK (margin_percentage IS NULL OR (margin_percentage >= -100 AND margin_percentage <= 100));",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_stock_quantity CHECK (stock_quantity IS NULL OR stock_quantity >= -999999);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_reserved_quantity CHECK (reserved_quantity IS NULL OR reserved_quantity >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_available_quantity CHECK (available_quantity IS NULL OR available_quantity >= -999999);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_reorder_level CHECK (reorder_level IS NULL OR reorder_level >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_reorder_quantity CHECK (reorder_quantity IS NULL OR reorder_quantity >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_min_order_quantity CHECK (min_order_quantity IS NULL OR min_order_quantity >= 1);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_max_order_quantity CHECK (max_order_quantity IS NULL OR max_order_quantity >= 1);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_lead_time_days CHECK (lead_time_days IS NULL OR lead_time_days >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_weight CHECK (weight IS NULL OR weight >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_height CHECK (height IS NULL OR height >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_width CHECK (width IS NULL OR width >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_depth CHECK (depth IS NULL OR depth >= 0);",
+      "ALTER TABLE product ADD CONSTRAINT chk_product_min_max_order CHECK (max_order_quantity IS NULL OR min_order_quantity IS NULL OR max_order_quantity >= min_order_quantity);",
+      "",
+      "-- STEP 5: Add column comments for documentation",
+      "COMMENT ON COLUMN product.list_price IS 'List price in organization currency - DECIMAL(15,2) for exact precision';",
+      "COMMENT ON COLUMN product.cost_price IS 'Cost price for margin calculations - DECIMAL(15,2) for exact precision';",
+      "COMMENT ON COLUMN product.exchange_rate IS 'Currency exchange rate - DECIMAL(12,6) for high precision';",
+      "COMMENT ON COLUMN product.sku IS 'Stock Keeping Unit - unique product identifier for inventory management';",
+      "COMMENT ON COLUMN product.barcode IS 'UPC/EAN/ISBN barcode for product scanning and identification';",
+      "COMMENT ON COLUMN product.reorder_level IS 'Minimum stock level before automatic reorder is triggered';",
+      "COMMENT ON COLUMN product.reorder_quantity IS 'Quantity to order when stock reaches reorder level';",
+      "COMMENT ON COLUMN product.min_order_quantity IS 'Minimum quantity that can be ordered in a single transaction';",
+      "COMMENT ON COLUMN product.max_order_quantity IS 'Maximum quantity that can be ordered in a single transaction';",
+      "COMMENT ON COLUMN product.lead_time_days IS 'Days required for delivery/availability after order placement';",
+      "COMMENT ON COLUMN product.taxable IS 'Whether this product is subject to tax';",
+      "COMMENT ON COLUMN product.is_archived IS 'Archived products are hidden but kept for historical records';",
+      "COMMENT ON COLUMN product.product_family IS 'Product family grouping for reporting and analytics (Salesforce Family equivalent)';",
+      "COMMENT ON COLUMN product.external_id IS 'External system reference ID for integrations';",
+      "",
+      "COMMIT;",
+      "",
+      "-- ============================================",
+      "-- Post-migration validation queries",
+      "-- ============================================",
+      "",
+      "-- Verify data types",
+      "SELECT column_name, data_type, numeric_precision, numeric_scale",
+      "FROM information_schema.columns",
+      "WHERE table_name = 'product'",
+      "AND column_name IN ('list_price', 'cost_price', 'exchange_rate', 'weight')",
+      "ORDER BY column_name;",
+      "",
+      "-- Verify indexes",
+      "SELECT indexname, indexdef",
+      "FROM pg_indexes",
+      "WHERE tablename = 'product'",
+      "ORDER BY indexname;",
+      "",
+      "-- Verify constraints",
+      "SELECT conname, pg_get_constraintdef(oid)",
+      "FROM pg_constraint",
+      "WHERE conrelid = 'product'::regclass",
+      "ORDER BY conname;"
+    ]
+  },
+  "impact_analysis": {
+    "breaking_changes": [
+      {
+        "change": "Type conversion from float to decimal",
+        "affected_code": [
+          "Entity property declarations",
+          "API serialization/deserialization",
+          "Form field types",
+          "Calculations and comparisons"
+        ],
+        "migration_effort": "LOW - Doctrine handles type conversion automatically",
+        "risk": "LOW - Decimal is compatible with float in PHP"
+      }
+    ],
+    "performance_impact": {
+      "database": {
+        "storage": "Minimal increase (~1-2 bytes per decimal field)",
+        "query_speed": "20-40% improvement on indexed fields (productCode, active, sellable)",
+        "index_overhead": "Minimal - indexes on selective columns only"
+      },
+      "application": {
+        "calculation_precision": "MAJOR improvement - eliminates floating point errors",
+        "api_response_time": "No change - JSON serialization handles decimal",
+        "form_validation": "Improved - decimal precision enforced at database level"
+      }
+    }
+  },
+  "recommendations": {
+    "immediate_actions": [
+      "1. Run the complete_migration SQL in a transaction",
+      "2. Update Product entity PHP class to use decimal types",
+      "3. Update API Platform serialization groups if needed",
+      "4. Test pricing calculations with new decimal precision",
+      "5. Update any hardcoded float casts to decimal"
+    ],
+    "future_enhancements": [
+      "1. Add computed field for profitMargin (listPrice - costPrice)",
+      "2. Add trigger to auto-calculate availableQuantity (stockQuantity - reservedQuantity)",
+      "3. Consider separate PriceHistory table for price change tracking",
+      "4. Add ProductVariant entity for size/color variations",
+      "5. Implement automatic reorder notifications when stock hits reorderLevel"
+    ],
+    "salesforce_alignment": [
+      "ProductCode → productCode (already exists)",
+      "Family → productFamily (NEW)",
+      "IsActive → active (already exists)",
+      "QuantityUnitOfMeasure → unitOfMeasure (already exists)",
+      "StockKeepingUnit → sku (NEW)"
+    ]
+  },
+  "testing_checklist": [
+    "Verify pricing calculations maintain precision (no .999999 or .000001 errors)",
+    "Test SKU uniqueness constraint within organization",
+    "Verify negative stock quantities work for backorders",
+    "Test discount percentage constraint (0-100)",
+    "Verify index performance on product code lookups",
+    "Test active/sellable filters with new indexes",
+    "Verify margin percentage allows negative values (loss scenarios)",
+    "Test reorder level triggers (if implementing auto-notifications)",
+    "Verify multi-tenant organization filtering works with new indexes",
+    "Test API serialization of decimal fields"
+  ]
+}

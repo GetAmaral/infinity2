@@ -41,10 +41,18 @@ final class SoftDeleteSubscriber
     {
         $entity = $args->getObject();
 
+        error_log("[SoftDeleteSubscriber] preRemove called for: " . get_class($entity));
+
         // Check if entity supports soft delete
-        if (!$this->hasSoftDeleteTrait($entity)) {
+        $hasTrait = $this->hasSoftDeleteTrait($entity);
+        error_log("[SoftDeleteSubscriber] Has SoftDeletableTrait: " . ($hasTrait ? 'YES' : 'NO'));
+
+        if (!$hasTrait) {
+            error_log("[SoftDeleteSubscriber] Allowing normal hard delete");
             return; // Allow normal hard delete
         }
+
+        error_log("[SoftDeleteSubscriber] Performing soft delete instead");
 
         // Get entity manager
         $em = $args->getObjectManager();

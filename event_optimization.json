@@ -1,0 +1,1089 @@
+{
+  "entity": "Event",
+  "analysis": {
+    "current_state": "Good foundation with calendar integration, recurrence support, and attendee management. Needs optimization for modern calendar APIs (Google, Outlook) and online meeting features.",
+    "strengths": [
+      "Has calendar relationship",
+      "Supports recurrence (interval, frequency, end date)",
+      "Has attendee relationship (OneToMany)",
+      "Conference data support (Google Hangout)",
+      "Extended properties for API sync"
+    ],
+    "gaps": [
+      "Missing timezone support for proper multi-timezone handling",
+      "No explicit showAs/freeBusyStatus (Busy, Free, Tentative, OutOfOffice)",
+      "No eventType categorization (Meeting, Call, Task, Demo)",
+      "Missing relationship to Contact, Company, Deal (what the meeting is about)",
+      "No assignedTo user (primary owner/participant)",
+      "No meeting provider enum (Zoom, Teams, Google Meet)",
+      "recurrenceRule not RFC 5545 compliant (using interval/frequency instead)",
+      "Missing recurrence exceptions handling",
+      "No duration field (useful for calculations)",
+      "startTime/endTime not indexed (critical for calendar queries)",
+      "Missing isCancelled, isDraft status flags",
+      "No responseStatus tracking (accepted, declined, tentative)",
+      "Missing sensitivity/confidentiality levels"
+    ]
+  },
+  "recommendations": {
+    "keep": [
+      {
+        "property": "name",
+        "reason": "Core property - event title/subject. Keep as-is."
+      },
+      {
+        "property": "description",
+        "reason": "Standard calendar field for event details"
+      },
+      {
+        "property": "location",
+        "reason": "Physical location string"
+      },
+      {
+        "property": "startTime",
+        "reason": "Event start - MUST INDEX for calendar queries",
+        "action": "ADD INDEX"
+      },
+      {
+        "property": "endTime",
+        "reason": "Event end - MUST INDEX for calendar queries",
+        "action": "ADD INDEX"
+      },
+      {
+        "property": "allDay",
+        "reason": "All-day event flag - standard calendar feature",
+        "action": "Rename to isAllDay for consistency"
+      },
+      {
+        "property": "calendar",
+        "reason": "ManyToOne to Calendar - essential relationship"
+      },
+      {
+        "property": "organizer",
+        "reason": "ManyToOne to User - event creator/organizer"
+      },
+      {
+        "property": "attendees",
+        "reason": "OneToMany to EventAttendee - essential for meetings"
+      },
+      {
+        "property": "categories",
+        "reason": "ManyToMany categorization"
+      },
+      {
+        "property": "hangoutLink",
+        "reason": "Keep but rename to meetingUrl for generic use"
+      },
+      {
+        "property": "conferenceData",
+        "reason": "JSON for online meeting details (Google format)"
+      },
+      {
+        "property": "extendedProperties",
+        "reason": "JSON for API sync metadata"
+      },
+      {
+        "property": "source",
+        "reason": "JSON for external calendar source tracking"
+      },
+      {
+        "property": "attachments",
+        "reason": "OneToMany - event attachments"
+      },
+      {
+        "property": "reminders",
+        "reason": "OneToMany - event reminders"
+      },
+      {
+        "property": "resourceBookings",
+        "reason": "OneToMany - room/equipment bookings"
+      },
+      {
+        "property": "parentEvent",
+        "reason": "ManyToOne - for recurring event instances"
+      },
+      {
+        "property": "childrenEvents",
+        "reason": "OneToMany - recurring event instances"
+      },
+      {
+        "property": "originalStartTime",
+        "reason": "For modified recurring instances"
+      },
+      {
+        "property": "sequence",
+        "reason": "iCalendar sequence number for updates"
+      }
+    ],
+    "remove": [
+      {
+        "property": "geo",
+        "reason": "Too vague - better handled in location coordinates or via geocoding service"
+      },
+      {
+        "property": "eventStatus",
+        "reason": "Replace with explicit enum: status (Planned, Confirmed, Completed, Cancelled)"
+      },
+      {
+        "property": "visibility",
+        "reason": "Boolean is too limited - replace with enum: visibility (Default, Public, Private)"
+      },
+      {
+        "property": "priority",
+        "reason": "Replace with importance enum (Low, Normal, High) matching Outlook"
+      },
+      {
+        "property": "recurrenceInterval",
+        "reason": "Replace with recurrenceRule (RFC 5545 RRULE string)"
+      },
+      {
+        "property": "recurrenceFrequency",
+        "reason": "Part of recurrenceRule - use single RRULE string instead"
+      },
+      {
+        "property": "recurrenceEndDate",
+        "reason": "Part of recurrenceRule UNTIL parameter"
+      },
+      {
+        "property": "recurrenceCount",
+        "reason": "Part of recurrenceRule COUNT parameter"
+      },
+      {
+        "property": "notifications",
+        "reason": "Duplicate of reminders - consolidate into reminders"
+      },
+      {
+        "property": "meetingDatas",
+        "reason": "Unclear purpose - consolidate into conferenceData JSON"
+      },
+      {
+        "property": "workingHours",
+        "reason": "Belongs to User/Calendar, not Event"
+      },
+      {
+        "property": "holidays",
+        "reason": "Belongs to Calendar/Organization, not Event"
+      },
+      {
+        "property": "notes",
+        "reason": "Duplicate of description - use description instead"
+      }
+    ],
+    "add": [
+      {
+        "property": "subject",
+        "type": "string",
+        "nullable": false,
+        "indexed": true,
+        "reason": "Alias for name - standard in Salesforce/Outlook. Search queries.",
+        "action": "Consider renaming 'name' to 'subject' OR keep both with subject as copy of name"
+      },
+      {
+        "property": "status",
+        "type": "string",
+        "nullable": false,
+        "default": "Planned",
+        "values": ["Planned", "Confirmed", "Completed", "Cancelled"],
+        "reason": "Clear event lifecycle status (Salesforce standard)"
+      },
+      {
+        "property": "showAs",
+        "type": "string",
+        "nullable": false,
+        "default": "Busy",
+        "values": ["Busy", "Free", "Tentative", "OutOfOffice", "WorkingElsewhere"],
+        "reason": "Free/busy status for calendar availability (Outlook/Google standard)"
+      },
+      {
+        "property": "eventType",
+        "type": "string",
+        "nullable": true,
+        "values": ["Meeting", "Call", "Task", "Email", "Demo", "Conference", "Training", "Interview"],
+        "reason": "Event categorization for filtering and reporting"
+      },
+      {
+        "property": "assignedTo",
+        "type": "ManyToOne",
+        "target": "User",
+        "nullable": true,
+        "reason": "Primary owner/participant - Salesforce pattern for assignment"
+      },
+      {
+        "property": "contact",
+        "type": "ManyToOne",
+        "target": "Contact",
+        "nullable": true,
+        "reason": "Link to Contact record (Salesforce WhoID pattern)"
+      },
+      {
+        "property": "company",
+        "type": "ManyToOne",
+        "target": "Company",
+        "nullable": true,
+        "reason": "Link to Company/Account record"
+      },
+      {
+        "property": "deal",
+        "type": "ManyToOne",
+        "target": "Deal",
+        "nullable": true,
+        "reason": "Link to Deal/Opportunity record (Salesforce WhatID pattern)"
+      },
+      {
+        "property": "timezone",
+        "type": "string",
+        "nullable": true,
+        "default": "UTC",
+        "reason": "Event timezone (IANA timezone name: America/New_York)"
+      },
+      {
+        "property": "startTimezone",
+        "type": "string",
+        "nullable": true,
+        "reason": "Outlook pattern - separate start timezone"
+      },
+      {
+        "property": "endTimezone",
+        "type": "string",
+        "nullable": true,
+        "reason": "Outlook pattern - separate end timezone"
+      },
+      {
+        "property": "duration",
+        "type": "integer",
+        "nullable": true,
+        "reason": "Duration in minutes - useful for calculations, reporting"
+      },
+      {
+        "property": "isRecurring",
+        "type": "boolean",
+        "nullable": false,
+        "default": false,
+        "reason": "Flag for recurring events - quick filtering"
+      },
+      {
+        "property": "recurrenceRule",
+        "type": "text",
+        "nullable": true,
+        "reason": "RFC 5545 RRULE string (e.g., FREQ=WEEKLY;BYDAY=MO,WE,FR;UNTIL=20251231)"
+      },
+      {
+        "property": "recurrenceExceptions",
+        "type": "json",
+        "nullable": true,
+        "reason": "Array of dates where recurrence is cancelled/modified"
+      },
+      {
+        "property": "isCancelled",
+        "type": "boolean",
+        "nullable": false,
+        "default": false,
+        "indexed": true,
+        "reason": "Quick check for cancelled events (Outlook standard)"
+      },
+      {
+        "property": "isDraft",
+        "type": "boolean",
+        "nullable": false,
+        "default": false,
+        "reason": "Draft events not yet sent to attendees (Outlook standard)"
+      },
+      {
+        "property": "isOnlineMeeting",
+        "type": "boolean",
+        "nullable": false,
+        "default": false,
+        "reason": "Flag for online meetings - Outlook pattern"
+      },
+      {
+        "property": "onlineMeetingProvider",
+        "type": "string",
+        "nullable": true,
+        "values": ["Unknown", "Zoom", "Teams", "GoogleMeet", "Webex", "SkypeForBusiness", "SkypeForConsumer"],
+        "reason": "Outlook standard - meeting provider enum"
+      },
+      {
+        "property": "meetingUrl",
+        "type": "string",
+        "nullable": true,
+        "reason": "Generic meeting URL (rename from hangoutLink)"
+      },
+      {
+        "property": "meetingId",
+        "type": "string",
+        "nullable": true,
+        "reason": "Meeting ID for joining (Zoom meeting ID, Teams ID)"
+      },
+      {
+        "property": "meetingPassword",
+        "type": "string",
+        "nullable": true,
+        "reason": "Meeting password/passcode"
+      },
+      {
+        "property": "locationUrl",
+        "type": "string",
+        "nullable": true,
+        "reason": "URL for location details or directions"
+      },
+      {
+        "property": "locationDisplayName",
+        "type": "string",
+        "nullable": true,
+        "reason": "Formatted location name (Outlook pattern)"
+      },
+      {
+        "property": "locationCoordinates",
+        "type": "json",
+        "nullable": true,
+        "reason": "Lat/long for map integration: {\"latitude\": 40.7128, \"longitude\": -74.0060}"
+      },
+      {
+        "property": "reminderMinutes",
+        "type": "integer",
+        "nullable": true,
+        "default": 15,
+        "reason": "Default reminder time before event in minutes"
+      },
+      {
+        "property": "importance",
+        "type": "string",
+        "nullable": false,
+        "default": "Normal",
+        "values": ["Low", "Normal", "High"],
+        "reason": "Outlook standard - event importance"
+      },
+      {
+        "property": "sensitivity",
+        "type": "string",
+        "nullable": false,
+        "default": "Normal",
+        "values": ["Normal", "Personal", "Private", "Confidential"],
+        "reason": "Outlook standard - confidentiality level"
+      },
+      {
+        "property": "responseStatus",
+        "type": "string",
+        "nullable": true,
+        "values": ["NeedsAction", "Accepted", "Declined", "Tentative"],
+        "reason": "Organizer's response status (Google pattern)"
+      },
+      {
+        "property": "responseRequested",
+        "type": "boolean",
+        "nullable": false,
+        "default": true,
+        "reason": "Whether responses are requested from attendees (Outlook)"
+      },
+      {
+        "property": "allowNewTimeProposals",
+        "type": "boolean",
+        "nullable": false,
+        "default": true,
+        "reason": "Allow attendees to propose new times (Outlook)"
+      },
+      {
+        "property": "hideAttendees",
+        "type": "boolean",
+        "nullable": false,
+        "default": false,
+        "reason": "Hide attendee list from each other (Outlook)"
+      },
+      {
+        "property": "externalCalendarId",
+        "type": "string",
+        "nullable": true,
+        "indexed": true,
+        "reason": "External calendar event ID (Google Event ID, Outlook Event ID) for sync"
+      },
+      {
+        "property": "externalCalendarProvider",
+        "type": "string",
+        "nullable": true,
+        "values": ["Google", "Outlook", "Apple", "Other"],
+        "reason": "Source calendar provider"
+      },
+      {
+        "property": "icalUid",
+        "type": "string",
+        "nullable": true,
+        "indexed": true,
+        "reason": "iCalendar UID for cross-platform sync"
+      },
+      {
+        "property": "webLink",
+        "type": "string",
+        "nullable": true,
+        "reason": "Link to view event in external calendar (Google webLink)"
+      },
+      {
+        "property": "htmlLink",
+        "type": "string",
+        "nullable": true,
+        "reason": "HTML link to event (Google htmlLink)"
+      },
+      {
+        "property": "guestsCanModify",
+        "type": "boolean",
+        "nullable": false,
+        "default": false,
+        "reason": "Google pattern - attendees can modify event"
+      },
+      {
+        "property": "guestsCanInviteOthers",
+        "type": "boolean",
+        "nullable": false,
+        "default": true,
+        "reason": "Google pattern - attendees can invite others"
+      },
+      {
+        "property": "guestsCanSeeOtherGuests",
+        "type": "boolean",
+        "nullable": false,
+        "default": true,
+        "reason": "Google pattern - attendees can see other attendees"
+      },
+      {
+        "property": "transparency",
+        "type": "string",
+        "nullable": false,
+        "default": "Opaque",
+        "values": ["Opaque", "Transparent"],
+        "reason": "Google pattern - whether event blocks time on calendar"
+      },
+      {
+        "property": "colorId",
+        "type": "string",
+        "nullable": true,
+        "reason": "Google calendar color ID (1-11)"
+      },
+      {
+        "property": "locked",
+        "type": "boolean",
+        "nullable": false,
+        "default": false,
+        "reason": "Google pattern - event cannot be modified"
+      }
+    ],
+    "rename": [
+      {
+        "from": "allDay",
+        "to": "isAllDay",
+        "reason": "Naming consistency - boolean fields should start with 'is'"
+      }
+    ]
+  },
+  "final_structure": {
+    "description": "Optimized Event entity for modern calendar/meeting management with Google Calendar, Outlook, and Salesforce compatibility",
+    "properties": [
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false,
+        "indexed": true,
+        "description": "Event title/subject - primary name field"
+      },
+      {
+        "name": "subject",
+        "type": "string",
+        "nullable": true,
+        "indexed": true,
+        "description": "Alias for name - Salesforce/Outlook compatibility. Can be computed or duplicate."
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": true,
+        "indexed": false,
+        "description": "Event details/body"
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "nullable": false,
+        "indexed": true,
+        "default": "Planned",
+        "values": ["Planned", "Confirmed", "Completed", "Cancelled"],
+        "description": "Event lifecycle status"
+      },
+      {
+        "name": "eventType",
+        "type": "string",
+        "nullable": true,
+        "indexed": true,
+        "values": ["Meeting", "Call", "Task", "Email", "Demo", "Conference", "Training", "Interview"],
+        "description": "Event categorization"
+      },
+      {
+        "name": "showAs",
+        "type": "string",
+        "nullable": false,
+        "indexed": false,
+        "default": "Busy",
+        "values": ["Busy", "Free", "Tentative", "OutOfOffice", "WorkingElsewhere"],
+        "description": "Free/busy status for calendar availability"
+      },
+      {
+        "name": "importance",
+        "type": "string",
+        "nullable": false,
+        "indexed": false,
+        "default": "Normal",
+        "values": ["Low", "Normal", "High"],
+        "description": "Event importance/priority"
+      },
+      {
+        "name": "sensitivity",
+        "type": "string",
+        "nullable": false,
+        "indexed": false,
+        "default": "Normal",
+        "values": ["Normal", "Personal", "Private", "Confidential"],
+        "description": "Confidentiality level"
+      },
+      {
+        "name": "startTime",
+        "type": "datetime",
+        "nullable": false,
+        "indexed": true,
+        "description": "Event start date/time - CRITICAL INDEX for calendar queries"
+      },
+      {
+        "name": "endTime",
+        "type": "datetime",
+        "nullable": false,
+        "indexed": true,
+        "description": "Event end date/time - CRITICAL INDEX for calendar queries"
+      },
+      {
+        "name": "isAllDay",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": false,
+        "default": false,
+        "description": "All-day event flag"
+      },
+      {
+        "name": "timezone",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "default": "UTC",
+        "description": "Event timezone (IANA name: America/New_York)"
+      },
+      {
+        "name": "startTimezone",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "Start timezone - Outlook pattern"
+      },
+      {
+        "name": "endTimezone",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "End timezone - Outlook pattern"
+      },
+      {
+        "name": "duration",
+        "type": "integer",
+        "nullable": true,
+        "indexed": false,
+        "description": "Duration in minutes"
+      },
+      {
+        "name": "location",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "Physical location string"
+      },
+      {
+        "name": "locationDisplayName",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "Formatted location name"
+      },
+      {
+        "name": "locationUrl",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "URL for location details/directions"
+      },
+      {
+        "name": "locationCoordinates",
+        "type": "json",
+        "nullable": true,
+        "indexed": false,
+        "description": "Lat/long: {latitude: 40.7128, longitude: -74.0060}"
+      },
+      {
+        "name": "isOnlineMeeting",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": false,
+        "default": false,
+        "description": "Online meeting flag"
+      },
+      {
+        "name": "onlineMeetingProvider",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "values": ["Unknown", "Zoom", "Teams", "GoogleMeet", "Webex", "SkypeForBusiness", "SkypeForConsumer"],
+        "description": "Meeting provider"
+      },
+      {
+        "name": "meetingUrl",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "Meeting URL (Zoom, Teams, etc.)"
+      },
+      {
+        "name": "meetingId",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "Meeting ID for joining"
+      },
+      {
+        "name": "meetingPassword",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "Meeting password/passcode"
+      },
+      {
+        "name": "conferenceData",
+        "type": "json",
+        "nullable": true,
+        "indexed": false,
+        "description": "Google conferenceData JSON structure"
+      },
+      {
+        "name": "isRecurring",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": true,
+        "default": false,
+        "description": "Recurring event flag"
+      },
+      {
+        "name": "recurrenceRule",
+        "type": "text",
+        "nullable": true,
+        "indexed": false,
+        "description": "RFC 5545 RRULE string"
+      },
+      {
+        "name": "recurrenceExceptions",
+        "type": "json",
+        "nullable": true,
+        "indexed": false,
+        "description": "Array of exception dates"
+      },
+      {
+        "name": "originalStartTime",
+        "type": "datetime",
+        "nullable": true,
+        "indexed": false,
+        "description": "Original start for modified recurring instances"
+      },
+      {
+        "name": "isCancelled",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": true,
+        "default": false,
+        "description": "Cancelled event flag"
+      },
+      {
+        "name": "isDraft",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": false,
+        "default": false,
+        "description": "Draft event not yet sent"
+      },
+      {
+        "name": "responseStatus",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "values": ["NeedsAction", "Accepted", "Declined", "Tentative"],
+        "description": "Organizer's response status"
+      },
+      {
+        "name": "responseRequested",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": false,
+        "default": true,
+        "description": "Request attendee responses"
+      },
+      {
+        "name": "allowNewTimeProposals",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": false,
+        "default": true,
+        "description": "Allow time proposals from attendees"
+      },
+      {
+        "name": "hideAttendees",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": false,
+        "default": false,
+        "description": "Hide attendee list"
+      },
+      {
+        "name": "guestsCanModify",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": false,
+        "default": false,
+        "description": "Attendees can modify event (Google)"
+      },
+      {
+        "name": "guestsCanInviteOthers",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": false,
+        "default": true,
+        "description": "Attendees can invite others (Google)"
+      },
+      {
+        "name": "guestsCanSeeOtherGuests",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": false,
+        "default": true,
+        "description": "Attendees can see other attendees (Google)"
+      },
+      {
+        "name": "transparency",
+        "type": "string",
+        "nullable": false,
+        "indexed": false,
+        "default": "Opaque",
+        "values": ["Opaque", "Transparent"],
+        "description": "Whether event blocks calendar time (Google)"
+      },
+      {
+        "name": "reminderMinutes",
+        "type": "integer",
+        "nullable": true,
+        "indexed": false,
+        "default": 15,
+        "description": "Default reminder time in minutes"
+      },
+      {
+        "name": "externalCalendarId",
+        "type": "string",
+        "nullable": true,
+        "indexed": true,
+        "description": "External calendar event ID for sync"
+      },
+      {
+        "name": "externalCalendarProvider",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "values": ["Google", "Outlook", "Apple", "Other"],
+        "description": "External calendar provider"
+      },
+      {
+        "name": "icalUid",
+        "type": "string",
+        "nullable": true,
+        "indexed": true,
+        "description": "iCalendar UID for cross-platform sync"
+      },
+      {
+        "name": "sequence",
+        "type": "integer",
+        "nullable": true,
+        "indexed": false,
+        "description": "iCalendar sequence number"
+      },
+      {
+        "name": "webLink",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "Link to view in external calendar"
+      },
+      {
+        "name": "htmlLink",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "HTML link to event"
+      },
+      {
+        "name": "colorId",
+        "type": "string",
+        "nullable": true,
+        "indexed": false,
+        "description": "Google calendar color ID (1-11)"
+      },
+      {
+        "name": "locked",
+        "type": "boolean",
+        "nullable": false,
+        "indexed": false,
+        "default": false,
+        "description": "Event cannot be modified (Google)"
+      },
+      {
+        "name": "extendedProperties",
+        "type": "json",
+        "nullable": true,
+        "indexed": false,
+        "description": "Extended properties for API sync"
+      },
+      {
+        "name": "source",
+        "type": "json",
+        "nullable": true,
+        "indexed": false,
+        "description": "External source information"
+      }
+    ],
+    "relationships": [
+      {
+        "name": "organization",
+        "type": "ManyToOne",
+        "target": "Organization",
+        "nullable": false,
+        "description": "Multi-tenant organization"
+      },
+      {
+        "name": "calendar",
+        "type": "ManyToOne",
+        "target": "Calendar",
+        "nullable": true,
+        "description": "Parent calendar"
+      },
+      {
+        "name": "organizer",
+        "type": "ManyToOne",
+        "target": "User",
+        "nullable": true,
+        "description": "Event creator/organizer"
+      },
+      {
+        "name": "assignedTo",
+        "type": "ManyToOne",
+        "target": "User",
+        "nullable": true,
+        "description": "Primary owner/participant (Salesforce pattern)"
+      },
+      {
+        "name": "contact",
+        "type": "ManyToOne",
+        "target": "Contact",
+        "nullable": true,
+        "description": "Related contact (Salesforce WhoID)"
+      },
+      {
+        "name": "company",
+        "type": "ManyToOne",
+        "target": "Company",
+        "nullable": true,
+        "description": "Related company/account"
+      },
+      {
+        "name": "deal",
+        "type": "ManyToOne",
+        "target": "Deal",
+        "nullable": true,
+        "description": "Related deal/opportunity (Salesforce WhatID)"
+      },
+      {
+        "name": "parentEvent",
+        "type": "ManyToOne",
+        "target": "Event",
+        "nullable": true,
+        "description": "Parent for recurring event instances"
+      },
+      {
+        "name": "childrenEvents",
+        "type": "OneToMany",
+        "target": "Event",
+        "mappedBy": "parentEvent",
+        "description": "Child recurring instances"
+      },
+      {
+        "name": "attendees",
+        "type": "OneToMany",
+        "target": "EventAttendee",
+        "mappedBy": "event",
+        "description": "Event attendees"
+      },
+      {
+        "name": "attachments",
+        "type": "OneToMany",
+        "target": "Attachment",
+        "mappedBy": "event",
+        "description": "Event attachments"
+      },
+      {
+        "name": "reminders",
+        "type": "OneToMany",
+        "target": "Reminder",
+        "mappedBy": "event",
+        "description": "Event reminders"
+      },
+      {
+        "name": "resourceBookings",
+        "type": "OneToMany",
+        "target": "ResourceBooking",
+        "mappedBy": "event",
+        "description": "Room/equipment bookings"
+      },
+      {
+        "name": "categories",
+        "type": "ManyToMany",
+        "target": "Category",
+        "description": "Event categories"
+      }
+    ]
+  },
+  "implementation_priority": {
+    "critical": [
+      "Add indexes to startTime and endTime (MUST for calendar performance)",
+      "Add status field (event lifecycle)",
+      "Add showAs field (free/busy)",
+      "Add timezone fields (multi-timezone support)",
+      "Add isOnlineMeeting, onlineMeetingProvider, meetingUrl (modern meetings)",
+      "Add contact, company, deal relationships (CRM integration)",
+      "Replace recurrence fields with recurrenceRule (RFC 5545)",
+      "Add isCancelled, isDraft flags",
+      "Add externalCalendarId with index (sync)"
+    ],
+    "high": [
+      "Add eventType for categorization",
+      "Add assignedTo relationship",
+      "Add importance and sensitivity",
+      "Add meeting credentials (meetingId, meetingPassword)",
+      "Add location enhancements (locationDisplayName, locationUrl, locationCoordinates)",
+      "Add attendee control flags (hideAttendees, responseRequested, etc.)",
+      "Add icalUid with index (cross-platform sync)"
+    ],
+    "medium": [
+      "Add Google-specific fields (transparency, color, guest permissions)",
+      "Add Outlook-specific fields (allowNewTimeProposals)",
+      "Add webLink, htmlLink for external calendar access",
+      "Add duration field",
+      "Rename allDay to isAllDay"
+    ],
+    "low": [
+      "Add locked field",
+      "Consider subject field (or keep name only)"
+    ]
+  },
+  "migration_notes": {
+    "data_transformation": [
+      "eventStatus -> status: Map integer to enum string",
+      "visibility (boolean) -> sensitivity: Map to enum",
+      "priority (integer) -> importance: Map to enum (Low/Normal/High)",
+      "recurrenceInterval + recurrenceFrequency -> recurrenceRule: Convert to RFC 5545 RRULE",
+      "hangoutLink -> meetingUrl: Rename field",
+      "allDay -> isAllDay: Rename field"
+    ],
+    "deletions": [
+      "Drop: geo, notifications (duplicate), meetingDatas, workingHours, holidays, notes (duplicate)"
+    ],
+    "indexes_to_add": [
+      "startTime (CRITICAL)",
+      "endTime (CRITICAL)",
+      "externalCalendarId",
+      "icalUid",
+      "isCancelled",
+      "isRecurring",
+      "status",
+      "eventType"
+    ]
+  },
+  "calendar_query_patterns": {
+    "example_queries": [
+      "Get events for date range: WHERE startTime >= ? AND endTime <= ? AND isCancelled = false",
+      "Get user's busy times: WHERE assignedTo = ? AND showAs IN ('Busy', 'OutOfOffice') AND isCancelled = false",
+      "Get recurring events: WHERE isRecurring = true AND parentEvent IS NULL",
+      "Get online meetings: WHERE isOnlineMeeting = true AND meetingUrl IS NOT NULL",
+      "Sync with Google: WHERE externalCalendarProvider = 'Google' AND externalCalendarId IS NOT NULL"
+    ]
+  },
+  "salesforce_compatibility": {
+    "mappings": [
+      "Subject -> name/subject",
+      "StartDateTime -> startTime",
+      "EndDateTime -> endTime",
+      "IsAllDayEvent -> isAllDay",
+      "WhoId -> contact (Contact reference)",
+      "WhatId -> company/deal (Account/Opportunity reference)",
+      "OwnerId -> assignedTo",
+      "EventSubtype -> eventType",
+      "ShowAs -> showAs",
+      "Location -> location"
+    ]
+  },
+  "google_calendar_compatibility": {
+    "mappings": [
+      "summary -> name",
+      "description -> description",
+      "start.dateTime -> startTime",
+      "end.dateTime -> endTime",
+      "start.timeZone -> startTimezone",
+      "location -> location",
+      "hangoutLink -> meetingUrl",
+      "conferenceData -> conferenceData (JSON)",
+      "recurrence -> recurrenceRule (RRULE array)",
+      "attendees -> attendees relationship",
+      "organizer -> organizer",
+      "id -> externalCalendarId",
+      "iCalUID -> icalUid",
+      "transparency -> transparency",
+      "colorId -> colorId",
+      "extendedProperties -> extendedProperties (JSON)",
+      "source -> source (JSON)",
+      "guestsCanModify -> guestsCanModify",
+      "guestsCanInviteOthers -> guestsCanInviteOthers",
+      "guestsCanSeeOtherGuests -> guestsCanSeeOtherGuests",
+      "locked -> locked"
+    ]
+  },
+  "outlook_compatibility": {
+    "mappings": [
+      "subject -> name/subject",
+      "body -> description",
+      "start.dateTime -> startTime",
+      "end.dateTime -> endTime",
+      "start.timeZone -> startTimezone",
+      "end.timeZone -> endTimezone",
+      "location -> location",
+      "isOnlineMeeting -> isOnlineMeeting",
+      "onlineMeetingProvider -> onlineMeetingProvider",
+      "onlineMeetingUrl -> meetingUrl",
+      "showAs -> showAs",
+      "importance -> importance",
+      "sensitivity -> sensitivity",
+      "isAllDay -> isAllDay",
+      "isCancelled -> isCancelled",
+      "isDraft -> isDraft",
+      "responseRequested -> responseRequested",
+      "allowNewTimeProposals -> allowNewTimeProposals",
+      "hideAttendees -> hideAttendees",
+      "attendees -> attendees relationship",
+      "organizer -> organizer",
+      "id -> externalCalendarId",
+      "iCalUId -> icalUid"
+    ]
+  }
+}

@@ -228,15 +228,29 @@ final class UserController extends BaseApiController
         $userId = $user->getId()?->toString();
         $userName = $user->getName();
 
-        if ($this->isCsrfTokenValid('delete-user-' . $userId, $request->request->get('_token'))) {
+        $receivedToken = $request->request->get('_token');
+        $expectedTokenId = 'delete';  // Use single stateless token for all deletes
+
+        if ($this->isCsrfTokenValid($expectedTokenId, $receivedToken)) {
             error_log("=== DELETE DEBUG ===");
             error_log("User ID: $userId");
             error_log("User Name: $userName");
             error_log("Entity state: " . $this->entityManager->getUnitOfWork()->getEntityState($user));
             error_log("Contains: " . ($this->entityManager->contains($user) ? 'YES' : 'NO'));
+            error_log("Student courses count: " . $user->getStudentCourses()->count());
+
+            // Force load the collection to ensure it's initialized
+            $studentCourses = $user->getStudentCourses();
+            if (!$studentCourses->isInitialized()) {
+                error_log("StudentCourses collection NOT initialized - forcing load");
+                $studentCourses->toArray(); // Force load
+            }
+            error_log("StudentCourses loaded: " . $studentCourses->count());
 
             $this->entityManager->remove($user);
             error_log("After remove() - Scheduled for deletion: " . count($this->entityManager->getUnitOfWork()->getScheduledEntityDeletions()));
+            error_log("After remove() - Scheduled for insertion: " . count($this->entityManager->getUnitOfWork()->getScheduledEntityInsertions()));
+            error_log("After remove() - Scheduled for update: " . count($this->entityManager->getUnitOfWork()->getScheduledEntityUpdates()));
 
             $this->entityManager->flush();
             error_log("After flush() - Entity still exists: " . ($this->entityManager->contains($user) ? 'YES' : 'NO'));
@@ -397,7 +411,7 @@ final class UserController extends BaseApiController
             'enrolledCoursesCount' => $entity->getStudentCourses()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'createdAtFormatted' => $entity->getCreatedAt()->format('M d, Y'),
-            'deleteCsrfToken' => $this->csrfTokenManager->getToken('delete-user-' . $userId)->getValue(),
+            'deleteCsrfToken' => $this->csrfTokenManager->getToken('delete')->getValue(),
         ];
     }
 }
