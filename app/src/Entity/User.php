@@ -23,6 +23,25 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ORM\Index(name: 'idx_user_email', columns: ['email'])]
+#[ORM\Index(name: 'idx_user_username', columns: ['username'])]
+#[ORM\Index(name: 'idx_user_organization', columns: ['organization_id'])]
+#[ORM\Index(name: 'idx_user_two_factor_enabled', columns: ['two_factor_enabled'])]
+#[ORM\Index(name: 'idx_user_password_reset_token', columns: ['password_reset_token'])]
+#[ORM\Index(name: 'idx_user_session_token', columns: ['session_token'])]
+#[ORM\Index(name: 'idx_user_last_password_change_at', columns: ['last_password_change_at'])]
+#[ORM\Index(name: 'idx_user_password_expires_at', columns: ['password_expires_at'])]
+#[ORM\Index(name: 'idx_user_must_change_password', columns: ['must_change_password'])]
+#[ORM\Index(name: 'idx_user_passkey_enabled', columns: ['passkey_enabled'])]
+#[ORM\Index(name: 'idx_user_email_verified_at', columns: ['email_verified_at'])]
+#[ORM\Index(name: 'idx_user_department', columns: ['department'])]
+#[ORM\Index(name: 'idx_user_manager_id', columns: ['manager_id'])]
+#[ORM\Index(name: 'idx_user_sales_team', columns: ['sales_team'])]
+#[ORM\Index(name: 'idx_user_is_agent', columns: ['is_agent'])]
+#[ORM\Index(name: 'idx_user_agent_type', columns: ['agent_type'])]
+#[ORM\Index(name: 'idx_user_is_active', columns: ['is_active'])]
+#[ORM\Index(name: 'idx_user_deleted_at', columns: ['deleted_at'])]
+#[ORM\Index(name: 'idx_user_failed_login_attempts', columns: ['failed_login_attempts'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[ApiResource(
     normalizationContext: ['groups' => ['user:read']],
@@ -52,11 +71,12 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
+    #[Assert\Length(max: 255)]
     #[Groups(['user:read', 'user:write'])]
     protected string $email = '';
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:write'])] // Password only for write operations
+    // CRITICAL SECURITY: Password must NEVER be in serialization groups, NEVER api_readable
     protected string $password = '';
 
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users')]
@@ -84,7 +104,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     protected ?\DateTimeImmutable $apiTokenExpiresAt = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    // CRITICAL SECURITY: API key must NEVER be api_readable
     protected ?string $openAiApiKey = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
@@ -97,7 +117,9 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     protected ?\DateTimeImmutable $lockedUntil = null;
 
     #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
+    #[Groups(['user:read'])] // CRITICAL: api_writable=false - users cannot change organization
     protected ?Organization $organization = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
@@ -113,6 +135,164 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
 
     #[ORM\OneToMany(mappedBy: 'student', targetEntity: StudentCourse::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     protected Collection $studentCourses;
+
+    // ===== NEW SECURITY FIELDS (2FA, Passwordless, Session Security) =====
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    protected bool $twoFactorEnabled = false;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    // CRITICAL: TOTP secret - NEVER expose via API
+    protected ?string $twoFactorSecret = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    // CRITICAL: Backup codes - NEVER expose via API
+    protected ?array $twoFactorBackupCodes = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    // CRITICAL: Password reset token - NEVER api_readable
+    protected ?string $passwordResetToken = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $passwordResetExpiry = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    // CRITICAL: Session token - NEVER api_readable
+    protected ?string $sessionToken = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $lastPasswordChangeAt = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $passwordExpiresAt = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    protected bool $mustChangePassword = false;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    protected bool $passkeyEnabled = false;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    // CRITICAL: FIDO2 credentials - NEVER expose via API
+    protected ?array $passkeyCredentials = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['user:read'])]
+    protected ?\DateTimeImmutable $emailVerifiedAt = null;
+
+    // ===== NEW CRM FIELDS =====
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true, unique: true)]
+    #[Assert\Length(min: 3, max: 100)]
+    #[Assert\Regex(pattern: '/^[a-zA-Z0-9_-]+$/', message: 'Username must contain only letters, numbers, underscores, and hyphens')]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $username = null;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Assert\Regex(pattern: '/^[+]?[0-9\s()-]+$/')]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $phone = null;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Assert\Regex(pattern: '/^[+]?[0-9\s()-]+$/')]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $mobilePhone = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $jobTitle = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $department = null;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true, options: ['default' => 'UTC'])]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $timezone = 'UTC';
+
+    #[ORM\Column(type: 'string', length: 10, nullable: true, options: ['default' => 'en'])]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $locale = 'en';
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $preferredLanguage = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $emailSignature = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    #[Groups(['user:read', 'user:write'])]
+    protected bool $emailNotificationsEnabled = true;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(['user:read', 'user:write'])]
+    protected bool $smsNotificationsEnabled = false;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(['user:read', 'user:write'])]
+    protected bool $calendarSyncEnabled = false;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?array $workingHours = null;
+
+    #[ORM\Column(type: 'string', length: 3, nullable: true, options: ['default' => 'USD'])]
+    #[Assert\Length(min: 3, max: 3)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $defaultCurrency = 'USD';
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true, options: ['default' => 'Y-m-d'])]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $dateFormat = 'Y-m-d';
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?User $manager = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $salesTeam = null;
+
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    #[Assert\PositiveOrZero]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $quotaAmount = null;
+
+    #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
+    #[Assert\Range(min: 0, max: 100)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $commissionRate = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(['user:read', 'user:write'])]
+    protected bool $isAgent = false;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $agentType = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    #[Groups(['user:read', 'user:write'])]
+    protected bool $isActive = true;
+
+    // ===== AUDIT FIELDS (deletedAt for soft delete) =====
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $deletedAt = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $avatar = null;
+
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?\DateTimeImmutable $birthDate = null;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $gender = null;
 
     public function __construct()
     {
@@ -557,6 +737,451 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
                 $studentCourse->setStudent(null);
             }
         }
+        return $this;
+    }
+
+    // ===== GETTERS/SETTERS FOR NEW SECURITY FIELDS =====
+
+    public function isTwoFactorEnabled(): bool
+    {
+        return $this->twoFactorEnabled;
+    }
+
+    public function setTwoFactorEnabled(bool $twoFactorEnabled): self
+    {
+        $this->twoFactorEnabled = $twoFactorEnabled;
+        return $this;
+    }
+
+    public function getTwoFactorSecret(): ?string
+    {
+        return $this->twoFactorSecret;
+    }
+
+    public function setTwoFactorSecret(?string $twoFactorSecret): self
+    {
+        $this->twoFactorSecret = $twoFactorSecret;
+        return $this;
+    }
+
+    public function getTwoFactorBackupCodes(): ?array
+    {
+        return $this->twoFactorBackupCodes;
+    }
+
+    public function setTwoFactorBackupCodes(?array $twoFactorBackupCodes): self
+    {
+        $this->twoFactorBackupCodes = $twoFactorBackupCodes;
+        return $this;
+    }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function setPasswordResetToken(?string $passwordResetToken): self
+    {
+        $this->passwordResetToken = $passwordResetToken;
+        return $this;
+    }
+
+    public function getPasswordResetExpiry(): ?\DateTimeImmutable
+    {
+        return $this->passwordResetExpiry;
+    }
+
+    public function setPasswordResetExpiry(?\DateTimeImmutable $passwordResetExpiry): self
+    {
+        $this->passwordResetExpiry = $passwordResetExpiry;
+        return $this;
+    }
+
+    public function generatePasswordResetToken(int $validityMinutes = 60): self
+    {
+        $this->passwordResetToken = bin2hex(random_bytes(32));
+        $this->passwordResetExpiry = (new \DateTimeImmutable())->modify("+{$validityMinutes} minutes");
+        return $this;
+    }
+
+    public function isPasswordResetTokenValid(): bool
+    {
+        if (!$this->passwordResetToken || !$this->passwordResetExpiry) {
+            return false;
+        }
+        return $this->passwordResetExpiry > new \DateTimeImmutable();
+    }
+
+    public function getSessionToken(): ?string
+    {
+        return $this->sessionToken;
+    }
+
+    public function setSessionToken(?string $sessionToken): self
+    {
+        $this->sessionToken = $sessionToken;
+        return $this;
+    }
+
+    public function getLastPasswordChangeAt(): ?\DateTimeImmutable
+    {
+        return $this->lastPasswordChangeAt;
+    }
+
+    public function setLastPasswordChangeAt(?\DateTimeImmutable $lastPasswordChangeAt): self
+    {
+        $this->lastPasswordChangeAt = $lastPasswordChangeAt;
+        return $this;
+    }
+
+    public function getPasswordExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->passwordExpiresAt;
+    }
+
+    public function setPasswordExpiresAt(?\DateTimeImmutable $passwordExpiresAt): self
+    {
+        $this->passwordExpiresAt = $passwordExpiresAt;
+        return $this;
+    }
+
+    public function mustChangePassword(): bool
+    {
+        return $this->mustChangePassword;
+    }
+
+    public function setMustChangePassword(bool $mustChangePassword): self
+    {
+        $this->mustChangePassword = $mustChangePassword;
+        return $this;
+    }
+
+    public function isPasskeyEnabled(): bool
+    {
+        return $this->passkeyEnabled;
+    }
+
+    public function setPasskeyEnabled(bool $passkeyEnabled): self
+    {
+        $this->passkeyEnabled = $passkeyEnabled;
+        return $this;
+    }
+
+    public function getPasskeyCredentials(): ?array
+    {
+        return $this->passkeyCredentials;
+    }
+
+    public function setPasskeyCredentials(?array $passkeyCredentials): self
+    {
+        $this->passkeyCredentials = $passkeyCredentials;
+        return $this;
+    }
+
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable
+    {
+        return $this->emailVerifiedAt;
+    }
+
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
+    {
+        $this->emailVerifiedAt = $emailVerifiedAt;
+        return $this;
+    }
+
+    // ===== GETTERS/SETTERS FOR NEW CRM FIELDS =====
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(?string $username): self
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+        return $this;
+    }
+
+    public function getMobilePhone(): ?string
+    {
+        return $this->mobilePhone;
+    }
+
+    public function setMobilePhone(?string $mobilePhone): self
+    {
+        $this->mobilePhone = $mobilePhone;
+        return $this;
+    }
+
+    public function getJobTitle(): ?string
+    {
+        return $this->jobTitle;
+    }
+
+    public function setJobTitle(?string $jobTitle): self
+    {
+        $this->jobTitle = $jobTitle;
+        return $this;
+    }
+
+    public function getDepartment(): ?string
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?string $department): self
+    {
+        $this->department = $department;
+        return $this;
+    }
+
+    public function getTimezone(): ?string
+    {
+        return $this->timezone;
+    }
+
+    public function setTimezone(?string $timezone): self
+    {
+        $this->timezone = $timezone;
+        return $this;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(?string $locale): self
+    {
+        $this->locale = $locale;
+        return $this;
+    }
+
+    public function getPreferredLanguage(): ?string
+    {
+        return $this->preferredLanguage;
+    }
+
+    public function setPreferredLanguage(?string $preferredLanguage): self
+    {
+        $this->preferredLanguage = $preferredLanguage;
+        return $this;
+    }
+
+    public function getEmailSignature(): ?string
+    {
+        return $this->emailSignature;
+    }
+
+    public function setEmailSignature(?string $emailSignature): self
+    {
+        $this->emailSignature = $emailSignature;
+        return $this;
+    }
+
+    public function isEmailNotificationsEnabled(): bool
+    {
+        return $this->emailNotificationsEnabled;
+    }
+
+    public function setEmailNotificationsEnabled(bool $emailNotificationsEnabled): self
+    {
+        $this->emailNotificationsEnabled = $emailNotificationsEnabled;
+        return $this;
+    }
+
+    public function isSmsNotificationsEnabled(): bool
+    {
+        return $this->smsNotificationsEnabled;
+    }
+
+    public function setSmsNotificationsEnabled(bool $smsNotificationsEnabled): self
+    {
+        $this->smsNotificationsEnabled = $smsNotificationsEnabled;
+        return $this;
+    }
+
+    public function isCalendarSyncEnabled(): bool
+    {
+        return $this->calendarSyncEnabled;
+    }
+
+    public function setCalendarSyncEnabled(bool $calendarSyncEnabled): self
+    {
+        $this->calendarSyncEnabled = $calendarSyncEnabled;
+        return $this;
+    }
+
+    public function getWorkingHours(): ?array
+    {
+        return $this->workingHours;
+    }
+
+    public function setWorkingHours(?array $workingHours): self
+    {
+        $this->workingHours = $workingHours;
+        return $this;
+    }
+
+    public function getDefaultCurrency(): ?string
+    {
+        return $this->defaultCurrency;
+    }
+
+    public function setDefaultCurrency(?string $defaultCurrency): self
+    {
+        $this->defaultCurrency = $defaultCurrency;
+        return $this;
+    }
+
+    public function getDateFormat(): ?string
+    {
+        return $this->dateFormat;
+    }
+
+    public function setDateFormat(?string $dateFormat): self
+    {
+        $this->dateFormat = $dateFormat;
+        return $this;
+    }
+
+    public function getManager(): ?User
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?User $manager): self
+    {
+        $this->manager = $manager;
+        return $this;
+    }
+
+    public function getSalesTeam(): ?string
+    {
+        return $this->salesTeam;
+    }
+
+    public function setSalesTeam(?string $salesTeam): self
+    {
+        $this->salesTeam = $salesTeam;
+        return $this;
+    }
+
+    public function getQuotaAmount(): ?string
+    {
+        return $this->quotaAmount;
+    }
+
+    public function setQuotaAmount(?string $quotaAmount): self
+    {
+        $this->quotaAmount = $quotaAmount;
+        return $this;
+    }
+
+    public function getCommissionRate(): ?string
+    {
+        return $this->commissionRate;
+    }
+
+    public function setCommissionRate(?string $commissionRate): self
+    {
+        $this->commissionRate = $commissionRate;
+        return $this;
+    }
+
+    public function isAgent(): bool
+    {
+        return $this->isAgent;
+    }
+
+    public function setIsAgent(bool $isAgent): self
+    {
+        $this->isAgent = $isAgent;
+        return $this;
+    }
+
+    public function getAgentType(): ?string
+    {
+        return $this->agentType;
+    }
+
+    public function setAgentType(?string $agentType): self
+    {
+        $this->agentType = $agentType;
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+
+    // ===== GETTERS/SETTERS FOR AUDIT FIELDS =====
+
+    public function getDeletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+        return $this;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deletedAt !== null;
+    }
+
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeImmutable
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(?\DateTimeImmutable $birthDate): self
+    {
+        $this->birthDate = $birthDate;
+        return $this;
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?string $gender): self
+    {
+        $this->gender = $gender;
         return $this;
     }
 

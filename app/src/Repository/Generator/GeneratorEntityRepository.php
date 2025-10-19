@@ -113,6 +113,30 @@ final class GeneratorEntityRepository extends BaseRepository
     }
 
     /**
+     * Find entities for code generation with properties eagerly loaded
+     * Ordered by menuGroup, menuOrder, and entityName
+     *
+     * @param string|null $entityFilter Optional entity name filter
+     * @return array<GeneratorEntity>
+     */
+    public function findForGeneration(?string $entityFilter = null): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->leftJoin('e.properties', 'p')
+            ->addSelect('p')
+            ->orderBy('e.menuGroup', 'ASC')
+            ->addOrderBy('e.menuOrder', 'ASC')
+            ->addOrderBy('e.entityName', 'ASC');
+
+        if ($entityFilter) {
+            $qb->where('e.entityName = :name')
+               ->setParameter('name', $entityFilter);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Transform GeneratorEntity to array for API response
      */
     protected function entityToArray(object $entity): array

@@ -268,6 +268,28 @@ class GeneratorProperty
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $apiExample = null;   // Example value for API documentation
 
+    // Advanced API Platform Filters
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $filterStrategy = null;  // 'partial', 'exact', 'start', 'end', 'word_start'
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $filterSearchable = false;  // Enable full-text search filter
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $filterOrderable = false;  // Enable ordering on this property
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $filterBoolean = false;  // Enable boolean filter
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $filterDate = false;  // Enable date range filter
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $filterNumericRange = false;  // Enable numeric range filter
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $filterExists = false;  // Enable null/not-null filter
+
     // ====================================
     // FIELD-LEVEL SECURITY
     // ====================================
@@ -486,4 +508,20 @@ class GeneratorProperty
     public function setSerializerMethod(?string $serializerMethod): self { $this->serializerMethod = $serializerMethod; return $this; }
     public function getDenormalizer(): ?string { return $this->denormalizer; }
     public function setDenormalizer(?string $denormalizer): self { $this->denormalizer = $denormalizer; return $this; }
+
+    // Advanced filters getters and setters
+    public function getFilterStrategy(): ?string { return $this->filterStrategy; }
+    public function setFilterStrategy(?string $filterStrategy): self { $this->filterStrategy = $filterStrategy; return $this; }
+    public function isFilterSearchable(): bool { return $this->filterSearchable; }
+    public function setFilterSearchable(bool $filterSearchable): self { $this->filterSearchable = $filterSearchable; return $this; }
+    public function isFilterOrderable(): bool { return $this->filterOrderable; }
+    public function setFilterOrderable(bool $filterOrderable): self { $this->filterOrderable = $filterOrderable; return $this; }
+    public function isFilterBoolean(): bool { return $this->filterBoolean; }
+    public function setFilterBoolean(bool $filterBoolean): self { $this->filterBoolean = $filterBoolean; return $this; }
+    public function isFilterDate(): bool { return $this->filterDate; }
+    public function setFilterDate(bool $filterDate): self { $this->filterDate = $filterDate; return $this; }
+    public function isFilterNumericRange(): bool { return $this->filterNumericRange; }
+    public function setFilterNumericRange(bool $filterNumericRange): self { $this->filterNumericRange = $filterNumericRange; return $this; }
+    public function isFilterExists(): bool { return $this->filterExists; }
+    public function setFilterExists(bool $filterExists): self { $this->filterExists = $filterExists; return $this; }
 }

@@ -137,13 +137,14 @@ class GeneratorEntity
     #[Groups(['generator_entity:read', 'generator_entity:write'])]
     private ?array $apiDefaultOrder = null;  // {"name": "asc"}
 
+    // Operation-Level Configuration
     #[ORM\Column(type: 'json', nullable: true)]
     #[Groups(['generator_entity:read', 'generator_entity:write'])]
-    private ?array $apiSearchableFields = null;
+    private ?array $operationSecurity = null;  // Per-operation security: ['GetCollection' => "is_granted('ROLE_USER')", 'Post' => "is_granted('ROLE_ADMIN')"]
 
     #[ORM\Column(type: 'json', nullable: true)]
     #[Groups(['generator_entity:read', 'generator_entity:write'])]
-    private ?array $apiFilterableFields = null;
+    private ?array $operationValidationGroups = null;  // Per-operation validation: ['Post' => ['create', 'strict'], 'Put' => ['update']]
 
     // ====================================
     // SECURITY (2 fields)
@@ -156,6 +157,14 @@ class GeneratorEntity
     #[ORM\Column(type: 'json', nullable: true)]
     #[Groups(['generator_entity:read', 'generator_entity:write'])]
     private ?array $voterAttributes = null;  // ['VIEW', 'EDIT', 'DELETE', 'CREATE']
+
+    // ====================================
+    // VALIDATION (2 fields)
+    // ====================================
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private ?array $validationGroups = null;  // ['create', 'update', 'admin'] - context-aware validation
 
     // ====================================
     // NAVIGATION (2 fields)
@@ -579,28 +588,6 @@ class GeneratorEntity
         return $this;
     }
 
-    public function getApiSearchableFields(): ?array
-    {
-        return $this->apiSearchableFields;
-    }
-
-    public function setApiSearchableFields(?array $apiSearchableFields): self
-    {
-        $this->apiSearchableFields = $apiSearchableFields;
-        return $this;
-    }
-
-    public function getApiFilterableFields(): ?array
-    {
-        return $this->apiFilterableFields;
-    }
-
-    public function setApiFilterableFields(?array $apiFilterableFields): self
-    {
-        $this->apiFilterableFields = $apiFilterableFields;
-        return $this;
-    }
-
     public function isVoterEnabled(): bool
     {
         return $this->voterEnabled;
@@ -787,5 +774,38 @@ class GeneratorEntity
     public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function getOperationSecurity(): ?array
+    {
+        return $this->operationSecurity;
+    }
+
+    public function setOperationSecurity(?array $operationSecurity): self
+    {
+        $this->operationSecurity = $operationSecurity;
+        return $this;
+    }
+
+    public function getOperationValidationGroups(): ?array
+    {
+        return $this->operationValidationGroups;
+    }
+
+    public function setOperationValidationGroups(?array $operationValidationGroups): self
+    {
+        $this->operationValidationGroups = $operationValidationGroups;
+        return $this;
+    }
+
+    public function getValidationGroups(): ?array
+    {
+        return $this->validationGroups;
+    }
+
+    public function setValidationGroups(?array $validationGroups): self
+    {
+        $this->validationGroups = $validationGroups;
+        return $this;
     }
 }

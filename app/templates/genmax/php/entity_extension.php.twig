@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use App\Entity\Generated\{{ entity.getEntityName() }}Generated;
+use App\Repository\{{ entity.getEntityName() }}Repository;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * {{ entity.getEntityLabel() }} Entity
+ *
+ * {% if entity.getDescription() %}{{ entity.getDescription() }}{% endif %}
+ *
+ * This class extends the generated base and is SAFE TO EDIT.
+ * Add custom business logic, methods, and overrides here.
+ *
+ * @generated once by Genmax Code Generator
+ */
+#[ORM\Entity(repositoryClass: {{ entity.getEntityName() }}Repository::class)]
+#[ORM\Table(name: '{{ entity.getTableName() }}')]
+class {{ entity.getEntityName() }} extends {{ entity.getEntityName() }}Generated
+{
+    // Add custom properties here
+
+    // Add custom methods here
+}

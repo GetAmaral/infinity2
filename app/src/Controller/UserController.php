@@ -228,33 +228,9 @@ final class UserController extends BaseApiController
         $userId = $user->getId()?->toString();
         $userName = $user->getName();
 
-        $receivedToken = $request->request->get('_token');
-        $expectedTokenId = 'delete';  // Use single stateless token for all deletes
-
-        if ($this->isCsrfTokenValid($expectedTokenId, $receivedToken)) {
-            error_log("=== DELETE DEBUG ===");
-            error_log("User ID: $userId");
-            error_log("User Name: $userName");
-            error_log("Entity state: " . $this->entityManager->getUnitOfWork()->getEntityState($user));
-            error_log("Contains: " . ($this->entityManager->contains($user) ? 'YES' : 'NO'));
-            error_log("Student courses count: " . $user->getStudentCourses()->count());
-
-            // Force load the collection to ensure it's initialized
-            $studentCourses = $user->getStudentCourses();
-            if (!$studentCourses->isInitialized()) {
-                error_log("StudentCourses collection NOT initialized - forcing load");
-                $studentCourses->toArray(); // Force load
-            }
-            error_log("StudentCourses loaded: " . $studentCourses->count());
-
+        if ($this->isCsrfTokenValid('delete', $request->request->get('_token'))) {
             $this->entityManager->remove($user);
-            error_log("After remove() - Scheduled for deletion: " . count($this->entityManager->getUnitOfWork()->getScheduledEntityDeletions()));
-            error_log("After remove() - Scheduled for insertion: " . count($this->entityManager->getUnitOfWork()->getScheduledEntityInsertions()));
-            error_log("After remove() - Scheduled for update: " . count($this->entityManager->getUnitOfWork()->getScheduledEntityUpdates()));
-
             $this->entityManager->flush();
-            error_log("After flush() - Entity still exists: " . ($this->entityManager->contains($user) ? 'YES' : 'NO'));
-            error_log("=== END DEBUG ===");
 
             $this->addFlash('success', 'user.flash.deleted_successfully');
 
@@ -266,7 +242,6 @@ final class UserController extends BaseApiController
                 ]);
             }
         } else {
-            error_log("DEBUG: CSRF token invalid!");
             $this->addFlash('error', 'common.error.invalid_csrf');
         }
 

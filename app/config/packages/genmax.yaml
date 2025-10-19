@@ -1,0 +1,118 @@
+# Genmax Code Generator Configuration
+#
+# This file defines all paths and directories used by Genmax.
+# Paths are relative to %kernel.project_dir%
+
+parameters:
+    # ====================================
+    # GENMAX PATH CONFIGURATION
+    # ====================================
+
+    genmax.paths:
+        # Entity paths
+        entity_generated_dir: 'src/Entity/Generated'
+        entity_dir: 'src/Entity'
+        entity_generated_namespace: 'App\Entity\Generated'
+        entity_namespace: 'App\Entity'
+
+        # Repository paths
+        repository_generated_dir: 'src/Repository/Generated'
+        repository_dir: 'src/Repository'
+        repository_generated_namespace: 'App\Repository\Generated'
+        repository_namespace: 'App\Repository'
+
+        # Controller paths
+        controller_generated_dir: 'src/Controller/Generated'
+        controller_dir: 'src/Controller'
+        controller_generated_namespace: 'App\Controller\Generated'
+        controller_namespace: 'App\Controller'
+
+        # Security Voter paths
+        voter_generated_dir: 'src/Security/Voter/Generated'
+        voter_dir: 'src/Security/Voter'
+        voter_generated_namespace: 'App\Security\Voter\Generated'
+        voter_namespace: 'App\Security\Voter'
+
+        # Form paths
+        form_generated_dir: 'src/Form/Generated'
+        form_dir: 'src/Form'
+        form_generated_namespace: 'App\Form\Generated'
+        form_namespace: 'App\Form'
+
+        # Template paths
+        template_dir: 'templates'
+
+        # API Platform config
+        api_platform_config_dir: 'config/api_platform'
+
+        # Test paths
+        test_entity_dir: 'tests/Entity'
+        test_repository_dir: 'tests/Repository'
+        test_controller_dir: 'tests/Controller'
+        test_voter_dir: 'tests/Security/Voter'
+
+        # Navigation & translations
+        base_template: 'templates/base.html.twig'
+        translations_dir: 'translations'
+
+        # Backup directory
+        backup_dir: 'var/backups'
+
+    # ====================================
+    # GENMAX FEATURE FLAGS
+    # ====================================
+
+    genmax.features:
+        # Phase 1 - ACTIVE
+        entity_generation: true
+
+        # Phase 2 - ACTIVE
+        api_platform_generation: true
+        repository_generation: false
+
+        # Phase 3 - Future
+        controller_generation: false
+        voter_generation: false
+        form_generation: false
+
+        # Phase 4 - Future
+        template_generation: false
+        navigation_generation: false
+        translation_generation: false
+
+        # Phase 5 - Future
+        test_generation: false
+
+    # ====================================
+    # GENMAX TEMPLATE CONFIGURATION
+    # ====================================
+
+    genmax.templates:
+        # Template paths (relative to templates/ directory)
+        entity_generated: 'genmax/php/entity_generated.php.twig'
+        entity_extension: 'genmax/php/entity_extension.php.twig'
+        repository_generated: 'genmax/php/repository_generated.php.twig'
+        repository_extension: 'genmax/php/repository_extension.php.twig'
+        controller_generated: 'genmax/php/controller_generated.php.twig'
+        controller_extension: 'genmax/php/controller_extension.php.twig'
+        voter_generated: 'genmax/php/voter_generated.php.twig'
+        voter_extension: 'genmax/php/voter_extension.php.twig'
+        form_generated: 'genmax/php/form_generated.php.twig'
+        form_extension: 'genmax/php/form_extension.php.twig'
+        api_platform_config: 'genmax/yaml/api_platform.yaml.twig'
+
+    # ====================================
+    # GENMAX GENERATION OPTIONS
+    # ====================================
+
+    genmax.options:
+        # Backup settings
+        backup_enabled: true
+        backup_prefix: 'genmax_generation'
+
+        # Generation settings
+        dry_run_default: false
+
+        # File permissions
+        directory_permissions: 0755
+        file_permissions: 0644

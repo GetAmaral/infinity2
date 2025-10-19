@@ -12,6 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrganizationRepository::class)]
+#[ORM\Index(name: 'idx_organization_slug', columns: ['slug'])]
+#[ORM\Index(name: 'idx_organization_is_active', columns: ['is_active'])]
 #[ApiResource(
     normalizationContext: ['groups' => ['organization:read']],
     denormalizationContext: ['groups' => ['organization:write']],
@@ -55,6 +57,55 @@ class Organization extends EntityBase
     #[ORM\Column(type: 'boolean')]
     #[Groups(['organization:read', 'organization:write'])]
     protected bool $isActive = true;
+
+    // Subscription Management
+    #[ORM\Column(length: 50, options: ['default' => 'free'])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected string $subscriptionPlan = 'free';
+
+    #[ORM\Column(length: 50, options: ['default' => 'active'])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected string $subscriptionStatus = 'active';
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?\DateTimeImmutable $subscriptionEndDate = null;
+
+    // Billing Configuration
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Email]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $billingEmail = null;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 10])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected int $maxUsers = 10;
+
+    #[ORM\Column(type: 'bigint', options: ['default' => 10737418240])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected int $storageLimit = 10737418240; // 10GB in bytes
+
+    // Regional Settings
+    #[ORM\Column(length: 100, options: ['default' => 'UTC'])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected string $timezone = 'UTC';
+
+    #[ORM\Column(length: 10, options: ['default' => 'en'])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected string $defaultLocale = 'en';
+
+    #[ORM\Column(length: 10, options: ['default' => 'USD'])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected string $defaultCurrency = 'USD';
+
+    // GDPR Compliance
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected bool $gdprEnabled = true;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 365])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected int $dataRetentionDays = 365;
 
     #[ORM\OneToMany(mappedBy: 'organization', targetEntity: User::class)]
     #[Groups(['organization:read'])]
@@ -242,6 +293,160 @@ class Organization extends EntityBase
     {
         $this->isActive = $isActive;
         return $this;
+    }
+
+    // Subscription Management Getters/Setters
+    public function getSubscriptionPlan(): string
+    {
+        return $this->subscriptionPlan;
+    }
+
+    public function setSubscriptionPlan(string $subscriptionPlan): self
+    {
+        $this->subscriptionPlan = $subscriptionPlan;
+        return $this;
+    }
+
+    public function getSubscriptionStatus(): string
+    {
+        return $this->subscriptionStatus;
+    }
+
+    public function setSubscriptionStatus(string $subscriptionStatus): self
+    {
+        $this->subscriptionStatus = $subscriptionStatus;
+        return $this;
+    }
+
+    public function getSubscriptionEndDate(): ?\DateTimeImmutable
+    {
+        return $this->subscriptionEndDate;
+    }
+
+    public function setSubscriptionEndDate(?\DateTimeImmutable $subscriptionEndDate): self
+    {
+        $this->subscriptionEndDate = $subscriptionEndDate;
+        return $this;
+    }
+
+    public function isSubscriptionActive(): bool
+    {
+        if ($this->subscriptionStatus !== 'active') {
+            return false;
+        }
+
+        if ($this->subscriptionEndDate === null) {
+            return true;
+        }
+
+        return $this->subscriptionEndDate > new \DateTimeImmutable();
+    }
+
+    // Billing Configuration Getters/Setters
+    public function getBillingEmail(): ?string
+    {
+        return $this->billingEmail;
+    }
+
+    public function setBillingEmail(?string $billingEmail): self
+    {
+        $this->billingEmail = $billingEmail;
+        return $this;
+    }
+
+    public function getMaxUsers(): int
+    {
+        return $this->maxUsers;
+    }
+
+    public function setMaxUsers(int $maxUsers): self
+    {
+        $this->maxUsers = $maxUsers;
+        return $this;
+    }
+
+    public function getStorageLimit(): int
+    {
+        return $this->storageLimit;
+    }
+
+    public function setStorageLimit(int $storageLimit): self
+    {
+        $this->storageLimit = $storageLimit;
+        return $this;
+    }
+
+    public function getStorageLimitInGB(): float
+    {
+        return $this->storageLimit / 1073741824; // Convert bytes to GB
+    }
+
+    public function setStorageLimitInGB(float $gigabytes): self
+    {
+        $this->storageLimit = (int)($gigabytes * 1073741824);
+        return $this;
+    }
+
+    // Regional Settings Getters/Setters
+    public function getTimezone(): string
+    {
+        return $this->timezone;
+    }
+
+    public function setTimezone(string $timezone): self
+    {
+        $this->timezone = $timezone;
+        return $this;
+    }
+
+    public function getDefaultLocale(): string
+    {
+        return $this->defaultLocale;
+    }
+
+    public function setDefaultLocale(string $defaultLocale): self
+    {
+        $this->defaultLocale = $defaultLocale;
+        return $this;
+    }
+
+    public function getDefaultCurrency(): string
+    {
+        return $this->defaultCurrency;
+    }
+
+    public function setDefaultCurrency(string $defaultCurrency): self
+    {
+        $this->defaultCurrency = $defaultCurrency;
+        return $this;
+    }
+
+    // GDPR Compliance Getters/Setters
+    public function isGdprEnabled(): bool
+    {
+        return $this->gdprEnabled;
+    }
+
+    public function setGdprEnabled(bool $gdprEnabled): self
+    {
+        $this->gdprEnabled = $gdprEnabled;
+        return $this;
+    }
+
+    public function getDataRetentionDays(): int
+    {
+        return $this->dataRetentionDays;
+    }
+
+    public function setDataRetentionDays(int $dataRetentionDays): self
+    {
+        $this->dataRetentionDays = $dataRetentionDays;
+        return $this;
+    }
+
+    public function getDataRetentionDate(): \DateTimeImmutable
+    {
+        return (new \DateTimeImmutable())->modify("-{$this->dataRetentionDays} days");
     }
 
 }
