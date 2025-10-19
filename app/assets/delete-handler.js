@@ -338,15 +338,7 @@ class DeleteHandler {
             detail: { button }
         }));
 
-        // Reload the page after a short delay to refresh the list
-        setTimeout(() => {
-            if (typeof Turbo !== 'undefined') {
-                Turbo.cache.clear();
-                Turbo.visit(window.location, { action: 'replace' });
-            } else {
-                window.location.reload();
-            }
-        }, 800);
+        // NO PAGE RELOAD - Let Turbo Stream handle the refresh
     }
 
     handleError(message) {

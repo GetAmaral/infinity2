@@ -229,21 +229,30 @@ final class UserController extends BaseApiController
         $userName = $user->getName();
 
         if ($this->isCsrfTokenValid('delete-user-' . $userId, $request->request->get('_token'))) {
+            error_log("=== DELETE DEBUG ===");
+            error_log("User ID: $userId");
+            error_log("User Name: $userName");
+            error_log("Entity state: " . $this->entityManager->getUnitOfWork()->getEntityState($user));
+            error_log("Contains: " . ($this->entityManager->contains($user) ? 'YES' : 'NO'));
+
             $this->entityManager->remove($user);
+            error_log("After remove() - Scheduled for deletion: " . count($this->entityManager->getUnitOfWork()->getScheduledEntityDeletions()));
+
             $this->entityManager->flush();
+            error_log("After flush() - Entity still exists: " . ($this->entityManager->contains($user) ? 'YES' : 'NO'));
+            error_log("=== END DEBUG ===");
 
             $this->addFlash('success', 'user.flash.deleted_successfully');
 
             // Return Turbo Stream response for seamless UX
-            if (str_contains($request->headers->get('Accept', ''), 'turbo-stream')) {
-                $response = $this->render('user/_turbo_stream_deleted.html.twig', [
+            if ($request->headers->get('Accept') === 'text/vnd.turbo-stream.html') {
+                return $this->render('user/_turbo_stream_deleted.html.twig', [
                     'userId' => $userId,
                     'userName' => $userName,
                 ]);
-                $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
-                return $response;
             }
         } else {
+            error_log("DEBUG: CSRF token invalid!");
             $this->addFlash('error', 'common.error.invalid_csrf');
         }
 

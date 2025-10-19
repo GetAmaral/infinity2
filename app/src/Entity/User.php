@@ -111,7 +111,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Course::class)]
     protected Collection $ownedCourses;
 
-    #[ORM\OneToMany(mappedBy: 'student', targetEntity: StudentCourse::class)]
+    #[ORM\OneToMany(mappedBy: 'student', targetEntity: StudentCourse::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     protected Collection $studentCourses;
 
     public function __construct()

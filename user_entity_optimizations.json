@@ -1,0 +1,1024 @@
+{
+  "entity": "User",
+  "optimization_date": "2025-10-18",
+  "optimization_basis": "2025 Authentication & CRM Best Practices (Symfony 7.3, Salesforce, HubSpot, OWASP)",
+  "critical_notes": [
+    "User entity is CRITICAL for security - password field must NEVER be api_readable",
+    "Email must be unique per organization and indexed for performance",
+    "Two-factor authentication and passwordless support required",
+    "Organization field cannot be changed by users (formReadOnly=true)",
+    "Follow Symfony 7.3 security improvements (deprecated eraseCredentials)",
+    "Support multi-factor authentication and session security",
+    "Implement soft delete with deletedAt for audit compliance"
+  ],
+
+  "properties_to_add": [
+    {
+      "property_name": "username",
+      "property_label": "Username",
+      "property_type": "string",
+      "length": 100,
+      "nullable": true,
+      "unique": true,
+      "indexed": true,
+      "searchable": true,
+      "sortable": true,
+      "show_in_list": true,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "validation_rules": {"Length": {"min": 3, "max": 100}, "Regex": {"pattern": "/^[a-zA-Z0-9_-]+$/"}},
+      "validation_message": "Username must be 3-100 characters and contain only letters, numbers, underscores, and hyphens",
+      "form_help": "Optional username for login (alternative to email)",
+      "reason": "Modern CRMs support username OR email login. Provides flexibility for users who prefer usernames."
+    },
+    {
+      "property_name": "phone",
+      "property_label": "Phone",
+      "property_type": "string",
+      "length": 20,
+      "nullable": true,
+      "indexed": false,
+      "searchable": true,
+      "show_in_list": true,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "validation_rules": {"Regex": {"pattern": "/^[+]?[0-9\\s()-]+$/"}},
+      "form_help": "Business phone number",
+      "reason": "Replaces 'celPhone' with standard 'phone' naming. Essential for CRM user profiles."
+    },
+    {
+      "property_name": "mobilePhone",
+      "property_label": "Mobile Phone",
+      "property_type": "string",
+      "length": 20,
+      "nullable": true,
+      "indexed": false,
+      "searchable": true,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "validation_rules": {"Regex": {"pattern": "/^[+]?[0-9\\s()-]+$/"}},
+      "form_help": "Mobile phone for SMS and 2FA",
+      "reason": "Separate mobile for 2FA and SMS. Standard in Salesforce and HubSpot."
+    },
+    {
+      "property_name": "jobTitle",
+      "property_label": "Job Title",
+      "property_type": "string",
+      "length": 100,
+      "nullable": true,
+      "indexed": false,
+      "searchable": true,
+      "show_in_list": true,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "reason": "Replaces 'position'. Standard CRM field (Salesforce: Title, HubSpot: Job Title)."
+    },
+    {
+      "property_name": "department",
+      "property_label": "Department",
+      "property_type": "string",
+      "length": 100,
+      "nullable": true,
+      "indexed": true,
+      "searchable": true,
+      "filterable": true,
+      "show_in_list": true,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "reason": "Critical for CRM organization structure. Standard in all major CRMs. Indexed for filtering."
+    },
+    {
+      "property_name": "timezone",
+      "property_label": "Timezone",
+      "property_type": "string",
+      "length": 50,
+      "nullable": true,
+      "default_value": "UTC",
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "form_help": "User's timezone for scheduling and notifications",
+      "reason": "Essential for global CRM operations. Affects meeting scheduling, notifications, calendar sync."
+    },
+    {
+      "property_name": "locale",
+      "property_label": "Locale",
+      "property_type": "string",
+      "length": 10,
+      "nullable": true,
+      "default_value": "en",
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "form_help": "Language preference (e.g., en, es, fr)",
+      "reason": "Multi-language support. Standard in enterprise CRMs."
+    },
+    {
+      "property_name": "preferredLanguage",
+      "property_label": "Preferred Language",
+      "property_type": "string",
+      "length": 50,
+      "nullable": true,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "reason": "Separate from locale for better UX. Can show 'English (US)' vs 'en_US'."
+    },
+    {
+      "property_name": "twoFactorEnabled",
+      "property_label": "Two-Factor Auth Enabled",
+      "property_type": "boolean",
+      "nullable": false,
+      "default_value": false,
+      "indexed": true,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": false,
+      "api_writable": false,
+      "form_read_only": true,
+      "reason": "CRITICAL: 2FA is essential in 2025. Indexed for security audits. NOT api_readable for security."
+    },
+    {
+      "property_name": "twoFactorSecret",
+      "property_label": "Two-Factor Secret",
+      "property_type": "string",
+      "length": 255,
+      "nullable": true,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": false,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "reason": "CRITICAL: Stores TOTP secret. NEVER expose via API or forms. Encrypted storage recommended."
+    },
+    {
+      "property_name": "twoFactorBackupCodes",
+      "property_label": "2FA Backup Codes",
+      "property_type": "text",
+      "nullable": true,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": false,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "is_jsonb": true,
+      "reason": "CRITICAL: Backup codes for 2FA recovery. JSON array of hashed codes. NEVER expose."
+    },
+    {
+      "property_name": "passwordResetToken",
+      "property_label": "Password Reset Token",
+      "property_type": "string",
+      "length": 255,
+      "nullable": true,
+      "indexed": true,
+      "show_in_list": false,
+      "show_in_detail": false,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "reason": "CRITICAL: Password reset flow. Indexed for lookup. NEVER api_readable."
+    },
+    {
+      "property_name": "passwordResetExpiry",
+      "property_label": "Password Reset Expiry",
+      "property_type": "datetime",
+      "nullable": true,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": false,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "reason": "CRITICAL: Token expiry prevents indefinite password reset links. 15-60 min typical."
+    },
+    {
+      "property_name": "emailSignature",
+      "property_label": "Email Signature",
+      "property_type": "text",
+      "nullable": true,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "form_help": "Your email signature for sent emails",
+      "reason": "Standard CRM feature (Salesforce, HubSpot). Used when sending emails from CRM."
+    },
+    {
+      "property_name": "emailNotificationsEnabled",
+      "property_label": "Email Notifications",
+      "property_type": "boolean",
+      "nullable": false,
+      "default_value": true,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "reason": "User preference for email notifications. GDPR/privacy compliance."
+    },
+    {
+      "property_name": "smsNotificationsEnabled",
+      "property_label": "SMS Notifications",
+      "property_type": "boolean",
+      "nullable": false,
+      "default_value": false,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "reason": "Separate SMS consent. GDPR/TCPA compliance required."
+    },
+    {
+      "property_name": "calendarSyncEnabled",
+      "property_label": "Calendar Sync Enabled",
+      "property_type": "boolean",
+      "nullable": false,
+      "default_value": false,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "reason": "Calendar integration (Google Calendar, Outlook). Standard CRM feature."
+    },
+    {
+      "property_name": "workingHours",
+      "property_label": "Working Hours",
+      "property_type": "text",
+      "nullable": true,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "is_jsonb": true,
+      "form_help": "Available working hours for scheduling",
+      "reason": "Schedule availability. Salesforce has 'Working Hours'. JSON: {monday: '9-17', ...}"
+    },
+    {
+      "property_name": "defaultCurrency",
+      "property_label": "Default Currency",
+      "property_type": "string",
+      "length": 3,
+      "nullable": true,
+      "default_value": "USD",
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "validation_rules": {"Length": {"min": 3, "max": 3}},
+      "form_help": "ISO 4217 currency code (USD, EUR, GBP)",
+      "reason": "Multi-currency CRM. User sees deals/quotes in their currency."
+    },
+    {
+      "property_name": "dateFormat",
+      "property_label": "Date Format",
+      "property_type": "string",
+      "length": 20,
+      "nullable": true,
+      "default_value": "Y-m-d",
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "form_help": "Preferred date format (Y-m-d, m/d/Y, d.m.Y)",
+      "reason": "Localization. US uses m/d/Y, Europe uses d.m.Y."
+    },
+    {
+      "property_name": "manager",
+      "property_label": "Manager",
+      "property_type": null,
+      "nullable": true,
+      "relationship_type": "ManyToOne",
+      "target_entity": "User",
+      "indexed": true,
+      "show_in_list": true,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "reason": "CRITICAL CRM feature. Org hierarchy (Salesforce: Manager). Self-referencing relationship. Indexed for hierarchy queries."
+    },
+    {
+      "property_name": "salesTeam",
+      "property_label": "Sales Team",
+      "property_type": "string",
+      "length": 100,
+      "nullable": true,
+      "indexed": true,
+      "searchable": true,
+      "filterable": true,
+      "show_in_list": true,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "reason": "Sales organization. Filter deals/reports by team. Indexed for performance."
+    },
+    {
+      "property_name": "quotaAmount",
+      "property_label": "Quota Amount",
+      "property_type": "decimal",
+      "precision": 15,
+      "scale": 2,
+      "nullable": true,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "validation_rules": {"PositiveOrZero": true},
+      "form_help": "Sales quota target",
+      "reason": "Sales performance tracking. Salesforce has 'Forecast Category Amount'."
+    },
+    {
+      "property_name": "commissionRate",
+      "property_label": "Commission Rate",
+      "property_type": "decimal",
+      "precision": 5,
+      "scale": 2,
+      "nullable": true,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "validation_rules": {"Range": {"min": 0, "max": 100}},
+      "form_help": "Commission percentage (0-100)",
+      "reason": "Sales compensation. Percentage of deal value."
+    },
+    {
+      "property_name": "isAgent",
+      "property_label": "Is Agent",
+      "property_type": "boolean",
+      "nullable": false,
+      "default_value": false,
+      "indexed": true,
+      "filterable": true,
+      "show_in_list": true,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "reason": "Quick flag for agent users. Indexed for filtering. Complements agents OneToMany."
+    },
+    {
+      "property_name": "agentType",
+      "property_label": "Agent Type",
+      "property_type": "string",
+      "length": 50,
+      "nullable": true,
+      "indexed": true,
+      "filterable": true,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": true,
+      "api_readable": true,
+      "api_writable": true,
+      "reason": "Type of agent (sales, support, etc). Indexed for filtering."
+    },
+    {
+      "property_name": "deletedAt",
+      "property_label": "Deleted At",
+      "property_type": "datetime",
+      "nullable": true,
+      "indexed": true,
+      "show_in_list": false,
+      "show_in_detail": false,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "reason": "CRITICAL: Soft delete for audit compliance. Indexed for filtering. NEVER show in forms. Use Gedmo SoftDeleteable."
+    },
+    {
+      "property_name": "createdBy",
+      "property_label": "Created By",
+      "property_type": null,
+      "nullable": true,
+      "relationship_type": "ManyToOne",
+      "target_entity": "User",
+      "indexed": true,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": false,
+      "form_read_only": true,
+      "api_readable": true,
+      "api_writable": false,
+      "reason": "Audit trail. Who created this user. Use Gedmo Blameable."
+    },
+    {
+      "property_name": "lastModifiedBy",
+      "property_label": "Last Modified By",
+      "property_type": null,
+      "nullable": true,
+      "relationship_type": "ManyToOne",
+      "target_entity": "User",
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": false,
+      "form_read_only": true,
+      "api_readable": true,
+      "api_writable": false,
+      "reason": "Audit trail. Who last modified. Use Gedmo Blameable."
+    },
+    {
+      "property_name": "sessionToken",
+      "property_label": "Session Token",
+      "property_type": "string",
+      "length": 255,
+      "nullable": true,
+      "indexed": true,
+      "show_in_list": false,
+      "show_in_detail": false,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "reason": "Symfony 7.3: Session security improvements. Token for session validation. Indexed for lookup. NEVER api_readable."
+    },
+    {
+      "property_name": "lastPasswordChangeAt",
+      "property_label": "Last Password Change",
+      "property_type": "datetime",
+      "nullable": true,
+      "indexed": true,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "reason": "Password aging policy. Force password change after 90 days. Indexed for policy enforcement."
+    },
+    {
+      "property_name": "passwordExpiresAt",
+      "property_label": "Password Expires At",
+      "property_type": "datetime",
+      "nullable": true,
+      "indexed": true,
+      "show_in_list": false,
+      "show_in_detail": false,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "reason": "Password expiration enforcement. Computed from lastPasswordChangeAt + policy days."
+    },
+    {
+      "property_name": "mustChangePassword",
+      "property_label": "Must Change Password",
+      "property_type": "boolean",
+      "nullable": false,
+      "default_value": false,
+      "indexed": true,
+      "show_in_list": false,
+      "show_in_detail": false,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "reason": "Force password change on next login (admin reset, compromised account). Indexed for security checks."
+    },
+    {
+      "property_name": "passkeyEnabled",
+      "property_label": "Passkey/FIDO2 Enabled",
+      "property_type": "boolean",
+      "nullable": false,
+      "default_value": false,
+      "indexed": true,
+      "show_in_list": false,
+      "show_in_detail": true,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "reason": "2025 TREND: Passwordless authentication via FIDO2/WebAuthn. Apple Passkeys, Windows Hello. Indexed for security audits."
+    },
+    {
+      "property_name": "passkeyCredentials",
+      "property_label": "Passkey Credentials",
+      "property_type": "text",
+      "nullable": true,
+      "indexed": false,
+      "show_in_list": false,
+      "show_in_detail": false,
+      "show_in_form": false,
+      "api_readable": false,
+      "api_writable": false,
+      "is_jsonb": true,
+      "reason": "CRITICAL: Stores FIDO2 public keys. JSON array of credentials. NEVER expose via API."
+    }
+  ],
+
+  "properties_to_update": [
+    {
+      "property_name": "email",
+      "updates": {
+        "indexed": true,
+        "unique": true,
+        "api_readable": true,
+        "api_writable": true,
+        "form_read_only": false,
+        "validation_rules": {"NotBlank": true, "Email": true, "Length": {"max": 255}},
+        "reason": "CRITICAL: Email is user identifier. MUST be indexed and unique. Searchable for lookups."
+      }
+    },
+    {
+      "property_name": "password",
+      "updates": {
+        "indexed": false,
+        "searchable": false,
+        "show_in_list": false,
+        "show_in_detail": false,
+        "show_in_form": false,
+        "api_readable": false,
+        "api_writable": false,
+        "api_groups": [],
+        "reason": "CRITICAL SECURITY: Password must NEVER be api_readable, NEVER in serialization groups, NEVER searchable. Use plainPassword in forms."
+      }
+    },
+    {
+      "property_name": "organization",
+      "updates": {
+        "nullable": false,
+        "form_read_only": true,
+        "indexed": true,
+        "api_readable": true,
+        "api_writable": false,
+        "validation_rules": {"NotBlank": true},
+        "reason": "CRITICAL: Organization is tenant key. MUST be non-nullable and read-only. Users cannot change organization. Indexed for tenant queries."
+      }
+    },
+    {
+      "property_name": "active",
+      "updates": {
+        "property_name": "isActive",
+        "default_value": true,
+        "indexed": true,
+        "filterable": true,
+        "show_in_list": true,
+        "api_readable": true,
+        "api_writable": true,
+        "reason": "Rename to 'isActive' for consistency. Indexed for filtering inactive users. Default true for new users."
+      }
+    },
+    {
+      "property_name": "failedLoginAttempts",
+      "updates": {
+        "indexed": true,
+        "show_in_detail": true,
+        "api_readable": false,
+        "api_writable": false,
+        "form_read_only": true,
+        "reason": "Indexed for security monitoring. NOT api_readable to prevent enumeration attacks. Show in admin detail view only."
+      }
+    },
+    {
+      "property_name": "lastPasswordChange",
+      "updates": {
+        "property_name": "lastPasswordChangeAt",
+        "indexed": true,
+        "api_readable": false,
+        "reason": "Rename for consistency. Indexed for password aging policies. NOT api_readable for security."
+      }
+    },
+    {
+      "property_name": "emailVerifiedAt",
+      "updates": {
+        "indexed": true,
+        "api_readable": true,
+        "show_in_detail": true,
+        "reason": "Indexed for filtering verified users. Show verification status in detail view."
+      }
+    },
+    {
+      "property_name": "profilePictureUrl",
+      "updates": {
+        "property_name": "avatar",
+        "searchable": false,
+        "show_in_list": true,
+        "api_readable": true,
+        "form_help": "URL or path to profile picture",
+        "reason": "Rename to 'avatar' (simpler, standard naming). Remove duplicate avatarUrl field."
+      }
+    },
+    {
+      "property_name": "celPhone",
+      "updates": {
+        "property_name": "phone",
+        "property_label": "Phone",
+        "reason": "Rename to standard 'phone' field. See new 'mobilePhone' for mobile-specific number."
+      }
+    },
+    {
+      "property_name": "position",
+      "updates": {
+        "property_name": "jobTitle",
+        "property_label": "Job Title",
+        "reason": "Rename to standard CRM field name 'jobTitle' (Salesforce, HubSpot standard)."
+      }
+    },
+    {
+      "property_name": "birthDate",
+      "updates": {
+        "show_in_list": false,
+        "show_in_detail": true,
+        "api_readable": true,
+        "form_help": "User's date of birth",
+        "reason": "Keep but hide from list view (privacy). Useful for HR/compliance."
+      }
+    },
+    {
+      "property_name": "gender",
+      "updates": {
+        "property_type": "string",
+        "length": 50,
+        "show_in_list": false,
+        "form_help": "Gender identity (optional)",
+        "reason": "Change from integer to string for inclusivity (Male/Female/Non-binary/Other/Prefer not to say). Privacy-conscious."
+      }
+    }
+  ],
+
+  "properties_to_remove": [
+    {
+      "property_name": "avatarUrl",
+      "reason": "Duplicate of profilePictureUrl. Keep only 'avatar' field."
+    },
+    {
+      "property_name": "grantedRoles",
+      "reason": "Replaced by proper 'roles' ManyToMany relationship which already exists. Remove redundant field."
+    }
+  ],
+
+  "relationships_to_keep": [
+    {
+      "property_name": "roles",
+      "relationship_type": "ManyToMany",
+      "target_entity": "Role",
+      "reason": "CRITICAL: RBAC system. User has multiple roles. Already exists, keep as-is."
+    },
+    {
+      "property_name": "profiles",
+      "relationship_type": "ManyToMany",
+      "target_entity": "Profile",
+      "reason": "User profiles/persona. Keep for CRM functionality."
+    },
+    {
+      "property_name": "socialMedias",
+      "relationship_type": "OneToMany",
+      "target_entity": "SocialMedia",
+      "reason": "Social media profiles. Standard CRM feature."
+    },
+    {
+      "property_name": "managedContacts",
+      "relationship_type": "OneToMany",
+      "target_entity": "Contact",
+      "reason": "Contacts owned/managed by this user. CRM core feature."
+    },
+    {
+      "property_name": "contacts",
+      "relationship_type": "ManyToMany",
+      "target_entity": "Contact",
+      "reason": "Contacts associated with user (not owned). CRM feature."
+    },
+    {
+      "property_name": "managedCompanies",
+      "relationship_type": "OneToMany",
+      "target_entity": "Company",
+      "reason": "Companies managed by user. CRM core feature."
+    },
+    {
+      "property_name": "flags",
+      "relationship_type": "OneToMany",
+      "target_entity": "Flag",
+      "reason": "User flags/tags. CRM feature."
+    },
+    {
+      "property_name": "agents",
+      "relationship_type": "OneToMany",
+      "target_entity": "Agent",
+      "reason": "Agent records. Keep for agent functionality."
+    },
+    {
+      "property_name": "talks",
+      "relationship_type": "ManyToMany",
+      "target_entity": "Talk",
+      "reason": "Conversations/communications. CRM feature."
+    },
+    {
+      "property_name": "managedDeals",
+      "relationship_type": "OneToMany",
+      "target_entity": "Deal",
+      "reason": "Deals owned by user. CRM core feature."
+    },
+    {
+      "property_name": "deals",
+      "relationship_type": "ManyToMany",
+      "target_entity": "Deal",
+      "reason": "Deals associated with user. CRM feature."
+    },
+    {
+      "property_name": "managedPipelines",
+      "relationship_type": "OneToMany",
+      "target_entity": "Pipeline",
+      "reason": "Sales pipelines managed by user. CRM feature."
+    },
+    {
+      "property_name": "tasks",
+      "relationship_type": "OneToMany",
+      "target_entity": "Task",
+      "reason": "User tasks. CRM core feature."
+    },
+    {
+      "property_name": "managedCampaigns",
+      "relationship_type": "OneToMany",
+      "target_entity": "Campaign",
+      "reason": "Marketing campaigns managed by user. CRM feature."
+    },
+    {
+      "property_name": "campaigns",
+      "relationship_type": "ManyToMany",
+      "target_entity": "Campaign",
+      "reason": "Campaigns user is part of. CRM feature."
+    },
+    {
+      "property_name": "calendars",
+      "relationship_type": "OneToMany",
+      "target_entity": "Calendar",
+      "reason": "User calendars. CRM scheduling feature."
+    },
+    {
+      "property_name": "organizedEvents",
+      "relationship_type": "OneToMany",
+      "target_entity": "Event",
+      "reason": "Events organized by user. CRM feature."
+    },
+    {
+      "property_name": "eventAttendances",
+      "relationship_type": "OneToMany",
+      "target_entity": "EventAttendee",
+      "reason": "Events user attends. CRM feature."
+    },
+    {
+      "property_name": "ownedCourses",
+      "relationship_type": "OneToMany",
+      "target_entity": "Course",
+      "reason": "Courses owned/created by user. Learning management feature."
+    },
+    {
+      "property_name": "studentCourses",
+      "relationship_type": "OneToMany",
+      "target_entity": "StudentCourse",
+      "reason": "Course enrollments. Learning management feature."
+    }
+  ],
+
+  "security_critical_fields": {
+    "NEVER_API_READABLE": [
+      "password",
+      "twoFactorSecret",
+      "twoFactorBackupCodes",
+      "passwordResetToken",
+      "passwordResetExpiry",
+      "sessionToken",
+      "passkeyCredentials",
+      "verificationToken",
+      "apiToken",
+      "openAiApiKey",
+      "lastPasswordChangeAt",
+      "passwordExpiresAt",
+      "mustChangePassword",
+      "failedLoginAttempts",
+      "lockedUntil"
+    ],
+    "ADMIN_ONLY_READABLE": [
+      "twoFactorEnabled",
+      "passkeyEnabled",
+      "emailVerifiedAt",
+      "lastLoginAt",
+      "deletedAt"
+    ],
+    "FORM_READ_ONLY": [
+      "organization",
+      "twoFactorEnabled",
+      "passkeyEnabled",
+      "emailVerifiedAt",
+      "lastLoginAt",
+      "failedLoginAttempts",
+      "lockedUntil",
+      "createdBy",
+      "lastModifiedBy",
+      "deletedAt"
+    ],
+    "INDEXED_FOR_SECURITY": [
+      "email",
+      "username",
+      "organization",
+      "twoFactorEnabled",
+      "passwordResetToken",
+      "sessionToken",
+      "failedLoginAttempts",
+      "lastPasswordChangeAt",
+      "passwordExpiresAt",
+      "mustChangePassword",
+      "passkeyEnabled",
+      "deletedAt",
+      "isActive",
+      "emailVerifiedAt"
+    ]
+  },
+
+  "symfony_7_3_compliance": {
+    "eraseCredentials": {
+      "status": "deprecated",
+      "recommendation": "Add #[\\Deprecated] attribute to eraseCredentials() method. Symfony will stop calling it automatically.",
+      "alternative": "Use AuthenticationTokenCreatedEvent to manually erase sensitive data"
+    },
+    "session_security": {
+      "recommendation": "Implement __serialize() method to exclude password from session storage",
+      "example": "public function __serialize(): array { $data = get_object_vars($this); unset($data['password']); return $data; }"
+    },
+    "rate_limiting": {
+      "status": "enabled",
+      "config": "max_attempts: 5 per IP+username, 25 per IP",
+      "note": "Already implemented via failedLoginAttempts field"
+    }
+  },
+
+  "2025_authentication_trends": {
+    "passwordless": {
+      "fields": ["passkeyEnabled", "passkeyCredentials"],
+      "technologies": ["FIDO2", "WebAuthn", "Apple Passkeys", "Windows Hello"],
+      "priority": "HIGH - Industry moving toward passwordless"
+    },
+    "multi_factor": {
+      "fields": ["twoFactorEnabled", "twoFactorSecret", "twoFactorBackupCodes"],
+      "methods": ["TOTP", "SMS", "Hardware Keys", "Biometrics"],
+      "priority": "CRITICAL - Essential for security"
+    },
+    "session_security": {
+      "fields": ["sessionToken", "lastLoginAt"],
+      "features": ["Session validation", "Concurrent session management", "Device fingerprinting"],
+      "priority": "HIGH - Symfony 7.3 focus"
+    },
+    "password_policies": {
+      "fields": ["lastPasswordChangeAt", "passwordExpiresAt", "mustChangePassword"],
+      "policies": ["90-day expiration", "Complexity requirements", "Password history"],
+      "priority": "MEDIUM - Compliance requirement"
+    }
+  },
+
+  "index_recommendations": {
+    "composite_indexes": [
+      {
+        "fields": ["organization", "email"],
+        "reason": "Unique email per organization (multi-tenant). Critical for user lookup."
+      },
+      {
+        "fields": ["organization", "isActive"],
+        "reason": "Filter active users by organization. High-frequency query."
+      },
+      {
+        "fields": ["organization", "deletedAt"],
+        "reason": "Filter soft-deleted users by organization. Audit queries."
+      },
+      {
+        "fields": ["department", "isActive"],
+        "reason": "Organizational reports and filtering."
+      },
+      {
+        "fields": ["manager", "isActive"],
+        "reason": "Hierarchy queries (get all reports for a manager)."
+      }
+    ],
+    "single_indexes": [
+      "email", "username", "organization", "twoFactorEnabled", "passwordResetToken",
+      "sessionToken", "failedLoginAttempts", "lastPasswordChangeAt", "passwordExpiresAt",
+      "mustChangePassword", "passkeyEnabled", "deletedAt", "isActive", "emailVerifiedAt",
+      "department", "manager", "salesTeam", "createdBy", "jobTitle"
+    ]
+  },
+
+  "api_platform_configuration": {
+    "normalization_groups": {
+      "user:read": ["id", "name", "email", "username", "phone", "mobilePhone", "jobTitle", "department", "timezone", "locale", "avatar", "organization", "isActive", "emailVerifiedAt", "roles"],
+      "user:read:admin": ["user:read", "twoFactorEnabled", "passkeyEnabled", "lastLoginAt", "emailVerifiedAt", "createdBy", "lastModifiedBy"],
+      "user:read:owner": ["user:read", "emailSignature", "emailNotificationsEnabled", "smsNotificationsEnabled", "calendarSyncEnabled", "workingHours", "defaultCurrency", "dateFormat", "uiSettings"]
+    },
+    "denormalization_groups": {
+      "user:write": ["name", "email", "username", "phone", "mobilePhone", "jobTitle", "department", "timezone", "locale", "avatar", "birthDate", "gender", "emailSignature", "emailNotificationsEnabled", "smsNotificationsEnabled", "calendarSyncEnabled", "workingHours", "defaultCurrency", "dateFormat"],
+      "user:write:admin": ["user:write", "organization", "isActive", "roles", "manager", "salesTeam", "quotaAmount", "commissionRate", "isAgent", "agentType"]
+    },
+    "security_rules": [
+      "Password field: NEVER in any serialization group",
+      "Sensitive fields: Only in user:read:admin group",
+      "User preferences: Only in user:read:owner group (user can see their own settings)",
+      "Organization: Readable in user:read, writable only in user:write:admin"
+    ]
+  },
+
+  "validation_recommendations": {
+    "email": ["NotBlank", "Email", "Length: max 255", "Unique per organization"],
+    "username": ["Length: 3-100", "Regex: alphanumeric + underscore/hyphen", "Unique"],
+    "phone": ["Regex: international phone format"],
+    "mobilePhone": ["Regex: international phone format"],
+    "password": ["NotCompromisedPassword", "Length: min 12", "PasswordStrength: medium"],
+    "timezone": ["Timezone", "Choice: valid timezone names"],
+    "locale": ["Locale", "Length: max 10"],
+    "defaultCurrency": ["Currency", "Length: 3"],
+    "quotaAmount": ["PositiveOrZero"],
+    "commissionRate": ["Range: 0-100"]
+  },
+
+  "gdpr_privacy_compliance": {
+    "consent_fields": ["emailNotificationsEnabled", "smsNotificationsEnabled"],
+    "personal_data": ["name", "email", "phone", "mobilePhone", "birthDate", "gender", "avatar"],
+    "right_to_erasure": "Use soft delete (deletedAt) to maintain referential integrity while allowing data removal",
+    "data_portability": "Implement user data export in JSON format via API",
+    "right_to_access": "User can view all their data via API (user:read:owner group)"
+  },
+
+  "migration_notes": {
+    "breaking_changes": [
+      "Rename 'celPhone' to 'phone'",
+      "Rename 'position' to 'jobTitle'",
+      "Rename 'active' to 'isActive'",
+      "Rename 'profilePictureUrl' to 'avatar'",
+      "Remove 'avatarUrl' (duplicate)",
+      "Remove 'grantedRoles' (use roles relationship)",
+      "Change 'gender' from integer to string"
+    ],
+    "data_migration_required": [
+      "Copy celPhone to phone",
+      "Copy position to jobTitle",
+      "Copy active to isActive",
+      "Copy profilePictureUrl to avatar",
+      "Convert gender integer to string (1='Male', 2='Female', etc.)",
+      "Set default values for new boolean fields"
+    ],
+    "backward_compatibility": [
+      "Consider keeping old fields for 1-2 migration cycles",
+      "Add deprecation notices in API responses",
+      "Update all frontend/API clients before removing old fields"
+    ]
+  },
+
+  "implementation_checklist": [
+    "✓ Add all new security fields (2FA, passwordless, session)",
+    "✓ Add all new CRM fields (manager, salesTeam, quota, etc.)",
+    "✓ Add user preference fields (timezone, locale, notifications)",
+    "✓ Add audit fields (deletedAt, createdBy, lastModifiedBy)",
+    "✓ Update existing fields with correct indexes and security settings",
+    "✓ Rename fields for standard compliance",
+    "✓ Remove duplicate/obsolete fields",
+    "✓ Create composite indexes for multi-tenant queries",
+    "✓ Configure API Platform serialization groups",
+    "✓ Implement Symfony 7.3 security improvements (__serialize, deprecated eraseCredentials)",
+    "✓ Add validation constraints",
+    "✓ Update forms to exclude sensitive fields",
+    "✓ Add GDPR compliance features",
+    "✓ Write migration script for data transformation",
+    "✓ Update User entity class",
+    "✓ Update UserRepository with new query methods",
+    "✓ Update UserController to handle new fields",
+    "✓ Update UserFormType",
+    "✓ Update templates to show new fields",
+    "✓ Add 2FA implementation",
+    "✓ Add passwordless/passkey implementation",
+    "✓ Update tests",
+    "✓ Update API documentation"
+  ]
+}

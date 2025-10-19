@@ -1,0 +1,713 @@
+{
+  "entity": "Deal",
+  "entity_id": "0199cadd-630e-724e-844d-8eeb93a2b79d",
+  "analysis_date": "2025-10-18",
+  "research_sources": [
+    "Salesforce Opportunity Object Standard Fields 2025",
+    "HubSpot Deal Properties Best Practices 2025",
+    "Modern CRM Sales Opportunity Schema Design 2025",
+    "Sales Pipeline Deal Tracking & Forecasting 2025"
+  ],
+
+  "executive_summary": {
+    "current_properties_count": 44,
+    "critical_issues_found": 8,
+    "missing_properties": 3,
+    "optimization_recommendations": 15,
+    "overall_assessment": "GOOD - Entity has comprehensive coverage but needs critical optimizations for financial precision, indexing, constraints, and missing probability field"
+  },
+
+  "critical_issues": [
+    {
+      "issue_id": 1,
+      "severity": "CRITICAL",
+      "category": "Data Type",
+      "property": "ALL_AMOUNT_FIELDS",
+      "affected_properties": [
+        "initialAmount",
+        "expectedAmount",
+        "closureAmount",
+        "weightedAmount",
+        "discountAmount",
+        "commissionAmount"
+      ],
+      "current_state": "float (no precision/scale)",
+      "required_state": "decimal(15,2)",
+      "issue": "Using float for monetary values causes rounding errors and precision loss",
+      "impact": "Financial calculations will be inaccurate, unacceptable for CRM sales data",
+      "salesforce_standard": "Currency fields use decimal(18,2)",
+      "hubspot_standard": "Number fields support decimal precision",
+      "recommendation": "Change ALL amount fields to decimal(15,2)",
+      "priority": "IMMEDIATE"
+    },
+    {
+      "issue_id": 2,
+      "severity": "CRITICAL",
+      "category": "Missing Property",
+      "property": "probability",
+      "current_state": "MISSING",
+      "required_state": "integer with check constraint (0-100)",
+      "issue": "Probability is essential for weighted pipeline forecasting",
+      "impact": "Cannot calculate weighted_amount properly, forecast accuracy compromised",
+      "salesforce_standard": "Probability (0-100%) tied to Stage",
+      "hubspot_standard": "Deal Probability field for forecasting",
+      "recommendation": "Add probability field with constraint CHECK (probability >= 0 AND probability <= 100)",
+      "priority": "IMMEDIATE"
+    },
+    {
+      "issue_id": 3,
+      "severity": "HIGH",
+      "category": "Constraints",
+      "property": "ALL_AMOUNT_FIELDS",
+      "current_state": "No check constraints",
+      "required_state": "CHECK constraints for non-negative values",
+      "issue": "No validation preventing negative amounts",
+      "impact": "Data integrity issues, negative deal values possible",
+      "recommendation": "Add CHECK (field_name >= 0) for all amount fields",
+      "priority": "HIGH"
+    },
+    {
+      "issue_id": 4,
+      "severity": "HIGH",
+      "category": "Constraints",
+      "property": "discountPercentage, commissionRate, exchangeRate",
+      "current_state": "float with no constraints",
+      "required_state": "decimal with range constraints",
+      "issue": "Percentage fields have no validation",
+      "impact": "Invalid percentages (e.g., 150%, -50%) can be stored",
+      "recommendation": "discountPercentage: decimal(5,2) CHECK (0-100), commissionRate: decimal(5,2) CHECK (0-100), exchangeRate: decimal(10,6) CHECK (> 0)",
+      "priority": "HIGH"
+    },
+    {
+      "issue_id": 5,
+      "severity": "HIGH",
+      "category": "Indexing",
+      "property": "expectedClosureDate",
+      "current_state": "Not indexed",
+      "required_state": "Indexed",
+      "issue": "Critical date for pipeline reports and forecasting not indexed",
+      "impact": "Slow queries on date-based reports and pipeline filtering",
+      "salesforce_standard": "Close Date is indexed by default",
+      "recommendation": "Add index on expectedClosureDate",
+      "priority": "HIGH"
+    },
+    {
+      "issue_id": 6,
+      "severity": "HIGH",
+      "category": "Indexing",
+      "property": "manager (deal owner)",
+      "current_state": "Not indexed",
+      "required_state": "Indexed",
+      "issue": "Foreign key to User (deal owner) not indexed",
+      "impact": "Slow queries filtering by deal owner, common in CRM dashboards",
+      "salesforce_standard": "Opportunity Owner is always indexed",
+      "hubspot_standard": "Deal Owner indexed for performance",
+      "recommendation": "Add index on manager_id",
+      "priority": "HIGH"
+    },
+    {
+      "issue_id": 7,
+      "severity": "HIGH",
+      "category": "Indexing",
+      "property": "currentStage",
+      "current_state": "Not indexed",
+      "required_state": "Indexed",
+      "issue": "Pipeline stage is primary filtering field, not indexed",
+      "impact": "Pipeline views and stage-based reports will be slow",
+      "salesforce_standard": "Stage field indexed by default",
+      "recommendation": "Add index on current_stage_id",
+      "priority": "HIGH"
+    },
+    {
+      "issue_id": 8,
+      "severity": "MEDIUM",
+      "category": "Indexing",
+      "property": "dealStatus",
+      "current_state": "Not indexed",
+      "required_state": "Indexed",
+      "issue": "Status field used for filtering open/won/lost deals not indexed",
+      "impact": "Common queries filtering by status will be slower",
+      "recommendation": "Add index on deal_status",
+      "priority": "MEDIUM"
+    }
+  ],
+
+  "missing_properties": [
+    {
+      "property_name": "probability",
+      "property_type": "integer",
+      "nullable": false,
+      "default_value": 0,
+      "check_constraint": "probability >= 0 AND probability <= 100",
+      "indexed": true,
+      "sortable": true,
+      "filterable": true,
+      "rationale": "Essential for weighted pipeline forecasting. Salesforce and HubSpot standard field. Each stage has default probability.",
+      "salesforce_equivalent": "Probability (0-100%)",
+      "hubspot_equivalent": "Deal Probability",
+      "usage": "Used in calculation: weightedAmount = expectedAmount * (probability / 100)",
+      "priority": "CRITICAL"
+    },
+    {
+      "property_name": "expectedRevenue",
+      "property_type": "decimal",
+      "precision": 15,
+      "scale": 2,
+      "nullable": true,
+      "computed": true,
+      "compute_expression": "expected_amount * (probability / 100.0)",
+      "indexed": false,
+      "sortable": true,
+      "filterable": true,
+      "rationale": "Salesforce standard field. Auto-calculated from amount * probability. Critical for pipeline forecasting.",
+      "salesforce_equivalent": "Expected Revenue (calculated)",
+      "priority": "MEDIUM",
+      "note": "Could be virtual/computed field or calculated in application layer"
+    },
+    {
+      "property_name": "nextStep",
+      "property_type": "text",
+      "nullable": true,
+      "indexed": false,
+      "searchable": true,
+      "rationale": "Salesforce and HubSpot standard field. Captures next action needed to move deal forward. Important for sales process management.",
+      "salesforce_equivalent": "Next Step",
+      "hubspot_equivalent": "Next Step",
+      "priority": "LOW",
+      "note": "Could be tracked in tasks table instead, so lower priority"
+    }
+  ],
+
+  "data_type_optimizations": [
+    {
+      "property_name": "initialAmount",
+      "current_type": "float",
+      "recommended_type": "decimal(15,2)",
+      "rationale": "Monetary value requires exact precision",
+      "migration_sql": "ALTER TABLE deal_table ALTER COLUMN initial_amount TYPE NUMERIC(15,2);"
+    },
+    {
+      "property_name": "expectedAmount",
+      "current_type": "float",
+      "recommended_type": "decimal(15,2)",
+      "rationale": "Primary deal value, must be exact",
+      "migration_sql": "ALTER TABLE deal_table ALTER COLUMN expected_amount TYPE NUMERIC(15,2);"
+    },
+    {
+      "property_name": "closureAmount",
+      "current_type": "float",
+      "recommended_type": "decimal(15,2)",
+      "rationale": "Actual closed amount, critical for revenue reporting",
+      "migration_sql": "ALTER TABLE deal_table ALTER COLUMN closure_amount TYPE NUMERIC(15,2);"
+    },
+    {
+      "property_name": "weightedAmount",
+      "current_type": "float",
+      "recommended_type": "decimal(15,2)",
+      "rationale": "Calculated from amount * probability, used in forecasting",
+      "migration_sql": "ALTER TABLE deal_table ALTER COLUMN weighted_amount TYPE NUMERIC(15,2);"
+    },
+    {
+      "property_name": "discountAmount",
+      "current_type": "float",
+      "recommended_type": "decimal(15,2)",
+      "rationale": "Monetary discount value",
+      "migration_sql": "ALTER TABLE deal_table ALTER COLUMN discount_amount TYPE NUMERIC(15,2);"
+    },
+    {
+      "property_name": "discountPercentage",
+      "current_type": "float",
+      "recommended_type": "decimal(5,2)",
+      "rationale": "Percentage with 2 decimal places (e.g., 15.50%)",
+      "migration_sql": "ALTER TABLE deal_table ALTER COLUMN discount_percentage TYPE NUMERIC(5,2);"
+    },
+    {
+      "property_name": "commissionRate",
+      "current_type": "float",
+      "recommended_type": "decimal(5,2)",
+      "rationale": "Percentage rate (e.g., 10.50%)",
+      "migration_sql": "ALTER TABLE deal_table ALTER COLUMN commission_rate TYPE NUMERIC(5,2);"
+    },
+    {
+      "property_name": "commissionAmount",
+      "current_type": "float",
+      "recommended_type": "decimal(15,2)",
+      "rationale": "Monetary commission value",
+      "migration_sql": "ALTER TABLE deal_table ALTER COLUMN commission_amount TYPE NUMERIC(15,2);"
+    },
+    {
+      "property_name": "exchangeRate",
+      "current_type": "float",
+      "recommended_type": "decimal(10,6)",
+      "rationale": "Currency exchange rates need high precision (e.g., 1.234567)",
+      "migration_sql": "ALTER TABLE deal_table ALTER COLUMN exchange_rate TYPE NUMERIC(10,6);"
+    },
+    {
+      "property_name": "daysInCurrentStage",
+      "current_type": "float",
+      "recommended_type": "integer",
+      "rationale": "Days are whole numbers, no decimals needed",
+      "migration_sql": "ALTER TABLE deal_table ALTER COLUMN days_in_current_stage TYPE INTEGER;"
+    }
+  ],
+
+  "constraint_additions": [
+    {
+      "property_name": "initialAmount",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_initial_amount_positive CHECK (initial_amount >= 0);",
+      "rationale": "Prevent negative deal amounts"
+    },
+    {
+      "property_name": "expectedAmount",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_expected_amount_positive CHECK (expected_amount >= 0);",
+      "rationale": "Prevent negative deal amounts"
+    },
+    {
+      "property_name": "closureAmount",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_closure_amount_positive CHECK (closure_amount >= 0);",
+      "rationale": "Prevent negative closed amounts"
+    },
+    {
+      "property_name": "weightedAmount",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_weighted_amount_positive CHECK (weighted_amount >= 0);",
+      "rationale": "Prevent negative weighted amounts"
+    },
+    {
+      "property_name": "discountAmount",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_discount_amount_positive CHECK (discount_amount >= 0);",
+      "rationale": "Discounts must be positive"
+    },
+    {
+      "property_name": "discountPercentage",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_discount_percentage_range CHECK (discount_percentage >= 0 AND discount_percentage <= 100);",
+      "rationale": "Percentage must be 0-100"
+    },
+    {
+      "property_name": "commissionRate",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_commission_rate_range CHECK (commission_rate >= 0 AND commission_rate <= 100);",
+      "rationale": "Percentage must be 0-100"
+    },
+    {
+      "property_name": "commissionAmount",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_commission_amount_positive CHECK (commission_amount >= 0);",
+      "rationale": "Commission must be positive"
+    },
+    {
+      "property_name": "exchangeRate",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_exchange_rate_positive CHECK (exchange_rate > 0);",
+      "rationale": "Exchange rate must be positive (> 0, not >= 0)"
+    },
+    {
+      "property_name": "probability",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_probability_range CHECK (probability >= 0 AND probability <= 100);",
+      "rationale": "Probability percentage 0-100"
+    },
+    {
+      "property_name": "daysInCurrentStage",
+      "constraint_type": "CHECK",
+      "constraint_sql": "ALTER TABLE deal_table ADD CONSTRAINT check_days_in_stage_positive CHECK (days_in_current_stage >= 0);",
+      "rationale": "Days cannot be negative"
+    }
+  ],
+
+  "index_additions": [
+    {
+      "property_name": "expectedClosureDate",
+      "index_type": "btree",
+      "index_sql": "CREATE INDEX idx_deal_expected_closure_date ON deal_table(expected_closure_date);",
+      "rationale": "Critical for pipeline reporting, forecast queries, and date-range filtering",
+      "query_patterns": [
+        "SELECT * FROM deal_table WHERE expected_closure_date BETWEEN ? AND ?",
+        "ORDER BY expected_closure_date",
+        "Pipeline reports grouped by close date"
+      ]
+    },
+    {
+      "property_name": "closureDate",
+      "index_type": "btree",
+      "index_sql": "CREATE INDEX idx_deal_closure_date ON deal_table(closure_date);",
+      "rationale": "For won/lost deal reporting and historical analysis",
+      "query_patterns": [
+        "Revenue reports by close date",
+        "Won deals in date range"
+      ]
+    },
+    {
+      "property_name": "manager_id",
+      "index_type": "btree",
+      "index_sql": "CREATE INDEX idx_deal_manager_id ON deal_table(manager_id);",
+      "rationale": "Deal owner filtering is extremely common in CRM (my deals, team deals)",
+      "query_patterns": [
+        "SELECT * FROM deal_table WHERE manager_id = ?",
+        "Dashboard: My Open Deals",
+        "Sales rep performance reports"
+      ]
+    },
+    {
+      "property_name": "current_stage_id",
+      "index_type": "btree",
+      "index_sql": "CREATE INDEX idx_deal_current_stage_id ON deal_table(current_stage_id);",
+      "rationale": "Pipeline stage is primary grouping/filtering field",
+      "query_patterns": [
+        "Pipeline kanban view grouped by stage",
+        "Stage conversion reports",
+        "Deals in specific stage"
+      ]
+    },
+    {
+      "property_name": "dealStatus",
+      "index_type": "btree",
+      "index_sql": "CREATE INDEX idx_deal_status ON deal_table(deal_status);",
+      "rationale": "Common filtering by open/won/lost/abandoned status",
+      "query_patterns": [
+        "Open deals only",
+        "Won deals this quarter",
+        "Lost deals analysis"
+      ]
+    },
+    {
+      "property_name": "company_id",
+      "index_type": "btree",
+      "index_sql": "CREATE INDEX idx_deal_company_id ON deal_table(company_id);",
+      "rationale": "Account-level deal views and reporting",
+      "query_patterns": [
+        "All deals for a company",
+        "Account dashboard"
+      ]
+    },
+    {
+      "property_name": "lastActivityDate",
+      "index_type": "btree",
+      "index_sql": "CREATE INDEX idx_deal_last_activity_date ON deal_table(last_activity_date);",
+      "rationale": "Identify stale deals, track engagement recency",
+      "query_patterns": [
+        "Deals with no activity in 30 days",
+        "Most recently active deals"
+      ]
+    },
+    {
+      "property_name": "composite_index_1",
+      "columns": ["manager_id", "deal_status", "expected_closure_date"],
+      "index_type": "btree",
+      "index_sql": "CREATE INDEX idx_deal_manager_status_closedate ON deal_table(manager_id, deal_status, expected_closure_date);",
+      "rationale": "Optimize common dashboard query: my open deals closing this month/quarter",
+      "query_patterns": [
+        "SELECT * FROM deal_table WHERE manager_id = ? AND deal_status = 'open' AND expected_closure_date BETWEEN ? AND ? ORDER BY expected_closure_date"
+      ]
+    },
+    {
+      "property_name": "composite_index_2",
+      "columns": ["current_stage_id", "expected_closure_date"],
+      "index_type": "btree",
+      "index_sql": "CREATE INDEX idx_deal_stage_closedate ON deal_table(current_stage_id, expected_closure_date);",
+      "rationale": "Pipeline forecasting by stage and time period",
+      "query_patterns": [
+        "Deals in negotiation stage closing this quarter"
+      ]
+    }
+  ],
+
+  "property_modifications": [
+    {
+      "property_name": "name",
+      "current_nullable": false,
+      "current_indexed": false,
+      "recommendation": "Add index for searching/autocomplete",
+      "update_sql": "CREATE INDEX idx_deal_name ON deal_table(name);",
+      "rationale": "Deal name search is common in UI autocomplete"
+    },
+    {
+      "property_name": "organization",
+      "current_nullable": true,
+      "recommendation": "Should be NOT NULL",
+      "update_sql": "UPDATE deal_table SET organization_id = (SELECT id FROM organization_table LIMIT 1) WHERE organization_id IS NULL; ALTER TABLE deal_table ALTER COLUMN organization_id SET NOT NULL;",
+      "rationale": "Multi-tenant architecture requires organization on all entities",
+      "priority": "CRITICAL"
+    },
+    {
+      "property_name": "manager",
+      "current_nullable": true,
+      "recommendation": "Should be NOT NULL (deal owner required)",
+      "rationale": "Every deal must have an owner. Salesforce and HubSpot require owner.",
+      "priority": "HIGH"
+    },
+    {
+      "property_name": "expectedClosureDate",
+      "current_nullable": true,
+      "recommendation": "Should be NOT NULL",
+      "rationale": "Salesforce requires Close Date. Essential for forecasting and pipeline management.",
+      "priority": "HIGH"
+    },
+    {
+      "property_name": "currentStage",
+      "current_nullable": true,
+      "recommendation": "Should be NOT NULL",
+      "rationale": "Every deal must be in a stage. Stage drives probability and workflow.",
+      "priority": "HIGH"
+    },
+    {
+      "property_name": "expectedAmount",
+      "current_nullable": true,
+      "current_filterable": false,
+      "recommendation": "Make filterable=true, add index for range queries",
+      "rationale": "Amount filtering is critical for pipeline value analysis",
+      "priority": "MEDIUM"
+    },
+    {
+      "property_name": "expectedClosureDate",
+      "current_filterable": false,
+      "recommendation": "Make filterable=true",
+      "rationale": "Date range filtering essential for quarterly/monthly forecasts",
+      "priority": "MEDIUM"
+    },
+    {
+      "property_name": "dealStatus",
+      "current_filterable": false,
+      "recommendation": "Make filterable=true",
+      "rationale": "Common filter: show only open deals, won deals, etc.",
+      "priority": "MEDIUM"
+    },
+    {
+      "property_name": "forecastCategory",
+      "current_filterable": false,
+      "recommendation": "Make filterable=true",
+      "rationale": "Forecast category filtering for pipeline commits",
+      "priority": "MEDIUM"
+    }
+  ],
+
+  "best_practices_alignment": {
+    "salesforce_opportunity_alignment": {
+      "score": "85/100",
+      "required_fields_present": [
+        "name ✓",
+        "currentStage ✓",
+        "expectedClosureDate ✓",
+        "expectedAmount ✓",
+        "manager (Opportunity Owner) ✓",
+        "company (Account) ✓",
+        "forecastCategory ✓",
+        "lostReason ✓",
+        "campaign ✓",
+        "dealType ✓"
+      ],
+      "missing_required_fields": [
+        "probability ✗ (CRITICAL)"
+      ],
+      "optional_fields_present": [
+        "primaryContact ✓",
+        "leadSource ✓",
+        "description ✓",
+        "nextFollowUp ✓"
+      ],
+      "missing_optional_fields": [
+        "nextStep ✗ (can use tasks)",
+        "expectedRevenue ✗ (can calculate)"
+      ]
+    },
+    "hubspot_deals_alignment": {
+      "score": "88/100",
+      "strengths": [
+        "Comprehensive deal tracking",
+        "Multiple amount fields for different stages",
+        "Custom fields support (JSON)",
+        "Strong relationship management",
+        "Activity tracking (talks, tasks)"
+      ],
+      "gaps": [
+        "Missing probability field",
+        "No data validation constraints",
+        "Missing performance indexes"
+      ]
+    },
+    "modern_crm_best_practices": {
+      "score": "82/100",
+      "strengths": [
+        "Multi-tenant organization isolation",
+        "Comprehensive relationship tracking",
+        "Pipeline stage management",
+        "Deal history tracking (dealStages)",
+        "Flexible custom fields",
+        "Product/service association",
+        "Campaign attribution",
+        "Competitor tracking"
+      ],
+      "areas_for_improvement": [
+        "Financial precision (float vs decimal)",
+        "Data integrity constraints",
+        "Performance optimization (indexes)",
+        "Required field enforcement"
+      ]
+    }
+  },
+
+  "2025_crm_trends_compliance": {
+    "ai_and_automation_readiness": {
+      "score": "90/100",
+      "features": [
+        "customFields (JSON) for AI insights storage ✓",
+        "Probability for AI-driven forecasting ✗ (MISSING)",
+        "dealScore exists for predictive scoring ✗ (NOT IN DATA)",
+        "lastActivityDate for engagement tracking ✓",
+        "daysInCurrentStage for velocity analysis ✓"
+      ]
+    },
+    "forecasting_capabilities": {
+      "score": "70/100",
+      "features": [
+        "forecastCategory ✓",
+        "weightedAmount ✓",
+        "probability ✗ (MISSING - CRITICAL)",
+        "expectedAmount ✓",
+        "currentStage ✓"
+      ],
+      "gap": "Missing probability field prevents accurate weighted forecasting"
+    },
+    "sales_process_automation": {
+      "score": "95/100",
+      "features": [
+        "Pipeline stage tracking ✓",
+        "Deal stage history ✓",
+        "Task management integration ✓",
+        "Activity tracking ✓",
+        "Team collaboration (team field) ✓",
+        "Next follow-up scheduling ✓"
+      ]
+    },
+    "data_quality_and_governance": {
+      "score": "60/100",
+      "gaps": [
+        "No check constraints on amounts",
+        "No validation on percentages",
+        "No required field enforcement",
+        "Float instead of decimal for money"
+      ],
+      "impact": "Data integrity at risk, reporting accuracy compromised"
+    }
+  },
+
+  "sql_migration_script": {
+    "description": "Complete SQL migration to optimize Deal entity",
+    "warnings": [
+      "BACKUP DATABASE BEFORE RUNNING",
+      "Test in development environment first",
+      "Run during maintenance window",
+      "Check for null values before adding NOT NULL constraints"
+    ],
+    "sql": "-- DEAL ENTITY OPTIMIZATION MIGRATION\n-- Date: 2025-10-18\n-- Purpose: Optimize Deal entity based on 2025 CRM best practices\n\nBEGIN;\n\n-- ============================================\n-- STEP 1: DATA TYPE CONVERSIONS (CRITICAL)\n-- ============================================\n\n-- Convert all amount fields from FLOAT to DECIMAL(15,2)\nALTER TABLE deal_table ALTER COLUMN initial_amount TYPE NUMERIC(15,2);\nALTER TABLE deal_table ALTER COLUMN expected_amount TYPE NUMERIC(15,2);\nALTER TABLE deal_table ALTER COLUMN closure_amount TYPE NUMERIC(15,2);\nALTER TABLE deal_table ALTER COLUMN weighted_amount TYPE NUMERIC(15,2);\nALTER TABLE deal_table ALTER COLUMN discount_amount TYPE NUMERIC(15,2);\nALTER TABLE deal_table ALTER COLUMN commission_amount TYPE NUMERIC(15,2);\n\n-- Convert percentage fields to DECIMAL(5,2)\nALTER TABLE deal_table ALTER COLUMN discount_percentage TYPE NUMERIC(5,2);\nALTER TABLE deal_table ALTER COLUMN commission_rate TYPE NUMERIC(5,2);\n\n-- Convert exchange rate to DECIMAL(10,6) for precision\nALTER TABLE deal_table ALTER COLUMN exchange_rate TYPE NUMERIC(10,6);\n\n-- Convert days to INTEGER\nALTER TABLE deal_table ALTER COLUMN days_in_current_stage TYPE INTEGER;\n\n-- ============================================\n-- STEP 2: ADD MISSING CRITICAL FIELDS\n-- ============================================\n\n-- Add probability field (CRITICAL for forecasting)\nALTER TABLE deal_table ADD COLUMN probability INTEGER DEFAULT 0;\nCOMMENT ON COLUMN deal_table.probability IS 'Deal close probability (0-100%). Tied to pipeline stage.';\n\n-- ============================================\n-- STEP 3: ADD CHECK CONSTRAINTS\n-- ============================================\n\n-- Amount constraints (non-negative)\nALTER TABLE deal_table ADD CONSTRAINT check_initial_amount_positive \n  CHECK (initial_amount IS NULL OR initial_amount >= 0);\n\nALTER TABLE deal_table ADD CONSTRAINT check_expected_amount_positive \n  CHECK (expected_amount IS NULL OR expected_amount >= 0);\n\nALTER TABLE deal_table ADD CONSTRAINT check_closure_amount_positive \n  CHECK (closure_amount IS NULL OR closure_amount >= 0);\n\nALTER TABLE deal_table ADD CONSTRAINT check_weighted_amount_positive \n  CHECK (weighted_amount IS NULL OR weighted_amount >= 0);\n\nALTER TABLE deal_table ADD CONSTRAINT check_discount_amount_positive \n  CHECK (discount_amount IS NULL OR discount_amount >= 0);\n\nALTER TABLE deal_table ADD CONSTRAINT check_commission_amount_positive \n  CHECK (commission_amount IS NULL OR commission_amount >= 0);\n\n-- Percentage constraints (0-100)\nALTER TABLE deal_table ADD CONSTRAINT check_discount_percentage_range \n  CHECK (discount_percentage IS NULL OR (discount_percentage >= 0 AND discount_percentage <= 100));\n\nALTER TABLE deal_table ADD CONSTRAINT check_commission_rate_range \n  CHECK (commission_rate IS NULL OR (commission_rate >= 0 AND commission_rate <= 100));\n\nALTER TABLE deal_table ADD CONSTRAINT check_probability_range \n  CHECK (probability >= 0 AND probability <= 100);\n\n-- Exchange rate constraint (must be positive)\nALTER TABLE deal_table ADD CONSTRAINT check_exchange_rate_positive \n  CHECK (exchange_rate IS NULL OR exchange_rate > 0);\n\n-- Days constraint (non-negative)\nALTER TABLE deal_table ADD CONSTRAINT check_days_in_stage_positive \n  CHECK (days_in_current_stage IS NULL OR days_in_current_stage >= 0);\n\n-- ============================================\n-- STEP 4: ADD PERFORMANCE INDEXES\n-- ============================================\n\n-- Critical date indexes\nCREATE INDEX idx_deal_expected_closure_date ON deal_table(expected_closure_date) WHERE expected_closure_date IS NOT NULL;\nCREATE INDEX idx_deal_closure_date ON deal_table(closure_date) WHERE closure_date IS NOT NULL;\nCREATE INDEX idx_deal_last_activity_date ON deal_table(last_activity_date) WHERE last_activity_date IS NOT NULL;\n\n-- Critical FK indexes\nCREATE INDEX idx_deal_manager_id ON deal_table(manager_id) WHERE manager_id IS NOT NULL;\nCREATE INDEX idx_deal_current_stage_id ON deal_table(current_stage_id) WHERE current_stage_id IS NOT NULL;\nCREATE INDEX idx_deal_company_id ON deal_table(company_id) WHERE company_id IS NOT NULL;\n\n-- Status index\nCREATE INDEX idx_deal_status ON deal_table(deal_status) WHERE deal_status IS NOT NULL;\n\n-- Search index\nCREATE INDEX idx_deal_name ON deal_table(name);\n\n-- Composite indexes for common queries\nCREATE INDEX idx_deal_manager_status_closedate \n  ON deal_table(manager_id, deal_status, expected_closure_date) \n  WHERE manager_id IS NOT NULL AND deal_status IS NOT NULL;\n\nCREATE INDEX idx_deal_stage_closedate \n  ON deal_table(current_stage_id, expected_closure_date) \n  WHERE current_stage_id IS NOT NULL;\n\n-- ============================================\n-- STEP 5: UPDATE EXISTING DATA (OPTIONAL)\n-- ============================================\n\n-- Set default probability based on current stage (if PipelineStage has default_probability)\n-- UPDATE deal_table d \n-- SET probability = COALESCE(\n--   (SELECT default_probability FROM pipeline_stage_table ps WHERE ps.id = d.current_stage_id), \n--   0\n-- )\n-- WHERE d.probability = 0 AND d.current_stage_id IS NOT NULL;\n\n-- Calculate weighted amount if not set\nUPDATE deal_table \nSET weighted_amount = (expected_amount * probability / 100.0)\nWHERE expected_amount IS NOT NULL \n  AND probability IS NOT NULL \n  AND (weighted_amount IS NULL OR weighted_amount = 0);\n\nCOMMIT;\n\n-- ============================================\n-- VERIFICATION QUERIES\n-- ============================================\n\n-- Check data types\nSELECT column_name, data_type, numeric_precision, numeric_scale \nFROM information_schema.columns \nWHERE table_name = 'deal_table' \n  AND column_name IN ('expected_amount', 'probability', 'discount_percentage')\nORDER BY column_name;\n\n-- Check constraints\nSELECT conname, contype, pg_get_constraintdef(oid) \nFROM pg_constraint \nWHERE conrelid = 'deal_table'::regclass \n  AND contype = 'c'\nORDER BY conname;\n\n-- Check indexes\nSELECT indexname, indexdef \nFROM pg_indexes \nWHERE tablename = 'deal_table'\nORDER BY indexname;\n"
+  },
+
+  "generator_property_updates": {
+    "description": "SQL to update generator_property table for Deal entity optimizations",
+    "sql": "-- Update generator_property table for Deal entity\n\nBEGIN;\n\n-- ============================================\n-- UPDATE AMOUNT FIELDS TO DECIMAL\n-- ============================================\n\nUPDATE generator_property \nSET \n  property_type = 'decimal',\n  precision = 15,\n  scale = 2,\n  check_constraint = 'initial_amount >= 0',\n  indexed = false,\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'initialAmount';\n\nUPDATE generator_property \nSET \n  property_type = 'decimal',\n  precision = 15,\n  scale = 2,\n  check_constraint = 'expected_amount >= 0',\n  indexed = true,\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'expectedAmount';\n\nUPDATE generator_property \nSET \n  property_type = 'decimal',\n  precision = 15,\n  scale = 2,\n  check_constraint = 'closure_amount >= 0',\n  indexed = false,\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'closureAmount';\n\nUPDATE generator_property \nSET \n  property_type = 'decimal',\n  precision = 15,\n  scale = 2,\n  check_constraint = 'weighted_amount >= 0',\n  indexed = false,\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'weightedAmount';\n\nUPDATE generator_property \nSET \n  property_type = 'decimal',\n  precision = 15,\n  scale = 2,\n  check_constraint = 'discount_amount >= 0',\n  indexed = false,\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'discountAmount';\n\nUPDATE generator_property \nSET \n  property_type = 'decimal',\n  precision = 15,\n  scale = 2,\n  check_constraint = 'commission_amount >= 0',\n  indexed = false,\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'commissionAmount';\n\n-- ============================================\n-- UPDATE PERCENTAGE FIELDS TO DECIMAL(5,2)\n-- ============================================\n\nUPDATE generator_property \nSET \n  property_type = 'decimal',\n  precision = 5,\n  scale = 2,\n  check_constraint = 'discount_percentage >= 0 AND discount_percentage <= 100',\n  indexed = false,\n  filterable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'discountPercentage';\n\nUPDATE generator_property \nSET \n  property_type = 'decimal',\n  precision = 5,\n  scale = 2,\n  check_constraint = 'commission_rate >= 0 AND commission_rate <= 100',\n  indexed = false,\n  filterable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'commissionRate';\n\n-- ============================================\n-- UPDATE EXCHANGE RATE TO DECIMAL(10,6)\n-- ============================================\n\nUPDATE generator_property \nSET \n  property_type = 'decimal',\n  precision = 10,\n  scale = 6,\n  check_constraint = 'exchange_rate > 0',\n  indexed = false\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'exchangeRate';\n\n-- ============================================\n-- UPDATE DAYS TO INTEGER\n-- ============================================\n\nUPDATE generator_property \nSET \n  property_type = 'integer',\n  check_constraint = 'days_in_current_stage >= 0',\n  indexed = false\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'daysInCurrentStage';\n\n-- ============================================\n-- ADD INDEXES TO CRITICAL FIELDS\n-- ============================================\n\nUPDATE generator_property \nSET \n  indexed = true,\n  index_type = 'btree',\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'expectedClosureDate';\n\nUPDATE generator_property \nSET \n  indexed = true,\n  index_type = 'btree',\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'closureDate';\n\nUPDATE generator_property \nSET \n  indexed = true,\n  index_type = 'btree',\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name IN ('manager', 'currentStage', 'company');\n\nUPDATE generator_property \nSET \n  indexed = true,\n  index_type = 'btree',\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'dealStatus';\n\nUPDATE generator_property \nSET \n  indexed = true,\n  index_type = 'btree',\n  searchable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'name';\n\nUPDATE generator_property \nSET \n  indexed = true,\n  index_type = 'btree',\n  filterable = true,\n  sortable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name = 'lastActivityDate';\n\n-- ============================================\n-- MAKE FILTERABLE\n-- ============================================\n\nUPDATE generator_property \nSET filterable = true\nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d' \n  AND property_name IN (\n    'expectedAmount', \n    'expectedClosureDate', \n    'dealStatus', \n    'forecastCategory',\n    'closureDate',\n    'lastActivityDate'\n  );\n\n-- ============================================\n-- INSERT PROBABILITY FIELD (NEW)\n-- ============================================\n\nINSERT INTO generator_property (\n  id,\n  entity_id,\n  property_name,\n  property_label,\n  property_type,\n  property_order,\n  nullable,\n  \"unique\",\n  default_value,\n  indexed,\n  index_type,\n  sortable,\n  searchable,\n  filterable,\n  show_in_list,\n  show_in_detail,\n  show_in_form,\n  api_readable,\n  api_writable,\n  form_type,\n  form_required,\n  check_constraint,\n  created_at,\n  updated_at\n) VALUES (\n  gen_random_uuid(),\n  '0199cadd-630e-724e-844d-8eeb93a2b79d',\n  'probability',\n  'Probability',\n  'integer',\n  (SELECT COALESCE(MAX(property_order), 0) + 1 FROM generator_property WHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d'),\n  false,\n  false,\n  '0',\n  true,\n  'btree',\n  true,\n  false,\n  true,\n  true,\n  true,\n  true,\n  true,\n  true,\n  'IntegerType',\n  false,\n  'probability >= 0 AND probability <= 100',\n  NOW(),\n  NOW()\n);\n\nCOMMIT;\n\n-- ============================================\n-- VERIFICATION\n-- ============================================\n\nSELECT \n  property_name,\n  property_type,\n  precision,\n  scale,\n  check_constraint,\n  indexed,\n  filterable,\n  sortable\nFROM generator_property \nWHERE entity_id = '0199cadd-630e-724e-844d-8eeb93a2b79d'\n  AND property_name IN (\n    'expectedAmount',\n    'probability',\n    'discountPercentage',\n    'expectedClosureDate',\n    'manager'\n  )\nORDER BY property_name;\n"
+  },
+
+  "implementation_priority": [
+    {
+      "priority": 1,
+      "action": "Add probability field",
+      "category": "Missing Critical Field",
+      "effort": "LOW",
+      "impact": "CRITICAL",
+      "sql_file": "01_add_probability_field.sql"
+    },
+    {
+      "priority": 2,
+      "action": "Convert all amount fields to decimal(15,2)",
+      "category": "Data Type Fix",
+      "effort": "MEDIUM",
+      "impact": "CRITICAL",
+      "sql_file": "02_convert_amounts_to_decimal.sql"
+    },
+    {
+      "priority": 3,
+      "action": "Add check constraints on amounts and percentages",
+      "category": "Data Integrity",
+      "effort": "LOW",
+      "impact": "HIGH",
+      "sql_file": "03_add_check_constraints.sql"
+    },
+    {
+      "priority": 4,
+      "action": "Add indexes on critical fields",
+      "category": "Performance",
+      "effort": "LOW",
+      "impact": "HIGH",
+      "sql_file": "04_add_indexes.sql"
+    },
+    {
+      "priority": 5,
+      "action": "Make organization, manager, currentStage, expectedClosureDate NOT NULL",
+      "category": "Required Fields",
+      "effort": "MEDIUM",
+      "impact": "HIGH",
+      "sql_file": "05_enforce_required_fields.sql",
+      "note": "Requires data cleanup first"
+    },
+    {
+      "priority": 6,
+      "action": "Enable filterable on key fields",
+      "category": "UI/UX",
+      "effort": "LOW",
+      "impact": "MEDIUM",
+      "sql_file": "06_enable_filterable.sql"
+    }
+  ],
+
+  "recommendations_summary": {
+    "immediate_actions": [
+      "Add probability field (integer, 0-100, indexed, NOT NULL DEFAULT 0)",
+      "Convert all monetary fields to decimal(15,2)",
+      "Add check constraints on all amount and percentage fields",
+      "Add indexes on: expectedClosureDate, manager_id, current_stage_id, deal_status, company_id"
+    ],
+    "high_priority": [
+      "Make organization, manager, currentStage, expectedClosureDate NOT NULL",
+      "Enable filterable on expectedAmount, expectedClosureDate, dealStatus, forecastCategory",
+      "Convert discountPercentage and commissionRate to decimal(5,2)",
+      "Add composite indexes for common query patterns"
+    ],
+    "medium_priority": [
+      "Add nextStep text field (or rely on tasks)",
+      "Add expectedRevenue computed field",
+      "Add index on name for search/autocomplete",
+      "Consider adding dealScore for AI/ML predictions"
+    ],
+    "nice_to_have": [
+      "Add full-text search on description and notes",
+      "Consider partitioning by organization_id for very large datasets",
+      "Add triggers to auto-calculate weightedAmount when probability or expectedAmount changes"
+    ]
+  },
+
+  "testing_checklist": [
+    "Test decimal precision: insert deal with amount 123456.789, verify stored as 123456.79",
+    "Test check constraints: try inserting negative amount, should fail",
+    "Test probability constraint: try inserting 150%, should fail",
+    "Test index performance: query deals by expectedClosureDate range, check execution plan",
+    "Test weighted amount calculation: probability 50%, amount $10,000 = weighted $5,000",
+    "Test filtering: filter deals by status, stage, owner, close date",
+    "Test NOT NULL constraints: try creating deal without owner, should fail (after migration)",
+    "Test composite index: query 'my open deals closing this month', verify uses index"
+  ],
+
+  "documentation_updates_needed": [
+    "Update API documentation to reflect new probability field",
+    "Document decimal precision for amount fields",
+    "Update validation rules documentation",
+    "Add probability calculation rules (tie to stage default)",
+    "Document weighted forecasting formulas",
+    "Update entity relationship diagrams",
+    "Add migration guide for existing data"
+  ]
+}
