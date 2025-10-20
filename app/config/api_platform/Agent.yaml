@@ -14,21 +14,197 @@ resources:
       groups: ["agent:write"]
 
     order:
-      createdAt: DESC
+      name: ASC
 
-    security: "is_granted('ROLE_SUPPORT_ADMIN')"
+    security: "is_granted('ROLE_USER')"
 
     operations:
       - class: ApiPlatform\Metadata\GetCollection
-        security: "is_granted('ROLE_SUPPORT_ADMIN')"
+        security: "is_granted('ROLE_USER')"
       - class: ApiPlatform\Metadata\Get
-        security: "is_granted('ROLE_SUPPORT_ADMIN')"
+        security: "is_granted('ROLE_USER')"
       - class: ApiPlatform\Metadata\Post
         security: "is_granted('ROLE_SUPPORT_ADMIN')"
       - class: ApiPlatform\Metadata\Put
-        security: "is_granted('ROLE_SUPPORT_ADMIN')"
+        security: "is_granted('ROLE_SUPPORT_ADMIN') or object.getUser() == user"
+      - class: ApiPlatform\Metadata\Patch
+        security: "is_granted('ROLE_USER')"
       - class: ApiPlatform\Metadata\Delete
-        security: "is_granted('ROLE_SUPPORT_ADMIN')"
+        security: "is_granted('ROLE_SUPER_ADMIN')"
 
 
 
+    # Property-level configuration
+    properties:
+      name:
+        description: "The brand name"
+        example: "Nike"
+        # Advanced filters
+        filters:
+          - type: SearchFilter
+            strategy: partial
+          - type: SearchFilter
+            strategy: partial
+          - type: OrderFilter
+      phone:
+        description: "Contact phone number"
+        example: "+1-555-123-4567"
+        # Advanced filters
+        filters:
+          - type: SearchFilter
+            strategy: exact
+          - type: SearchFilter
+            strategy: partial
+      title:
+        description: "Job title or position"
+        example: "Senior Sales Representative"
+        # Advanced filters
+        filters:
+          - type: SearchFilter
+            strategy: partial
+          - type: SearchFilter
+            strategy: partial
+          - type: OrderFilter
+      active:
+        description: "Whether agent is active in the system"
+        example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: BooleanFilter
+      available:
+        description: "Whether agent is available for new assignments"
+        example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: BooleanFilter
+      territory:
+        description: "Geographic or account-based territory"
+        example: "Northeast"
+        # Advanced filters
+        filters:
+          - type: SearchFilter
+            strategy: exact
+          - type: SearchFilter
+            strategy: partial
+          - type: OrderFilter
+      quota:
+        description: "Sales quota amount"
+        example: "150000.00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: NumericFilter
+      user:
+        description: "User"
+        example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: ExistsFilter
+      agentType:
+        description: "AgentType"
+        example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: ExistsFilter
+      commissionRate:
+        description: "Commission percentage (0-100)"
+        example: "8.50"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: NumericFilter
+      startDate:
+        description: "Employment start date"
+        example: "2024-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: DateFilter
+      endDate:
+        description: "End Date (date)"
+        example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: DateFilter
+      specialization:
+        description: "Area of sales expertise"
+        example: "Enterprise SaaS"
+        # Advanced filters
+        filters:
+          - type: SearchFilter
+            strategy: partial
+          - type: SearchFilter
+            strategy: partial
+          - type: OrderFilter
+      languages:
+        description: "Languages spoken (JSON array)"
+        example: "[\"English\", \"Spanish\", \"French\"]"
+      certifications:
+        description: "Professional certifications"
+        example: "Certified Sales Professional (CSP), Salesforce Certified"
+      totalSales:
+        description: "Lifetime total sales"
+        example: "1250000.00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: NumericFilter
+      currentMonthSales:
+        description: "Sales for current month"
+        example: "45000.00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: NumericFilter
+      conversionRate:
+        description: "Lead-to-sale conversion percentage"
+        example: "23.50"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: NumericFilter
+      customerSatisfactionScore:
+        description: "Customer satisfaction score (0-10)"
+        example: "4.75"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: NumericFilter
+      maxConcurrentCustomers:
+        description: "Maximum simultaneous customers"
+        example: "10"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: NumericFilter
+      currentCustomerCount:
+        description: "Current active customer count"
+        example: "7"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: NumericFilter
+      averageResponseTime:
+        description: "Average response time in minutes"
+        example: "15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: NumericFilter
+      skills:
+        description: "Comma-separated skills or JSON array"
+        example: "[\"Negotiation\", \"Cold Calling\", \"CRM Software\", \"Account Management\"]"
+      prompt:
+        description: "AI assistant prompt configuration for this agent"
+        example: "You are a helpful sales assistant specializing in enterprise solutions."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      talks:
+        description: "Talks"
+        example: "sample value"

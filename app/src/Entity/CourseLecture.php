@@ -225,7 +225,7 @@ class CourseLecture extends EntityBase
 
     #[ORM\Column(type: 'integer')]
     #[Assert\PositiveOrZero]
-    #[Assert\Range(min: 0, max: 86400, maxMessage: 'course.lecture.validation.duration_max')]
+    #[Assert\Range(min: 0, max: 86400, notInRangeMessage: 'course.lecture.validation.duration_max')]
     #[Groups(['course_lecture:read', 'course_lecture:write', 'student:read'])]
     protected int $durationSeconds = 0;
 

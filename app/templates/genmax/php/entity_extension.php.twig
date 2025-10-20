@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @generated once by Genmax Code Generator
  */
 #[ORM\Entity(repositoryClass: {{ entity.getEntityName() }}Repository::class)]
-#[ORM\Table(name: '{{ entity.getTableName() }}')]
+#[ORM\Table(name: '{{ getSafeTableName(entity.getEntityName()) }}')]
 class {{ entity.getEntityName() }} extends {{ entity.getEntityName() }}Generated
 {
     // Add custom properties here

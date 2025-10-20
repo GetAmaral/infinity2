@@ -8,8 +8,8 @@
 
 | Metric | Count |
 |--------|-------|
-| **Total Properties** | 26 |
-| **Indexed Properties** | 10 |
+| **Total Properties** | 25 |
+| **Indexed Properties** | 9 |
 | **Enum Properties** | 2 |
 | **Virtual/Computed Properties** | 7 |
 | **Audit Trail** | ✅ Enabled |
@@ -34,11 +34,10 @@
 | `pipelineType` | enum | ✅ Yes | "Sales" | Type: Sales/Marketing/Service/Custom/Partner/Recruitment |
 | `displayOrder` | integer | ✅ Yes | 0 | Sort order (indexed) |
 
-### Ownership & Team
+### Ownership
 | Property | Type | Required | Indexed | Description |
 |----------|------|----------|---------|-------------|
 | `owner` | ManyToOne → User | No | ✅ Yes | Pipeline owner/manager |
-| `team` | ManyToOne → Team | No | ✅ Yes | Assigned team |
 | `createdBy` | ManyToOne → User | No | ✅ Yes | Creator (audit) |
 
 ### Relationships
@@ -136,13 +135,12 @@ is_granted('ROLE_CRM_ADMIN')
 1. `id` (Primary Key)
 2. `organization_id` ✅ **CRITICAL** (multi-tenant filtering)
 3. `owner_id` (query performance)
-4. `team_id` (query performance)
-5. `createdBy_id` (audit queries)
-6. `isDefault` (default lookup)
-7. `isActive` (active filtering)
-8. `pipelineType` (type filtering)
-9. `displayOrder` (sorting)
-10. `archivedAt` (soft delete queries)
+4. `createdBy_id` (audit queries)
+5. `isDefault` (default lookup)
+6. `isActive` (active filtering)
+7. `pipelineType` (type filtering)
+8. `displayOrder` (sorting)
+9. `archivedAt` (soft delete queries)
 
 ### Recommended Composite Indexes
 ```sql
@@ -271,7 +269,6 @@ Content-Type: application/json
   "isDefault": false,
   "isActive": true,
   "owner": "/api/users/{userId}",
-  "team": "/api/teams/{teamId}",
   "forecastEnabled": true,
   "autoAdvanceStages": false,
   "rottenDealThreshold": 45,
@@ -310,7 +307,7 @@ GET /api/pipelines?isActive=true&pipelineType=Sales&organization=/api/organizati
 
 ### Query Optimization
 1. Always filter by `organization_id` first (multi-tenant)
-2. Use indexes for filtering (isActive, pipelineType, team)
+2. Use indexes for filtering (isActive, pipelineType, owner)
 3. Use LAZY loading for relationships
 4. Limit result sets with pagination
 

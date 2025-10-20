@@ -73,30 +73,39 @@ resources:
 
 {# Search and filter configuration is now property-level - see properties section below #}
 
-{% set hasPropertyConfig = false %}
-{% for property in entity.getProperties() %}
-{% if not property.isApiReadable() or not property.isApiWritable() or property.getApiDescription() or property.getApiExample() or property.isSubresource() or property.getFilterStrategy() or property.isFilterSearchable() or property.isFilterOrderable() or property.isFilterBoolean() or property.isFilterDate() or property.isFilterNumericRange() or property.isFilterExists() %}
-{% set hasPropertyConfig = true %}
-{% endif %}
-{% endfor %}
-
-{% if hasPropertyConfig %}
     # Property-level configuration
     properties:
 {% for property in entity.getProperties() %}
-{% if not property.isApiReadable() or not property.isApiWritable() or property.getApiDescription() or property.getApiExample() or property.isSubresource() or property.getFilterStrategy() or property.isFilterSearchable() or property.isFilterOrderable() or property.isFilterBoolean() or property.isFilterDate() or property.isFilterNumericRange() or property.isFilterExists() %}
       {{ property.getPropertyName() }}:
 {% if not property.isApiReadable() %}
         readable: false
 {% endif %}
-{% if not property.isApiWritable() %}
+{% if not property.isApiWritable() or property.isComputed() or property.isAutoCalculated() %}
         writable: false
 {% endif %}
 {% if property.getApiDescription() %}
         description: {{ property.getApiDescription()|json_encode|raw }}
+{% else %}
+        description: {{ property.getPropertyLabel()|json_encode|raw }}
 {% endif %}
 {% if property.getApiExample() %}
         example: {{ property.getApiExample()|json_encode|raw }}
+{% elseif property.getPropertyType() == 'string' or property.getPropertyType() == 'text' %}
+        example: "Sample {{ property.getPropertyLabel()|lower }}"
+{% elseif property.getPropertyType() == 'integer' %}
+        example: {{ property.getDefaultValue() ?? 42 }}
+{% elseif property.getPropertyType() in ['decimal', 'float'] %}
+        example: {{ property.getDefaultValue() ?? '99.99' }}
+{% elseif property.getPropertyType() == 'boolean' %}
+        example: {{ property.getDefaultValue() is same as(true) ? 'true' : (property.getDefaultValue() is same as(false) ? 'false' : 'true') }}
+{% elseif property.getPropertyType() in ['datetime', 'datetime_immutable'] %}
+        example: "2025-01-15T10:30:00Z"
+{% elseif property.getPropertyType() in ['date', 'date_immutable'] %}
+        example: "2025-01-15"
+{% elseif property.getPropertyType() == 'json' %}
+        example: "{\"key\": \"value\"}"
+{% elseif property.getRelationshipType() %}
+        example: "/api/{{ property.getTargetEntity()|lower }}s/01234567-89ab-cdef-0123-456789abcdef"
 {% endif %}
 {% if property.isSubresource() and property.getSubresourcePath() %}
         # Subresource configuration
@@ -133,6 +142,4 @@ resources:
           - type: ExistsFilter
 {% endif %}
 {% endif %}
-{% endif %}
 {% endfor %}
-{% endif %}

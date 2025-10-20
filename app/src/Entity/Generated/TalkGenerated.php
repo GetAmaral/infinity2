@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\Organization;
 use App\Entity\Company;
 use App\Entity\Deal;
 use App\Entity\TalkType;
@@ -34,7 +33,7 @@ abstract class TalkGenerated extends EntityBase
 {
     use OrganizationTrait;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string', length: 255)]
     protected string $subject;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -77,7 +76,7 @@ abstract class TalkGenerated extends EntityBase
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $durationSeconds = null;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $recordingUrl = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'talks', fetch: 'LAZY')]
@@ -103,10 +102,10 @@ abstract class TalkGenerated extends EntityBase
     protected int $messageCount = 0;
 
     #[ORM\Column(type: 'boolean')]
-    protected bool $archived = ;
+    protected bool $archived = false;
 
     #[ORM\Column(type: 'boolean')]
-    protected bool $isInternal = ;
+    protected bool $internal = false;
 
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $tags = null;
@@ -141,34 +140,34 @@ abstract class TalkGenerated extends EntityBase
         return $this;
     }
 
-    public function getCompany(): ?Company
+    public function getCompany(): ?App\Entity\Company
     {
         return $this->company;
     }
 
-    public function setCompany(?Company $company): self
+    public function setCompany(?App\Entity\Company $company): self
     {
         $this->company = $company;
         return $this;
     }
 
-    public function getDeal(): ?Deal
+    public function getDeal(): ?App\Entity\Deal
     {
         return $this->deal;
     }
 
-    public function setDeal(?Deal $deal): self
+    public function setDeal(?App\Entity\Deal $deal): self
     {
         $this->deal = $deal;
         return $this;
     }
 
-    public function getTalktype(): TalkType
+    public function getTalktype(): App\Entity\TalkType
     {
         return $this->talkType;
     }
 
-    public function setTalktype(TalkType $talkType): self
+    public function setTalktype(App\Entity\TalkType $talkType): self
     {
         $this->talkType = $talkType;
         return $this;
@@ -275,14 +274,14 @@ abstract class TalkGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, App\Entity\User>
      */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function addUer(User $uer): self
+    public function addUer(App\Entity\User $uer): self
     {
         if (!$this->users->contains($uer)) {
             $this->users->add($uer);
@@ -290,44 +289,44 @@ abstract class TalkGenerated extends EntityBase
         return $this;
     }
 
-    public function removeUer(User $uer): self
+    public function removeUer(App\Entity\User $uer): self
     {
         if ($this->users->removeElement($uer)) {
         }
         return $this;
     }
 
-    public function getOwner(): User
+    public function getOwner(): App\Entity\User
     {
         return $this->owner;
     }
 
-    public function setOwner(User $owner): self
+    public function setOwner(App\Entity\User $owner): self
     {
         $this->owner = $owner;
         return $this;
     }
 
-    public function getAssignedto(): ?User
+    public function getAssignedto(): ?App\Entity\User
     {
         return $this->assignedTo;
     }
 
-    public function setAssignedto(?User $assignedTo): self
+    public function setAssignedto(?App\Entity\User $assignedTo): self
     {
         $this->assignedTo = $assignedTo;
         return $this;
     }
 
     /**
-     * @return Collection<int, Agent>
+     * @return Collection<int, App\Entity\Agent>
      */
     public function getAgents(): Collection
     {
         return $this->agents;
     }
 
-    public function addAgent(Agent $agent): self
+    public function addAgent(App\Entity\Agent $agent): self
     {
         if (!$this->agents->contains($agent)) {
             $this->agents->add($agent);
@@ -335,7 +334,7 @@ abstract class TalkGenerated extends EntityBase
         return $this;
     }
 
-    public function removeAgent(Agent $agent): self
+    public function removeAgent(App\Entity\Agent $agent): self
     {
         if ($this->agents->removeElement($agent)) {
         }
@@ -343,14 +342,14 @@ abstract class TalkGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, Campaign>
+     * @return Collection<int, App\Entity\Campaign>
      */
     public function getCampaigns(): Collection
     {
         return $this->campaigns;
     }
 
-    public function addCampaign(Campaign $campaign): self
+    public function addCampaign(App\Entity\Campaign $campaign): self
     {
         if (!$this->campaigns->contains($campaign)) {
             $this->campaigns->add($campaign);
@@ -358,7 +357,7 @@ abstract class TalkGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCampaign(Campaign $campaign): self
+    public function removeCampaign(App\Entity\Campaign $campaign): self
     {
         if ($this->campaigns->removeElement($campaign)) {
         }
@@ -366,14 +365,14 @@ abstract class TalkGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, TalkMessage>
+     * @return Collection<int, App\Entity\TalkMessage>
      */
     public function getMessages(): Collection
     {
         return $this->messages;
     }
 
-    public function addMeage(TalkMessage $meage): self
+    public function addMeage(App\Entity\TalkMessage $meage): self
     {
         if (!$this->messages->contains($meage)) {
             $this->messages->add($meage);
@@ -382,7 +381,7 @@ abstract class TalkGenerated extends EntityBase
         return $this;
     }
 
-    public function removeMeage(TalkMessage $meage): self
+    public function removeMeage(App\Entity\TalkMessage $meage): self
     {
         if ($this->messages->removeElement($meage)) {
             if ($meage->getTalk() === $this) {
@@ -417,19 +416,19 @@ abstract class TalkGenerated extends EntityBase
         return $this->archived === true;
     }
 
-    public function getIsinternal(): bool    {
-        return $this->isInternal;
+    public function getInternal(): bool    {
+        return $this->internal;
     }
 
-    public function setIsinternal(bool $isInternal): self
+    public function setInternal(bool $internal): self
     {
-        $this->isInternal = $isInternal;
+        $this->internal = $internal;
         return $this;
     }
 
-    public function isIsinternal(): bool
+    public function isInternal(): bool
     {
-        return $this->isInternal === true;
+        return $this->internal === true;
     }
 
     public function getTags(): ?array    {

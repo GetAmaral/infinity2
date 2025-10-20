@@ -27,6 +27,8 @@ resources:
         security: "is_granted('ROLE_USER')"
       - class: ApiPlatform\Metadata\Put
         security: "is_granted('ROLE_USER')"
+      - class: ApiPlatform\Metadata\Patch
+        security: "is_granted('ROLE_USER')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_USER')"
 
@@ -34,16 +36,6 @@ resources:
 
     # Property-level configuration
     properties:
-      name:
-        description: "Country name"
-        example: "United States"
-        # Advanced filters
-        filters:
-          - type: SearchFilter
-            strategy: partial
-          - type: SearchFilter
-            strategy: partial
-          - type: OrderFilter
       iso2:
         description: "Two-letter country code (ISO 3166-1 alpha-2)"
         example: "US"
@@ -51,6 +43,16 @@ resources:
         filters:
           - type: SearchFilter
             strategy: exact
+          - type: SearchFilter
+            strategy: partial
+          - type: OrderFilter
+      name:
+        description: "The brand name"
+        example: "Nike"
+        # Advanced filters
+        filters:
+          - type: SearchFilter
+            strategy: partial
           - type: SearchFilter
             strategy: partial
           - type: OrderFilter
@@ -92,13 +94,6 @@ resources:
             strategy: partial
           - type: SearchFilter
             strategy: partial
-      active:
-        description: "Whether country is active in the system"
-        example: "1"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
-          - type: BooleanFilter
       continent:
         description: "Continent name"
         example: "North America"
@@ -122,6 +117,7 @@ resources:
         example: "$"
       euMember:
         description: "European Union member state"
+        example: "true"
         # Advanced filters
         filters:
           - type: BooleanFilter
@@ -139,6 +135,13 @@ resources:
       officialName:
         description: "Official full country name"
         example: "United States of America"
+      active:
+        description: "Whether country is active in the system"
+        example: "1"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+          - type: BooleanFilter
       subregion:
         description: "UN geographic subregion"
         example: "Northern America"
@@ -174,16 +177,19 @@ resources:
           - type: BooleanFilter
       schengenMember:
         description: "Schengen Area member state"
+        example: "true"
         # Advanced filters
         filters:
           - type: BooleanFilter
       oecdMember:
         description: "OECD member country"
+        example: "true"
         # Advanced filters
         filters:
           - type: BooleanFilter
       dataResidencyRequired:
         description: "Data localization laws in effect"
+        example: "true"
         # Advanced filters
         filters:
           - type: BooleanFilter
@@ -201,6 +207,7 @@ resources:
         example: "{street}\\n{city}, {region} {postalCode}"
       taxIdRequired:
         description: "Tax ID\/VAT required for transactions"
+        example: "true"
         # Advanced filters
         filters:
           - type: BooleanFilter

@@ -76,7 +76,7 @@ class GeneratorProperty
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $scale = null;
 
-    #[ORM\Column(name: '`unique`', type: 'boolean', options: ['default' => false])]
+    #[ORM\Column(name: 'unique_prop', type: 'boolean', options: ['default' => false])]
     private bool $unique = false;
 
     #[ORM\Column(type: 'json', nullable: true)]
@@ -159,7 +159,7 @@ class GeneratorProperty
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $orphanRemoval = false;
 
-    #[ORM\Column(name: '`fetch`', length: 20, nullable: true, options: ['default' => 'LAZY'])]
+    #[ORM\Column(name: 'fetch_prop', length: 20, nullable: true, options: ['default' => 'LAZY'])]
     private ?string $fetch = 'LAZY';      // 'LAZY', 'EAGER', 'EXTRA_LAZY'
 
     #[ORM\Column(type: 'json', nullable: true)]

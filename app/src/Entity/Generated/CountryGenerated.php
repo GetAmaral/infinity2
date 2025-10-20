@@ -21,16 +21,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 abstract class CountryGenerated extends EntityBase
 {
-    #[ORM\Column(type: 'string', length: 100, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 2, max: 100)]
-    protected string $name;
-
     #[ORM\Column(type: 'string', length: 2, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 2)]
     #[Assert\Regex(pattern: '/^[A-Z]{2}$/')]
     protected string $iso2;
+
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 100)]
+    protected string $name;
 
     #[ORM\Column(type: 'string', length: 3, unique: true)]
     #[Assert\NotBlank]
@@ -55,9 +55,6 @@ abstract class CountryGenerated extends EntityBase
     #[Assert\Length(max: 10)]
     #[Assert\Regex(pattern: '/^\+\d{1,4}$/')]
     protected string $phoneCode;
-
-    #[ORM\Column(type: 'boolean')]
-    protected bool $active = true;
 
     #[ORM\Column(type: 'string', length: 50)]
     #[Assert\NotBlank]
@@ -86,6 +83,9 @@ abstract class CountryGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 200, nullable: true)]
     #[Assert\Length(max: 200)]
     protected ?string $officialName = null;
+
+    #[ORM\Column(type: 'boolean')]
+    protected bool $active = true;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Assert\Length(max: 100)]
@@ -162,16 +162,6 @@ abstract class CountryGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getIso2(): string    {
         return $this->iso2;
     }
@@ -179,6 +169,16 @@ abstract class CountryGenerated extends EntityBase
     public function setIso2(string $iso2): self
     {
         $this->iso2 = $iso2;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -220,21 +220,6 @@ abstract class CountryGenerated extends EntityBase
     {
         $this->phoneCode = $phoneCode;
         return $this;
-    }
-
-    public function getActive(): bool    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->active === true;
     }
 
     public function getContinent(): string    {
@@ -310,6 +295,21 @@ abstract class CountryGenerated extends EntityBase
     {
         $this->officialName = $officialName;
         return $this;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active === true;
     }
 
     public function getSubregion(): ?string    {

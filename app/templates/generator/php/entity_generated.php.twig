@@ -67,7 +67,7 @@ abstract class {{ className }} extends {{ extendsClass }}
 {% if usesOrganizationTrait and property.propertyName == 'organization' %}
 {# Skip organization property - provided by OrganizationTrait #}
 {% elseif not property.isRelationship() %}
-    #[ORM\Column(type: '{{ property.propertyType }}'{% if property.length %}, length: {{ property.length }}{% endif %}{% if property.precision %}, precision: {{ property.precision }}{% endif %}{% if property.scale %}, scale: {{ property.scale }}{% endif %}{% if property.nullable %}, nullable: true{% endif %}{% if property.unique %}, unique: true{% endif %})]
+    #[ORM\Column({% if isReservedKeyword(property.propertyName) %}name: '{{ getSafeColumnName(property.propertyName) }}', {% endif %}type: '{{ property.propertyType }}'{% if property.length %}, length: {{ property.length }}{% endif %}{% if property.precision %}, precision: {{ property.precision }}{% endif %}{% if property.scale %}, scale: {{ property.scale }}{% endif %}{% if property.nullable %}, nullable: true{% endif %}{% if property.unique %}, unique: true{% endif %})]
 {% for rule in property.validationRules %}
     #[Assert\{{ rule|replace({'=': ': '}) }}]
 {% endfor %}

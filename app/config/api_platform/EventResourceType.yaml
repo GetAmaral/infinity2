@@ -27,8 +27,21 @@ resources:
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Put
         security: "is_granted('ROLE_SUPER_ADMIN')"
+      - class: ApiPlatform\Metadata\Patch
+        security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SUPER_ADMIN')"
 
 
 
+    # Property-level configuration
+    properties:
+      name:
+        description: "The brand name"
+        example: "Nike"
+      description:
+        description: "..."
+        example: "..."
+      organization:
+        description: "The organization..."
+        example: "\/api\/organizations\/..."

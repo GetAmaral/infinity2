@@ -22,7 +22,7 @@ use App\Entity\Organization;
 #[ORM\HasLifecycleCallbacks]
 abstract class EventResourceTypeGenerated extends EntityBase
 {
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -57,12 +57,12 @@ abstract class EventResourceTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getOrganization(): ?Organization
+    public function getOrganization(): ?App\Entity\Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(?Organization $organization): self
+    public function setOrganization(?App\Entity\Organization $organization): self
     {
         $this->organization = $organization;
         return $this;

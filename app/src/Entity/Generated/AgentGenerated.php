@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\Organization;
 use App\Entity\User;
 use App\Entity\AgentType;
 use App\Entity\Talk;
@@ -30,17 +29,94 @@ abstract class AgentGenerated extends EntityBase
 {
     use OrganizationTrait;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 100)]
     protected string $name;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $agentPrompt = null;
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Assert\Length(max: 20)]
+    protected ?string $phone = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    protected ?string $title = null;
+
+    #[ORM\Column(type: 'boolean')]
+    #[Assert\NotNull]
+    protected bool $active = true;
+
+    #[ORM\Column(type: 'boolean')]
+    #[Assert\NotNull]
+    protected bool $available = true;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    protected ?string $territory = null;
+
+    #[ORM\Column(type: 'decimal', precision: 12, scale: 2, nullable: true)]
+    #[Assert\PositiveOrZero]
+    protected ?float $quota = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'agents')]
     protected ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: AgentType::class)]
     protected ?AgentType $agentType = null;
+
+    #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
+    #[Assert\Range(min: 0, max: 100)]
+    protected ?float $commissionRate = 0;
+
+    #[ORM\Column(type: 'date', nullable: true)]
+    protected ?\DateTimeImmutable $startDate = null;
+
+    #[ORM\Column(type: 'date', nullable: true)]
+    protected ?\DateTimeImmutable $endDate = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    protected ?string $specialization = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $languages = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $certifications = null;
+
+    #[ORM\Column(type: 'decimal', precision: 12, scale: 2, nullable: true)]
+    #[Assert\PositiveOrZero]
+    protected ?float $totalSales = 0;
+
+    #[ORM\Column(type: 'decimal', precision: 12, scale: 2, nullable: true)]
+    #[Assert\PositiveOrZero]
+    protected ?float $currentMonthSales = 0;
+
+    #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
+    #[Assert\Range(min: 0, max: 100)]
+    protected ?float $conversionRate = 0;
+
+    #[ORM\Column(type: 'decimal', precision: 3, scale: 2, nullable: true)]
+    #[Assert\Range(min: 0, max: 10)]
+    protected ?float $customerSatisfactionScore = null;
+
+    #[ORM\Column(type: 'integer')]
+    #[Assert\PositiveOrZero]
+    protected int $maxConcurrentCustomers = 10;
+
+    #[ORM\Column(type: 'integer')]
+    #[Assert\PositiveOrZero]
+    protected int $currentCustomerCount = 0;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\PositiveOrZero]
+    protected ?int $averageResponseTime = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $skills = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $prompt = null;
 
     #[ORM\ManyToMany(targetEntity: Talk::class, inversedBy: 'agents', fetch: 'LAZY')]
     protected Collection $talks;
@@ -62,47 +138,257 @@ abstract class AgentGenerated extends EntityBase
         return $this;
     }
 
-    public function getAgentprompt(): ?string    {
-        return $this->agentPrompt;
+    public function getPhone(): ?string    {
+        return $this->phone;
     }
 
-    public function setAgentprompt(?string $agentPrompt): self
+    public function setPhone(?string $phone): self
     {
-        $this->agentPrompt = $agentPrompt;
+        $this->phone = $phone;
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getTitle(): ?string    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active === true;
+    }
+
+    public function getAvailable(): bool    {
+        return $this->available;
+    }
+
+    public function setAvailable(bool $available): self
+    {
+        $this->available = $available;
+        return $this;
+    }
+
+    public function isAvailable(): bool
+    {
+        return $this->available === true;
+    }
+
+    public function getTerritory(): ?string    {
+        return $this->territory;
+    }
+
+    public function setTerritory(?string $territory): self
+    {
+        $this->territory = $territory;
+        return $this;
+    }
+
+    public function getQuota(): ?float    {
+        return $this->quota;
+    }
+
+    public function setQuota(?float $quota): self
+    {
+        $this->quota = $quota;
+        return $this;
+    }
+
+    public function getUser(): ?App\Entity\User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(?App\Entity\User $user): self
     {
         $this->user = $user;
         return $this;
     }
 
-    public function getAgenttype(): ?AgentType
+    public function getAgenttype(): ?App\Entity\AgentType
     {
         return $this->agentType;
     }
 
-    public function setAgenttype(?AgentType $agentType): self
+    public function setAgenttype(?App\Entity\AgentType $agentType): self
     {
         $this->agentType = $agentType;
         return $this;
     }
 
+    public function getCommissionrate(): ?float    {
+        return $this->commissionRate;
+    }
+
+    public function setCommissionrate(?float $commissionRate): self
+    {
+        $this->commissionRate = $commissionRate;
+        return $this;
+    }
+
+    public function getStartdate(): ?\DateTimeImmutable    {
+        return $this->startDate;
+    }
+
+    public function setStartdate(?\DateTimeImmutable $startDate): self
+    {
+        $this->startDate = $startDate;
+        return $this;
+    }
+
+    public function getEnddate(): ?\DateTimeImmutable    {
+        return $this->endDate;
+    }
+
+    public function setEnddate(?\DateTimeImmutable $endDate): self
+    {
+        $this->endDate = $endDate;
+        return $this;
+    }
+
+    public function getSpecialization(): ?string    {
+        return $this->specialization;
+    }
+
+    public function setSpecialization(?string $specialization): self
+    {
+        $this->specialization = $specialization;
+        return $this;
+    }
+
+    public function getLanguages(): ?string    {
+        return $this->languages;
+    }
+
+    public function setLanguages(?string $languages): self
+    {
+        $this->languages = $languages;
+        return $this;
+    }
+
+    public function getCertifications(): ?string    {
+        return $this->certifications;
+    }
+
+    public function setCertifications(?string $certifications): self
+    {
+        $this->certifications = $certifications;
+        return $this;
+    }
+
+    public function getTotalsales(): ?float    {
+        return $this->totalSales;
+    }
+
+    public function setTotalsales(?float $totalSales): self
+    {
+        $this->totalSales = $totalSales;
+        return $this;
+    }
+
+    public function getCurrentmonthsales(): ?float    {
+        return $this->currentMonthSales;
+    }
+
+    public function setCurrentmonthsales(?float $currentMonthSales): self
+    {
+        $this->currentMonthSales = $currentMonthSales;
+        return $this;
+    }
+
+    public function getConversionrate(): ?float    {
+        return $this->conversionRate;
+    }
+
+    public function setConversionrate(?float $conversionRate): self
+    {
+        $this->conversionRate = $conversionRate;
+        return $this;
+    }
+
+    public function getCustomersatisfactionscore(): ?float    {
+        return $this->customerSatisfactionScore;
+    }
+
+    public function setCustomersatisfactionscore(?float $customerSatisfactionScore): self
+    {
+        $this->customerSatisfactionScore = $customerSatisfactionScore;
+        return $this;
+    }
+
+    public function getMaxconcurrentcustomers(): int    {
+        return $this->maxConcurrentCustomers;
+    }
+
+    public function setMaxconcurrentcustomers(int $maxConcurrentCustomers): self
+    {
+        $this->maxConcurrentCustomers = $maxConcurrentCustomers;
+        return $this;
+    }
+
+    public function getCurrentcustomercount(): int    {
+        return $this->currentCustomerCount;
+    }
+
+    public function setCurrentcustomercount(int $currentCustomerCount): self
+    {
+        $this->currentCustomerCount = $currentCustomerCount;
+        return $this;
+    }
+
+    public function getAverageresponsetime(): ?int    {
+        return $this->averageResponseTime;
+    }
+
+    public function setAverageresponsetime(?int $averageResponseTime): self
+    {
+        $this->averageResponseTime = $averageResponseTime;
+        return $this;
+    }
+
+    public function getSkills(): ?string    {
+        return $this->skills;
+    }
+
+    public function setSkills(?string $skills): self
+    {
+        $this->skills = $skills;
+        return $this;
+    }
+
+    public function getPrompt(): ?string    {
+        return $this->prompt;
+    }
+
+    public function setPrompt(?string $prompt): self
+    {
+        $this->prompt = $prompt;
+        return $this;
+    }
+
     /**
-     * @return Collection<int, Talk>
+     * @return Collection<int, App\Entity\Talk>
      */
     public function getTalks(): Collection
     {
         return $this->talks;
     }
 
-    public function addTalk(Talk $talk): self
+    public function addTalk(App\Entity\Talk $talk): self
     {
         if (!$this->talks->contains($talk)) {
             $this->talks->add($talk);
@@ -110,7 +396,7 @@ abstract class AgentGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTalk(Talk $talk): self
+    public function removeTalk(App\Entity\Talk $talk): self
     {
         if ($this->talks->removeElement($talk)) {
         }
@@ -120,6 +406,6 @@ abstract class AgentGenerated extends EntityBase
 
     public function __toString(): string
     {
-        return $this->name ?? ($this->getId()?->toRfc4122() ?? '');
+        return $this->name ?? $this->title ?? ($this->getId()?->toRfc4122() ?? '');
     }
 }

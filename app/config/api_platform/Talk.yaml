@@ -27,6 +27,8 @@ resources:
         security: "is_granted('ROLE_SUPPORT_ADMIN')"
       - class: ApiPlatform\Metadata\Put
         security: "is_granted('ROLE_SUPPORT_ADMIN')"
+      - class: ApiPlatform\Metadata\Patch
+        security: "is_granted('ROLE_SUPPORT_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SUPPORT_ADMIN')"
 
@@ -34,5 +36,79 @@ resources:
 
     # Property-level configuration
     properties:
+      subject:
+        description: "Subject (text field)"
+        example: "Sample longer text value"
+      summary:
+        description: "Summary (long text)"
+        example: "This is a longer text field with more content"
+      company:
+        description: "Company"
+        example: "sample value"
+      deal:
+        description: "Deal"
+        example: "sample value"
+      talkType:
+        description: "TalkType"
+        example: "sample value"
+      channel:
+        description: "Channel (numeric value)"
+        example: "42"
+      status:
+        description: "Current status"
+        example: "42"
+      priority:
+        description: "Priority level"
+        example: "42"
+      outcome:
+        description: "Outcome (numeric value)"
+        example: "42"
+      sentiment:
+        description: "Sentiment (text field)"
+        example: "Sample text"
+      dateStart:
+        description: "DateStart (date and time)"
+        example: "2025-01-15T10:30:00Z"
+      dateLastMessage:
+        description: "DateLastMessage (date and time)"
+        example: "2025-01-15T10:30:00Z"
+      closedAt:
+        description: "Closed At (date and time)"
+        example: "2025-01-15T10:30:00Z"
+      durationSeconds:
+        description: "DurationSeconds (numeric value)"
+        example: "42"
+      recordingUrl:
+        description: "RecordingUrl (text field)"
+        example: "Sample longer text value"
+      users:
+        description: "Users"
+        example: "sample value"
+      owner:
+        description: "Owner"
+        example: "sample value"
+      assignedTo:
+        description: "Assigned To"
+        example: "sample value"
+      agents:
+        description: "Agents"
+        example: "sample value"
+      campaigns:
+        description: "Campaigns"
+        example: "sample value"
+      messages:
+        description: "Messages"
+        example: "sample value"
       messageCount:
         writable: false
+        description: "Message Count (numeric value)"
+        example: "42"
+      archived:
+        description: "IsArchived (yes\/no)"
+        example: "true"
+      internal:
+        description: "Is Internal (yes\/no)"
+        example: "true"
+      tags:
+        description: "Tags (JSON data)"
+        example: "{\"key\": \"value\"}"

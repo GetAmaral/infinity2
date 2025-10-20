@@ -24,14 +24,14 @@ use App\Entity\Agent;
 #[ORM\HasLifecycleCallbacks]
 abstract class AgentTypeGenerated extends EntityBase
 {
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $name;
+
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $defaultPrompt = null;
-
-    #[ORM\Column(type: 'string')]
-    protected string $name;
+    #[ORM\OneToMany(targetEntity: Agent::class, mappedBy: 'agentType', fetch: 'LAZY')]
+    protected Collection $agents;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $active = null;
@@ -39,26 +39,36 @@ abstract class AgentTypeGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $code = null;
 
+    #[ORM\Column(type: 'string', length: 7, nullable: true)]
+    protected ?string $color = '#0dcaf0';
+
+    #[ORM\Column(name: 'default_prop', type: 'boolean', nullable: true)]
+    protected ?bool $default = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $defaultPrompt = null;
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $icon = null;
 
-    #[ORM\Column(type: 'string', length: 7, nullable: true)]
-    protected ?string $color = null;
-
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $sortOrder = null;
-
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    protected ?bool $default = null;
-
-    #[ORM\OneToMany(targetEntity: Agent::class, mappedBy: 'agentType', fetch: 'LAZY')]
-    protected Collection $agents;
 
 
     public function __construct()
     {
         parent::__construct();
         $this->agents = new ArrayCollection();
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
     }
 
     public function getDescription(): ?string    {
@@ -71,23 +81,30 @@ abstract class AgentTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getDefaultprompt(): ?string    {
-        return $this->defaultPrompt;
+    /**
+     * @return Collection<int, App\Entity\Agent>
+     */
+    public function getAgents(): Collection
+    {
+        return $this->agents;
     }
 
-    public function setDefaultprompt(?string $defaultPrompt): self
+    public function addAgent(App\Entity\Agent $agent): self
     {
-        $this->defaultPrompt = $defaultPrompt;
+        if (!$this->agents->contains($agent)) {
+            $this->agents->add($agent);
+            $agent->setAgenttype($this);
+        }
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
+    public function removeAgent(App\Entity\Agent $agent): self
     {
-        $this->name = $name;
+        if ($this->agents->removeElement($agent)) {
+            if ($agent->getAgenttype() === $this) {
+                $agent->setAgenttype(null);
+            }
+        }
         return $this;
     }
 
@@ -116,16 +133,6 @@ abstract class AgentTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getIcon(): ?string    {
-        return $this->icon;
-    }
-
-    public function setIcon(?string $icon): self
-    {
-        $this->icon = $icon;
-        return $this;
-    }
-
     public function getColor(): ?string    {
         return $this->color;
     }
@@ -133,16 +140,6 @@ abstract class AgentTypeGenerated extends EntityBase
     public function setColor(?string $color): self
     {
         $this->color = $color;
-        return $this;
-    }
-
-    public function getSortorder(): ?int    {
-        return $this->sortOrder;
-    }
-
-    public function setSortorder(?int $sortOrder): self
-    {
-        $this->sortOrder = $sortOrder;
         return $this;
     }
 
@@ -161,30 +158,33 @@ abstract class AgentTypeGenerated extends EntityBase
         return $this->default === true;
     }
 
-    /**
-     * @return Collection<int, Agent>
-     */
-    public function getAgents(): Collection
-    {
-        return $this->agents;
+    public function getDefaultprompt(): ?string    {
+        return $this->defaultPrompt;
     }
 
-    public function addAgent(Agent $agent): self
+    public function setDefaultprompt(?string $defaultPrompt): self
     {
-        if (!$this->agents->contains($agent)) {
-            $this->agents->add($agent);
-            $agent->setAgenttype($this);
-        }
+        $this->defaultPrompt = $defaultPrompt;
         return $this;
     }
 
-    public function removeAgent(Agent $agent): self
+    public function getIcon(): ?string    {
+        return $this->icon;
+    }
+
+    public function setIcon(?string $icon): self
     {
-        if ($this->agents->removeElement($agent)) {
-            if ($agent->getAgenttype() === $this) {
-                $agent->setAgenttype(null);
-            }
-        }
+        $this->icon = $icon;
+        return $this;
+    }
+
+    public function getSortorder(): ?int    {
+        return $this->sortOrder;
+    }
+
+    public function setSortorder(?int $sortOrder): self
+    {
+        $this->sortOrder = $sortOrder;
         return $this;
     }
 

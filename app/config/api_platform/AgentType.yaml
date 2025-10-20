@@ -27,8 +27,42 @@ resources:
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Put
         security: "is_granted('ROLE_SUPER_ADMIN')"
+      - class: ApiPlatform\Metadata\Patch
+        security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SUPER_ADMIN')"
 
 
 
+    # Property-level configuration
+    properties:
+      name:
+        description: "The brand name"
+        example: "Nike"
+      description:
+        description: "..."
+        example: "..."
+      agents:
+        description: "Agents"
+        example: "sample value"
+      active:
+        description: "Whether this record is active"
+        example: "true"
+      code:
+        description: "Code (text field)"
+        example: "Sample text"
+      color:
+        description: "Color (text field)"
+        example: "Sample text"
+      default:
+        description: "Default (yes\/no)"
+        example: "true"
+      defaultPrompt:
+        description: "DefaultPrompt (long text)"
+        example: "This is a longer text field with more content"
+      icon:
+        description: "Icon (text field)"
+        example: "Sample longer text value"
+      sortOrder:
+        description: "Sort Order (numeric value)"
+        example: "42"

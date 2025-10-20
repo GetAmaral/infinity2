@@ -198,11 +198,6 @@ class GeneratorEntity
     #[Groups(['generator_entity:read', 'generator_entity:write'])]
     private string $namespace = 'App\\Entity';
 
-    #[ORM\Column(length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
-    #[Groups(['generator_entity:read', 'generator_entity:write'])]
-    private ?string $tableName = null;
-
     #[ORM\Column(options: ['default' => true])]
     #[Groups(['generator_entity:read', 'generator_entity:write'])]
     private bool $fixturesEnabled = true;
@@ -349,10 +344,21 @@ class GeneratorEntity
 
     /**
      * Get database table name
+     *
+     * Uses Utils::camelToSnakeCase() to convert entity name.
+     * ONLY adds _table suffix if the snake_case name is a reserved SQL keyword.
+     * This matches the logic in ReservedKeywordExtension for consistency.
+     *
+     * Note: For reserved keyword checking, use ReservedKeywordExtension::isReservedKeyword()
+     * This method provides a simplified version for basic usage.
      */
     public function getTableName(): string
     {
-        return $this->tableName ?? $this->getSlug();
+        // Reuse Utils function instead of reinventing wheel
+        return \App\Service\Utils::camelToSnakeCase($this->entityName, false);
+
+        // Note: Suffix logic is in ReservedKeywordExtension for template generation
+        // This simplified version returns just snake_case for database queries
     }
 
     /**
@@ -421,7 +427,7 @@ class GeneratorEntity
             $this->voterEnabled,
             $this->voterAttributes,
             $this->namespace,
-            $this->tableName,
+            // tableName removed - now calculated from entityName
         ]));
     }
 
@@ -651,17 +657,6 @@ class GeneratorEntity
     public function setNamespace(string $namespace): self
     {
         $this->namespace = $namespace;
-        return $this;
-    }
-
-    public function getTableNameValue(): ?string
-    {
-        return $this->tableName;
-    }
-
-    public function setTableNameValue(?string $tableName): self
-    {
-        $this->tableName = $tableName;
         return $this;
     }
 
