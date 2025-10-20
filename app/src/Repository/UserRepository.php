@@ -23,7 +23,20 @@ class UserRepository extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return ['name', 'email'];
+        return [
+            'name',
+            'email',
+            'username',
+            'firstName',
+            'lastName',
+            'phone',
+            'mobilePhone',
+            'jobTitle',
+            'department',
+            'employeeId',
+            'notes',
+            'bio'
+        ];
     }
 
     /**
@@ -35,11 +48,25 @@ class UserRepository extends BaseRepository
         return [
             'name' => 'name',
             'email' => 'email',
+            'username' => 'username',
+            'firstName' => 'firstName',
+            'lastName' => 'lastName',
+            'jobTitle' => 'jobTitle',
+            'department' => 'department',
             'roles' => 'roles',
-            'isVerified' => 'isVerified',
+            'verified' => 'verified',
+            'active' => 'active',
+            'agent' => 'agent',
             'organizationName' => 'organization.name', // Relationship field - sortable but not filterable
             'lastLoginAt' => 'lastLoginAt',
+            'lastActivityAt' => 'lastActivityAt',
+            'hireDate' => 'hireDate',
+            'terminationDate' => 'terminationDate',
+            'employmentStatus' => 'employmentStatus',
+            'loginCount' => 'loginCount',
+            'profileCompleteness' => 'profileCompleteness',
             'createdAt' => 'createdAt',
+            'updatedAt' => 'updatedAt',
         ];
     }
 
@@ -51,9 +78,27 @@ class UserRepository extends BaseRepository
         return [
             'name' => 'name',
             'email' => 'email',
-            'isVerified' => 'isVerified',
+            'username' => 'username',
+            'firstName' => 'firstName',
+            'lastName' => 'lastName',
+            'phone' => 'phone',
+            'mobilePhone' => 'mobilePhone',
+            'jobTitle' => 'jobTitle',
+            'department' => 'department',
+            'verified' => 'verified',
+            'active' => 'active',
+            'agent' => 'agent',
+            'locked' => 'locked',
+            'visible' => 'visible',
+            'employeeId' => 'employeeId',
+            'employmentStatus' => 'employmentStatus',
+            'status' => 'status',
             'lastLoginAt' => 'lastLoginAt',
+            'lastActivityAt' => 'lastActivityAt',
+            'hireDate' => 'hireDate',
+            'terminationDate' => 'terminationDate',
             'createdAt' => 'createdAt',
+            'updatedAt' => 'updatedAt',
         ];
     }
 
@@ -62,7 +107,20 @@ class UserRepository extends BaseRepository
      */
     protected function getBooleanFilterFields(): array
     {
-        return ['isVerified'];
+        return [
+            'verified',
+            'active',
+            'agent',
+            'locked',
+            'visible',
+            'termsSigned',
+            'twoFactorEnabled',
+            'passkeyEnabled',
+            'mustChangePassword',
+            'emailNotificationsEnabled',
+            'smsNotificationsEnabled',
+            'calendarSyncEnabled'
+        ];
     }
 
     /**
@@ -70,7 +128,19 @@ class UserRepository extends BaseRepository
      */
     protected function getDateFilterFields(): array
     {
-        return ['lastLoginAt', 'createdAt'];
+        return [
+            'lastLoginAt',
+            'lastActivityAt',
+            'hireDate',
+            'terminationDate',
+            'birthDate',
+            'createdAt',
+            'updatedAt',
+            'deletedAt',
+            'emailVerifiedAt',
+            'lastPasswordChangeAt',
+            'passwordExpiresAt'
+        ];
     }
 
     /**

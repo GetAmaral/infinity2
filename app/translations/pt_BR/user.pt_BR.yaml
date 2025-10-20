@@ -111,7 +111,10 @@ user.import.review.ready_to_import: Pronto para importar
 user.import.review.errors: Erros
 user.import.review.rows_with_errors: Linhas com erros de validação
 user.import.review.errors_found: Erros de Validação Encontrados
-user.import.review.errors_description: Por favor, corrija os erros abaixo e reenvie o arquivo. Linhas com erros não serão importadas.
+user.import.review.errors_description: As seguintes linhas contêm erros e NÃO serão importadas. Apenas usuários válidos serão importados.
+user.import.review.error_actions: O que você pode fazer
+user.import.review.error_action_fix: Corrija os erros no seu arquivo XLSX e envie novamente para importar todos os usuários
+user.import.review.error_action_continue: Ou continue e importe apenas os usuários válidos (erros serão ignorados)
 user.import.review.errors_table_title: Erros (%count% linhas)
 user.import.review.valid_users_table_title: Usuários Válidos (%count% usuários)
 user.import.review.row: Linha
@@ -127,3 +130,18 @@ user.import.flash.import_error: 'Erro ao importar usuários: %error%'
 user.import.flash.import_success: '%count% usuário(s) importado(s) com sucesso.'
 user.import.flash.import_warning: '%count% usuário(s) falharam ao importar.'
 user.import.flash.cancelled: Importação cancelada.
+
+# Importação de Usuários - Mensagens de Erro de Validação
+user.import.validation.email_required: Email é obrigatório
+user.import.validation.email_invalid: Formato de email inválido
+user.import.validation.email_duplicate_same_org: "Email já registrado na sua organização: '%email%' (Usuário: %user%)"
+user.import.validation.email_duplicate_other_org: "Email já registrado em outra organização: '%email%' (Usuário: %user% em %org%)"
+user.import.validation.unknown_org: Organização Desconhecida
+user.import.validation.name_required: Nome é obrigatório
+user.import.validation.name_min_length: Nome deve ter pelo menos 2 caracteres
+user.import.validation.name_max_length: Nome não pode exceder 255 caracteres
+user.import.validation.password_required: Senha é obrigatória
+user.import.validation.password_min_length: Senha deve ter pelo menos 6 caracteres
+user.import.validation.role_not_found: "Permissão não encontrada: %role%"
+user.import.validation.no_organization: Nenhum contexto de organização disponível
+user.import.validation.database_duplicate: Email já existe no banco de dados (duplicado)

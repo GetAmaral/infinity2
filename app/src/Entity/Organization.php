@@ -13,7 +13,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrganizationRepository::class)]
 #[ORM\Index(name: 'idx_organization_slug', columns: ['slug'])]
-#[ORM\Index(name: 'idx_organization_is_active', columns: ['is_active'])]
+#[ORM\Index(name: 'idx_organization_active', columns: ['active'])]
+#[ORM\Index(name: 'idx_organization_subscription_status', columns: ['subscription_status'])]
+#[ORM\Index(name: 'idx_organization_domain', columns: ['domain'])]
+#[ORM\Index(name: 'idx_organization_verified', columns: ['verified'])]
 #[ApiResource(
     normalizationContext: ['groups' => ['organization:read']],
     denormalizationContext: ['groups' => ['organization:write']],
@@ -22,6 +25,30 @@ use Symfony\Component\Serializer\Annotation\Groups;
             uriTemplate: '/admin/organizations',
             security: "is_granted('ROLE_ADMIN')",
             normalizationContext: ['groups' => ['organization:read', 'audit:read']]
+        ),
+        new \ApiPlatform\Metadata\Get(
+            uriTemplate: '/admin/organizations/{id}',
+            security: "is_granted('ROLE_ADMIN')",
+            normalizationContext: ['groups' => ['organization:read', 'audit:read']]
+        ),
+        new \ApiPlatform\Metadata\Post(
+            uriTemplate: '/admin/organizations',
+            security: "is_granted('ROLE_ADMIN')",
+            denormalizationContext: ['groups' => ['organization:write']]
+        ),
+        new \ApiPlatform\Metadata\Put(
+            uriTemplate: '/admin/organizations/{id}',
+            security: "is_granted('ROLE_ADMIN')",
+            denormalizationContext: ['groups' => ['organization:write']]
+        ),
+        new \ApiPlatform\Metadata\Patch(
+            uriTemplate: '/admin/organizations/{id}',
+            security: "is_granted('ROLE_ADMIN')",
+            denormalizationContext: ['groups' => ['organization:write']]
+        ),
+        new \ApiPlatform\Metadata\Delete(
+            uriTemplate: '/admin/organizations/{id}',
+            security: "is_granted('ROLE_ADMIN')"
         )
     ]
 )]
@@ -54,9 +81,90 @@ class Organization extends EntityBase
     #[Groups(['organization:read', 'organization:write'])]
     protected ?string $logoPathDark = null;
 
-    #[ORM\Column(type: 'boolean')]
+    // Contact Information
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['organization:read', 'organization:write'])]
-    protected bool $isActive = true;
+    protected ?string $domain = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Email]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $email = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $phone = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $fax = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $website = null;
+
+    // Address Information
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $addressLine1 = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $addressLine2 = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $city = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $state = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $postalCode = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $country = null;
+
+    // Business Information
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $industry = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $organizationType = null;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?int $employeeCount = null;
+
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $annualRevenue = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?string $taxId = null;
+
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected ?\DateTimeImmutable $foundedDate = null;
+
+    // Status & Verification
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected bool $active = true;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(['organization:read', 'organization:write'])]
+    protected bool $verified = false;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['organization:read'])]
+    protected ?\DateTimeImmutable $verifiedAt = null;
 
     // Subscription Management
     #[ORM\Column(length: 50, options: ['default' => 'free'])]
@@ -286,12 +394,241 @@ class Organization extends EntityBase
 
     public function isActive(): bool
     {
-        return $this->isActive;
+        return $this->active;
     }
 
-    public function setIsActive(bool $isActive): self
+    public function setActive(bool $active): self
     {
-        $this->isActive = $isActive;
+        $this->active = $active;
+        return $this;
+    }
+
+    // Contact Information Getters/Setters
+    public function getDomain(): ?string
+    {
+        return $this->domain;
+    }
+
+    public function setDomain(?string $domain): self
+    {
+        $this->domain = $domain;
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+        return $this;
+    }
+
+    public function getFax(): ?string
+    {
+        return $this->fax;
+    }
+
+    public function setFax(?string $fax): self
+    {
+        $this->fax = $fax;
+        return $this;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): self
+    {
+        $this->website = $website;
+        return $this;
+    }
+
+    // Address Information Getters/Setters
+    public function getAddressLine1(): ?string
+    {
+        return $this->addressLine1;
+    }
+
+    public function setAddressLine1(?string $addressLine1): self
+    {
+        $this->addressLine1 = $addressLine1;
+        return $this;
+    }
+
+    public function getAddressLine2(): ?string
+    {
+        return $this->addressLine2;
+    }
+
+    public function setAddressLine2(?string $addressLine2): self
+    {
+        $this->addressLine2 = $addressLine2;
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
+        return $this;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(?string $state): self
+    {
+        $this->state = $state;
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): self
+    {
+        $this->postalCode = $postalCode;
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    public function getFullAddress(): string
+    {
+        $parts = array_filter([
+            $this->addressLine1,
+            $this->addressLine2,
+            $this->city,
+            $this->state,
+            $this->postalCode,
+            $this->country
+        ]);
+        return implode(', ', $parts);
+    }
+
+    // Business Information Getters/Setters
+    public function getIndustry(): ?string
+    {
+        return $this->industry;
+    }
+
+    public function setIndustry(?string $industry): self
+    {
+        $this->industry = $industry;
+        return $this;
+    }
+
+    public function getOrganizationType(): ?string
+    {
+        return $this->organizationType;
+    }
+
+    public function setOrganizationType(?string $organizationType): self
+    {
+        $this->organizationType = $organizationType;
+        return $this;
+    }
+
+    public function getEmployeeCount(): ?int
+    {
+        return $this->employeeCount;
+    }
+
+    public function setEmployeeCount(?int $employeeCount): self
+    {
+        $this->employeeCount = $employeeCount;
+        return $this;
+    }
+
+    public function getAnnualRevenue(): ?string
+    {
+        return $this->annualRevenue;
+    }
+
+    public function setAnnualRevenue(?string $annualRevenue): self
+    {
+        $this->annualRevenue = $annualRevenue;
+        return $this;
+    }
+
+    public function getTaxId(): ?string
+    {
+        return $this->taxId;
+    }
+
+    public function setTaxId(?string $taxId): self
+    {
+        $this->taxId = $taxId;
+        return $this;
+    }
+
+    public function getFoundedDate(): ?\DateTimeImmutable
+    {
+        return $this->foundedDate;
+    }
+
+    public function setFoundedDate(?\DateTimeImmutable $foundedDate): self
+    {
+        $this->foundedDate = $foundedDate;
+        return $this;
+    }
+
+    // Status & Verification Getters/Setters
+    public function isVerified(): bool
+    {
+        return $this->verified;
+    }
+
+    public function setVerified(bool $verified): self
+    {
+        $this->verified = $verified;
+        if ($verified && $this->verifiedAt === null) {
+            $this->verifiedAt = new \DateTimeImmutable();
+        }
+        return $this;
+    }
+
+    public function getVerifiedAt(): ?\DateTimeImmutable
+    {
+        return $this->verifiedAt;
+    }
+
+    public function setVerifiedAt(?\DateTimeImmutable $verifiedAt): self
+    {
+        $this->verifiedAt = $verifiedAt;
         return $this;
     }
 
@@ -447,6 +784,38 @@ class Organization extends EntityBase
     public function getDataRetentionDate(): \DateTimeImmutable
     {
         return (new \DateTimeImmutable())->modify("-{$this->dataRetentionDays} days");
+    }
+
+    /**
+     * String representation of the organization
+     */
+    public function __toString(): string
+    {
+        return $this->name ?: 'Organization#' . ($this->id ?? 'unsaved');
+    }
+
+    /**
+     * Get current user count
+     */
+    public function getUserCount(): int
+    {
+        return $this->users->count();
+    }
+
+    /**
+     * Check if organization can add more users
+     */
+    public function canAddUsers(): bool
+    {
+        return $this->getUserCount() < $this->maxUsers;
+    }
+
+    /**
+     * Get remaining user slots
+     */
+    public function getRemainingUserSlots(): int
+    {
+        return max(0, $this->maxUsers - $this->getUserCount());
     }
 
 }

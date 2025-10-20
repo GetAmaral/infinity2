@@ -676,13 +676,20 @@ Holiday,event,Event,,1,,,,,,ManyToOne,Event,holidays,,,,LAZY,,simple,,,,EntityTy
 Holiday,date,Date,date,1,,,,,,,,,,,,LAZY,,,,,,DateType,{},,,,1,1,1,1,,,1,1,"holiday:read,holiday:write",,,,date,{}
 Holiday,description,Description,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"holiday:read,holiday:write",,,,paragraph,{}
 Holiday,blockSchedule,BlockSchedule,boolean,1,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,1,,,1,1,"holiday:read,holiday:write",,,,boolean,{}
-HolidayTemplate,name,Name,,,,,,,,,,,,,,LAZY,,simple,,,,TextType,{},1,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,word,{}
+HolidayTemplate,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,word,{}
+HolidayTemplate,description,Description,text,1,,,,,,,,,,,,LAZY,,,,Length(max=1000),,TextareaType,{},,,,1,1,1,1,1,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,paragraph,{}
+HolidayTemplate,active,Active,boolean,1,,,,1,1,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,boolean,{}
+HolidayTemplate,holidayType,Holiday Type,string,1,,,,,,,,,,,,LAZY,,simple,,"Choice(choices=['FIXED','MOVABLE','ADJUSTABLE'])",,ChoiceType,"{""choices"": {""Fixed"": ""FIXED"", ""Movable"": ""MOVABLE"", ""Adjustable"": ""ADJUSTABLE""}}",1,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,word,{}
 HolidayTemplate,date,Date,date,1,,,,,,,,,,,,LAZY,,,,,,DateType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,date,{}
-HolidayTemplate,recurrenceInterval,RecurrenceInterval,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,randomNumber,{}
-HolidayTemplate,recurrenceFrequency,RecurrenceFrequency,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,randomNumber,{}
+HolidayTemplate,month,Month,integer,1,,,,,,,,,,,,LAZY,,,,Range(min=1 max=12),,IntegerType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,randomNumber,"{""min"": 1 ""max"": 12}"
+HolidayTemplate,dayOfMonth,Day of Month,integer,1,,,,,,,,,,,,LAZY,,,,Range(min=1 max=31),,IntegerType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,randomNumber,"{""min"": 1 ""max"": 31}"
+HolidayTemplate,weekOfMonth,Week of Month,integer,1,,,,,,,,,,,,LAZY,,,,Range(min=-1 max=5),,IntegerType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,randomNumber,"{""min"": -1 ""max"": 5}"
+HolidayTemplate,dayOfWeek,Day of Week,integer,1,,,,,,,,,,,,LAZY,,,,Range(min=0 max=6),,IntegerType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,randomNumber,"{""min"": 0 ""max"": 6}"
+HolidayTemplate,recurrencePattern,Recurrence Pattern,string,1,,,,,,,,,,,,LAZY,,simple,,"Choice(choices=['NONE','YEARLY','MONTHLY'])",,ChoiceType,"{""choices"": {""None"": ""NONE"", ""Yearly"": ""YEARLY"", ""Monthly"": ""MONTHLY""}}",1,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,word,{}
+HolidayTemplate,observanceRule,Observance Rule,string,1,,,,,,,,,,,,LAZY,,simple,,"Choice(choices=['ACTUAL','NEAREST_WEEKDAY','NEXT_MONDAY','PREVIOUS_FRIDAY'])",,ChoiceType,"{""choices"": {""Actual Day"": ""ACTUAL"", ""Nearest Weekday"": ""NEAREST_WEEKDAY"", ""Next Monday"": ""NEXT_MONDAY"", ""Previous Friday"": ""PREVIOUS_FRIDAY""}}",1,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,word,{}
+HolidayTemplate,blockSchedule,Block Schedule,boolean,1,,,,1,1,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,boolean,{}
 HolidayTemplate,country,Country,,1,,,,,,ManyToOne,Country,holidayTemplates,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,,{}
 HolidayTemplate,city,City,,1,,,,,,ManyToOne,City,holidayTemplates,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,,{}
-HolidayTemplate,blockSchedule,BlockSchedule,boolean,1,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,boolean,{}
 TimeZone,name,Name,string,1,,,,,,,,,,,,LAZY,,simple,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"timezone:read,timezone:write",,,,word,{}
 TimeZone,offsetMinutes,OffsetMinutes,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"timezone:read,timezone:write",,,,randomNumber,{}
 TimeZone,workingHours,WorkingHours,,1,,,,,,OneToMany,WorkingHour,timeZone,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"timezone:read,timezone:write",,,,,{}

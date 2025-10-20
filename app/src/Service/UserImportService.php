@@ -15,6 +15,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Service for importing users from XLSX files
@@ -26,7 +27,8 @@ final class UserImportService
         private readonly UserRepository $userRepository,
         private readonly RoleRepository $roleRepository,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly ValidatorInterface $validator
+        private readonly ValidatorInterface $validator,
+        private readonly TranslatorInterface $translator
     ) {
     }
 
@@ -109,7 +111,15 @@ final class UserImportService
                     'email' => $user->getEmail(),
                     'name' => $user->getName(),
                 ];
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+                // Catch duplicate email at database level (safety net)
+                $failed[] = [
+                    'row' => $userData['row'],
+                    'email' => $userData['data']['email'] ?? 'N/A',
+                    'error' => $this->translator->trans('user.import.validation.database_duplicate', [], 'user'),
+                ];
             } catch (\Exception $e) {
+                // Catch any other errors
                 $failed[] = [
                     'row' => $userData['row'],
                     'email' => $userData['data']['email'] ?? 'N/A',
@@ -126,6 +136,7 @@ final class UserImportService
 
     /**
      * Map column headers to field names
+     * Handles headers with extra text like "(Required)", "(Optional)", etc.
      */
     private function mapColumns(array $headerRow): array
     {
@@ -134,14 +145,44 @@ final class UserImportService
         foreach ($headerRow as $index => $header) {
             $normalized = strtolower(trim((string)$header));
 
-            $map[$index] = match ($normalized) {
-                'email', 'e-mail' => 'email',
-                'name', 'full name', 'nome' => 'name',
-                'password', 'senha' => 'password',
-                'roles', 'role', 'perfil', 'perfis' => 'roles',
-                'openai api key', 'openai_api_key', 'api key' => 'openAiApiKey',
-                default => null,
-            };
+            // Strip out common patterns like (Required), (Optional), parentheses, brackets, etc.
+            $cleaned = preg_replace('/\s*\([^)]*\)\s*/', '', $normalized); // Remove (text)
+            $cleaned = preg_replace('/\s*\[[^\]]*\]\s*/', '', $cleaned); // Remove [text]
+            $cleaned = trim($cleaned);
+
+            // Try exact match first with cleaned value, then with original normalized
+            foreach ([$cleaned, $normalized] as $value) {
+                $result = match ($value) {
+                    'email', 'e-mail', 'e-mail address', 'email address' => 'email',
+                    'name', 'full name', 'nome', 'user name', 'username' => 'name',
+                    'password', 'senha', 'pass' => 'password',
+                    'roles', 'role', 'perfil', 'perfis', 'user roles' => 'roles',
+                    'openai api key', 'openai_api_key', 'api key', 'openai key' => 'openAiApiKey',
+                    default => null,
+                };
+
+                if ($result !== null) {
+                    $map[$index] = $result;
+                    break;
+                }
+            }
+
+            // If still not mapped, try partial matching as last resort
+            if (!isset($map[$index]) || $map[$index] === null) {
+                if (str_contains($cleaned, 'email') || str_contains($cleaned, 'e-mail')) {
+                    $map[$index] = 'email';
+                } elseif (str_contains($cleaned, 'name') || str_contains($cleaned, 'nome')) {
+                    $map[$index] = 'name';
+                } elseif (str_contains($cleaned, 'password') || str_contains($cleaned, 'senha')) {
+                    $map[$index] = 'password';
+                } elseif (str_contains($cleaned, 'role') || str_contains($cleaned, 'perfil')) {
+                    $map[$index] = 'roles';
+                } elseif (str_contains($cleaned, 'openai') || str_contains($cleaned, 'api') && str_contains($cleaned, 'key')) {
+                    $map[$index] = 'openAiApiKey';
+                } else {
+                    $map[$index] = null;
+                }
+            }
         }
 
         return $map;
@@ -213,9 +254,15 @@ final class UserImportService
 
     /**
      * Convert column index to Excel column letter (1 -> A, 2 -> B, etc.)
+     * Also handles string column letters (A, B, C, etc.) - just returns them as-is
      */
-    private function getColumnLetter(int $index): string
+    private function getColumnLetter(int|string $index): string
     {
+        // If already a string (column letter like 'A', 'B', etc.), return as-is
+        if (is_string($index)) {
+            return $index;
+        }
+
         // PhpSpreadsheet uses 1-based indexing for columns
         // But our array index might be different depending on rangeToArray
         // For safety, let's use the built-in method
@@ -233,19 +280,37 @@ final class UserImportService
         // STEP 1: Validate email FIRST (this is the primary identifier)
         if (empty($userData['email'])) {
             // This should not happen as we skip empty emails in parseXlsx, but keep as safety
-            $errors[] = 'Email is required';
+            $errors[] = $this->translator->trans('user.import.validation.email_required', [], 'user');
             return $errors; // Stop here - no point validating other fields
         }
 
         if (!filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors[] = 'Invalid email format';
+            $errors[] = $this->translator->trans('user.import.validation.email_invalid', [], 'user');
             return $errors; // Stop here - invalid email means row is bad
         }
 
-        // Check if email already exists
+        // Check if email already exists (globally - emails must be unique across all organizations)
         $existingUser = $this->userRepository->findOneBy(['email' => $userData['email']]);
         if ($existingUser !== null) {
-            $errors[] = "Email already exists: {$userData['email']}";
+            $existingOrgName = $existingUser->getOrganization() ? $existingUser->getOrganization()->getName() : $this->translator->trans('user.import.validation.unknown_org', [], 'user');
+            $existingUserName = $existingUser->getName();
+
+            // Provide detailed error message
+            if ($organization && $existingUser->getOrganization() &&
+                $existingUser->getOrganization()->getId()->equals($organization->getId())) {
+                // Same organization - clear duplicate
+                $errors[] = $this->translator->trans('user.import.validation.email_duplicate_same_org', [
+                    '%email%' => $userData['email'],
+                    '%user%' => $existingUserName,
+                ], 'user');
+            } else {
+                // Different organization - still can't use due to global constraint
+                $errors[] = $this->translator->trans('user.import.validation.email_duplicate_other_org', [
+                    '%email%' => $userData['email'],
+                    '%user%' => $existingUserName,
+                    '%org%' => $existingOrgName,
+                ], 'user');
+            }
             return $errors; // Stop here - duplicate email
         }
 
@@ -253,18 +318,18 @@ final class UserImportService
 
         // Validate name (required)
         if (empty($userData['name'])) {
-            $errors[] = 'Name is required';
+            $errors[] = $this->translator->trans('user.import.validation.name_required', [], 'user');
         } elseif (strlen($userData['name']) < 2) {
-            $errors[] = 'Name must be at least 2 characters';
+            $errors[] = $this->translator->trans('user.import.validation.name_min_length', [], 'user');
         } elseif (strlen($userData['name']) > 255) {
-            $errors[] = 'Name must not exceed 255 characters';
+            $errors[] = $this->translator->trans('user.import.validation.name_max_length', [], 'user');
         }
 
         // Validate password (required)
         if (empty($userData['password'])) {
-            $errors[] = 'Password is required';
+            $errors[] = $this->translator->trans('user.import.validation.password_required', [], 'user');
         } elseif (strlen($userData['password']) < 6) {
-            $errors[] = 'Password must be at least 6 characters';
+            $errors[] = $this->translator->trans('user.import.validation.password_min_length', [], 'user');
         }
 
         // STEP 3: Validate optional fields
@@ -274,14 +339,16 @@ final class UserImportService
             foreach ($userData['roles'] as $roleName) {
                 $role = $this->roleRepository->findOneBy(['name' => $roleName]);
                 if ($role === null) {
-                    $errors[] = "Role not found: {$roleName}";
+                    $errors[] = $this->translator->trans('user.import.validation.role_not_found', [
+                        '%role%' => $roleName,
+                    ], 'user');
                 }
             }
         }
 
         // Validate organization
         if ($organization === null) {
-            $errors[] = 'No organization context available';
+            $errors[] = $this->translator->trans('user.import.validation.no_organization', [], 'user');
         }
 
         return $errors;
@@ -317,7 +384,7 @@ final class UserImportService
             foreach ($userData['roles'] as $roleName) {
                 $role = $this->roleRepository->findOneBy(['name' => $roleName]);
                 if ($role !== null) {
-                    $user->addRoleEntity($role);
+                    $user->addRole($role);
                 }
             }
         }

@@ -111,7 +111,10 @@ user.import.review.ready_to_import: Ready to import
 user.import.review.errors: Errors
 user.import.review.rows_with_errors: Rows with validation errors
 user.import.review.errors_found: Validation Errors Found
-user.import.review.errors_description: Please fix the errors below and re-upload the file. Rows with errors will not be imported.
+user.import.review.errors_description: The following rows contain errors and will NOT be imported. Only valid users will be imported.
+user.import.review.error_actions: What you can do
+user.import.review.error_action_fix: Fix the errors in your XLSX file and upload again to import all users
+user.import.review.error_action_continue: Or continue and import only the valid users (errors will be ignored)
 user.import.review.errors_table_title: Errors (%count% rows)
 user.import.review.valid_users_table_title: Valid Users (%count% users)
 user.import.review.row: Row
@@ -127,3 +130,18 @@ user.import.flash.import_error: 'Error importing users: %error%'
 user.import.flash.import_success: '%count% user(s) imported successfully.'
 user.import.flash.import_warning: '%count% user(s) failed to import.'
 user.import.flash.cancelled: Import cancelled.
+
+# User Import - Validation Error Messages
+user.import.validation.email_required: Email is required
+user.import.validation.email_invalid: Invalid email format
+user.import.validation.email_duplicate_same_org: "Email already registered in your organization: '%email%' (User: %user%)"
+user.import.validation.email_duplicate_other_org: "Email already registered in another organization: '%email%' (User: %user% in %org%)"
+user.import.validation.unknown_org: Unknown Organization
+user.import.validation.name_required: Name is required
+user.import.validation.name_min_length: Name must be at least 2 characters
+user.import.validation.name_max_length: Name must not exceed 255 characters
+user.import.validation.password_required: Password is required
+user.import.validation.password_min_length: Password must be at least 6 characters
+user.import.validation.role_not_found: "Role not found: %role%"
+user.import.validation.no_organization: No organization context available
+user.import.validation.database_duplicate: Email already exists in database (duplicate)

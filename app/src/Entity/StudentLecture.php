@@ -7,6 +7,9 @@ namespace App\Entity;
 use App\Repository\StudentLectureRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Patch;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -21,7 +24,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
             uriTemplate: '/admin/student-lectures',
             security: "is_granted('ROLE_ADMIN')",
             normalizationContext: ['groups' => ['student_lecture:read', 'audit:read']]
-        )
+        ),
+        new Get(
+            uriTemplate: '/student-lectures/{id}',
+            security: "is_granted('VIEW', object)"
+        ),
+        new Patch(
+            uriTemplate: '/student-lectures/{id}',
+            security: "is_granted('EDIT', object)"
+        ),
+        new Post(
+            uriTemplate: '/student-lectures',
+            security: "is_granted('ROLE_USER')"
+        ),
     ]
 )]
 class StudentLecture extends EntityBase
@@ -68,6 +83,93 @@ class StudentLecture extends EntityBase
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Groups(['student_lecture:read', 'student_lecture:write'])]
     private ?\DateTimeImmutable $completedAt = null;
+
+    // === ENGAGEMENT ANALYTICS ===
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['student_lecture:read'])]
+    private ?\DateTimeImmutable $firstWatchedAt = null;
+
+    #[ORM\Column(type: 'integer')]
+    #[Assert\PositiveOrZero]
+    #[Groups(['student_lecture:read'])]
+    private int $watchCount = 0;
+
+    #[ORM\Column(type: 'integer')]
+    #[Assert\PositiveOrZero]
+    #[Groups(['student_lecture:read'])]
+    private int $totalWatchTimeSeconds = 0;
+
+    #[ORM\Column(type: 'json')]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
+    private array $videoBookmarks = [];
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
+    private ?string $notes = null;
+
+    // === QUIZ MANAGEMENT ===
+
+    #[ORM\Column(type: 'integer')]
+    #[Assert\PositiveOrZero]
+    #[Groups(['student_lecture:read'])]
+    private int $quizAttempts = 0;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    #[Assert\Range(min: 0, max: 100)]
+    #[Groups(['student_lecture:read'])]
+    private ?float $quizBestScore = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    #[Assert\Range(min: 0, max: 100)]
+    #[Groups(['student_lecture:read'])]
+    private ?float $quizLastScore = null;
+
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['student_lecture:read'])]
+    private bool $quizPassed = false;
+
+    // === ASSIGNMENT MANAGEMENT ===
+
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
+    private bool $assignmentSubmitted = false;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['student_lecture:read'])]
+    private ?\DateTimeImmutable $assignmentSubmittedAt = null;
+
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Groups(['student_lecture:read'])]
+    private ?string $assignmentFilePath = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    #[Assert\Range(min: 0, max: 100)]
+    #[Groups(['student_lecture:read'])]
+    private ?float $assignmentScore = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['student_lecture:read'])]
+    private ?string $assignmentFeedback = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['student_lecture:read'])]
+    private ?\DateTimeImmutable $assignmentGradedAt = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    #[Groups(['student_lecture:read'])]
+    private ?User $assignmentGradedBy = null;
+
+    // === FLAGGING SYSTEM ===
+
+    #[ORM\Column(type: 'boolean', name: 'is_flagged')]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
+    private bool $flagged = false;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
+    private ?string $flaggedReason = null;
 
     public function getStudent(): User
     {
@@ -192,6 +294,311 @@ class StudentLecture extends EntityBase
         return $this;
     }
 
+    // === ENGAGEMENT ANALYTICS GETTERS/SETTERS ===
+
+    public function getFirstWatchedAt(): ?\DateTimeImmutable
+    {
+        return $this->firstWatchedAt;
+    }
+
+    public function setFirstWatchedAt(?\DateTimeImmutable $firstWatchedAt): self
+    {
+        $this->firstWatchedAt = $firstWatchedAt;
+        return $this;
+    }
+
+    public function getWatchCount(): int
+    {
+        return $this->watchCount;
+    }
+
+    public function setWatchCount(int $watchCount): self
+    {
+        $this->watchCount = $watchCount;
+        return $this;
+    }
+
+    public function incrementWatchCount(): self
+    {
+        $this->watchCount++;
+        return $this;
+    }
+
+    public function getTotalWatchTimeSeconds(): int
+    {
+        return $this->totalWatchTimeSeconds;
+    }
+
+    public function setTotalWatchTimeSeconds(int $totalWatchTimeSeconds): self
+    {
+        $this->totalWatchTimeSeconds = $totalWatchTimeSeconds;
+        return $this;
+    }
+
+    public function addWatchTimeSeconds(int $seconds): self
+    {
+        $this->totalWatchTimeSeconds += $seconds;
+        return $this;
+    }
+
+    public function getVideoBookmarks(): array
+    {
+        return $this->videoBookmarks;
+    }
+
+    public function setVideoBookmarks(array $videoBookmarks): self
+    {
+        $this->videoBookmarks = $videoBookmarks;
+        return $this;
+    }
+
+    public function addBookmark(int $timestampSeconds, ?string $note = null): self
+    {
+        $this->videoBookmarks[] = [
+            'timestamp' => $timestampSeconds,
+            'note' => $note,
+            'created_at' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+        ];
+        return $this;
+    }
+
+    public function removeBookmark(int $timestampSeconds): self
+    {
+        $this->videoBookmarks = array_filter(
+            $this->videoBookmarks,
+            fn($bookmark) => $bookmark['timestamp'] !== $timestampSeconds
+        );
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): self
+    {
+        $this->notes = $notes;
+        return $this;
+    }
+
+    // === QUIZ MANAGEMENT GETTERS/SETTERS ===
+
+    public function getQuizAttempts(): int
+    {
+        return $this->quizAttempts;
+    }
+
+    public function setQuizAttempts(int $quizAttempts): self
+    {
+        $this->quizAttempts = $quizAttempts;
+        return $this;
+    }
+
+    public function incrementQuizAttempts(): self
+    {
+        $this->quizAttempts++;
+        return $this;
+    }
+
+    public function getQuizBestScore(): ?float
+    {
+        return $this->quizBestScore;
+    }
+
+    public function setQuizBestScore(?float $quizBestScore): self
+    {
+        $this->quizBestScore = $quizBestScore;
+        return $this;
+    }
+
+    public function getQuizLastScore(): ?float
+    {
+        return $this->quizLastScore;
+    }
+
+    public function setQuizLastScore(?float $quizLastScore): self
+    {
+        $this->quizLastScore = $quizLastScore;
+        return $this;
+    }
+
+    public function isQuizPassed(): bool
+    {
+        return $this->quizPassed;
+    }
+
+    public function setQuizPassed(bool $quizPassed): self
+    {
+        $this->quizPassed = $quizPassed;
+        return $this;
+    }
+
+    /**
+     * Record a quiz attempt and update scores
+     */
+    public function recordQuizAttempt(float $score, bool $passed): self
+    {
+        $this->incrementQuizAttempts();
+        $this->quizLastScore = $score;
+
+        // Update best score if this is better
+        if ($this->quizBestScore === null || $score > $this->quizBestScore) {
+            $this->quizBestScore = $score;
+        }
+
+        // Update passed status
+        $this->quizPassed = $passed;
+
+        return $this;
+    }
+
+    // === ASSIGNMENT MANAGEMENT GETTERS/SETTERS ===
+
+    public function isAssignmentSubmitted(): bool
+    {
+        return $this->assignmentSubmitted;
+    }
+
+    public function setAssignmentSubmitted(bool $assignmentSubmitted): self
+    {
+        $this->assignmentSubmitted = $assignmentSubmitted;
+        return $this;
+    }
+
+    public function getAssignmentSubmittedAt(): ?\DateTimeImmutable
+    {
+        return $this->assignmentSubmittedAt;
+    }
+
+    public function setAssignmentSubmittedAt(?\DateTimeImmutable $assignmentSubmittedAt): self
+    {
+        $this->assignmentSubmittedAt = $assignmentSubmittedAt;
+        return $this;
+    }
+
+    public function getAssignmentFilePath(): ?string
+    {
+        return $this->assignmentFilePath;
+    }
+
+    public function setAssignmentFilePath(?string $assignmentFilePath): self
+    {
+        $this->assignmentFilePath = $assignmentFilePath;
+        return $this;
+    }
+
+    public function getAssignmentScore(): ?float
+    {
+        return $this->assignmentScore;
+    }
+
+    public function setAssignmentScore(?float $assignmentScore): self
+    {
+        $this->assignmentScore = $assignmentScore;
+        return $this;
+    }
+
+    public function getAssignmentFeedback(): ?string
+    {
+        return $this->assignmentFeedback;
+    }
+
+    public function setAssignmentFeedback(?string $assignmentFeedback): self
+    {
+        $this->assignmentFeedback = $assignmentFeedback;
+        return $this;
+    }
+
+    public function getAssignmentGradedAt(): ?\DateTimeImmutable
+    {
+        return $this->assignmentGradedAt;
+    }
+
+    public function setAssignmentGradedAt(?\DateTimeImmutable $assignmentGradedAt): self
+    {
+        $this->assignmentGradedAt = $assignmentGradedAt;
+        return $this;
+    }
+
+    public function getAssignmentGradedBy(): ?User
+    {
+        return $this->assignmentGradedBy;
+    }
+
+    public function setAssignmentGradedBy(?User $assignmentGradedBy): self
+    {
+        $this->assignmentGradedBy = $assignmentGradedBy;
+        return $this;
+    }
+
+    /**
+     * Submit an assignment
+     */
+    public function submitAssignment(string $filePath): self
+    {
+        $this->assignmentSubmitted = true;
+        $this->assignmentSubmittedAt = new \DateTimeImmutable();
+        $this->assignmentFilePath = $filePath;
+        return $this;
+    }
+
+    /**
+     * Grade a submitted assignment
+     */
+    public function gradeAssignment(float $score, string $feedback, User $gradedBy): self
+    {
+        $this->assignmentScore = $score;
+        $this->assignmentFeedback = $feedback;
+        $this->assignmentGradedAt = new \DateTimeImmutable();
+        $this->assignmentGradedBy = $gradedBy;
+        return $this;
+    }
+
+    // === FLAGGING SYSTEM GETTERS/SETTERS ===
+
+    public function isFlagged(): bool
+    {
+        return $this->flagged;
+    }
+
+    public function setFlagged(bool $flagged): self
+    {
+        $this->flagged = $flagged;
+        return $this;
+    }
+
+    public function getFlaggedReason(): ?string
+    {
+        return $this->flaggedReason;
+    }
+
+    public function setFlaggedReason(?string $flaggedReason): self
+    {
+        $this->flaggedReason = $flaggedReason;
+        return $this;
+    }
+
+    /**
+     * Flag this lecture for instructor review
+     */
+    public function flag(string $reason): self
+    {
+        $this->flagged = true;
+        $this->flaggedReason = $reason;
+        return $this;
+    }
+
+    /**
+     * Remove flag
+     */
+    public function unflag(): self
+    {
+        $this->flagged = false;
+        $this->flaggedReason = null;
+        return $this;
+    }
+
     /**
      * Calculate completion percentage and status.
      * Called automatically before persist or update.
@@ -200,7 +607,12 @@ class StudentLecture extends EntityBase
     #[ORM\PreUpdate]
     public function calculateCompletion(): void
     {
-        $lectureLength = $this->lecture->getLengthSeconds();
+        // Track first watch timestamp
+        if ($this->watchedSeconds > 0 && $this->firstWatchedAt === null) {
+            $this->firstWatchedAt = new \DateTimeImmutable();
+        }
+
+        $lectureLength = $this->lecture->getDurationSeconds();
 
         error_log(sprintf('[PreUpdate] Calculating completion: watchedSeconds=%d, lectureLength=%d',
             $this->watchedSeconds,

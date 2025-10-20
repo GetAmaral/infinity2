@@ -622,8 +622,26 @@ NotificationType,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max
 NotificationType,organization,Organization,,1,,,,,,ManyToOne,Organization,notificationTypes,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"notificationtype:read,notificationtype:write",,,,,{}
 NotificationType,description,Description,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"notificationtype:read,notificationtype:write",,,,paragraph,{}
 NotificationType,notifications,Notifications,,1,,,,,,OneToMany,Notification,type,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"notificationtype:read,notificationtype:write",,,,,{}
-NotificationTypeTemplate,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,word,{}
-NotificationTypeTemplate,description,Description,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,paragraph,{}
+NotificationType,notificationTypeTemplates,Notification Type Templates,,1,,,,,,OneToMany,NotificationTypeTemplate,notificationType,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"notificationtype:read,notificationtype:write",,,,,{}
+NotificationTypeTemplate,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",SUPER_ADMIN,,,word,{}
+NotificationTypeTemplate,description,Description,text,1,,,,,,,,Description,,,,,LAZY,,,,Length(max=2000),,TextareaType,{},,,Help text for template usage,1,1,1,1,1,,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,paragraph,{}
+NotificationTypeTemplate,subject,Subject,string,,500,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=500)",,TextType,{},1,,,1,1,1,1,1,,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,sentence,{}
+NotificationTypeTemplate,bodyHtml,Body HTML,text,1,,,,,,,,,,,,LAZY,,,,Length(max=10000),,TextareaType,"{'attr': {'rows': 10}}",,,HTML version of notification body,1,1,1,,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,paragraph,{}
+NotificationTypeTemplate,bodyPlainText,Body Plain Text,text,1,,,,,,,,,,,,LAZY,,,,Length(max=10000),,TextareaType,"{'attr': {'rows': 10}}",,,Plain text version of notification body,1,1,1,,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,paragraph,{}
+NotificationTypeTemplate,headerContent,Header Content,text,1,,,,,,,,,,,,LAZY,,,,Length(max=2000),,TextareaType,{},,,Optional header content,1,1,1,,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,paragraph,{}
+NotificationTypeTemplate,footerContent,Footer Content,text,1,,,,,,,,,,,,LAZY,,,,Length(max=2000),,TextareaType,{},,,Optional footer content,1,1,1,,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,paragraph,{}
+NotificationTypeTemplate,replyToEmail,Reply-To Email,string,1,255,,,,,,,,,,,LAZY,,simple,,Email,,EmailType,{},,,Reply-to email address,1,1,1,,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,email,{}
+NotificationTypeTemplate,notificationType,NotificationType,,1,,,,,,ManyToOne,NotificationType,notificationTypeTemplates,,,,LAZY,,simple,,"NotBlank",,EntityType,{},1,,,1,1,1,1,,,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,relationEntity,{}
+NotificationTypeTemplate,communicationMethod,CommunicationMethod,,1,,,,,,ManyToOne,CommunicationMethod,notificationTypeTemplates,,,,LAZY,,simple,,,,EntityType,{},,,Default communication channel,1,1,1,1,,,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,relationEntity,{}
+NotificationTypeTemplate,priority,Priority,string,1,50,,,,,,,,,,,LAZY,,simple,,"Length(max=50)",,ChoiceType,"{'choices': {'Information': 'information', 'Warning': 'warning', 'Critical': 'critical'}}",,,Priority level for notifications,1,1,1,1,1,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,word,{}
+NotificationTypeTemplate,category,Category,string,1,100,,,,,,,,,,,LAZY,,simple,,"Length(max=100)",,TextType,{},,,Template category for grouping,1,1,1,1,1,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,word,{}
+NotificationTypeTemplate,availablePlaceholders,Available Placeholders,json,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,"{'attr': {'rows': 5}}",,,JSON array of available placeholder variables,1,1,1,,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,json,{"maxItems": 50}
+NotificationTypeTemplate,placeholderExamples,Placeholder Examples,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,Example usage of placeholders,1,1,1,,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,paragraph,{}
+NotificationTypeTemplate,active,Active,boolean,,,,,,"true",,,,,,,LAZY,,simple,,,,CheckboxType,{},,,Enable or disable this template,1,1,1,1,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,boolean,{}
+NotificationTypeTemplate,default,Default,boolean,,,,,,"false",,,,,,,LAZY,,simple,,,,CheckboxType,{},,,Mark as default template for this type,1,1,1,1,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,boolean,{}
+NotificationTypeTemplate,iconUrl,Icon URL,string,1,255,,,,,,,,,,,LAZY,,simple,,"Url,Length(max=255)",,TextType,{},,,URL to icon for UI display,1,1,1,,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,url,{}
+NotificationTypeTemplate,colorCode,Color Code,string,1,7,,,,,,,,,,,LAZY,,simple,,"Regex(pattern=""/^#[0-9A-Fa-f]{6}$/"", message=""Must be a valid hex color code"")",,ColorType,{},,,Hex color code for categorization,1,1,1,,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,word,{}
+NotificationTypeTemplate,tags,Tags,json,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,Searchable tags (JSON array),1,1,1,,,1,1,1,"notificationtypetemplate:read,notificationtypetemplate:write",,,,json,{"maxItems": 20}
 EventCategory,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"eventcategory:read,eventcategory:write",,,,word,{}
 EventCategory,organization,Organization,,1,,,,,,ManyToOne,Organization,eventCategories,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"eventcategory:read,eventcategory:write",,,,,{}
 EventCategory,description,Description,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"eventcategory:read,eventcategory:write",,,,paragraph,{}
@@ -643,9 +661,35 @@ EventResource,bookingRules,BookingRules,json,1,,,,,,,,,,,,LAZY,,,,,,TextareaType
 EventResource,availabilitySchedule,AvailabilitySchedule,json,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,,,1,1,"eventresource:read,eventresource:write",,,,word,{}
 EventResource,active,Active,boolean,1,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,1,,,1,1,"eventresource:read,eventresource:write",,,,boolean,{}
 EventResource,eventBookings,EventBookings,,1,,,,,,OneToMany,EventResourceBooking,resource,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"eventresource:read,eventresource:write",,,,,{}
-EventResourceType,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"eventresourcetype:read,eventresourcetype:write",,,,word,{}
-EventResourceType,organization,Organization,,1,,,,,,ManyToOne,Organization,eventResourceTypes,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"eventresourcetype:read,eventresourcetype:write",,,,,{}
-EventResourceType,description,Description,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"eventresourcetype:read,eventresourcetype:write",,,,paragraph,{}
+EventResourceType,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=100)",,TextType,{},1,,,1,1,1,1,1,,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:list",,,,word,{}
+EventResourceType,code,Code,string,,50,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=50),",,TextType,{},1,,,1,1,1,1,1,,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:list",,,,word,{}
+EventResourceType,description,Description,text,1,,,,,,,,,,,,LAZY,,,,Length(max=1000),,TextareaType,{},,,,1,1,1,1,1,,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,paragraph,{}
+EventResourceType,organization,Organization,,1,,,,,,ManyToOne,Organization,eventResourceTypes,,,,LAZY,,composite,createdAt,NotBlank,,EntityType,{},,,,1,1,,1,,,1,1,"eventresourcetype:read",,,,,{}
+EventResourceType,category,Category,string,,50,,,,,,,,,,,LAZY,,simple,,"NotBlank,",,ChoiceType,{},1,,,1,1,1,1,1,,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:list",,,,word,{}
+EventResourceType,icon,Icon,string,1,50,,,,,,,,,,,LAZY,,,,Length(max=50),,TextType,{},,,,1,1,1,1,,,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:list",,,,word,{}
+EventResourceType,color,Color,string,1,20,,,,,,,,,,,LAZY,,,,,,TextType,{},,,,,1,1,1,,,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:list",,,,word,{}
+EventResourceType,badgeColor,Badge Color,string,1,20,,,,,,,,,,,LAZY,,,,,,TextType,{},,,,,1,1,1,,,1,1,"eventresourcetype:read,eventresourcetype:write",,,,word,{}
+EventResourceType,active,Active,boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,,1,1,1,1,1,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:list",,,,boolean,{}
+EventResourceType,bookable,Bookable,boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,,1,1,1,1,,,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:list",,,,boolean,{}
+EventResourceType,isDefault,Is Default,boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write",,,,boolean,{}
+EventResourceType,sortOrder,Sort Order,integer,1,,,,,,,,,,,,LAZY,,,,Range(min=0,max=9999),,IntegerType,{},,,,,1,1,1,1,,,1,1,"eventresourcetype:read,eventresourcetype:write",,,,randomNumber,{}
+EventResourceType,capacity,Capacity,integer,1,,,,,,,,,,,,LAZY,,,,Range(min=1,max=9999),,IntegerType,{},,,,1,1,1,1,,,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,randomNumber,{}
+EventResourceType,capacityUnit,Capacity Unit,string,1,20,,,,,,,,,,,LAZY,,,,,,ChoiceType,{},,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,word,{}
+EventResourceType,requiresApproval,Requires Approval,boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,boolean,{}
+EventResourceType,autoConfirm,Auto Confirm,boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,boolean,{}
+EventResourceType,advanceBookingDays,Advance Booking Days,integer,1,,,,,,,,,,,,LAZY,,,,Range(min=0,max=365),,IntegerType,{},,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,randomNumber,{}
+EventResourceType,maxBookingDuration,Max Booking Duration (min),integer,1,,,,,,,,,,,,LAZY,,,,Range(min=15,max=10080),,IntegerType,{},,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,randomNumber,{}
+EventResourceType,minBookingDuration,Min Booking Duration (min),integer,1,,,,,,,,,,,,LAZY,,,,Range(min=15,max=480),,IntegerType,{},,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,randomNumber,{}
+EventResourceType,bufferTimeBefore,Buffer Time Before (min),integer,1,,,,,,,,,,,,LAZY,,,,Range(min=0,max=120),,IntegerType,{},,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,randomNumber,{}
+EventResourceType,bufferTimeAfter,Buffer Time After (min),integer,1,,,,,,,,,,,,LAZY,,,,Range(min=0,max=120),,IntegerType,{},,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,randomNumber,{}
+EventResourceType,allowMultipleBookings,Allow Multiple Bookings,boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,boolean,{}
+EventResourceType,allowWaitlist,Allow Waitlist,boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,boolean,{}
+EventResourceType,trackUsage,Track Usage,boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,boolean,{}
+EventResourceType,notificationEnabled,Notification Enabled,boolean,,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,boolean,{}
+EventResourceType,notificationTemplate,Notification Template,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,,,1,,,,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,paragraph,{}
+EventResourceType,bookingInstructions,Booking Instructions,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,paragraph,{}
+EventResourceType,cancellationPolicy,Cancellation Policy,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,,,1,1,1,"eventresourcetype:read,eventresourcetype:write,eventresourcetype:detail",,,,paragraph,{}
+EventResourceType,metadata,Metadata,json,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,,,1,,,,1,1,"eventresourcetype:read,eventresourcetype:write",,,,json,{}
 EventResourceBooking,organization,Organization,,1,,,,,,ManyToOne,Organization,eventResourceBookings,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"eventresourcebooking:read,eventresourcebooking:write",,,,,{}
 EventResourceBooking,event,Event,,1,,,,,,ManyToOne,Event,resourceBookings,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"eventresourcebooking:read,eventresourcebooking:write",,,,,{}
 EventResourceBooking,resource,Resource,,1,,,,,,ManyToOne,EventResource,eventBookings,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"eventresourcebooking:read,eventresourcebooking:write",,,,,{}
@@ -683,14 +727,12 @@ HolidayTemplate,recurrenceFrequency,RecurrenceFrequency,integer,1,,,,,,,,,,,,LAZ
 HolidayTemplate,country,Country,,1,,,,,,ManyToOne,Country,holidayTemplates,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,,{}
 HolidayTemplate,city,City,,1,,,,,,ManyToOne,City,holidayTemplates,,,,LAZY,,simple,,,,EntityType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,,{}
 HolidayTemplate,blockSchedule,BlockSchedule,boolean,1,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,1,,,1,1,"holidaytemplate:read,holidaytemplate:write",,,,boolean,{}
-TimeZone,name,Name,string,1,,,,,,,,,,,,LAZY,,simple,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"timezone:read,timezone:write",,,,word,{}
-TimeZone,offsetMinutes,OffsetMinutes,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"timezone:read,timezone:write",,,,randomNumber,{}
-TimeZone,workingHours,WorkingHours,,1,,,,,,OneToMany,WorkingHour,timeZone,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"timezone:read,timezone:write",,,,,{}
 CommunicationMethod,name,Name,string,,,,,,,,,,,,,LAZY,,simple,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"communicationmethod:read,communicationmethod:write",,,,word,{}
 CommunicationMethod,function,Function,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"communicationmethod:read,communicationmethod:write",,,,word,{}
 CommunicationMethod,property,Property,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"communicationmethod:read,communicationmethod:write",,,,word,{}
 CommunicationMethod,reminders,Reminders,,1,,,,,,OneToMany,Reminder,communicationMethod,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"communicationmethod:read,communicationmethod:write",,,,,{}
 CommunicationMethod,notifications,Notifications,,1,,,,,,OneToMany,Notification,communicationMethod,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"communicationmethod:read,communicationmethod:write",,,,,{}
+CommunicationMethod,notificationTypeTemplates,Notification Type Templates,,1,,,,,,OneToMany,NotificationTypeTemplate,communicationMethod,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"communicationmethod:read,communicationmethod:write",,,,,{}
 Course,name,Name,string,,,,,,,,,,,,,LAZY,,,,"NotBlank,Length(max=255)",,TextType,{},1,,,1,1,1,1,1,,1,1,"course:read,course:write",TEACHER,,,word,{}
 Course,organization,Organization,,1,,,,,,ManyToOne,Organization,courses,,,,LAZY,,composite,createdAt,,,EntityType,{},,,,1,1,,1,,,1,1,"course:read,course:write",,,,,{}
 Course,description,Description,text,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,,1,1,1,1,1,,1,1,"course:read,course:write",,,,paragraph,{}
@@ -727,3 +769,34 @@ AuditLog,user,User,,1,,,,,,ManyToOne,User,,,,,LAZY,,createdAt,,,EntityType,{},fa
 AuditLog,changes,Changes,json,,,,,,,,,,,,,LAZY,,,,,NotBlank,,TextareaType,,1,false,,1,1,,,,,1,false,"audit:read,audit:write",,,,array,{}
 AuditLog,metadata,Metadata,json,1,,,,,,,,,,,,LAZY,,,,,,TextareaType,{},,,"IP address, user agent, etc",1,1,,,,,1,,"audit:read,audit:write",,,,array,{}
 AuditLog,checksum,Checksum,string,1,64,,,,,,,,,,,LAZY,,,,,,TextType,{},,,"SHA-256 for tamper detection",1,1,,,,,1,,"audit:read,audit:write",,,,word,{}
+AgentType,code,Code,string,1,50,,,,,,,,,,LAZY,,,,"Length(max=50)",,TextType,{},,,,1,1,1,1,1,,1,1,"agenttype:read,agenttype:write",,,,word,{}
+AgentType,icon,Icon,string,1,,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,1,1,,1,1,"agenttype:read,agenttype:write",,,,word,{}
+AgentType,color,Color,string,1,7,,,,,,,,,,,LAZY,,,,Length(max=7),,TextType,{},,,,1,1,1,1,1,,1,1,"agenttype:read,agenttype:write",,,,word,{}
+AgentType,sortOrder,SortOrder,integer,1,,,,,,,,,,,,LAZY,,,,,,IntegerType,{},,,,1,1,1,1,,,1,1,"agenttype:read,agenttype:write",,,,randomNumber,{}
+AgentType,default,Default,boolean,1,,,,,,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,1,,,1,1,"agenttype:read,agenttype:write",,,,boolean,{}
+AgentType,agents,Agents,,1,,,,,,OneToMany,Agent,agentType,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"agenttype:read,agenttype:write",,,,,{}
+TimeZone,tzCode,Timezone Code,string,0,100,,,1,,,,,,,,LAZY,,simple,,NotBlank|Length(max=100)|Regex(pattern="/^[A-Z][a-z]+\/[A-Z][a-z_]+$/"),"Must be valid IANA timezone code",TextType,{},1,,,1,1,1,1,1,,1,1,"timezone:read,timezone:write",,,,custom,"tzCode:America/New_York"
+TimeZone,tzName,Timezone Name,string,0,255,,,,,,,,,,,LAZY,,simple,,NotBlank|Length(min=3 max=255),"Timezone name is required",TextType,{},1,,,1,1,1,1,1,,1,1,"timezone:read,timezone:write",,,,custom,"tzName:Eastern Standard Time"
+TimeZone,tzAbbreviation,Abbreviation,string,1,10,,,,,,,,,,,LAZY,,,,Length(max=10),,TextType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,custom,"tzAbbreviation:EST"
+TimeZone,utcOffset,UTC Offset (minutes),integer,0,,,,,,,,,,,,LAZY,,simple,,NotNull|Range(min=-720 max=840),"UTC offset must be between -12:00 and +14:00 hours",IntegerType,{},1,,,1,1,1,1,,1,1,1,"timezone:read,timezone:write",,,,randomNumber,"{""min"":-720,""max"":840}"
+TimeZone,standardOffset,Standard Offset (minutes),integer,0,,,,,,,,,,,,LAZY,,,,NotNull|Range(min=-720 max=840),,IntegerType,{},1,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,randomNumber,"{""min"":-720,""max"":840}"
+TimeZone,dstOffset,DST Offset (minutes),integer,1,,,,,,,,,,,,LAZY,,,,Range(min=-720 max=840),,IntegerType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,randomNumber,"{""min"":-720,""max"":840}"
+TimeZone,currentOffset,Current Offset (minutes),integer,0,,,,,,,,,,,,LAZY,,,,NotNull|Range(min=-720 max=840),,IntegerType,{},,,1,1,1,,1,1,1,"timezone:read",,,,randomNumber,"{""min"":-720,""max"":840}"
+TimeZone,dst,Supports DST,boolean,0,,,,,0,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,boolean,{}
+TimeZone,dstStart,DST Start Rule,string,1,255,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,custom,"dstStart:Second Sunday in March"
+TimeZone,dstEnd,DST End Rule,string,1,255,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,custom,"dstEnd:First Sunday in November"
+TimeZone,dstAbbreviation,DST Abbreviation,string,1,10,,,,,,,,,,,LAZY,,,,Length(max=10),,TextType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,custom,"dstAbbreviation:EDT"
+TimeZone,countryCode,Country Code,string,1,2,,,,,,,,,,,LAZY,,simple,,Length(min=2 max=2)|Regex(pattern="/^[A-Z]{2}$/"),"Must be ISO 3166-1 alpha-2 code",TextType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,countryCode,{}
+TimeZone,region,Region,string,1,100,,,,,,,,,,,LAZY,,,,Length(max=100),,TextType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,word,{}
+TimeZone,city,City,string,1,100,,,,,,,,,,,LAZY,,,,Length(max=100),,TextType,{},,,,1,1,1,1,,1,1,1,"timezone:read,timezone:write",,,,city,{}
+TimeZone,continent,Continent,string,1,50,,,,,,,,,,,LAZY,,simple,,Choice(choices=["Africa" "Americas" "Antarctica" "Asia" "Atlantic" "Australia" "Europe" "Indian" "Pacific"]),"Invalid continent",ChoiceType,"{""choices"":{""Africa"":""Africa"",""Americas"":""Americas"",""Antarctica"":""Antarctica"",""Asia"":""Asia"",""Atlantic"":""Atlantic"",""Australia"":""Australia"",""Europe"":""Europe"",""Indian"":""Indian"",""Pacific"":""Pacific""}}",,,1,1,1,1,,1,1,1,"timezone:read,timezone:write",,,,randomElement,"[""Africa"",""Americas"",""Asia"",""Europe"",""Pacific""]"
+TimeZone,active,Active,boolean,0,,,,,1,,,,,,,LAZY,,simple,,,,CheckboxType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,boolean,{}
+TimeZone,default,Default,boolean,0,,,,,0,,,,,,,LAZY,,,,,,CheckboxType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,boolean,{}
+TimeZone,displayOrder,Display Order,integer,0,,,,,100,,,,,,,LAZY,,,,Range(min=0 max=9999),,IntegerType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,randomNumber,"{""min"":1,""max"":999}"
+TimeZone,description,Description,text,1,,,,,,,,,,,,LAZY,,,,Length(max=5000),,TextareaType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,text,{}
+TimeZone,windowsTimeZoneId,Windows Timezone ID,string,1,255,,,,,,,,,,,LAZY,,,,Length(max=255),,TextType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,custom,"windowsTimeZoneId:Eastern Standard Time"
+TimeZone,ianaVersion,IANA Version,string,1,10,,,,,,,,,,,LAZY,,,,Length(max=10),,TextType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,custom,"ianaVersion:2025a"
+TimeZone,notes,Notes,text,1,,,,,,,,,,,,LAZY,,,,Length(max=10000),,TextareaType,{},,,,1,1,1,,,1,1,1,"timezone:read,timezone:write",,,,text,{}
+TimeZone,workingHours,Working Hours,,1,,,,,,OneToMany,WorkingHour,timeZone,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"timezone:read,timezone:write",,,,,{}
+TimeZone,calendars,Calendars,,1,,,,,,OneToMany,Calendar,timeZone,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"timezone:read",,,,,{}
+TimeZone,organizations,Organizations,,1,,,,,,OneToMany,Organization,timeZone,,,,LAZY,,,,,,EntityType,{},,,,1,1,1,1,,,1,1,"timezone:read",,,,,{}

@@ -85,13 +85,15 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     protected Collection $roles;
 
     #[ORM\Column(type: 'boolean')]
-    protected bool $isVerified = false;
+    #[Groups(['user:read', 'user:write'])]
+    protected bool $verified = false;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:write'])]
     protected bool $termsSigned = false;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['user:read'])]
     protected ?\DateTimeImmutable $termsSignedAt = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -108,12 +110,15 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     protected ?string $openAiApiKey = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['user:read', 'audit:read'])]
     protected ?\DateTimeImmutable $lastLoginAt = null;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['audit:read'])]
     protected int $failedLoginAttempts = 0;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['audit:read'])]
     protected ?\DateTimeImmutable $lockedUntil = null;
 
     #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'users')]
@@ -139,6 +144,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     // ===== NEW SECURITY FIELDS (2FA, Passwordless, Session Security) =====
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(['user:read', 'user:write'])]
     protected bool $twoFactorEnabled = false;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -154,6 +160,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     protected ?string $passwordResetToken = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['audit:read'])]
     protected ?\DateTimeImmutable $passwordResetExpiry = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -161,15 +168,19 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     protected ?string $sessionToken = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['user:read', 'audit:read'])]
     protected ?\DateTimeImmutable $lastPasswordChangeAt = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['user:read', 'audit:read'])]
     protected ?\DateTimeImmutable $passwordExpiresAt = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(['user:read', 'audit:read'])]
     protected bool $mustChangePassword = false;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(['user:read', 'user:write'])]
     protected bool $passkeyEnabled = false;
 
     #[ORM\Column(type: 'json', nullable: true)]
@@ -267,7 +278,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     #[Groups(['user:read', 'user:write'])]
-    protected bool $isAgent = false;
+    protected bool $agent = false;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
@@ -275,11 +286,12 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
 
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     #[Groups(['user:read', 'user:write'])]
-    protected bool $isActive = true;
+    protected bool $active = true;
 
     // ===== AUDIT FIELDS (deletedAt for soft delete) =====
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['audit:read'])]
     protected ?\DateTimeImmutable $deletedAt = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -293,6 +305,200 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     protected ?string $gender = null;
+
+    // ===== ADDITIONAL CRM FIELDS (2025 Best Practices) =====
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $title = null; // Mr., Mrs., Dr., etc.
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $firstName = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $lastName = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $middleName = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $suffix = null; // Jr., Sr., III, etc.
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $nickname = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $secondaryEmail = null;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $workPhone = null;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $homePhone = null;
+
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $phoneExtension = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $fax = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $website = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $linkedinUrl = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $twitterHandle = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $address = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $city = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $state = null;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $postalCode = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $country = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $region = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $officeLocation = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $employeeId = null;
+
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?\DateTimeImmutable $hireDate = null;
+
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?\DateTimeImmutable $terminationDate = null;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $employmentStatus = null; // full-time, part-time, contract, etc.
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $costCenter = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $division = null;
+
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $businessUnit = null;
+
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $salary = null;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $salaryFrequency = null; // hourly, monthly, annually
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?array $skills = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?array $certifications = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?array $languages = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $bio = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $notes = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?array $tags = null;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    #[Groups(['user:read'])]
+    protected int $loginCount = 0;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['user:read', 'audit:read'])]
+    protected ?string $lastIpAddress = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['user:read', 'audit:read'])]
+    protected ?string $lastUserAgent = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    #[Groups(['user:read', 'user:write'])]
+    protected bool $visible = true; // Visibility in directory/team lists
+
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    #[Groups(['user:read'])]
+    protected int $profileCompleteness = 0; // 0-100 percentage
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['user:read', 'audit:read'])]
+    protected ?\DateTimeImmutable $lastActivityAt = null;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $status = null; // available, busy, away, offline, do-not-disturb
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?string $statusMessage = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(['user:read', 'user:write'])]
+    protected bool $locked = false; // Account locked by admin
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['audit:read'])]
+    protected ?string $lockedReason = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['audit:read'])]
+    protected ?\DateTimeImmutable $lockedAt = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    protected ?array $customFields = null; // Flexible JSON for custom attributes
 
     public function __construct()
     {
@@ -413,13 +619,19 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     // Verification methods
     public function isVerified(): bool
     {
-        return $this->isVerified;
+        return $this->verified;
     }
 
-    public function setIsVerified(bool $isVerified): self
+    public function setVerified(bool $verified): self
     {
-        $this->isVerified = $isVerified;
+        $this->verified = $verified;
         return $this;
+    }
+
+    // Backward compatibility alias
+    public function setIsVerified(bool $verified): self
+    {
+        return $this->setVerified($verified);
     }
 
     public function getVerificationToken(): ?string
@@ -563,21 +775,6 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     public function getLockedUntil(): ?\DateTimeImmutable
     {
         return $this->lockedUntil;
-    }
-
-    public function isLocked(): bool
-    {
-        if (!$this->lockedUntil) {
-            return false;
-        }
-
-        if ($this->lockedUntil <= new \DateTimeImmutable()) {
-            // Lock expired, reset counters
-            $this->resetFailedLoginAttempts();
-            return false;
-        }
-
-        return true;
     }
 
     public function getUiSettings(): ?array
@@ -1102,13 +1299,19 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
 
     public function isAgent(): bool
     {
-        return $this->isAgent;
+        return $this->agent;
     }
 
-    public function setIsAgent(bool $isAgent): self
+    public function setAgent(bool $agent): self
     {
-        $this->isAgent = $isAgent;
+        $this->agent = $agent;
         return $this;
+    }
+
+    // Backward compatibility alias
+    public function setIsAgent(bool $agent): self
+    {
+        return $this->setAgent($agent);
     }
 
     public function getAgentType(): ?string
@@ -1124,13 +1327,19 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
 
     public function isActive(): bool
     {
-        return $this->isActive;
+        return $this->active;
     }
 
-    public function setIsActive(bool $isActive): self
+    public function setActive(bool $active): self
     {
-        $this->isActive = $isActive;
+        $this->active = $active;
         return $this;
+    }
+
+    // Backward compatibility alias
+    public function setIsActive(bool $active): self
+    {
+        return $this->setActive($active);
     }
 
     // ===== GETTERS/SETTERS FOR AUDIT FIELDS =====
@@ -1182,6 +1391,616 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     public function setGender(?string $gender): self
     {
         $this->gender = $gender;
+        return $this;
+    }
+
+    // ===== GETTERS/SETTERS FOR ADDITIONAL CRM FIELDS =====
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): self
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): self
+    {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    public function getMiddleName(): ?string
+    {
+        return $this->middleName;
+    }
+
+    public function setMiddleName(?string $middleName): self
+    {
+        $this->middleName = $middleName;
+        return $this;
+    }
+
+    public function getSuffix(): ?string
+    {
+        return $this->suffix;
+    }
+
+    public function setSuffix(?string $suffix): self
+    {
+        $this->suffix = $suffix;
+        return $this;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(?string $nickname): self
+    {
+        $this->nickname = $nickname;
+        return $this;
+    }
+
+    public function getSecondaryEmail(): ?string
+    {
+        return $this->secondaryEmail;
+    }
+
+    public function setSecondaryEmail(?string $secondaryEmail): self
+    {
+        $this->secondaryEmail = $secondaryEmail;
+        return $this;
+    }
+
+    public function getWorkPhone(): ?string
+    {
+        return $this->workPhone;
+    }
+
+    public function setWorkPhone(?string $workPhone): self
+    {
+        $this->workPhone = $workPhone;
+        return $this;
+    }
+
+    public function getHomePhone(): ?string
+    {
+        return $this->homePhone;
+    }
+
+    public function setHomePhone(?string $homePhone): self
+    {
+        $this->homePhone = $homePhone;
+        return $this;
+    }
+
+    public function getPhoneExtension(): ?string
+    {
+        return $this->phoneExtension;
+    }
+
+    public function setPhoneExtension(?string $phoneExtension): self
+    {
+        $this->phoneExtension = $phoneExtension;
+        return $this;
+    }
+
+    public function getFax(): ?string
+    {
+        return $this->fax;
+    }
+
+    public function setFax(?string $fax): self
+    {
+        $this->fax = $fax;
+        return $this;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): self
+    {
+        $this->website = $website;
+        return $this;
+    }
+
+    public function getLinkedinUrl(): ?string
+    {
+        return $this->linkedinUrl;
+    }
+
+    public function setLinkedinUrl(?string $linkedinUrl): self
+    {
+        $this->linkedinUrl = $linkedinUrl;
+        return $this;
+    }
+
+    public function getTwitterHandle(): ?string
+    {
+        return $this->twitterHandle;
+    }
+
+    public function setTwitterHandle(?string $twitterHandle): self
+    {
+        $this->twitterHandle = $twitterHandle;
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
+        return $this;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(?string $state): self
+    {
+        $this->state = $state;
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): self
+    {
+        $this->postalCode = $postalCode;
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?string $region): self
+    {
+        $this->region = $region;
+        return $this;
+    }
+
+    public function getOfficeLocation(): ?string
+    {
+        return $this->officeLocation;
+    }
+
+    public function setOfficeLocation(?string $officeLocation): self
+    {
+        $this->officeLocation = $officeLocation;
+        return $this;
+    }
+
+    public function getEmployeeId(): ?string
+    {
+        return $this->employeeId;
+    }
+
+    public function setEmployeeId(?string $employeeId): self
+    {
+        $this->employeeId = $employeeId;
+        return $this;
+    }
+
+    public function getHireDate(): ?\DateTimeImmutable
+    {
+        return $this->hireDate;
+    }
+
+    public function setHireDate(?\DateTimeImmutable $hireDate): self
+    {
+        $this->hireDate = $hireDate;
+        return $this;
+    }
+
+    public function getTerminationDate(): ?\DateTimeImmutable
+    {
+        return $this->terminationDate;
+    }
+
+    public function setTerminationDate(?\DateTimeImmutable $terminationDate): self
+    {
+        $this->terminationDate = $terminationDate;
+        return $this;
+    }
+
+    public function getEmploymentStatus(): ?string
+    {
+        return $this->employmentStatus;
+    }
+
+    public function setEmploymentStatus(?string $employmentStatus): self
+    {
+        $this->employmentStatus = $employmentStatus;
+        return $this;
+    }
+
+    public function getCostCenter(): ?string
+    {
+        return $this->costCenter;
+    }
+
+    public function setCostCenter(?string $costCenter): self
+    {
+        $this->costCenter = $costCenter;
+        return $this;
+    }
+
+    public function getDivision(): ?string
+    {
+        return $this->division;
+    }
+
+    public function setDivision(?string $division): self
+    {
+        $this->division = $division;
+        return $this;
+    }
+
+    public function getBusinessUnit(): ?string
+    {
+        return $this->businessUnit;
+    }
+
+    public function setBusinessUnit(?string $businessUnit): self
+    {
+        $this->businessUnit = $businessUnit;
+        return $this;
+    }
+
+    public function getSalary(): ?string
+    {
+        return $this->salary;
+    }
+
+    public function setSalary(?string $salary): self
+    {
+        $this->salary = $salary;
+        return $this;
+    }
+
+    public function getSalaryFrequency(): ?string
+    {
+        return $this->salaryFrequency;
+    }
+
+    public function setSalaryFrequency(?string $salaryFrequency): self
+    {
+        $this->salaryFrequency = $salaryFrequency;
+        return $this;
+    }
+
+    public function getSkills(): ?array
+    {
+        return $this->skills;
+    }
+
+    public function setSkills(?array $skills): self
+    {
+        $this->skills = $skills;
+        return $this;
+    }
+
+    public function getCertifications(): ?array
+    {
+        return $this->certifications;
+    }
+
+    public function setCertifications(?array $certifications): self
+    {
+        $this->certifications = $certifications;
+        return $this;
+    }
+
+    public function getLanguages(): ?array
+    {
+        return $this->languages;
+    }
+
+    public function setLanguages(?array $languages): self
+    {
+        $this->languages = $languages;
+        return $this;
+    }
+
+    public function getBio(): ?string
+    {
+        return $this->bio;
+    }
+
+    public function setBio(?string $bio): self
+    {
+        $this->bio = $bio;
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): self
+    {
+        $this->notes = $notes;
+        return $this;
+    }
+
+    public function getTags(): ?array
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): self
+    {
+        $this->tags = $tags;
+        return $this;
+    }
+
+    public function getLoginCount(): int
+    {
+        return $this->loginCount;
+    }
+
+    public function setLoginCount(int $loginCount): self
+    {
+        $this->loginCount = $loginCount;
+        return $this;
+    }
+
+    public function incrementLoginCount(): self
+    {
+        $this->loginCount++;
+        return $this;
+    }
+
+    public function getLastIpAddress(): ?string
+    {
+        return $this->lastIpAddress;
+    }
+
+    public function setLastIpAddress(?string $lastIpAddress): self
+    {
+        $this->lastIpAddress = $lastIpAddress;
+        return $this;
+    }
+
+    public function getLastUserAgent(): ?string
+    {
+        return $this->lastUserAgent;
+    }
+
+    public function setLastUserAgent(?string $lastUserAgent): self
+    {
+        $this->lastUserAgent = $lastUserAgent;
+        return $this;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(bool $visible): self
+    {
+        $this->visible = $visible;
+        return $this;
+    }
+
+    public function getProfileCompleteness(): int
+    {
+        return $this->profileCompleteness;
+    }
+
+    public function setProfileCompleteness(int $profileCompleteness): self
+    {
+        $this->profileCompleteness = max(0, min(100, $profileCompleteness));
+        return $this;
+    }
+
+    public function calculateProfileCompleteness(): self
+    {
+        $fields = [
+            $this->name, $this->email, $this->username, $this->phone,
+            $this->jobTitle, $this->department, $this->avatar, $this->bio,
+            $this->timezone, $this->locale, $this->address, $this->city
+        ];
+
+        $filled = count(array_filter($fields, fn($field) => !empty($field)));
+        $total = count($fields);
+
+        $this->profileCompleteness = (int) round(($filled / $total) * 100);
+        return $this;
+    }
+
+    public function getLastActivityAt(): ?\DateTimeImmutable
+    {
+        return $this->lastActivityAt;
+    }
+
+    public function setLastActivityAt(?\DateTimeImmutable $lastActivityAt): self
+    {
+        $this->lastActivityAt = $lastActivityAt;
+        return $this;
+    }
+
+    public function updateLastActivity(): self
+    {
+        $this->lastActivityAt = new \DateTimeImmutable();
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getStatusMessage(): ?string
+    {
+        return $this->statusMessage;
+    }
+
+    public function setStatusMessage(?string $statusMessage): self
+    {
+        $this->statusMessage = $statusMessage;
+        return $this;
+    }
+
+    public function isLocked(): bool
+    {
+        // Check both lockedUntil (temporary lock) and locked (permanent/admin lock)
+        if ($this->locked) {
+            return true;
+        }
+
+        if (!$this->lockedUntil) {
+            return false;
+        }
+
+        if ($this->lockedUntil <= new \DateTimeImmutable()) {
+            // Lock expired, reset counters
+            $this->resetFailedLoginAttempts();
+            return false;
+        }
+
+        return true;
+    }
+
+    public function setLocked(bool $locked): self
+    {
+        $this->locked = $locked;
+        if ($locked && !$this->lockedAt) {
+            $this->lockedAt = new \DateTimeImmutable();
+        } elseif (!$locked) {
+            $this->lockedAt = null;
+            $this->lockedReason = null;
+        }
+        return $this;
+    }
+
+    public function getLockedReason(): ?string
+    {
+        return $this->lockedReason;
+    }
+
+    public function setLockedReason(?string $lockedReason): self
+    {
+        $this->lockedReason = $lockedReason;
+        return $this;
+    }
+
+    public function getLockedAt(): ?\DateTimeImmutable
+    {
+        return $this->lockedAt;
+    }
+
+    public function setLockedAt(?\DateTimeImmutable $lockedAt): self
+    {
+        $this->lockedAt = $lockedAt;
+        return $this;
+    }
+
+    public function lockAccount(string $reason): self
+    {
+        $this->locked = true;
+        $this->lockedReason = $reason;
+        $this->lockedAt = new \DateTimeImmutable();
+        return $this;
+    }
+
+    public function unlockAccount(): self
+    {
+        $this->locked = false;
+        $this->lockedReason = null;
+        $this->lockedAt = null;
+        $this->lockedUntil = null;
+        $this->resetFailedLoginAttempts();
+        return $this;
+    }
+
+    public function getCustomFields(): ?array
+    {
+        return $this->customFields;
+    }
+
+    public function setCustomFields(?array $customFields): self
+    {
+        $this->customFields = $customFields;
+        return $this;
+    }
+
+    public function getCustomField(string $key, mixed $default = null): mixed
+    {
+        return $this->customFields[$key] ?? $default;
+    }
+
+    public function setCustomField(string $key, mixed $value): self
+    {
+        if ($this->customFields === null) {
+            $this->customFields = [];
+        }
+        $this->customFields[$key] = $value;
         return $this;
     }
 
