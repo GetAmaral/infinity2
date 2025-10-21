@@ -46,7 +46,7 @@ abstract class CourseGenerated extends EntityBase
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[Groups(['course:read'])]
+    #[Groups(['course:read', 'course:write'])]
     #[ORM\OneToMany(targetEntity: CourseModule::class, mappedBy: 'course', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $modules;
 
@@ -59,7 +59,7 @@ abstract class CourseGenerated extends EntityBase
     #[ORM\JoinColumn(nullable: false)]
     protected User $owner;
 
-    #[Groups(['course:read'])]
+    #[Groups(['course:read', 'course:write'])]
     #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'course', fetch: 'LAZY')]
     protected Collection $studentCourses;
 

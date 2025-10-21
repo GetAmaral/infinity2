@@ -13,6 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\CourseModule;
 use App\Entity\StudentLecture;
 use App\Entity\StudentCourse;
+use App\Entity\Organization;
 
 /**
  * CourseLecture Entity (Generated Base Class)
@@ -27,68 +28,177 @@ use App\Entity\StudentCourse;
 #[ORM\HasLifecycleCallbacks]
 abstract class CourseLectureGenerated extends EntityBase
 {
-    #[Groups(['courselecture:read', 'courselecture:write'])]
+    #[Groups(['course_lecture:read', 'course_lecture:write', 'course:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $name;
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
+    #[Groups(['course_lecture:read'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
     protected ?string $videoFileName = null;
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
+    #[Groups(['course_lecture:read'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     #[Assert\Length(max: 500)]
     protected ?string $videoPath = null;
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
-    #[ORM\Column(type: 'string', length: 20)]
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
     #[Assert\Length(max: 20)]
-    protected string $processingStatus = 'pending';
+    protected ?string $processingStatus = 'pending';
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
+    #[Groups(['course_lecture:read'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
     protected ?string $processingStep = null;
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
-    #[ORM\Column(type: 'integer')]
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
     #[Assert\Range(max: 150, min: 0)]
-    protected int $processingPercentage = 0;
+    protected ?int $processingPercentage = 0;
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
+    #[Groups(['course_lecture:read'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $processingError = null;
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
+    #[Groups(['course_lecture:read'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $processedAt = null;
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $viewOrder = 0;
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $lengthSeconds = 0;
 
-    #[Groups(['courselecture:read', 'courselecture:write'])]
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
     #[ORM\ManyToOne(targetEntity: CourseModule::class, inversedBy: 'lectures')]
     #[ORM\JoinColumn(nullable: false)]
     protected CourseModule $courseModule;
 
-    #[Groups(['courselecture:read'])]
+    #[Groups(['course_lecture:read'])]
     #[ORM\OneToMany(targetEntity: StudentLecture::class, mappedBy: 'lecture', fetch: 'LAZY')]
     protected Collection $studentLectures;
 
-    #[Groups(['courselecture:read'])]
+    #[Groups(['course_lecture:read'])]
     #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'currentLecture', fetch: 'LAZY')]
     protected Collection $studentCoursesOnThisLecture;
+
+    #[Groups(['course_lecture:read'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $active;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $published;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write', 'student:read'])]
+    #[ORM\Column(name: 'free_prop', type: 'boolean')]
+    protected bool $free;
+
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $publishedAt = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write', 'student:read'])]
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    protected ?string $videoUrl = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    protected ?string $videoType = null;
+
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    protected ?string $videoResolution = null;
+
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'bigint', nullable: true)]
+    protected ?string $videoSizeBytes = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write', 'student:read'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $transcript = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write', 'student:read'])]
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    protected ?string $subtitleUrl = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    protected ?string $subtitleLanguage = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write', 'student:read'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $attachments = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write', 'student:read'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $externalLinks = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $learningObjectives = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $prerequisites = null;
+
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $viewCount = null;
+
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $completionCount = null;
+
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'float', nullable: true)]
+    protected ?float $averageWatchPercentage = null;
+
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'float', nullable: true)]
+    protected ?float $rating = null;
+
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $ratingCount = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write', 'student:read'])]
+    #[ORM\Column(type: 'integer')]
+    protected int $durationSeconds;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    protected ?string $difficultyLevel = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $tags = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $skillsCovered = null;
+
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $pointsValue = null;
+
+    #[Groups(['course_lecture:read'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $badges = null;
 
 
     public function __construct()
@@ -138,11 +248,11 @@ abstract class CourseLectureGenerated extends EntityBase
         return $this;
     }
 
-    public function getProcessingStatus(): string    {
+    public function getProcessingStatus(): ?string    {
         return $this->processingStatus;
     }
 
-    public function setProcessingStatus(string $processingStatus): self
+    public function setProcessingStatus(?string $processingStatus): self
     {
         $this->processingStatus = $processingStatus;
         return $this;
@@ -158,11 +268,11 @@ abstract class CourseLectureGenerated extends EntityBase
         return $this;
     }
 
-    public function getProcessingPercentage(): int    {
+    public function getProcessingPercentage(): ?int    {
         return $this->processingPercentage;
     }
 
-    public function setProcessingPercentage(int $processingPercentage): self
+    public function setProcessingPercentage(?int $processingPercentage): self
     {
         $this->processingPercentage = $processingPercentage;
         return $this;
@@ -270,6 +380,292 @@ abstract class CourseLectureGenerated extends EntityBase
                 $studentCoursesOnThisLecture->setCurrentLecture(null);
             }
         }
+        return $this;
+    }
+
+    public function getOrganization(): Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active === true;
+    }
+
+    public function getPublished(): bool    {
+        return $this->published;
+    }
+
+    public function setPublished(bool $published): self
+    {
+        $this->published = $published;
+        return $this;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->published === true;
+    }
+
+    public function getFree(): bool    {
+        return $this->free;
+    }
+
+    public function setFree(bool $free): self
+    {
+        $this->free = $free;
+        return $this;
+    }
+
+    public function isFree(): bool
+    {
+        return $this->free === true;
+    }
+
+    public function getPublishedAt(): ?\DateTimeImmutable    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(?\DateTimeImmutable $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
+        return $this;
+    }
+
+    public function getVideoUrl(): ?string    {
+        return $this->videoUrl;
+    }
+
+    public function setVideoUrl(?string $videoUrl): self
+    {
+        $this->videoUrl = $videoUrl;
+        return $this;
+    }
+
+    public function getVideoType(): ?string    {
+        return $this->videoType;
+    }
+
+    public function setVideoType(?string $videoType): self
+    {
+        $this->videoType = $videoType;
+        return $this;
+    }
+
+    public function getVideoResolution(): ?string    {
+        return $this->videoResolution;
+    }
+
+    public function setVideoResolution(?string $videoResolution): self
+    {
+        $this->videoResolution = $videoResolution;
+        return $this;
+    }
+
+    public function getVideoSizeBytes(): ?string    {
+        return $this->videoSizeBytes;
+    }
+
+    public function setVideoSizeBytes(?string $videoSizeBytes): self
+    {
+        $this->videoSizeBytes = $videoSizeBytes;
+        return $this;
+    }
+
+    public function getTranscript(): ?string    {
+        return $this->transcript;
+    }
+
+    public function setTranscript(?string $transcript): self
+    {
+        $this->transcript = $transcript;
+        return $this;
+    }
+
+    public function getSubtitleUrl(): ?string    {
+        return $this->subtitleUrl;
+    }
+
+    public function setSubtitleUrl(?string $subtitleUrl): self
+    {
+        $this->subtitleUrl = $subtitleUrl;
+        return $this;
+    }
+
+    public function getSubtitleLanguage(): ?string    {
+        return $this->subtitleLanguage;
+    }
+
+    public function setSubtitleLanguage(?string $subtitleLanguage): self
+    {
+        $this->subtitleLanguage = $subtitleLanguage;
+        return $this;
+    }
+
+    public function getAttachments(): ?array    {
+        return $this->attachments;
+    }
+
+    public function setAttachments(?array $attachments): self
+    {
+        $this->attachments = $attachments;
+        return $this;
+    }
+
+    public function getExternalLinks(): ?array    {
+        return $this->externalLinks;
+    }
+
+    public function setExternalLinks(?array $externalLinks): self
+    {
+        $this->externalLinks = $externalLinks;
+        return $this;
+    }
+
+    public function getLearningObjectives(): ?array    {
+        return $this->learningObjectives;
+    }
+
+    public function setLearningObjectives(?array $learningObjectives): self
+    {
+        $this->learningObjectives = $learningObjectives;
+        return $this;
+    }
+
+    public function getPrerequisites(): ?string    {
+        return $this->prerequisites;
+    }
+
+    public function setPrerequisites(?string $prerequisites): self
+    {
+        $this->prerequisites = $prerequisites;
+        return $this;
+    }
+
+    public function getViewCount(): ?int    {
+        return $this->viewCount;
+    }
+
+    public function setViewCount(?int $viewCount): self
+    {
+        $this->viewCount = $viewCount;
+        return $this;
+    }
+
+    public function getCompletionCount(): ?int    {
+        return $this->completionCount;
+    }
+
+    public function setCompletionCount(?int $completionCount): self
+    {
+        $this->completionCount = $completionCount;
+        return $this;
+    }
+
+    public function getAverageWatchPercentage(): ?float    {
+        return $this->averageWatchPercentage;
+    }
+
+    public function setAverageWatchPercentage(?float $averageWatchPercentage): self
+    {
+        $this->averageWatchPercentage = $averageWatchPercentage;
+        return $this;
+    }
+
+    public function getRating(): ?float    {
+        return $this->rating;
+    }
+
+    public function setRating(?float $rating): self
+    {
+        $this->rating = $rating;
+        return $this;
+    }
+
+    public function getRatingCount(): ?int    {
+        return $this->ratingCount;
+    }
+
+    public function setRatingCount(?int $ratingCount): self
+    {
+        $this->ratingCount = $ratingCount;
+        return $this;
+    }
+
+    public function getDurationSeconds(): int    {
+        return $this->durationSeconds;
+    }
+
+    public function setDurationSeconds(int $durationSeconds): self
+    {
+        $this->durationSeconds = $durationSeconds;
+        return $this;
+    }
+
+    public function getDifficultyLevel(): ?string    {
+        return $this->difficultyLevel;
+    }
+
+    public function setDifficultyLevel(?string $difficultyLevel): self
+    {
+        $this->difficultyLevel = $difficultyLevel;
+        return $this;
+    }
+
+    public function getTags(): ?array    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): self
+    {
+        $this->tags = $tags;
+        return $this;
+    }
+
+    public function getSkillsCovered(): ?array    {
+        return $this->skillsCovered;
+    }
+
+    public function setSkillsCovered(?array $skillsCovered): self
+    {
+        $this->skillsCovered = $skillsCovered;
+        return $this;
+    }
+
+    public function getPointsValue(): ?int    {
+        return $this->pointsValue;
+    }
+
+    public function setPointsValue(?int $pointsValue): self
+    {
+        $this->pointsValue = $pointsValue;
+        return $this;
+    }
+
+    public function getBadges(): ?array    {
+        return $this->badges;
+    }
+
+    public function setBadges(?array $badges): self
+    {
+        $this->badges = $badges;
         return $this;
     }
 

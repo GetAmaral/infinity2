@@ -8,10 +8,10 @@ resources:
     description: "Individual lectures and learning content"
 
     normalizationContext:
-      groups: ["courselecture:read"]
+      groups: ["course_lecture:read"]
 
     denormalizationContext:
-      groups: ["courselecture:write"]
+      groups: ["course_lecture:write"]
 
     order:
       createdAt: DESC
@@ -84,3 +84,93 @@ resources:
       studentCoursesOnThisLecture:
         description: "StudentCoursesOnThisLecture (text field)"
         example: "Sample longer text value"
+      organization:
+        writable: false
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
+      active:
+        description: "Active"
+        example: true
+      published:
+        description: "Published"
+        example: true
+      free:
+        description: "Free"
+        example: true
+      publishedAt:
+        writable: false
+        description: "Published At"
+        example: "2025-01-15T10:30:00Z"
+      videoUrl:
+        description: "Video URL"
+        example: "Sample video url"
+      videoType:
+        description: "Video Type"
+        example: "Sample video type"
+      videoResolution:
+        writable: false
+        description: "Video Resolution"
+        example: "Sample video resolution"
+      videoSizeBytes:
+        writable: false
+        description: "Video Size (Bytes)"
+      transcript:
+        description: "Transcript"
+        example: "Sample transcript"
+      subtitleUrl:
+        description: "Subtitle URL"
+        example: "Sample subtitle url"
+      subtitleLanguage:
+        description: "Subtitle Language"
+        example: "Sample subtitle language"
+      attachments:
+        description: "Attachments"
+        example: "{\"key\": \"value\"}"
+      externalLinks:
+        description: "External Links"
+        example: "{\"key\": \"value\"}"
+      learningObjectives:
+        description: "Learning Objectives"
+        example: "{\"key\": \"value\"}"
+      prerequisites:
+        description: "Prerequisites"
+        example: "Sample prerequisites"
+      viewCount:
+        writable: false
+        description: "View Count"
+        example: 42
+      completionCount:
+        writable: false
+        description: "Completion Count"
+        example: 42
+      averageWatchPercentage:
+        writable: false
+        description: "Average Watch %"
+        example: 99.99
+      rating:
+        writable: false
+        description: "Rating"
+        example: 99.99
+      ratingCount:
+        writable: false
+        description: "Rating Count"
+        example: 42
+      durationSeconds:
+        description: "Duration (seconds)"
+        example: 42
+      difficultyLevel:
+        description: "Difficulty Level"
+        example: "Sample difficulty level"
+      tags:
+        description: "Tags"
+        example: "{\"key\": \"value\"}"
+      skillsCovered:
+        description: "Skills Covered"
+        example: "{\"key\": \"value\"}"
+      pointsValue:
+        description: "Points Value"
+        example: 42
+      badges:
+        writable: false
+        description: "Badges"
+        example: "{\"key\": \"value\"}"

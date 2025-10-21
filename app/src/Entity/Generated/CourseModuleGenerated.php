@@ -26,37 +26,37 @@ use App\Entity\CourseLecture;
 #[ORM\HasLifecycleCallbacks]
 abstract class CourseModuleGenerated extends EntityBase
 {
-    #[Groups(['coursemodule:read', 'coursemodule:write'])]
+    #[Groups(['course_module:read', 'course_module:write', 'course:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $name;
 
-    #[Groups(['coursemodule:read', 'coursemodule:write'])]
+    #[Groups(['course_module:read', 'course_module:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[Groups(['coursemodule:read', 'coursemodule:write'])]
+    #[Groups(['course_module:read', 'course_module:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $releaseDate = null;
 
-    #[Groups(['coursemodule:read', 'coursemodule:write'])]
+    #[Groups(['course_module:read', 'course_module:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $viewOrder = 0;
 
-    #[Groups(['coursemodule:read', 'coursemodule:write'])]
+    #[Groups(['course_module:read'])]
     #[ORM\Column(type: 'integer')]
     protected int $totalLengthSeconds = 0;
 
-    #[Groups(['coursemodule:read', 'coursemodule:write'])]
+    #[Groups(['course_module:read', 'course_module:write'])]
     #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'modules')]
     #[ORM\JoinColumn(nullable: false)]
     protected Course $course;
 
-    #[Groups(['coursemodule:read'])]
+    #[Groups(['course_module:read'])]
     #[ORM\OneToMany(targetEntity: CourseLecture::class, mappedBy: 'courseModule', fetch: 'LAZY')]
     protected Collection $lectures;
 
-    #[Groups(['coursemodule:read', 'coursemodule:write'])]
+    #[Groups(['course_module:read', 'course_module:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 

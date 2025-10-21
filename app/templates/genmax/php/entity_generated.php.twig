@@ -46,7 +46,11 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
 {% for property in entity.getProperties() %}
 {% if not property.getRelationshipType() %}
 {# Scalar properties #}
+{% if property.getApiGroups() %}
+    #[Groups([{% for group in property.getApiGroups() %}'{{ group }}'{% if not loop.last %}, {% endif %}{% endfor %}])]
+{% else %}
     #[Groups(['{{ entityNameLower }}:read', '{{ entityNameLower }}:write'])]
+{% endif %}
     #[ORM\Column({% if isReservedKeyword(property.getPropertyName()) %}name: '{{ getSafeColumnName(property.getPropertyName()) }}', {% endif %}type: '{{ property.getPropertyType() }}'{% if property.getLength() %}, length: {{ property.getLength() }}{% endif %}{% if property.getPrecision() %}, precision: {{ property.getPrecision() }}{% endif %}{% if property.getScale() %}, scale: {{ property.getScale() }}{% endif %}{% if property.isNullable() %}, nullable: true{% endif %}{% if property.isUnique() %}, unique: true{% endif %})]
 {% if property.getValidationRules() and property.getValidationRules() is iterable %}
 {% for rule in property.getValidationRules() %}
@@ -61,7 +65,11 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
 {% else %}
 {# Relationship properties #}
 {% if property.getRelationshipType() in ['OneToMany', 'ManyToMany'] %}
+{% if property.getApiGroups() %}
+    #[Groups([{% for group in property.getApiGroups() %}'{{ group }}'{% if not loop.last %}, {% endif %}{% endfor %}])]
+{% else %}
     #[Groups(['{{ entityNameLower }}:read'])]
+{% endif %}
     #[ORM\{{ property.getRelationshipType() }}(targetEntity: {{ getClassName(property.getTargetEntity()) }}::class{% if property.getMappedBy() %}, mappedBy: '{{ property.getMappedBy() }}'{% elseif property.getInversedBy() %}, inversedBy: '{{ property.getInversedBy() }}'{% endif %}{% if property.getCascade() %}, cascade: [{% for op in property.getCascade() %}'{{ op }}'{% if not loop.last %}, {% endif %}{% endfor %}]{% endif %}{% if property.isOrphanRemoval() %}, orphanRemoval: true{% endif %}{% if property.getFetch() %}, fetch: '{{ property.getFetch() }}'{% endif %})]
 {% if property.getRelationshipType() == 'ManyToMany' and property.getInversedBy() %}
     #[ORM\JoinTable(name: '{{ getSafeTableName(entity.getEntityName()) }}_{{ property.getPropertyName() }}')]
@@ -73,7 +81,11 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
 
 {% else %}
 {# ManyToOne or OneToOne #}
+{% if property.getApiGroups() %}
+    #[Groups([{% for group in property.getApiGroups() %}'{{ group }}'{% if not loop.last %}, {% endif %}{% endfor %}])]
+{% else %}
     #[Groups(['{{ entityNameLower }}:read', '{{ entityNameLower }}:write'])]
+{% endif %}
     #[ORM\{{ property.getRelationshipType() }}(targetEntity: {{ getClassName(property.getTargetEntity()) }}::class{% if property.getMappedBy() %}, mappedBy: '{{ property.getMappedBy() }}'{% elseif property.getInversedBy() %}, inversedBy: '{{ property.getInversedBy() }}'{% endif %})]
 {% if not property.isNullable() %}
     #[ORM\JoinColumn(nullable: false)]
