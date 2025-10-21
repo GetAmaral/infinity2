@@ -140,12 +140,12 @@ abstract class AgentGenerated extends EntityBase
         $this->talks = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -231,23 +231,23 @@ abstract class AgentGenerated extends EntityBase
         return $this;
     }
 
-    public function getUser(): ?App\Entity\User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?App\Entity\User $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
         return $this;
     }
 
-    public function getAgentType(): ?App\Entity\AgentType
+    public function getAgentType(): ?AgentType
     {
         return $this->agentType;
     }
 
-    public function setAgentType(?App\Entity\AgentType $agentType): self
+    public function setAgentType(?AgentType $agentType): self
     {
         $this->agentType = $agentType;
         return $this;
@@ -404,14 +404,14 @@ abstract class AgentGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Talk>
+     * @return Collection<int, Talk>
      */
     public function getTalks(): Collection
     {
         return $this->talks;
     }
 
-    public function addTalk(App\Entity\Talk $talk): self
+    public function addTalk(Talk $talk): self
     {
         if (!$this->talks->contains($talk)) {
             $this->talks->add($talk);
@@ -420,7 +420,7 @@ abstract class AgentGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTalk(App\Entity\Talk $talk): self
+    public function removeTalk(Talk $talk): self
     {
         if ($this->talks->removeElement($talk)) {
             if ($talk->getAgents() === $this) {

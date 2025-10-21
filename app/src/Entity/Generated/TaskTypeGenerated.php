@@ -56,12 +56,12 @@ abstract class TaskTypeGenerated extends EntityBase
         $this->tasks = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -88,14 +88,14 @@ abstract class TaskTypeGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\TaskTemplate>
+     * @return Collection<int, TaskTemplate>
      */
     public function getTaskTemplates(): Collection
     {
         return $this->taskTemplates;
     }
 
-    public function addTaskTemplate(App\Entity\TaskTemplate $taskTemplate): self
+    public function addTaskTemplate(TaskTemplate $taskTemplate): self
     {
         if (!$this->taskTemplates->contains($taskTemplate)) {
             $this->taskTemplates->add($taskTemplate);
@@ -104,7 +104,7 @@ abstract class TaskTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTaskTemplate(App\Entity\TaskTemplate $taskTemplate): self
+    public function removeTaskTemplate(TaskTemplate $taskTemplate): self
     {
         if ($this->taskTemplates->removeElement($taskTemplate)) {
             if ($taskTemplate->getType() === $this) {
@@ -115,14 +115,14 @@ abstract class TaskTypeGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Task>
+     * @return Collection<int, Task>
      */
     public function getTasks(): Collection
     {
         return $this->tasks;
     }
 
-    public function addTask(App\Entity\Task $task): self
+    public function addTask(Task $task): self
     {
         if (!$this->tasks->contains($task)) {
             $this->tasks->add($task);
@@ -131,7 +131,7 @@ abstract class TaskTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTask(App\Entity\Task $task): self
+    public function removeTask(Task $task): self
     {
         if ($this->tasks->removeElement($task)) {
             if ($task->getType() === $this) {

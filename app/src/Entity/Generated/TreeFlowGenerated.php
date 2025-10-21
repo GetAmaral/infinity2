@@ -72,12 +72,12 @@ abstract class TreeFlowGenerated extends EntityBase
         $this->steps = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -144,14 +144,14 @@ abstract class TreeFlowGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Step>
+     * @return Collection<int, Step>
      */
     public function getSteps(): Collection
     {
         return $this->steps;
     }
 
-    public function addStep(App\Entity\Step $step): self
+    public function addStep(Step $step): self
     {
         if (!$this->steps->contains($step)) {
             $this->steps->add($step);
@@ -160,7 +160,7 @@ abstract class TreeFlowGenerated extends EntityBase
         return $this;
     }
 
-    public function removeStep(App\Entity\Step $step): self
+    public function removeStep(Step $step): self
     {
         if ($this->steps->removeElement($step)) {
             if ($step->getTreeFlow() === $this) {

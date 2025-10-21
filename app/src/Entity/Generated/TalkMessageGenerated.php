@@ -134,56 +134,56 @@ abstract class TalkMessageGenerated extends EntityBase
         $this->attachments = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
     }
 
-    public function getTalk(): App\Entity\Talk
+    public function getTalk(): Talk
     {
         return $this->talk;
     }
 
-    public function setTalk(App\Entity\Talk $talk): self
+    public function setTalk(Talk $talk): self
     {
         $this->talk = $talk;
         return $this;
     }
 
-    public function getFromContact(): ?App\Entity\Contact
+    public function getFromContact(): ?Contact
     {
         return $this->fromContact;
     }
 
-    public function setFromContact(?App\Entity\Contact $fromContact): self
+    public function setFromContact(?Contact $fromContact): self
     {
         $this->fromContact = $fromContact;
         return $this;
     }
 
-    public function getFromUser(): ?App\Entity\User
+    public function getFromUser(): ?User
     {
         return $this->fromUser;
     }
 
-    public function setFromUser(?App\Entity\User $fromUser): self
+    public function setFromUser(?User $fromUser): self
     {
         $this->fromUser = $fromUser;
         return $this;
     }
 
-    public function getFromAgent(): ?App\Entity\Agent
+    public function getFromAgent(): ?Agent
     {
         return $this->fromAgent;
     }
 
-    public function setFromAgent(?App\Entity\Agent $fromAgent): self
+    public function setFromAgent(?Agent $fromAgent): self
     {
         $this->fromAgent = $fromAgent;
         return $this;
@@ -220,14 +220,14 @@ abstract class TalkMessageGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Attachment>
+     * @return Collection<int, Attachment>
      */
     public function getAttachments(): Collection
     {
         return $this->attachments;
     }
 
-    public function addAttachment(App\Entity\Attachment $attachment): self
+    public function addAttachment(Attachment $attachment): self
     {
         if (!$this->attachments->contains($attachment)) {
             $this->attachments->add($attachment);
@@ -236,7 +236,7 @@ abstract class TalkMessageGenerated extends EntityBase
         return $this;
     }
 
-    public function removeAttachment(App\Entity\Attachment $attachment): self
+    public function removeAttachment(Attachment $attachment): self
     {
         if ($this->attachments->removeElement($attachment)) {
             if ($attachment->getTalkMessage() === $this) {
@@ -281,12 +281,12 @@ abstract class TalkMessageGenerated extends EntityBase
         return $this;
     }
 
-    public function getParentMessage(): ?App\Entity\TalkMessage
+    public function getParentMessage(): ?TalkMessage
     {
         return $this->parentMessage;
     }
 
-    public function setParentMessage(?App\Entity\TalkMessage $parentMessage): self
+    public function setParentMessage(?TalkMessage $parentMessage): self
     {
         $this->parentMessage = $parentMessage;
         return $this;
@@ -307,12 +307,12 @@ abstract class TalkMessageGenerated extends EntityBase
         return $this->edited === true;
     }
 
-    public function getNotification(): ?App\Entity\Notification
+    public function getNotification(): ?Notification
     {
         return $this->notification;
     }
 
-    public function setNotification(?App\Entity\Notification $notification): self
+    public function setNotification(?Notification $notification): self
     {
         $this->notification = $notification;
         return $this;

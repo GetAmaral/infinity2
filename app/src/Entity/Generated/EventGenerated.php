@@ -330,12 +330,12 @@ abstract class EventGenerated extends EntityBase
         $this->meetingDatas = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -416,37 +416,37 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getCalendar(): ?App\Entity\Calendar
+    public function getCalendar(): ?Calendar
     {
         return $this->calendar;
     }
 
-    public function setCalendar(?App\Entity\Calendar $calendar): self
+    public function setCalendar(?Calendar $calendar): self
     {
         $this->calendar = $calendar;
         return $this;
     }
 
-    public function getOrganizer(): ?App\Entity\User
+    public function getOrganizer(): ?User
     {
         return $this->organizer;
     }
 
-    public function setOrganizer(?App\Entity\User $organizer): self
+    public function setOrganizer(?User $organizer): self
     {
         $this->organizer = $organizer;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\EventAttendee>
+     * @return Collection<int, EventAttendee>
      */
     public function getAttendees(): Collection
     {
         return $this->attendees;
     }
 
-    public function addAttendee(App\Entity\EventAttendee $attendee): self
+    public function addAttendee(EventAttendee $attendee): self
     {
         if (!$this->attendees->contains($attendee)) {
             $this->attendees->add($attendee);
@@ -455,7 +455,7 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function removeAttendee(App\Entity\EventAttendee $attendee): self
+    public function removeAttendee(EventAttendee $attendee): self
     {
         if ($this->attendees->removeElement($attendee)) {
             if ($attendee->getEvent() === $this) {
@@ -466,14 +466,14 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\EventCategory>
+     * @return Collection<int, EventCategory>
      */
     public function getCategories(): Collection
     {
         return $this->categories;
     }
 
-    public function addCategory(App\Entity\EventCategory $category): self
+    public function addCategory(EventCategory $category): self
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
@@ -481,7 +481,7 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCategory(App\Entity\EventCategory $category): self
+    public function removeCategory(EventCategory $category): self
     {
         if ($this->categories->removeElement($category)) {
         }
@@ -489,14 +489,14 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Attachment>
+     * @return Collection<int, Attachment>
      */
     public function getAttachments(): Collection
     {
         return $this->attachments;
     }
 
-    public function addAttachment(App\Entity\Attachment $attachment): self
+    public function addAttachment(Attachment $attachment): self
     {
         if (!$this->attachments->contains($attachment)) {
             $this->attachments->add($attachment);
@@ -505,7 +505,7 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function removeAttachment(App\Entity\Attachment $attachment): self
+    public function removeAttachment(Attachment $attachment): self
     {
         if ($this->attachments->removeElement($attachment)) {
             if ($attachment->getEvent() === $this) {
@@ -516,14 +516,14 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Reminder>
+     * @return Collection<int, Reminder>
      */
     public function getReminders(): Collection
     {
         return $this->reminders;
     }
 
-    public function addReminder(App\Entity\Reminder $reminder): self
+    public function addReminder(Reminder $reminder): self
     {
         if (!$this->reminders->contains($reminder)) {
             $this->reminders->add($reminder);
@@ -532,7 +532,7 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function removeReminder(App\Entity\Reminder $reminder): self
+    public function removeReminder(Reminder $reminder): self
     {
         if ($this->reminders->removeElement($reminder)) {
             if ($reminder->getEvent() === $this) {
@@ -543,14 +543,14 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\EventResourceBooking>
+     * @return Collection<int, EventResourceBooking>
      */
     public function getResourceBookings(): Collection
     {
         return $this->resourceBookings;
     }
 
-    public function addResourceBooking(App\Entity\EventResourceBooking $resourceBooking): self
+    public function addResourceBooking(EventResourceBooking $resourceBooking): self
     {
         if (!$this->resourceBookings->contains($resourceBooking)) {
             $this->resourceBookings->add($resourceBooking);
@@ -559,7 +559,7 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function removeResourceBooking(App\Entity\EventResourceBooking $resourceBooking): self
+    public function removeResourceBooking(EventResourceBooking $resourceBooking): self
     {
         if ($this->resourceBookings->removeElement($resourceBooking)) {
             if ($resourceBooking->getEvent() === $this) {
@@ -569,26 +569,26 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getParentEvent(): ?App\Entity\Event
+    public function getParentEvent(): ?Event
     {
         return $this->parentEvent;
     }
 
-    public function setParentEvent(?App\Entity\Event $parentEvent): self
+    public function setParentEvent(?Event $parentEvent): self
     {
         $this->parentEvent = $parentEvent;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\Event>
+     * @return Collection<int, Event>
      */
     public function getChildrenEvents(): Collection
     {
         return $this->childrenEvents;
     }
 
-    public function addChildrenEvent(App\Entity\Event $childrenEvent): self
+    public function addChildrenEvent(Event $childrenEvent): self
     {
         if (!$this->childrenEvents->contains($childrenEvent)) {
             $this->childrenEvents->add($childrenEvent);
@@ -597,7 +597,7 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function removeChildrenEvent(App\Entity\Event $childrenEvent): self
+    public function removeChildrenEvent(Event $childrenEvent): self
     {
         if ($this->childrenEvents->removeElement($childrenEvent)) {
             if ($childrenEvent->getParentEvent() === $this) {
@@ -658,14 +658,14 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\WorkingHour>
+     * @return Collection<int, WorkingHour>
      */
     public function getWorkingHours(): Collection
     {
         return $this->workingHours;
     }
 
-    public function addWorkingHour(App\Entity\WorkingHour $workingHour): self
+    public function addWorkingHour(WorkingHour $workingHour): self
     {
         if (!$this->workingHours->contains($workingHour)) {
             $this->workingHours->add($workingHour);
@@ -674,7 +674,7 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function removeWorkingHour(App\Entity\WorkingHour $workingHour): self
+    public function removeWorkingHour(WorkingHour $workingHour): self
     {
         if ($this->workingHours->removeElement($workingHour)) {
             if ($workingHour->getEvent() === $this) {
@@ -685,14 +685,14 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Holiday>
+     * @return Collection<int, Holiday>
      */
     public function getHolidays(): Collection
     {
         return $this->holidays;
     }
 
-    public function addHoliday(App\Entity\Holiday $holiday): self
+    public function addHoliday(Holiday $holiday): self
     {
         if (!$this->holidays->contains($holiday)) {
             $this->holidays->add($holiday);
@@ -701,7 +701,7 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function removeHoliday(App\Entity\Holiday $holiday): self
+    public function removeHoliday(Holiday $holiday): self
     {
         if ($this->holidays->removeElement($holiday)) {
             if ($holiday->getEvent() === $this) {
@@ -722,14 +722,14 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Notification>
+     * @return Collection<int, Notification>
      */
     public function getNotifications(): Collection
     {
         return $this->notifications;
     }
 
-    public function addNotification(App\Entity\Notification $notification): self
+    public function addNotification(Notification $notification): self
     {
         if (!$this->notifications->contains($notification)) {
             $this->notifications->add($notification);
@@ -738,7 +738,7 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function removeNotification(App\Entity\Notification $notification): self
+    public function removeNotification(Notification $notification): self
     {
         if ($this->notifications->removeElement($notification)) {
             if ($notification->getEvent() === $this) {
@@ -749,14 +749,14 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\MeetingData>
+     * @return Collection<int, MeetingData>
      */
     public function getMeetingDatas(): Collection
     {
         return $this->meetingDatas;
     }
 
-    public function addMeetingData(App\Entity\MeetingData $meetingData): self
+    public function addMeetingData(MeetingData $meetingData): self
     {
         if (!$this->meetingDatas->contains($meetingData)) {
             $this->meetingDatas->add($meetingData);
@@ -765,7 +765,7 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function removeMeetingData(App\Entity\MeetingData $meetingData): self
+    public function removeMeetingData(MeetingData $meetingData): self
     {
         if ($this->meetingDatas->removeElement($meetingData)) {
             if ($meetingData->getEvent() === $this) {
@@ -1200,45 +1200,45 @@ abstract class EventGenerated extends EntityBase
         return $this->locked === true;
     }
 
-    public function getAssignedTo(): ?App\Entity\User
+    public function getAssignedTo(): ?User
     {
         return $this->assignedTo;
     }
 
-    public function setAssignedTo(?App\Entity\User $assignedTo): self
+    public function setAssignedTo(?User $assignedTo): self
     {
         $this->assignedTo = $assignedTo;
         return $this;
     }
 
-    public function getContact(): ?App\Entity\Contact
+    public function getContact(): ?Contact
     {
         return $this->contact;
     }
 
-    public function setContact(?App\Entity\Contact $contact): self
+    public function setContact(?Contact $contact): self
     {
         $this->contact = $contact;
         return $this;
     }
 
-    public function getCompany(): ?App\Entity\Company
+    public function getCompany(): ?Company
     {
         return $this->company;
     }
 
-    public function setCompany(?App\Entity\Company $company): self
+    public function setCompany(?Company $company): self
     {
         $this->company = $company;
         return $this;
     }
 
-    public function getDeal(): ?App\Entity\Deal
+    public function getDeal(): ?Deal
     {
         return $this->deal;
     }
 
-    public function setDeal(?App\Entity\Deal $deal): self
+    public function setDeal(?Deal $deal): self
     {
         $this->deal = $deal;
         return $this;

@@ -80,14 +80,14 @@ abstract class RoleGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\User>
+     * @return Collection<int, User>
      */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function addUser(App\Entity\User $user): self
+    public function addUser(User $user): self
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
@@ -96,7 +96,7 @@ abstract class RoleGenerated extends EntityBase
         return $this;
     }
 
-    public function removeUser(App\Entity\User $user): self
+    public function removeUser(User $user): self
     {
         if ($this->users->removeElement($user)) {
             if ($user->getRoles() === $this) {

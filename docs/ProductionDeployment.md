@@ -55,7 +55,7 @@ php scripts/pre-generation-check.php
 
 - [ ] **Dry run succeeds**
 ```bash
-php bin/console app:generate-from-csv --dry-run
+php bin/console genmax:generate --dry-run
 # Expected: Preview of all files, no errors
 ```
 
@@ -198,7 +198,7 @@ php bin/console doctrine:migrations:status
 php scripts/verify-csv-migration.php
 
 # Generate code
-php bin/console app:generate-from-csv
+php bin/console genmax:generate
 
 # Run new migrations
 php bin/console make:migration
@@ -596,7 +596,7 @@ jobs:
         run: php scripts/pre-generation-check.php
 
       - name: Generate code (dry-run)
-        run: php bin/console app:generate-from-csv --dry-run
+        run: php bin/console genmax:generate --dry-run
 
       - name: Run tests
         run: php bin/phpunit

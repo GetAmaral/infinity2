@@ -120,14 +120,14 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
 {% if property.getRelationshipType() in ['OneToMany', 'ManyToMany'] %}
 {% set singularName = toSingular(property.getPropertyName()) %}
     /**
-     * @return Collection<int, {{ property.getTargetEntity() }}>
+     * @return Collection<int, {{ getClassName(property.getTargetEntity()) }}>
      */
     public function get{{ toPascalCase(property.getPropertyName()) }}(): Collection
     {
         return $this->{{ property.getPropertyName() }};
     }
 
-    public function add{{ toPascalCase(singularName) }}({{ property.getTargetEntity() }} ${{ singularName }}): self
+    public function add{{ toPascalCase(singularName) }}({{ getClassName(property.getTargetEntity()) }} ${{ singularName }}): self
     {
         if (!$this->{{ property.getPropertyName() }}->contains(${{ singularName }})) {
             $this->{{ property.getPropertyName() }}->add(${{ singularName }});
@@ -138,7 +138,7 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
         return $this;
     }
 
-    public function remove{{ toPascalCase(singularName) }}({{ property.getTargetEntity() }} ${{ singularName }}): self
+    public function remove{{ toPascalCase(singularName) }}({{ getClassName(property.getTargetEntity()) }} ${{ singularName }}): self
     {
         if ($this->{{ property.getPropertyName() }}->removeElement(${{ singularName }})) {
 {% if property.getMappedBy() %}
@@ -151,12 +151,12 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
     }
 
 {% else %}
-    public function get{{ toPascalCase(property.getPropertyName()) }}(): {% if property.isNullable() %}?{% endif %}{{ property.getTargetEntity() }}
+    public function get{{ toPascalCase(property.getPropertyName()) }}(): {% if property.isNullable() %}?{% endif %}{{ getClassName(property.getTargetEntity()) }}
     {
         return $this->{{ property.getPropertyName() }};
     }
 
-    public function set{{ toPascalCase(property.getPropertyName()) }}({% if property.isNullable() %}?{% endif %}{{ property.getTargetEntity() }} ${{ property.getPropertyName() }}): self
+    public function set{{ toPascalCase(property.getPropertyName()) }}({% if property.isNullable() %}?{% endif %}{{ getClassName(property.getTargetEntity()) }} ${{ property.getPropertyName() }}): self
     {
         $this->{{ property.getPropertyName() }} = ${{ property.getPropertyName() }};
         return $this;

@@ -90,12 +90,12 @@ abstract class CalendarTypeGenerated extends EntityBase
         $this->calendars = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -122,14 +122,14 @@ abstract class CalendarTypeGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Calendar>
+     * @return Collection<int, Calendar>
      */
     public function getCalendars(): Collection
     {
         return $this->calendars;
     }
 
-    public function addCalendar(App\Entity\Calendar $calendar): self
+    public function addCalendar(Calendar $calendar): self
     {
         if (!$this->calendars->contains($calendar)) {
             $this->calendars->add($calendar);
@@ -138,7 +138,7 @@ abstract class CalendarTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCalendar(App\Entity\Calendar $calendar): self
+    public function removeCalendar(Calendar $calendar): self
     {
         if ($this->calendars->removeElement($calendar)) {
             if ($calendar->getCalendarType() === $this) {

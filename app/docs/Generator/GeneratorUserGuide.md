@@ -88,9 +88,9 @@ php bin/console doctrine:migrations:migrate
 
 2. **Verify installation**:
 ```bash
-php bin/console app:generate --help
+php bin/console genmax:generate --help
 # or use alias:
-php bin/console gen --help
+php bin/console genmax:generate --help
 ```
 
 3. **Check generator tables**:
@@ -292,9 +292,9 @@ Complete reference for property-level configuration:
 Generate code for all entities defined in **database**:
 
 ```bash
-php bin/console app:generate
+php bin/console genmax:generate
 # or use alias:
-php bin/console gen
+php bin/console genmax:generate
 ```
 
 ### Generate Single Entity
@@ -302,7 +302,7 @@ php bin/console gen
 Generate code for specific entity:
 
 ```bash
-php bin/console gen --entity=Contact
+php bin/console genmax:generate --entity=Contact
 ```
 
 ### Dry Run Mode
@@ -310,7 +310,7 @@ php bin/console gen --entity=Contact
 Preview what will be generated without writing files:
 
 ```bash
-php bin/console gen --dry-run
+php bin/console genmax:generate --dry-run
 ```
 
 ### Legacy CSV Mode
@@ -318,7 +318,7 @@ php bin/console gen --dry-run
 Generate from CSV files (deprecated):
 
 ```bash
-php bin/console gen --from-csv
+php bin/console genmax:generate --from-csv
 ```
 
 **Warning**: CSV mode is deprecated and will show a warning message.
@@ -545,7 +545,7 @@ To modify existing entities (database-first):
 1. **Update database** (via UI or direct SQL)
 2. **Run generator**:
 ```bash
-php bin/console gen
+php bin/console genmax:generate
 ```
 3. **Create migration**:
 ```bash
@@ -563,10 +563,10 @@ To regenerate after database changes:
 
 ```bash
 # Preview changes
-php bin/console gen --dry-run
+php bin/console genmax:generate --dry-run
 
 # Generate
-php bin/console gen
+php bin/console genmax:generate
 
 # Apply migrations
 php bin/console doctrine:migrations:migrate
@@ -602,7 +602,7 @@ cp var/generatorBackup/20250107_120000/*.bak src/Entity/
 To use CSV mode (not recommended):
 
 ```bash
-php bin/console gen --from-csv
+php bin/console genmax:generate --from-csv
 ```
 
 ### CSV Files
@@ -627,7 +627,7 @@ php bin/console app:import-csv-to-database
 php bin/console doctrine:query:sql "SELECT COUNT(*) FROM generator_entity"
 
 # Start using database mode
-php bin/console gen
+php bin/console genmax:generate
 ```
 
 ---

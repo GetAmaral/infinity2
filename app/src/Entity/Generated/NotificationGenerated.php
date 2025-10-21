@@ -113,12 +113,12 @@ abstract class NotificationGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -134,23 +134,23 @@ abstract class NotificationGenerated extends EntityBase
         return $this;
     }
 
-    public function getRecipient(): App\Entity\User
+    public function getRecipient(): User
     {
         return $this->recipient;
     }
 
-    public function setRecipient(App\Entity\User $recipient): self
+    public function setRecipient(User $recipient): self
     {
         $this->recipient = $recipient;
         return $this;
     }
 
-    public function getSender(): ?App\Entity\User
+    public function getSender(): ?User
     {
         return $this->sender;
     }
 
-    public function setSender(?App\Entity\User $sender): self
+    public function setSender(?User $sender): self
     {
         $this->sender = $sender;
         return $this;
@@ -176,12 +176,12 @@ abstract class NotificationGenerated extends EntityBase
         return $this;
     }
 
-    public function getAttendee(): ?App\Entity\EventAttendee
+    public function getAttendee(): ?EventAttendee
     {
         return $this->attendee;
     }
 
-    public function setAttendee(?App\Entity\EventAttendee $attendee): self
+    public function setAttendee(?EventAttendee $attendee): self
     {
         $this->attendee = $attendee;
         return $this;
@@ -227,23 +227,23 @@ abstract class NotificationGenerated extends EntityBase
         return $this;
     }
 
-    public function getCommunicationMethod(): ?App\Entity\CommunicationMethod
+    public function getCommunicationMethod(): ?CommunicationMethod
     {
         return $this->communicationMethod;
     }
 
-    public function setCommunicationMethod(?App\Entity\CommunicationMethod $communicationMethod): self
+    public function setCommunicationMethod(?CommunicationMethod $communicationMethod): self
     {
         $this->communicationMethod = $communicationMethod;
         return $this;
     }
 
-    public function getEvent(): ?App\Entity\Event
+    public function getEvent(): ?Event
     {
         return $this->event;
     }
 
-    public function setEvent(?App\Entity\Event $event): self
+    public function setEvent(?Event $event): self
     {
         $this->event = $event;
         return $this;
@@ -269,12 +269,12 @@ abstract class NotificationGenerated extends EntityBase
         return $this;
     }
 
-    public function getReminder(): ?App\Entity\Reminder
+    public function getReminder(): ?Reminder
     {
         return $this->reminder;
     }
 
-    public function setReminder(?App\Entity\Reminder $reminder): self
+    public function setReminder(?Reminder $reminder): self
     {
         $this->reminder = $reminder;
         return $this;
@@ -290,23 +290,23 @@ abstract class NotificationGenerated extends EntityBase
         return $this;
     }
 
-    public function getTalkMessage(): ?App\Entity\TalkMessage
+    public function getTalkMessage(): ?TalkMessage
     {
         return $this->talkMessage;
     }
 
-    public function setTalkMessage(?App\Entity\TalkMessage $talkMessage): self
+    public function setTalkMessage(?TalkMessage $talkMessage): self
     {
         $this->talkMessage = $talkMessage;
         return $this;
     }
 
-    public function getType(): ?App\Entity\NotificationType
+    public function getType(): ?NotificationType
     {
         return $this->type;
     }
 
-    public function setType(?App\Entity\NotificationType $type): self
+    public function setType(?NotificationType $type): self
     {
         $this->type = $type;
         return $this;

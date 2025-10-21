@@ -93,14 +93,14 @@ abstract class AgentTypeGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Agent>
+     * @return Collection<int, Agent>
      */
     public function getAgents(): Collection
     {
         return $this->agents;
     }
 
-    public function addAgent(App\Entity\Agent $agent): self
+    public function addAgent(Agent $agent): self
     {
         if (!$this->agents->contains($agent)) {
             $this->agents->add($agent);
@@ -109,7 +109,7 @@ abstract class AgentTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function removeAgent(App\Entity\Agent $agent): self
+    public function removeAgent(Agent $agent): self
     {
         if ($this->agents->removeElement($agent)) {
             if ($agent->getAgentType() === $this) {

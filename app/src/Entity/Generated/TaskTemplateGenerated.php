@@ -81,12 +81,12 @@ abstract class TaskTemplateGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -177,12 +177,12 @@ abstract class TaskTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getPipelineStageTemplate(): ?App\Entity\PipelineStageTemplate
+    public function getPipelineStageTemplate(): ?PipelineStageTemplate
     {
         return $this->pipelineStageTemplate;
     }
 
-    public function setPipelineStageTemplate(?App\Entity\PipelineStageTemplate $pipelineStageTemplate): self
+    public function setPipelineStageTemplate(?PipelineStageTemplate $pipelineStageTemplate): self
     {
         $this->pipelineStageTemplate = $pipelineStageTemplate;
         return $this;
@@ -198,12 +198,12 @@ abstract class TaskTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getType(): ?App\Entity\TaskType
+    public function getType(): ?TaskType
     {
         return $this->type;
     }
 
-    public function setType(?App\Entity\TaskType $type): self
+    public function setType(?TaskType $type): self
     {
         $this->type = $type;
         return $this;

@@ -105,23 +105,23 @@ abstract class EventResourceBookingGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
     }
 
-    public function getBookedBy(): ?App\Entity\User
+    public function getBookedBy(): ?User
     {
         return $this->bookedBy;
     }
 
-    public function setBookedBy(?App\Entity\User $bookedBy): self
+    public function setBookedBy(?User $bookedBy): self
     {
         $this->bookedBy = $bookedBy;
         return $this;
@@ -242,12 +242,12 @@ abstract class EventResourceBookingGenerated extends EntityBase
         return $this;
     }
 
-    public function getEvent(): ?App\Entity\Event
+    public function getEvent(): ?Event
     {
         return $this->event;
     }
 
-    public function setEvent(?App\Entity\Event $event): self
+    public function setEvent(?Event $event): self
     {
         $this->event = $event;
         return $this;
@@ -288,12 +288,12 @@ abstract class EventResourceBookingGenerated extends EntityBase
         return $this;
     }
 
-    public function getResource(): ?App\Entity\EventResource
+    public function getResource(): ?EventResource
     {
         return $this->resource;
     }
 
-    public function setResource(?App\Entity\EventResource $resource): self
+    public function setResource(?EventResource $resource): self
     {
         $this->resource = $resource;
         return $this;

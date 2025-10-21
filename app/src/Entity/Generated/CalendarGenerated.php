@@ -141,12 +141,12 @@ abstract class CalendarGenerated extends EntityBase
         $this->holidays = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -172,12 +172,12 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function getUser(): ?App\Entity\User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?App\Entity\User $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
         return $this;
@@ -243,26 +243,26 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function getCalendarType(): ?App\Entity\CalendarType
+    public function getCalendarType(): ?CalendarType
     {
         return $this->calendarType;
     }
 
-    public function setCalendarType(?App\Entity\CalendarType $calendarType): self
+    public function setCalendarType(?CalendarType $calendarType): self
     {
         $this->calendarType = $calendarType;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\Event>
+     * @return Collection<int, Event>
      */
     public function getEvents(): Collection
     {
         return $this->events;
     }
 
-    public function addEvent(App\Entity\Event $event): self
+    public function addEvent(Event $event): self
     {
         if (!$this->events->contains($event)) {
             $this->events->add($event);
@@ -271,7 +271,7 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function removeEvent(App\Entity\Event $event): self
+    public function removeEvent(Event $event): self
     {
         if ($this->events->removeElement($event)) {
             if ($event->getCalendar() === $this) {
@@ -281,12 +281,12 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function getExternalLink(): ?App\Entity\CalendarExternalLink
+    public function getExternalLink(): ?CalendarExternalLink
     {
         return $this->externalLink;
     }
 
-    public function setExternalLink(?App\Entity\CalendarExternalLink $externalLink): self
+    public function setExternalLink(?CalendarExternalLink $externalLink): self
     {
         $this->externalLink = $externalLink;
         return $this;
@@ -303,14 +303,14 @@ abstract class CalendarGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\WorkingHour>
+     * @return Collection<int, WorkingHour>
      */
     public function getWorkingHours(): Collection
     {
         return $this->workingHours;
     }
 
-    public function addWorkingHour(App\Entity\WorkingHour $workingHour): self
+    public function addWorkingHour(WorkingHour $workingHour): self
     {
         if (!$this->workingHours->contains($workingHour)) {
             $this->workingHours->add($workingHour);
@@ -319,7 +319,7 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function removeWorkingHour(App\Entity\WorkingHour $workingHour): self
+    public function removeWorkingHour(WorkingHour $workingHour): self
     {
         if ($this->workingHours->removeElement($workingHour)) {
             if ($workingHour->getCalendar() === $this) {
@@ -330,14 +330,14 @@ abstract class CalendarGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Holiday>
+     * @return Collection<int, Holiday>
      */
     public function getHolidays(): Collection
     {
         return $this->holidays;
     }
 
-    public function addHoliday(App\Entity\Holiday $holiday): self
+    public function addHoliday(Holiday $holiday): self
     {
         if (!$this->holidays->contains($holiday)) {
             $this->holidays->add($holiday);
@@ -346,7 +346,7 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function removeHoliday(App\Entity\Holiday $holiday): self
+    public function removeHoliday(Holiday $holiday): self
     {
         if ($this->holidays->removeElement($holiday)) {
             if ($holiday->getCalendar() === $this) {

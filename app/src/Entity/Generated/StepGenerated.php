@@ -98,12 +98,12 @@ abstract class StepGenerated extends EntityBase
         return $this;
     }
 
-    public function getTreeFlow(): App\Entity\TreeFlow
+    public function getTreeFlow(): TreeFlow
     {
         return $this->treeFlow;
     }
 
-    public function setTreeFlow(App\Entity\TreeFlow $treeFlow): self
+    public function setTreeFlow(TreeFlow $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
         return $this;
@@ -185,14 +185,14 @@ abstract class StepGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\StepQuestion>
+     * @return Collection<int, StepQuestion>
      */
     public function getQuestions(): Collection
     {
         return $this->questions;
     }
 
-    public function addQuestion(App\Entity\StepQuestion $question): self
+    public function addQuestion(StepQuestion $question): self
     {
         if (!$this->questions->contains($question)) {
             $this->questions->add($question);
@@ -201,7 +201,7 @@ abstract class StepGenerated extends EntityBase
         return $this;
     }
 
-    public function removeQuestion(App\Entity\StepQuestion $question): self
+    public function removeQuestion(StepQuestion $question): self
     {
         if ($this->questions->removeElement($question)) {
             if ($question->getStep() === $this) {
@@ -212,14 +212,14 @@ abstract class StepGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\StepOutput>
+     * @return Collection<int, StepOutput>
      */
     public function getOutputs(): Collection
     {
         return $this->outputs;
     }
 
-    public function addOutput(App\Entity\StepOutput $output): self
+    public function addOutput(StepOutput $output): self
     {
         if (!$this->outputs->contains($output)) {
             $this->outputs->add($output);
@@ -228,7 +228,7 @@ abstract class StepGenerated extends EntityBase
         return $this;
     }
 
-    public function removeOutput(App\Entity\StepOutput $output): self
+    public function removeOutput(StepOutput $output): self
     {
         if ($this->outputs->removeElement($output)) {
             if ($output->getStep() === $this) {
@@ -239,14 +239,14 @@ abstract class StepGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\StepInput>
+     * @return Collection<int, StepInput>
      */
     public function getInputs(): Collection
     {
         return $this->inputs;
     }
 
-    public function addInput(App\Entity\StepInput $input): self
+    public function addInput(StepInput $input): self
     {
         if (!$this->inputs->contains($input)) {
             $this->inputs->add($input);
@@ -255,7 +255,7 @@ abstract class StepGenerated extends EntityBase
         return $this;
     }
 
-    public function removeInput(App\Entity\StepInput $input): self
+    public function removeInput(StepInput $input): self
     {
         if ($this->inputs->removeElement($input)) {
             if ($input->getStep() === $this) {

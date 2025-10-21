@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Generated\UserGenerated;
 use App\Repository\UserRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -60,29 +61,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
         )
     ]
 )]
-class User extends EntityBase implements UserInterface, PasswordAuthenticatedUserInterface
+class User extends UserGenerated implements UserInterface, PasswordAuthenticatedUserInterface
 {
-
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Groups(['user:read', 'user:write'])]
-    protected string $name = '';
-
-    #[ORM\Column(length: 255, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Email]
-    #[Assert\Length(max: 255)]
-    #[Groups(['user:read', 'user:write'])]
-    protected string $email = '';
-
-    #[ORM\Column(length: 255)]
-    // CRITICAL SECURITY: Password must NEVER be in serialization groups, NEVER api_readable
-    protected string $password = '';
+    // ===== ROLE MANAGEMENT SYSTEM =====
 
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users')]
     #[ORM\JoinTable(name: 'user_roles')]
     #[Groups(['user:read'])]
     protected Collection $roles;
+
+    // ===== VERIFICATION & TERMS =====
 
     #[ORM\Column(type: 'boolean')]
     #[Groups(['user:read', 'user:write'])]
@@ -99,33 +87,31 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $verificationToken = null;
 
+    // ===== API TOKEN SYSTEM =====
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $apiToken = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $apiTokenExpiresAt = null;
 
+    // ===== OPENAI INTEGRATION =====
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     // CRITICAL SECURITY: API key must NEVER be api_readable
     protected ?string $openAiApiKey = null;
+
+    // ===== ENHANCED LOGIN TRACKING =====
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Groups(['user:read', 'audit:read'])]
     protected ?\DateTimeImmutable $lastLoginAt = null;
 
-    #[ORM\Column(type: 'integer')]
-    #[Groups(['audit:read'])]
-    protected int $failedLoginAttempts = 0;
-
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Groups(['audit:read'])]
     protected ?\DateTimeImmutable $lockedUntil = null;
 
-    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank]
-    #[Groups(['user:read'])] // CRITICAL: api_writable=false - users cannot change organization
-    protected ?Organization $organization = null;
+    // ===== UI/UX PREFERENCES =====
 
     #[ORM\Column(type: 'json', nullable: true)]
     #[Groups(['user:read'])]
@@ -135,13 +121,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[Groups(['user:read'])]
     protected ?array $listPreferences = null;
 
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Course::class)]
-    protected Collection $ownedCourses;
-
-    #[ORM\OneToMany(mappedBy: 'student', targetEntity: StudentCourse::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
-    protected Collection $studentCourses;
-
-    // ===== NEW SECURITY FIELDS (2FA, Passwordless, Session Security) =====
+    // ===== 2FA & ADVANCED SECURITY =====
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     #[Groups(['user:read', 'user:write'])]
@@ -187,11 +167,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     // CRITICAL: FIDO2 credentials - NEVER expose via API
     protected ?array $passkeyCredentials = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    #[Groups(['user:read'])]
-    protected ?\DateTimeImmutable $emailVerifiedAt = null;
-
-    // ===== NEW CRM FIELDS =====
+    // ===== EXTENDED CRM FIELDS =====
 
     #[ORM\Column(type: 'string', length: 100, nullable: true, unique: true)]
     #[Assert\Length(min: 3, max: 100)]
@@ -284,11 +260,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[Groups(['user:read', 'user:write'])]
     protected ?string $agentType = null;
 
-    #[ORM\Column(type: 'boolean', options: ['default' => true])]
-    #[Groups(['user:read', 'user:write'])]
-    protected bool $active = true;
-
-    // ===== AUDIT FIELDS (deletedAt for soft delete) =====
+    // ===== AUDIT FIELDS =====
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Groups(['audit:read'])]
@@ -298,19 +270,14 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[Groups(['user:read', 'user:write'])]
     protected ?string $avatar = null;
 
-    #[ORM\Column(type: 'date_immutable', nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
-    protected ?\DateTimeImmutable $birthDate = null;
+    // Note: birthDate and gender already in UserGenerated, but with different types
+    // We may need to override these if type mismatch is intentional
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
-    protected ?string $gender = null;
-
-    // ===== ADDITIONAL CRM FIELDS (2025 Best Practices) =====
+    // ===== NAME COMPONENTS =====
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
-    protected ?string $title = null; // Mr., Mrs., Dr., etc.
+    protected ?string $title = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
@@ -326,11 +293,13 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
-    protected ?string $suffix = null; // Jr., Sr., III, etc.
+    protected ?string $suffix = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     protected ?string $nickname = null;
+
+    // ===== EXTENDED CONTACT INFO =====
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
@@ -364,6 +333,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[Groups(['user:read', 'user:write'])]
     protected ?string $twitterHandle = null;
 
+    // ===== ADDRESS FIELDS =====
+
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     protected ?string $address = null;
@@ -392,6 +363,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[Groups(['user:read', 'user:write'])]
     protected ?string $officeLocation = null;
 
+    // ===== EMPLOYMENT DETAILS =====
+
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     protected ?string $employeeId = null;
@@ -406,7 +379,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
-    protected ?string $employmentStatus = null; // full-time, part-time, contract, etc.
+    protected ?string $employmentStatus = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
@@ -426,7 +399,9 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
-    protected ?string $salaryFrequency = null; // hourly, monthly, annually
+    protected ?string $salaryFrequency = null;
+
+    // ===== PROFESSIONAL DATA =====
 
     #[ORM\Column(type: 'json', nullable: true)]
     #[Groups(['user:read', 'user:write'])]
@@ -452,6 +427,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[Groups(['user:read', 'user:write'])]
     protected ?array $tags = null;
 
+    // ===== ACTIVITY TRACKING =====
+
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
     #[Groups(['user:read'])]
     protected int $loginCount = 0;
@@ -466,27 +443,31 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
 
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     #[Groups(['user:read', 'user:write'])]
-    protected bool $visible = true; // Visibility in directory/team lists
+    protected bool $visible = true;
 
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
     #[Groups(['user:read'])]
-    protected int $profileCompleteness = 0; // 0-100 percentage
+    protected int $profileCompleteness = 0;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Groups(['user:read', 'audit:read'])]
     protected ?\DateTimeImmutable $lastActivityAt = null;
 
+    // ===== STATUS SYSTEM =====
+
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
-    protected ?string $status = null; // available, busy, away, offline, do-not-disturb
+    protected ?string $status = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     protected ?string $statusMessage = null;
 
+    // ===== ACCOUNT LOCKING (ADMIN) =====
+
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     #[Groups(['user:read', 'user:write'])]
-    protected bool $locked = false; // Account locked by admin
+    protected bool $locked = false;
 
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['audit:read'])]
@@ -496,52 +477,22 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
     #[Groups(['audit:read'])]
     protected ?\DateTimeImmutable $lockedAt = null;
 
+    // ===== CUSTOM FIELDS SYSTEM =====
+
     #[ORM\Column(type: 'json', nullable: true)]
     #[Groups(['user:read', 'user:write'])]
-    protected ?array $customFields = null; // Flexible JSON for custom attributes
+    protected ?array $customFields = null;
+
+    // ===== CONSTRUCTOR =====
 
     public function __construct()
     {
         parent::__construct();
         $this->roles = new ArrayCollection();
-        $this->ownedCourses = new ArrayCollection();
-        $this->studentCourses = new ArrayCollection();
     }
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
+    // ===== SYMFONY SECURITY INTERFACE METHODS =====
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-        return $this;
-    }
-
-    public function getOrganization(): ?Organization
-    {
-        return $this->organization;
-    }
-
-    public function setOrganization(?Organization $organization): self
-    {
-        $this->organization = $organization;
-        return $this;
-    }
-
-    // UserInterface methods
     public function getUserIdentifier(): string
     {
         return $this->email;
@@ -561,19 +512,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         // No sensitive data to erase
     }
 
-    // PasswordAuthenticatedUserInterface method
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
+    // ===== ROLE MANAGEMENT =====
 
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-        return $this;
-    }
-
-    // Role management
     public function addRole(Role $role): self
     {
         if (!$this->roles->contains($role)) {
@@ -616,7 +556,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return false;
     }
 
-    // Verification methods
+    // ===== VERIFICATION METHODS =====
+
     public function isVerified(): bool
     {
         return $this->verified;
@@ -628,7 +569,6 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    // Backward compatibility alias
     public function setIsVerified(bool $verified): self
     {
         return $this->setVerified($verified);
@@ -645,7 +585,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    // Terms methods
+    // ===== TERMS METHODS =====
+
     public function hasSignedTerms(): bool
     {
         return $this->termsSigned;
@@ -671,7 +612,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    // API Token methods
+    // ===== API TOKEN METHODS =====
+
     public function getApiToken(): ?string
     {
         return $this->apiToken;
@@ -716,7 +658,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    // OpenAI API Key methods
+    // ===== OPENAI API KEY METHODS =====
+
     public function getOpenAiApiKey(): ?string
     {
         return $this->openAiApiKey;
@@ -728,7 +671,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    // Security methods
+    // ===== SECURITY METHODS =====
+
     public function getLastLoginAt(): ?\DateTimeImmutable
     {
         return $this->lastLoginAt;
@@ -746,11 +690,6 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         $this->failedLoginAttempts = 0;
         $this->lockedUntil = null;
         return $this;
-    }
-
-    public function getFailedLoginAttempts(): int
-    {
-        return $this->failedLoginAttempts;
     }
 
     public function incrementFailedLoginAttempts(): self
@@ -777,6 +716,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this->lockedUntil;
     }
 
+    // ===== UI SETTINGS METHODS =====
+
     public function getUiSettings(): ?array
     {
         return $this->uiSettings;
@@ -799,9 +740,6 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    /**
-     * Get a specific list preference value
-     */
     public function getListPreference(string $key, mixed $default = null): mixed
     {
         if ($this->listPreferences === null) {
@@ -810,9 +748,6 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this->listPreferences[$key] ?? $default;
     }
 
-    /**
-     * Set a specific list preference value
-     */
     public function setListPreference(string $key, mixed $value): self
     {
         if ($this->listPreferences === null) {
@@ -822,17 +757,11 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    /**
-     * Get a specific UI setting value
-     */
     public function getUiSetting(string $key, mixed $default = null): mixed
     {
         return $this->uiSettings[$key] ?? $default;
     }
 
-    /**
-     * Set a specific UI setting value
-     */
     public function setUiSetting(string $key, mixed $value): self
     {
         if ($this->uiSettings === null) {
@@ -842,9 +771,6 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    /**
-     * Merge UI settings with existing ones
-     */
     public function mergeUiSettings(array $settings): self
     {
         if ($this->uiSettings === null) {
@@ -854,9 +780,6 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    /**
-     * Get default UI settings structure
-     */
     public function getDefaultUiSettings(): array
     {
         return [
@@ -872,9 +795,6 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         ];
     }
 
-    /**
-     * Initialize UI settings with defaults if not set
-     */
     public function initializeUiSettings(): self
     {
         if ($this->uiSettings === null) {
@@ -883,61 +803,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    /**
-     * @return Collection<int, Course>
-     */
-    public function getOwnedCourses(): Collection
-    {
-        return $this->ownedCourses;
-    }
-
-    public function addOwnedCourse(Course $course): self
-    {
-        if (!$this->ownedCourses->contains($course)) {
-            $this->ownedCourses->add($course);
-            $course->setOwner($this);
-        }
-        return $this;
-    }
-
-    public function removeOwnedCourse(Course $course): self
-    {
-        if ($this->ownedCourses->removeElement($course)) {
-            if ($course->getOwner() === $this) {
-                $course->setOwner(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, StudentCourse>
-     */
-    public function getStudentCourses(): Collection
-    {
-        return $this->studentCourses;
-    }
-
-    public function addStudentCourse(StudentCourse $studentCourse): self
-    {
-        if (!$this->studentCourses->contains($studentCourse)) {
-            $this->studentCourses->add($studentCourse);
-            $studentCourse->setStudent($this);
-        }
-        return $this;
-    }
-
-    public function removeStudentCourse(StudentCourse $studentCourse): self
-    {
-        if ($this->studentCourses->removeElement($studentCourse)) {
-            if ($studentCourse->getStudent() === $this) {
-                $studentCourse->setStudent(null);
-            }
-        }
-        return $this;
-    }
-
-    // ===== GETTERS/SETTERS FOR NEW SECURITY FIELDS =====
+    // ===== 2FA METHODS =====
 
     public function isTwoFactorEnabled(): bool
     {
@@ -971,6 +837,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         $this->twoFactorBackupCodes = $twoFactorBackupCodes;
         return $this;
     }
+
+    // ===== PASSWORD RESET METHODS =====
 
     public function getPasswordResetToken(): ?string
     {
@@ -1009,6 +877,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this->passwordResetExpiry > new \DateTimeImmutable();
     }
 
+    // ===== SESSION TOKEN METHODS =====
+
     public function getSessionToken(): ?string
     {
         return $this->sessionToken;
@@ -1019,6 +889,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         $this->sessionToken = $sessionToken;
         return $this;
     }
+
+    // ===== PASSWORD MANAGEMENT =====
 
     public function getLastPasswordChangeAt(): ?\DateTimeImmutable
     {
@@ -1053,6 +925,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
+    // ===== PASSKEY METHODS =====
+
     public function isPasskeyEnabled(): bool
     {
         return $this->passkeyEnabled;
@@ -1075,18 +949,7 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getEmailVerifiedAt(): ?\DateTimeImmutable
-    {
-        return $this->emailVerifiedAt;
-    }
-
-    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
-    {
-        $this->emailVerifiedAt = $emailVerifiedAt;
-        return $this;
-    }
-
-    // ===== GETTERS/SETTERS FOR NEW CRM FIELDS =====
+    // ===== CRM FIELD GETTERS/SETTERS =====
 
     public function getUsername(): ?string
     {
@@ -1308,7 +1171,6 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    // Backward compatibility alias
     public function setIsAgent(bool $agent): self
     {
         return $this->setAgent($agent);
@@ -1325,24 +1187,9 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function isActive(): bool
-    {
-        return $this->active;
-    }
+    // Note: setIsActive() alias exists in parent UserGenerated
 
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
-    // Backward compatibility alias
-    public function setIsActive(bool $active): self
-    {
-        return $this->setActive($active);
-    }
-
-    // ===== GETTERS/SETTERS FOR AUDIT FIELDS =====
+    // ===== AUDIT FIELD METHODS =====
 
     public function getDeletedAt(): ?\DateTimeImmutable
     {
@@ -1360,7 +1207,6 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this->deletedAt !== null;
     }
 
-
     public function getAvatar(): ?string
     {
         return $this->avatar;
@@ -1372,29 +1218,9 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getBirthDate(): ?\DateTimeImmutable
-    {
-        return $this->birthDate;
-    }
+    // Note: birthDate and gender getters/setters exist in parent
 
-    public function setBirthDate(?\DateTimeImmutable $birthDate): self
-    {
-        $this->birthDate = $birthDate;
-        return $this;
-    }
-
-    public function getGender(): ?string
-    {
-        return $this->gender;
-    }
-
-    public function setGender(?string $gender): self
-    {
-        $this->gender = $gender;
-        return $this;
-    }
-
-    // ===== GETTERS/SETTERS FOR ADDITIONAL CRM FIELDS =====
+    // ===== NAME COMPONENT METHODS =====
 
     public function getTitle(): ?string
     {
@@ -1461,6 +1287,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         $this->nickname = $nickname;
         return $this;
     }
+
+    // ===== EXTENDED CONTACT INFO METHODS =====
 
     public function getSecondaryEmail(): ?string
     {
@@ -1550,6 +1378,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
+    // ===== ADDRESS METHODS =====
+
     public function getAddress(): ?string
     {
         return $this->address;
@@ -1626,6 +1456,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         $this->officeLocation = $officeLocation;
         return $this;
     }
+
+    // ===== EMPLOYMENT METHODS =====
 
     public function getEmployeeId(): ?string
     {
@@ -1726,6 +1558,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
+    // ===== PROFESSIONAL DATA METHODS =====
+
     public function getSkills(): ?array
     {
         return $this->skills;
@@ -1791,6 +1625,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         $this->tags = $tags;
         return $this;
     }
+
+    // ===== ACTIVITY TRACKING METHODS =====
 
     public function getLoginCount(): int
     {
@@ -1885,6 +1721,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
+    // ===== STATUS METHODS =====
+
     public function getStatus(): ?string
     {
         return $this->status;
@@ -1906,6 +1744,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         $this->statusMessage = $statusMessage;
         return $this;
     }
+
+    // ===== ACCOUNT LOCKING METHODS =====
 
     public function isLocked(): bool
     {
@@ -1979,6 +1819,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
+    // ===== CUSTOM FIELDS METHODS =====
+
     public function getCustomFields(): ?array
     {
         return $this->customFields;
@@ -2003,6 +1845,8 @@ class User extends EntityBase implements UserInterface, PasswordAuthenticatedUse
         $this->customFields[$key] = $value;
         return $this;
     }
+
+    // ===== __toString =====
 
     public function __toString(): string
     {

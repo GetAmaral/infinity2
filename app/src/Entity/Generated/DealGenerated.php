@@ -258,12 +258,12 @@ abstract class DealGenerated extends EntityBase
         $this->tags = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -289,12 +289,12 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getCompany(): ?App\Entity\Company
+    public function getCompany(): ?Company
     {
         return $this->company;
     }
 
-    public function setCompany(?App\Entity\Company $company): self
+    public function setCompany(?Company $company): self
     {
         $this->company = $company;
         return $this;
@@ -310,12 +310,12 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getCurrentStage(): App\Entity\PipelineStage
+    public function getCurrentStage(): PipelineStage
     {
         return $this->currentStage;
     }
 
-    public function setCurrentStage(App\Entity\PipelineStage $currentStage): self
+    public function setCurrentStage(PipelineStage $currentStage): self
     {
         $this->currentStage = $currentStage;
         return $this;
@@ -331,23 +331,23 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getDealType(): ?App\Entity\DealType
+    public function getDealType(): ?DealType
     {
         return $this->dealType;
     }
 
-    public function setDealType(?App\Entity\DealType $dealType): self
+    public function setDealType(?DealType $dealType): self
     {
         $this->dealType = $dealType;
         return $this;
     }
 
-    public function getPipeline(): ?App\Entity\Pipeline
+    public function getPipeline(): ?Pipeline
     {
         return $this->pipeline;
     }
 
-    public function setPipeline(?App\Entity\Pipeline $pipeline): self
+    public function setPipeline(?Pipeline $pipeline): self
     {
         $this->pipeline = $pipeline;
         return $this;
@@ -363,12 +363,12 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getCategory(): ?App\Entity\DealCategory
+    public function getCategory(): ?DealCategory
     {
         return $this->category;
     }
 
-    public function setCategory(?App\Entity\DealCategory $category): self
+    public function setCategory(?DealCategory $category): self
     {
         $this->category = $category;
         return $this;
@@ -505,14 +505,14 @@ abstract class DealGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Product>
+     * @return Collection<int, Product>
      */
     public function getProducts(): Collection
     {
         return $this->products;
     }
 
-    public function addProduct(App\Entity\Product $product): self
+    public function addProduct(Product $product): self
     {
         if (!$this->products->contains($product)) {
             $this->products->add($product);
@@ -520,7 +520,7 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function removeProduct(App\Entity\Product $product): self
+    public function removeProduct(Product $product): self
     {
         if ($this->products->removeElement($product)) {
         }
@@ -577,37 +577,37 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getManager(): ?App\Entity\User
+    public function getManager(): ?User
     {
         return $this->manager;
     }
 
-    public function setManager(?App\Entity\User $manager): self
+    public function setManager(?User $manager): self
     {
         $this->manager = $manager;
         return $this;
     }
 
-    public function getOwner(): App\Entity\User
+    public function getOwner(): User
     {
         return $this->owner;
     }
 
-    public function setOwner(App\Entity\User $owner): self
+    public function setOwner(User $owner): self
     {
         $this->owner = $owner;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\User>
+     * @return Collection<int, User>
      */
     public function getTeam(): Collection
     {
         return $this->team;
     }
 
-    public function addTeam(App\Entity\User $team): self
+    public function addTeam(User $team): self
     {
         if (!$this->team->contains($team)) {
             $this->team->add($team);
@@ -615,33 +615,33 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTeam(App\Entity\User $team): self
+    public function removeTeam(User $team): self
     {
         if ($this->team->removeElement($team)) {
         }
         return $this;
     }
 
-    public function getPrimaryContact(): ?App\Entity\Contact
+    public function getPrimaryContact(): ?Contact
     {
         return $this->primaryContact;
     }
 
-    public function setPrimaryContact(?App\Entity\Contact $primaryContact): self
+    public function setPrimaryContact(?Contact $primaryContact): self
     {
         $this->primaryContact = $primaryContact;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\Contact>
+     * @return Collection<int, Contact>
      */
     public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
-    public function addContact(App\Entity\Contact $contact): self
+    public function addContact(Contact $contact): self
     {
         if (!$this->contacts->contains($contact)) {
             $this->contacts->add($contact);
@@ -649,30 +649,30 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function removeContact(App\Entity\Contact $contact): self
+    public function removeContact(Contact $contact): self
     {
         if ($this->contacts->removeElement($contact)) {
         }
         return $this;
     }
 
-    public function getLeadSource(): ?App\Entity\LeadSource
+    public function getLeadSource(): ?LeadSource
     {
         return $this->leadSource;
     }
 
-    public function setLeadSource(?App\Entity\LeadSource $leadSource): self
+    public function setLeadSource(?LeadSource $leadSource): self
     {
         $this->leadSource = $leadSource;
         return $this;
     }
 
-    public function getCampaign(): ?App\Entity\Campaign
+    public function getCampaign(): ?Campaign
     {
         return $this->campaign;
     }
 
-    public function setCampaign(?App\Entity\Campaign $campaign): self
+    public function setCampaign(?Campaign $campaign): self
     {
         $this->campaign = $campaign;
         return $this;
@@ -699,14 +699,14 @@ abstract class DealGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\DealStage>
+     * @return Collection<int, DealStage>
      */
     public function getDealStages(): Collection
     {
         return $this->dealStages;
     }
 
-    public function addDealStage(App\Entity\DealStage $dealStage): self
+    public function addDealStage(DealStage $dealStage): self
     {
         if (!$this->dealStages->contains($dealStage)) {
             $this->dealStages->add($dealStage);
@@ -715,7 +715,7 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDealStage(App\Entity\DealStage $dealStage): self
+    public function removeDealStage(DealStage $dealStage): self
     {
         if ($this->dealStages->removeElement($dealStage)) {
             if ($dealStage->getDeal() === $this) {
@@ -726,14 +726,14 @@ abstract class DealGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Talk>
+     * @return Collection<int, Talk>
      */
     public function getTalks(): Collection
     {
         return $this->talks;
     }
 
-    public function addTalk(App\Entity\Talk $talk): self
+    public function addTalk(Talk $talk): self
     {
         if (!$this->talks->contains($talk)) {
             $this->talks->add($talk);
@@ -742,7 +742,7 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTalk(App\Entity\Talk $talk): self
+    public function removeTalk(Talk $talk): self
     {
         if ($this->talks->removeElement($talk)) {
             if ($talk->getDeal() === $this) {
@@ -753,14 +753,14 @@ abstract class DealGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Task>
+     * @return Collection<int, Task>
      */
     public function getTasks(): Collection
     {
         return $this->tasks;
     }
 
-    public function addTask(App\Entity\Task $task): self
+    public function addTask(Task $task): self
     {
         if (!$this->tasks->contains($task)) {
             $this->tasks->add($task);
@@ -769,7 +769,7 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTask(App\Entity\Task $task): self
+    public function removeTask(Task $task): self
     {
         if ($this->tasks->removeElement($task)) {
             if ($task->getDeal() === $this) {
@@ -780,14 +780,14 @@ abstract class DealGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Competitor>
+     * @return Collection<int, Competitor>
      */
     public function getCompetitors(): Collection
     {
         return $this->competitors;
     }
 
-    public function addCompetitor(App\Entity\Competitor $competitor): self
+    public function addCompetitor(Competitor $competitor): self
     {
         if (!$this->competitors->contains($competitor)) {
             $this->competitors->add($competitor);
@@ -795,7 +795,7 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCompetitor(App\Entity\Competitor $competitor): self
+    public function removeCompetitor(Competitor $competitor): self
     {
         if ($this->competitors->removeElement($competitor)) {
         }
@@ -803,14 +803,14 @@ abstract class DealGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Tag>
+     * @return Collection<int, Tag>
      */
     public function getTags(): Collection
     {
         return $this->tags;
     }
 
-    public function addTag(App\Entity\Tag $tag): self
+    public function addTag(Tag $tag): self
     {
         if (!$this->tags->contains($tag)) {
             $this->tags->add($tag);
@@ -818,7 +818,7 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTag(App\Entity\Tag $tag): self
+    public function removeTag(Tag $tag): self
     {
         if ($this->tags->removeElement($tag)) {
         }
@@ -835,23 +835,23 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getLostReason(): ?App\Entity\LostReason
+    public function getLostReason(): ?LostReason
     {
         return $this->lostReason;
     }
 
-    public function setLostReason(?App\Entity\LostReason $lostReason): self
+    public function setLostReason(?LostReason $lostReason): self
     {
         $this->lostReason = $lostReason;
         return $this;
     }
 
-    public function getWinReason(): ?App\Entity\WinReason
+    public function getWinReason(): ?WinReason
     {
         return $this->winReason;
     }
 
-    public function setWinReason(?App\Entity\WinReason $winReason): self
+    public function setWinReason(?WinReason $winReason): self
     {
         $this->winReason = $winReason;
         return $this;

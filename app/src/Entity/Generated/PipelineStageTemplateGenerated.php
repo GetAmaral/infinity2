@@ -96,12 +96,12 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
         $this->tasks = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -182,26 +182,26 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getPipelineTemplate(): App\Entity\PipelineTemplate
+    public function getPipelineTemplate(): PipelineTemplate
     {
         return $this->pipelineTemplate;
     }
 
-    public function setPipelineTemplate(App\Entity\PipelineTemplate $pipelineTemplate): self
+    public function setPipelineTemplate(PipelineTemplate $pipelineTemplate): self
     {
         $this->pipelineTemplate = $pipelineTemplate;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\TaskTemplate>
+     * @return Collection<int, TaskTemplate>
      */
     public function getTasks(): Collection
     {
         return $this->tasks;
     }
 
-    public function addTask(App\Entity\TaskTemplate $task): self
+    public function addTask(TaskTemplate $task): self
     {
         if (!$this->tasks->contains($task)) {
             $this->tasks->add($task);
@@ -210,7 +210,7 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTask(App\Entity\TaskTemplate $task): self
+    public function removeTask(TaskTemplate $task): self
     {
         if ($this->tasks->removeElement($task)) {
             if ($task->getPipelineStageTemplate() === $this) {

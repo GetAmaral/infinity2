@@ -161,12 +161,12 @@ abstract class MeetingDataGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -182,12 +182,12 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getEvent(): ?App\Entity\Event
+    public function getEvent(): ?Event
     {
         return $this->event;
     }
 
-    public function setEvent(?App\Entity\Event $event): self
+    public function setEvent(?Event $event): self
     {
         $this->event = $event;
         return $this;

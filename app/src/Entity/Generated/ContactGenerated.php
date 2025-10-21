@@ -244,12 +244,12 @@ abstract class ContactGenerated extends EntityBase
         $this->tasks = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -285,12 +285,12 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getAccountManager(): ?App\Entity\User
+    public function getAccountManager(): ?User
     {
         return $this->accountManager;
     }
 
-    public function setAccountManager(?App\Entity\User $accountManager): self
+    public function setAccountManager(?User $accountManager): self
     {
         $this->accountManager = $accountManager;
         return $this;
@@ -307,14 +307,14 @@ abstract class ContactGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\User>
+     * @return Collection<int, User>
      */
     public function getAccountTeam(): Collection
     {
         return $this->accountTeam;
     }
 
-    public function addAccountTeam(App\Entity\User $accountTeam): self
+    public function addAccountTeam(User $accountTeam): self
     {
         if (!$this->accountTeam->contains($accountTeam)) {
             $this->accountTeam->add($accountTeam);
@@ -322,7 +322,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removeAccountTeam(App\Entity\User $accountTeam): self
+    public function removeAccountTeam(User $accountTeam): self
     {
         if ($this->accountTeam->removeElement($accountTeam)) {
         }
@@ -349,12 +349,12 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getBillingCity(): ?App\Entity\City
+    public function getBillingCity(): ?City
     {
         return $this->billingCity;
     }
 
-    public function setBillingCity(?App\Entity\City $billingCity): self
+    public function setBillingCity(?City $billingCity): self
     {
         $this->billingCity = $billingCity;
         return $this;
@@ -371,14 +371,14 @@ abstract class ContactGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Campaign>
+     * @return Collection<int, Campaign>
      */
     public function getCampaigns(): Collection
     {
         return $this->campaigns;
     }
 
-    public function addCampaign(App\Entity\Campaign $campaign): self
+    public function addCampaign(Campaign $campaign): self
     {
         if (!$this->campaigns->contains($campaign)) {
             $this->campaigns->add($campaign);
@@ -387,7 +387,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCampaign(App\Entity\Campaign $campaign): self
+    public function removeCampaign(Campaign $campaign): self
     {
         if ($this->campaigns->removeElement($campaign)) {
             if ($campaign->getContacts() === $this) {
@@ -397,23 +397,23 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getCity(): ?App\Entity\City
+    public function getCity(): ?City
     {
         return $this->city;
     }
 
-    public function setCity(?App\Entity\City $city): self
+    public function setCity(?City $city): self
     {
         $this->city = $city;
         return $this;
     }
 
-    public function getCompany(): App\Entity\Company
+    public function getCompany(): Company
     {
         return $this->company;
     }
 
-    public function setCompany(App\Entity\Company $company): self
+    public function setCompany(Company $company): self
     {
         $this->company = $company;
         return $this;
@@ -430,14 +430,14 @@ abstract class ContactGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getDeals(): Collection
     {
         return $this->deals;
     }
 
-    public function addDeal(App\Entity\Deal $deal): self
+    public function addDeal(Deal $deal): self
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
@@ -446,7 +446,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDeal(App\Entity\Deal $deal): self
+    public function removeDeal(Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
             if ($deal->getContacts() === $this) {
@@ -567,14 +567,14 @@ abstract class ContactGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\EventAttendee>
+     * @return Collection<int, EventAttendee>
      */
     public function getEventAttendances(): Collection
     {
         return $this->eventAttendances;
     }
 
-    public function addEventAttendance(App\Entity\EventAttendee $eventAttendance): self
+    public function addEventAttendance(EventAttendee $eventAttendance): self
     {
         if (!$this->eventAttendances->contains($eventAttendance)) {
             $this->eventAttendances->add($eventAttendance);
@@ -583,7 +583,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removeEventAttendance(App\Entity\EventAttendee $eventAttendance): self
+    public function removeEventAttendance(EventAttendee $eventAttendance): self
     {
         if ($this->eventAttendances->removeElement($eventAttendance)) {
             if ($eventAttendance->getContact() === $this) {
@@ -604,14 +604,14 @@ abstract class ContactGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Flag>
+     * @return Collection<int, Flag>
      */
     public function getFlags(): Collection
     {
         return $this->flags;
     }
 
-    public function addFlag(App\Entity\Flag $flag): self
+    public function addFlag(Flag $flag): self
     {
         if (!$this->flags->contains($flag)) {
             $this->flags->add($flag);
@@ -620,7 +620,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removeFlag(App\Entity\Flag $flag): self
+    public function removeFlag(Flag $flag): self
     {
         if ($this->flags->removeElement($flag)) {
             if ($flag->getContact() === $this) {
@@ -721,14 +721,14 @@ abstract class ContactGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getPrimaryDeals(): Collection
     {
         return $this->primaryDeals;
     }
 
-    public function addPrimaryDeal(App\Entity\Deal $primaryDeal): self
+    public function addPrimaryDeal(Deal $primaryDeal): self
     {
         if (!$this->primaryDeals->contains($primaryDeal)) {
             $this->primaryDeals->add($primaryDeal);
@@ -737,7 +737,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removePrimaryDeal(App\Entity\Deal $primaryDeal): self
+    public function removePrimaryDeal(Deal $primaryDeal): self
     {
         if ($this->primaryDeals->removeElement($primaryDeal)) {
             if ($primaryDeal->getPrimaryContact() === $this) {
@@ -778,14 +778,14 @@ abstract class ContactGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\SocialMedia>
+     * @return Collection<int, SocialMedia>
      */
     public function getSocialMedias(): Collection
     {
         return $this->socialMedias;
     }
 
-    public function addSocialMedia(App\Entity\SocialMedia $socialMedia): self
+    public function addSocialMedia(SocialMedia $socialMedia): self
     {
         if (!$this->socialMedias->contains($socialMedia)) {
             $this->socialMedias->add($socialMedia);
@@ -794,7 +794,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSocialMedia(App\Entity\SocialMedia $socialMedia): self
+    public function removeSocialMedia(SocialMedia $socialMedia): self
     {
         if ($this->socialMedias->removeElement($socialMedia)) {
             if ($socialMedia->getContact() === $this) {
@@ -815,14 +815,14 @@ abstract class ContactGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Talk>
+     * @return Collection<int, Talk>
      */
     public function getTalks(): Collection
     {
         return $this->talks;
     }
 
-    public function addTalk(App\Entity\Talk $talk): self
+    public function addTalk(Talk $talk): self
     {
         if (!$this->talks->contains($talk)) {
             $this->talks->add($talk);
@@ -831,7 +831,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTalk(App\Entity\Talk $talk): self
+    public function removeTalk(Talk $talk): self
     {
         if ($this->talks->removeElement($talk)) {
             if ($talk->getContact() === $this) {
@@ -842,14 +842,14 @@ abstract class ContactGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Task>
+     * @return Collection<int, Task>
      */
     public function getTasks(): Collection
     {
         return $this->tasks;
     }
 
-    public function addTask(App\Entity\Task $task): self
+    public function addTask(Task $task): self
     {
         if (!$this->tasks->contains($task)) {
             $this->tasks->add($task);
@@ -858,7 +858,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTask(App\Entity\Task $task): self
+    public function removeTask(Task $task): self
     {
         if ($this->tasks->removeElement($task)) {
             if ($task->getContact() === $this) {

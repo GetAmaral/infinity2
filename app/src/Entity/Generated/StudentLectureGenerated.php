@@ -70,34 +70,34 @@ abstract class StudentLectureGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getStudent(): App\Entity\User
+    public function getStudent(): User
     {
         return $this->student;
     }
 
-    public function setStudent(App\Entity\User $student): self
+    public function setStudent(User $student): self
     {
         $this->student = $student;
         return $this;
     }
 
-    public function getLecture(): App\Entity\CourseLecture
+    public function getLecture(): CourseLecture
     {
         return $this->lecture;
     }
 
-    public function setLecture(App\Entity\CourseLecture $lecture): self
+    public function setLecture(CourseLecture $lecture): self
     {
         $this->lecture = $lecture;
         return $this;
     }
 
-    public function getStudentCourse(): ?App\Entity\StudentCourse
+    public function getStudentCourse(): ?StudentCourse
     {
         return $this->studentCourse;
     }
 
-    public function setStudentCourse(?App\Entity\StudentCourse $studentCourse): self
+    public function setStudentCourse(?StudentCourse $studentCourse): self
     {
         $this->studentCourse = $studentCourse;
         return $this;

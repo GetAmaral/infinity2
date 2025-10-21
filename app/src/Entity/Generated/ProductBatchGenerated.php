@@ -142,12 +142,12 @@ abstract class ProductBatchGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -393,12 +393,12 @@ abstract class ProductBatchGenerated extends EntityBase
         return $this;
     }
 
-    public function getProduct(): ?App\Entity\Product
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
 
-    public function setProduct(?App\Entity\Product $product): self
+    public function setProduct(?Product $product): self
     {
         $this->product = $product;
         return $this;

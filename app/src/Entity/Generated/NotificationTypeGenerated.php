@@ -134,12 +134,12 @@ abstract class NotificationTypeGenerated extends EntityBase
         $this->notifications = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -176,14 +176,14 @@ abstract class NotificationTypeGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Notification>
+     * @return Collection<int, Notification>
      */
     public function getNotifications(): Collection
     {
         return $this->notifications;
     }
 
-    public function addNotification(App\Entity\Notification $notification): self
+    public function addNotification(Notification $notification): self
     {
         if (!$this->notifications->contains($notification)) {
             $this->notifications->add($notification);
@@ -192,7 +192,7 @@ abstract class NotificationTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function removeNotification(App\Entity\Notification $notification): self
+    public function removeNotification(Notification $notification): self
     {
         if ($this->notifications->removeElement($notification)) {
             if ($notification->getType() === $this) {

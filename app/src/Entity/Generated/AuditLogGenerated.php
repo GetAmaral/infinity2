@@ -120,12 +120,12 @@ abstract class AuditLogGenerated extends EntityBase
         return $this;
     }
 
-    public function getUser(): ?App\Entity\User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?App\Entity\User $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
         return $this;

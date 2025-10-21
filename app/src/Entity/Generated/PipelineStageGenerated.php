@@ -108,12 +108,12 @@ abstract class PipelineStageGenerated extends EntityBase
         $this->tasks = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -130,14 +130,14 @@ abstract class PipelineStageGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\DealStage>
+     * @return Collection<int, DealStage>
      */
     public function getDealStages(): Collection
     {
         return $this->dealStages;
     }
 
-    public function addDealStage(App\Entity\DealStage $dealStage): self
+    public function addDealStage(DealStage $dealStage): self
     {
         if (!$this->dealStages->contains($dealStage)) {
             $this->dealStages->add($dealStage);
@@ -146,7 +146,7 @@ abstract class PipelineStageGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDealStage(App\Entity\DealStage $dealStage): self
+    public function removeDealStage(DealStage $dealStage): self
     {
         if ($this->dealStages->removeElement($dealStage)) {
             if ($dealStage->getPipelineStage() === $this) {
@@ -237,14 +237,14 @@ abstract class PipelineStageGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getDeals(): Collection
     {
         return $this->deals;
     }
 
-    public function addDeal(App\Entity\Deal $deal): self
+    public function addDeal(Deal $deal): self
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
@@ -253,7 +253,7 @@ abstract class PipelineStageGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDeal(App\Entity\Deal $deal): self
+    public function removeDeal(Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
             if ($deal->getCurrentStage() === $this) {
@@ -283,34 +283,34 @@ abstract class PipelineStageGenerated extends EntityBase
         return $this;
     }
 
-    public function getNext(): ?App\Entity\PipelineStage
+    public function getNext(): ?PipelineStage
     {
         return $this->next;
     }
 
-    public function setNext(?App\Entity\PipelineStage $next): self
+    public function setNext(?PipelineStage $next): self
     {
         $this->next = $next;
         return $this;
     }
 
-    public function getPipeline(): ?App\Entity\Pipeline
+    public function getPipeline(): ?Pipeline
     {
         return $this->pipeline;
     }
 
-    public function setPipeline(?App\Entity\Pipeline $pipeline): self
+    public function setPipeline(?Pipeline $pipeline): self
     {
         $this->pipeline = $pipeline;
         return $this;
     }
 
-    public function getPrevious(): ?App\Entity\PipelineStage
+    public function getPrevious(): ?PipelineStage
     {
         return $this->previous;
     }
 
-    public function setPrevious(?App\Entity\PipelineStage $previous): self
+    public function setPrevious(?PipelineStage $previous): self
     {
         $this->previous = $previous;
         return $this;
@@ -327,14 +327,14 @@ abstract class PipelineStageGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Task>
+     * @return Collection<int, Task>
      */
     public function getTasks(): Collection
     {
         return $this->tasks;
     }
 
-    public function addTask(App\Entity\Task $task): self
+    public function addTask(Task $task): self
     {
         if (!$this->tasks->contains($task)) {
             $this->tasks->add($task);
@@ -343,7 +343,7 @@ abstract class PipelineStageGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTask(App\Entity\Task $task): self
+    public function removeTask(Task $task): self
     {
         if ($this->tasks->removeElement($task)) {
             if ($task->getPipelineStage() === $this) {

@@ -88,12 +88,12 @@ abstract class StudentCourseGenerated extends EntityBase
         $this->studentLectures = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -159,48 +159,48 @@ abstract class StudentCourseGenerated extends EntityBase
         return $this;
     }
 
-    public function getStudent(): App\Entity\User
+    public function getStudent(): User
     {
         return $this->student;
     }
 
-    public function setStudent(App\Entity\User $student): self
+    public function setStudent(User $student): self
     {
         $this->student = $student;
         return $this;
     }
 
-    public function getCourse(): App\Entity\Course
+    public function getCourse(): Course
     {
         return $this->course;
     }
 
-    public function setCourse(App\Entity\Course $course): self
+    public function setCourse(Course $course): self
     {
         $this->course = $course;
         return $this;
     }
 
-    public function getCurrentLecture(): ?App\Entity\CourseLecture
+    public function getCurrentLecture(): ?CourseLecture
     {
         return $this->currentLecture;
     }
 
-    public function setCurrentLecture(?App\Entity\CourseLecture $currentLecture): self
+    public function setCurrentLecture(?CourseLecture $currentLecture): self
     {
         $this->currentLecture = $currentLecture;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\StudentLecture>
+     * @return Collection<int, StudentLecture>
      */
     public function getStudentLectures(): Collection
     {
         return $this->studentLectures;
     }
 
-    public function addStudentLecture(App\Entity\StudentLecture $studentLecture): self
+    public function addStudentLecture(StudentLecture $studentLecture): self
     {
         if (!$this->studentLectures->contains($studentLecture)) {
             $this->studentLectures->add($studentLecture);
@@ -209,7 +209,7 @@ abstract class StudentCourseGenerated extends EntityBase
         return $this;
     }
 
-    public function removeStudentLecture(App\Entity\StudentLecture $studentLecture): self
+    public function removeStudentLecture(StudentLecture $studentLecture): self
     {
         if ($this->studentLectures->removeElement($studentLecture)) {
             if ($studentLecture->getStudentCourse() === $this) {

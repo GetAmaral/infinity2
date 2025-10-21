@@ -572,14 +572,14 @@ abstract class CountryGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\HolidayTemplate>
+     * @return Collection<int, HolidayTemplate>
      */
     public function getHolidayTemplates(): Collection
     {
         return $this->holidayTemplates;
     }
 
-    public function addHolidayTemplate(App\Entity\HolidayTemplate $holidayTemplate): self
+    public function addHolidayTemplate(HolidayTemplate $holidayTemplate): self
     {
         if (!$this->holidayTemplates->contains($holidayTemplate)) {
             $this->holidayTemplates->add($holidayTemplate);
@@ -588,7 +588,7 @@ abstract class CountryGenerated extends EntityBase
         return $this;
     }
 
-    public function removeHolidayTemplate(App\Entity\HolidayTemplate $holidayTemplate): self
+    public function removeHolidayTemplate(HolidayTemplate $holidayTemplate): self
     {
         if ($this->holidayTemplates->removeElement($holidayTemplate)) {
             if ($holidayTemplate->getCountry() === $this) {

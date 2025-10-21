@@ -98,12 +98,12 @@ abstract class PipelineTemplateGenerated extends EntityBase
         $this->stages = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -230,14 +230,14 @@ abstract class PipelineTemplateGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\PipelineStageTemplate>
+     * @return Collection<int, PipelineStageTemplate>
      */
     public function getStages(): Collection
     {
         return $this->stages;
     }
 
-    public function addStage(App\Entity\PipelineStageTemplate $stage): self
+    public function addStage(PipelineStageTemplate $stage): self
     {
         if (!$this->stages->contains($stage)) {
             $this->stages->add($stage);
@@ -246,7 +246,7 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function removeStage(App\Entity\PipelineStageTemplate $stage): self
+    public function removeStage(PipelineStageTemplate $stage): self
     {
         if ($this->stages->removeElement($stage)) {
             if ($stage->getPipelineTemplate() === $this) {

@@ -139,14 +139,14 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Calendar>
+     * @return Collection<int, Calendar>
      */
     public function getCalendars(): Collection
     {
         return $this->calendars;
     }
 
-    public function addCalendar(App\Entity\Calendar $calendar): self
+    public function addCalendar(Calendar $calendar): self
     {
         if (!$this->calendars->contains($calendar)) {
             $this->calendars->add($calendar);
@@ -155,7 +155,7 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCalendar(App\Entity\Calendar $calendar): self
+    public function removeCalendar(Calendar $calendar): self
     {
         if ($this->calendars->removeElement($calendar)) {
             if ($calendar->getExternalLink() === $this) {
@@ -360,12 +360,12 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
         return $this;
     }
 
-    public function getUser(): App\Entity\User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(App\Entity\User $user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
         return $this;

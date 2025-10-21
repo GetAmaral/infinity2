@@ -117,26 +117,26 @@ abstract class CourseModuleGenerated extends EntityBase
         return $this;
     }
 
-    public function getCourse(): App\Entity\Course
+    public function getCourse(): Course
     {
         return $this->course;
     }
 
-    public function setCourse(App\Entity\Course $course): self
+    public function setCourse(Course $course): self
     {
         $this->course = $course;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\CourseLecture>
+     * @return Collection<int, CourseLecture>
      */
     public function getLectures(): Collection
     {
         return $this->lectures;
     }
 
-    public function addLecture(App\Entity\CourseLecture $lecture): self
+    public function addLecture(CourseLecture $lecture): self
     {
         if (!$this->lectures->contains($lecture)) {
             $this->lectures->add($lecture);
@@ -145,7 +145,7 @@ abstract class CourseModuleGenerated extends EntityBase
         return $this;
     }
 
-    public function removeLecture(App\Entity\CourseLecture $lecture): self
+    public function removeLecture(CourseLecture $lecture): self
     {
         if ($this->lectures->removeElement($lecture)) {
             if ($lecture->getCourseModule() === $this) {

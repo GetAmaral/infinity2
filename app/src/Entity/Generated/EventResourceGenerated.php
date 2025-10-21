@@ -137,12 +137,12 @@ abstract class EventResourceGenerated extends EntityBase
         $this->eventBookings = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -353,12 +353,12 @@ abstract class EventResourceGenerated extends EntityBase
         return $this;
     }
 
-    public function getCity(): ?App\Entity\City
+    public function getCity(): ?City
     {
         return $this->city;
     }
 
-    public function setCity(?App\Entity\City $city): self
+    public function setCity(?City $city): self
     {
         $this->city = $city;
         return $this;
@@ -375,14 +375,14 @@ abstract class EventResourceGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\EventResourceBooking>
+     * @return Collection<int, EventResourceBooking>
      */
     public function getEventBookings(): Collection
     {
         return $this->eventBookings;
     }
 
-    public function addEventBooking(App\Entity\EventResourceBooking $eventBooking): self
+    public function addEventBooking(EventResourceBooking $eventBooking): self
     {
         if (!$this->eventBookings->contains($eventBooking)) {
             $this->eventBookings->add($eventBooking);
@@ -391,7 +391,7 @@ abstract class EventResourceGenerated extends EntityBase
         return $this;
     }
 
-    public function removeEventBooking(App\Entity\EventResourceBooking $eventBooking): self
+    public function removeEventBooking(EventResourceBooking $eventBooking): self
     {
         if ($this->eventBookings->removeElement($eventBooking)) {
             if ($eventBooking->getResource() === $this) {
@@ -421,12 +421,12 @@ abstract class EventResourceGenerated extends EntityBase
         return $this;
     }
 
-    public function getType(): App\Entity\EventResourceType
+    public function getType(): EventResourceType
     {
         return $this->type;
     }
 
-    public function setType(App\Entity\EventResourceType $type): self
+    public function setType(EventResourceType $type): self
     {
         $this->type = $type;
         return $this;

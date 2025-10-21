@@ -78,12 +78,12 @@ abstract class EventCategoryGenerated extends EntityBase
         $this->events = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -195,14 +195,14 @@ abstract class EventCategoryGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Event>
+     * @return Collection<int, Event>
      */
     public function getEvents(): Collection
     {
         return $this->events;
     }
 
-    public function addEvent(App\Entity\Event $event): self
+    public function addEvent(Event $event): self
     {
         if (!$this->events->contains($event)) {
             $this->events->add($event);
@@ -211,7 +211,7 @@ abstract class EventCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function removeEvent(App\Entity\Event $event): self
+    public function removeEvent(Event $event): self
     {
         if ($this->events->removeElement($event)) {
             if ($event->getCategories() === $this) {

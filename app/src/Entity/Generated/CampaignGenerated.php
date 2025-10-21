@@ -233,12 +233,12 @@ abstract class CampaignGenerated extends EntityBase
         $this->team = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -375,14 +375,14 @@ abstract class CampaignGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Company>
+     * @return Collection<int, Company>
      */
     public function getCompanies(): Collection
     {
         return $this->companies;
     }
 
-    public function addCompany(App\Entity\Company $company): self
+    public function addCompany(Company $company): self
     {
         if (!$this->companies->contains($company)) {
             $this->companies->add($company);
@@ -390,7 +390,7 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCompany(App\Entity\Company $company): self
+    public function removeCompany(Company $company): self
     {
         if ($this->companies->removeElement($company)) {
         }
@@ -398,14 +398,14 @@ abstract class CampaignGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Contact>
+     * @return Collection<int, Contact>
      */
     public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
-    public function addContact(App\Entity\Contact $contact): self
+    public function addContact(Contact $contact): self
     {
         if (!$this->contacts->contains($contact)) {
             $this->contacts->add($contact);
@@ -413,7 +413,7 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function removeContact(App\Entity\Contact $contact): self
+    public function removeContact(Contact $contact): self
     {
         if ($this->contacts->removeElement($contact)) {
         }
@@ -421,14 +421,14 @@ abstract class CampaignGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getDeals(): Collection
     {
         return $this->deals;
     }
 
-    public function addDeal(App\Entity\Deal $deal): self
+    public function addDeal(Deal $deal): self
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
@@ -437,7 +437,7 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDeal(App\Entity\Deal $deal): self
+    public function removeDeal(Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
             if ($deal->getCampaign() === $this) {
@@ -512,12 +512,12 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function getManager(): ?App\Entity\User
+    public function getManager(): ?User
     {
         return $this->manager;
     }
 
-    public function setManager(?App\Entity\User $manager): self
+    public function setManager(?User $manager): self
     {
         $this->manager = $manager;
         return $this;
@@ -593,23 +593,23 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function getOwner(): App\Entity\User
+    public function getOwner(): User
     {
         return $this->owner;
     }
 
-    public function setOwner(App\Entity\User $owner): self
+    public function setOwner(User $owner): self
     {
         $this->owner = $owner;
         return $this;
     }
 
-    public function getParentCampaign(): ?App\Entity\Campaign
+    public function getParentCampaign(): ?Campaign
     {
         return $this->parentCampaign;
     }
 
-    public function setParentCampaign(?App\Entity\Campaign $parentCampaign): self
+    public function setParentCampaign(?Campaign $parentCampaign): self
     {
         $this->parentCampaign = $parentCampaign;
         return $this;
@@ -676,14 +676,14 @@ abstract class CampaignGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\SocialMedia>
+     * @return Collection<int, SocialMedia>
      */
     public function getSocialMedias(): Collection
     {
         return $this->socialMedias;
     }
 
-    public function addSocialMedia(App\Entity\SocialMedia $socialMedia): self
+    public function addSocialMedia(SocialMedia $socialMedia): self
     {
         if (!$this->socialMedias->contains($socialMedia)) {
             $this->socialMedias->add($socialMedia);
@@ -691,7 +691,7 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSocialMedia(App\Entity\SocialMedia $socialMedia): self
+    public function removeSocialMedia(SocialMedia $socialMedia): self
     {
         if ($this->socialMedias->removeElement($socialMedia)) {
         }
@@ -719,14 +719,14 @@ abstract class CampaignGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Talk>
+     * @return Collection<int, Talk>
      */
     public function getTalks(): Collection
     {
         return $this->talks;
     }
 
-    public function addTalk(App\Entity\Talk $talk): self
+    public function addTalk(Talk $talk): self
     {
         if (!$this->talks->contains($talk)) {
             $this->talks->add($talk);
@@ -734,7 +734,7 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTalk(App\Entity\Talk $talk): self
+    public function removeTalk(Talk $talk): self
     {
         if ($this->talks->removeElement($talk)) {
         }
@@ -752,14 +752,14 @@ abstract class CampaignGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\User>
+     * @return Collection<int, User>
      */
     public function getTeam(): Collection
     {
         return $this->team;
     }
 
-    public function addTeam(App\Entity\User $team): self
+    public function addTeam(User $team): self
     {
         if (!$this->team->contains($team)) {
             $this->team->add($team);
@@ -767,7 +767,7 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTeam(App\Entity\User $team): self
+    public function removeTeam(User $team): self
     {
         if ($this->team->removeElement($team)) {
         }

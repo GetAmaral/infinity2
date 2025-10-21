@@ -83,23 +83,23 @@ abstract class HolidayTemplateGenerated extends EntityBase
         return $this->blocksScheduling === true;
     }
 
-    public function getCity(): ?App\Entity\City
+    public function getCity(): ?City
     {
         return $this->city;
     }
 
-    public function setCity(?App\Entity\City $city): self
+    public function setCity(?City $city): self
     {
         $this->city = $city;
         return $this;
     }
 
-    public function getCountry(): ?App\Entity\Country
+    public function getCountry(): ?Country
     {
         return $this->country;
     }
 
-    public function setCountry(?App\Entity\Country $country): self
+    public function setCountry(?Country $country): self
     {
         $this->country = $country;
         return $this;

@@ -70,12 +70,12 @@ abstract class StepInputGenerated extends EntityBase
         return $this;
     }
 
-    public function getStep(): App\Entity\Step
+    public function getStep(): Step
     {
         return $this->step;
     }
 
-    public function setStep(App\Entity\Step $step): self
+    public function setStep(Step $step): self
     {
         $this->step = $step;
         return $this;
@@ -112,14 +112,14 @@ abstract class StepInputGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\StepConnection>
+     * @return Collection<int, StepConnection>
      */
     public function getConnections(): Collection
     {
         return $this->connections;
     }
 
-    public function addConnection(App\Entity\StepConnection $connection): self
+    public function addConnection(StepConnection $connection): self
     {
         if (!$this->connections->contains($connection)) {
             $this->connections->add($connection);
@@ -128,7 +128,7 @@ abstract class StepInputGenerated extends EntityBase
         return $this;
     }
 
-    public function removeConnection(App\Entity\StepConnection $connection): self
+    public function removeConnection(StepConnection $connection): self
     {
         if ($this->connections->removeElement($connection)) {
             if ($connection->getTargetInput() === $this) {

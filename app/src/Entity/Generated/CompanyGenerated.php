@@ -347,12 +347,12 @@ abstract class CompanyGenerated extends EntityBase
         $this->suppliedProducts = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -388,12 +388,12 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getAccountManager(): ?App\Entity\User
+    public function getAccountManager(): ?User
     {
         return $this->accountManager;
     }
 
-    public function setAccountManager(?App\Entity\User $accountManager): self
+    public function setAccountManager(?User $accountManager): self
     {
         $this->accountManager = $accountManager;
         return $this;
@@ -439,12 +439,12 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getShippingCity(): ?App\Entity\City
+    public function getShippingCity(): ?City
     {
         return $this->shippingCity;
     }
 
-    public function setShippingCity(?App\Entity\City $shippingCity): self
+    public function setShippingCity(?City $shippingCity): self
     {
         $this->shippingCity = $shippingCity;
         return $this;
@@ -461,14 +461,14 @@ abstract class CompanyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Campaign>
+     * @return Collection<int, Campaign>
      */
     public function getCampaigns(): Collection
     {
         return $this->campaigns;
     }
 
-    public function addCampaign(App\Entity\Campaign $campaign): self
+    public function addCampaign(Campaign $campaign): self
     {
         if (!$this->campaigns->contains($campaign)) {
             $this->campaigns->add($campaign);
@@ -477,7 +477,7 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCampaign(App\Entity\Campaign $campaign): self
+    public function removeCampaign(Campaign $campaign): self
     {
         if ($this->campaigns->removeElement($campaign)) {
             if ($campaign->getCompanies() === $this) {
@@ -517,12 +517,12 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getParentCompany(): ?App\Entity\Company
+    public function getParentCompany(): ?Company
     {
         return $this->parentCompany;
     }
 
-    public function setParentCompany(?App\Entity\Company $parentCompany): self
+    public function setParentCompany(?Company $parentCompany): self
     {
         $this->parentCompany = $parentCompany;
         return $this;
@@ -578,12 +578,12 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getCity(): ?App\Entity\City
+    public function getCity(): ?City
     {
         return $this->city;
     }
 
-    public function setCity(?App\Entity\City $city): self
+    public function setCity(?City $city): self
     {
         $this->city = $city;
         return $this;
@@ -720,14 +720,14 @@ abstract class CompanyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Contact>
+     * @return Collection<int, Contact>
      */
     public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
-    public function addContact(App\Entity\Contact $contact): self
+    public function addContact(Contact $contact): self
     {
         if (!$this->contacts->contains($contact)) {
             $this->contacts->add($contact);
@@ -736,7 +736,7 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeContact(App\Entity\Contact $contact): self
+    public function removeContact(Contact $contact): self
     {
         if ($this->contacts->removeElement($contact)) {
             if ($contact->getCompany() === $this) {
@@ -757,14 +757,14 @@ abstract class CompanyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getDeals(): Collection
     {
         return $this->deals;
     }
 
-    public function addDeal(App\Entity\Deal $deal): self
+    public function addDeal(Deal $deal): self
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
@@ -773,7 +773,7 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDeal(App\Entity\Deal $deal): self
+    public function removeDeal(Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
             if ($deal->getCompany() === $this) {
@@ -794,14 +794,14 @@ abstract class CompanyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Flag>
+     * @return Collection<int, Flag>
      */
     public function getFlags(): Collection
     {
         return $this->flags;
     }
 
-    public function addFlag(App\Entity\Flag $flag): self
+    public function addFlag(Flag $flag): self
     {
         if (!$this->flags->contains($flag)) {
             $this->flags->add($flag);
@@ -810,7 +810,7 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeFlag(App\Entity\Flag $flag): self
+    public function removeFlag(Flag $flag): self
     {
         if ($this->flags->removeElement($flag)) {
             if ($flag->getCompany() === $this) {
@@ -821,14 +821,14 @@ abstract class CompanyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Talk>
+     * @return Collection<int, Talk>
      */
     public function getTalks(): Collection
     {
         return $this->talks;
     }
 
-    public function addTalk(App\Entity\Talk $talk): self
+    public function addTalk(Talk $talk): self
     {
         if (!$this->talks->contains($talk)) {
             $this->talks->add($talk);
@@ -837,7 +837,7 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTalk(App\Entity\Talk $talk): self
+    public function removeTalk(Talk $talk): self
     {
         if ($this->talks->removeElement($talk)) {
             if ($talk->getCompany() === $this) {
@@ -848,14 +848,14 @@ abstract class CompanyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Brand>
+     * @return Collection<int, Brand>
      */
     public function getManufacturedBrands(): Collection
     {
         return $this->manufacturedBrands;
     }
 
-    public function addManufacturedBrand(App\Entity\Brand $manufacturedBrand): self
+    public function addManufacturedBrand(Brand $manufacturedBrand): self
     {
         if (!$this->manufacturedBrands->contains($manufacturedBrand)) {
             $this->manufacturedBrands->add($manufacturedBrand);
@@ -863,7 +863,7 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeManufacturedBrand(App\Entity\Brand $manufacturedBrand): self
+    public function removeManufacturedBrand(Brand $manufacturedBrand): self
     {
         if ($this->manufacturedBrands->removeElement($manufacturedBrand)) {
         }
@@ -871,14 +871,14 @@ abstract class CompanyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Product>
+     * @return Collection<int, Product>
      */
     public function getManufacturedProducts(): Collection
     {
         return $this->manufacturedProducts;
     }
 
-    public function addManufacturedProduct(App\Entity\Product $manufacturedProduct): self
+    public function addManufacturedProduct(Product $manufacturedProduct): self
     {
         if (!$this->manufacturedProducts->contains($manufacturedProduct)) {
             $this->manufacturedProducts->add($manufacturedProduct);
@@ -886,7 +886,7 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeManufacturedProduct(App\Entity\Product $manufacturedProduct): self
+    public function removeManufacturedProduct(Product $manufacturedProduct): self
     {
         if ($this->manufacturedProducts->removeElement($manufacturedProduct)) {
         }
@@ -944,14 +944,14 @@ abstract class CompanyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\SocialMedia>
+     * @return Collection<int, SocialMedia>
      */
     public function getSocialMedias(): Collection
     {
         return $this->socialMedias;
     }
 
-    public function addSocialMedia(App\Entity\SocialMedia $socialMedia): self
+    public function addSocialMedia(SocialMedia $socialMedia): self
     {
         if (!$this->socialMedias->contains($socialMedia)) {
             $this->socialMedias->add($socialMedia);
@@ -960,7 +960,7 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSocialMedia(App\Entity\SocialMedia $socialMedia): self
+    public function removeSocialMedia(SocialMedia $socialMedia): self
     {
         if ($this->socialMedias->removeElement($socialMedia)) {
             if ($socialMedia->getCompany() === $this) {
@@ -981,14 +981,14 @@ abstract class CompanyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Brand>
+     * @return Collection<int, Brand>
      */
     public function getSuppliedBrands(): Collection
     {
         return $this->suppliedBrands;
     }
 
-    public function addSuppliedBrand(App\Entity\Brand $suppliedBrand): self
+    public function addSuppliedBrand(Brand $suppliedBrand): self
     {
         if (!$this->suppliedBrands->contains($suppliedBrand)) {
             $this->suppliedBrands->add($suppliedBrand);
@@ -996,7 +996,7 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSuppliedBrand(App\Entity\Brand $suppliedBrand): self
+    public function removeSuppliedBrand(Brand $suppliedBrand): self
     {
         if ($this->suppliedBrands->removeElement($suppliedBrand)) {
         }
@@ -1004,14 +1004,14 @@ abstract class CompanyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Product>
+     * @return Collection<int, Product>
      */
     public function getSuppliedProducts(): Collection
     {
         return $this->suppliedProducts;
     }
 
-    public function addSuppliedProduct(App\Entity\Product $suppliedProduct): self
+    public function addSuppliedProduct(Product $suppliedProduct): self
     {
         if (!$this->suppliedProducts->contains($suppliedProduct)) {
             $this->suppliedProducts->add($suppliedProduct);
@@ -1019,7 +1019,7 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSuppliedProduct(App\Entity\Product $suppliedProduct): self
+    public function removeSuppliedProduct(Product $suppliedProduct): self
     {
         if ($this->suppliedProducts->removeElement($suppliedProduct)) {
         }

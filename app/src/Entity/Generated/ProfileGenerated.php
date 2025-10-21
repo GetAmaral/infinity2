@@ -57,12 +57,12 @@ abstract class ProfileGenerated extends EntityBase
         $this->users = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -89,14 +89,14 @@ abstract class ProfileGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Role>
+     * @return Collection<int, Role>
      */
     public function getGrantedRoles(): Collection
     {
         return $this->grantedRoles;
     }
 
-    public function addGrantedRole(App\Entity\Role $grantedRole): self
+    public function addGrantedRole(Role $grantedRole): self
     {
         if (!$this->grantedRoles->contains($grantedRole)) {
             $this->grantedRoles->add($grantedRole);
@@ -104,7 +104,7 @@ abstract class ProfileGenerated extends EntityBase
         return $this;
     }
 
-    public function removeGrantedRole(App\Entity\Role $grantedRole): self
+    public function removeGrantedRole(Role $grantedRole): self
     {
         if ($this->grantedRoles->removeElement($grantedRole)) {
         }
@@ -112,14 +112,14 @@ abstract class ProfileGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\User>
+     * @return Collection<int, User>
      */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function addUser(App\Entity\User $user): self
+    public function addUser(User $user): self
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
@@ -127,7 +127,7 @@ abstract class ProfileGenerated extends EntityBase
         return $this;
     }
 
-    public function removeUser(App\Entity\User $user): self
+    public function removeUser(User $user): self
     {
         if ($this->users->removeElement($user)) {
         }

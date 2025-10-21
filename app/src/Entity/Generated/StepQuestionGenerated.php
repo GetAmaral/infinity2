@@ -68,12 +68,12 @@ abstract class StepQuestionGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getStep(): App\Entity\Step
+    public function getStep(): Step
     {
         return $this->step;
     }
 
-    public function setStep(App\Entity\Step $step): self
+    public function setStep(Step $step): self
     {
         $this->step = $step;
         return $this;

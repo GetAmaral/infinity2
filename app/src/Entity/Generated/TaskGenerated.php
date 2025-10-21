@@ -179,12 +179,12 @@ abstract class TaskGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -290,23 +290,23 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getContact(): ?App\Entity\Contact
+    public function getContact(): ?Contact
     {
         return $this->contact;
     }
 
-    public function setContact(?App\Entity\Contact $contact): self
+    public function setContact(?Contact $contact): self
     {
         $this->contact = $contact;
         return $this;
     }
 
-    public function getDeal(): ?App\Entity\Deal
+    public function getDeal(): ?Deal
     {
         return $this->deal;
     }
 
-    public function setDeal(?App\Entity\Deal $deal): self
+    public function setDeal(?Deal $deal): self
     {
         $this->deal = $deal;
         return $this;
@@ -332,12 +332,12 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getPipelineStage(): ?App\Entity\PipelineStage
+    public function getPipelineStage(): ?PipelineStage
     {
         return $this->pipelineStage;
     }
 
-    public function setPipelineStage(?App\Entity\PipelineStage $pipelineStage): self
+    public function setPipelineStage(?PipelineStage $pipelineStage): self
     {
         $this->pipelineStage = $pipelineStage;
         return $this;
@@ -378,12 +378,12 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getCompany(): ?App\Entity\Company
+    public function getCompany(): ?Company
     {
         return $this->company;
     }
 
-    public function setCompany(?App\Entity\Company $company): self
+    public function setCompany(?Company $company): self
     {
         $this->company = $company;
         return $this;
@@ -524,23 +524,23 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getType(): ?App\Entity\TaskType
+    public function getType(): ?TaskType
     {
         return $this->type;
     }
 
-    public function setType(?App\Entity\TaskType $type): self
+    public function setType(?TaskType $type): self
     {
         $this->type = $type;
         return $this;
     }
 
-    public function getUser(): ?App\Entity\User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?App\Entity\User $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
         return $this;

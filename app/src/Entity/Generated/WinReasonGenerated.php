@@ -111,12 +111,12 @@ abstract class WinReasonGenerated extends EntityBase
         $this->deals = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -288,14 +288,14 @@ abstract class WinReasonGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getDeals(): Collection
     {
         return $this->deals;
     }
 
-    public function addDeal(App\Entity\Deal $deal): self
+    public function addDeal(Deal $deal): self
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
@@ -304,7 +304,7 @@ abstract class WinReasonGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDeal(App\Entity\Deal $deal): self
+    public function removeDeal(Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
             if ($deal->getWinReason() === $this) {

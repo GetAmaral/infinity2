@@ -353,12 +353,12 @@ abstract class ProductGenerated extends EntityBase
         $this->tags = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -480,14 +480,14 @@ abstract class ProductGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Attachment>
+     * @return Collection<int, Attachment>
      */
     public function getAttachments(): Collection
     {
         return $this->attachments;
     }
 
-    public function addAttachment(App\Entity\Attachment $attachment): self
+    public function addAttachment(Attachment $attachment): self
     {
         if (!$this->attachments->contains($attachment)) {
             $this->attachments->add($attachment);
@@ -496,7 +496,7 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeAttachment(App\Entity\Attachment $attachment): self
+    public function removeAttachment(Attachment $attachment): self
     {
         if ($this->attachments->removeElement($attachment)) {
             if ($attachment->getProduct() === $this) {
@@ -592,14 +592,14 @@ abstract class ProductGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\ProductBatch>
+     * @return Collection<int, ProductBatch>
      */
     public function getBatches(): Collection
     {
         return $this->batches;
     }
 
-    public function addBatch(App\Entity\ProductBatch $batch): self
+    public function addBatch(ProductBatch $batch): self
     {
         if (!$this->batches->contains($batch)) {
             $this->batches->add($batch);
@@ -608,7 +608,7 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeBatch(App\Entity\ProductBatch $batch): self
+    public function removeBatch(ProductBatch $batch): self
     {
         if ($this->batches->removeElement($batch)) {
             if ($batch->getProduct() === $this) {
@@ -618,23 +618,23 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getBillingFrequency(): ?App\Entity\BillingFrequency
+    public function getBillingFrequency(): ?BillingFrequency
     {
         return $this->billingFrequency;
     }
 
-    public function setBillingFrequency(?App\Entity\BillingFrequency $billingFrequency): self
+    public function setBillingFrequency(?BillingFrequency $billingFrequency): self
     {
         $this->billingFrequency = $billingFrequency;
         return $this;
     }
 
-    public function getBrand(): ?App\Entity\Brand
+    public function getBrand(): ?Brand
     {
         return $this->brand;
     }
 
-    public function setBrand(?App\Entity\Brand $brand): self
+    public function setBrand(?Brand $brand): self
     {
         $this->brand = $brand;
         return $this;
@@ -650,12 +650,12 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getCategory(): ?App\Entity\ProductCategory
+    public function getCategory(): ?ProductCategory
     {
         return $this->category;
     }
 
-    public function setCategory(?App\Entity\ProductCategory $category): self
+    public function setCategory(?ProductCategory $category): self
     {
         $this->category = $category;
         return $this;
@@ -712,14 +712,14 @@ abstract class ProductGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getDeals(): Collection
     {
         return $this->deals;
     }
 
-    public function addDeal(App\Entity\Deal $deal): self
+    public function addDeal(Deal $deal): self
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
@@ -728,7 +728,7 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDeal(App\Entity\Deal $deal): self
+    public function removeDeal(Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
             if ($deal->getProducts() === $this) {
@@ -829,14 +829,14 @@ abstract class ProductGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Company>
+     * @return Collection<int, Company>
      */
     public function getManufacturer(): Collection
     {
         return $this->manufacturer;
     }
 
-    public function addManufacturer(App\Entity\Company $manufacturer): self
+    public function addManufacturer(Company $manufacturer): self
     {
         if (!$this->manufacturer->contains($manufacturer)) {
             $this->manufacturer->add($manufacturer);
@@ -845,7 +845,7 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeManufacturer(App\Entity\Company $manufacturer): self
+    public function removeManufacturer(Company $manufacturer): self
     {
         if ($this->manufacturer->removeElement($manufacturer)) {
             if ($manufacturer->getManufacturedProducts() === $this) {
@@ -895,12 +895,12 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getProductLine(): ?App\Entity\ProductLine
+    public function getProductLine(): ?ProductLine
     {
         return $this->productLine;
     }
 
-    public function setProductLine(?App\Entity\ProductLine $productLine): self
+    public function setProductLine(?ProductLine $productLine): self
     {
         $this->productLine = $productLine;
         return $this;
@@ -942,14 +942,14 @@ abstract class ProductGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Product>
+     * @return Collection<int, Product>
      */
     public function getRelatedFrom(): Collection
     {
         return $this->relatedFrom;
     }
 
-    public function addRelatedFrom(App\Entity\Product $relatedFrom): self
+    public function addRelatedFrom(Product $relatedFrom): self
     {
         if (!$this->relatedFrom->contains($relatedFrom)) {
             $this->relatedFrom->add($relatedFrom);
@@ -958,7 +958,7 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeRelatedFrom(App\Entity\Product $relatedFrom): self
+    public function removeRelatedFrom(Product $relatedFrom): self
     {
         if ($this->relatedFrom->removeElement($relatedFrom)) {
             if ($relatedFrom->getRelatedTo() === $this) {
@@ -969,14 +969,14 @@ abstract class ProductGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Product>
+     * @return Collection<int, Product>
      */
     public function getRelatedTo(): Collection
     {
         return $this->relatedTo;
     }
 
-    public function addRelatedTo(App\Entity\Product $relatedTo): self
+    public function addRelatedTo(Product $relatedTo): self
     {
         if (!$this->relatedTo->contains($relatedTo)) {
             $this->relatedTo->add($relatedTo);
@@ -984,7 +984,7 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeRelatedTo(App\Entity\Product $relatedTo): self
+    public function removeRelatedTo(Product $relatedTo): self
     {
         if ($this->relatedTo->removeElement($relatedTo)) {
         }
@@ -1097,14 +1097,14 @@ abstract class ProductGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Product>
+     * @return Collection<int, Product>
      */
     public function getSubstituteFrom(): Collection
     {
         return $this->substituteFrom;
     }
 
-    public function addSubstituteFrom(App\Entity\Product $substituteFrom): self
+    public function addSubstituteFrom(Product $substituteFrom): self
     {
         if (!$this->substituteFrom->contains($substituteFrom)) {
             $this->substituteFrom->add($substituteFrom);
@@ -1113,7 +1113,7 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSubstituteFrom(App\Entity\Product $substituteFrom): self
+    public function removeSubstituteFrom(Product $substituteFrom): self
     {
         if ($this->substituteFrom->removeElement($substituteFrom)) {
             if ($substituteFrom->getSubstituteTo() === $this) {
@@ -1124,14 +1124,14 @@ abstract class ProductGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Product>
+     * @return Collection<int, Product>
      */
     public function getSubstituteTo(): Collection
     {
         return $this->substituteTo;
     }
 
-    public function addSubstituteTo(App\Entity\Product $substituteTo): self
+    public function addSubstituteTo(Product $substituteTo): self
     {
         if (!$this->substituteTo->contains($substituteTo)) {
             $this->substituteTo->add($substituteTo);
@@ -1139,7 +1139,7 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSubstituteTo(App\Entity\Product $substituteTo): self
+    public function removeSubstituteTo(Product $substituteTo): self
     {
         if ($this->substituteTo->removeElement($substituteTo)) {
         }
@@ -1147,14 +1147,14 @@ abstract class ProductGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Company>
+     * @return Collection<int, Company>
      */
     public function getSupplier(): Collection
     {
         return $this->supplier;
     }
 
-    public function addSupplier(App\Entity\Company $supplier): self
+    public function addSupplier(Company $supplier): self
     {
         if (!$this->supplier->contains($supplier)) {
             $this->supplier->add($supplier);
@@ -1163,7 +1163,7 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSupplier(App\Entity\Company $supplier): self
+    public function removeSupplier(Company $supplier): self
     {
         if ($this->supplier->removeElement($supplier)) {
             if ($supplier->getSuppliedProducts() === $this) {
@@ -1184,14 +1184,14 @@ abstract class ProductGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Tag>
+     * @return Collection<int, Tag>
      */
     public function getTags(): Collection
     {
         return $this->tags;
     }
 
-    public function addTag(App\Entity\Tag $tag): self
+    public function addTag(Tag $tag): self
     {
         if (!$this->tags->contains($tag)) {
             $this->tags->add($tag);
@@ -1199,19 +1199,19 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTag(App\Entity\Tag $tag): self
+    public function removeTag(Tag $tag): self
     {
         if ($this->tags->removeElement($tag)) {
         }
         return $this;
     }
 
-    public function getTaxCategory(): ?App\Entity\TaxCategory
+    public function getTaxCategory(): ?TaxCategory
     {
         return $this->taxCategory;
     }
 
-    public function setTaxCategory(?App\Entity\TaxCategory $taxCategory): self
+    public function setTaxCategory(?TaxCategory $taxCategory): self
     {
         $this->taxCategory = $taxCategory;
         return $this;

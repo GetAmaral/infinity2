@@ -46,34 +46,34 @@ abstract class StepConnectionGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
     }
 
-    public function getSourceOutput(): App\Entity\StepOutput
+    public function getSourceOutput(): StepOutput
     {
         return $this->sourceOutput;
     }
 
-    public function setSourceOutput(App\Entity\StepOutput $sourceOutput): self
+    public function setSourceOutput(StepOutput $sourceOutput): self
     {
         $this->sourceOutput = $sourceOutput;
         return $this;
     }
 
-    public function getTargetInput(): App\Entity\StepInput
+    public function getTargetInput(): StepInput
     {
         return $this->targetInput;
     }
 
-    public function setTargetInput(App\Entity\StepInput $targetInput): self
+    public function setTargetInput(StepInput $targetInput): self
     {
         $this->targetInput = $targetInput;
         return $this;

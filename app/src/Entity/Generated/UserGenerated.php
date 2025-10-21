@@ -224,12 +224,12 @@ abstract class UserGenerated extends EntityBase
         $this->tasks = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -246,14 +246,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Agent>
+     * @return Collection<int, Agent>
      */
     public function getAgents(): Collection
     {
         return $this->agents;
     }
 
-    public function addAgent(App\Entity\Agent $agent): self
+    public function addAgent(Agent $agent): self
     {
         if (!$this->agents->contains($agent)) {
             $this->agents->add($agent);
@@ -262,7 +262,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeAgent(App\Entity\Agent $agent): self
+    public function removeAgent(Agent $agent): self
     {
         if ($this->agents->removeElement($agent)) {
             if ($agent->getUser() === $this) {
@@ -308,14 +308,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Calendar>
+     * @return Collection<int, Calendar>
      */
     public function getCalendars(): Collection
     {
         return $this->calendars;
     }
 
-    public function addCalendar(App\Entity\Calendar $calendar): self
+    public function addCalendar(Calendar $calendar): self
     {
         if (!$this->calendars->contains($calendar)) {
             $this->calendars->add($calendar);
@@ -324,7 +324,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCalendar(App\Entity\Calendar $calendar): self
+    public function removeCalendar(Calendar $calendar): self
     {
         if ($this->calendars->removeElement($calendar)) {
             if ($calendar->getUser() === $this) {
@@ -335,14 +335,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Campaign>
+     * @return Collection<int, Campaign>
      */
     public function getCampaigns(): Collection
     {
         return $this->campaigns;
     }
 
-    public function addCampaign(App\Entity\Campaign $campaign): self
+    public function addCampaign(Campaign $campaign): self
     {
         if (!$this->campaigns->contains($campaign)) {
             $this->campaigns->add($campaign);
@@ -351,7 +351,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCampaign(App\Entity\Campaign $campaign): self
+    public function removeCampaign(Campaign $campaign): self
     {
         if ($this->campaigns->removeElement($campaign)) {
             if ($campaign->getTeam() === $this) {
@@ -372,14 +372,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Contact>
+     * @return Collection<int, Contact>
      */
     public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
-    public function addContact(App\Entity\Contact $contact): self
+    public function addContact(Contact $contact): self
     {
         if (!$this->contacts->contains($contact)) {
             $this->contacts->add($contact);
@@ -388,7 +388,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeContact(App\Entity\Contact $contact): self
+    public function removeContact(Contact $contact): self
     {
         if ($this->contacts->removeElement($contact)) {
             if ($contact->getAccountTeam() === $this) {
@@ -399,14 +399,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getDeals(): Collection
     {
         return $this->deals;
     }
 
-    public function addDeal(App\Entity\Deal $deal): self
+    public function addDeal(Deal $deal): self
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
@@ -415,7 +415,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDeal(App\Entity\Deal $deal): self
+    public function removeDeal(Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
             if ($deal->getTeam() === $this) {
@@ -436,14 +436,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getOwnedDeals(): Collection
     {
         return $this->ownedDeals;
     }
 
-    public function addOwnedDeal(App\Entity\Deal $ownedDeal): self
+    public function addOwnedDeal(Deal $ownedDeal): self
     {
         if (!$this->ownedDeals->contains($ownedDeal)) {
             $this->ownedDeals->add($ownedDeal);
@@ -452,7 +452,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeOwnedDeal(App\Entity\Deal $ownedDeal): self
+    public function removeOwnedDeal(Deal $ownedDeal): self
     {
         if ($this->ownedDeals->removeElement($ownedDeal)) {
             if ($ownedDeal->getOwner() === $this) {
@@ -473,14 +473,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\CalendarExternalLink>
+     * @return Collection<int, CalendarExternalLink>
      */
     public function getCalendarExternalLinks(): Collection
     {
         return $this->calendarExternalLinks;
     }
 
-    public function addCalendarExternalLink(App\Entity\CalendarExternalLink $calendarExternalLink): self
+    public function addCalendarExternalLink(CalendarExternalLink $calendarExternalLink): self
     {
         if (!$this->calendarExternalLinks->contains($calendarExternalLink)) {
             $this->calendarExternalLinks->add($calendarExternalLink);
@@ -489,7 +489,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCalendarExternalLink(App\Entity\CalendarExternalLink $calendarExternalLink): self
+    public function removeCalendarExternalLink(CalendarExternalLink $calendarExternalLink): self
     {
         if ($this->calendarExternalLinks->removeElement($calendarExternalLink)) {
             if ($calendarExternalLink->getUser() === $this) {
@@ -500,14 +500,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\EventResourceBooking>
+     * @return Collection<int, EventResourceBooking>
      */
     public function getResourceBookings(): Collection
     {
         return $this->resourceBookings;
     }
 
-    public function addResourceBooking(App\Entity\EventResourceBooking $resourceBooking): self
+    public function addResourceBooking(EventResourceBooking $resourceBooking): self
     {
         if (!$this->resourceBookings->contains($resourceBooking)) {
             $this->resourceBookings->add($resourceBooking);
@@ -516,7 +516,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeResourceBooking(App\Entity\EventResourceBooking $resourceBooking): self
+    public function removeResourceBooking(EventResourceBooking $resourceBooking): self
     {
         if ($this->resourceBookings->removeElement($resourceBooking)) {
             if ($resourceBooking->getBookedBy() === $this) {
@@ -527,14 +527,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\EventAttendee>
+     * @return Collection<int, EventAttendee>
      */
     public function getEventAttendances(): Collection
     {
         return $this->eventAttendances;
     }
 
-    public function addEventAttendance(App\Entity\EventAttendee $eventAttendance): self
+    public function addEventAttendance(EventAttendee $eventAttendance): self
     {
         if (!$this->eventAttendances->contains($eventAttendance)) {
             $this->eventAttendances->add($eventAttendance);
@@ -543,7 +543,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeEventAttendance(App\Entity\EventAttendee $eventAttendance): self
+    public function removeEventAttendance(EventAttendee $eventAttendance): self
     {
         if ($this->eventAttendances->removeElement($eventAttendance)) {
             if ($eventAttendance->getUser() === $this) {
@@ -564,14 +564,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Flag>
+     * @return Collection<int, Flag>
      */
     public function getFlags(): Collection
     {
         return $this->flags;
     }
 
-    public function addFlag(App\Entity\Flag $flag): self
+    public function addFlag(Flag $flag): self
     {
         if (!$this->flags->contains($flag)) {
             $this->flags->add($flag);
@@ -580,7 +580,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeFlag(App\Entity\Flag $flag): self
+    public function removeFlag(Flag $flag): self
     {
         if ($this->flags->removeElement($flag)) {
             if ($flag->getUser() === $this) {
@@ -611,14 +611,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Campaign>
+     * @return Collection<int, Campaign>
      */
     public function getManagedCampaigns(): Collection
     {
         return $this->managedCampaigns;
     }
 
-    public function addManagedCampaign(App\Entity\Campaign $managedCampaign): self
+    public function addManagedCampaign(Campaign $managedCampaign): self
     {
         if (!$this->managedCampaigns->contains($managedCampaign)) {
             $this->managedCampaigns->add($managedCampaign);
@@ -627,7 +627,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeManagedCampaign(App\Entity\Campaign $managedCampaign): self
+    public function removeManagedCampaign(Campaign $managedCampaign): self
     {
         if ($this->managedCampaigns->removeElement($managedCampaign)) {
             if ($managedCampaign->getManager() === $this) {
@@ -638,14 +638,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Campaign>
+     * @return Collection<int, Campaign>
      */
     public function getOwnedCampaigns(): Collection
     {
         return $this->ownedCampaigns;
     }
 
-    public function addOwnedCampaign(App\Entity\Campaign $ownedCampaign): self
+    public function addOwnedCampaign(Campaign $ownedCampaign): self
     {
         if (!$this->ownedCampaigns->contains($ownedCampaign)) {
             $this->ownedCampaigns->add($ownedCampaign);
@@ -654,7 +654,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeOwnedCampaign(App\Entity\Campaign $ownedCampaign): self
+    public function removeOwnedCampaign(Campaign $ownedCampaign): self
     {
         if ($this->ownedCampaigns->removeElement($ownedCampaign)) {
             if ($ownedCampaign->getOwner() === $this) {
@@ -665,14 +665,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Company>
+     * @return Collection<int, Company>
      */
     public function getManagedCompanies(): Collection
     {
         return $this->managedCompanies;
     }
 
-    public function addManagedCompany(App\Entity\Company $managedCompany): self
+    public function addManagedCompany(Company $managedCompany): self
     {
         if (!$this->managedCompanies->contains($managedCompany)) {
             $this->managedCompanies->add($managedCompany);
@@ -681,7 +681,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeManagedCompany(App\Entity\Company $managedCompany): self
+    public function removeManagedCompany(Company $managedCompany): self
     {
         if ($this->managedCompanies->removeElement($managedCompany)) {
             if ($managedCompany->getAccountManager() === $this) {
@@ -692,14 +692,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Contact>
+     * @return Collection<int, Contact>
      */
     public function getManagedContacts(): Collection
     {
         return $this->managedContacts;
     }
 
-    public function addManagedContact(App\Entity\Contact $managedContact): self
+    public function addManagedContact(Contact $managedContact): self
     {
         if (!$this->managedContacts->contains($managedContact)) {
             $this->managedContacts->add($managedContact);
@@ -708,7 +708,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeManagedContact(App\Entity\Contact $managedContact): self
+    public function removeManagedContact(Contact $managedContact): self
     {
         if ($this->managedContacts->removeElement($managedContact)) {
             if ($managedContact->getAccountManager() === $this) {
@@ -719,14 +719,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getManagedDeals(): Collection
     {
         return $this->managedDeals;
     }
 
-    public function addManagedDeal(App\Entity\Deal $managedDeal): self
+    public function addManagedDeal(Deal $managedDeal): self
     {
         if (!$this->managedDeals->contains($managedDeal)) {
             $this->managedDeals->add($managedDeal);
@@ -735,7 +735,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeManagedDeal(App\Entity\Deal $managedDeal): self
+    public function removeManagedDeal(Deal $managedDeal): self
     {
         if ($this->managedDeals->removeElement($managedDeal)) {
             if ($managedDeal->getManager() === $this) {
@@ -746,14 +746,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Pipeline>
+     * @return Collection<int, Pipeline>
      */
     public function getManagedPipelines(): Collection
     {
         return $this->managedPipelines;
     }
 
-    public function addManagedPipeline(App\Entity\Pipeline $managedPipeline): self
+    public function addManagedPipeline(Pipeline $managedPipeline): self
     {
         if (!$this->managedPipelines->contains($managedPipeline)) {
             $this->managedPipelines->add($managedPipeline);
@@ -762,7 +762,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeManagedPipeline(App\Entity\Pipeline $managedPipeline): self
+    public function removeManagedPipeline(Pipeline $managedPipeline): self
     {
         if ($this->managedPipelines->removeElement($managedPipeline)) {
             if ($managedPipeline->getManager() === $this) {
@@ -773,14 +773,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Event>
+     * @return Collection<int, Event>
      */
     public function getOrganizedEvents(): Collection
     {
         return $this->organizedEvents;
     }
 
-    public function addOrganizedEvent(App\Entity\Event $organizedEvent): self
+    public function addOrganizedEvent(Event $organizedEvent): self
     {
         if (!$this->organizedEvents->contains($organizedEvent)) {
             $this->organizedEvents->add($organizedEvent);
@@ -789,7 +789,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeOrganizedEvent(App\Entity\Event $organizedEvent): self
+    public function removeOrganizedEvent(Event $organizedEvent): self
     {
         if ($this->organizedEvents->removeElement($organizedEvent)) {
             if ($organizedEvent->getOrganizer() === $this) {
@@ -800,14 +800,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Course>
+     * @return Collection<int, Course>
      */
     public function getOwnedCourses(): Collection
     {
         return $this->ownedCourses;
     }
 
-    public function addOwnedCours(App\Entity\Course $ownedCours): self
+    public function addOwnedCours(Course $ownedCours): self
     {
         if (!$this->ownedCourses->contains($ownedCours)) {
             $this->ownedCourses->add($ownedCours);
@@ -816,7 +816,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeOwnedCours(App\Entity\Course $ownedCours): self
+    public function removeOwnedCours(Course $ownedCours): self
     {
         if ($this->ownedCourses->removeElement($ownedCours)) {
             if ($ownedCours->getOwner() === $this) {
@@ -857,14 +857,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Profile>
+     * @return Collection<int, Profile>
      */
     public function getProfiles(): Collection
     {
         return $this->profiles;
     }
 
-    public function addProfile(App\Entity\Profile $profile): self
+    public function addProfile(Profile $profile): self
     {
         if (!$this->profiles->contains($profile)) {
             $this->profiles->add($profile);
@@ -873,7 +873,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeProfile(App\Entity\Profile $profile): self
+    public function removeProfile(Profile $profile): self
     {
         if ($this->profiles->removeElement($profile)) {
             if ($profile->getUsers() === $this) {
@@ -884,14 +884,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\SocialMedia>
+     * @return Collection<int, SocialMedia>
      */
     public function getSocialMedias(): Collection
     {
         return $this->socialMedias;
     }
 
-    public function addSocialMedia(App\Entity\SocialMedia $socialMedia): self
+    public function addSocialMedia(SocialMedia $socialMedia): self
     {
         if (!$this->socialMedias->contains($socialMedia)) {
             $this->socialMedias->add($socialMedia);
@@ -900,7 +900,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSocialMedia(App\Entity\SocialMedia $socialMedia): self
+    public function removeSocialMedia(SocialMedia $socialMedia): self
     {
         if ($this->socialMedias->removeElement($socialMedia)) {
             if ($socialMedia->getUser() === $this) {
@@ -911,14 +911,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\StudentCourse>
+     * @return Collection<int, StudentCourse>
      */
     public function getStudentCourses(): Collection
     {
         return $this->studentCourses;
     }
 
-    public function addStudentCours(App\Entity\StudentCourse $studentCours): self
+    public function addStudentCours(StudentCourse $studentCours): self
     {
         if (!$this->studentCourses->contains($studentCours)) {
             $this->studentCourses->add($studentCours);
@@ -927,7 +927,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeStudentCours(App\Entity\StudentCourse $studentCours): self
+    public function removeStudentCours(StudentCourse $studentCours): self
     {
         if ($this->studentCourses->removeElement($studentCours)) {
             if ($studentCours->getStudent() === $this) {
@@ -938,14 +938,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Talk>
+     * @return Collection<int, Talk>
      */
     public function getTalks(): Collection
     {
         return $this->talks;
     }
 
-    public function addTalk(App\Entity\Talk $talk): self
+    public function addTalk(Talk $talk): self
     {
         if (!$this->talks->contains($talk)) {
             $this->talks->add($talk);
@@ -954,7 +954,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTalk(App\Entity\Talk $talk): self
+    public function removeTalk(Talk $talk): self
     {
         if ($this->talks->removeElement($talk)) {
             if ($talk->getUsers() === $this) {
@@ -965,14 +965,14 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Task>
+     * @return Collection<int, Task>
      */
     public function getTasks(): Collection
     {
         return $this->tasks;
     }
 
-    public function addTask(App\Entity\Task $task): self
+    public function addTask(Task $task): self
     {
         if (!$this->tasks->contains($task)) {
             $this->tasks->add($task);
@@ -981,7 +981,7 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTask(App\Entity\Task $task): self
+    public function removeTask(Task $task): self
     {
         if ($this->tasks->removeElement($task)) {
             if ($task->getUser() === $this) {

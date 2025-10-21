@@ -75,14 +75,14 @@ abstract class CommunicationMethodGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Notification>
+     * @return Collection<int, Notification>
      */
     public function getNotifications(): Collection
     {
         return $this->notifications;
     }
 
-    public function addNotification(App\Entity\Notification $notification): self
+    public function addNotification(Notification $notification): self
     {
         if (!$this->notifications->contains($notification)) {
             $this->notifications->add($notification);
@@ -91,7 +91,7 @@ abstract class CommunicationMethodGenerated extends EntityBase
         return $this;
     }
 
-    public function removeNotification(App\Entity\Notification $notification): self
+    public function removeNotification(Notification $notification): self
     {
         if ($this->notifications->removeElement($notification)) {
             if ($notification->getCommunicationMethod() === $this) {
@@ -112,14 +112,14 @@ abstract class CommunicationMethodGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Reminder>
+     * @return Collection<int, Reminder>
      */
     public function getReminders(): Collection
     {
         return $this->reminders;
     }
 
-    public function addReminder(App\Entity\Reminder $reminder): self
+    public function addReminder(Reminder $reminder): self
     {
         if (!$this->reminders->contains($reminder)) {
             $this->reminders->add($reminder);
@@ -128,7 +128,7 @@ abstract class CommunicationMethodGenerated extends EntityBase
         return $this;
     }
 
-    public function removeReminder(App\Entity\Reminder $reminder): self
+    public function removeReminder(Reminder $reminder): self
     {
         if ($this->reminders->removeElement($reminder)) {
             if ($reminder->getCommunicationMethod() === $this) {

@@ -84,12 +84,12 @@ abstract class DealCategoryGenerated extends EntityBase
         $this->deals = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -160,26 +160,26 @@ abstract class DealCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function getParentCategory(): ?App\Entity\DealCategory
+    public function getParentCategory(): ?DealCategory
     {
         return $this->parentCategory;
     }
 
-    public function setParentCategory(?App\Entity\DealCategory $parentCategory): self
+    public function setParentCategory(?DealCategory $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\DealCategory>
+     * @return Collection<int, DealCategory>
      */
     public function getSubcategories(): Collection
     {
         return $this->subcategories;
     }
 
-    public function addSubcategory(App\Entity\DealCategory $subcategory): self
+    public function addSubcategory(DealCategory $subcategory): self
     {
         if (!$this->subcategories->contains($subcategory)) {
             $this->subcategories->add($subcategory);
@@ -188,7 +188,7 @@ abstract class DealCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSubcategory(App\Entity\DealCategory $subcategory): self
+    public function removeSubcategory(DealCategory $subcategory): self
     {
         if ($this->subcategories->removeElement($subcategory)) {
             if ($subcategory->getParentCategory() === $this) {
@@ -199,14 +199,14 @@ abstract class DealCategoryGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Deal>
+     * @return Collection<int, Deal>
      */
     public function getDeals(): Collection
     {
         return $this->deals;
     }
 
-    public function addDeal(App\Entity\Deal $deal): self
+    public function addDeal(Deal $deal): self
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
@@ -215,7 +215,7 @@ abstract class DealCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDeal(App\Entity\Deal $deal): self
+    public function removeDeal(Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
             if ($deal->getCategory() === $this) {

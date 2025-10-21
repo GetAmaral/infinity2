@@ -64,12 +64,12 @@ abstract class ReminderGenerated extends EntityBase
         $this->notifications = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -100,23 +100,23 @@ abstract class ReminderGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getCommunicationMethod(): ?App\Entity\CommunicationMethod
+    public function getCommunicationMethod(): ?CommunicationMethod
     {
         return $this->communicationMethod;
     }
 
-    public function setCommunicationMethod(?App\Entity\CommunicationMethod $communicationMethod): self
+    public function setCommunicationMethod(?CommunicationMethod $communicationMethod): self
     {
         $this->communicationMethod = $communicationMethod;
         return $this;
     }
 
-    public function getEvent(): ?App\Entity\Event
+    public function getEvent(): ?Event
     {
         return $this->event;
     }
 
-    public function setEvent(?App\Entity\Event $event): self
+    public function setEvent(?Event $event): self
     {
         $this->event = $event;
         return $this;
@@ -133,14 +133,14 @@ abstract class ReminderGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Notification>
+     * @return Collection<int, Notification>
      */
     public function getNotifications(): Collection
     {
         return $this->notifications;
     }
 
-    public function addNotification(App\Entity\Notification $notification): self
+    public function addNotification(Notification $notification): self
     {
         if (!$this->notifications->contains($notification)) {
             $this->notifications->add($notification);
@@ -149,7 +149,7 @@ abstract class ReminderGenerated extends EntityBase
         return $this;
     }
 
-    public function removeNotification(App\Entity\Notification $notification): self
+    public function removeNotification(Notification $notification): self
     {
         if ($this->notifications->removeElement($notification)) {
             if ($notification->getReminder() === $this) {

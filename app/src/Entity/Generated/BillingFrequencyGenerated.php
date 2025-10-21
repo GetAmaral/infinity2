@@ -86,12 +86,12 @@ abstract class BillingFrequencyGenerated extends EntityBase
         $this->products = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -218,14 +218,14 @@ abstract class BillingFrequencyGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Product>
+     * @return Collection<int, Product>
      */
     public function getProducts(): Collection
     {
         return $this->products;
     }
 
-    public function addProduct(App\Entity\Product $product): self
+    public function addProduct(Product $product): self
     {
         if (!$this->products->contains($product)) {
             $this->products->add($product);
@@ -234,7 +234,7 @@ abstract class BillingFrequencyGenerated extends EntityBase
         return $this;
     }
 
-    public function removeProduct(App\Entity\Product $product): self
+    public function removeProduct(Product $product): self
     {
         if ($this->products->removeElement($product)) {
             if ($product->getBillingFrequency() === $this) {

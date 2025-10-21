@@ -51,14 +51,14 @@ abstract class ProfileTemplateGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Role>
+     * @return Collection<int, Role>
      */
     public function getGrantedRoles(): Collection
     {
         return $this->grantedRoles;
     }
 
-    public function addGrantedRole(App\Entity\Role $grantedRole): self
+    public function addGrantedRole(Role $grantedRole): self
     {
         if (!$this->grantedRoles->contains($grantedRole)) {
             $this->grantedRoles->add($grantedRole);
@@ -66,7 +66,7 @@ abstract class ProfileTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function removeGrantedRole(App\Entity\Role $grantedRole): self
+    public function removeGrantedRole(Role $grantedRole): self
     {
         if ($this->grantedRoles->removeElement($grantedRole)) {
         }

@@ -60,12 +60,12 @@ abstract class ProductCategoryGenerated extends EntityBase
         $this->products = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -91,26 +91,26 @@ abstract class ProductCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function getParentCategory(): ?App\Entity\ProductCategory
+    public function getParentCategory(): ?ProductCategory
     {
         return $this->parentCategory;
     }
 
-    public function setParentCategory(?App\Entity\ProductCategory $parentCategory): self
+    public function setParentCategory(?ProductCategory $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\ProductCategory>
+     * @return Collection<int, ProductCategory>
      */
     public function getSubcategories(): Collection
     {
         return $this->subcategories;
     }
 
-    public function addSubcategory(App\Entity\ProductCategory $subcategory): self
+    public function addSubcategory(ProductCategory $subcategory): self
     {
         if (!$this->subcategories->contains($subcategory)) {
             $this->subcategories->add($subcategory);
@@ -119,7 +119,7 @@ abstract class ProductCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function removeSubcategory(App\Entity\ProductCategory $subcategory): self
+    public function removeSubcategory(ProductCategory $subcategory): self
     {
         if ($this->subcategories->removeElement($subcategory)) {
             if ($subcategory->getParentCategory() === $this) {
@@ -130,14 +130,14 @@ abstract class ProductCategoryGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Product>
+     * @return Collection<int, Product>
      */
     public function getProducts(): Collection
     {
         return $this->products;
     }
 
-    public function addProduct(App\Entity\Product $product): self
+    public function addProduct(Product $product): self
     {
         if (!$this->products->contains($product)) {
             $this->products->add($product);
@@ -146,7 +146,7 @@ abstract class ProductCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function removeProduct(App\Entity\Product $product): self
+    public function removeProduct(Product $product): self
     {
         if ($this->products->removeElement($product)) {
             if ($product->getCategory() === $this) {

@@ -105,12 +105,12 @@ abstract class DealStageGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -161,23 +161,23 @@ abstract class DealStageGenerated extends EntityBase
         return $this->rotten === true;
     }
 
-    public function getEnteredBy(): ?App\Entity\User
+    public function getEnteredBy(): ?User
     {
         return $this->enteredBy;
     }
 
-    public function setEnteredBy(?App\Entity\User $enteredBy): self
+    public function setEnteredBy(?User $enteredBy): self
     {
         $this->enteredBy = $enteredBy;
         return $this;
     }
 
-    public function getExitedBy(): ?App\Entity\User
+    public function getExitedBy(): ?User
     {
         return $this->exitedBy;
     }
 
-    public function setExitedBy(?App\Entity\User $exitedBy): self
+    public function setExitedBy(?User $exitedBy): self
     {
         $this->exitedBy = $exitedBy;
         return $this;
@@ -238,12 +238,12 @@ abstract class DealStageGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getDeal(): ?App\Entity\Deal
+    public function getDeal(): ?Deal
     {
         return $this->deal;
     }
 
-    public function setDeal(?App\Entity\Deal $deal): self
+    public function setDeal(?Deal $deal): self
     {
         $this->deal = $deal;
         return $this;
@@ -279,12 +279,12 @@ abstract class DealStageGenerated extends EntityBase
         return $this;
     }
 
-    public function getPipelineStage(): ?App\Entity\PipelineStage
+    public function getPipelineStage(): ?PipelineStage
     {
         return $this->pipelineStage;
     }
 
-    public function setPipelineStage(?App\Entity\PipelineStage $pipelineStage): self
+    public function setPipelineStage(?PipelineStage $pipelineStage): self
     {
         $this->pipelineStage = $pipelineStage;
         return $this;

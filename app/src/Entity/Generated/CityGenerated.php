@@ -89,12 +89,12 @@ abstract class CityGenerated extends EntityBase
         $this->holidayTemplates = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -120,12 +120,12 @@ abstract class CityGenerated extends EntityBase
         return $this;
     }
 
-    public function getCountry(): ?App\Entity\Country
+    public function getCountry(): ?Country
     {
         return $this->country;
     }
 
-    public function setCountry(?App\Entity\Country $country): self
+    public function setCountry(?Country $country): self
     {
         $this->country = $country;
         return $this;
@@ -212,14 +212,14 @@ abstract class CityGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\EventResource>
+     * @return Collection<int, EventResource>
      */
     public function getEventResources(): Collection
     {
         return $this->eventResources;
     }
 
-    public function addEventResource(App\Entity\EventResource $eventResource): self
+    public function addEventResource(EventResource $eventResource): self
     {
         if (!$this->eventResources->contains($eventResource)) {
             $this->eventResources->add($eventResource);
@@ -228,7 +228,7 @@ abstract class CityGenerated extends EntityBase
         return $this;
     }
 
-    public function removeEventResource(App\Entity\EventResource $eventResource): self
+    public function removeEventResource(EventResource $eventResource): self
     {
         if ($this->eventResources->removeElement($eventResource)) {
             if ($eventResource->getCity() === $this) {
@@ -239,14 +239,14 @@ abstract class CityGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\HolidayTemplate>
+     * @return Collection<int, HolidayTemplate>
      */
     public function getHolidayTemplates(): Collection
     {
         return $this->holidayTemplates;
     }
 
-    public function addHolidayTemplate(App\Entity\HolidayTemplate $holidayTemplate): self
+    public function addHolidayTemplate(HolidayTemplate $holidayTemplate): self
     {
         if (!$this->holidayTemplates->contains($holidayTemplate)) {
             $this->holidayTemplates->add($holidayTemplate);
@@ -255,7 +255,7 @@ abstract class CityGenerated extends EntityBase
         return $this;
     }
 
-    public function removeHolidayTemplate(App\Entity\HolidayTemplate $holidayTemplate): self
+    public function removeHolidayTemplate(HolidayTemplate $holidayTemplate): self
     {
         if ($this->holidayTemplates->removeElement($holidayTemplate)) {
             if ($holidayTemplate->getCity() === $this) {

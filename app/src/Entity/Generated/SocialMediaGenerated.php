@@ -74,12 +74,12 @@ abstract class SocialMediaGenerated extends EntityBase
         $this->campaigns = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -106,14 +106,14 @@ abstract class SocialMediaGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Campaign>
+     * @return Collection<int, Campaign>
      */
     public function getCampaigns(): Collection
     {
         return $this->campaigns;
     }
 
-    public function addCampaign(App\Entity\Campaign $campaign): self
+    public function addCampaign(Campaign $campaign): self
     {
         if (!$this->campaigns->contains($campaign)) {
             $this->campaigns->add($campaign);
@@ -122,7 +122,7 @@ abstract class SocialMediaGenerated extends EntityBase
         return $this;
     }
 
-    public function removeCampaign(App\Entity\Campaign $campaign): self
+    public function removeCampaign(Campaign $campaign): self
     {
         if ($this->campaigns->removeElement($campaign)) {
             if ($campaign->getSocialMedias() === $this) {
@@ -132,34 +132,34 @@ abstract class SocialMediaGenerated extends EntityBase
         return $this;
     }
 
-    public function getCompany(): ?App\Entity\Company
+    public function getCompany(): ?Company
     {
         return $this->company;
     }
 
-    public function setCompany(?App\Entity\Company $company): self
+    public function setCompany(?Company $company): self
     {
         $this->company = $company;
         return $this;
     }
 
-    public function getContact(): ?App\Entity\Contact
+    public function getContact(): ?Contact
     {
         return $this->contact;
     }
 
-    public function setContact(?App\Entity\Contact $contact): self
+    public function setContact(?Contact $contact): self
     {
         $this->contact = $contact;
         return $this;
     }
 
-    public function getSocialMediaType(): ?App\Entity\SocialMediaType
+    public function getSocialMediaType(): ?SocialMediaType
     {
         return $this->socialMediaType;
     }
 
-    public function setSocialMediaType(?App\Entity\SocialMediaType $socialMediaType): self
+    public function setSocialMediaType(?SocialMediaType $socialMediaType): self
     {
         $this->socialMediaType = $socialMediaType;
         return $this;
@@ -175,12 +175,12 @@ abstract class SocialMediaGenerated extends EntityBase
         return $this;
     }
 
-    public function getUser(): ?App\Entity\User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?App\Entity\User $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
         return $this;

@@ -57,12 +57,12 @@ abstract class StepOutputGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getStep(): App\Entity\Step
+    public function getStep(): Step
     {
         return $this->step;
     }
 
-    public function setStep(App\Entity\Step $step): self
+    public function setStep(Step $step): self
     {
         $this->step = $step;
         return $this;
@@ -108,12 +108,12 @@ abstract class StepOutputGenerated extends EntityBase
         return $this;
     }
 
-    public function getConnection(): ?App\Entity\StepConnection
+    public function getConnection(): ?StepConnection
     {
         return $this->connection;
     }
 
-    public function setConnection(?App\Entity\StepConnection $connection): self
+    public function setConnection(?StepConnection $connection): self
     {
         $this->connection = $connection;
         return $this;

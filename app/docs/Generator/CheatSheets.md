@@ -18,28 +18,17 @@ Quick reference for common tasks and commands.
 
 ## CLI Commands
 
-### Generation (Database-First - Default)
+### Generation (Database-First)
 
 ```bash
 # Generate all entities from database
-php bin/console app:generate
-# or use short alias:
-php bin/console gen
+php bin/console genmax:generate
 
 # Generate single entity
-php bin/console gen --entity=Contact
+php bin/console genmax:generate --entity=Contact
 
 # Dry run (preview only)
-php bin/console gen --dry-run
-
-# Legacy: Generate from CSV (deprecated)
-php bin/console gen --from-csv
-
-# Batch generation (if available)
-php scripts/batch-generate.php --batch=10
-
-# With options
-php scripts/batch-generate.php --batch=5 --continue-on-error --skip-tests
+php bin/console genmax:generate --dry-run
 
 # Export database definitions to CSV backup
 php bin/console generator:export-csv

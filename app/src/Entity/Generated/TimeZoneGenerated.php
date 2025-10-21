@@ -65,14 +65,14 @@ abstract class TimeZoneGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\WorkingHour>
+     * @return Collection<int, WorkingHour>
      */
     public function getWorkingHours(): Collection
     {
         return $this->workingHours;
     }
 
-    public function addWorkingHour(App\Entity\WorkingHour $workingHour): self
+    public function addWorkingHour(WorkingHour $workingHour): self
     {
         if (!$this->workingHours->contains($workingHour)) {
             $this->workingHours->add($workingHour);
@@ -81,7 +81,7 @@ abstract class TimeZoneGenerated extends EntityBase
         return $this;
     }
 
-    public function removeWorkingHour(App\Entity\WorkingHour $workingHour): self
+    public function removeWorkingHour(WorkingHour $workingHour): self
     {
         if ($this->workingHours->removeElement($workingHour)) {
             if ($workingHour->getTimeZone() === $this) {

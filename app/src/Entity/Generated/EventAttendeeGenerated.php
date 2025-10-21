@@ -86,12 +86,12 @@ abstract class EventAttendeeGenerated extends EntityBase
         $this->notifications = new ArrayCollection();
     }
 
-    public function getOrganization(): App\Entity\Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function setOrganization(App\Entity\Organization $organization): self
+    public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -127,12 +127,12 @@ abstract class EventAttendeeGenerated extends EntityBase
         return $this;
     }
 
-    public function getContact(): ?App\Entity\Contact
+    public function getContact(): ?Contact
     {
         return $this->contact;
     }
 
-    public function setContact(?App\Entity\Contact $contact): self
+    public function setContact(?Contact $contact): self
     {
         $this->contact = $contact;
         return $this;
@@ -148,26 +148,26 @@ abstract class EventAttendeeGenerated extends EntityBase
         return $this;
     }
 
-    public function getEvent(): App\Entity\Event
+    public function getEvent(): Event
     {
         return $this->event;
     }
 
-    public function setEvent(App\Entity\Event $event): self
+    public function setEvent(Event $event): self
     {
         $this->event = $event;
         return $this;
     }
 
     /**
-     * @return Collection<int, App\Entity\Notification>
+     * @return Collection<int, Notification>
      */
     public function getNotifications(): Collection
     {
         return $this->notifications;
     }
 
-    public function addNotification(App\Entity\Notification $notification): self
+    public function addNotification(Notification $notification): self
     {
         if (!$this->notifications->contains($notification)) {
             $this->notifications->add($notification);
@@ -176,7 +176,7 @@ abstract class EventAttendeeGenerated extends EntityBase
         return $this;
     }
 
-    public function removeNotification(App\Entity\Notification $notification): self
+    public function removeNotification(Notification $notification): self
     {
         if ($this->notifications->removeElement($notification)) {
             if ($notification->getAttendee() === $this) {
@@ -226,12 +226,12 @@ abstract class EventAttendeeGenerated extends EntityBase
         return $this;
     }
 
-    public function getUser(): ?App\Entity\User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?App\Entity\User $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
         return $this;
