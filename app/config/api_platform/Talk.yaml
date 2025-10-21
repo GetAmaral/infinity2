@@ -50,6 +50,9 @@ resources:
       deal:
         description: "Deal"
         example: "sample value"
+      contact:
+        description: "Contact"
+        example: "/api/contacts/01234567-89ab-cdef-0123-456789abcdef"
       talkType:
         description: "TalkType"
         example: "sample value"

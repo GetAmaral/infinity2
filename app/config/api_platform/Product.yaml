@@ -71,12 +71,12 @@ resources:
       compareAtPrice:
         description: "Compare At Price (decimal value)"
         example: "99.99"
-      attachments:
-        description: "Attachments"
-        example: "sample value"
       status:
         description: "Current status"
         example: "Sample text"
+      attachments:
+        description: "Attachments"
+        example: "sample value"
       reorderLevel:
         description: "Reorder Level (numeric value)"
         example: "42"
@@ -86,12 +86,12 @@ resources:
       leadTime:
         description: "Lead Time (days) (numeric value)"
         example: "42"
-      active:
-        description: "Whether this record is active"
-        example: "true"
       minOrderQuantity:
         description: "Min Order Quantity (numeric value)"
         example: "42"
+      active:
+        description: "Whether this record is active"
+        example: "true"
       maxOrderQuantity:
         description: "Max Order Quantity (numeric value)"
         example: "42"

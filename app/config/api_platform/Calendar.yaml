@@ -41,12 +41,12 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
-      description:
-        description: "..."
-        example: "..."
       user:
         description: "User"
         example: "sample value"
+      description:
+        description: "..."
+        example: "..."
       timeZone:
         description: "TimeZone (text field)"
         example: "Sample longer text value"

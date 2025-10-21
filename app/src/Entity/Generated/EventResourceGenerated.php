@@ -78,12 +78,12 @@ abstract class EventResourceGenerated extends EntityBase
     protected ?int $maximumBookingDuration = null;
 
     #[Groups(['eventresource:read', 'eventresource:write'])]
-    #[ORM\Column(type: 'json', nullable: true)]
-    protected ?array $bookingRules = null;
-
-    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     protected ?string $pricePerHour = null;
+
+    #[Groups(['eventresource:read', 'eventresource:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $bookingRules = null;
 
     #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
@@ -283,16 +283,6 @@ abstract class EventResourceGenerated extends EntityBase
         return $this;
     }
 
-    public function getBookingRules(): ?array    {
-        return $this->bookingRules;
-    }
-
-    public function setBookingRules(?array $bookingRules): self
-    {
-        $this->bookingRules = $bookingRules;
-        return $this;
-    }
-
     public function getPricePerHour(): ?string    {
         return $this->pricePerHour;
     }
@@ -300,6 +290,16 @@ abstract class EventResourceGenerated extends EntityBase
     public function setPricePerHour(?string $pricePerHour): self
     {
         $this->pricePerHour = $pricePerHour;
+        return $this;
+    }
+
+    public function getBookingRules(): ?array    {
+        return $this->bookingRules;
+    }
+
+    public function setBookingRules(?array $bookingRules): self
+    {
+        $this->bookingRules = $bookingRules;
         return $this;
     }
 

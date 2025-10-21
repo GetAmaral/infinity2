@@ -19,10 +19,10 @@ use App\Entity\Attachment;
 use App\Entity\Reminder;
 use App\Entity\EventResourceBooking;
 use App\Entity\Event;
-use App\Entity\WorkingHour;
 use App\Entity\Holiday;
-use App\Entity\Notification;
 use App\Entity\MeetingData;
+use App\Entity\Notification;
+use App\Entity\WorkingHour;
 use App\Entity\Contact;
 use App\Entity\Company;
 use App\Entity\Deal;
@@ -50,12 +50,12 @@ abstract class EventGenerated extends EntityBase
     protected string $name;
 
     #[Groups(['event:read', 'event:write'])]
-    #[ORM\Column(type: 'datetime')]
-    protected \DateTimeImmutable $startTime;
-
-    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
+
+    #[Groups(['event:read', 'event:write'])]
+    #[ORM\Column(type: 'datetime')]
+    protected \DateTimeImmutable $startTime;
 
     #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'datetime')]
@@ -131,10 +131,6 @@ abstract class EventGenerated extends EntityBase
     protected ?array $source = null;
 
     #[Groups(['event:read'])]
-    #[ORM\OneToMany(targetEntity: WorkingHour::class, mappedBy: 'event', fetch: 'LAZY')]
-    protected Collection $workingHours;
-
-    #[Groups(['event:read'])]
     #[ORM\OneToMany(targetEntity: Holiday::class, mappedBy: 'event', fetch: 'LAZY')]
     protected Collection $holidays;
 
@@ -143,12 +139,16 @@ abstract class EventGenerated extends EntityBase
     protected ?string $subject = null;
 
     #[Groups(['event:read'])]
+    #[ORM\OneToMany(targetEntity: MeetingData::class, mappedBy: 'event', fetch: 'LAZY')]
+    protected Collection $meetingDatas;
+
+    #[Groups(['event:read'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'event', fetch: 'LAZY')]
     protected Collection $notifications;
 
     #[Groups(['event:read'])]
-    #[ORM\OneToMany(targetEntity: MeetingData::class, mappedBy: 'event', fetch: 'LAZY')]
-    protected Collection $meetingDatas;
+    #[ORM\OneToMany(targetEntity: WorkingHour::class, mappedBy: 'event', fetch: 'LAZY')]
+    protected Collection $workingHours;
 
     #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -324,10 +324,10 @@ abstract class EventGenerated extends EntityBase
         $this->reminders = new ArrayCollection();
         $this->resourceBookings = new ArrayCollection();
         $this->childrenEvents = new ArrayCollection();
-        $this->workingHours = new ArrayCollection();
         $this->holidays = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
         $this->meetingDatas = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+        $this->workingHours = new ArrayCollection();
     }
 
     public function getOrganization(): Organization
@@ -351,16 +351,6 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getStartTime(): \DateTimeImmutable    {
-        return $this->startTime;
-    }
-
-    public function setStartTime(\DateTimeImmutable $startTime): self
-    {
-        $this->startTime = $startTime;
-        return $this;
-    }
-
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -368,6 +358,16 @@ abstract class EventGenerated extends EntityBase
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getStartTime(): \DateTimeImmutable    {
+        return $this->startTime;
+    }
+
+    public function setStartTime(\DateTimeImmutable $startTime): self
+    {
+        $this->startTime = $startTime;
         return $this;
     }
 
@@ -658,33 +658,6 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, WorkingHour>
-     */
-    public function getWorkingHours(): Collection
-    {
-        return $this->workingHours;
-    }
-
-    public function addWorkingHour(WorkingHour $workingHour): self
-    {
-        if (!$this->workingHours->contains($workingHour)) {
-            $this->workingHours->add($workingHour);
-            $workingHour->setEvent($this);
-        }
-        return $this;
-    }
-
-    public function removeWorkingHour(WorkingHour $workingHour): self
-    {
-        if ($this->workingHours->removeElement($workingHour)) {
-            if ($workingHour->getEvent() === $this) {
-                $workingHour->setEvent(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Holiday>
      */
     public function getHolidays(): Collection
@@ -722,6 +695,33 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
+     * @return Collection<int, MeetingData>
+     */
+    public function getMeetingDatas(): Collection
+    {
+        return $this->meetingDatas;
+    }
+
+    public function addMeetingData(MeetingData $meetingData): self
+    {
+        if (!$this->meetingDatas->contains($meetingData)) {
+            $this->meetingDatas->add($meetingData);
+            $meetingData->setEvent($this);
+        }
+        return $this;
+    }
+
+    public function removeMeetingData(MeetingData $meetingData): self
+    {
+        if ($this->meetingDatas->removeElement($meetingData)) {
+            if ($meetingData->getEvent() === $this) {
+                $meetingData->setEvent(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Notification>
      */
     public function getNotifications(): Collection
@@ -749,27 +749,27 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, MeetingData>
+     * @return Collection<int, WorkingHour>
      */
-    public function getMeetingDatas(): Collection
+    public function getWorkingHours(): Collection
     {
-        return $this->meetingDatas;
+        return $this->workingHours;
     }
 
-    public function addMeetingData(MeetingData $meetingData): self
+    public function addWorkingHour(WorkingHour $workingHour): self
     {
-        if (!$this->meetingDatas->contains($meetingData)) {
-            $this->meetingDatas->add($meetingData);
-            $meetingData->setEvent($this);
+        if (!$this->workingHours->contains($workingHour)) {
+            $this->workingHours->add($workingHour);
+            $workingHour->setEvent($this);
         }
         return $this;
     }
 
-    public function removeMeetingData(MeetingData $meetingData): self
+    public function removeWorkingHour(WorkingHour $workingHour): self
     {
-        if ($this->meetingDatas->removeElement($meetingData)) {
-            if ($meetingData->getEvent() === $this) {
-                $meetingData->setEvent(null);
+        if ($this->workingHours->removeElement($workingHour)) {
+            if ($workingHour->getEvent() === $this) {
+                $workingHour->setEvent(null);
             }
         }
         return $this;

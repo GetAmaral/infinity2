@@ -83,12 +83,12 @@ resources:
       priority:
         description: "Priority level"
         example: "42"
-      completed:
-        description: "Completed (yes\/no)"
-        example: "true"
       scheduledDate:
         description: "Due Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+      completed:
+        description: "Completed (yes\/no)"
+        example: "true"
       company:
         description: "Company"
         example: "sample value"

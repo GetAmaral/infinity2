@@ -38,12 +38,12 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
-      title:
-        description: "The title or subject of the meeting"
-        example: "Q1 Planning Meeting"
       event:
         description: "The associated calendar event for this meeting"
         example: "\/api\/events\/0199cadd-0000-7000-0000-000000000001"
+      title:
+        description: "The title or subject of the meeting"
+        example: "Q1 Planning Meeting"
       meetingType:
         description: "The type or category of the meeting"
         example: "client"
@@ -80,12 +80,12 @@ resources:
       minutes:
         description: "Formal minutes documenting decisions and discussions"
         example: "Board approved Q1 budget of $500K"
-      attendees:
-        description: "Array of attendees with their attendance status"
-        example: "{\"attendees\": [{\"name\": \"John Doe\", \"email\": \"john@example.com\", \"status\": \"attended\", \"role\": \"presenter\"}]}"
       meetingId:
         description: "The unique meeting identifier from the platform (e.g., Zoom meeting ID)"
         example: "123-456-789"
+      attendees:
+        description: "Array of attendees with their attendance status"
+        example: "{\"attendees\": [{\"name\": \"John Doe\", \"email\": \"john@example.com\", \"status\": \"attended\", \"role\": \"presenter\"}]}"
       absentees:
         description: "Array of people who were expected but did not attend"
         example: "{\"absentees\": [{\"name\": \"Jane Smith\", \"email\": \"jane@example.com\", \"reason\": \"sick leave\"}]}"

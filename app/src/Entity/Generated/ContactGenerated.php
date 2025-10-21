@@ -17,7 +17,6 @@ use App\Entity\Campaign;
 use App\Entity\Company;
 use App\Entity\Deal;
 use App\Entity\EventAttendee;
-use App\Entity\Flag;
 use App\Entity\SocialMedia;
 use App\Entity\Talk;
 use App\Entity\Task;
@@ -41,13 +40,13 @@ abstract class ContactGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $name;
-
-    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\Length(max: 100)]
     protected string $firstName;
+
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $name;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100)]
@@ -97,13 +96,13 @@ abstract class ContactGenerated extends EntityBase
     #[ORM\JoinColumn(nullable: false)]
     protected Company $company;
 
-    #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'string', length: 25, nullable: true)]
-    protected ?string $mobilePhone = null;
-
     #[Groups(['contact:read'])]
     #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'contacts', fetch: 'LAZY')]
     protected Collection $deals;
+
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'string', length: 25, nullable: true)]
+    protected ?string $mobilePhone = null;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -115,13 +114,13 @@ abstract class ContactGenerated extends EntityBase
     protected ?string $title = null;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'boolean')]
-    protected bool $emailOptOut;
-
-    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Assert\Length(max: 100)]
     protected ?string $department = null;
+
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $emailOptOut;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
@@ -156,10 +155,6 @@ abstract class ContactGenerated extends EntityBase
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $firstTalkDate = null;
-
-    #[Groups(['contact:read'])]
-    #[ORM\OneToMany(targetEntity: Flag::class, mappedBy: 'contact', fetch: 'LAZY')]
-    protected Collection $flags;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -237,7 +232,6 @@ abstract class ContactGenerated extends EntityBase
         $this->campaigns = new ArrayCollection();
         $this->deals = new ArrayCollection();
         $this->eventAttendances = new ArrayCollection();
-        $this->flags = new ArrayCollection();
         $this->primaryDeals = new ArrayCollection();
         $this->socialMedias = new ArrayCollection();
         $this->talks = new ArrayCollection();
@@ -255,16 +249,6 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getFirstName(): string    {
         return $this->firstName;
     }
@@ -272,6 +256,16 @@ abstract class ContactGenerated extends EntityBase
     public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -419,16 +413,6 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getMobilePhone(): ?string    {
-        return $this->mobilePhone;
-    }
-
-    public function setMobilePhone(?string $mobilePhone): self
-    {
-        $this->mobilePhone = $mobilePhone;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Deal>
      */
@@ -456,6 +440,16 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
+    public function getMobilePhone(): ?string    {
+        return $this->mobilePhone;
+    }
+
+    public function setMobilePhone(?string $mobilePhone): self
+    {
+        $this->mobilePhone = $mobilePhone;
+        return $this;
+    }
+
     public function getLinkedinUrl(): ?string    {
         return $this->linkedinUrl;
     }
@@ -476,6 +470,16 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
+    public function getDepartment(): ?string    {
+        return $this->department;
+    }
+
+    public function setDepartment(?string $department): self
+    {
+        $this->department = $department;
+        return $this;
+    }
+
     public function getEmailOptOut(): bool    {
         return $this->emailOptOut;
     }
@@ -489,16 +493,6 @@ abstract class ContactGenerated extends EntityBase
     public function isEmailOptOut(): bool
     {
         return $this->emailOptOut === true;
-    }
-
-    public function getDepartment(): ?string    {
-        return $this->department;
-    }
-
-    public function setDepartment(?string $department): self
-    {
-        $this->department = $department;
-        return $this;
     }
 
     public function getLeadSource(): ?string    {
@@ -600,33 +594,6 @@ abstract class ContactGenerated extends EntityBase
     public function setFirstTalkDate(?\DateTimeImmutable $firstTalkDate): self
     {
         $this->firstTalkDate = $firstTalkDate;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Flag>
-     */
-    public function getFlags(): Collection
-    {
-        return $this->flags;
-    }
-
-    public function addFlag(Flag $flag): self
-    {
-        if (!$this->flags->contains($flag)) {
-            $this->flags->add($flag);
-            $flag->setContact($this);
-        }
-        return $this;
-    }
-
-    public function removeFlag(Flag $flag): self
-    {
-        if ($this->flags->removeElement($flag)) {
-            if ($flag->getContact() === $this) {
-                $flag->setContact(null);
-            }
-        }
         return $this;
     }
 

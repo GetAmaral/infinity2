@@ -41,12 +41,12 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
-      startTime:
-        description: "Event start date and time"
-        example: "2025-10-19T14:00:00Z"
       description:
         description: "..."
         example: "..."
+      startTime:
+        description: "Event start date and time"
+        example: "2025-10-19T14:00:00Z"
       endTime:
         description: "Event end date and time"
         example: "2025-10-19T15:00:00Z"
@@ -101,10 +101,6 @@ resources:
       source:
         description: "External source information for synced events"
         example: "{\"url\": \"https:\/\/external.com\/event\/123\", \"title\": \"External Calendar\"}"
-      workingHours:
-        writable: false
-        description: "WorkingHours"
-        example: "/api/workinghours/01234567-89ab-cdef-0123-456789abcdef"
       holidays:
         writable: false
         description: "Holidays"
@@ -112,14 +108,18 @@ resources:
       subject:
         description: "Event subject (Salesforce\/Outlook compatibility)"
         example: "Q4 Planning Meeting"
-      notifications:
-        writable: false
-        description: "Notifications"
-        example: "/api/notifications/01234567-89ab-cdef-0123-456789abcdef"
       meetingDatas:
         writable: false
         description: "MeetingDatas"
         example: "/api/meetingdatas/01234567-89ab-cdef-0123-456789abcdef"
+      notifications:
+        writable: false
+        description: "Notifications"
+        example: "/api/notifications/01234567-89ab-cdef-0123-456789abcdef"
+      workingHours:
+        writable: false
+        description: "WorkingHours"
+        example: "/api/workinghours/01234567-89ab-cdef-0123-456789abcdef"
       status:
         description: "Current lifecycle status of the event"
         example: "confirmed"

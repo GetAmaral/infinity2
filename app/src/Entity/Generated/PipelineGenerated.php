@@ -59,7 +59,7 @@ abstract class PipelineGenerated extends EntityBase
 
     #[Groups(['pipeline:read'])]
     #[ORM\OneToMany(targetEntity: PipelineStage::class, mappedBy: 'pipeline', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
-    #[ORM\OrderBy(['order' => 'ASC'])]
+    #[ORM\OrderBy(['displayOrder' => 'ASC'])]
     protected Collection $stages;
 
     #[Groups(['pipeline:read', 'pipeline:write'])]

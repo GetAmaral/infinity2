@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace {{ namespace }};
 
-use App\Entity\Generated\{{ entity.getEntityName() }}Generated;
-use App\Repository\{{ entity.getEntityName() }}Repository;
+use {{ generated_namespace }}\{{ entity.getEntityName() }}Generated;
+use {{ repository_namespace }}\{{ entity.getEntityName() }}Repository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

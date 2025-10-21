@@ -77,12 +77,12 @@ resources:
       shippingCity:
         description: "Shipping City"
         example: "sample value"
-      shippingPostalCode:
-        description: "Shipping Postal Code (text field)"
-        example: "Sample text"
       campaigns:
         description: "Campaigns"
         example: "sample value"
+      shippingPostalCode:
+        description: "Shipping Postal Code (text field)"
+        example: "Sample text"
       annualRevenue:
         description: "Annual Revenue (decimal value)"
         example: "99.99"
@@ -110,12 +110,12 @@ resources:
       creditLimit:
         description: "Credit Limit (decimal value)"
         example: "99.99"
-      city:
-        description: "City"
-        example: "sample value"
       fiscalYearEnd:
         description: "Fiscal Year End (text field)"
         example: "Sample text"
+      city:
+        description: "City"
+        example: "sample value"
       sicCode:
         description: "SIC Code (text field)"
         example: "Sample text"
@@ -140,12 +140,12 @@ resources:
       country:
         description: "Country (text field)"
         example: "Sample longer text value"
-      companySize:
-        description: "Number of Employees (numeric value)"
-        example: "42"
       shippingCountry:
         description: "Shipping Country (text field)"
         example: "Sample longer text value"
+      companySize:
+        description: "Number of Employees (numeric value)"
+        example: "42"
       fax:
         description: "Fax (text field)"
         example: "Sample text"
@@ -161,9 +161,6 @@ resources:
       email:
         description: "Email address"
         example: "user@example.com"
-      flags:
-        description: "Flags"
-        example: "sample value"
       talks:
         writable: false
         description: "Talks"
@@ -204,14 +201,13 @@ resources:
       taxId:
         description: "Document (text field)"
         example: "Sample text"
+      nextActivityDate:
+        description: "Next Activity Date (date)"
+        example: "2025-01-15"
       lastActivityDate:
         writable: false
         description: "Last Activity Date (date)"
         example: "2025-01-15"
-      numberOfAssociatedDeals:
-        writable: false
-        description: "Number of Deals (numeric value)"
-        example: "42"
       timeZone:
         description: "Time Zone (text field)"
         example: "Sample longer text value"
@@ -221,9 +217,19 @@ resources:
       tags:
         description: "Tags (text field)"
         example: "Sample longer text value"
-      shippingStateProvince:
-        description: "Shipping State\/Province (text field)"
+      lifecycleStage:
+        description: "Lifecycle Stage (text field)"
+        example: "Sample text"
+      companyDomain:
+        description: "Company Domain (text field)"
         example: "Sample longer text value"
+      leadStatus:
+        description: "Lead Status (text field)"
+        example: "Sample text"
+      numberOfAssociatedDeals:
+        writable: false
+        description: "Number of Deals (numeric value)"
+        example: "42"
       numberOfAssociatedContacts:
         writable: false
         description: "Number of Contacts (numeric value)"
@@ -231,15 +237,6 @@ resources:
       public:
         description: "Is Public Company (yes\/no)"
         example: "true"
-      leadStatus:
-        description: "Lead Status (text field)"
-        example: "Sample text"
-      nextActivityDate:
-        description: "Next Activity Date (date)"
-        example: "2025-01-15"
-      companyDomain:
-        description: "Company Domain (text field)"
+      shippingStateProvince:
+        description: "Shipping State\/Province (text field)"
         example: "Sample longer text value"
-      lifecycleStage:
-        description: "Lifecycle Stage (text field)"
-        example: "Sample text"

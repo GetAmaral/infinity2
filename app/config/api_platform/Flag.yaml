@@ -41,12 +41,12 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
-      description:
-        description: "..."
-        example: "..."
       category:
         description: "Category (text field)"
         example: "Sample text"
+      description:
+        description: "..."
+        example: "..."
       color:
         description: "Color (text field)"
         example: "Sample text"

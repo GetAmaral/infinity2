@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Generated;
+namespace {{ generated_namespace }};
 
-use App\Entity\EntityBase;
+use {{ namespace }}\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 {% set hasCollections = false %}
 {% for property in entity.getProperties() %}
@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 {% endif %}
 {% endfor %}
 {% for targetEntity in targetEntities %}
-use {{ targetEntity }};
+use {{ namespace }}\{{ targetEntity }};
 {% endfor %}
 
 /**

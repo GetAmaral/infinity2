@@ -43,13 +43,13 @@ abstract class DealTypeGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $category = null;
 
-    #[Groups(['dealtype:read', 'dealtype:write'])]
-    #[ORM\Column(type: 'string', length: 7)]
-    protected string $color = '#0dcaf0';
-
     #[Groups(['dealtype:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'dealType', fetch: 'LAZY')]
     protected Collection $deals;
+
+    #[Groups(['dealtype:read', 'dealtype:write'])]
+    #[ORM\Column(type: 'string', length: 7)]
+    protected string $color = '#0dcaf0';
 
     #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'string', length: 50)]
@@ -60,12 +60,12 @@ abstract class DealTypeGenerated extends EntityBase
     protected bool $default = false;
 
     #[Groups(['dealtype:read', 'dealtype:write'])]
-    #[ORM\Column(type: 'boolean')]
-    protected bool $active = true;
-
-    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $sortOrder = 0;
+
+    #[Groups(['dealtype:read', 'dealtype:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $active = true;
 
     #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -123,16 +123,6 @@ abstract class DealTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getColor(): string    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): self
-    {
-        $this->color = $color;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Deal>
      */
@@ -157,6 +147,16 @@ abstract class DealTypeGenerated extends EntityBase
                 $deal->setDealType(null);
             }
         }
+        return $this;
+    }
+
+    public function getColor(): string    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
         return $this;
     }
 
@@ -185,6 +185,16 @@ abstract class DealTypeGenerated extends EntityBase
         return $this->default === true;
     }
 
+    public function getSortOrder(): int    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(int $sortOrder): self
+    {
+        $this->sortOrder = $sortOrder;
+        return $this;
+    }
+
     public function getActive(): bool    {
         return $this->active;
     }
@@ -198,16 +208,6 @@ abstract class DealTypeGenerated extends EntityBase
     public function isActive(): bool
     {
         return $this->active === true;
-    }
-
-    public function getSortOrder(): int    {
-        return $this->sortOrder;
-    }
-
-    public function setSortOrder(int $sortOrder): self
-    {
-        $this->sortOrder = $sortOrder;
-        return $this;
     }
 
     public function getExpectedDuration(): ?int    {

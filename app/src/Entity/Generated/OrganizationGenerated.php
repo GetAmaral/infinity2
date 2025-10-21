@@ -18,21 +18,20 @@ use App\Entity\Brand;
 use App\Entity\Calendar;
 use App\Entity\Campaign;
 use App\Entity\PipelineStageTemplate;
-use App\Entity\Reminder;
 use App\Entity\Attachment;
 use App\Entity\CalendarType;
 use App\Entity\City;
 use App\Entity\TreeFlow;
 use App\Entity\WinReason;
 use App\Entity\PipelineTemplate;
-use App\Entity\StepConnection;
+use App\Entity\Reminder;
 use App\Entity\TaskTemplate;
+use App\Entity\DealCategory;
+use App\Entity\DealType;
 use App\Entity\EventAttendee;
 use App\Entity\LostReason;
 use App\Entity\MeetingData;
 use App\Entity\Notification;
-use App\Entity\DealCategory;
-use App\Entity\DealType;
 use App\Entity\Company;
 use App\Entity\Competitor;
 use App\Entity\Contact;
@@ -47,7 +46,6 @@ use App\Entity\Event;
 use App\Entity\Flag;
 use App\Entity\Holiday;
 use App\Entity\LeadSource;
-use App\Entity\CourseLecture;
 use App\Entity\Module;
 use App\Entity\NotificationType;
 use App\Entity\PipelineStage;
@@ -90,21 +88,21 @@ abstract class OrganizationGenerated extends EntityBase
     protected string $name;
 
     #[Groups(['organization:read', 'organization:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
-
-    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
     protected ?string $logoPathDark = null;
 
     #[Groups(['organization:read', 'organization:write'])]
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected ?string $logoUrl = null;
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $description = null;
 
     #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $studentCourses;
+
+    #[Groups(['organization:read', 'organization:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $logoUrl = null;
 
     #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -163,10 +161,6 @@ abstract class OrganizationGenerated extends EntityBase
     #[ORM\OneToMany(targetEntity: PipelineStageTemplate::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $pipelineStageTemplates;
 
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: Reminder::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $reminders;
-
     #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     #[Assert\Length(max: 20)]
@@ -197,12 +191,20 @@ abstract class OrganizationGenerated extends EntityBase
     protected Collection $pipelineTemplates;
 
     #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: StepConnection::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $stepConnections;
+    #[ORM\OneToMany(targetEntity: Reminder::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $reminders;
 
     #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: TaskTemplate::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $taskTemplates;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: DealCategory::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $dealCategories;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: DealType::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $dealTypes;
 
     #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'organization', fetch: 'LAZY')]
@@ -219,14 +221,6 @@ abstract class OrganizationGenerated extends EntityBase
     #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $notifications;
-
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: DealCategory::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $dealCategories;
-
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: DealType::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $dealTypes;
 
     #[Groups(['organization:read', 'organization:write'])]
     #[ORM\ManyToOne(targetEntity: City::class)]
@@ -312,10 +306,6 @@ abstract class OrganizationGenerated extends EntityBase
     #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: LeadSource::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $leadSources;
-
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: CourseLecture::class, mappedBy: 'organization', orphanRemoval: true, fetch: 'LAZY')]
-    protected Collection $courseLectures;
 
     #[Groups(['organization:read'])]
     #[ORM\ManyToMany(targetEntity: Module::class, fetch: 'LAZY')]
@@ -430,21 +420,20 @@ abstract class OrganizationGenerated extends EntityBase
         $this->calendars = new ArrayCollection();
         $this->campaigns = new ArrayCollection();
         $this->pipelineStageTemplates = new ArrayCollection();
-        $this->reminders = new ArrayCollection();
         $this->attachments = new ArrayCollection();
         $this->calendarTypes = new ArrayCollection();
         $this->cities = new ArrayCollection();
         $this->treeFlows = new ArrayCollection();
         $this->winReasons = new ArrayCollection();
         $this->pipelineTemplates = new ArrayCollection();
-        $this->stepConnections = new ArrayCollection();
+        $this->reminders = new ArrayCollection();
         $this->taskTemplates = new ArrayCollection();
+        $this->dealCategories = new ArrayCollection();
+        $this->dealTypes = new ArrayCollection();
         $this->eventAttendees = new ArrayCollection();
         $this->lostReasons = new ArrayCollection();
         $this->meetingDatas = new ArrayCollection();
         $this->notifications = new ArrayCollection();
-        $this->dealCategories = new ArrayCollection();
-        $this->dealTypes = new ArrayCollection();
         $this->companies = new ArrayCollection();
         $this->competitors = new ArrayCollection();
         $this->contacts = new ArrayCollection();
@@ -459,7 +448,6 @@ abstract class OrganizationGenerated extends EntityBase
         $this->flags = new ArrayCollection();
         $this->holidays = new ArrayCollection();
         $this->leadSources = new ArrayCollection();
-        $this->courseLectures = new ArrayCollection();
         $this->modules = new ArrayCollection();
         $this->notificationTypes = new ArrayCollection();
         $this->pipelineStages = new ArrayCollection();
@@ -500,16 +488,6 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
     public function getLogoPathDark(): ?string    {
         return $this->logoPathDark;
     }
@@ -520,13 +498,13 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getLogoUrl(): ?string    {
-        return $this->logoUrl;
+    public function getDescription(): ?string    {
+        return $this->description;
     }
 
-    public function setLogoUrl(?string $logoUrl): self
+    public function setDescription(?string $description): self
     {
-        $this->logoUrl = $logoUrl;
+        $this->description = $description;
         return $this;
     }
 
@@ -554,6 +532,16 @@ abstract class OrganizationGenerated extends EntityBase
                 $studentCours->setOrganization(null);
             }
         }
+        return $this;
+    }
+
+    public function getLogoUrl(): ?string    {
+        return $this->logoUrl;
+    }
+
+    public function setLogoUrl(?string $logoUrl): self
+    {
+        $this->logoUrl = $logoUrl;
         return $this;
     }
 
@@ -821,33 +809,6 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    /**
-     * @return Collection<int, Reminder>
-     */
-    public function getReminders(): Collection
-    {
-        return $this->reminders;
-    }
-
-    public function addReminder(Reminder $reminder): self
-    {
-        if (!$this->reminders->contains($reminder)) {
-            $this->reminders->add($reminder);
-            $reminder->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeReminder(Reminder $reminder): self
-    {
-        if ($this->reminders->removeElement($reminder)) {
-            if ($reminder->getOrganization() === $this) {
-                $reminder->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
     public function getCelPhone(): ?string    {
         return $this->celPhone;
     }
@@ -1021,27 +982,27 @@ abstract class OrganizationGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, StepConnection>
+     * @return Collection<int, Reminder>
      */
-    public function getStepConnections(): Collection
+    public function getReminders(): Collection
     {
-        return $this->stepConnections;
+        return $this->reminders;
     }
 
-    public function addStepConnection(StepConnection $stepConnection): self
+    public function addReminder(Reminder $reminder): self
     {
-        if (!$this->stepConnections->contains($stepConnection)) {
-            $this->stepConnections->add($stepConnection);
-            $stepConnection->setOrganization($this);
+        if (!$this->reminders->contains($reminder)) {
+            $this->reminders->add($reminder);
+            $reminder->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeStepConnection(StepConnection $stepConnection): self
+    public function removeReminder(Reminder $reminder): self
     {
-        if ($this->stepConnections->removeElement($stepConnection)) {
-            if ($stepConnection->getOrganization() === $this) {
-                $stepConnection->setOrganization(null);
+        if ($this->reminders->removeElement($reminder)) {
+            if ($reminder->getOrganization() === $this) {
+                $reminder->setOrganization(null);
             }
         }
         return $this;
@@ -1069,6 +1030,60 @@ abstract class OrganizationGenerated extends EntityBase
         if ($this->taskTemplates->removeElement($taskTemplate)) {
             if ($taskTemplate->getOrganization() === $this) {
                 $taskTemplate->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DealCategory>
+     */
+    public function getDealCategories(): Collection
+    {
+        return $this->dealCategories;
+    }
+
+    public function addDealCategory(DealCategory $dealCategory): self
+    {
+        if (!$this->dealCategories->contains($dealCategory)) {
+            $this->dealCategories->add($dealCategory);
+            $dealCategory->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeDealCategory(DealCategory $dealCategory): self
+    {
+        if ($this->dealCategories->removeElement($dealCategory)) {
+            if ($dealCategory->getOrganization() === $this) {
+                $dealCategory->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DealType>
+     */
+    public function getDealTypes(): Collection
+    {
+        return $this->dealTypes;
+    }
+
+    public function addDealType(DealType $dealType): self
+    {
+        if (!$this->dealTypes->contains($dealType)) {
+            $this->dealTypes->add($dealType);
+            $dealType->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeDealType(DealType $dealType): self
+    {
+        if ($this->dealTypes->removeElement($dealType)) {
+            if ($dealType->getOrganization() === $this) {
+                $dealType->setOrganization(null);
             }
         }
         return $this;
@@ -1177,60 +1192,6 @@ abstract class OrganizationGenerated extends EntityBase
         if ($this->notifications->removeElement($notification)) {
             if ($notification->getOrganization() === $this) {
                 $notification->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DealCategory>
-     */
-    public function getDealCategories(): Collection
-    {
-        return $this->dealCategories;
-    }
-
-    public function addDealCategory(DealCategory $dealCategory): self
-    {
-        if (!$this->dealCategories->contains($dealCategory)) {
-            $this->dealCategories->add($dealCategory);
-            $dealCategory->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeDealCategory(DealCategory $dealCategory): self
-    {
-        if ($this->dealCategories->removeElement($dealCategory)) {
-            if ($dealCategory->getOrganization() === $this) {
-                $dealCategory->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DealType>
-     */
-    public function getDealTypes(): Collection
-    {
-        return $this->dealTypes;
-    }
-
-    public function addDealType(DealType $dealType): self
-    {
-        if (!$this->dealTypes->contains($dealType)) {
-            $this->dealTypes->add($dealType);
-            $dealType->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeDealType(DealType $dealType): self
-    {
-        if ($this->dealTypes->removeElement($dealType)) {
-            if ($dealType->getOrganization() === $this) {
-                $dealType->setOrganization(null);
             }
         }
         return $this;
@@ -1680,33 +1641,6 @@ abstract class OrganizationGenerated extends EntityBase
         if ($this->leadSources->removeElement($leadSource)) {
             if ($leadSource->getOrganization() === $this) {
                 $leadSource->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, CourseLecture>
-     */
-    public function getCourseLectures(): Collection
-    {
-        return $this->courseLectures;
-    }
-
-    public function addCourseLecture(CourseLecture $courseLecture): self
-    {
-        if (!$this->courseLectures->contains($courseLecture)) {
-            $this->courseLectures->add($courseLecture);
-            $courseLecture->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeCourseLecture(CourseLecture $courseLecture): self
-    {
-        if ($this->courseLectures->removeElement($courseLecture)) {
-            if ($courseLecture->getOrganization() === $this) {
-                $courseLecture->setOrganization(null);
             }
         }
         return $this;

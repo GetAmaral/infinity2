@@ -30,13 +30,13 @@ abstract class MeetingDataGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
+    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'meetingDatas')]
+    protected ?Event $event = null;
+
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $title;
-
-    #[Groups(['meetingdata:read', 'meetingdata:write'])]
-    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'meetingDatas')]
-    protected ?Event $event = null;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -76,12 +76,12 @@ abstract class MeetingDataGenerated extends EntityBase
     protected ?string $minutes = null;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
-    #[ORM\Column(type: 'json', nullable: true)]
-    protected ?array $attendees = null;
-
-    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $meetingId = null;
+
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $attendees = null;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
@@ -172,16 +172,6 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getTitle(): string    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-        return $this;
-    }
-
     public function getEvent(): ?Event
     {
         return $this->event;
@@ -190,6 +180,16 @@ abstract class MeetingDataGenerated extends EntityBase
     public function setEvent(?Event $event): self
     {
         $this->event = $event;
+        return $this;
+    }
+
+    public function getTitle(): string    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
         return $this;
     }
 
@@ -283,16 +283,6 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getAttendees(): ?array    {
-        return $this->attendees;
-    }
-
-    public function setAttendees(?array $attendees): self
-    {
-        $this->attendees = $attendees;
-        return $this;
-    }
-
     public function getMeetingId(): ?string    {
         return $this->meetingId;
     }
@@ -300,6 +290,16 @@ abstract class MeetingDataGenerated extends EntityBase
     public function setMeetingId(?string $meetingId): self
     {
         $this->meetingId = $meetingId;
+        return $this;
+    }
+
+    public function getAttendees(): ?array    {
+        return $this->attendees;
+    }
+
+    public function setAttendees(?array $attendees): self
+    {
+        $this->attendees = $attendees;
         return $this;
     }
 

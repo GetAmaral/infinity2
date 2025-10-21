@@ -71,40 +71,132 @@ resources:
       email:
         description: "Email address"
         example: "user@example.com"
+      grantedRoles:
+        writable: false
+        description: "Granted Roles"
+        example: "/api/roles/01234567-89ab-cdef-0123-456789abcdef"
       ownedDeals:
         writable: false
         description: "Deals"
         example: "/api/deals/01234567-89ab-cdef-0123-456789abcdef"
-      emailVerifiedAt:
-        description: "EmailVerifiedAt (date and time)"
-        example: "2025-01-15T10:30:00Z"
-      calendarExternalLinks:
-        writable: false
-        description: "CalendarExternalLinks"
-        example: "/api/calendarexternallinks/01234567-89ab-cdef-0123-456789abcdef"
       resourceBookings:
         writable: false
         description: "EventResourceBookings"
         example: "/api/eventresourcebookings/01234567-89ab-cdef-0123-456789abcdef"
+      calendarExternalLinks:
+        writable: false
+        description: "CalendarExternalLinks"
+        example: "/api/calendarexternallinks/01234567-89ab-cdef-0123-456789abcdef"
+      emailVerifiedAt:
+        description: "EmailVerifiedAt (date and time)"
+        example: "2025-01-15T10:30:00Z"
       eventAttendances:
         description: "EventAttendances"
         example: "sample value"
+      verified:
+        description: "Verified"
+        example: true
+      termsSigned:
+        description: "Terms Signed"
+        example: true
+      termsSignedAt:
+        writable: false
+        description: "Terms Signed At"
+        example: "2025-01-15T10:30:00Z"
+      verificationToken:
+        readable: false
+        writable: false
+        description: "Verification Token"
+        example: "Sample verification token"
+      apiToken:
+        readable: false
+        writable: false
+        description: "API Token"
+        example: "Sample api token"
       failedLoginAttempts:
         writable: false
         description: "FailedLoginAttempts (numeric value)"
         example: "42"
-      flags:
-        description: "Flags"
-        example: "sample value"
+      apiTokenExpiresAt:
+        readable: false
+        writable: false
+        description: "API Token Expires At"
+        example: "2025-01-15T10:30:00Z"
+      openAiApiKey:
+        readable: false
+        writable: false
+        description: "OpenAI API Key"
+        example: "Sample openai api key"
       gender:
         description: "Gender (numeric value)"
         example: "42"
+      lastLoginAt:
+        writable: false
+        description: "Last Login At"
+        example: "2025-01-15T10:30:00Z"
+      lockedUntil:
+        writable: false
+        description: "Locked Until"
+        example: "2025-01-15T10:30:00Z"
+      uiSettings:
+        description: "UI Settings"
+        example: "{\"key\": \"value\"}"
+      listPreferences:
+        description: "List Preferences"
+        example: "{\"key\": \"value\"}"
       lastPasswordChange:
         description: "LastPasswordChange (date and time)"
         example: "2025-01-15T10:30:00Z"
+      twoFactorEnabled:
+        description: "Two Factor Enabled"
+        example: true
+      twoFactorSecret:
+        readable: false
+        writable: false
+        description: "Two Factor Secret"
+        example: "Sample two factor secret"
+      twoFactorBackupCodes:
+        readable: false
+        writable: false
+        description: "Two Factor Backup Codes"
+        example: "{\"key\": \"value\"}"
+      passwordResetToken:
+        readable: false
+        writable: false
+        description: "Password Reset Token"
+        example: "Sample password reset token"
+      passwordResetExpiry:
+        writable: false
+        description: "Password Reset Expiry"
+        example: "2025-01-15T10:30:00Z"
+      sessionToken:
+        readable: false
+        writable: false
+        description: "Session Token"
+        example: "Sample session token"
+      lastPasswordChangeAt:
+        writable: false
+        description: "Last Password Change At"
+        example: "2025-01-15T10:30:00Z"
+      passwordExpiresAt:
+        writable: false
+        description: "Password Expires At"
+        example: "2025-01-15T10:30:00Z"
+      mustChangePassword:
+        writable: false
+        description: "Must Change Password"
+        example: true
+      passkeyEnabled:
+        description: "Passkey Enabled"
+        example: true
       managedCampaigns:
         description: "ManagedCampaigns"
         example: "sample value"
+      passkeyCredentials:
+        readable: false
+        writable: false
+        description: "Passkey Credentials"
+        example: "{\"key\": \"value\"}"
       ownedCampaigns:
         description: "OwnedCampaigns"
         example: "/api/campaigns/01234567-89ab-cdef-0123-456789abcdef"
@@ -114,40 +206,262 @@ resources:
       managedContacts:
         description: "ManagedContacts"
         example: "sample value"
+      username:
+        description: "Username"
+        example: "Sample username"
       managedDeals:
         description: "ManagedDeals"
         example: "sample value"
-      managedPipelines:
-        description: "ManagedPipelines"
-        example: "sample value"
+      phone:
+        description: "Phone"
+        example: "Sample phone"
+      mobilePhone:
+        description: "Mobile Phone"
+        example: "Sample mobile phone"
+      jobTitle:
+        description: "Job Title"
+        example: "Sample job title"
+      department:
+        description: "Department"
+        example: "Sample department"
+      timezone:
+        description: "Timezone"
+        example: "Sample timezone"
+      locale:
+        description: "Locale"
+        example: "Sample locale"
+      preferredLanguage:
+        description: "Preferred Language"
+        example: "Sample preferred language"
+      emailSignature:
+        description: "Email Signature"
+        example: "Sample email signature"
+      emailNotificationsEnabled:
+        description: "Email Notifications Enabled"
+        example: true
+      smsNotificationsEnabled:
+        description: "SMS Notifications Enabled"
+        example: true
+      calendarSyncEnabled:
+        description: "Calendar Sync Enabled"
+        example: true
+      workingHours:
+        description: "Working Hours"
+        example: "{\"key\": \"value\"}"
+      defaultCurrency:
+        description: "Default Currency"
+        example: "Sample default currency"
+      dateFormat:
+        description: "Date Format"
+        example: "Sample date format"
       organizedEvents:
         description: "OrganizedEvents"
         example: "sample value"
+      manager:
+        description: "Manager"
+        example: "/api/users/01234567-89ab-cdef-0123-456789abcdef"
+      salesTeam:
+        description: "Sales Team"
+        example: "Sample sales team"
+      quotaAmount:
+        description: "Quota Amount"
+        example: 99.99
+      commissionRate:
+        description: "Commission Rate"
+        example: 99.99
+      agent:
+        description: "Agent"
+        example: true
+      agentType:
+        description: "Agent Type"
+        example: "Sample agent type"
       ownedCourses:
         description: "OwnedCourses"
         example: "sample value"
+      deletedAt:
+        writable: false
+        description: "Deleted At"
+        example: "2025-01-15T10:30:00Z"
+      avatar:
+        description: "Avatar"
+        example: "Sample avatar"
       password:
         readable: false
         description: "Password (text field)"
         example: "Sample longer text value"
+      title:
+        description: "Title"
+        example: "Sample title"
+      firstName:
+        description: "First Name"
+        example: "Sample first name"
+      lastName:
+        description: "Last Name"
+        example: "Sample last name"
+      middleName:
+        description: "Middle Name"
+        example: "Sample middle name"
+      suffix:
+        description: "Suffix"
+        example: "Sample suffix"
+      nickname:
+        description: "Nickname"
+        example: "Sample nickname"
       position:
         description: "Position (text field)"
         example: "Sample longer text value"
+      secondaryEmail:
+        description: "Secondary Email"
+        example: "Sample secondary email"
+      workPhone:
+        description: "Work Phone"
+        example: "Sample work phone"
+      homePhone:
+        description: "Home Phone"
+        example: "Sample home phone"
+      phoneExtension:
+        description: "Phone Extension"
+        example: "Sample phone extension"
+      fax:
+        description: "Fax"
+        example: "Sample fax"
+      website:
+        description: "Website"
+        example: "Sample website"
+      linkedinUrl:
+        description: "LinkedIn URL"
+        example: "Sample linkedin url"
+      twitterHandle:
+        description: "Twitter Handle"
+        example: "Sample twitter handle"
+      address:
+        description: "Address"
+        example: "Sample address"
       profilePictureUrl:
         description: "ProfilePictureUrl (text field)"
         example: "Sample longer text value"
+      city:
+        description: "City"
+        example: "Sample city"
+      state:
+        description: "State"
+        example: "Sample state"
+      postalCode:
+        description: "Postal Code"
+        example: "Sample postal code"
+      country:
+        description: "Country"
+        example: "Sample country"
+      region:
+        description: "Region"
+        example: "Sample region"
+      officeLocation:
+        description: "Office Location"
+        example: "Sample office location"
       profiles:
         description: "Profiles"
         example: "sample value"
+      employeeId:
+        description: "Employee ID"
+        example: "Sample employee id"
+      hireDate:
+        description: "Hire Date"
+        example: "2025-01-15"
+      terminationDate:
+        description: "Termination Date"
+        example: "2025-01-15"
+      employmentStatus:
+        description: "Employment Status"
+        example: "Sample employment status"
+      costCenter:
+        description: "Cost Center"
+        example: "Sample cost center"
+      division:
+        description: "Division"
+        example: "Sample division"
+      businessUnit:
+        description: "Business Unit"
+        example: "Sample business unit"
+      salary:
+        description: "Salary"
+        example: 99.99
+      salaryFrequency:
+        description: "Salary Frequency"
+        example: "Sample salary frequency"
       socialMedias:
         description: "SocialMedias"
         example: "sample value"
+      skills:
+        description: "Skills"
+        example: "{\"key\": \"value\"}"
+      certifications:
+        description: "Certifications"
+        example: "{\"key\": \"value\"}"
+      languages:
+        description: "Languages"
+        example: "{\"key\": \"value\"}"
+      bio:
+        description: "Bio"
+        example: "Sample bio"
+      notes:
+        description: "Notes"
+        example: "Sample notes"
+      tags:
+        description: "Tags"
+        example: "{\"key\": \"value\"}"
       studentCourses:
         description: "Student Courses"
         example: "sample value"
+      loginCount:
+        writable: false
+        description: "Login Count"
+        example: 0
+      lastIpAddress:
+        writable: false
+        description: "Last IP Address"
+        example: "Sample last ip address"
+      lastUserAgent:
+        writable: false
+        description: "Last User Agent"
+        example: "Sample last user agent"
+      visible:
+        description: "Visible"
+        example: true
+      profileCompleteness:
+        writable: false
+        description: "Profile Completeness"
+        example: 0
+      lastActivityAt:
+        writable: false
+        description: "Last Activity At"
+        example: "2025-01-15T10:30:00Z"
       talks:
         description: "Talks"
         example: "sample value"
+      status:
+        description: "Status"
+        example: "Sample status"
+      statusMessage:
+        description: "Status Message"
+        example: "Sample status message"
       tasks:
         description: "..."
         example: "..."
+      locked:
+        description: "Locked"
+        example: true
+      lockedReason:
+        writable: false
+        description: "Locked Reason"
+        example: "Sample locked reason"
+      lockedAt:
+        writable: false
+        description: "Locked At"
+        example: "2025-01-15T10:30:00Z"
+      customFields:
+        description: "Custom Fields"
+        example: "{\"key\": \"value\"}"
+      managedPipelines:
+        writable: false
+        description: "Managed Pipelines"
+        example: "/api/pipelines/01234567-89ab-cdef-0123-456789abcdef"

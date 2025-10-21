@@ -27,18 +27,18 @@ use App\Entity\StepConnection;
 abstract class StepInputGenerated extends EntityBase
 {
     #[Groups(['stepinput:read', 'stepinput:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Length(max: 255)]
-    protected string $name;
-
-    #[Groups(['stepinput:read', 'stepinput:write'])]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'inputs')]
     #[ORM\JoinColumn(nullable: false)]
     protected Step $step;
 
     #[Groups(['stepinput:read', 'stepinput:write'])]
-    #[ORM\Column(name: 'type_prop', type: 'enum')]
-    protected string $type = ANY;
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
+    protected string $name;
+
+    #[Groups(['stepinput:read', 'stepinput:write'])]
+    #[ORM\Column(name: 'type_prop', type: 'string')]
+    protected string $type = 'ANY';
 
     #[Groups(['stepinput:read', 'stepinput:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -60,16 +60,6 @@ abstract class StepInputGenerated extends EntityBase
         $this->connections = new ArrayCollection();
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getStep(): Step
     {
         return $this->step;
@@ -78,6 +68,16 @@ abstract class StepInputGenerated extends EntityBase
     public function setStep(Step $step): self
     {
         $this->step = $step;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 

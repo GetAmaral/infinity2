@@ -83,6 +83,8 @@ class EntityGenerator
             // Render from template
             $content = $this->twig->render($this->templates['entity_generated'], [
                 'entity' => $entity,
+                'namespace' => $this->paths['entity_namespace'],
+                'generated_namespace' => $this->paths['entity_generated_namespace'],
             ]);
 
             // Write file atomically
@@ -137,6 +139,9 @@ class EntityGenerator
             // Render from template
             $content = $this->twig->render($this->templates['entity_extension'], [
                 'entity' => $entity,
+                'namespace' => $this->paths['entity_namespace'],
+                'generated_namespace' => $this->paths['entity_generated_namespace'],
+                'repository_namespace' => $this->paths['repository_namespace'],
             ]);
 
             // Write file atomically

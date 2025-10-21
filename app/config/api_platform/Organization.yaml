@@ -41,18 +41,18 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
-      description:
-        description: "..."
-        example: "..."
       logoPathDark:
         description: "Logo Path Dark (text field)"
         example: "Sample longer text value"
-      logoUrl:
-        description: "URL to the brand logo..."
-        example: "https:\/\/example.com\/logos\/nike.png"
+      description:
+        description: "..."
+        example: "..."
       studentCourses:
         description: "Student Courses"
         example: "sample value"
+      logoUrl:
+        description: "URL to the brand logo..."
+        example: "https:\/\/example.com\/logos\/nike.png"
       industry:
         description: "Industry (text field)"
         example: "Sample longer text value"
@@ -96,10 +96,6 @@ resources:
         writable: false
         description: "PipelineStageTemplates"
         example: "/api/pipelinestagetemplates/01234567-89ab-cdef-0123-456789abcdef"
-      reminders:
-        writable: false
-        description: "Reminders"
-        example: "/api/reminders/01234567-89ab-cdef-0123-456789abcdef"
       celPhone:
         description: "CelPhone (text field)"
         example: "Sample text"
@@ -127,14 +123,22 @@ resources:
         writable: false
         description: "PipelineTemplates"
         example: "/api/pipelinetemplates/01234567-89ab-cdef-0123-456789abcdef"
-      stepConnections:
+      reminders:
         writable: false
-        description: "StepConnections"
-        example: "/api/stepconnections/01234567-89ab-cdef-0123-456789abcdef"
+        description: "Reminders"
+        example: "/api/reminders/01234567-89ab-cdef-0123-456789abcdef"
       taskTemplates:
         writable: false
         description: "TaskTemplates"
         example: "/api/tasktemplates/01234567-89ab-cdef-0123-456789abcdef"
+      dealCategories:
+        writable: false
+        description: "DealCategorys"
+        example: "/api/dealcategorys/01234567-89ab-cdef-0123-456789abcdef"
+      dealTypes:
+        writable: false
+        description: "DealTypes"
+        example: "/api/dealtypes/01234567-89ab-cdef-0123-456789abcdef"
       eventAttendees:
         writable: false
         description: "EventAttendees"
@@ -151,14 +155,6 @@ resources:
         writable: false
         description: "Notifications"
         example: "/api/notifications/01234567-89ab-cdef-0123-456789abcdef"
-      dealCategories:
-        writable: false
-        description: "DealCategorys"
-        example: "/api/dealcategorys/01234567-89ab-cdef-0123-456789abcdef"
-      dealTypes:
-        writable: false
-        description: "DealTypes"
-        example: "/api/dealtypes/01234567-89ab-cdef-0123-456789abcdef"
       city:
         description: "City"
         example: "sample value"
@@ -221,9 +217,6 @@ resources:
         example: "{\"key\": \"value\"}"
       leadSources:
         description: "LeadSources"
-        example: "sample value"
-      courseLectures:
-        description: "Lectures"
         example: "sample value"
       modules:
         description: "Modules"

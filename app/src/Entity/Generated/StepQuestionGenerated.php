@@ -24,14 +24,14 @@ use App\Entity\Step;
 abstract class StepQuestionGenerated extends EntityBase
 {
     #[Groups(['stepquestion:read', 'stepquestion:write'])]
-    #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'questions')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected Step $step;
-
-    #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $name;
+
+    #[Groups(['stepquestion:read', 'stepquestion:write'])]
+    #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'questions')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Step $step;
 
     #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -68,6 +68,16 @@ abstract class StepQuestionGenerated extends EntityBase
         parent::__construct();
     }
 
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function getStep(): Step
     {
         return $this->step;
@@ -76,16 +86,6 @@ abstract class StepQuestionGenerated extends EntityBase
     public function setStep(Step $step): self
     {
         $this->step = $step;
-        return $this;
-    }
-
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
         return $this;
     }
 

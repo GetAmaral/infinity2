@@ -99,12 +99,12 @@ abstract class TaskGenerated extends EntityBase
     protected ?int $priority = null;
 
     #[Groups(['task:read', 'task:write'])]
-    #[ORM\Column(type: 'boolean')]
-    protected bool $completed = false;
-
-    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $scheduledDate = null;
+
+    #[Groups(['task:read', 'task:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $completed = false;
 
     #[Groups(['task:read', 'task:write'])]
     #[ORM\ManyToOne(targetEntity: Company::class)]
@@ -353,6 +353,16 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
+    public function getScheduledDate(): ?\DateTimeImmutable    {
+        return $this->scheduledDate;
+    }
+
+    public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
+    {
+        $this->scheduledDate = $scheduledDate;
+        return $this;
+    }
+
     public function getCompleted(): bool    {
         return $this->completed;
     }
@@ -366,16 +376,6 @@ abstract class TaskGenerated extends EntityBase
     public function isCompleted(): bool
     {
         return $this->completed === true;
-    }
-
-    public function getScheduledDate(): ?\DateTimeImmutable    {
-        return $this->scheduledDate;
-    }
-
-    public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
-    {
-        $this->scheduledDate = $scheduledDate;
-        return $this;
     }
 
     public function getCompany(): ?Company

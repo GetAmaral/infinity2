@@ -93,14 +93,14 @@ abstract class ProductGenerated extends EntityBase
     #[Assert\PositiveOrZero]
     protected ?string $compareAtPrice = null;
 
-    #[Groups(['product:read'])]
-    #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'product', fetch: 'LAZY')]
-    protected Collection $attachments;
-
     #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Assert\Choice(choices: ['draft', 'active', 'archived', 'discontinued'])]
     protected ?string $status = null;
+
+    #[Groups(['product:read'])]
+    #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'product', fetch: 'LAZY')]
+    protected Collection $attachments;
 
     #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -118,13 +118,13 @@ abstract class ProductGenerated extends EntityBase
     protected ?int $leadTime = null;
 
     #[Groups(['product:read', 'product:write'])]
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    protected ?bool $active = null;
-
-    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     #[Assert\Positive]
     protected ?int $minOrderQuantity = null;
+
+    #[Groups(['product:read', 'product:write'])]
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    protected ?bool $active = null;
 
     #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -479,6 +479,16 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
+    public function getStatus(): ?string    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Attachment>
      */
@@ -503,16 +513,6 @@ abstract class ProductGenerated extends EntityBase
                 $attachment->setProduct(null);
             }
         }
-        return $this;
-    }
-
-    public function getStatus(): ?string    {
-        return $this->status;
-    }
-
-    public function setStatus(?string $status): self
-    {
-        $this->status = $status;
         return $this;
     }
 
@@ -546,6 +546,16 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
+    public function getMinOrderQuantity(): ?int    {
+        return $this->minOrderQuantity;
+    }
+
+    public function setMinOrderQuantity(?int $minOrderQuantity): self
+    {
+        $this->minOrderQuantity = $minOrderQuantity;
+        return $this;
+    }
+
     public function getActive(): ?bool    {
         return $this->active;
     }
@@ -559,16 +569,6 @@ abstract class ProductGenerated extends EntityBase
     public function isActive(): bool
     {
         return $this->active === true;
-    }
-
-    public function getMinOrderQuantity(): ?int    {
-        return $this->minOrderQuantity;
-    }
-
-    public function setMinOrderQuantity(?int $minOrderQuantity): self
-    {
-        $this->minOrderQuantity = $minOrderQuantity;
-        return $this;
     }
 
     public function getMaxOrderQuantity(): ?int    {

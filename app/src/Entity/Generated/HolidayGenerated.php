@@ -55,12 +55,12 @@ abstract class HolidayGenerated extends EntityBase
     protected bool $active = true;
 
     #[Groups(['holiday:read', 'holiday:write'])]
-    #[ORM\Column(type: 'string', length: 2, nullable: true)]
-    protected ?string $country = null;
-
-    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\ManyToOne(targetEntity: Calendar::class, inversedBy: 'holidays')]
     protected ?Calendar $calendar = null;
+
+    #[Groups(['holiday:read', 'holiday:write'])]
+    #[ORM\Column(type: 'string', length: 2, nullable: true)]
+    protected ?string $country = null;
 
     #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
@@ -203,16 +203,6 @@ abstract class HolidayGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getCountry(): ?string    {
-        return $this->country;
-    }
-
-    public function setCountry(?string $country): self
-    {
-        $this->country = $country;
-        return $this;
-    }
-
     public function getCalendar(): ?Calendar
     {
         return $this->calendar;
@@ -221,6 +211,16 @@ abstract class HolidayGenerated extends EntityBase
     public function setCalendar(?Calendar $calendar): self
     {
         $this->calendar = $calendar;
+        return $this;
+    }
+
+    public function getCountry(): ?string    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
         return $this;
     }
 

@@ -16,19 +16,20 @@ use App\Entity\Calendar;
 use App\Entity\Campaign;
 use App\Entity\Contact;
 use App\Entity\Deal;
-use App\Entity\CalendarExternalLink;
+use App\Entity\Role;
 use App\Entity\EventResourceBooking;
+use App\Entity\CalendarExternalLink;
 use App\Entity\EventAttendee;
-use App\Entity\Flag;
 use App\Entity\Company;
-use App\Entity\Pipeline;
 use App\Entity\Event;
+use App\Entity\User;
 use App\Entity\Course;
 use App\Entity\Profile;
 use App\Entity\SocialMedia;
 use App\Entity\StudentCourse;
 use App\Entity\Talk;
 use App\Entity\Task;
+use App\Entity\Pipeline;
 
 /**
  * User Entity (Generated Base Class)
@@ -65,7 +66,7 @@ abstract class UserGenerated extends EntityBase
     protected ?string $avatarUrl = null;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $birthDate = null;
 
     #[Groups(['user:read'])]
@@ -95,44 +96,133 @@ abstract class UserGenerated extends EntityBase
     protected string $email;
 
     #[Groups(['user:read'])]
-    #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'owner', fetch: 'LAZY')]
-    protected Collection $ownedDeals;
-
-    #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTimeImmutable $emailVerifiedAt = null;
+    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'user_table_grantedRoles')]
+    protected Collection $grantedRoles;
 
     #[Groups(['user:read'])]
-    #[ORM\OneToMany(targetEntity: CalendarExternalLink::class, mappedBy: 'user', fetch: 'LAZY')]
-    protected Collection $calendarExternalLinks;
+    #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'owner', fetch: 'LAZY')]
+    protected Collection $ownedDeals;
 
     #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: EventResourceBooking::class, mappedBy: 'bookedBy', fetch: 'LAZY')]
     protected Collection $resourceBookings;
 
     #[Groups(['user:read'])]
+    #[ORM\OneToMany(targetEntity: CalendarExternalLink::class, mappedBy: 'user', fetch: 'LAZY')]
+    protected Collection $calendarExternalLinks;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $emailVerifiedAt = null;
+
+    #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'user', fetch: 'LAZY')]
     protected Collection $eventAttendances;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $verified = false;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $termsSigned = false;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $termsSignedAt = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $verificationToken = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $apiToken = null;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $failedLoginAttempts = 0;
 
-    #[Groups(['user:read'])]
-    #[ORM\OneToMany(targetEntity: Flag::class, mappedBy: 'user', fetch: 'LAZY')]
-    protected Collection $flags;
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $apiTokenExpiresAt = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $openAiApiKey = null;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $gender = null;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $lastLoginAt = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $lockedUntil = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $uiSettings = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $listPreferences = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastPasswordChange = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $twoFactorEnabled = false;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $twoFactorSecret = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $twoFactorBackupCodes = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $passwordResetToken = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $passwordResetExpiry = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $sessionToken = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $lastPasswordChangeAt = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $passwordExpiresAt = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $mustChangePassword = false;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $passkeyEnabled = false;
 
     #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: Campaign::class, mappedBy: 'manager', fetch: 'LAZY')]
     protected Collection $managedCampaigns;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $passkeyCredentials = null;
 
     #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: Campaign::class, mappedBy: 'owner', fetch: 'LAZY')]
@@ -146,21 +236,109 @@ abstract class UserGenerated extends EntityBase
     #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'accountManager', fetch: 'LAZY')]
     protected Collection $managedContacts;
 
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true, unique: true)]
+    protected ?string $username = null;
+
     #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'manager', fetch: 'LAZY')]
     protected Collection $managedDeals;
 
-    #[Groups(['user:read'])]
-    #[ORM\OneToMany(targetEntity: Pipeline::class, mappedBy: 'manager', fetch: 'LAZY')]
-    protected Collection $managedPipelines;
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    protected ?string $phone = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    protected ?string $mobilePhone = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $jobTitle = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $department = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    protected ?string $timezone = 'UTC';
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    protected ?string $locale = 'en';
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    protected ?string $preferredLanguage = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $emailSignature = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $emailNotificationsEnabled = true;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $smsNotificationsEnabled = false;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $calendarSyncEnabled = false;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $workingHours = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 3, nullable: true)]
+    protected ?string $defaultCurrency = 'USD';
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    protected ?string $dateFormat = 'Y-m-d';
 
     #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer', fetch: 'LAZY')]
     protected Collection $organizedEvents;
 
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    protected ?User $manager = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $salesTeam = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    protected ?string $quotaAmount = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
+    protected ?string $commissionRate = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $agent = false;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    protected ?string $agentType = null;
+
     #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'owner', fetch: 'LAZY')]
     protected Collection $ownedCourses;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $deletedAt = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $avatar = null;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -168,32 +346,228 @@ abstract class UserGenerated extends EntityBase
     protected string $password;
 
     #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $title = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $firstName = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $lastName = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $middleName = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $suffix = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $nickname = null;
+
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(name: 'position_prop', type: 'string', length: 255, nullable: true)]
     protected ?string $position = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $secondaryEmail = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    protected ?string $workPhone = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    protected ?string $homePhone = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    protected ?string $phoneExtension = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $fax = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $website = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $linkedinUrl = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $twitterHandle = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $address = null;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $profilePictureUrl = null;
 
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $city = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(name: 'state_prop', type: 'string', length: 100, nullable: true)]
+    protected ?string $state = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    protected ?string $postalCode = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $country = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $region = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $officeLocation = null;
+
     #[Groups(['user:read'])]
     #[ORM\ManyToMany(targetEntity: Profile::class, mappedBy: 'users', fetch: 'LAZY')]
     protected Collection $profiles;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $employeeId = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $hireDate = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $terminationDate = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    protected ?string $employmentStatus = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $costCenter = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $division = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $businessUnit = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    protected ?string $salary = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    protected ?string $salaryFrequency = null;
 
     #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: SocialMedia::class, mappedBy: 'user', fetch: 'LAZY')]
     protected Collection $socialMedias;
 
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $skills = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $certifications = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $languages = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $bio = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $notes = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $tags = null;
+
     #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'student', fetch: 'LAZY')]
     protected Collection $studentCourses;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'integer')]
+    protected int $loginCount = 0;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $lastIpAddress = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $lastUserAgent = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $visible = true;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'integer')]
+    protected int $profileCompleteness = 0;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $lastActivityAt = null;
 
     #[Groups(['user:read'])]
     #[ORM\ManyToMany(targetEntity: Talk::class, mappedBy: 'users', fetch: 'LAZY')]
     protected Collection $talks;
 
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    protected ?string $status = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $statusMessage = null;
+
     #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user', fetch: 'LAZY')]
     protected Collection $tasks;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $locked = false;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $lockedReason = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $lockedAt = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $customFields = null;
+
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(targetEntity: Pipeline::class, mappedBy: 'owner', fetch: 'LAZY')]
+    protected Collection $managedPipelines;
 
 
     public function __construct()
@@ -204,17 +578,16 @@ abstract class UserGenerated extends EntityBase
         $this->campaigns = new ArrayCollection();
         $this->contacts = new ArrayCollection();
         $this->deals = new ArrayCollection();
+        $this->grantedRoles = new ArrayCollection();
         $this->ownedDeals = new ArrayCollection();
-        $this->calendarExternalLinks = new ArrayCollection();
         $this->resourceBookings = new ArrayCollection();
+        $this->calendarExternalLinks = new ArrayCollection();
         $this->eventAttendances = new ArrayCollection();
-        $this->flags = new ArrayCollection();
         $this->managedCampaigns = new ArrayCollection();
         $this->ownedCampaigns = new ArrayCollection();
         $this->managedCompanies = new ArrayCollection();
         $this->managedContacts = new ArrayCollection();
         $this->managedDeals = new ArrayCollection();
-        $this->managedPipelines = new ArrayCollection();
         $this->organizedEvents = new ArrayCollection();
         $this->ownedCourses = new ArrayCollection();
         $this->profiles = new ArrayCollection();
@@ -222,6 +595,7 @@ abstract class UserGenerated extends EntityBase
         $this->studentCourses = new ArrayCollection();
         $this->talks = new ArrayCollection();
         $this->tasks = new ArrayCollection();
+        $this->managedPipelines = new ArrayCollection();
     }
 
     public function getOrganization(): Organization
@@ -436,6 +810,29 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
+     * @return Collection<int, Role>
+     */
+    public function getGrantedRoles(): Collection
+    {
+        return $this->grantedRoles;
+    }
+
+    public function addGrantedRole(Role $grantedRole): self
+    {
+        if (!$this->grantedRoles->contains($grantedRole)) {
+            $this->grantedRoles->add($grantedRole);
+        }
+        return $this;
+    }
+
+    public function removeGrantedRole(Role $grantedRole): self
+    {
+        if ($this->grantedRoles->removeElement($grantedRole)) {
+        }
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Deal>
      */
     public function getOwnedDeals(): Collection
@@ -457,43 +854,6 @@ abstract class UserGenerated extends EntityBase
         if ($this->ownedDeals->removeElement($ownedDeal)) {
             if ($ownedDeal->getOwner() === $this) {
                 $ownedDeal->setOwner(null);
-            }
-        }
-        return $this;
-    }
-
-    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
-        return $this->emailVerifiedAt;
-    }
-
-    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
-    {
-        $this->emailVerifiedAt = $emailVerifiedAt;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, CalendarExternalLink>
-     */
-    public function getCalendarExternalLinks(): Collection
-    {
-        return $this->calendarExternalLinks;
-    }
-
-    public function addCalendarExternalLink(CalendarExternalLink $calendarExternalLink): self
-    {
-        if (!$this->calendarExternalLinks->contains($calendarExternalLink)) {
-            $this->calendarExternalLinks->add($calendarExternalLink);
-            $calendarExternalLink->setUser($this);
-        }
-        return $this;
-    }
-
-    public function removeCalendarExternalLink(CalendarExternalLink $calendarExternalLink): self
-    {
-        if ($this->calendarExternalLinks->removeElement($calendarExternalLink)) {
-            if ($calendarExternalLink->getUser() === $this) {
-                $calendarExternalLink->setUser(null);
             }
         }
         return $this;
@@ -527,6 +887,43 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
+     * @return Collection<int, CalendarExternalLink>
+     */
+    public function getCalendarExternalLinks(): Collection
+    {
+        return $this->calendarExternalLinks;
+    }
+
+    public function addCalendarExternalLink(CalendarExternalLink $calendarExternalLink): self
+    {
+        if (!$this->calendarExternalLinks->contains($calendarExternalLink)) {
+            $this->calendarExternalLinks->add($calendarExternalLink);
+            $calendarExternalLink->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeCalendarExternalLink(CalendarExternalLink $calendarExternalLink): self
+    {
+        if ($this->calendarExternalLinks->removeElement($calendarExternalLink)) {
+            if ($calendarExternalLink->getUser() === $this) {
+                $calendarExternalLink->setUser(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
+        return $this->emailVerifiedAt;
+    }
+
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
+    {
+        $this->emailVerifiedAt = $emailVerifiedAt;
+        return $this;
+    }
+
+    /**
      * @return Collection<int, EventAttendee>
      */
     public function getEventAttendances(): Collection
@@ -553,6 +950,66 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getVerified(): bool    {
+        return $this->verified;
+    }
+
+    public function setVerified(bool $verified): self
+    {
+        $this->verified = $verified;
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->verified === true;
+    }
+
+    public function getTermsSigned(): bool    {
+        return $this->termsSigned;
+    }
+
+    public function setTermsSigned(bool $termsSigned): self
+    {
+        $this->termsSigned = $termsSigned;
+        return $this;
+    }
+
+    public function isTermsSigned(): bool
+    {
+        return $this->termsSigned === true;
+    }
+
+    public function getTermsSignedAt(): ?\DateTimeImmutable    {
+        return $this->termsSignedAt;
+    }
+
+    public function setTermsSignedAt(?\DateTimeImmutable $termsSignedAt): self
+    {
+        $this->termsSignedAt = $termsSignedAt;
+        return $this;
+    }
+
+    public function getVerificationToken(): ?string    {
+        return $this->verificationToken;
+    }
+
+    public function setVerificationToken(?string $verificationToken): self
+    {
+        $this->verificationToken = $verificationToken;
+        return $this;
+    }
+
+    public function getApiToken(): ?string    {
+        return $this->apiToken;
+    }
+
+    public function setApiToken(?string $apiToken): self
+    {
+        $this->apiToken = $apiToken;
+        return $this;
+    }
+
     public function getFailedLoginAttempts(): int    {
         return $this->failedLoginAttempts;
     }
@@ -563,30 +1020,23 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    /**
-     * @return Collection<int, Flag>
-     */
-    public function getFlags(): Collection
-    {
-        return $this->flags;
+    public function getApiTokenExpiresAt(): ?\DateTimeImmutable    {
+        return $this->apiTokenExpiresAt;
     }
 
-    public function addFlag(Flag $flag): self
+    public function setApiTokenExpiresAt(?\DateTimeImmutable $apiTokenExpiresAt): self
     {
-        if (!$this->flags->contains($flag)) {
-            $this->flags->add($flag);
-            $flag->setUser($this);
-        }
+        $this->apiTokenExpiresAt = $apiTokenExpiresAt;
         return $this;
     }
 
-    public function removeFlag(Flag $flag): self
+    public function getOpenAiApiKey(): ?string    {
+        return $this->openAiApiKey;
+    }
+
+    public function setOpenAiApiKey(?string $openAiApiKey): self
     {
-        if ($this->flags->removeElement($flag)) {
-            if ($flag->getUser() === $this) {
-                $flag->setUser(null);
-            }
-        }
+        $this->openAiApiKey = $openAiApiKey;
         return $this;
     }
 
@@ -600,6 +1050,46 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getLastLoginAt(): ?\DateTimeImmutable    {
+        return $this->lastLoginAt;
+    }
+
+    public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
+    {
+        $this->lastLoginAt = $lastLoginAt;
+        return $this;
+    }
+
+    public function getLockedUntil(): ?\DateTimeImmutable    {
+        return $this->lockedUntil;
+    }
+
+    public function setLockedUntil(?\DateTimeImmutable $lockedUntil): self
+    {
+        $this->lockedUntil = $lockedUntil;
+        return $this;
+    }
+
+    public function getUiSettings(): ?array    {
+        return $this->uiSettings;
+    }
+
+    public function setUiSettings(?array $uiSettings): self
+    {
+        $this->uiSettings = $uiSettings;
+        return $this;
+    }
+
+    public function getListPreferences(): ?array    {
+        return $this->listPreferences;
+    }
+
+    public function setListPreferences(?array $listPreferences): self
+    {
+        $this->listPreferences = $listPreferences;
+        return $this;
+    }
+
     public function getLastPasswordChange(): ?\DateTimeImmutable    {
         return $this->lastPasswordChange;
     }
@@ -608,6 +1098,121 @@ abstract class UserGenerated extends EntityBase
     {
         $this->lastPasswordChange = $lastPasswordChange;
         return $this;
+    }
+
+    public function getTwoFactorEnabled(): bool    {
+        return $this->twoFactorEnabled;
+    }
+
+    public function setTwoFactorEnabled(bool $twoFactorEnabled): self
+    {
+        $this->twoFactorEnabled = $twoFactorEnabled;
+        return $this;
+    }
+
+    public function isTwoFactorEnabled(): bool
+    {
+        return $this->twoFactorEnabled === true;
+    }
+
+    public function getTwoFactorSecret(): ?string    {
+        return $this->twoFactorSecret;
+    }
+
+    public function setTwoFactorSecret(?string $twoFactorSecret): self
+    {
+        $this->twoFactorSecret = $twoFactorSecret;
+        return $this;
+    }
+
+    public function getTwoFactorBackupCodes(): ?array    {
+        return $this->twoFactorBackupCodes;
+    }
+
+    public function setTwoFactorBackupCodes(?array $twoFactorBackupCodes): self
+    {
+        $this->twoFactorBackupCodes = $twoFactorBackupCodes;
+        return $this;
+    }
+
+    public function getPasswordResetToken(): ?string    {
+        return $this->passwordResetToken;
+    }
+
+    public function setPasswordResetToken(?string $passwordResetToken): self
+    {
+        $this->passwordResetToken = $passwordResetToken;
+        return $this;
+    }
+
+    public function getPasswordResetExpiry(): ?\DateTimeImmutable    {
+        return $this->passwordResetExpiry;
+    }
+
+    public function setPasswordResetExpiry(?\DateTimeImmutable $passwordResetExpiry): self
+    {
+        $this->passwordResetExpiry = $passwordResetExpiry;
+        return $this;
+    }
+
+    public function getSessionToken(): ?string    {
+        return $this->sessionToken;
+    }
+
+    public function setSessionToken(?string $sessionToken): self
+    {
+        $this->sessionToken = $sessionToken;
+        return $this;
+    }
+
+    public function getLastPasswordChangeAt(): ?\DateTimeImmutable    {
+        return $this->lastPasswordChangeAt;
+    }
+
+    public function setLastPasswordChangeAt(?\DateTimeImmutable $lastPasswordChangeAt): self
+    {
+        $this->lastPasswordChangeAt = $lastPasswordChangeAt;
+        return $this;
+    }
+
+    public function getPasswordExpiresAt(): ?\DateTimeImmutable    {
+        return $this->passwordExpiresAt;
+    }
+
+    public function setPasswordExpiresAt(?\DateTimeImmutable $passwordExpiresAt): self
+    {
+        $this->passwordExpiresAt = $passwordExpiresAt;
+        return $this;
+    }
+
+    public function getMustChangePassword(): bool    {
+        return $this->mustChangePassword;
+    }
+
+    public function setMustChangePassword(bool $mustChangePassword): self
+    {
+        $this->mustChangePassword = $mustChangePassword;
+        return $this;
+    }
+
+    public function isMustChangePassword(): bool
+    {
+        return $this->mustChangePassword === true;
+    }
+
+    public function getPasskeyEnabled(): bool    {
+        return $this->passkeyEnabled;
+    }
+
+    public function setPasskeyEnabled(bool $passkeyEnabled): self
+    {
+        $this->passkeyEnabled = $passkeyEnabled;
+        return $this;
+    }
+
+    public function isPasskeyEnabled(): bool
+    {
+        return $this->passkeyEnabled === true;
     }
 
     /**
@@ -634,6 +1239,16 @@ abstract class UserGenerated extends EntityBase
                 $managedCampaign->setManager(null);
             }
         }
+        return $this;
+    }
+
+    public function getPasskeyCredentials(): ?array    {
+        return $this->passkeyCredentials;
+    }
+
+    public function setPasskeyCredentials(?array $passkeyCredentials): self
+    {
+        $this->passkeyCredentials = $passkeyCredentials;
         return $this;
     }
 
@@ -718,6 +1333,16 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getUsername(): ?string    {
+        return $this->username;
+    }
+
+    public function setUsername(?string $username): self
+    {
+        $this->username = $username;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Deal>
      */
@@ -745,30 +1370,158 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    /**
-     * @return Collection<int, Pipeline>
-     */
-    public function getManagedPipelines(): Collection
-    {
-        return $this->managedPipelines;
+    public function getPhone(): ?string    {
+        return $this->phone;
     }
 
-    public function addManagedPipeline(Pipeline $managedPipeline): self
+    public function setPhone(?string $phone): self
     {
-        if (!$this->managedPipelines->contains($managedPipeline)) {
-            $this->managedPipelines->add($managedPipeline);
-            $managedPipeline->setManager($this);
-        }
+        $this->phone = $phone;
         return $this;
     }
 
-    public function removeManagedPipeline(Pipeline $managedPipeline): self
+    public function getMobilePhone(): ?string    {
+        return $this->mobilePhone;
+    }
+
+    public function setMobilePhone(?string $mobilePhone): self
     {
-        if ($this->managedPipelines->removeElement($managedPipeline)) {
-            if ($managedPipeline->getManager() === $this) {
-                $managedPipeline->setManager(null);
-            }
-        }
+        $this->mobilePhone = $mobilePhone;
+        return $this;
+    }
+
+    public function getJobTitle(): ?string    {
+        return $this->jobTitle;
+    }
+
+    public function setJobTitle(?string $jobTitle): self
+    {
+        $this->jobTitle = $jobTitle;
+        return $this;
+    }
+
+    public function getDepartment(): ?string    {
+        return $this->department;
+    }
+
+    public function setDepartment(?string $department): self
+    {
+        $this->department = $department;
+        return $this;
+    }
+
+    public function getTimezone(): ?string    {
+        return $this->timezone;
+    }
+
+    public function setTimezone(?string $timezone): self
+    {
+        $this->timezone = $timezone;
+        return $this;
+    }
+
+    public function getLocale(): ?string    {
+        return $this->locale;
+    }
+
+    public function setLocale(?string $locale): self
+    {
+        $this->locale = $locale;
+        return $this;
+    }
+
+    public function getPreferredLanguage(): ?string    {
+        return $this->preferredLanguage;
+    }
+
+    public function setPreferredLanguage(?string $preferredLanguage): self
+    {
+        $this->preferredLanguage = $preferredLanguage;
+        return $this;
+    }
+
+    public function getEmailSignature(): ?string    {
+        return $this->emailSignature;
+    }
+
+    public function setEmailSignature(?string $emailSignature): self
+    {
+        $this->emailSignature = $emailSignature;
+        return $this;
+    }
+
+    public function getEmailNotificationsEnabled(): bool    {
+        return $this->emailNotificationsEnabled;
+    }
+
+    public function setEmailNotificationsEnabled(bool $emailNotificationsEnabled): self
+    {
+        $this->emailNotificationsEnabled = $emailNotificationsEnabled;
+        return $this;
+    }
+
+    public function isEmailNotificationsEnabled(): bool
+    {
+        return $this->emailNotificationsEnabled === true;
+    }
+
+    public function getSmsNotificationsEnabled(): bool    {
+        return $this->smsNotificationsEnabled;
+    }
+
+    public function setSmsNotificationsEnabled(bool $smsNotificationsEnabled): self
+    {
+        $this->smsNotificationsEnabled = $smsNotificationsEnabled;
+        return $this;
+    }
+
+    public function isSmsNotificationsEnabled(): bool
+    {
+        return $this->smsNotificationsEnabled === true;
+    }
+
+    public function getCalendarSyncEnabled(): bool    {
+        return $this->calendarSyncEnabled;
+    }
+
+    public function setCalendarSyncEnabled(bool $calendarSyncEnabled): self
+    {
+        $this->calendarSyncEnabled = $calendarSyncEnabled;
+        return $this;
+    }
+
+    public function isCalendarSyncEnabled(): bool
+    {
+        return $this->calendarSyncEnabled === true;
+    }
+
+    public function getWorkingHours(): ?array    {
+        return $this->workingHours;
+    }
+
+    public function setWorkingHours(?array $workingHours): self
+    {
+        $this->workingHours = $workingHours;
+        return $this;
+    }
+
+    public function getDefaultCurrency(): ?string    {
+        return $this->defaultCurrency;
+    }
+
+    public function setDefaultCurrency(?string $defaultCurrency): self
+    {
+        $this->defaultCurrency = $defaultCurrency;
+        return $this;
+    }
+
+    public function getDateFormat(): ?string    {
+        return $this->dateFormat;
+    }
+
+    public function setDateFormat(?string $dateFormat): self
+    {
+        $this->dateFormat = $dateFormat;
         return $this;
     }
 
@@ -799,6 +1552,72 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getManager(): ?User
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?User $manager): self
+    {
+        $this->manager = $manager;
+        return $this;
+    }
+
+    public function getSalesTeam(): ?string    {
+        return $this->salesTeam;
+    }
+
+    public function setSalesTeam(?string $salesTeam): self
+    {
+        $this->salesTeam = $salesTeam;
+        return $this;
+    }
+
+    public function getQuotaAmount(): ?string    {
+        return $this->quotaAmount;
+    }
+
+    public function setQuotaAmount(?string $quotaAmount): self
+    {
+        $this->quotaAmount = $quotaAmount;
+        return $this;
+    }
+
+    public function getCommissionRate(): ?string    {
+        return $this->commissionRate;
+    }
+
+    public function setCommissionRate(?string $commissionRate): self
+    {
+        $this->commissionRate = $commissionRate;
+        return $this;
+    }
+
+    public function getAgent(): bool    {
+        return $this->agent;
+    }
+
+    public function setAgent(bool $agent): self
+    {
+        $this->agent = $agent;
+        return $this;
+    }
+
+    public function isAgent(): bool
+    {
+        return $this->agent === true;
+    }
+
+    public function getAgentType(): ?string    {
+        return $this->agentType;
+    }
+
+    public function setAgentType(?string $agentType): self
+    {
+        $this->agentType = $agentType;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Course>
      */
@@ -826,6 +1645,26 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getDeletedAt(): ?\DateTimeImmutable    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+        return $this;
+    }
+
+    public function getAvatar(): ?string    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+        return $this;
+    }
+
     public function getPassword(): string    {
         return $this->password;
     }
@@ -833,6 +1672,66 @@ abstract class UserGenerated extends EntityBase
     public function setPassword(string $password): self
     {
         $this->password = $password;
+        return $this;
+    }
+
+    public function getTitle(): ?string    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function getFirstName(): ?string    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): self
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getLastName(): ?string    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): self
+    {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    public function getMiddleName(): ?string    {
+        return $this->middleName;
+    }
+
+    public function setMiddleName(?string $middleName): self
+    {
+        $this->middleName = $middleName;
+        return $this;
+    }
+
+    public function getSuffix(): ?string    {
+        return $this->suffix;
+    }
+
+    public function setSuffix(?string $suffix): self
+    {
+        $this->suffix = $suffix;
+        return $this;
+    }
+
+    public function getNickname(): ?string    {
+        return $this->nickname;
+    }
+
+    public function setNickname(?string $nickname): self
+    {
+        $this->nickname = $nickname;
         return $this;
     }
 
@@ -846,6 +1745,96 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getSecondaryEmail(): ?string    {
+        return $this->secondaryEmail;
+    }
+
+    public function setSecondaryEmail(?string $secondaryEmail): self
+    {
+        $this->secondaryEmail = $secondaryEmail;
+        return $this;
+    }
+
+    public function getWorkPhone(): ?string    {
+        return $this->workPhone;
+    }
+
+    public function setWorkPhone(?string $workPhone): self
+    {
+        $this->workPhone = $workPhone;
+        return $this;
+    }
+
+    public function getHomePhone(): ?string    {
+        return $this->homePhone;
+    }
+
+    public function setHomePhone(?string $homePhone): self
+    {
+        $this->homePhone = $homePhone;
+        return $this;
+    }
+
+    public function getPhoneExtension(): ?string    {
+        return $this->phoneExtension;
+    }
+
+    public function setPhoneExtension(?string $phoneExtension): self
+    {
+        $this->phoneExtension = $phoneExtension;
+        return $this;
+    }
+
+    public function getFax(): ?string    {
+        return $this->fax;
+    }
+
+    public function setFax(?string $fax): self
+    {
+        $this->fax = $fax;
+        return $this;
+    }
+
+    public function getWebsite(): ?string    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): self
+    {
+        $this->website = $website;
+        return $this;
+    }
+
+    public function getLinkedinUrl(): ?string    {
+        return $this->linkedinUrl;
+    }
+
+    public function setLinkedinUrl(?string $linkedinUrl): self
+    {
+        $this->linkedinUrl = $linkedinUrl;
+        return $this;
+    }
+
+    public function getTwitterHandle(): ?string    {
+        return $this->twitterHandle;
+    }
+
+    public function setTwitterHandle(?string $twitterHandle): self
+    {
+        $this->twitterHandle = $twitterHandle;
+        return $this;
+    }
+
+    public function getAddress(): ?string    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
+        return $this;
+    }
+
     public function getProfilePictureUrl(): ?string    {
         return $this->profilePictureUrl;
     }
@@ -853,6 +1842,66 @@ abstract class UserGenerated extends EntityBase
     public function setProfilePictureUrl(?string $profilePictureUrl): self
     {
         $this->profilePictureUrl = $profilePictureUrl;
+        return $this;
+    }
+
+    public function getCity(): ?string    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
+        return $this;
+    }
+
+    public function getState(): ?string    {
+        return $this->state;
+    }
+
+    public function setState(?string $state): self
+    {
+        $this->state = $state;
+        return $this;
+    }
+
+    public function getPostalCode(): ?string    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): self
+    {
+        $this->postalCode = $postalCode;
+        return $this;
+    }
+
+    public function getCountry(): ?string    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    public function getRegion(): ?string    {
+        return $this->region;
+    }
+
+    public function setRegion(?string $region): self
+    {
+        $this->region = $region;
+        return $this;
+    }
+
+    public function getOfficeLocation(): ?string    {
+        return $this->officeLocation;
+    }
+
+    public function setOfficeLocation(?string $officeLocation): self
+    {
+        $this->officeLocation = $officeLocation;
         return $this;
     }
 
@@ -883,6 +1932,96 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getEmployeeId(): ?string    {
+        return $this->employeeId;
+    }
+
+    public function setEmployeeId(?string $employeeId): self
+    {
+        $this->employeeId = $employeeId;
+        return $this;
+    }
+
+    public function getHireDate(): ?\DateTimeImmutable    {
+        return $this->hireDate;
+    }
+
+    public function setHireDate(?\DateTimeImmutable $hireDate): self
+    {
+        $this->hireDate = $hireDate;
+        return $this;
+    }
+
+    public function getTerminationDate(): ?\DateTimeImmutable    {
+        return $this->terminationDate;
+    }
+
+    public function setTerminationDate(?\DateTimeImmutable $terminationDate): self
+    {
+        $this->terminationDate = $terminationDate;
+        return $this;
+    }
+
+    public function getEmploymentStatus(): ?string    {
+        return $this->employmentStatus;
+    }
+
+    public function setEmploymentStatus(?string $employmentStatus): self
+    {
+        $this->employmentStatus = $employmentStatus;
+        return $this;
+    }
+
+    public function getCostCenter(): ?string    {
+        return $this->costCenter;
+    }
+
+    public function setCostCenter(?string $costCenter): self
+    {
+        $this->costCenter = $costCenter;
+        return $this;
+    }
+
+    public function getDivision(): ?string    {
+        return $this->division;
+    }
+
+    public function setDivision(?string $division): self
+    {
+        $this->division = $division;
+        return $this;
+    }
+
+    public function getBusinessUnit(): ?string    {
+        return $this->businessUnit;
+    }
+
+    public function setBusinessUnit(?string $businessUnit): self
+    {
+        $this->businessUnit = $businessUnit;
+        return $this;
+    }
+
+    public function getSalary(): ?string    {
+        return $this->salary;
+    }
+
+    public function setSalary(?string $salary): self
+    {
+        $this->salary = $salary;
+        return $this;
+    }
+
+    public function getSalaryFrequency(): ?string    {
+        return $this->salaryFrequency;
+    }
+
+    public function setSalaryFrequency(?string $salaryFrequency): self
+    {
+        $this->salaryFrequency = $salaryFrequency;
+        return $this;
+    }
+
     /**
      * @return Collection<int, SocialMedia>
      */
@@ -907,6 +2046,66 @@ abstract class UserGenerated extends EntityBase
                 $socialMedia->setUser(null);
             }
         }
+        return $this;
+    }
+
+    public function getSkills(): ?array    {
+        return $this->skills;
+    }
+
+    public function setSkills(?array $skills): self
+    {
+        $this->skills = $skills;
+        return $this;
+    }
+
+    public function getCertifications(): ?array    {
+        return $this->certifications;
+    }
+
+    public function setCertifications(?array $certifications): self
+    {
+        $this->certifications = $certifications;
+        return $this;
+    }
+
+    public function getLanguages(): ?array    {
+        return $this->languages;
+    }
+
+    public function setLanguages(?array $languages): self
+    {
+        $this->languages = $languages;
+        return $this;
+    }
+
+    public function getBio(): ?string    {
+        return $this->bio;
+    }
+
+    public function setBio(?string $bio): self
+    {
+        $this->bio = $bio;
+        return $this;
+    }
+
+    public function getNotes(): ?string    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): self
+    {
+        $this->notes = $notes;
+        return $this;
+    }
+
+    public function getTags(): ?array    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): self
+    {
+        $this->tags = $tags;
         return $this;
     }
 
@@ -937,6 +2136,71 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getLoginCount(): int    {
+        return $this->loginCount;
+    }
+
+    public function setLoginCount(int $loginCount): self
+    {
+        $this->loginCount = $loginCount;
+        return $this;
+    }
+
+    public function getLastIpAddress(): ?string    {
+        return $this->lastIpAddress;
+    }
+
+    public function setLastIpAddress(?string $lastIpAddress): self
+    {
+        $this->lastIpAddress = $lastIpAddress;
+        return $this;
+    }
+
+    public function getLastUserAgent(): ?string    {
+        return $this->lastUserAgent;
+    }
+
+    public function setLastUserAgent(?string $lastUserAgent): self
+    {
+        $this->lastUserAgent = $lastUserAgent;
+        return $this;
+    }
+
+    public function getVisible(): bool    {
+        return $this->visible;
+    }
+
+    public function setVisible(bool $visible): self
+    {
+        $this->visible = $visible;
+        return $this;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->visible === true;
+    }
+
+    public function getProfileCompleteness(): int    {
+        return $this->profileCompleteness;
+    }
+
+    public function setProfileCompleteness(int $profileCompleteness): self
+    {
+        $this->profileCompleteness = $profileCompleteness;
+        return $this;
+    }
+
+    public function getLastActivityAt(): ?\DateTimeImmutable    {
+        return $this->lastActivityAt;
+    }
+
+    public function setLastActivityAt(?\DateTimeImmutable $lastActivityAt): self
+    {
+        $this->lastActivityAt = $lastActivityAt;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Talk>
      */
@@ -961,6 +2225,26 @@ abstract class UserGenerated extends EntityBase
                 $talk->setUsers(null);
             }
         }
+        return $this;
+    }
+
+    public function getStatus(): ?string    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getStatusMessage(): ?string    {
+        return $this->statusMessage;
+    }
+
+    public function setStatusMessage(?string $statusMessage): self
+    {
+        $this->statusMessage = $statusMessage;
         return $this;
     }
 
@@ -991,9 +2275,81 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getLocked(): bool    {
+        return $this->locked;
+    }
+
+    public function setLocked(bool $locked): self
+    {
+        $this->locked = $locked;
+        return $this;
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->locked === true;
+    }
+
+    public function getLockedReason(): ?string    {
+        return $this->lockedReason;
+    }
+
+    public function setLockedReason(?string $lockedReason): self
+    {
+        $this->lockedReason = $lockedReason;
+        return $this;
+    }
+
+    public function getLockedAt(): ?\DateTimeImmutable    {
+        return $this->lockedAt;
+    }
+
+    public function setLockedAt(?\DateTimeImmutable $lockedAt): self
+    {
+        $this->lockedAt = $lockedAt;
+        return $this;
+    }
+
+    public function getCustomFields(): ?array    {
+        return $this->customFields;
+    }
+
+    public function setCustomFields(?array $customFields): self
+    {
+        $this->customFields = $customFields;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pipeline>
+     */
+    public function getManagedPipelines(): Collection
+    {
+        return $this->managedPipelines;
+    }
+
+    public function addManagedPipeline(Pipeline $managedPipeline): self
+    {
+        if (!$this->managedPipelines->contains($managedPipeline)) {
+            $this->managedPipelines->add($managedPipeline);
+            $managedPipeline->setOwner($this);
+        }
+        return $this;
+    }
+
+    public function removeManagedPipeline(Pipeline $managedPipeline): self
+    {
+        if ($this->managedPipelines->removeElement($managedPipeline)) {
+            if ($managedPipeline->getOwner() === $this) {
+                $managedPipeline->setOwner(null);
+            }
+        }
+        return $this;
+    }
+
 
     public function __toString(): string
     {
-        return $this->name ?? ($this->getId()?->toRfc4122() ?? '');
+        return $this->name ?? $this->title ?? ($this->getId()?->toRfc4122() ?? '');
     }
 }

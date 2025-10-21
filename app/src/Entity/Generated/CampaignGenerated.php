@@ -129,6 +129,10 @@ abstract class CampaignGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'managedCampaigns')]
     protected ?User $manager = null;
 
+    #[Groups(['campaign:read'])]
+    #[ORM\OneToMany(targetEntity: Campaign::class, mappedBy: 'parentCampaign', fetch: 'LAZY')]
+    protected Collection $childCampaigns;
+
     #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $message = null;
@@ -228,6 +232,7 @@ abstract class CampaignGenerated extends EntityBase
         $this->companies = new ArrayCollection();
         $this->contacts = new ArrayCollection();
         $this->deals = new ArrayCollection();
+        $this->childCampaigns = new ArrayCollection();
         $this->socialMedias = new ArrayCollection();
         $this->talks = new ArrayCollection();
         $this->team = new ArrayCollection();
@@ -520,6 +525,33 @@ abstract class CampaignGenerated extends EntityBase
     public function setManager(?User $manager): self
     {
         $this->manager = $manager;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Campaign>
+     */
+    public function getChildCampaigns(): Collection
+    {
+        return $this->childCampaigns;
+    }
+
+    public function addChildCampaign(Campaign $childCampaign): self
+    {
+        if (!$this->childCampaigns->contains($childCampaign)) {
+            $this->childCampaigns->add($childCampaign);
+            $childCampaign->setParentCampaign($this);
+        }
+        return $this;
+    }
+
+    public function removeChildCampaign(Campaign $childCampaign): self
+    {
+        if ($this->childCampaigns->removeElement($childCampaign)) {
+            if ($childCampaign->getParentCampaign() === $this) {
+                $childCampaign->setParentCampaign(null);
+            }
+        }
         return $this;
     }
 

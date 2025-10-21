@@ -39,12 +39,12 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
-      value:
-        description: "Unique code identifier for the billing frequency (e.g., \"monthly\", \"quarterly\", \"annual\"). Lowercase, underscore-separated."
-        example: "monthly"
       name:
         description: "The brand name"
         example: "Nike"
+      value:
+        description: "Unique code identifier for the billing frequency (e.g., \"monthly\", \"quarterly\", \"annual\"). Lowercase, underscore-separated."
+        example: "monthly"
       description:
         description: "..."
         example: "..."

@@ -32,12 +32,12 @@ abstract class BillingFrequencyGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
-    #[ORM\Column(name: 'value_prop', type: 'string', length: 50, unique: true)]
-    protected string $value;
-
-    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
+
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
+    #[ORM\Column(name: 'value_prop', type: 'string', length: 50, unique: true)]
+    protected string $value;
 
     #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'text', length: 500, nullable: true)]
@@ -97,16 +97,6 @@ abstract class BillingFrequencyGenerated extends EntityBase
         return $this;
     }
 
-    public function getValue(): string    {
-        return $this->value;
-    }
-
-    public function setValue(string $value): self
-    {
-        $this->value = $value;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -114,6 +104,16 @@ abstract class BillingFrequencyGenerated extends EntityBase
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getValue(): string    {
+        return $this->value;
+    }
+
+    public function setValue(string $value): self
+    {
+        $this->value = $value;
         return $this;
     }
 

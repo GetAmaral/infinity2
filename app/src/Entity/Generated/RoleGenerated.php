@@ -35,7 +35,7 @@ abstract class RoleGenerated extends EntityBase
     protected array $permissions;
 
     #[Groups(['role:read'])]
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', fetch: 'LAZY')]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'grantedRoles', fetch: 'LAZY')]
     protected Collection $users;
 
     #[Groups(['role:read', 'role:write'])]
@@ -91,7 +91,7 @@ abstract class RoleGenerated extends EntityBase
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            $user->setRoles($this);
+            $user->setGrantedRoles($this);
         }
         return $this;
     }
@@ -99,8 +99,8 @@ abstract class RoleGenerated extends EntityBase
     public function removeUser(User $user): self
     {
         if ($this->users->removeElement($user)) {
-            if ($user->getRoles() === $this) {
-                $user->setRoles(null);
+            if ($user->getGrantedRoles() === $this) {
+                $user->setGrantedRoles(null);
             }
         }
         return $this;

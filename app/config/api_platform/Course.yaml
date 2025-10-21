@@ -38,12 +38,12 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
-      releaseDate:
-        description: "Release Date"
-        example: "sample value"
       name:
         description: "The brand name"
         example: "Nike"
+      releaseDate:
+        description: "Release Date"
+        example: "sample value"
       description:
         description: "..."
         example: "..."

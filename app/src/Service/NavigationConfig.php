@@ -53,7 +53,7 @@ final class NavigationConfig
                 'label' => 'nav.my.courses',
                 'route' => 'student_courses',
                 'icon' => 'bi-mortarboard',
-                // All authenticated users can view their courses
+                'role' => 'ROLE_STUDENT',
             ],
             'organizations' => [
                 'label' => 'nav.organizations',

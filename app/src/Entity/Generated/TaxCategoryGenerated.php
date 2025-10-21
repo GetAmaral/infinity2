@@ -27,7 +27,7 @@ use App\Entity\Product;
 abstract class TaxCategoryGenerated extends EntityBase
 {
     #[Groups(['taxcategory:read', 'taxcategory:write'])]
-    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'taxCategories')]
     #[ORM\JoinColumn(nullable: false)]
     protected Organization $organization;
 

@@ -47,25 +47,25 @@ resources:
       category:
         description: "High-level business category for grouping and reporting on deal types"
         example: "New Business"
-      color:
-        description: "Hex color code used for visual identification of this deal type in dashboards and reports"
-        example: "#6366f1"
       deals:
         writable: false
         description: "Collection of deals associated with this deal type"
         example: "[]"
+      color:
+        description: "Hex color code used for visual identification of this deal type in dashboards and reports"
+        example: "#6366f1"
       icon:
         description: "Bootstrap icon class name for visual representation in the UI"
         example: "bi-briefcase"
       default:
         description: "Indicates if this is the default deal type to be pre-selected when creating new deals"
         example: "false"
-      active:
-        description: "Indicates if this deal type is active and available for use in the system"
-        example: "true"
       sortOrder:
         description: "Numeric value determining the display order of deal types in lists and selection fields"
         example: "10"
+      active:
+        description: "Indicates if this deal type is active and available for use in the system"
+        example: "true"
       expectedDuration:
         description: "Expected sales cycle duration in days for deals of this type, used for forecasting"
         example: "45"

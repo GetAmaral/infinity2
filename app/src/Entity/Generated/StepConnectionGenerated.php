@@ -8,7 +8,6 @@ use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Entity\Organization;
 use App\Entity\StepOutput;
 use App\Entity\StepInput;
 
@@ -26,11 +25,6 @@ use App\Entity\StepInput;
 abstract class StepConnectionGenerated extends EntityBase
 {
     #[Groups(['stepconnection:read', 'stepconnection:write'])]
-    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'stepConnections')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected Organization $organization;
-
-    #[Groups(['stepconnection:read', 'stepconnection:write'])]
     #[ORM\OneToOne(targetEntity: StepOutput::class, inversedBy: 'connection')]
     #[ORM\JoinColumn(nullable: false)]
     protected StepOutput $sourceOutput;
@@ -44,17 +38,6 @@ abstract class StepConnectionGenerated extends EntityBase
     public function __construct()
     {
         parent::__construct();
-    }
-
-    public function getOrganization(): Organization
-    {
-        return $this->organization;
-    }
-
-    public function setOrganization(Organization $organization): self
-    {
-        $this->organization = $organization;
-        return $this;
     }
 
     public function getSourceOutput(): StepOutput

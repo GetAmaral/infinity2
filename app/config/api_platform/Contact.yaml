@@ -38,12 +38,12 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
-      name:
-        description: "The brand name"
-        example: "Nike"
       firstName:
         description: "First Name (text field)"
         example: "Sample longer text value"
+      name:
+        description: "The brand name"
+        example: "Nike"
       lastName:
         description: "Last Name (text field)"
         example: "Sample longer text value"
@@ -77,24 +77,24 @@ resources:
       company:
         description: "Company"
         example: "sample value"
-      mobilePhone:
-        description: "Mobile Phone (text field)"
-        example: "Sample text"
       deals:
         description: "Deals"
         example: "sample value"
+      mobilePhone:
+        description: "Mobile Phone (text field)"
+        example: "Sample text"
       linkedinUrl:
         description: "LinkedIn URL (text field)"
         example: "Sample longer text value"
       title:
         description: "Job Title (text field)"
         example: "Sample longer text value"
-      emailOptOut:
-        description: "Email Opt-Out (yes\/no)"
-        example: "true"
       department:
         description: "Department (text field)"
         example: "Sample longer text value"
+      emailOptOut:
+        description: "Email Opt-Out (yes\/no)"
+        example: "true"
       leadSource:
         description: "Lead Source (text field)"
         example: "Sample longer text value"
@@ -119,9 +119,6 @@ resources:
       firstTalkDate:
         description: "FirstTalkDate (date and time)"
         example: "2025-01-15T10:30:00Z"
-      flags:
-        description: "Flags"
-        example: "sample value"
       gender:
         description: "Gender (numeric value)"
         example: "42"

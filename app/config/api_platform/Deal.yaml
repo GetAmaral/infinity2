@@ -56,11 +56,11 @@ resources:
       probability:
         description: "Probability (decimal value)"
         example: "99.99"
-      dealType:
-        description: "DealType"
-        example: "sample value"
       pipeline:
         description: "Pipeline"
+        example: "sample value"
+      dealType:
+        description: "DealType"
         example: "sample value"
       priority:
         description: "Priority level"
@@ -68,12 +68,12 @@ resources:
       category:
         description: "Category"
         example: "sample value"
-      expectedAmount:
-        description: "ExpectedAmount (decimal value)"
-        example: "99.99"
       dealNumber:
         description: "DealNumber (text field)"
         example: "Sample longer text value"
+      expectedAmount:
+        description: "ExpectedAmount (decimal value)"
+        example: "99.99"
       weightedAmount:
         description: "WeightedAmount (decimal value)"
         example: "99.99"
@@ -128,11 +128,11 @@ resources:
       manager:
         description: "Manager"
         example: "sample value"
-      owner:
-        description: "Deal Owner"
-        example: "sample value"
       team:
         description: "Team"
+        example: "sample value"
+      owner:
+        description: "Deal Owner"
         example: "sample value"
       primaryContact:
         description: "PrimaryContact"

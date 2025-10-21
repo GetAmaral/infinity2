@@ -13,6 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Organization;
 use App\Entity\Company;
 use App\Entity\Deal;
+use App\Entity\Contact;
 use App\Entity\TalkType;
 use App\Entity\User;
 use App\Entity\Agent;
@@ -52,6 +53,10 @@ abstract class TalkGenerated extends EntityBase
     #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToOne(targetEntity: Deal::class, inversedBy: 'talks')]
     protected ?Deal $deal = null;
+
+    #[Groups(['talk:read', 'talk:write'])]
+    #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'talks')]
+    protected ?Contact $contact = null;
 
     #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToOne(targetEntity: TalkType::class, inversedBy: 'talks')]
@@ -204,6 +209,17 @@ abstract class TalkGenerated extends EntityBase
     public function setDeal(?Deal $deal): self
     {
         $this->deal = $deal;
+        return $this;
+    }
+
+    public function getContact(): ?Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?Contact $contact): self
+    {
+        $this->contact = $contact;
         return $this;
     }
 

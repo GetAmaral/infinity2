@@ -40,12 +40,12 @@ abstract class PipelineTemplateGenerated extends EntityBase
     protected string $name;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
-    #[ORM\Column(name: 'public_prop', type: 'boolean')]
-    protected bool $public = false;
-
-    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
+
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\Column(name: 'public_prop', type: 'boolean')]
+    protected bool $public = false;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
@@ -56,12 +56,12 @@ abstract class PipelineTemplateGenerated extends EntityBase
     protected ?int $estimatedDuration = null;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    protected ?string $industry = null;
-
-    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $stageCount;
+
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $industry = null;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
@@ -75,13 +75,13 @@ abstract class PipelineTemplateGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 50)]
     protected string $icon = 'bi-diagram-3-fill';
 
-    #[Groups(['pipelinetemplate:read'])]
-    #[ORM\OneToMany(targetEntity: PipelineStageTemplate::class, mappedBy: 'pipelineTemplate', orphanRemoval: true, fetch: 'LAZY')]
-    protected Collection $stages;
-
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $usageCount = 0;
+
+    #[Groups(['pipelinetemplate:read'])]
+    #[ORM\OneToMany(targetEntity: PipelineStageTemplate::class, mappedBy: 'pipelineTemplate', orphanRemoval: true, fetch: 'LAZY')]
+    protected Collection $stages;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
@@ -134,6 +134,16 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this;
     }
 
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
     public function getPublic(): bool    {
         return $this->public;
     }
@@ -147,16 +157,6 @@ abstract class PipelineTemplateGenerated extends EntityBase
     public function isPublic(): bool
     {
         return $this->public === true;
-    }
-
-    public function getDescription(): ?string    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-        return $this;
     }
 
     public function getTemplateCategory(): ?string    {
@@ -179,16 +179,6 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getIndustry(): ?string    {
-        return $this->industry;
-    }
-
-    public function setIndustry(?string $industry): self
-    {
-        $this->industry = $industry;
-        return $this;
-    }
-
     public function getStageCount(): int    {
         return $this->stageCount;
     }
@@ -196,6 +186,16 @@ abstract class PipelineTemplateGenerated extends EntityBase
     public function setStageCount(int $stageCount): self
     {
         $this->stageCount = $stageCount;
+        return $this;
+    }
+
+    public function getIndustry(): ?string    {
+        return $this->industry;
+    }
+
+    public function setIndustry(?string $industry): self
+    {
+        $this->industry = $industry;
         return $this;
     }
 
@@ -229,6 +229,16 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this;
     }
 
+    public function getUsageCount(): int    {
+        return $this->usageCount;
+    }
+
+    public function setUsageCount(int $usageCount): self
+    {
+        $this->usageCount = $usageCount;
+        return $this;
+    }
+
     /**
      * @return Collection<int, PipelineStageTemplate>
      */
@@ -253,16 +263,6 @@ abstract class PipelineTemplateGenerated extends EntityBase
                 $stage->setPipelineTemplate(null);
             }
         }
-        return $this;
-    }
-
-    public function getUsageCount(): int    {
-        return $this->usageCount;
-    }
-
-    public function setUsageCount(int $usageCount): self
-    {
-        $this->usageCount = $usageCount;
         return $this;
     }
 

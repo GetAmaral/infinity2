@@ -104,6 +104,10 @@ resources:
       manager:
         description: "Manager"
         example: "sample value"
+      childCampaigns:
+        writable: false
+        description: "Child Campaigns"
+        example: "/api/campaigns/01234567-89ab-cdef-0123-456789abcdef"
       message:
         description: "Message (long text)"
         example: "This is a longer text field with more content"

@@ -13,8 +13,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Organization;
 use App\Entity\Company;
 use App\Entity\PipelineStage;
-use App\Entity\DealType;
 use App\Entity\Pipeline;
+use App\Entity\DealType;
 use App\Entity\DealCategory;
 use App\Entity\Product;
 use App\Entity\User;
@@ -73,12 +73,12 @@ abstract class DealGenerated extends EntityBase
     protected ?string $probability = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\ManyToOne(targetEntity: DealType::class, inversedBy: 'deals')]
-    protected ?DealType $dealType = null;
-
-    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: Pipeline::class, inversedBy: 'deals')]
     protected ?Pipeline $pipeline = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\ManyToOne(targetEntity: DealType::class, inversedBy: 'deals')]
+    protected ?DealType $dealType = null;
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -89,12 +89,12 @@ abstract class DealGenerated extends EntityBase
     protected ?DealCategory $category = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?string $expectedAmount = null;
-
-    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $dealNumber = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    protected ?string $expectedAmount = null;
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
@@ -171,15 +171,15 @@ abstract class DealGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'managedDeals')]
     protected ?User $manager = null;
 
-    #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedDeals')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected User $owner;
-
     #[Groups(['deal:read'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'deals', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'deal_team')]
     protected Collection $team;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedDeals')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected User $owner;
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'primaryDeals')]
@@ -331,17 +331,6 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getDealType(): ?DealType
-    {
-        return $this->dealType;
-    }
-
-    public function setDealType(?DealType $dealType): self
-    {
-        $this->dealType = $dealType;
-        return $this;
-    }
-
     public function getPipeline(): ?Pipeline
     {
         return $this->pipeline;
@@ -350,6 +339,17 @@ abstract class DealGenerated extends EntityBase
     public function setPipeline(?Pipeline $pipeline): self
     {
         $this->pipeline = $pipeline;
+        return $this;
+    }
+
+    public function getDealType(): ?DealType
+    {
+        return $this->dealType;
+    }
+
+    public function setDealType(?DealType $dealType): self
+    {
+        $this->dealType = $dealType;
         return $this;
     }
 
@@ -374,16 +374,6 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getExpectedAmount(): ?string    {
-        return $this->expectedAmount;
-    }
-
-    public function setExpectedAmount(?string $expectedAmount): self
-    {
-        $this->expectedAmount = $expectedAmount;
-        return $this;
-    }
-
     public function getDealNumber(): ?string    {
         return $this->dealNumber;
     }
@@ -391,6 +381,16 @@ abstract class DealGenerated extends EntityBase
     public function setDealNumber(?string $dealNumber): self
     {
         $this->dealNumber = $dealNumber;
+        return $this;
+    }
+
+    public function getExpectedAmount(): ?string    {
+        return $this->expectedAmount;
+    }
+
+    public function setExpectedAmount(?string $expectedAmount): self
+    {
+        $this->expectedAmount = $expectedAmount;
         return $this;
     }
 
@@ -588,17 +588,6 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getOwner(): User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(User $owner): self
-    {
-        $this->owner = $owner;
-        return $this;
-    }
-
     /**
      * @return Collection<int, User>
      */
@@ -619,6 +608,17 @@ abstract class DealGenerated extends EntityBase
     {
         if ($this->team->removeElement($team)) {
         }
+        return $this;
+    }
+
+    public function getOwner(): User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(User $owner): self
+    {
+        $this->owner = $owner;
         return $this;
     }
 

@@ -26,7 +26,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * - Watch videos and track progress
  */
 #[Route('/student')]
-#[IsGranted('ROLE_USER')]
+#[IsGranted('ROLE_STUDENT')]
 final class StudentController extends AbstractController
 {
     public function __construct(

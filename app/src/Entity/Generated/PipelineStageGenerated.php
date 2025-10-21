@@ -88,7 +88,7 @@ abstract class PipelineStageGenerated extends EntityBase
     protected ?Pipeline $pipeline = null;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\OneToOne(targetEntity: PipelineStage::class, inversedBy: 'next')]
+    #[ORM\OneToOne(targetEntity: PipelineStage::class, mappedBy: 'next')]
     protected ?PipelineStage $previous = null;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
