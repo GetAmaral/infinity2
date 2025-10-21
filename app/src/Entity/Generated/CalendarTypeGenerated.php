@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Calendar;
 
 /**
@@ -25,44 +26,60 @@ use App\Entity\Calendar;
 #[ORM\HasLifecycleCallbacks]
 abstract class CalendarTypeGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['calendartype:read', 'calendartype:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'calendarTypes')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[ORM\Column(type: 'string', length: 7)]
-    protected string $color = '#0dcaf0';
-
+    #[Groups(['calendartype:read'])]
     #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'calendarType', fetch: 'LAZY')]
     protected Collection $calendars;
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
+    #[ORM\Column(type: 'string', length: 7)]
+    protected string $color = '#0dcaf0';
+
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'string', length: 50)]
     protected string $icon = 'bi-calendar3';
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'string', length: 20)]
     protected string $visibility = 'personal';
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'string', length: 20)]
     protected string $access_level = 'owner_only';
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $sort_order = 100;
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $allow_sharing = true;
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $require_approval = false;
 
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $max_calendars_per_user = null;
 
@@ -71,6 +88,17 @@ abstract class CalendarTypeGenerated extends EntityBase
     {
         parent::__construct();
         $this->calendars = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -93,16 +121,6 @@ abstract class CalendarTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getColor(): string    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): self
-    {
-        $this->color = $color;
-        return $this;
-    }
-
     /**
      * @return Collection<int, App\Entity\Calendar>
      */
@@ -115,7 +133,7 @@ abstract class CalendarTypeGenerated extends EntityBase
     {
         if (!$this->calendars->contains($calendar)) {
             $this->calendars->add($calendar);
-            $calendar->setCalendartype($this);
+            $calendar->setCalendarType($this);
         }
         return $this;
     }
@@ -123,10 +141,20 @@ abstract class CalendarTypeGenerated extends EntityBase
     public function removeCalendar(App\Entity\Calendar $calendar): self
     {
         if ($this->calendars->removeElement($calendar)) {
-            if ($calendar->getCalendartype() === $this) {
-                $calendar->setCalendartype(null);
+            if ($calendar->getCalendarType() === $this) {
+                $calendar->setCalendarType(null);
             }
         }
+        return $this;
+    }
+
+    public function getColor(): string    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
         return $this;
     }
 

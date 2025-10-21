@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Event;
 
 /**
@@ -23,102 +24,152 @@ use App\Entity\Event;
 #[ORM\HasLifecycleCallbacks]
 abstract class MeetingDataGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'meetingDatas')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $title;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'meetingDatas')]
     protected ?Event $event = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $meetingType;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $status;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'datetime')]
     protected \DateTimeImmutable $startTime;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $endTime = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $duration = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $location = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $agenda = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $minutes = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected ?string $meetingId = null;
-
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $attendees = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $meetingId = null;
+
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $absentees = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $decisions = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $actionItems = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $recordingAvailable = false;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $transcript = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $recordingDuration = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'bigint', nullable: true)]
     protected ?string $recordingSize = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $nextMeetingDate = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $organizer = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected ?string $platform = null;
-
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $tags = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $platform = null;
+
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $confidential = false;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $recurring = false;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $recurrencePattern = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     protected ?string $recordUrl = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
     protected ?string $secret = null;
 
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     protected ?string $url = null;
 
 
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getTitle(): string    {
@@ -142,11 +193,11 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getMeetingtype(): string    {
+    public function getMeetingType(): string    {
         return $this->meetingType;
     }
 
-    public function setMeetingtype(string $meetingType): self
+    public function setMeetingType(string $meetingType): self
     {
         $this->meetingType = $meetingType;
         return $this;
@@ -162,21 +213,21 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getStarttime(): \DateTimeImmutable    {
+    public function getStartTime(): \DateTimeImmutable    {
         return $this->startTime;
     }
 
-    public function setStarttime(\DateTimeImmutable $startTime): self
+    public function setStartTime(\DateTimeImmutable $startTime): self
     {
         $this->startTime = $startTime;
         return $this;
     }
 
-    public function getEndtime(): ?\DateTimeImmutable    {
+    public function getEndTime(): ?\DateTimeImmutable    {
         return $this->endTime;
     }
 
-    public function setEndtime(?\DateTimeImmutable $endTime): self
+    public function setEndTime(?\DateTimeImmutable $endTime): self
     {
         $this->endTime = $endTime;
         return $this;
@@ -232,16 +283,6 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getMeetingid(): ?string    {
-        return $this->meetingId;
-    }
-
-    public function setMeetingid(?string $meetingId): self
-    {
-        $this->meetingId = $meetingId;
-        return $this;
-    }
-
     public function getAttendees(): ?array    {
         return $this->attendees;
     }
@@ -249,6 +290,16 @@ abstract class MeetingDataGenerated extends EntityBase
     public function setAttendees(?array $attendees): self
     {
         $this->attendees = $attendees;
+        return $this;
+    }
+
+    public function getMeetingId(): ?string    {
+        return $this->meetingId;
+    }
+
+    public function setMeetingId(?string $meetingId): self
+    {
+        $this->meetingId = $meetingId;
         return $this;
     }
 
@@ -272,27 +323,27 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getActionitems(): ?array    {
+    public function getActionItems(): ?array    {
         return $this->actionItems;
     }
 
-    public function setActionitems(?array $actionItems): self
+    public function setActionItems(?array $actionItems): self
     {
         $this->actionItems = $actionItems;
         return $this;
     }
 
-    public function getRecordingavailable(): bool    {
+    public function getRecordingAvailable(): bool    {
         return $this->recordingAvailable;
     }
 
-    public function setRecordingavailable(bool $recordingAvailable): self
+    public function setRecordingAvailable(bool $recordingAvailable): self
     {
         $this->recordingAvailable = $recordingAvailable;
         return $this;
     }
 
-    public function isRecordingavailable(): bool
+    public function isRecordingAvailable(): bool
     {
         return $this->recordingAvailable === true;
     }
@@ -307,31 +358,31 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getRecordingduration(): ?int    {
+    public function getRecordingDuration(): ?int    {
         return $this->recordingDuration;
     }
 
-    public function setRecordingduration(?int $recordingDuration): self
+    public function setRecordingDuration(?int $recordingDuration): self
     {
         $this->recordingDuration = $recordingDuration;
         return $this;
     }
 
-    public function getRecordingsize(): ?string    {
+    public function getRecordingSize(): ?string    {
         return $this->recordingSize;
     }
 
-    public function setRecordingsize(?string $recordingSize): self
+    public function setRecordingSize(?string $recordingSize): self
     {
         $this->recordingSize = $recordingSize;
         return $this;
     }
 
-    public function getNextmeetingdate(): ?\DateTimeImmutable    {
+    public function getNextMeetingDate(): ?\DateTimeImmutable    {
         return $this->nextMeetingDate;
     }
 
-    public function setNextmeetingdate(?\DateTimeImmutable $nextMeetingDate): self
+    public function setNextMeetingDate(?\DateTimeImmutable $nextMeetingDate): self
     {
         $this->nextMeetingDate = $nextMeetingDate;
         return $this;
@@ -347,16 +398,6 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getPlatform(): ?string    {
-        return $this->platform;
-    }
-
-    public function setPlatform(?string $platform): self
-    {
-        $this->platform = $platform;
-        return $this;
-    }
-
     public function getTags(): ?array    {
         return $this->tags;
     }
@@ -364,6 +405,16 @@ abstract class MeetingDataGenerated extends EntityBase
     public function setTags(?array $tags): self
     {
         $this->tags = $tags;
+        return $this;
+    }
+
+    public function getPlatform(): ?string    {
+        return $this->platform;
+    }
+
+    public function setPlatform(?string $platform): self
+    {
+        $this->platform = $platform;
         return $this;
     }
 
@@ -397,21 +448,21 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this->recurring === true;
     }
 
-    public function getRecurrencepattern(): ?array    {
+    public function getRecurrencePattern(): ?array    {
         return $this->recurrencePattern;
     }
 
-    public function setRecurrencepattern(?array $recurrencePattern): self
+    public function setRecurrencePattern(?array $recurrencePattern): self
     {
         $this->recurrencePattern = $recurrencePattern;
         return $this;
     }
 
-    public function getRecordurl(): ?string    {
+    public function getRecordUrl(): ?string    {
         return $this->recordUrl;
     }
 
-    public function setRecordurl(?string $recordUrl): self
+    public function setRecordUrl(?string $recordUrl): self
     {
         $this->recordUrl = $recordUrl;
         return $this;

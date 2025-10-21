@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\PipelineTemplate;
 use App\Entity\TaskTemplate;
 
@@ -26,48 +27,65 @@ use App\Entity\TaskTemplate;
 #[ORM\HasLifecycleCallbacks]
 abstract class PipelineStageTemplateGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'pipelineStageTemplates')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
+    #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
+    protected string $probability = '0';
+
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(name: 'order_prop', type: 'integer')]
     protected int $order = 0;
 
-    #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
-    protected float $probability = 0;
-
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active;
 
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'string', length: 7, nullable: true)]
     protected ?string $color = '#0dcaf0';
 
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $rottingDays = null;
 
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\ManyToOne(targetEntity: PipelineTemplate::class, inversedBy: 'stages')]
     #[ORM\JoinColumn(nullable: false)]
     protected PipelineTemplate $pipelineTemplate;
 
-    #[ORM\Column(name: 'final_prop', type: 'boolean')]
-    protected bool $final;
-
+    #[Groups(['pipelinestagetemplate:read'])]
     #[ORM\OneToMany(targetEntity: TaskTemplate::class, mappedBy: 'pipelineStageTemplate', fetch: 'LAZY')]
     protected Collection $tasks;
 
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
+    #[ORM\Column(name: 'final_prop', type: 'boolean')]
+    protected bool $final;
+
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $stageType;
 
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $automationRules = null;
 
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $requiredFields = null;
 
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $icon = null;
 
@@ -76,6 +94,17 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
     {
         parent::__construct();
         $this->tasks = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -98,6 +127,16 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
         return $this;
     }
 
+    public function getProbability(): string    {
+        return $this->probability;
+    }
+
+    public function setProbability(string $probability): self
+    {
+        $this->probability = $probability;
+        return $this;
+    }
+
     public function getOrder(): int    {
         return $this->order;
     }
@@ -105,16 +144,6 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
     public function setOrder(int $order): self
     {
         $this->order = $order;
-        return $this;
-    }
-
-    public function getProbability(): float    {
-        return $this->probability;
-    }
-
-    public function setProbability(float $probability): self
-    {
-        $this->probability = $probability;
         return $this;
     }
 
@@ -143,24 +172,51 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getRottingdays(): ?int    {
+    public function getRottingDays(): ?int    {
         return $this->rottingDays;
     }
 
-    public function setRottingdays(?int $rottingDays): self
+    public function setRottingDays(?int $rottingDays): self
     {
         $this->rottingDays = $rottingDays;
         return $this;
     }
 
-    public function getPipelinetemplate(): App\Entity\PipelineTemplate
+    public function getPipelineTemplate(): App\Entity\PipelineTemplate
     {
         return $this->pipelineTemplate;
     }
 
-    public function setPipelinetemplate(App\Entity\PipelineTemplate $pipelineTemplate): self
+    public function setPipelineTemplate(App\Entity\PipelineTemplate $pipelineTemplate): self
     {
         $this->pipelineTemplate = $pipelineTemplate;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\TaskTemplate>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(App\Entity\TaskTemplate $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setPipelineStageTemplate($this);
+        }
+        return $this;
+    }
+
+    public function removeTask(App\Entity\TaskTemplate $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            if ($task->getPipelineStageTemplate() === $this) {
+                $task->setPipelineStageTemplate(null);
+            }
+        }
         return $this;
     }
 
@@ -179,58 +235,31 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
         return $this->final === true;
     }
 
-    /**
-     * @return Collection<int, App\Entity\TaskTemplate>
-     */
-    public function getTasks(): Collection
-    {
-        return $this->tasks;
-    }
-
-    public function addTak(App\Entity\TaskTemplate $tak): self
-    {
-        if (!$this->tasks->contains($tak)) {
-            $this->tasks->add($tak);
-            $tak->setPipelinestagetemplate($this);
-        }
-        return $this;
-    }
-
-    public function removeTak(App\Entity\TaskTemplate $tak): self
-    {
-        if ($this->tasks->removeElement($tak)) {
-            if ($tak->getPipelinestagetemplate() === $this) {
-                $tak->setPipelinestagetemplate(null);
-            }
-        }
-        return $this;
-    }
-
-    public function getStagetype(): string    {
+    public function getStageType(): string    {
         return $this->stageType;
     }
 
-    public function setStagetype(string $stageType): self
+    public function setStageType(string $stageType): self
     {
         $this->stageType = $stageType;
         return $this;
     }
 
-    public function getAutomationrules(): ?array    {
+    public function getAutomationRules(): ?array    {
         return $this->automationRules;
     }
 
-    public function setAutomationrules(?array $automationRules): self
+    public function setAutomationRules(?array $automationRules): self
     {
         $this->automationRules = $automationRules;
         return $this;
     }
 
-    public function getRequiredfields(): ?array    {
+    public function getRequiredFields(): ?array    {
         return $this->requiredFields;
     }
 
-    public function setRequiredfields(?array $requiredFields): self
+    public function setRequiredFields(?array $requiredFields): self
     {
         $this->requiredFields = $requiredFields;
         return $this;

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Step;
 use App\Entity\StepConnection;
 
@@ -25,23 +26,30 @@ use App\Entity\StepConnection;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepInputGenerated extends EntityBase
 {
+    #[Groups(['stepinput:read', 'stepinput:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
+    protected string $name;
+
+    #[Groups(['stepinput:read', 'stepinput:write'])]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'inputs')]
     #[ORM\JoinColumn(nullable: false)]
     protected Step $step;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $name;
-
+    #[Groups(['stepinput:read', 'stepinput:write'])]
     #[ORM\Column(name: 'type_prop', type: 'enum')]
     protected string $type = ANY;
 
+    #[Groups(['stepinput:read', 'stepinput:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Assert\3(max: 255, constraint: 'Length')]
+    #[Assert\Length(max: 255)]
     protected ?string $slug = null;
 
+    #[Groups(['stepinput:read', 'stepinput:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $prompt = null;
 
+    #[Groups(['stepinput:read'])]
     #[ORM\OneToMany(targetEntity: StepConnection::class, mappedBy: 'targetInput', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $connections;
 
@@ -52,6 +60,16 @@ abstract class StepInputGenerated extends EntityBase
         $this->connections = new ArrayCollection();
     }
 
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function getStep(): App\Entity\Step
     {
         return $this->step;
@@ -60,16 +78,6 @@ abstract class StepInputGenerated extends EntityBase
     public function setStep(App\Entity\Step $step): self
     {
         $this->step = $step;
-        return $this;
-    }
-
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
         return $this;
     }
 
@@ -115,7 +123,7 @@ abstract class StepInputGenerated extends EntityBase
     {
         if (!$this->connections->contains($connection)) {
             $this->connections->add($connection);
-            $connection->setTargetinput($this);
+            $connection->setTargetInput($this);
         }
         return $this;
     }
@@ -123,8 +131,8 @@ abstract class StepInputGenerated extends EntityBase
     public function removeConnection(App\Entity\StepConnection $connection): self
     {
         if ($this->connections->removeElement($connection)) {
-            if ($connection->getTargetinput() === $this) {
-                $connection->setTargetinput(null);
+            if ($connection->getTargetInput() === $this) {
+                $connection->setTargetInput(null);
             }
         }
         return $this;

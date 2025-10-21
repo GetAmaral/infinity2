@@ -33,9 +33,11 @@ resources:
         security: "is_granted('ROLE_EVENT_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       title:
         description: "The notification title or subject line"
         example: "New message from John Doe"
@@ -51,12 +53,12 @@ resources:
       actionUrl:
         description: "URL to the resource or action related to this notification"
         example: "\/events\/123\/details"
-      read:
-        description: "Indicates whether the notification has been read by the recipient"
-        example: "true"
       attendee:
         description: "Related attendee for attendee-specific notifications"
         example: "\/api\/event_attendees\/01234567-89ab-cdef-0123-456789abcdef"
+      read:
+        description: "Indicates whether the notification has been read by the recipient"
+        example: "true"
       archived:
         description: "Indicates whether the notification has been archived by the recipient"
         example: "false"

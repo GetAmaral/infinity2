@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @generated once by Genmax Code Generator
  */
 #[ORM\Entity(repositoryClass: TalkRepository::class)]
-#[ORM\Table(name: 'talk_table')]
+#[ORM\Table(name: 'talk')]
 class Talk extends TalkGenerated
 {
     // Add custom properties here

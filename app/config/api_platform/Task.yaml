@@ -33,9 +33,11 @@ resources:
         security: "is_granted('ROLE_SALES_MANAGER')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"
@@ -81,12 +83,12 @@ resources:
       priority:
         description: "Priority level"
         example: "42"
-      scheduledDate:
-        description: "Due Date (date and time)"
-        example: "2025-01-15T10:30:00Z"
       completed:
         description: "Completed (yes\/no)"
         example: "true"
+      scheduledDate:
+        description: "Due Date (date and time)"
+        example: "2025-01-15T10:30:00Z"
       company:
         description: "Company"
         example: "sample value"
@@ -111,11 +113,11 @@ resources:
       emailSubject:
         description: "Email Subject (text field)"
         example: "Sample longer text value"
-      phoneNumber:
-        description: "Phone Number (text field)"
-        example: "Sample text"
       taskStatus:
         description: "Status (text field)"
+        example: "Sample text"
+      phoneNumber:
+        description: "Phone Number (text field)"
         example: "Sample text"
       meetingUrl:
         description: "Meeting URL (text field)"

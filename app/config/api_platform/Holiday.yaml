@@ -33,9 +33,11 @@ resources:
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"
@@ -46,15 +48,15 @@ resources:
       description:
         description: "..."
         example: "..."
-      blocksScheduling:
-        description: "Whether this holiday blocks scheduling and calendar operations"
-        example: "true"
       recurring:
         description: "Whether this holiday recurs annually on the same date"
         example: "true"
         # Advanced filters
         filters:
           - type: BooleanFilter
+      blocksScheduling:
+        description: "Whether this holiday blocks scheduling and calendar operations"
+        example: "true"
       observed:
         description: "Whether this is an observed holiday (moved from weekend to business day)"
         example: "false"
@@ -67,9 +69,6 @@ resources:
         # Advanced filters
         filters:
           - type: BooleanFilter
-      calendar:
-        description: "The calendar to which this holiday belongs"
-        example: "\/api\/calendars\/0199cadd-5678-7bcb-a551-8ede90d819b3"
       country:
         description: "ISO 3166-1 alpha-2 country code where this holiday is observed"
         example: "US"
@@ -77,6 +76,9 @@ resources:
         filters:
           - type: SearchFilter
             strategy: partial
+      calendar:
+        description: "The calendar to which this holiday belongs"
+        example: "\/api\/calendars\/0199cadd-5678-7bcb-a551-8ede90d819b3"
       region:
         description: "Specific region or state within the country where this holiday applies (e.g., California, Texas)"
         example: "California"
@@ -90,6 +92,9 @@ resources:
         # Advanced filters
         filters:
           - type: NumericFilter
+      event:
+        description: "The event associated with this holiday occurrence"
+        example: "\/api\/events\/0199cadd-9abc-7bcb-a551-8ede90d819b3"
       holidayType:
         description: "Type of holiday: national, regional, religious, bank, custom"
         example: "national"
@@ -97,18 +102,9 @@ resources:
         filters:
           - type: SearchFilter
             strategy: partial
-      event:
-        description: "The event associated with this holiday occurrence"
-        example: "\/api\/events\/0199cadd-9abc-7bcb-a551-8ede90d819b3"
       originalDate:
         description: "Original date of the holiday before being observed on a different day (e.g., when moved from weekend)"
         example: "2025-12-26"
-        # Advanced filters
-        filters:
-          - type: DateFilter
-      sentAt:
-        description: "The date when the holiday is observed"
-        example: "2025-12-25"
         # Advanced filters
         filters:
           - type: DateFilter
@@ -118,6 +114,12 @@ resources:
         # Advanced filters
         filters:
           - type: BooleanFilter
+      sentAt:
+        description: "The date when the holiday is observed"
+        example: "2025-12-25"
+        # Advanced filters
+        filters:
+          - type: DateFilter
       workingDay:
         description: "Whether this is a partial working day (half-day holiday)"
         example: "false"

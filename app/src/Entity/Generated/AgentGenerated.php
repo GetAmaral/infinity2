@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\User;
 use App\Entity\AgentType;
 use App\Entity\Talk;
@@ -27,98 +28,109 @@ use App\Entity\Talk;
 #[ORM\HasLifecycleCallbacks]
 abstract class AgentGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'agents')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 100)]
     protected string $name;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    #[Assert\Length(max: 20)]
     protected ?string $phone = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
     protected ?string $title = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'boolean')]
-    #[Assert\NotNull]
     protected bool $active = true;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'boolean')]
-    #[Assert\NotNull]
     protected bool $available = true;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
     protected ?string $territory = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'decimal', precision: 12, scale: 2, nullable: true)]
-    #[Assert\PositiveOrZero]
-    protected ?float $quota = null;
+    protected ?string $quota = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'agents')]
     protected ?User $user = null;
 
-    #[ORM\ManyToOne(targetEntity: AgentType::class)]
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\ManyToOne(targetEntity: AgentType::class, inversedBy: 'agents')]
     protected ?AgentType $agentType = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    #[Assert\Range(min: 0, max: 100)]
-    protected ?float $commissionRate = 0;
+    protected ?string $commissionRate = '0';
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $startDate = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $endDate = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
     protected ?string $specialization = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $languages = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $certifications = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'decimal', precision: 12, scale: 2, nullable: true)]
-    #[Assert\PositiveOrZero]
-    protected ?float $totalSales = 0;
+    protected ?string $totalSales = '0';
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'decimal', precision: 12, scale: 2, nullable: true)]
-    #[Assert\PositiveOrZero]
-    protected ?float $currentMonthSales = 0;
+    protected ?string $currentMonthSales = '0';
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    #[Assert\Range(min: 0, max: 100)]
-    protected ?float $conversionRate = 0;
+    protected ?string $conversionRate = '0';
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'decimal', precision: 3, scale: 2, nullable: true)]
-    #[Assert\Range(min: 0, max: 10)]
-    protected ?float $customerSatisfactionScore = null;
+    protected ?string $customerSatisfactionScore = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'integer')]
-    #[Assert\PositiveOrZero]
     protected int $maxConcurrentCustomers = 10;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'integer')]
-    #[Assert\PositiveOrZero]
     protected int $currentCustomerCount = 0;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Assert\PositiveOrZero]
     protected ?int $averageResponseTime = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $skills = null;
 
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $prompt = null;
 
-    #[ORM\ManyToMany(targetEntity: Talk::class, inversedBy: 'agents', fetch: 'LAZY')]
+    #[Groups(['agent:read'])]
+    #[ORM\ManyToMany(targetEntity: Talk::class, mappedBy: 'agents', fetch: 'LAZY')]
     protected Collection $talks;
 
 
@@ -126,6 +138,17 @@ abstract class AgentGenerated extends EntityBase
     {
         parent::__construct();
         $this->talks = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -198,11 +221,11 @@ abstract class AgentGenerated extends EntityBase
         return $this;
     }
 
-    public function getQuota(): ?float    {
+    public function getQuota(): ?string    {
         return $this->quota;
     }
 
-    public function setQuota(?float $quota): self
+    public function setQuota(?string $quota): self
     {
         $this->quota = $quota;
         return $this;
@@ -219,42 +242,42 @@ abstract class AgentGenerated extends EntityBase
         return $this;
     }
 
-    public function getAgenttype(): ?App\Entity\AgentType
+    public function getAgentType(): ?App\Entity\AgentType
     {
         return $this->agentType;
     }
 
-    public function setAgenttype(?App\Entity\AgentType $agentType): self
+    public function setAgentType(?App\Entity\AgentType $agentType): self
     {
         $this->agentType = $agentType;
         return $this;
     }
 
-    public function getCommissionrate(): ?float    {
+    public function getCommissionRate(): ?string    {
         return $this->commissionRate;
     }
 
-    public function setCommissionrate(?float $commissionRate): self
+    public function setCommissionRate(?string $commissionRate): self
     {
         $this->commissionRate = $commissionRate;
         return $this;
     }
 
-    public function getStartdate(): ?\DateTimeImmutable    {
+    public function getStartDate(): ?\DateTimeImmutable    {
         return $this->startDate;
     }
 
-    public function setStartdate(?\DateTimeImmutable $startDate): self
+    public function setStartDate(?\DateTimeImmutable $startDate): self
     {
         $this->startDate = $startDate;
         return $this;
     }
 
-    public function getEnddate(): ?\DateTimeImmutable    {
+    public function getEndDate(): ?\DateTimeImmutable    {
         return $this->endDate;
     }
 
-    public function setEnddate(?\DateTimeImmutable $endDate): self
+    public function setEndDate(?\DateTimeImmutable $endDate): self
     {
         $this->endDate = $endDate;
         return $this;
@@ -290,71 +313,71 @@ abstract class AgentGenerated extends EntityBase
         return $this;
     }
 
-    public function getTotalsales(): ?float    {
+    public function getTotalSales(): ?string    {
         return $this->totalSales;
     }
 
-    public function setTotalsales(?float $totalSales): self
+    public function setTotalSales(?string $totalSales): self
     {
         $this->totalSales = $totalSales;
         return $this;
     }
 
-    public function getCurrentmonthsales(): ?float    {
+    public function getCurrentMonthSales(): ?string    {
         return $this->currentMonthSales;
     }
 
-    public function setCurrentmonthsales(?float $currentMonthSales): self
+    public function setCurrentMonthSales(?string $currentMonthSales): self
     {
         $this->currentMonthSales = $currentMonthSales;
         return $this;
     }
 
-    public function getConversionrate(): ?float    {
+    public function getConversionRate(): ?string    {
         return $this->conversionRate;
     }
 
-    public function setConversionrate(?float $conversionRate): self
+    public function setConversionRate(?string $conversionRate): self
     {
         $this->conversionRate = $conversionRate;
         return $this;
     }
 
-    public function getCustomersatisfactionscore(): ?float    {
+    public function getCustomerSatisfactionScore(): ?string    {
         return $this->customerSatisfactionScore;
     }
 
-    public function setCustomersatisfactionscore(?float $customerSatisfactionScore): self
+    public function setCustomerSatisfactionScore(?string $customerSatisfactionScore): self
     {
         $this->customerSatisfactionScore = $customerSatisfactionScore;
         return $this;
     }
 
-    public function getMaxconcurrentcustomers(): int    {
+    public function getMaxConcurrentCustomers(): int    {
         return $this->maxConcurrentCustomers;
     }
 
-    public function setMaxconcurrentcustomers(int $maxConcurrentCustomers): self
+    public function setMaxConcurrentCustomers(int $maxConcurrentCustomers): self
     {
         $this->maxConcurrentCustomers = $maxConcurrentCustomers;
         return $this;
     }
 
-    public function getCurrentcustomercount(): int    {
+    public function getCurrentCustomerCount(): int    {
         return $this->currentCustomerCount;
     }
 
-    public function setCurrentcustomercount(int $currentCustomerCount): self
+    public function setCurrentCustomerCount(int $currentCustomerCount): self
     {
         $this->currentCustomerCount = $currentCustomerCount;
         return $this;
     }
 
-    public function getAverageresponsetime(): ?int    {
+    public function getAverageResponseTime(): ?int    {
         return $this->averageResponseTime;
     }
 
-    public function setAverageresponsetime(?int $averageResponseTime): self
+    public function setAverageResponseTime(?int $averageResponseTime): self
     {
         $this->averageResponseTime = $averageResponseTime;
         return $this;
@@ -392,6 +415,7 @@ abstract class AgentGenerated extends EntityBase
     {
         if (!$this->talks->contains($talk)) {
             $this->talks->add($talk);
+            $talk->setAgents($this);
         }
         return $this;
     }
@@ -399,6 +423,9 @@ abstract class AgentGenerated extends EntityBase
     public function removeTalk(App\Entity\Talk $talk): self
     {
         if ($this->talks->removeElement($talk)) {
+            if ($talk->getAgents() === $this) {
+                $talk->setAgents(null);
+            }
         }
         return $this;
     }

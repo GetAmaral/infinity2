@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\DealCategory;
 use App\Entity\Deal;
 
@@ -26,38 +27,52 @@ use App\Entity\Deal;
 #[ORM\HasLifecycleCallbacks]
 abstract class DealCategoryGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'dealCategories')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $name;
-
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\Column(type: 'string', length: 7, nullable: true)]
     protected ?string $color = '#0dcaf0';
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    protected ?string $icon = null;
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $name;
 
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    protected ?string $icon = null;
+
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
 
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $displayOrder = 10;
 
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\ManyToOne(targetEntity: DealCategory::class, inversedBy: 'subcategories')]
     protected ?DealCategory $parentCategory = null;
 
+    #[Groups(['dealcategory:read'])]
     #[ORM\OneToMany(targetEntity: DealCategory::class, mappedBy: 'parentCategory', fetch: 'LAZY')]
     protected Collection $subcategories;
 
+    #[Groups(['dealcategory:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'category', fetch: 'LAZY')]
     protected Collection $deals;
 
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\Column(name: 'group_prop', type: 'string', length: 255, nullable: true)]
     protected ?string $group = null;
 
@@ -69,13 +84,14 @@ abstract class DealCategoryGenerated extends EntityBase
         $this->deals = new ArrayCollection();
     }
 
-    public function getName(): string    {
-        return $this->name;
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
     }
 
-    public function setName(string $name): self
+    public function setOrganization(App\Entity\Organization $organization): self
     {
-        $this->name = $name;
+        $this->organization = $organization;
         return $this;
     }
 
@@ -89,13 +105,13 @@ abstract class DealCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function getIcon(): ?string    {
-        return $this->icon;
+    public function getName(): string    {
+        return $this->name;
     }
 
-    public function setIcon(?string $icon): self
+    public function setName(string $name): self
     {
-        $this->icon = $icon;
+        $this->name = $name;
         return $this;
     }
 
@@ -106,6 +122,16 @@ abstract class DealCategoryGenerated extends EntityBase
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getIcon(): ?string    {
+        return $this->icon;
+    }
+
+    public function setIcon(?string $icon): self
+    {
+        $this->icon = $icon;
         return $this;
     }
 
@@ -124,22 +150,22 @@ abstract class DealCategoryGenerated extends EntityBase
         return $this->default === true;
     }
 
-    public function getDisplayorder(): ?int    {
+    public function getDisplayOrder(): ?int    {
         return $this->displayOrder;
     }
 
-    public function setDisplayorder(?int $displayOrder): self
+    public function setDisplayOrder(?int $displayOrder): self
     {
         $this->displayOrder = $displayOrder;
         return $this;
     }
 
-    public function getParentcategory(): ?App\Entity\DealCategory
+    public function getParentCategory(): ?App\Entity\DealCategory
     {
         return $this->parentCategory;
     }
 
-    public function setParentcategory(?App\Entity\DealCategory $parentCategory): self
+    public function setParentCategory(?App\Entity\DealCategory $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
         return $this;
@@ -153,20 +179,20 @@ abstract class DealCategoryGenerated extends EntityBase
         return $this->subcategories;
     }
 
-    public function addSubcategory(App\Entity\DealCategory $ubcategory): self
+    public function addSubcategory(App\Entity\DealCategory $subcategory): self
     {
-        if (!$this->subcategories->contains($ubcategory)) {
-            $this->subcategories->add($ubcategory);
-            $ubcategory->setParentcategory($this);
+        if (!$this->subcategories->contains($subcategory)) {
+            $this->subcategories->add($subcategory);
+            $subcategory->setParentCategory($this);
         }
         return $this;
     }
 
-    public function removeSubcategory(App\Entity\DealCategory $ubcategory): self
+    public function removeSubcategory(App\Entity\DealCategory $subcategory): self
     {
-        if ($this->subcategories->removeElement($ubcategory)) {
-            if ($ubcategory->getParentcategory() === $this) {
-                $ubcategory->setParentcategory(null);
+        if ($this->subcategories->removeElement($subcategory)) {
+            if ($subcategory->getParentCategory() === $this) {
+                $subcategory->setParentCategory(null);
             }
         }
         return $this;

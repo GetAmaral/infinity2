@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\PipelineStageTemplate;
 use App\Entity\TaskType;
 
@@ -24,38 +25,53 @@ use App\Entity\TaskType;
 #[ORM\HasLifecycleCallbacks]
 abstract class TaskTemplateGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'taskTemplates')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $command = null;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $active = null;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $durationMinutes = null;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $location = null;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2, nullable: true)]
     protected ?float $periodicityInterval = null;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $periodicityTimeframe = null;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\ManyToOne(targetEntity: PipelineStageTemplate::class, inversedBy: 'tasks')]
     protected ?PipelineStageTemplate $pipelineStageTemplate = null;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\Range(max: 5, min: 1)]
     protected ?int $priority = null;
 
+    #[Groups(['tasktemplate:read', 'tasktemplate:write'])]
     #[ORM\ManyToOne(targetEntity: TaskType::class, inversedBy: 'taskTemplates')]
     protected ?TaskType $type = null;
 
@@ -63,6 +79,17 @@ abstract class TaskTemplateGenerated extends EntityBase
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -110,11 +137,11 @@ abstract class TaskTemplateGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getDurationminutes(): ?int    {
+    public function getDurationMinutes(): ?int    {
         return $this->durationMinutes;
     }
 
-    public function setDurationminutes(?int $durationMinutes): self
+    public function setDurationMinutes(?int $durationMinutes): self
     {
         $this->durationMinutes = $durationMinutes;
         return $this;
@@ -130,32 +157,32 @@ abstract class TaskTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getPeriodicityinterval(): ?float    {
+    public function getPeriodicityInterval(): ?float    {
         return $this->periodicityInterval;
     }
 
-    public function setPeriodicityinterval(?float $periodicityInterval): self
+    public function setPeriodicityInterval(?float $periodicityInterval): self
     {
         $this->periodicityInterval = $periodicityInterval;
         return $this;
     }
 
-    public function getPeriodicitytimeframe(): ?int    {
+    public function getPeriodicityTimeframe(): ?int    {
         return $this->periodicityTimeframe;
     }
 
-    public function setPeriodicitytimeframe(?int $periodicityTimeframe): self
+    public function setPeriodicityTimeframe(?int $periodicityTimeframe): self
     {
         $this->periodicityTimeframe = $periodicityTimeframe;
         return $this;
     }
 
-    public function getPipelinestagetemplate(): ?App\Entity\PipelineStageTemplate
+    public function getPipelineStageTemplate(): ?App\Entity\PipelineStageTemplate
     {
         return $this->pipelineStageTemplate;
     }
 
-    public function setPipelinestagetemplate(?App\Entity\PipelineStageTemplate $pipelineStageTemplate): self
+    public function setPipelineStageTemplate(?App\Entity\PipelineStageTemplate $pipelineStageTemplate): self
     {
         $this->pipelineStageTemplate = $pipelineStageTemplate;
         return $this;

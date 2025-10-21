@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Talk;
 use App\Entity\Contact;
 use App\Entity\User;
@@ -31,72 +32,98 @@ use App\Entity\Notification;
 #[ORM\HasLifecycleCallbacks]
 abstract class TalkMessageGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'talkMessages')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\ManyToOne(targetEntity: Talk::class, inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
     protected Talk $talk;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\ManyToOne(targetEntity: Contact::class)]
     protected ?Contact $fromContact = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $fromUser = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\ManyToOne(targetEntity: Agent::class)]
     protected ?Agent $fromAgent = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'datetime')]
     protected \DateTimeImmutable $sentAt;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'text')]
     protected string $body;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $messageType = 'text';
 
+    #[Groups(['talkmessage:read'])]
     #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'talkMessage', fetch: 'LAZY')]
     protected Collection $attachments;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(name: 'read_prop', type: 'boolean')]
     protected bool $read = false;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $readAt = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $sentiment = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\ManyToOne(targetEntity: TalkMessage::class)]
     protected ?TalkMessage $parentMessage = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $edited = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\OneToOne(targetEntity: Notification::class, inversedBy: 'talkMessage')]
     protected ?Notification $notification = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $direction = 'inbound';
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $deliveredAt = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $internal = false;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(name: 'system_prop', type: 'boolean')]
     protected bool $system = false;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $editedAt = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $channel = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     protected ?string $subject = null;
 
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $metadata = null;
 
@@ -105,6 +132,17 @@ abstract class TalkMessageGenerated extends EntityBase
     {
         parent::__construct();
         $this->attachments = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getTalk(): App\Entity\Talk
@@ -118,44 +156,44 @@ abstract class TalkMessageGenerated extends EntityBase
         return $this;
     }
 
-    public function getFromcontact(): ?App\Entity\Contact
+    public function getFromContact(): ?App\Entity\Contact
     {
         return $this->fromContact;
     }
 
-    public function setFromcontact(?App\Entity\Contact $fromContact): self
+    public function setFromContact(?App\Entity\Contact $fromContact): self
     {
         $this->fromContact = $fromContact;
         return $this;
     }
 
-    public function getFromuser(): ?App\Entity\User
+    public function getFromUser(): ?App\Entity\User
     {
         return $this->fromUser;
     }
 
-    public function setFromuser(?App\Entity\User $fromUser): self
+    public function setFromUser(?App\Entity\User $fromUser): self
     {
         $this->fromUser = $fromUser;
         return $this;
     }
 
-    public function getFromagent(): ?App\Entity\Agent
+    public function getFromAgent(): ?App\Entity\Agent
     {
         return $this->fromAgent;
     }
 
-    public function setFromagent(?App\Entity\Agent $fromAgent): self
+    public function setFromAgent(?App\Entity\Agent $fromAgent): self
     {
         $this->fromAgent = $fromAgent;
         return $this;
     }
 
-    public function getSentat(): \DateTimeImmutable    {
+    public function getSentAt(): \DateTimeImmutable    {
         return $this->sentAt;
     }
 
-    public function setSentat(\DateTimeImmutable $sentAt): self
+    public function setSentAt(\DateTimeImmutable $sentAt): self
     {
         $this->sentAt = $sentAt;
         return $this;
@@ -171,11 +209,11 @@ abstract class TalkMessageGenerated extends EntityBase
         return $this;
     }
 
-    public function getMessagetype(): string    {
+    public function getMessageType(): string    {
         return $this->messageType;
     }
 
-    public function setMessagetype(string $messageType): self
+    public function setMessageType(string $messageType): self
     {
         $this->messageType = $messageType;
         return $this;
@@ -193,7 +231,7 @@ abstract class TalkMessageGenerated extends EntityBase
     {
         if (!$this->attachments->contains($attachment)) {
             $this->attachments->add($attachment);
-            $attachment->setTalkmessage($this);
+            $attachment->setTalkMessage($this);
         }
         return $this;
     }
@@ -201,8 +239,8 @@ abstract class TalkMessageGenerated extends EntityBase
     public function removeAttachment(App\Entity\Attachment $attachment): self
     {
         if ($this->attachments->removeElement($attachment)) {
-            if ($attachment->getTalkmessage() === $this) {
-                $attachment->setTalkmessage(null);
+            if ($attachment->getTalkMessage() === $this) {
+                $attachment->setTalkMessage(null);
             }
         }
         return $this;
@@ -223,11 +261,11 @@ abstract class TalkMessageGenerated extends EntityBase
         return $this->read === true;
     }
 
-    public function getReadat(): ?\DateTimeImmutable    {
+    public function getReadAt(): ?\DateTimeImmutable    {
         return $this->readAt;
     }
 
-    public function setReadat(?\DateTimeImmutable $readAt): self
+    public function setReadAt(?\DateTimeImmutable $readAt): self
     {
         $this->readAt = $readAt;
         return $this;
@@ -243,12 +281,12 @@ abstract class TalkMessageGenerated extends EntityBase
         return $this;
     }
 
-    public function getParentmessage(): ?App\Entity\TalkMessage
+    public function getParentMessage(): ?App\Entity\TalkMessage
     {
         return $this->parentMessage;
     }
 
-    public function setParentmessage(?App\Entity\TalkMessage $parentMessage): self
+    public function setParentMessage(?App\Entity\TalkMessage $parentMessage): self
     {
         $this->parentMessage = $parentMessage;
         return $this;
@@ -290,11 +328,11 @@ abstract class TalkMessageGenerated extends EntityBase
         return $this;
     }
 
-    public function getDeliveredat(): ?\DateTimeImmutable    {
+    public function getDeliveredAt(): ?\DateTimeImmutable    {
         return $this->deliveredAt;
     }
 
-    public function setDeliveredat(?\DateTimeImmutable $deliveredAt): self
+    public function setDeliveredAt(?\DateTimeImmutable $deliveredAt): self
     {
         $this->deliveredAt = $deliveredAt;
         return $this;
@@ -330,11 +368,11 @@ abstract class TalkMessageGenerated extends EntityBase
         return $this->system === true;
     }
 
-    public function getEditedat(): ?\DateTimeImmutable    {
+    public function getEditedAt(): ?\DateTimeImmutable    {
         return $this->editedAt;
     }
 
-    public function setEditedat(?\DateTimeImmutable $editedAt): self
+    public function setEditedAt(?\DateTimeImmutable $editedAt): self
     {
         $this->editedAt = $editedAt;
         return $this;

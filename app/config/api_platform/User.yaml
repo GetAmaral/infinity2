@@ -33,9 +33,11 @@ resources:
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"
@@ -69,9 +71,21 @@ resources:
       email:
         description: "Email address"
         example: "user@example.com"
+      ownedDeals:
+        writable: false
+        description: "Deals"
+        example: "/api/deals/01234567-89ab-cdef-0123-456789abcdef"
       emailVerifiedAt:
         description: "EmailVerifiedAt (date and time)"
         example: "2025-01-15T10:30:00Z"
+      calendarExternalLinks:
+        writable: false
+        description: "CalendarExternalLinks"
+        example: "/api/calendarexternallinks/01234567-89ab-cdef-0123-456789abcdef"
+      resourceBookings:
+        writable: false
+        description: "EventResourceBookings"
+        example: "/api/eventresourcebookings/01234567-89ab-cdef-0123-456789abcdef"
       eventAttendances:
         description: "EventAttendances"
         example: "sample value"
@@ -85,15 +99,15 @@ resources:
       gender:
         description: "Gender (numeric value)"
         example: "42"
-      grantedRoles:
-        description: "GrantedRoles"
-        example: "sample value"
       lastPasswordChange:
         description: "LastPasswordChange (date and time)"
         example: "2025-01-15T10:30:00Z"
       managedCampaigns:
         description: "ManagedCampaigns"
         example: "sample value"
+      ownedCampaigns:
+        description: "OwnedCampaigns"
+        example: "/api/campaigns/01234567-89ab-cdef-0123-456789abcdef"
       managedCompanies:
         description: "ManagedCompanies"
         example: "sample value"

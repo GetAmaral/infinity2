@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Country;
 use App\Entity\EventResource;
 use App\Entity\HolidayTemplate;
@@ -27,41 +28,56 @@ use App\Entity\HolidayTemplate;
 #[ORM\HasLifecycleCallbacks]
 abstract class CityGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['city:read', 'city:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'cities')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\Column(name: 'state_prop', type: 'string', length: 100, nullable: true)]
     protected ?string $state = null;
 
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\ManyToOne(targetEntity: Country::class)]
     protected ?Country $country = null;
 
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2, nullable: true)]
     protected ?float $latitude = null;
 
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2, nullable: true)]
     protected ?float $longitude = null;
 
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\Column(type: 'string', length: 120, nullable: true)]
     protected ?string $timezone = null;
 
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $population = null;
 
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $capital;
 
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     protected ?string $ibgeCode = null;
 
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active;
 
+    #[Groups(['city:read'])]
     #[ORM\OneToMany(targetEntity: EventResource::class, mappedBy: 'city', fetch: 'LAZY')]
     protected Collection $eventResources;
 
+    #[Groups(['city:read'])]
     #[ORM\OneToMany(targetEntity: HolidayTemplate::class, mappedBy: 'city', fetch: 'LAZY')]
     protected Collection $holidayTemplates;
 
@@ -71,6 +87,17 @@ abstract class CityGenerated extends EntityBase
         parent::__construct();
         $this->eventResources = new ArrayCollection();
         $this->holidayTemplates = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -159,11 +186,11 @@ abstract class CityGenerated extends EntityBase
         return $this->capital === true;
     }
 
-    public function getIbgecode(): ?string    {
+    public function getIbgeCode(): ?string    {
         return $this->ibgeCode;
     }
 
-    public function setIbgecode(?string $ibgeCode): self
+    public function setIbgeCode(?string $ibgeCode): self
     {
         $this->ibgeCode = $ibgeCode;
         return $this;
@@ -187,25 +214,25 @@ abstract class CityGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\EventResource>
      */
-    public function getEventresources(): Collection
+    public function getEventResources(): Collection
     {
         return $this->eventResources;
     }
 
-    public function addEventreource(App\Entity\EventResource $eventReource): self
+    public function addEventResource(App\Entity\EventResource $eventResource): self
     {
-        if (!$this->eventResources->contains($eventReource)) {
-            $this->eventResources->add($eventReource);
-            $eventReource->setCity($this);
+        if (!$this->eventResources->contains($eventResource)) {
+            $this->eventResources->add($eventResource);
+            $eventResource->setCity($this);
         }
         return $this;
     }
 
-    public function removeEventreource(App\Entity\EventResource $eventReource): self
+    public function removeEventResource(App\Entity\EventResource $eventResource): self
     {
-        if ($this->eventResources->removeElement($eventReource)) {
-            if ($eventReource->getCity() === $this) {
-                $eventReource->setCity(null);
+        if ($this->eventResources->removeElement($eventResource)) {
+            if ($eventResource->getCity() === $this) {
+                $eventResource->setCity(null);
             }
         }
         return $this;
@@ -214,12 +241,12 @@ abstract class CityGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\HolidayTemplate>
      */
-    public function getHolidaytemplates(): Collection
+    public function getHolidayTemplates(): Collection
     {
         return $this->holidayTemplates;
     }
 
-    public function addHolidaytemplate(App\Entity\HolidayTemplate $holidayTemplate): self
+    public function addHolidayTemplate(App\Entity\HolidayTemplate $holidayTemplate): self
     {
         if (!$this->holidayTemplates->contains($holidayTemplate)) {
             $this->holidayTemplates->add($holidayTemplate);
@@ -228,7 +255,7 @@ abstract class CityGenerated extends EntityBase
         return $this;
     }
 
-    public function removeHolidaytemplate(App\Entity\HolidayTemplate $holidayTemplate): self
+    public function removeHolidayTemplate(App\Entity\HolidayTemplate $holidayTemplate): self
     {
         if ($this->holidayTemplates->removeElement($holidayTemplate)) {
             if ($holidayTemplate->getCity() === $this) {

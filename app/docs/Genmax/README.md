@@ -235,7 +235,9 @@ php bin/console genmax:generate Contact
 ```php
 abstract class ContactGenerated
 {
-    use OrganizationTrait;
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'contacts')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
     #[ORM\Column(length: 100)]
     protected string $fullName;

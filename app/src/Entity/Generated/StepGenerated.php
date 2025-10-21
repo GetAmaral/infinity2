@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\TreeFlow;
 use App\Entity\StepQuestion;
 use App\Entity\StepOutput;
@@ -27,41 +28,54 @@ use App\Entity\StepInput;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepGenerated extends EntityBase
 {
+    #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $name;
 
+    #[Groups(['step:read', 'step:write'])]
     #[ORM\ManyToOne(targetEntity: TreeFlow::class, inversedBy: 'steps')]
     #[ORM\JoinColumn(nullable: false)]
     protected TreeFlow $treeFlow;
 
+    #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(name: 'first_prop', type: 'boolean')]
     protected bool $first = false;
 
+    #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\3(max: 255, constraint: 'Length')]
+    #[Assert\Length(max: 255)]
     protected string $slug;
 
+    #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $objective = null;
 
+    #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $prompt = null;
 
+    #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $viewOrder = 1;
 
+    #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $positionX = null;
 
+    #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $positionY = null;
 
+    #[Groups(['step:read'])]
     #[ORM\OneToMany(targetEntity: StepQuestion::class, mappedBy: 'step', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $questions;
 
+    #[Groups(['step:read'])]
     #[ORM\OneToMany(targetEntity: StepOutput::class, mappedBy: 'step', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $outputs;
 
+    #[Groups(['step:read'])]
     #[ORM\OneToMany(targetEntity: StepInput::class, mappedBy: 'step', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $inputs;
 
@@ -84,12 +98,12 @@ abstract class StepGenerated extends EntityBase
         return $this;
     }
 
-    public function getTreeflow(): App\Entity\TreeFlow
+    public function getTreeFlow(): App\Entity\TreeFlow
     {
         return $this->treeFlow;
     }
 
-    public function setTreeflow(App\Entity\TreeFlow $treeFlow): self
+    public function setTreeFlow(App\Entity\TreeFlow $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
         return $this;
@@ -140,31 +154,31 @@ abstract class StepGenerated extends EntityBase
         return $this;
     }
 
-    public function getVieworder(): int    {
+    public function getViewOrder(): int    {
         return $this->viewOrder;
     }
 
-    public function setVieworder(int $viewOrder): self
+    public function setViewOrder(int $viewOrder): self
     {
         $this->viewOrder = $viewOrder;
         return $this;
     }
 
-    public function getPositionx(): ?int    {
+    public function getPositionX(): ?int    {
         return $this->positionX;
     }
 
-    public function setPositionx(?int $positionX): self
+    public function setPositionX(?int $positionX): self
     {
         $this->positionX = $positionX;
         return $this;
     }
 
-    public function getPositiony(): ?int    {
+    public function getPositionY(): ?int    {
         return $this->positionY;
     }
 
-    public function setPositiony(?int $positionY): self
+    public function setPositionY(?int $positionY): self
     {
         $this->positionY = $positionY;
         return $this;
@@ -178,20 +192,20 @@ abstract class StepGenerated extends EntityBase
         return $this->questions;
     }
 
-    public function addQuetion(App\Entity\StepQuestion $quetion): self
+    public function addQuestion(App\Entity\StepQuestion $question): self
     {
-        if (!$this->questions->contains($quetion)) {
-            $this->questions->add($quetion);
-            $quetion->setStep($this);
+        if (!$this->questions->contains($question)) {
+            $this->questions->add($question);
+            $question->setStep($this);
         }
         return $this;
     }
 
-    public function removeQuetion(App\Entity\StepQuestion $quetion): self
+    public function removeQuestion(App\Entity\StepQuestion $question): self
     {
-        if ($this->questions->removeElement($quetion)) {
-            if ($quetion->getStep() === $this) {
-                $quetion->setStep(null);
+        if ($this->questions->removeElement($question)) {
+            if ($question->getStep() === $this) {
+                $question->setStep(null);
             }
         }
         return $this;

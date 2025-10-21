@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Product;
 
 /**
@@ -23,83 +24,115 @@ use App\Entity\Product;
 #[ORM\HasLifecycleCallbacks]
 abstract class ProductBatchGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['productbatch:read', 'productbatch:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'productBatches')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'string', length: 100, unique: true)]
     protected string $batchNumber;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $manufacturingDate = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $lotNumber = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $serialNumber = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $expired = false;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $supplier = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $qualityStatus = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $availableQuantity = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $commissionAmount = null;
+    protected ?string $commissionAmount = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $commissionRate = null;
+    #[Assert\Range(max: 100, min: 0)]
+    protected ?string $commissionRate = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $costPrice = null;
+    protected ?string $costPrice = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $currency = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $discountAmount = null;
+    protected ?string $discountAmount = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $discountPercentage = null;
+    #[Assert\Range(max: 100, min: 0)]
+    protected ?string $discountPercentage = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2, nullable: true)]
     protected ?float $exchangeRate = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $expirationDate = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $listPrice = null;
+    protected ?string $listPrice = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $marginPercentage = null;
+    #[Assert\Range(max: 100, min: 0)]
+    protected ?string $marginPercentage = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $maximumDiscount = null;
+    protected ?string $maximumDiscount = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $minimumPrice = null;
+    protected ?string $minimumPrice = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'batches')]
     protected ?Product $product = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $reservedQuantity = null;
 
+    #[Groups(['productbatch:read', 'productbatch:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $stockQuantity = null;
 
@@ -109,11 +142,22 @@ abstract class ProductBatchGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getBatchnumber(): string    {
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getBatchNumber(): string    {
         return $this->batchNumber;
     }
 
-    public function setBatchnumber(string $batchNumber): self
+    public function setBatchNumber(string $batchNumber): self
     {
         $this->batchNumber = $batchNumber;
         return $this;
@@ -129,31 +173,31 @@ abstract class ProductBatchGenerated extends EntityBase
         return $this;
     }
 
-    public function getManufacturingdate(): ?\DateTimeImmutable    {
+    public function getManufacturingDate(): ?\DateTimeImmutable    {
         return $this->manufacturingDate;
     }
 
-    public function setManufacturingdate(?\DateTimeImmutable $manufacturingDate): self
+    public function setManufacturingDate(?\DateTimeImmutable $manufacturingDate): self
     {
         $this->manufacturingDate = $manufacturingDate;
         return $this;
     }
 
-    public function getLotnumber(): ?string    {
+    public function getLotNumber(): ?string    {
         return $this->lotNumber;
     }
 
-    public function setLotnumber(?string $lotNumber): self
+    public function setLotNumber(?string $lotNumber): self
     {
         $this->lotNumber = $lotNumber;
         return $this;
     }
 
-    public function getSerialnumber(): ?string    {
+    public function getSerialNumber(): ?string    {
         return $this->serialNumber;
     }
 
-    public function setSerialnumber(?string $serialNumber): self
+    public function setSerialNumber(?string $serialNumber): self
     {
         $this->serialNumber = $serialNumber;
         return $this;
@@ -184,11 +228,11 @@ abstract class ProductBatchGenerated extends EntityBase
         return $this;
     }
 
-    public function getQualitystatus(): ?string    {
+    public function getQualityStatus(): ?string    {
         return $this->qualityStatus;
     }
 
-    public function setQualitystatus(?string $qualityStatus): self
+    public function setQualityStatus(?string $qualityStatus): self
     {
         $this->qualityStatus = $qualityStatus;
         return $this;
@@ -204,11 +248,11 @@ abstract class ProductBatchGenerated extends EntityBase
         return $this;
     }
 
-    public function getAvailablequantity(): ?int    {
+    public function getAvailableQuantity(): ?int    {
         return $this->availableQuantity;
     }
 
-    public function setAvailablequantity(?int $availableQuantity): self
+    public function setAvailableQuantity(?int $availableQuantity): self
     {
         $this->availableQuantity = $availableQuantity;
         return $this;
@@ -229,31 +273,31 @@ abstract class ProductBatchGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getCommissionamount(): ?float    {
+    public function getCommissionAmount(): ?string    {
         return $this->commissionAmount;
     }
 
-    public function setCommissionamount(?float $commissionAmount): self
+    public function setCommissionAmount(?string $commissionAmount): self
     {
         $this->commissionAmount = $commissionAmount;
         return $this;
     }
 
-    public function getCommissionrate(): ?float    {
+    public function getCommissionRate(): ?string    {
         return $this->commissionRate;
     }
 
-    public function setCommissionrate(?float $commissionRate): self
+    public function setCommissionRate(?string $commissionRate): self
     {
         $this->commissionRate = $commissionRate;
         return $this;
     }
 
-    public function getCostprice(): ?float    {
+    public function getCostPrice(): ?string    {
         return $this->costPrice;
     }
 
-    public function setCostprice(?float $costPrice): self
+    public function setCostPrice(?string $costPrice): self
     {
         $this->costPrice = $costPrice;
         return $this;
@@ -269,81 +313,81 @@ abstract class ProductBatchGenerated extends EntityBase
         return $this;
     }
 
-    public function getDiscountamount(): ?float    {
+    public function getDiscountAmount(): ?string    {
         return $this->discountAmount;
     }
 
-    public function setDiscountamount(?float $discountAmount): self
+    public function setDiscountAmount(?string $discountAmount): self
     {
         $this->discountAmount = $discountAmount;
         return $this;
     }
 
-    public function getDiscountpercentage(): ?float    {
+    public function getDiscountPercentage(): ?string    {
         return $this->discountPercentage;
     }
 
-    public function setDiscountpercentage(?float $discountPercentage): self
+    public function setDiscountPercentage(?string $discountPercentage): self
     {
         $this->discountPercentage = $discountPercentage;
         return $this;
     }
 
-    public function getExchangerate(): ?float    {
+    public function getExchangeRate(): ?float    {
         return $this->exchangeRate;
     }
 
-    public function setExchangerate(?float $exchangeRate): self
+    public function setExchangeRate(?float $exchangeRate): self
     {
         $this->exchangeRate = $exchangeRate;
         return $this;
     }
 
-    public function getExpirationdate(): ?\DateTimeImmutable    {
+    public function getExpirationDate(): ?\DateTimeImmutable    {
         return $this->expirationDate;
     }
 
-    public function setExpirationdate(?\DateTimeImmutable $expirationDate): self
+    public function setExpirationDate(?\DateTimeImmutable $expirationDate): self
     {
         $this->expirationDate = $expirationDate;
         return $this;
     }
 
-    public function getListprice(): ?float    {
+    public function getListPrice(): ?string    {
         return $this->listPrice;
     }
 
-    public function setListprice(?float $listPrice): self
+    public function setListPrice(?string $listPrice): self
     {
         $this->listPrice = $listPrice;
         return $this;
     }
 
-    public function getMarginpercentage(): ?float    {
+    public function getMarginPercentage(): ?string    {
         return $this->marginPercentage;
     }
 
-    public function setMarginpercentage(?float $marginPercentage): self
+    public function setMarginPercentage(?string $marginPercentage): self
     {
         $this->marginPercentage = $marginPercentage;
         return $this;
     }
 
-    public function getMaximumdiscount(): ?float    {
+    public function getMaximumDiscount(): ?string    {
         return $this->maximumDiscount;
     }
 
-    public function setMaximumdiscount(?float $maximumDiscount): self
+    public function setMaximumDiscount(?string $maximumDiscount): self
     {
         $this->maximumDiscount = $maximumDiscount;
         return $this;
     }
 
-    public function getMinimumprice(): ?float    {
+    public function getMinimumPrice(): ?string    {
         return $this->minimumPrice;
     }
 
-    public function setMinimumprice(?float $minimumPrice): self
+    public function setMinimumPrice(?string $minimumPrice): self
     {
         $this->minimumPrice = $minimumPrice;
         return $this;
@@ -360,21 +404,21 @@ abstract class ProductBatchGenerated extends EntityBase
         return $this;
     }
 
-    public function getReservedquantity(): ?int    {
+    public function getReservedQuantity(): ?int    {
         return $this->reservedQuantity;
     }
 
-    public function setReservedquantity(?int $reservedQuantity): self
+    public function setReservedQuantity(?int $reservedQuantity): self
     {
         $this->reservedQuantity = $reservedQuantity;
         return $this;
     }
 
-    public function getStockquantity(): ?int    {
+    public function getStockQuantity(): ?int    {
         return $this->stockQuantity;
     }
 
-    public function setStockquantity(?int $stockQuantity): self
+    public function setStockQuantity(?int $stockQuantity): self
     {
         $this->stockQuantity = $stockQuantity;
         return $this;

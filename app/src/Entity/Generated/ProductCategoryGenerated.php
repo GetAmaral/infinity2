@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\ProductCategory;
 use App\Entity\Product;
 
@@ -26,20 +27,28 @@ use App\Entity\Product;
 #[ORM\HasLifecycleCallbacks]
 abstract class ProductCategoryGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['productcategory:read', 'productcategory:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'productCategories')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['productcategory:read', 'productcategory:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['productcategory:read', 'productcategory:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['productcategory:read', 'productcategory:write'])]
     #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'subcategories')]
     protected ?ProductCategory $parentCategory = null;
 
+    #[Groups(['productcategory:read'])]
     #[ORM\OneToMany(targetEntity: ProductCategory::class, mappedBy: 'parentCategory', fetch: 'LAZY')]
     protected Collection $subcategories;
 
+    #[Groups(['productcategory:read'])]
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category', fetch: 'LAZY')]
     protected Collection $products;
 
@@ -49,6 +58,17 @@ abstract class ProductCategoryGenerated extends EntityBase
         parent::__construct();
         $this->subcategories = new ArrayCollection();
         $this->products = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -71,12 +91,12 @@ abstract class ProductCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function getParentcategory(): ?App\Entity\ProductCategory
+    public function getParentCategory(): ?App\Entity\ProductCategory
     {
         return $this->parentCategory;
     }
 
-    public function setParentcategory(?App\Entity\ProductCategory $parentCategory): self
+    public function setParentCategory(?App\Entity\ProductCategory $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
         return $this;
@@ -90,20 +110,20 @@ abstract class ProductCategoryGenerated extends EntityBase
         return $this->subcategories;
     }
 
-    public function addSubcategory(App\Entity\ProductCategory $ubcategory): self
+    public function addSubcategory(App\Entity\ProductCategory $subcategory): self
     {
-        if (!$this->subcategories->contains($ubcategory)) {
-            $this->subcategories->add($ubcategory);
-            $ubcategory->setParentcategory($this);
+        if (!$this->subcategories->contains($subcategory)) {
+            $this->subcategories->add($subcategory);
+            $subcategory->setParentCategory($this);
         }
         return $this;
     }
 
-    public function removeSubcategory(App\Entity\ProductCategory $ubcategory): self
+    public function removeSubcategory(App\Entity\ProductCategory $subcategory): self
     {
-        if ($this->subcategories->removeElement($ubcategory)) {
-            if ($ubcategory->getParentcategory() === $this) {
-                $ubcategory->setParentcategory(null);
+        if ($this->subcategories->removeElement($subcategory)) {
+            if ($subcategory->getParentCategory() === $this) {
+                $subcategory->setParentCategory(null);
             }
         }
         return $this;

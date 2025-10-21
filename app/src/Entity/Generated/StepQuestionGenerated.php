@@ -7,6 +7,7 @@ namespace App\Entity\Generated;
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Step;
 
 /**
@@ -22,32 +23,42 @@ use App\Entity\Step;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepQuestionGenerated extends EntityBase
 {
+    #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'questions')]
     #[ORM\JoinColumn(nullable: false)]
     protected Step $step;
 
+    #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $name;
 
+    #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\3(max: 255, constraint: 'Length')]
+    #[Assert\Length(max: 255)]
     protected string $slug;
 
+    #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $prompt = null;
 
+    #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $objective = null;
 
+    #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $importance = 1;
 
+    #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $viewOrder = 1;
 
+    #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $fewShotPositive = null;
 
+    #[Groups(['stepquestion:read', 'stepquestion:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $fewShotNegative = null;
 
@@ -118,31 +129,31 @@ abstract class StepQuestionGenerated extends EntityBase
         return $this;
     }
 
-    public function getVieworder(): int    {
+    public function getViewOrder(): int    {
         return $this->viewOrder;
     }
 
-    public function setVieworder(int $viewOrder): self
+    public function setViewOrder(int $viewOrder): self
     {
         $this->viewOrder = $viewOrder;
         return $this;
     }
 
-    public function getFewshotpositive(): ?array    {
+    public function getFewShotPositive(): ?array    {
         return $this->fewShotPositive;
     }
 
-    public function setFewshotpositive(?array $fewShotPositive): self
+    public function setFewShotPositive(?array $fewShotPositive): self
     {
         $this->fewShotPositive = $fewShotPositive;
         return $this;
     }
 
-    public function getFewshotnegative(): ?array    {
+    public function getFewShotNegative(): ?array    {
         return $this->fewShotNegative;
     }
 
-    public function setFewshotnegative(?array $fewShotNegative): self
+    public function setFewShotNegative(?array $fewShotNegative): self
     {
         $this->fewShotNegative = $fewShotNegative;
         return $this;

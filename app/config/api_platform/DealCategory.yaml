@@ -33,21 +33,23 @@ resources:
         security: "is_granted('ROLE_CRM_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
-      name:
-        description: "The brand name"
-        example: "Nike"
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       color:
         description: "Hex color code for visual identification of the category (e.g., #FF5733)"
         example: "#6f42c1"
-      icon:
-        description: "Bootstrap Icon class name for visual representation (e.g., bi-briefcase, bi-star)"
-        example: "bi-tag"
+      name:
+        description: "The brand name"
+        example: "Nike"
       description:
         description: "..."
         example: "..."
+      icon:
+        description: "Bootstrap Icon class name for visual representation (e.g., bi-briefcase, bi-star)"
+        example: "bi-tag"
       default:
         description: "Indicates whether this is the default category automatically assigned to new deals"
         example: "false"

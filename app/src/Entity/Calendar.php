@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @generated once by Genmax Code Generator
  */
 #[ORM\Entity(repositoryClass: CalendarRepository::class)]
-#[ORM\Table(name: 'calendar_table')]
+#[ORM\Table(name: 'calendar')]
 class Calendar extends CalendarGenerated
 {
     // Add custom properties here

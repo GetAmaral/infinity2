@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\User;
 use App\Entity\PipelineStage;
 use App\Entity\Deal;
@@ -27,76 +28,102 @@ use App\Entity\Deal;
 #[ORM\HasLifecycleCallbacks]
 abstract class PipelineGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['pipeline:read', 'pipeline:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'pipelines')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $pipelineType = 'Sales';
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'managedPipelines')]
     protected ?User $owner = null;
 
+    #[Groups(['pipeline:read'])]
     #[ORM\OneToMany(targetEntity: PipelineStage::class, mappedBy: 'pipeline', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
     #[ORM\OrderBy(['order' => 'ASC'])]
     protected Collection $stages;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $displayOrder = 0;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'string', length: 7)]
     protected string $color = '#0dcaf0';
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'string', length: 50)]
     protected string $icon = 'bi-diagram-3';
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $forecastEnabled = true;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $autoAdvanceStages = false;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $rottenDealThreshold = 30;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'string', length: 3)]
     protected string $currency = 'USD';
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $avgDealSize = 0;
+    protected ?string $avgDealSize = '0';
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $avgCycleTime = null;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $winRate = null;
+    protected ?string $winRate = null;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $conversionRate = null;
+    protected ?string $conversionRate = null;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $totalDealsCount = 0;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $activeDealsCount = 0;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
-    protected float $totalPipelineValue = 0;
+    protected string $totalPipelineValue = '0';
 
+    #[Groups(['pipeline:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'pipeline', cascade: ['persist'], fetch: 'LAZY')]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     protected Collection $deals;
 
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $archivedAt = null;
 
@@ -106,6 +133,17 @@ abstract class PipelineGenerated extends EntityBase
         parent::__construct();
         $this->stages = new ArrayCollection();
         $this->deals = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -143,11 +181,11 @@ abstract class PipelineGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getPipelinetype(): string    {
+    public function getPipelineType(): string    {
         return $this->pipelineType;
     }
 
-    public function setPipelinetype(string $pipelineType): self
+    public function setPipelineType(string $pipelineType): self
     {
         $this->pipelineType = $pipelineType;
         return $this;
@@ -187,30 +225,30 @@ abstract class PipelineGenerated extends EntityBase
         return $this->stages;
     }
 
-    public function addStage(App\Entity\PipelineStage $tage): self
+    public function addStage(App\Entity\PipelineStage $stage): self
     {
-        if (!$this->stages->contains($tage)) {
-            $this->stages->add($tage);
-            $tage->setPipeline($this);
+        if (!$this->stages->contains($stage)) {
+            $this->stages->add($stage);
+            $stage->setPipeline($this);
         }
         return $this;
     }
 
-    public function removeStage(App\Entity\PipelineStage $tage): self
+    public function removeStage(App\Entity\PipelineStage $stage): self
     {
-        if ($this->stages->removeElement($tage)) {
-            if ($tage->getPipeline() === $this) {
-                $tage->setPipeline(null);
+        if ($this->stages->removeElement($stage)) {
+            if ($stage->getPipeline() === $this) {
+                $stage->setPipeline(null);
             }
         }
         return $this;
     }
 
-    public function getDisplayorder(): int    {
+    public function getDisplayOrder(): int    {
         return $this->displayOrder;
     }
 
-    public function setDisplayorder(int $displayOrder): self
+    public function setDisplayOrder(int $displayOrder): self
     {
         $this->displayOrder = $displayOrder;
         return $this;
@@ -236,41 +274,41 @@ abstract class PipelineGenerated extends EntityBase
         return $this;
     }
 
-    public function getForecastenabled(): bool    {
+    public function getForecastEnabled(): bool    {
         return $this->forecastEnabled;
     }
 
-    public function setForecastenabled(bool $forecastEnabled): self
+    public function setForecastEnabled(bool $forecastEnabled): self
     {
         $this->forecastEnabled = $forecastEnabled;
         return $this;
     }
 
-    public function isForecastenabled(): bool
+    public function isForecastEnabled(): bool
     {
         return $this->forecastEnabled === true;
     }
 
-    public function getAutoadvancestages(): bool    {
+    public function getAutoAdvanceStages(): bool    {
         return $this->autoAdvanceStages;
     }
 
-    public function setAutoadvancestages(bool $autoAdvanceStages): self
+    public function setAutoAdvanceStages(bool $autoAdvanceStages): self
     {
         $this->autoAdvanceStages = $autoAdvanceStages;
         return $this;
     }
 
-    public function isAutoadvancestages(): bool
+    public function isAutoAdvanceStages(): bool
     {
         return $this->autoAdvanceStages === true;
     }
 
-    public function getRottendealthreshold(): int    {
+    public function getRottenDealThreshold(): int    {
         return $this->rottenDealThreshold;
     }
 
-    public function setRottendealthreshold(int $rottenDealThreshold): self
+    public function setRottenDealThreshold(int $rottenDealThreshold): self
     {
         $this->rottenDealThreshold = $rottenDealThreshold;
         return $this;
@@ -286,71 +324,71 @@ abstract class PipelineGenerated extends EntityBase
         return $this;
     }
 
-    public function getAvgdealsize(): ?float    {
+    public function getAvgDealSize(): ?string    {
         return $this->avgDealSize;
     }
 
-    public function setAvgdealsize(?float $avgDealSize): self
+    public function setAvgDealSize(?string $avgDealSize): self
     {
         $this->avgDealSize = $avgDealSize;
         return $this;
     }
 
-    public function getAvgcycletime(): ?int    {
+    public function getAvgCycleTime(): ?int    {
         return $this->avgCycleTime;
     }
 
-    public function setAvgcycletime(?int $avgCycleTime): self
+    public function setAvgCycleTime(?int $avgCycleTime): self
     {
         $this->avgCycleTime = $avgCycleTime;
         return $this;
     }
 
-    public function getWinrate(): ?float    {
+    public function getWinRate(): ?string    {
         return $this->winRate;
     }
 
-    public function setWinrate(?float $winRate): self
+    public function setWinRate(?string $winRate): self
     {
         $this->winRate = $winRate;
         return $this;
     }
 
-    public function getConversionrate(): ?float    {
+    public function getConversionRate(): ?string    {
         return $this->conversionRate;
     }
 
-    public function setConversionrate(?float $conversionRate): self
+    public function setConversionRate(?string $conversionRate): self
     {
         $this->conversionRate = $conversionRate;
         return $this;
     }
 
-    public function getTotaldealscount(): int    {
+    public function getTotalDealsCount(): int    {
         return $this->totalDealsCount;
     }
 
-    public function setTotaldealscount(int $totalDealsCount): self
+    public function setTotalDealsCount(int $totalDealsCount): self
     {
         $this->totalDealsCount = $totalDealsCount;
         return $this;
     }
 
-    public function getActivedealscount(): int    {
+    public function getActiveDealsCount(): int    {
         return $this->activeDealsCount;
     }
 
-    public function setActivedealscount(int $activeDealsCount): self
+    public function setActiveDealsCount(int $activeDealsCount): self
     {
         $this->activeDealsCount = $activeDealsCount;
         return $this;
     }
 
-    public function getTotalpipelinevalue(): float    {
+    public function getTotalPipelineValue(): string    {
         return $this->totalPipelineValue;
     }
 
-    public function setTotalpipelinevalue(float $totalPipelineValue): self
+    public function setTotalPipelineValue(string $totalPipelineValue): self
     {
         $this->totalPipelineValue = $totalPipelineValue;
         return $this;
@@ -383,11 +421,11 @@ abstract class PipelineGenerated extends EntityBase
         return $this;
     }
 
-    public function getArchivedat(): ?\DateTimeImmutable    {
+    public function getArchivedAt(): ?\DateTimeImmutable    {
         return $this->archivedAt;
     }
 
-    public function setArchivedat(?\DateTimeImmutable $archivedAt): self
+    public function setArchivedAt(?\DateTimeImmutable $archivedAt): self
     {
         $this->archivedAt = $archivedAt;
         return $this;

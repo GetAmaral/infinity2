@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\StudentCourse;
 use App\Entity\Agent;
 use App\Entity\Product;
@@ -17,7 +17,22 @@ use App\Entity\BillingFrequency;
 use App\Entity\Brand;
 use App\Entity\Calendar;
 use App\Entity\Campaign;
+use App\Entity\PipelineStageTemplate;
+use App\Entity\Reminder;
+use App\Entity\Attachment;
+use App\Entity\CalendarType;
 use App\Entity\City;
+use App\Entity\TreeFlow;
+use App\Entity\WinReason;
+use App\Entity\PipelineTemplate;
+use App\Entity\StepConnection;
+use App\Entity\TaskTemplate;
+use App\Entity\EventAttendee;
+use App\Entity\LostReason;
+use App\Entity\MeetingData;
+use App\Entity\Notification;
+use App\Entity\DealCategory;
+use App\Entity\DealType;
 use App\Entity\Company;
 use App\Entity\Competitor;
 use App\Entity\Contact;
@@ -32,7 +47,7 @@ use App\Entity\Event;
 use App\Entity\Flag;
 use App\Entity\Holiday;
 use App\Entity\LeadSource;
-use App\Entity\Lecture;
+use App\Entity\CourseLecture;
 use App\Entity\Module;
 use App\Entity\NotificationType;
 use App\Entity\PipelineStage;
@@ -65,207 +80,341 @@ use App\Entity\WorkingHour;
 #[ORM\HasLifecycleCallbacks]
 abstract class OrganizationGenerated extends EntityBase
 {
-    use OrganizationTrait;
-
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $logoPath = null;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected ?string $logoPathDark = null;
-
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $studentCourses;
+    #[Groups(['organization:read', 'organization:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
+    protected ?string $logoPathDark = null;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $logoUrl = null;
 
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $studentCourses;
+
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $industry = null;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $address = null;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $website = null;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Agent::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $agents;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $products;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: BillingFrequency::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $billingFrequencies;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $branding = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Brand::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $brands;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Assert\Length(max: 20)]
     protected ?string $businessPhone = null;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $businessSettings = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $calendars;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Campaign::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $campaigns;
 
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: PipelineStageTemplate::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $pipelineStageTemplates;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: Reminder::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $reminders;
+
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Assert\Length(max: 20)]
     protected ?string $celPhone = null;
 
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $attachments;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: CalendarType::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $calendarTypes;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $cities;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: TreeFlow::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $treeFlows;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: WinReason::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $winReasons;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: PipelineTemplate::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $pipelineTemplates;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: StepConnection::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $stepConnections;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: TaskTemplate::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $taskTemplates;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $eventAttendees;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: LostReason::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $lostReasons;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: MeetingData::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $meetingDatas;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $notifications;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: DealCategory::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $dealCategories;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: DealType::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $dealTypes;
+
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\ManyToOne(targetEntity: City::class)]
     protected ?City $city = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Company::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $companies;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $companySize = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Competitor::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $competitors;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $contactName = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $contacts;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $courses;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Assert\Length(max: 20)]
     protected ?string $currency = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: DealStage::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $dealStages;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $deals;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: EventCategory::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $eventCategories;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: EventResourceBooking::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $eventResourceBookings;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: EventResourceType::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $eventResourceTypes;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: EventResource::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $eventResources;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $events;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $featureFlags = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Flag::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $flags;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $geo = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Holiday::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $holidays;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $integrationConfig = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: LeadSource::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $leadSources;
 
-    #[ORM\OneToMany(targetEntity: Lecture::class, mappedBy: 'organization', orphanRemoval: true, fetch: 'LAZY')]
-    protected Collection $lectures;
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: CourseLecture::class, mappedBy: 'organization', orphanRemoval: true, fetch: 'LAZY')]
+    protected Collection $courseLectures;
 
+    #[Groups(['organization:read'])]
     #[ORM\ManyToMany(targetEntity: Module::class, fetch: 'LAZY')]
     protected Collection $modules;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $navConfig = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: NotificationType::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $notificationTypes;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: PipelineStage::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $pipelineStages;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Pipeline::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $pipelines;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $postalCode = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: ProductBatch::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $productBatches;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: ProductCategory::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $productCategories;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: ProductLine::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $productLines;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Profile::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $profiles;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $securityConfig = null;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 50, unique: true)]
     #[Assert\Length(max: 50)]
     protected string $slug;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: SocialMedia::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $socialMedias;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $status = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $tags;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: TalkMessage::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $talkMessages;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: TalkType::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $talkTypes;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Talk::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $talks;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: TaskType::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $taskTypes;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $tasks;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: TaxCategory::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $taxCategories;
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $timeZone = 'UTC';
 
+    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $uiPreferences = null;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $users;
 
+    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: WorkingHour::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $workingHours;
 
@@ -280,6 +429,22 @@ abstract class OrganizationGenerated extends EntityBase
         $this->brands = new ArrayCollection();
         $this->calendars = new ArrayCollection();
         $this->campaigns = new ArrayCollection();
+        $this->pipelineStageTemplates = new ArrayCollection();
+        $this->reminders = new ArrayCollection();
+        $this->attachments = new ArrayCollection();
+        $this->calendarTypes = new ArrayCollection();
+        $this->cities = new ArrayCollection();
+        $this->treeFlows = new ArrayCollection();
+        $this->winReasons = new ArrayCollection();
+        $this->pipelineTemplates = new ArrayCollection();
+        $this->stepConnections = new ArrayCollection();
+        $this->taskTemplates = new ArrayCollection();
+        $this->eventAttendees = new ArrayCollection();
+        $this->lostReasons = new ArrayCollection();
+        $this->meetingDatas = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+        $this->dealCategories = new ArrayCollection();
+        $this->dealTypes = new ArrayCollection();
         $this->companies = new ArrayCollection();
         $this->competitors = new ArrayCollection();
         $this->contacts = new ArrayCollection();
@@ -294,7 +459,7 @@ abstract class OrganizationGenerated extends EntityBase
         $this->flags = new ArrayCollection();
         $this->holidays = new ArrayCollection();
         $this->leadSources = new ArrayCollection();
-        $this->lectures = new ArrayCollection();
+        $this->courseLectures = new ArrayCollection();
         $this->modules = new ArrayCollection();
         $this->notificationTypes = new ArrayCollection();
         $this->pipelineStages = new ArrayCollection();
@@ -315,11 +480,11 @@ abstract class OrganizationGenerated extends EntityBase
         $this->workingHours = new ArrayCollection();
     }
 
-    public function getLogopath(): ?string    {
+    public function getLogoPath(): ?string    {
         return $this->logoPath;
     }
 
-    public function setLogopath(?string $logoPath): self
+    public function setLogoPath(?string $logoPath): self
     {
         $this->logoPath = $logoPath;
         return $this;
@@ -335,16 +500,6 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getLogopathdark(): ?string    {
-        return $this->logoPathDark;
-    }
-
-    public function setLogopathdark(?string $logoPathDark): self
-    {
-        $this->logoPathDark = $logoPathDark;
-        return $this;
-    }
-
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -355,40 +510,50 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
+    public function getLogoPathDark(): ?string    {
+        return $this->logoPathDark;
+    }
+
+    public function setLogoPathDark(?string $logoPathDark): self
+    {
+        $this->logoPathDark = $logoPathDark;
+        return $this;
+    }
+
+    public function getLogoUrl(): ?string    {
+        return $this->logoUrl;
+    }
+
+    public function setLogoUrl(?string $logoUrl): self
+    {
+        $this->logoUrl = $logoUrl;
+        return $this;
+    }
+
     /**
      * @return Collection<int, App\Entity\StudentCourse>
      */
-    public function getStudentcourses(): Collection
+    public function getStudentCourses(): Collection
     {
         return $this->studentCourses;
     }
 
-    public function addStudentcoure(App\Entity\StudentCourse $tudentCoure): self
+    public function addStudentCours(App\Entity\StudentCourse $studentCours): self
     {
-        if (!$this->studentCourses->contains($tudentCoure)) {
-            $this->studentCourses->add($tudentCoure);
-            $tudentCoure->setOrganization($this);
+        if (!$this->studentCourses->contains($studentCours)) {
+            $this->studentCourses->add($studentCours);
+            $studentCours->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeStudentcoure(App\Entity\StudentCourse $tudentCoure): self
+    public function removeStudentCours(App\Entity\StudentCourse $studentCours): self
     {
-        if ($this->studentCourses->removeElement($tudentCoure)) {
-            if ($tudentCoure->getOrganization() === $this) {
-                $tudentCoure->setOrganization(null);
+        if ($this->studentCourses->removeElement($studentCours)) {
+            if ($studentCours->getOrganization() === $this) {
+                $studentCours->setOrganization(null);
             }
         }
-        return $this;
-    }
-
-    public function getLogourl(): ?string    {
-        return $this->logoUrl;
-    }
-
-    public function setLogourl(?string $logoUrl): self
-    {
-        $this->logoUrl = $logoUrl;
         return $this;
     }
 
@@ -494,12 +659,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\BillingFrequency>
      */
-    public function getBillingfrequencies(): Collection
+    public function getBillingFrequencies(): Collection
     {
         return $this->billingFrequencies;
     }
 
-    public function addBillingfrequency(App\Entity\BillingFrequency $billingFrequency): self
+    public function addBillingFrequency(App\Entity\BillingFrequency $billingFrequency): self
     {
         if (!$this->billingFrequencies->contains($billingFrequency)) {
             $this->billingFrequencies->add($billingFrequency);
@@ -508,7 +673,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removeBillingfrequency(App\Entity\BillingFrequency $billingFrequency): self
+    public function removeBillingFrequency(App\Entity\BillingFrequency $billingFrequency): self
     {
         if ($this->billingFrequencies->removeElement($billingFrequency)) {
             if ($billingFrequency->getOrganization() === $this) {
@@ -555,21 +720,21 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getBusinessphone(): ?string    {
+    public function getBusinessPhone(): ?string    {
         return $this->businessPhone;
     }
 
-    public function setBusinessphone(?string $businessPhone): self
+    public function setBusinessPhone(?string $businessPhone): self
     {
         $this->businessPhone = $businessPhone;
         return $this;
     }
 
-    public function getBusinesssettings(): ?array    {
+    public function getBusinessSettings(): ?array    {
         return $this->businessSettings;
     }
 
-    public function setBusinesssettings(?array $businessSettings): self
+    public function setBusinessSettings(?array $businessSettings): self
     {
         $this->businessSettings = $businessSettings;
         return $this;
@@ -629,13 +794,445 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getCelphone(): ?string    {
+    /**
+     * @return Collection<int, App\Entity\PipelineStageTemplate>
+     */
+    public function getPipelineStageTemplates(): Collection
+    {
+        return $this->pipelineStageTemplates;
+    }
+
+    public function addPipelineStageTemplate(App\Entity\PipelineStageTemplate $pipelineStageTemplate): self
+    {
+        if (!$this->pipelineStageTemplates->contains($pipelineStageTemplate)) {
+            $this->pipelineStageTemplates->add($pipelineStageTemplate);
+            $pipelineStageTemplate->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removePipelineStageTemplate(App\Entity\PipelineStageTemplate $pipelineStageTemplate): self
+    {
+        if ($this->pipelineStageTemplates->removeElement($pipelineStageTemplate)) {
+            if ($pipelineStageTemplate->getOrganization() === $this) {
+                $pipelineStageTemplate->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\Reminder>
+     */
+    public function getReminders(): Collection
+    {
+        return $this->reminders;
+    }
+
+    public function addReminder(App\Entity\Reminder $reminder): self
+    {
+        if (!$this->reminders->contains($reminder)) {
+            $this->reminders->add($reminder);
+            $reminder->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeReminder(App\Entity\Reminder $reminder): self
+    {
+        if ($this->reminders->removeElement($reminder)) {
+            if ($reminder->getOrganization() === $this) {
+                $reminder->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getCelPhone(): ?string    {
         return $this->celPhone;
     }
 
-    public function setCelphone(?string $celPhone): self
+    public function setCelPhone(?string $celPhone): self
     {
         $this->celPhone = $celPhone;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\Attachment>
+     */
+    public function getAttachments(): Collection
+    {
+        return $this->attachments;
+    }
+
+    public function addAttachment(App\Entity\Attachment $attachment): self
+    {
+        if (!$this->attachments->contains($attachment)) {
+            $this->attachments->add($attachment);
+            $attachment->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeAttachment(App\Entity\Attachment $attachment): self
+    {
+        if ($this->attachments->removeElement($attachment)) {
+            if ($attachment->getOrganization() === $this) {
+                $attachment->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\CalendarType>
+     */
+    public function getCalendarTypes(): Collection
+    {
+        return $this->calendarTypes;
+    }
+
+    public function addCalendarType(App\Entity\CalendarType $calendarType): self
+    {
+        if (!$this->calendarTypes->contains($calendarType)) {
+            $this->calendarTypes->add($calendarType);
+            $calendarType->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeCalendarType(App\Entity\CalendarType $calendarType): self
+    {
+        if ($this->calendarTypes->removeElement($calendarType)) {
+            if ($calendarType->getOrganization() === $this) {
+                $calendarType->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\City>
+     */
+    public function getCities(): Collection
+    {
+        return $this->cities;
+    }
+
+    public function addCity(App\Entity\City $city): self
+    {
+        if (!$this->cities->contains($city)) {
+            $this->cities->add($city);
+            $city->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeCity(App\Entity\City $city): self
+    {
+        if ($this->cities->removeElement($city)) {
+            if ($city->getOrganization() === $this) {
+                $city->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\TreeFlow>
+     */
+    public function getTreeFlows(): Collection
+    {
+        return $this->treeFlows;
+    }
+
+    public function addTreeFlow(App\Entity\TreeFlow $treeFlow): self
+    {
+        if (!$this->treeFlows->contains($treeFlow)) {
+            $this->treeFlows->add($treeFlow);
+            $treeFlow->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeTreeFlow(App\Entity\TreeFlow $treeFlow): self
+    {
+        if ($this->treeFlows->removeElement($treeFlow)) {
+            if ($treeFlow->getOrganization() === $this) {
+                $treeFlow->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\WinReason>
+     */
+    public function getWinReasons(): Collection
+    {
+        return $this->winReasons;
+    }
+
+    public function addWinReason(App\Entity\WinReason $winReason): self
+    {
+        if (!$this->winReasons->contains($winReason)) {
+            $this->winReasons->add($winReason);
+            $winReason->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeWinReason(App\Entity\WinReason $winReason): self
+    {
+        if ($this->winReasons->removeElement($winReason)) {
+            if ($winReason->getOrganization() === $this) {
+                $winReason->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\PipelineTemplate>
+     */
+    public function getPipelineTemplates(): Collection
+    {
+        return $this->pipelineTemplates;
+    }
+
+    public function addPipelineTemplate(App\Entity\PipelineTemplate $pipelineTemplate): self
+    {
+        if (!$this->pipelineTemplates->contains($pipelineTemplate)) {
+            $this->pipelineTemplates->add($pipelineTemplate);
+            $pipelineTemplate->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removePipelineTemplate(App\Entity\PipelineTemplate $pipelineTemplate): self
+    {
+        if ($this->pipelineTemplates->removeElement($pipelineTemplate)) {
+            if ($pipelineTemplate->getOrganization() === $this) {
+                $pipelineTemplate->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\StepConnection>
+     */
+    public function getStepConnections(): Collection
+    {
+        return $this->stepConnections;
+    }
+
+    public function addStepConnection(App\Entity\StepConnection $stepConnection): self
+    {
+        if (!$this->stepConnections->contains($stepConnection)) {
+            $this->stepConnections->add($stepConnection);
+            $stepConnection->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeStepConnection(App\Entity\StepConnection $stepConnection): self
+    {
+        if ($this->stepConnections->removeElement($stepConnection)) {
+            if ($stepConnection->getOrganization() === $this) {
+                $stepConnection->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\TaskTemplate>
+     */
+    public function getTaskTemplates(): Collection
+    {
+        return $this->taskTemplates;
+    }
+
+    public function addTaskTemplate(App\Entity\TaskTemplate $taskTemplate): self
+    {
+        if (!$this->taskTemplates->contains($taskTemplate)) {
+            $this->taskTemplates->add($taskTemplate);
+            $taskTemplate->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeTaskTemplate(App\Entity\TaskTemplate $taskTemplate): self
+    {
+        if ($this->taskTemplates->removeElement($taskTemplate)) {
+            if ($taskTemplate->getOrganization() === $this) {
+                $taskTemplate->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\EventAttendee>
+     */
+    public function getEventAttendees(): Collection
+    {
+        return $this->eventAttendees;
+    }
+
+    public function addEventAttendee(App\Entity\EventAttendee $eventAttendee): self
+    {
+        if (!$this->eventAttendees->contains($eventAttendee)) {
+            $this->eventAttendees->add($eventAttendee);
+            $eventAttendee->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeEventAttendee(App\Entity\EventAttendee $eventAttendee): self
+    {
+        if ($this->eventAttendees->removeElement($eventAttendee)) {
+            if ($eventAttendee->getOrganization() === $this) {
+                $eventAttendee->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\LostReason>
+     */
+    public function getLostReasons(): Collection
+    {
+        return $this->lostReasons;
+    }
+
+    public function addLostReason(App\Entity\LostReason $lostReason): self
+    {
+        if (!$this->lostReasons->contains($lostReason)) {
+            $this->lostReasons->add($lostReason);
+            $lostReason->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeLostReason(App\Entity\LostReason $lostReason): self
+    {
+        if ($this->lostReasons->removeElement($lostReason)) {
+            if ($lostReason->getOrganization() === $this) {
+                $lostReason->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\MeetingData>
+     */
+    public function getMeetingDatas(): Collection
+    {
+        return $this->meetingDatas;
+    }
+
+    public function addMeetingData(App\Entity\MeetingData $meetingData): self
+    {
+        if (!$this->meetingDatas->contains($meetingData)) {
+            $this->meetingDatas->add($meetingData);
+            $meetingData->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeMeetingData(App\Entity\MeetingData $meetingData): self
+    {
+        if ($this->meetingDatas->removeElement($meetingData)) {
+            if ($meetingData->getOrganization() === $this) {
+                $meetingData->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(App\Entity\Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeNotification(App\Entity\Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getOrganization() === $this) {
+                $notification->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\DealCategory>
+     */
+    public function getDealCategories(): Collection
+    {
+        return $this->dealCategories;
+    }
+
+    public function addDealCategory(App\Entity\DealCategory $dealCategory): self
+    {
+        if (!$this->dealCategories->contains($dealCategory)) {
+            $this->dealCategories->add($dealCategory);
+            $dealCategory->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeDealCategory(App\Entity\DealCategory $dealCategory): self
+    {
+        if ($this->dealCategories->removeElement($dealCategory)) {
+            if ($dealCategory->getOrganization() === $this) {
+                $dealCategory->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\DealType>
+     */
+    public function getDealTypes(): Collection
+    {
+        return $this->dealTypes;
+    }
+
+    public function addDealType(App\Entity\DealType $dealType): self
+    {
+        if (!$this->dealTypes->contains($dealType)) {
+            $this->dealTypes->add($dealType);
+            $dealType->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeDealType(App\Entity\DealType $dealType): self
+    {
+        if ($this->dealTypes->removeElement($dealType)) {
+            if ($dealType->getOrganization() === $this) {
+                $dealType->setOrganization(null);
+            }
+        }
         return $this;
     }
 
@@ -677,11 +1274,11 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getCompanysize(): ?int    {
+    public function getCompanySize(): ?int    {
         return $this->companySize;
     }
 
-    public function setCompanysize(?int $companySize): self
+    public function setCompanySize(?int $companySize): self
     {
         $this->companySize = $companySize;
         return $this;
@@ -714,11 +1311,11 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getContactname(): ?string    {
+    public function getContactName(): ?string    {
         return $this->contactName;
     }
 
-    public function setContactname(?string $contactName): self
+    public function setContactName(?string $contactName): self
     {
         $this->contactName = $contactName;
         return $this;
@@ -759,20 +1356,20 @@ abstract class OrganizationGenerated extends EntityBase
         return $this->courses;
     }
 
-    public function addCoure(App\Entity\Course $coure): self
+    public function addCours(App\Entity\Course $cours): self
     {
-        if (!$this->courses->contains($coure)) {
-            $this->courses->add($coure);
-            $coure->setOrganization($this);
+        if (!$this->courses->contains($cours)) {
+            $this->courses->add($cours);
+            $cours->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeCoure(App\Entity\Course $coure): self
+    public function removeCours(App\Entity\Course $cours): self
     {
-        if ($this->courses->removeElement($coure)) {
-            if ($coure->getOrganization() === $this) {
-                $coure->setOrganization(null);
+        if ($this->courses->removeElement($cours)) {
+            if ($cours->getOrganization() === $this) {
+                $cours->setOrganization(null);
             }
         }
         return $this;
@@ -791,12 +1388,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\DealStage>
      */
-    public function getDealstages(): Collection
+    public function getDealStages(): Collection
     {
         return $this->dealStages;
     }
 
-    public function addDealtage(App\Entity\DealStage $dealStage): self
+    public function addDealStage(App\Entity\DealStage $dealStage): self
     {
         if (!$this->dealStages->contains($dealStage)) {
             $this->dealStages->add($dealStage);
@@ -805,7 +1402,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDealtage(App\Entity\DealStage $dealStage): self
+    public function removeDealStage(App\Entity\DealStage $dealStage): self
     {
         if ($this->dealStages->removeElement($dealStage)) {
             if ($dealStage->getOrganization() === $this) {
@@ -845,12 +1442,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\EventCategory>
      */
-    public function getEventcategories(): Collection
+    public function getEventCategories(): Collection
     {
         return $this->eventCategories;
     }
 
-    public function addEventcategory(App\Entity\EventCategory $eventCategory): self
+    public function addEventCategory(App\Entity\EventCategory $eventCategory): self
     {
         if (!$this->eventCategories->contains($eventCategory)) {
             $this->eventCategories->add($eventCategory);
@@ -859,7 +1456,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removeEventcategory(App\Entity\EventCategory $eventCategory): self
+    public function removeEventCategory(App\Entity\EventCategory $eventCategory): self
     {
         if ($this->eventCategories->removeElement($eventCategory)) {
             if ($eventCategory->getOrganization() === $this) {
@@ -872,25 +1469,25 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\EventResourceBooking>
      */
-    public function getEventresourcebookings(): Collection
+    public function getEventResourceBookings(): Collection
     {
         return $this->eventResourceBookings;
     }
 
-    public function addEventreourcebooking(App\Entity\EventResourceBooking $eventReourceBooking): self
+    public function addEventResourceBooking(App\Entity\EventResourceBooking $eventResourceBooking): self
     {
-        if (!$this->eventResourceBookings->contains($eventReourceBooking)) {
-            $this->eventResourceBookings->add($eventReourceBooking);
-            $eventReourceBooking->setOrganization($this);
+        if (!$this->eventResourceBookings->contains($eventResourceBooking)) {
+            $this->eventResourceBookings->add($eventResourceBooking);
+            $eventResourceBooking->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeEventreourcebooking(App\Entity\EventResourceBooking $eventReourceBooking): self
+    public function removeEventResourceBooking(App\Entity\EventResourceBooking $eventResourceBooking): self
     {
-        if ($this->eventResourceBookings->removeElement($eventReourceBooking)) {
-            if ($eventReourceBooking->getOrganization() === $this) {
-                $eventReourceBooking->setOrganization(null);
+        if ($this->eventResourceBookings->removeElement($eventResourceBooking)) {
+            if ($eventResourceBooking->getOrganization() === $this) {
+                $eventResourceBooking->setOrganization(null);
             }
         }
         return $this;
@@ -899,25 +1496,25 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\EventResourceType>
      */
-    public function getEventresourcetypes(): Collection
+    public function getEventResourceTypes(): Collection
     {
         return $this->eventResourceTypes;
     }
 
-    public function addEventreourcetype(App\Entity\EventResourceType $eventReourceType): self
+    public function addEventResourceType(App\Entity\EventResourceType $eventResourceType): self
     {
-        if (!$this->eventResourceTypes->contains($eventReourceType)) {
-            $this->eventResourceTypes->add($eventReourceType);
-            $eventReourceType->setOrganization($this);
+        if (!$this->eventResourceTypes->contains($eventResourceType)) {
+            $this->eventResourceTypes->add($eventResourceType);
+            $eventResourceType->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeEventreourcetype(App\Entity\EventResourceType $eventReourceType): self
+    public function removeEventResourceType(App\Entity\EventResourceType $eventResourceType): self
     {
-        if ($this->eventResourceTypes->removeElement($eventReourceType)) {
-            if ($eventReourceType->getOrganization() === $this) {
-                $eventReourceType->setOrganization(null);
+        if ($this->eventResourceTypes->removeElement($eventResourceType)) {
+            if ($eventResourceType->getOrganization() === $this) {
+                $eventResourceType->setOrganization(null);
             }
         }
         return $this;
@@ -926,25 +1523,25 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\EventResource>
      */
-    public function getEventresources(): Collection
+    public function getEventResources(): Collection
     {
         return $this->eventResources;
     }
 
-    public function addEventreource(App\Entity\EventResource $eventReource): self
+    public function addEventResource(App\Entity\EventResource $eventResource): self
     {
-        if (!$this->eventResources->contains($eventReource)) {
-            $this->eventResources->add($eventReource);
-            $eventReource->setOrganization($this);
+        if (!$this->eventResources->contains($eventResource)) {
+            $this->eventResources->add($eventResource);
+            $eventResource->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeEventreource(App\Entity\EventResource $eventReource): self
+    public function removeEventResource(App\Entity\EventResource $eventResource): self
     {
-        if ($this->eventResources->removeElement($eventReource)) {
-            if ($eventReource->getOrganization() === $this) {
-                $eventReource->setOrganization(null);
+        if ($this->eventResources->removeElement($eventResource)) {
+            if ($eventResource->getOrganization() === $this) {
+                $eventResource->setOrganization(null);
             }
         }
         return $this;
@@ -977,11 +1574,11 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getFeatureflags(): ?array    {
+    public function getFeatureFlags(): ?array    {
         return $this->featureFlags;
     }
 
-    public function setFeatureflags(?array $featureFlags): self
+    public function setFeatureFlags(?array $featureFlags): self
     {
         $this->featureFlags = $featureFlags;
         return $this;
@@ -1051,11 +1648,11 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getIntegrationconfig(): ?array    {
+    public function getIntegrationConfig(): ?array    {
         return $this->integrationConfig;
     }
 
-    public function setIntegrationconfig(?array $integrationConfig): self
+    public function setIntegrationConfig(?array $integrationConfig): self
     {
         $this->integrationConfig = $integrationConfig;
         return $this;
@@ -1064,12 +1661,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\LeadSource>
      */
-    public function getLeadsources(): Collection
+    public function getLeadSources(): Collection
     {
         return $this->leadSources;
     }
 
-    public function addLeadource(App\Entity\LeadSource $leadSource): self
+    public function addLeadSource(App\Entity\LeadSource $leadSource): self
     {
         if (!$this->leadSources->contains($leadSource)) {
             $this->leadSources->add($leadSource);
@@ -1078,7 +1675,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removeLeadource(App\Entity\LeadSource $leadSource): self
+    public function removeLeadSource(App\Entity\LeadSource $leadSource): self
     {
         if ($this->leadSources->removeElement($leadSource)) {
             if ($leadSource->getOrganization() === $this) {
@@ -1089,27 +1686,27 @@ abstract class OrganizationGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, App\Entity\Lecture>
+     * @return Collection<int, App\Entity\CourseLecture>
      */
-    public function getLectures(): Collection
+    public function getCourseLectures(): Collection
     {
-        return $this->lectures;
+        return $this->courseLectures;
     }
 
-    public function addLecture(App\Entity\Lecture $lecture): self
+    public function addCourseLecture(App\Entity\CourseLecture $courseLecture): self
     {
-        if (!$this->lectures->contains($lecture)) {
-            $this->lectures->add($lecture);
-            $lecture->setOrganization($this);
+        if (!$this->courseLectures->contains($courseLecture)) {
+            $this->courseLectures->add($courseLecture);
+            $courseLecture->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeLecture(App\Entity\Lecture $lecture): self
+    public function removeCourseLecture(App\Entity\CourseLecture $courseLecture): self
     {
-        if ($this->lectures->removeElement($lecture)) {
-            if ($lecture->getOrganization() === $this) {
-                $lecture->setOrganization(null);
+        if ($this->courseLectures->removeElement($courseLecture)) {
+            if ($courseLecture->getOrganization() === $this) {
+                $courseLecture->setOrganization(null);
             }
         }
         return $this;
@@ -1138,11 +1735,11 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getNavconfig(): ?array    {
+    public function getNavConfig(): ?array    {
         return $this->navConfig;
     }
 
-    public function setNavconfig(?array $navConfig): self
+    public function setNavConfig(?array $navConfig): self
     {
         $this->navConfig = $navConfig;
         return $this;
@@ -1151,12 +1748,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\NotificationType>
      */
-    public function getNotificationtypes(): Collection
+    public function getNotificationTypes(): Collection
     {
         return $this->notificationTypes;
     }
 
-    public function addNotificationtype(App\Entity\NotificationType $notificationType): self
+    public function addNotificationType(App\Entity\NotificationType $notificationType): self
     {
         if (!$this->notificationTypes->contains($notificationType)) {
             $this->notificationTypes->add($notificationType);
@@ -1165,7 +1762,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removeNotificationtype(App\Entity\NotificationType $notificationType): self
+    public function removeNotificationType(App\Entity\NotificationType $notificationType): self
     {
         if ($this->notificationTypes->removeElement($notificationType)) {
             if ($notificationType->getOrganization() === $this) {
@@ -1178,12 +1775,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\PipelineStage>
      */
-    public function getPipelinestages(): Collection
+    public function getPipelineStages(): Collection
     {
         return $this->pipelineStages;
     }
 
-    public function addPipelinetage(App\Entity\PipelineStage $pipelineStage): self
+    public function addPipelineStage(App\Entity\PipelineStage $pipelineStage): self
     {
         if (!$this->pipelineStages->contains($pipelineStage)) {
             $this->pipelineStages->add($pipelineStage);
@@ -1192,7 +1789,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removePipelinetage(App\Entity\PipelineStage $pipelineStage): self
+    public function removePipelineStage(App\Entity\PipelineStage $pipelineStage): self
     {
         if ($this->pipelineStages->removeElement($pipelineStage)) {
             if ($pipelineStage->getOrganization() === $this) {
@@ -1229,11 +1826,11 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getPostalcode(): ?string    {
+    public function getPostalCode(): ?string    {
         return $this->postalCode;
     }
 
-    public function setPostalcode(?string $postalCode): self
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
         return $this;
@@ -1242,25 +1839,25 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\ProductBatch>
      */
-    public function getProductbatches(): Collection
+    public function getProductBatches(): Collection
     {
         return $this->productBatches;
     }
 
-    public function addProductbatche(App\Entity\ProductBatch $productBatche): self
+    public function addProductBatch(App\Entity\ProductBatch $productBatch): self
     {
-        if (!$this->productBatches->contains($productBatche)) {
-            $this->productBatches->add($productBatche);
-            $productBatche->setOrganization($this);
+        if (!$this->productBatches->contains($productBatch)) {
+            $this->productBatches->add($productBatch);
+            $productBatch->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeProductbatche(App\Entity\ProductBatch $productBatche): self
+    public function removeProductBatch(App\Entity\ProductBatch $productBatch): self
     {
-        if ($this->productBatches->removeElement($productBatche)) {
-            if ($productBatche->getOrganization() === $this) {
-                $productBatche->setOrganization(null);
+        if ($this->productBatches->removeElement($productBatch)) {
+            if ($productBatch->getOrganization() === $this) {
+                $productBatch->setOrganization(null);
             }
         }
         return $this;
@@ -1269,12 +1866,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\ProductCategory>
      */
-    public function getProductcategories(): Collection
+    public function getProductCategories(): Collection
     {
         return $this->productCategories;
     }
 
-    public function addProductcategory(App\Entity\ProductCategory $productCategory): self
+    public function addProductCategory(App\Entity\ProductCategory $productCategory): self
     {
         if (!$this->productCategories->contains($productCategory)) {
             $this->productCategories->add($productCategory);
@@ -1283,7 +1880,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removeProductcategory(App\Entity\ProductCategory $productCategory): self
+    public function removeProductCategory(App\Entity\ProductCategory $productCategory): self
     {
         if ($this->productCategories->removeElement($productCategory)) {
             if ($productCategory->getOrganization() === $this) {
@@ -1296,12 +1893,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\ProductLine>
      */
-    public function getProductlines(): Collection
+    public function getProductLines(): Collection
     {
         return $this->productLines;
     }
 
-    public function addProductline(App\Entity\ProductLine $productLine): self
+    public function addProductLine(App\Entity\ProductLine $productLine): self
     {
         if (!$this->productLines->contains($productLine)) {
             $this->productLines->add($productLine);
@@ -1310,7 +1907,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removeProductline(App\Entity\ProductLine $productLine): self
+    public function removeProductLine(App\Entity\ProductLine $productLine): self
     {
         if ($this->productLines->removeElement($productLine)) {
             if ($productLine->getOrganization() === $this) {
@@ -1347,11 +1944,11 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getSecurityconfig(): ?array    {
+    public function getSecurityConfig(): ?array    {
         return $this->securityConfig;
     }
 
-    public function setSecurityconfig(?array $securityConfig): self
+    public function setSecurityConfig(?array $securityConfig): self
     {
         $this->securityConfig = $securityConfig;
         return $this;
@@ -1370,25 +1967,25 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\SocialMedia>
      */
-    public function getSocialmedias(): Collection
+    public function getSocialMedias(): Collection
     {
         return $this->socialMedias;
     }
 
-    public function addSocialmedia(App\Entity\SocialMedia $ocialMedia): self
+    public function addSocialMedia(App\Entity\SocialMedia $socialMedia): self
     {
-        if (!$this->socialMedias->contains($ocialMedia)) {
-            $this->socialMedias->add($ocialMedia);
-            $ocialMedia->setOrganization($this);
+        if (!$this->socialMedias->contains($socialMedia)) {
+            $this->socialMedias->add($socialMedia);
+            $socialMedia->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeSocialmedia(App\Entity\SocialMedia $ocialMedia): self
+    public function removeSocialMedia(App\Entity\SocialMedia $socialMedia): self
     {
-        if ($this->socialMedias->removeElement($ocialMedia)) {
-            if ($ocialMedia->getOrganization() === $this) {
-                $ocialMedia->setOrganization(null);
+        if ($this->socialMedias->removeElement($socialMedia)) {
+            if ($socialMedia->getOrganization() === $this) {
+                $socialMedia->setOrganization(null);
             }
         }
         return $this;
@@ -1434,25 +2031,25 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\TalkMessage>
      */
-    public function getTalkmessages(): Collection
+    public function getTalkMessages(): Collection
     {
         return $this->talkMessages;
     }
 
-    public function addTalkmeage(App\Entity\TalkMessage $talkMeage): self
+    public function addTalkMessage(App\Entity\TalkMessage $talkMessage): self
     {
-        if (!$this->talkMessages->contains($talkMeage)) {
-            $this->talkMessages->add($talkMeage);
-            $talkMeage->setOrganization($this);
+        if (!$this->talkMessages->contains($talkMessage)) {
+            $this->talkMessages->add($talkMessage);
+            $talkMessage->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeTalkmeage(App\Entity\TalkMessage $talkMeage): self
+    public function removeTalkMessage(App\Entity\TalkMessage $talkMessage): self
     {
-        if ($this->talkMessages->removeElement($talkMeage)) {
-            if ($talkMeage->getOrganization() === $this) {
-                $talkMeage->setOrganization(null);
+        if ($this->talkMessages->removeElement($talkMessage)) {
+            if ($talkMessage->getOrganization() === $this) {
+                $talkMessage->setOrganization(null);
             }
         }
         return $this;
@@ -1461,12 +2058,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\TalkType>
      */
-    public function getTalktypes(): Collection
+    public function getTalkTypes(): Collection
     {
         return $this->talkTypes;
     }
 
-    public function addTalktype(App\Entity\TalkType $talkType): self
+    public function addTalkType(App\Entity\TalkType $talkType): self
     {
         if (!$this->talkTypes->contains($talkType)) {
             $this->talkTypes->add($talkType);
@@ -1475,7 +2072,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTalktype(App\Entity\TalkType $talkType): self
+    public function removeTalkType(App\Entity\TalkType $talkType): self
     {
         if ($this->talkTypes->removeElement($talkType)) {
             if ($talkType->getOrganization() === $this) {
@@ -1515,25 +2112,25 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\TaskType>
      */
-    public function getTasktypes(): Collection
+    public function getTaskTypes(): Collection
     {
         return $this->taskTypes;
     }
 
-    public function addTaktype(App\Entity\TaskType $takType): self
+    public function addTaskType(App\Entity\TaskType $taskType): self
     {
-        if (!$this->taskTypes->contains($takType)) {
-            $this->taskTypes->add($takType);
-            $takType->setOrganization($this);
+        if (!$this->taskTypes->contains($taskType)) {
+            $this->taskTypes->add($taskType);
+            $taskType->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeTaktype(App\Entity\TaskType $takType): self
+    public function removeTaskType(App\Entity\TaskType $taskType): self
     {
-        if ($this->taskTypes->removeElement($takType)) {
-            if ($takType->getOrganization() === $this) {
-                $takType->setOrganization(null);
+        if ($this->taskTypes->removeElement($taskType)) {
+            if ($taskType->getOrganization() === $this) {
+                $taskType->setOrganization(null);
             }
         }
         return $this;
@@ -1547,20 +2144,20 @@ abstract class OrganizationGenerated extends EntityBase
         return $this->tasks;
     }
 
-    public function addTak(App\Entity\Task $tak): self
+    public function addTask(App\Entity\Task $task): self
     {
-        if (!$this->tasks->contains($tak)) {
-            $this->tasks->add($tak);
-            $tak->setOrganization($this);
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeTak(App\Entity\Task $tak): self
+    public function removeTask(App\Entity\Task $task): self
     {
-        if ($this->tasks->removeElement($tak)) {
-            if ($tak->getOrganization() === $this) {
-                $tak->setOrganization(null);
+        if ($this->tasks->removeElement($task)) {
+            if ($task->getOrganization() === $this) {
+                $task->setOrganization(null);
             }
         }
         return $this;
@@ -1569,12 +2166,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\TaxCategory>
      */
-    public function getTaxcategories(): Collection
+    public function getTaxCategories(): Collection
     {
         return $this->taxCategories;
     }
 
-    public function addTaxcategory(App\Entity\TaxCategory $taxCategory): self
+    public function addTaxCategory(App\Entity\TaxCategory $taxCategory): self
     {
         if (!$this->taxCategories->contains($taxCategory)) {
             $this->taxCategories->add($taxCategory);
@@ -1583,7 +2180,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removeTaxcategory(App\Entity\TaxCategory $taxCategory): self
+    public function removeTaxCategory(App\Entity\TaxCategory $taxCategory): self
     {
         if ($this->taxCategories->removeElement($taxCategory)) {
             if ($taxCategory->getOrganization() === $this) {
@@ -1593,21 +2190,21 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getTimezone(): string    {
+    public function getTimeZone(): string    {
         return $this->timeZone;
     }
 
-    public function setTimezone(string $timeZone): self
+    public function setTimeZone(string $timeZone): self
     {
         $this->timeZone = $timeZone;
         return $this;
     }
 
-    public function getUipreferences(): ?array    {
+    public function getUiPreferences(): ?array    {
         return $this->uiPreferences;
     }
 
-    public function setUipreferences(?array $uiPreferences): self
+    public function setUiPreferences(?array $uiPreferences): self
     {
         $this->uiPreferences = $uiPreferences;
         return $this;
@@ -1621,20 +2218,20 @@ abstract class OrganizationGenerated extends EntityBase
         return $this->users;
     }
 
-    public function addUer(App\Entity\User $uer): self
+    public function addUser(App\Entity\User $user): self
     {
-        if (!$this->users->contains($uer)) {
-            $this->users->add($uer);
-            $uer->setOrganization($this);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeUer(App\Entity\User $uer): self
+    public function removeUser(App\Entity\User $user): self
     {
-        if ($this->users->removeElement($uer)) {
-            if ($uer->getOrganization() === $this) {
-                $uer->setOrganization(null);
+        if ($this->users->removeElement($user)) {
+            if ($user->getOrganization() === $this) {
+                $user->setOrganization(null);
             }
         }
         return $this;
@@ -1643,12 +2240,12 @@ abstract class OrganizationGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\WorkingHour>
      */
-    public function getWorkinghours(): Collection
+    public function getWorkingHours(): Collection
     {
         return $this->workingHours;
     }
 
-    public function addWorkinghour(App\Entity\WorkingHour $workingHour): self
+    public function addWorkingHour(App\Entity\WorkingHour $workingHour): self
     {
         if (!$this->workingHours->contains($workingHour)) {
             $this->workingHours->add($workingHour);
@@ -1657,7 +2254,7 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function removeWorkinghour(App\Entity\WorkingHour $workingHour): self
+    public function removeWorkingHour(App\Entity\WorkingHour $workingHour): self
     {
         if ($this->workingHours->removeElement($workingHour)) {
             if ($workingHour->getOrganization() === $this) {

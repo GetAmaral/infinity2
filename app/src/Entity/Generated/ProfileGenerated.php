@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Role;
 use App\Entity\User;
 
@@ -26,18 +27,26 @@ use App\Entity\User;
 #[ORM\HasLifecycleCallbacks]
 abstract class ProfileGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['profile:read', 'profile:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'profiles')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['profile:read', 'profile:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['profile:read', 'profile:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $description;
 
+    #[Groups(['profile:read'])]
     #[ORM\ManyToMany(targetEntity: Role::class, fetch: 'LAZY')]
     protected Collection $grantedRoles;
 
+    #[Groups(['profile:read'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'profiles', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'profile_users')]
     protected Collection $users;
 
 
@@ -46,6 +55,17 @@ abstract class ProfileGenerated extends EntityBase
         parent::__construct();
         $this->grantedRoles = new ArrayCollection();
         $this->users = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -71,12 +91,12 @@ abstract class ProfileGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\Role>
      */
-    public function getGrantedroles(): Collection
+    public function getGrantedRoles(): Collection
     {
         return $this->grantedRoles;
     }
 
-    public function addGrantedrole(App\Entity\Role $grantedRole): self
+    public function addGrantedRole(App\Entity\Role $grantedRole): self
     {
         if (!$this->grantedRoles->contains($grantedRole)) {
             $this->grantedRoles->add($grantedRole);
@@ -84,7 +104,7 @@ abstract class ProfileGenerated extends EntityBase
         return $this;
     }
 
-    public function removeGrantedrole(App\Entity\Role $grantedRole): self
+    public function removeGrantedRole(App\Entity\Role $grantedRole): self
     {
         if ($this->grantedRoles->removeElement($grantedRole)) {
         }
@@ -99,17 +119,17 @@ abstract class ProfileGenerated extends EntityBase
         return $this->users;
     }
 
-    public function addUer(App\Entity\User $uer): self
+    public function addUser(App\Entity\User $user): self
     {
-        if (!$this->users->contains($uer)) {
-            $this->users->add($uer);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
         }
         return $this;
     }
 
-    public function removeUer(App\Entity\User $uer): self
+    public function removeUser(App\Entity\User $user): self
     {
-        if ($this->users->removeElement($uer)) {
+        if ($this->users->removeElement($user)) {
         }
         return $this;
     }

@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\StepOutput;
 use App\Entity\StepInput;
 
@@ -24,12 +25,17 @@ use App\Entity\StepInput;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepConnectionGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['stepconnection:read', 'stepconnection:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'stepConnections')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['stepconnection:read', 'stepconnection:write'])]
     #[ORM\OneToOne(targetEntity: StepOutput::class, inversedBy: 'connection')]
     #[ORM\JoinColumn(nullable: false)]
     protected StepOutput $sourceOutput;
 
+    #[Groups(['stepconnection:read', 'stepconnection:write'])]
     #[ORM\ManyToOne(targetEntity: StepInput::class, inversedBy: 'connections')]
     #[ORM\JoinColumn(nullable: false)]
     protected StepInput $targetInput;
@@ -40,23 +46,34 @@ abstract class StepConnectionGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getSourceoutput(): App\Entity\StepOutput
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getSourceOutput(): App\Entity\StepOutput
     {
         return $this->sourceOutput;
     }
 
-    public function setSourceoutput(App\Entity\StepOutput $sourceOutput): self
+    public function setSourceOutput(App\Entity\StepOutput $sourceOutput): self
     {
         $this->sourceOutput = $sourceOutput;
         return $this;
     }
 
-    public function getTargetinput(): App\Entity\StepInput
+    public function getTargetInput(): App\Entity\StepInput
     {
         return $this->targetInput;
     }
 
-    public function setTargetinput(App\Entity\StepInput $targetInput): self
+    public function setTargetInput(App\Entity\StepInput $targetInput): self
     {
         $this->targetInput = $targetInput;
         return $this;

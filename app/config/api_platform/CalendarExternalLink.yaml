@@ -33,7 +33,6 @@ resources:
         security: "is_granted('ROLE_EVENT_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
       name:
@@ -117,6 +116,7 @@ resources:
       retryCount:
         writable: false
         description: "Number of consecutive failed sync attempts (resets on successful sync)"
+        example: 0
       scopes:
         description: "OAuth 2.0 scopes granted for this connection (e.g., calendar.readonly, calendar.events)"
         example: "[\"https:\/\/www.googleapis.com\/auth\/calendar\", \"https:\/\/www.googleapis.com\/auth\/calendar.events\"]"

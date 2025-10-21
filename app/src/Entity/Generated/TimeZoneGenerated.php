@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\WorkingHour;
 
 /**
@@ -24,12 +25,15 @@ use App\Entity\WorkingHour;
 #[ORM\HasLifecycleCallbacks]
 abstract class TimeZoneGenerated extends EntityBase
 {
+    #[Groups(['timezone:read', 'timezone:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['timezone:read', 'timezone:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $offsetMinutes = null;
 
+    #[Groups(['timezone:read'])]
     #[ORM\OneToMany(targetEntity: WorkingHour::class, mappedBy: 'timeZone', fetch: 'LAZY')]
     protected Collection $workingHours;
 
@@ -50,11 +54,11 @@ abstract class TimeZoneGenerated extends EntityBase
         return $this;
     }
 
-    public function getOffsetminutes(): ?int    {
+    public function getOffsetMinutes(): ?int    {
         return $this->offsetMinutes;
     }
 
-    public function setOffsetminutes(?int $offsetMinutes): self
+    public function setOffsetMinutes(?int $offsetMinutes): self
     {
         $this->offsetMinutes = $offsetMinutes;
         return $this;
@@ -63,25 +67,25 @@ abstract class TimeZoneGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\WorkingHour>
      */
-    public function getWorkinghours(): Collection
+    public function getWorkingHours(): Collection
     {
         return $this->workingHours;
     }
 
-    public function addWorkinghour(App\Entity\WorkingHour $workingHour): self
+    public function addWorkingHour(App\Entity\WorkingHour $workingHour): self
     {
         if (!$this->workingHours->contains($workingHour)) {
             $this->workingHours->add($workingHour);
-            $workingHour->setTimezone($this);
+            $workingHour->setTimeZone($this);
         }
         return $this;
     }
 
-    public function removeWorkinghour(App\Entity\WorkingHour $workingHour): self
+    public function removeWorkingHour(App\Entity\WorkingHour $workingHour): self
     {
         if ($this->workingHours->removeElement($workingHour)) {
-            if ($workingHour->getTimezone() === $this) {
-                $workingHour->setTimezone(null);
+            if ($workingHour->getTimeZone() === $this) {
+                $workingHour->setTimeZone(null);
             }
         }
         return $this;

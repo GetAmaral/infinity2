@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\TaskTemplate;
 use App\Entity\Task;
 
@@ -26,17 +27,24 @@ use App\Entity\Task;
 #[ORM\HasLifecycleCallbacks]
 abstract class TaskTypeGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['tasktype:read', 'tasktype:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'taskTypes')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['tasktype:read', 'tasktype:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['tasktype:read', 'tasktype:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $taskFunction = null;
 
+    #[Groups(['tasktype:read'])]
     #[ORM\OneToMany(targetEntity: TaskTemplate::class, mappedBy: 'type', fetch: 'LAZY')]
     protected Collection $taskTemplates;
 
+    #[Groups(['tasktype:read'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'type', fetch: 'LAZY')]
     protected Collection $tasks;
 
@@ -46,6 +54,17 @@ abstract class TaskTypeGenerated extends EntityBase
         parent::__construct();
         $this->taskTemplates = new ArrayCollection();
         $this->tasks = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -58,11 +77,11 @@ abstract class TaskTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getTaskfunction(): ?int    {
+    public function getTaskFunction(): ?int    {
         return $this->taskFunction;
     }
 
-    public function setTaskfunction(?int $taskFunction): self
+    public function setTaskFunction(?int $taskFunction): self
     {
         $this->taskFunction = $taskFunction;
         return $this;
@@ -71,25 +90,25 @@ abstract class TaskTypeGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\TaskTemplate>
      */
-    public function getTasktemplates(): Collection
+    public function getTaskTemplates(): Collection
     {
         return $this->taskTemplates;
     }
 
-    public function addTaktemplate(App\Entity\TaskTemplate $takTemplate): self
+    public function addTaskTemplate(App\Entity\TaskTemplate $taskTemplate): self
     {
-        if (!$this->taskTemplates->contains($takTemplate)) {
-            $this->taskTemplates->add($takTemplate);
-            $takTemplate->setType($this);
+        if (!$this->taskTemplates->contains($taskTemplate)) {
+            $this->taskTemplates->add($taskTemplate);
+            $taskTemplate->setType($this);
         }
         return $this;
     }
 
-    public function removeTaktemplate(App\Entity\TaskTemplate $takTemplate): self
+    public function removeTaskTemplate(App\Entity\TaskTemplate $taskTemplate): self
     {
-        if ($this->taskTemplates->removeElement($takTemplate)) {
-            if ($takTemplate->getType() === $this) {
-                $takTemplate->setType(null);
+        if ($this->taskTemplates->removeElement($taskTemplate)) {
+            if ($taskTemplate->getType() === $this) {
+                $taskTemplate->setType(null);
             }
         }
         return $this;
@@ -103,20 +122,20 @@ abstract class TaskTypeGenerated extends EntityBase
         return $this->tasks;
     }
 
-    public function addTak(App\Entity\Task $tak): self
+    public function addTask(App\Entity\Task $task): self
     {
-        if (!$this->tasks->contains($tak)) {
-            $this->tasks->add($tak);
-            $tak->setType($this);
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setType($this);
         }
         return $this;
     }
 
-    public function removeTak(App\Entity\Task $tak): self
+    public function removeTask(App\Entity\Task $task): self
     {
-        if ($this->tasks->removeElement($tak)) {
-            if ($tak->getType() === $this) {
-                $tak->setType(null);
+        if ($this->tasks->removeElement($task)) {
+            if ($task->getType() === $this) {
+                $task->setType(null);
             }
         }
         return $this;

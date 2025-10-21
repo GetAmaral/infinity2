@@ -45,9 +45,11 @@ resources:
           groups: ["Default","company:create","company:update"]
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"
@@ -75,12 +77,12 @@ resources:
       shippingCity:
         description: "Shipping City"
         example: "sample value"
-      campaigns:
-        description: "Campaigns"
-        example: "sample value"
       shippingPostalCode:
         description: "Shipping Postal Code (text field)"
         example: "Sample text"
+      campaigns:
+        description: "Campaigns"
+        example: "sample value"
       annualRevenue:
         description: "Annual Revenue (decimal value)"
         example: "99.99"
@@ -108,12 +110,12 @@ resources:
       creditLimit:
         description: "Credit Limit (decimal value)"
         example: "99.99"
-      fiscalYearEnd:
-        description: "Fiscal Year End (text field)"
-        example: "Sample text"
       city:
         description: "City"
         example: "sample value"
+      fiscalYearEnd:
+        description: "Fiscal Year End (text field)"
+        example: "Sample text"
       sicCode:
         description: "SIC Code (text field)"
         example: "Sample text"
@@ -138,12 +140,12 @@ resources:
       country:
         description: "Country (text field)"
         example: "Sample longer text value"
-      shippingCountry:
-        description: "Shipping Country (text field)"
-        example: "Sample longer text value"
       companySize:
         description: "Number of Employees (numeric value)"
         example: "42"
+      shippingCountry:
+        description: "Shipping Country (text field)"
+        example: "Sample longer text value"
       fax:
         description: "Fax (text field)"
         example: "Sample text"
@@ -162,6 +164,10 @@ resources:
       flags:
         description: "Flags"
         example: "sample value"
+      talks:
+        writable: false
+        description: "Talks"
+        example: "/api/talks/01234567-89ab-cdef-0123-456789abcdef"
       manufacturedBrands:
         description: "ManufacturedBrands"
         example: "sample value"
@@ -198,35 +204,10 @@ resources:
       taxId:
         description: "Document (text field)"
         example: "Sample text"
-      stateProvince:
-        description: "State\/Province (text field)"
-        example: "Sample longer text value"
-      leadStatus:
-        description: "Lead Status (text field)"
-        example: "Sample text"
-      companyDomain:
-        description: "Company Domain (text field)"
-        example: "Sample longer text value"
-      numberOfAssociatedContacts:
-        writable: false
-        description: "Number of Contacts (numeric value)"
-        example: "42"
-      shippingStateProvince:
-        description: "Shipping State\/Province (text field)"
-        example: "Sample longer text value"
-      tags:
-        description: "Tags (text field)"
-        example: "Sample longer text value"
       lastActivityDate:
         writable: false
         description: "Last Activity Date (date)"
         example: "2025-01-15"
-      nextActivityDate:
-        description: "Next Activity Date (date)"
-        example: "2025-01-15"
-      lifecycleStage:
-        description: "Lifecycle Stage (text field)"
-        example: "Sample text"
       numberOfAssociatedDeals:
         writable: false
         description: "Number of Deals (numeric value)"
@@ -234,6 +215,31 @@ resources:
       timeZone:
         description: "Time Zone (text field)"
         example: "Sample longer text value"
+      stateProvince:
+        description: "State\/Province (text field)"
+        example: "Sample longer text value"
+      tags:
+        description: "Tags (text field)"
+        example: "Sample longer text value"
+      shippingStateProvince:
+        description: "Shipping State\/Province (text field)"
+        example: "Sample longer text value"
+      numberOfAssociatedContacts:
+        writable: false
+        description: "Number of Contacts (numeric value)"
+        example: "42"
       public:
         description: "Is Public Company (yes\/no)"
         example: "true"
+      leadStatus:
+        description: "Lead Status (text field)"
+        example: "Sample text"
+      nextActivityDate:
+        description: "Next Activity Date (date)"
+        example: "2025-01-15"
+      companyDomain:
+        description: "Company Domain (text field)"
+        example: "Sample longer text value"
+      lifecycleStage:
+        description: "Lifecycle Stage (text field)"
+        example: "Sample text"

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\User;
 
 /**
@@ -24,21 +25,30 @@ use App\Entity\User;
 #[ORM\HasLifecycleCallbacks]
 abstract class RoleGenerated extends EntityBase
 {
+    #[Groups(['role:read', 'role:write'])]
     #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Assert\Length(max: 50)]
     protected string $name;
 
+    #[Groups(['role:read', 'role:write'])]
     #[ORM\Column(type: 'json')]
     protected array $permissions;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'grantedRoles', fetch: 'LAZY')]
+    #[Groups(['role:read'])]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', fetch: 'LAZY')]
     protected Collection $users;
 
+    #[Groups(['role:read', 'role:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $description;
 
+    #[Groups(['role:read', 'role:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\Range(max: 5, min: 1)]
     protected ?int $priority = null;
 
+    #[Groups(['role:read', 'role:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $systemRole = false;
 
@@ -77,20 +87,20 @@ abstract class RoleGenerated extends EntityBase
         return $this->users;
     }
 
-    public function addUer(App\Entity\User $uer): self
+    public function addUser(App\Entity\User $user): self
     {
-        if (!$this->users->contains($uer)) {
-            $this->users->add($uer);
-            $uer->setGrantedroles($this);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setRoles($this);
         }
         return $this;
     }
 
-    public function removeUer(App\Entity\User $uer): self
+    public function removeUser(App\Entity\User $user): self
     {
-        if ($this->users->removeElement($uer)) {
-            if ($uer->getGrantedroles() === $this) {
-                $uer->setGrantedroles(null);
+        if ($this->users->removeElement($user)) {
+            if ($user->getRoles() === $this) {
+                $user->setRoles(null);
             }
         }
         return $this;
@@ -116,17 +126,17 @@ abstract class RoleGenerated extends EntityBase
         return $this;
     }
 
-    public function getSystemrole(): bool    {
+    public function getSystemRole(): bool    {
         return $this->systemRole;
     }
 
-    public function setSystemrole(bool $systemRole): self
+    public function setSystemRole(bool $systemRole): self
     {
         $this->systemRole = $systemRole;
         return $this;
     }
 
-    public function isSystemrole(): bool
+    public function isSystemRole(): bool
     {
         return $this->systemRole === true;
     }

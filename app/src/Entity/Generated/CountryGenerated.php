@@ -6,7 +6,11 @@ namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\HolidayTemplate;
 
 /**
  * Country Entity (Generated Base Class)
@@ -21,145 +25,155 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 abstract class CountryGenerated extends EntityBase
 {
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 2, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 2, max: 2)]
-    #[Assert\Regex(pattern: '/^[A-Z]{2}$/')]
     protected string $iso2;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 2, max: 100)]
     protected string $name;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 3, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 3)]
-    #[Assert\Regex(pattern: '/^[A-Z]{3}$/')]
     protected string $iso3;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 3, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 3)]
-    #[Assert\Regex(pattern: '/^\d{3}$/')]
     protected string $numericCode;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 3)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 3)]
-    #[Assert\Regex(pattern: '/^[A-Z]{3}$/')]
     protected string $currencyCode;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 10)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 10)]
-    #[Assert\Regex(pattern: '/^\+\d{1,4}$/')]
     protected string $phoneCode;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 50)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 50)]
     protected string $continent;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
     protected ?string $capital = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 5, nullable: true)]
-    #[Assert\Length(max: 5)]
     protected ?string $currencySymbol = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $euMember = false;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
     protected ?string $region = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
     protected ?string $nativeName = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 200, nullable: true)]
-    #[Assert\Length(max: 200)]
     protected ?string $officialName = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
     protected ?string $subregion = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    protected ?float $latitude = null;
+    protected ?string $latitude = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    protected ?float $longitude = null;
+    protected ?string $longitude = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $timezones = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $languages = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    #[Assert\Length(max: 10)]
     protected ?string $tld = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
     protected ?string $nationalityName = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $availableForShipping = true;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $availableForBilling = true;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $schengenMember = false;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $oecdMember = false;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $dataResidencyRequired = false;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
     protected ?string $postalCodeFormat = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $postalCodeRequired = true;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $addressFormat = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $taxIdRequired = false;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $population = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'decimal', precision: 12, scale: 2, nullable: true)]
-    protected ?float $area = null;
+    protected ?string $area = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $unMemberSince = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    #[Assert\Length(max: 10)]
     protected ?string $flagEmoji = null;
 
+    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Assert\Length(max: 255)]
     protected ?string $flagSvgUrl = null;
+
+    #[Groups(['country:read'])]
+    #[ORM\OneToMany(targetEntity: HolidayTemplate::class, mappedBy: 'country', fetch: 'LAZY')]
+    protected Collection $holidayTemplates;
 
 
     public function __construct()
     {
         parent::__construct();
+        $this->holidayTemplates = new ArrayCollection();
     }
 
     public function getIso2(): string    {
@@ -192,31 +206,31 @@ abstract class CountryGenerated extends EntityBase
         return $this;
     }
 
-    public function getNumericcode(): string    {
+    public function getNumericCode(): string    {
         return $this->numericCode;
     }
 
-    public function setNumericcode(string $numericCode): self
+    public function setNumericCode(string $numericCode): self
     {
         $this->numericCode = $numericCode;
         return $this;
     }
 
-    public function getCurrencycode(): string    {
+    public function getCurrencyCode(): string    {
         return $this->currencyCode;
     }
 
-    public function setCurrencycode(string $currencyCode): self
+    public function setCurrencyCode(string $currencyCode): self
     {
         $this->currencyCode = $currencyCode;
         return $this;
     }
 
-    public function getPhonecode(): string    {
+    public function getPhoneCode(): string    {
         return $this->phoneCode;
     }
 
-    public function setPhonecode(string $phoneCode): self
+    public function setPhoneCode(string $phoneCode): self
     {
         $this->phoneCode = $phoneCode;
         return $this;
@@ -242,27 +256,27 @@ abstract class CountryGenerated extends EntityBase
         return $this;
     }
 
-    public function getCurrencysymbol(): ?string    {
+    public function getCurrencySymbol(): ?string    {
         return $this->currencySymbol;
     }
 
-    public function setCurrencysymbol(?string $currencySymbol): self
+    public function setCurrencySymbol(?string $currencySymbol): self
     {
         $this->currencySymbol = $currencySymbol;
         return $this;
     }
 
-    public function getEumember(): bool    {
+    public function getEuMember(): bool    {
         return $this->euMember;
     }
 
-    public function setEumember(bool $euMember): self
+    public function setEuMember(bool $euMember): self
     {
         $this->euMember = $euMember;
         return $this;
     }
 
-    public function isEumember(): bool
+    public function isEuMember(): bool
     {
         return $this->euMember === true;
     }
@@ -277,21 +291,21 @@ abstract class CountryGenerated extends EntityBase
         return $this;
     }
 
-    public function getNativename(): ?string    {
+    public function getNativeName(): ?string    {
         return $this->nativeName;
     }
 
-    public function setNativename(?string $nativeName): self
+    public function setNativeName(?string $nativeName): self
     {
         $this->nativeName = $nativeName;
         return $this;
     }
 
-    public function getOfficialname(): ?string    {
+    public function getOfficialName(): ?string    {
         return $this->officialName;
     }
 
-    public function setOfficialname(?string $officialName): self
+    public function setOfficialName(?string $officialName): self
     {
         $this->officialName = $officialName;
         return $this;
@@ -322,21 +336,21 @@ abstract class CountryGenerated extends EntityBase
         return $this;
     }
 
-    public function getLatitude(): ?float    {
+    public function getLatitude(): ?string    {
         return $this->latitude;
     }
 
-    public function setLatitude(?float $latitude): self
+    public function setLatitude(?string $latitude): self
     {
         $this->latitude = $latitude;
         return $this;
     }
 
-    public function getLongitude(): ?float    {
+    public function getLongitude(): ?string    {
         return $this->longitude;
     }
 
-    public function setLongitude(?float $longitude): self
+    public function setLongitude(?string $longitude): self
     {
         $this->longitude = $longitude;
         return $this;
@@ -372,137 +386,137 @@ abstract class CountryGenerated extends EntityBase
         return $this;
     }
 
-    public function getNationalityname(): ?string    {
+    public function getNationalityName(): ?string    {
         return $this->nationalityName;
     }
 
-    public function setNationalityname(?string $nationalityName): self
+    public function setNationalityName(?string $nationalityName): self
     {
         $this->nationalityName = $nationalityName;
         return $this;
     }
 
-    public function getAvailableforshipping(): bool    {
+    public function getAvailableForShipping(): bool    {
         return $this->availableForShipping;
     }
 
-    public function setAvailableforshipping(bool $availableForShipping): self
+    public function setAvailableForShipping(bool $availableForShipping): self
     {
         $this->availableForShipping = $availableForShipping;
         return $this;
     }
 
-    public function isAvailableforshipping(): bool
+    public function isAvailableForShipping(): bool
     {
         return $this->availableForShipping === true;
     }
 
-    public function getAvailableforbilling(): bool    {
+    public function getAvailableForBilling(): bool    {
         return $this->availableForBilling;
     }
 
-    public function setAvailableforbilling(bool $availableForBilling): self
+    public function setAvailableForBilling(bool $availableForBilling): self
     {
         $this->availableForBilling = $availableForBilling;
         return $this;
     }
 
-    public function isAvailableforbilling(): bool
+    public function isAvailableForBilling(): bool
     {
         return $this->availableForBilling === true;
     }
 
-    public function getSchengenmember(): bool    {
+    public function getSchengenMember(): bool    {
         return $this->schengenMember;
     }
 
-    public function setSchengenmember(bool $schengenMember): self
+    public function setSchengenMember(bool $schengenMember): self
     {
         $this->schengenMember = $schengenMember;
         return $this;
     }
 
-    public function isSchengenmember(): bool
+    public function isSchengenMember(): bool
     {
         return $this->schengenMember === true;
     }
 
-    public function getOecdmember(): bool    {
+    public function getOecdMember(): bool    {
         return $this->oecdMember;
     }
 
-    public function setOecdmember(bool $oecdMember): self
+    public function setOecdMember(bool $oecdMember): self
     {
         $this->oecdMember = $oecdMember;
         return $this;
     }
 
-    public function isOecdmember(): bool
+    public function isOecdMember(): bool
     {
         return $this->oecdMember === true;
     }
 
-    public function getDataresidencyrequired(): bool    {
+    public function getDataResidencyRequired(): bool    {
         return $this->dataResidencyRequired;
     }
 
-    public function setDataresidencyrequired(bool $dataResidencyRequired): self
+    public function setDataResidencyRequired(bool $dataResidencyRequired): self
     {
         $this->dataResidencyRequired = $dataResidencyRequired;
         return $this;
     }
 
-    public function isDataresidencyrequired(): bool
+    public function isDataResidencyRequired(): bool
     {
         return $this->dataResidencyRequired === true;
     }
 
-    public function getPostalcodeformat(): ?string    {
+    public function getPostalCodeFormat(): ?string    {
         return $this->postalCodeFormat;
     }
 
-    public function setPostalcodeformat(?string $postalCodeFormat): self
+    public function setPostalCodeFormat(?string $postalCodeFormat): self
     {
         $this->postalCodeFormat = $postalCodeFormat;
         return $this;
     }
 
-    public function getPostalcoderequired(): bool    {
+    public function getPostalCodeRequired(): bool    {
         return $this->postalCodeRequired;
     }
 
-    public function setPostalcoderequired(bool $postalCodeRequired): self
+    public function setPostalCodeRequired(bool $postalCodeRequired): self
     {
         $this->postalCodeRequired = $postalCodeRequired;
         return $this;
     }
 
-    public function isPostalcoderequired(): bool
+    public function isPostalCodeRequired(): bool
     {
         return $this->postalCodeRequired === true;
     }
 
-    public function getAddressformat(): ?string    {
+    public function getAddressFormat(): ?string    {
         return $this->addressFormat;
     }
 
-    public function setAddressformat(?string $addressFormat): self
+    public function setAddressFormat(?string $addressFormat): self
     {
         $this->addressFormat = $addressFormat;
         return $this;
     }
 
-    public function getTaxidrequired(): bool    {
+    public function getTaxIdRequired(): bool    {
         return $this->taxIdRequired;
     }
 
-    public function setTaxidrequired(bool $taxIdRequired): self
+    public function setTaxIdRequired(bool $taxIdRequired): self
     {
         $this->taxIdRequired = $taxIdRequired;
         return $this;
     }
 
-    public function isTaxidrequired(): bool
+    public function isTaxIdRequired(): bool
     {
         return $this->taxIdRequired === true;
     }
@@ -517,43 +531,70 @@ abstract class CountryGenerated extends EntityBase
         return $this;
     }
 
-    public function getArea(): ?float    {
+    public function getArea(): ?string    {
         return $this->area;
     }
 
-    public function setArea(?float $area): self
+    public function setArea(?string $area): self
     {
         $this->area = $area;
         return $this;
     }
 
-    public function getUnmembersince(): ?int    {
+    public function getUnMemberSince(): ?int    {
         return $this->unMemberSince;
     }
 
-    public function setUnmembersince(?int $unMemberSince): self
+    public function setUnMemberSince(?int $unMemberSince): self
     {
         $this->unMemberSince = $unMemberSince;
         return $this;
     }
 
-    public function getFlagemoji(): ?string    {
+    public function getFlagEmoji(): ?string    {
         return $this->flagEmoji;
     }
 
-    public function setFlagemoji(?string $flagEmoji): self
+    public function setFlagEmoji(?string $flagEmoji): self
     {
         $this->flagEmoji = $flagEmoji;
         return $this;
     }
 
-    public function getFlagsvgurl(): ?string    {
+    public function getFlagSvgUrl(): ?string    {
         return $this->flagSvgUrl;
     }
 
-    public function setFlagsvgurl(?string $flagSvgUrl): self
+    public function setFlagSvgUrl(?string $flagSvgUrl): self
     {
         $this->flagSvgUrl = $flagSvgUrl;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\HolidayTemplate>
+     */
+    public function getHolidayTemplates(): Collection
+    {
+        return $this->holidayTemplates;
+    }
+
+    public function addHolidayTemplate(App\Entity\HolidayTemplate $holidayTemplate): self
+    {
+        if (!$this->holidayTemplates->contains($holidayTemplate)) {
+            $this->holidayTemplates->add($holidayTemplate);
+            $holidayTemplate->setCountry($this);
+        }
+        return $this;
+    }
+
+    public function removeHolidayTemplate(App\Entity\HolidayTemplate $holidayTemplate): self
+    {
+        if ($this->holidayTemplates->removeElement($holidayTemplate)) {
+            if ($holidayTemplate->getCountry() === $this) {
+                $holidayTemplate->setCountry(null);
+            }
+        }
         return $this;
     }
 

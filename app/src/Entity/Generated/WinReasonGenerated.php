@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Deal;
 
 /**
@@ -25,53 +26,81 @@ use App\Entity\Deal;
 #[ORM\HasLifecycleCallbacks]
 abstract class WinReasonGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['winreason:read', 'winreason:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'winReasons')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'Win reason name is required')]
+    #[Assert\Length(max: 100)]
     protected string $name;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\Length(max: 1000)]
     protected ?string $description = null;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'Category is required')]
     protected string $category;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $sortOrder = 100;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $impactScore = null;
+    #[Assert\Range(min: 0, max: 100)]
+    protected ?string $impactScore = null;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $usageCount = 0;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $lastUsedAt = null;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $competitorRelated = false;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
     protected ?string $primaryCompetitor = null;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Choice(choices: ['HIGH', 'MEDIUM', 'LOW', 'NEUTRAL'])]
     protected ?string $dealValueImpact = null;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'string', length: 7)]
+    #[Assert\Regex(pattern: '^#[0-9A-Fa-f]{6}$')]
     protected string $color = '#0dcaf0';
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $tags = null;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\Length(max: 2000)]
     protected ?string $notes = null;
 
+    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $requiresApproval = false;
 
+    #[Groups(['winreason:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'winReason', fetch: 'LAZY')]
     protected Collection $deals;
 
@@ -80,6 +109,17 @@ abstract class WinReasonGenerated extends EntityBase
     {
         parent::__construct();
         $this->deals = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -112,76 +152,76 @@ abstract class WinReasonGenerated extends EntityBase
         return $this;
     }
 
-    public function getSortorder(): int    {
+    public function getSortOrder(): int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(int $sortOrder): self
+    public function setSortOrder(int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;
     }
 
-    public function getImpactscore(): ?float    {
+    public function getImpactScore(): ?string    {
         return $this->impactScore;
     }
 
-    public function setImpactscore(?float $impactScore): self
+    public function setImpactScore(?string $impactScore): self
     {
         $this->impactScore = $impactScore;
         return $this;
     }
 
-    public function getUsagecount(): int    {
+    public function getUsageCount(): int    {
         return $this->usageCount;
     }
 
-    public function setUsagecount(int $usageCount): self
+    public function setUsageCount(int $usageCount): self
     {
         $this->usageCount = $usageCount;
         return $this;
     }
 
-    public function getLastusedat(): ?\DateTimeImmutable    {
+    public function getLastUsedAt(): ?\DateTimeImmutable    {
         return $this->lastUsedAt;
     }
 
-    public function setLastusedat(?\DateTimeImmutable $lastUsedAt): self
+    public function setLastUsedAt(?\DateTimeImmutable $lastUsedAt): self
     {
         $this->lastUsedAt = $lastUsedAt;
         return $this;
     }
 
-    public function getCompetitorrelated(): bool    {
+    public function getCompetitorRelated(): bool    {
         return $this->competitorRelated;
     }
 
-    public function setCompetitorrelated(bool $competitorRelated): self
+    public function setCompetitorRelated(bool $competitorRelated): self
     {
         $this->competitorRelated = $competitorRelated;
         return $this;
     }
 
-    public function isCompetitorrelated(): bool
+    public function isCompetitorRelated(): bool
     {
         return $this->competitorRelated === true;
     }
 
-    public function getPrimarycompetitor(): ?string    {
+    public function getPrimaryCompetitor(): ?string    {
         return $this->primaryCompetitor;
     }
 
-    public function setPrimarycompetitor(?string $primaryCompetitor): self
+    public function setPrimaryCompetitor(?string $primaryCompetitor): self
     {
         $this->primaryCompetitor = $primaryCompetitor;
         return $this;
     }
 
-    public function getDealvalueimpact(): ?string    {
+    public function getDealValueImpact(): ?string    {
         return $this->dealValueImpact;
     }
 
-    public function setDealvalueimpact(?string $dealValueImpact): self
+    public function setDealValueImpact(?string $dealValueImpact): self
     {
         $this->dealValueImpact = $dealValueImpact;
         return $this;
@@ -232,17 +272,17 @@ abstract class WinReasonGenerated extends EntityBase
         return $this;
     }
 
-    public function getRequiresapproval(): bool    {
+    public function getRequiresApproval(): bool    {
         return $this->requiresApproval;
     }
 
-    public function setRequiresapproval(bool $requiresApproval): self
+    public function setRequiresApproval(bool $requiresApproval): self
     {
         $this->requiresApproval = $requiresApproval;
         return $this;
     }
 
-    public function isRequiresapproval(): bool
+    public function isRequiresApproval(): bool
     {
         return $this->requiresApproval === true;
     }
@@ -259,7 +299,7 @@ abstract class WinReasonGenerated extends EntityBase
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
-            $deal->setWinreason($this);
+            $deal->setWinReason($this);
         }
         return $this;
     }
@@ -267,8 +307,8 @@ abstract class WinReasonGenerated extends EntityBase
     public function removeDeal(App\Entity\Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
-            if ($deal->getWinreason() === $this) {
-                $deal->setWinreason(null);
+            if ($deal->getWinReason() === $this) {
+                $deal->setWinReason(null);
             }
         }
         return $this;

@@ -33,22 +33,24 @@ resources:
         security: "is_granted('ROLE_EVENT_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The name of the calendar type (e.g., Personal, Shared, Public, Team)"
         example: "Personal Calendar"
       description:
         description: "Optional description explaining the purpose and usage of this calendar type"
         example: "This calendar type is used for personal appointments and private events"
-      color:
-        description: "Hexadecimal color code for visual representation of the calendar type"
-        example: "#3788d8"
       calendars:
         writable: false
         description: "Collection of calendars that use this calendar type"
         example: "[\"\/api\/calendars\/0199c000-0000-0000-0000-000000000001\"]"
+      color:
+        description: "Hexadecimal color code for visual representation of the calendar type"
+        example: "#3788d8"
       icon:
         description: "Bootstrap icon class name for visual representation"
         example: "bi-calendar3"

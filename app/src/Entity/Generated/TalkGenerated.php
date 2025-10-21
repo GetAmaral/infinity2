@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Company;
 use App\Entity\Deal;
 use App\Entity\TalkType;
@@ -31,82 +32,115 @@ use App\Entity\TalkMessage;
 #[ORM\HasLifecycleCallbacks]
 abstract class TalkGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['talk:read', 'talk:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'talks')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $subject;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $summary = null;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'talks')]
     protected ?Company $company = null;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToOne(targetEntity: Deal::class, inversedBy: 'talks')]
     protected ?Deal $deal = null;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToOne(targetEntity: TalkType::class, inversedBy: 'talks')]
     #[ORM\JoinColumn(nullable: false)]
     protected TalkType $talkType;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $channel = 0;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $status = 0;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\Range(max: 5, min: 1)]
     protected ?int $priority = null;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $outcome = null;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
     protected ?string $sentiment = null;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $dateStart = null;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $dateLastMessage = null;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $closedAt = null;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $durationSeconds = null;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $recordingUrl = null;
 
+    #[Groups(['talk:read'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'talks', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'talk_users')]
     protected Collection $users;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     protected User $owner;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $assignedTo = null;
 
+    #[Groups(['talk:read'])]
     #[ORM\ManyToMany(targetEntity: Agent::class, inversedBy: 'talks', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'talk_agents')]
     protected Collection $agents;
 
-    #[ORM\ManyToMany(targetEntity: Campaign::class, inversedBy: 'talks', fetch: 'LAZY')]
+    #[Groups(['talk:read'])]
+    #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'talks', fetch: 'LAZY')]
     protected Collection $campaigns;
 
+    #[Groups(['talk:read'])]
     #[ORM\OneToMany(targetEntity: TalkMessage::class, mappedBy: 'talk', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $messages;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'integer')]
+    #[Assert\Range(max: 150, min: 0)]
     protected int $messageCount = 0;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $archived = false;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $internal = false;
 
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $tags = null;
 
@@ -118,6 +152,17 @@ abstract class TalkGenerated extends EntityBase
         $this->agents = new ArrayCollection();
         $this->campaigns = new ArrayCollection();
         $this->messages = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getSubject(): string    {
@@ -162,12 +207,12 @@ abstract class TalkGenerated extends EntityBase
         return $this;
     }
 
-    public function getTalktype(): App\Entity\TalkType
+    public function getTalkType(): App\Entity\TalkType
     {
         return $this->talkType;
     }
 
-    public function setTalktype(App\Entity\TalkType $talkType): self
+    public function setTalkType(App\Entity\TalkType $talkType): self
     {
         $this->talkType = $talkType;
         return $this;
@@ -223,51 +268,51 @@ abstract class TalkGenerated extends EntityBase
         return $this;
     }
 
-    public function getDatestart(): ?\DateTimeImmutable    {
+    public function getDateStart(): ?\DateTimeImmutable    {
         return $this->dateStart;
     }
 
-    public function setDatestart(?\DateTimeImmutable $dateStart): self
+    public function setDateStart(?\DateTimeImmutable $dateStart): self
     {
         $this->dateStart = $dateStart;
         return $this;
     }
 
-    public function getDatelastmessage(): ?\DateTimeImmutable    {
+    public function getDateLastMessage(): ?\DateTimeImmutable    {
         return $this->dateLastMessage;
     }
 
-    public function setDatelastmessage(?\DateTimeImmutable $dateLastMessage): self
+    public function setDateLastMessage(?\DateTimeImmutable $dateLastMessage): self
     {
         $this->dateLastMessage = $dateLastMessage;
         return $this;
     }
 
-    public function getClosedat(): ?\DateTimeImmutable    {
+    public function getClosedAt(): ?\DateTimeImmutable    {
         return $this->closedAt;
     }
 
-    public function setClosedat(?\DateTimeImmutable $closedAt): self
+    public function setClosedAt(?\DateTimeImmutable $closedAt): self
     {
         $this->closedAt = $closedAt;
         return $this;
     }
 
-    public function getDurationseconds(): ?int    {
+    public function getDurationSeconds(): ?int    {
         return $this->durationSeconds;
     }
 
-    public function setDurationseconds(?int $durationSeconds): self
+    public function setDurationSeconds(?int $durationSeconds): self
     {
         $this->durationSeconds = $durationSeconds;
         return $this;
     }
 
-    public function getRecordingurl(): ?string    {
+    public function getRecordingUrl(): ?string    {
         return $this->recordingUrl;
     }
 
-    public function setRecordingurl(?string $recordingUrl): self
+    public function setRecordingUrl(?string $recordingUrl): self
     {
         $this->recordingUrl = $recordingUrl;
         return $this;
@@ -281,17 +326,17 @@ abstract class TalkGenerated extends EntityBase
         return $this->users;
     }
 
-    public function addUer(App\Entity\User $uer): self
+    public function addUser(App\Entity\User $user): self
     {
-        if (!$this->users->contains($uer)) {
-            $this->users->add($uer);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
         }
         return $this;
     }
 
-    public function removeUer(App\Entity\User $uer): self
+    public function removeUser(App\Entity\User $user): self
     {
-        if ($this->users->removeElement($uer)) {
+        if ($this->users->removeElement($user)) {
         }
         return $this;
     }
@@ -307,12 +352,12 @@ abstract class TalkGenerated extends EntityBase
         return $this;
     }
 
-    public function getAssignedto(): ?App\Entity\User
+    public function getAssignedTo(): ?App\Entity\User
     {
         return $this->assignedTo;
     }
 
-    public function setAssignedto(?App\Entity\User $assignedTo): self
+    public function setAssignedTo(?App\Entity\User $assignedTo): self
     {
         $this->assignedTo = $assignedTo;
         return $this;
@@ -353,6 +398,7 @@ abstract class TalkGenerated extends EntityBase
     {
         if (!$this->campaigns->contains($campaign)) {
             $this->campaigns->add($campaign);
+            $campaign->setTalks($this);
         }
         return $this;
     }
@@ -360,6 +406,9 @@ abstract class TalkGenerated extends EntityBase
     public function removeCampaign(App\Entity\Campaign $campaign): self
     {
         if ($this->campaigns->removeElement($campaign)) {
+            if ($campaign->getTalks() === $this) {
+                $campaign->setTalks(null);
+            }
         }
         return $this;
     }
@@ -372,30 +421,30 @@ abstract class TalkGenerated extends EntityBase
         return $this->messages;
     }
 
-    public function addMeage(App\Entity\TalkMessage $meage): self
+    public function addMessage(App\Entity\TalkMessage $message): self
     {
-        if (!$this->messages->contains($meage)) {
-            $this->messages->add($meage);
-            $meage->setTalk($this);
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setTalk($this);
         }
         return $this;
     }
 
-    public function removeMeage(App\Entity\TalkMessage $meage): self
+    public function removeMessage(App\Entity\TalkMessage $message): self
     {
-        if ($this->messages->removeElement($meage)) {
-            if ($meage->getTalk() === $this) {
-                $meage->setTalk(null);
+        if ($this->messages->removeElement($message)) {
+            if ($message->getTalk() === $this) {
+                $message->setTalk(null);
             }
         }
         return $this;
     }
 
-    public function getMessagecount(): int    {
+    public function getMessageCount(): int    {
         return $this->messageCount;
     }
 
-    public function setMessagecount(int $messageCount): self
+    public function setMessageCount(int $messageCount): self
     {
         $this->messageCount = $messageCount;
         return $this;

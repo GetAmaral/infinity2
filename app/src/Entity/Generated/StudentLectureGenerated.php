@@ -7,6 +7,7 @@ namespace App\Entity\Generated;
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\User;
 use App\Entity\CourseLecture;
 use App\Entity\StudentCourse;
@@ -24,32 +25,42 @@ use App\Entity\StudentCourse;
 #[ORM\HasLifecycleCallbacks]
 abstract class StudentLectureGenerated extends EntityBase
 {
+    #[Groups(['studentlecture:read', 'studentlecture:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     protected User $student;
 
+    #[Groups(['studentlecture:read', 'studentlecture:write'])]
     #[ORM\ManyToOne(targetEntity: CourseLecture::class, inversedBy: 'studentLectures')]
     #[ORM\JoinColumn(nullable: false)]
     protected CourseLecture $lecture;
 
+    #[Groups(['studentlecture:read', 'studentlecture:write'])]
     #[ORM\ManyToOne(targetEntity: StudentCourse::class, inversedBy: 'studentLectures')]
     protected ?StudentCourse $studentCourse = null;
 
+    #[Groups(['studentlecture:read', 'studentlecture:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $watchedSeconds = 0;
 
+    #[Groups(['studentlecture:read', 'studentlecture:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $lastPositionSeconds = 0;
 
+    #[Groups(['studentlecture:read', 'studentlecture:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
-    protected float $completionPercentage = 0;
+    #[Assert\Range(max: 100, min: 0)]
+    protected string $completionPercentage = '0';
 
+    #[Groups(['studentlecture:read', 'studentlecture:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $completed = false;
 
+    #[Groups(['studentlecture:read', 'studentlecture:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastWatchedAt = null;
 
+    #[Groups(['studentlecture:read', 'studentlecture:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $completedAt = null;
 
@@ -81,42 +92,42 @@ abstract class StudentLectureGenerated extends EntityBase
         return $this;
     }
 
-    public function getStudentcourse(): ?App\Entity\StudentCourse
+    public function getStudentCourse(): ?App\Entity\StudentCourse
     {
         return $this->studentCourse;
     }
 
-    public function setStudentcourse(?App\Entity\StudentCourse $studentCourse): self
+    public function setStudentCourse(?App\Entity\StudentCourse $studentCourse): self
     {
         $this->studentCourse = $studentCourse;
         return $this;
     }
 
-    public function getWatchedseconds(): int    {
+    public function getWatchedSeconds(): int    {
         return $this->watchedSeconds;
     }
 
-    public function setWatchedseconds(int $watchedSeconds): self
+    public function setWatchedSeconds(int $watchedSeconds): self
     {
         $this->watchedSeconds = $watchedSeconds;
         return $this;
     }
 
-    public function getLastpositionseconds(): int    {
+    public function getLastPositionSeconds(): int    {
         return $this->lastPositionSeconds;
     }
 
-    public function setLastpositionseconds(int $lastPositionSeconds): self
+    public function setLastPositionSeconds(int $lastPositionSeconds): self
     {
         $this->lastPositionSeconds = $lastPositionSeconds;
         return $this;
     }
 
-    public function getCompletionpercentage(): float    {
+    public function getCompletionPercentage(): string    {
         return $this->completionPercentage;
     }
 
-    public function setCompletionpercentage(float $completionPercentage): self
+    public function setCompletionPercentage(string $completionPercentage): self
     {
         $this->completionPercentage = $completionPercentage;
         return $this;
@@ -137,21 +148,21 @@ abstract class StudentLectureGenerated extends EntityBase
         return $this->completed === true;
     }
 
-    public function getLastwatchedat(): ?\DateTimeImmutable    {
+    public function getLastWatchedAt(): ?\DateTimeImmutable    {
         return $this->lastWatchedAt;
     }
 
-    public function setLastwatchedat(?\DateTimeImmutable $lastWatchedAt): self
+    public function setLastWatchedAt(?\DateTimeImmutable $lastWatchedAt): self
     {
         $this->lastWatchedAt = $lastWatchedAt;
         return $this;
     }
 
-    public function getCompletedat(): ?\DateTimeImmutable    {
+    public function getCompletedAt(): ?\DateTimeImmutable    {
         return $this->completedAt;
     }
 
-    public function setCompletedat(?\DateTimeImmutable $completedAt): self
+    public function setCompletedAt(?\DateTimeImmutable $completedAt): self
     {
         $this->completedAt = $completedAt;
         return $this;

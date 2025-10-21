@@ -531,9 +531,6 @@ class GeneratorOrchestrator
     {
         $files = [];
 
-        // OrganizationTrait (exists as permanent file)
-        $files[] = $this->projectDir . '/src/Entity/Trait/OrganizationTrait.php';
-
         foreach ($entities as $entity) {
             // Entity files
             $files[] = $this->projectDir . '/src/Entity/Generated/' . $entity->entityName . 'Generated.php';

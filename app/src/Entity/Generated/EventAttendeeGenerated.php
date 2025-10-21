@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Contact;
 use App\Entity\Event;
 use App\Entity\Notification;
@@ -28,39 +29,53 @@ use App\Entity\User;
 #[ORM\HasLifecycleCallbacks]
 abstract class EventAttendeeGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'eventAttendees')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $attendeeStatus = null;
 
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\Column(name: 'comment_prop', type: 'text', nullable: true)]
     protected ?string $comment = null;
 
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'eventAttendances')]
     protected ?Contact $contact = null;
 
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true)]
     protected ?string $email = null;
 
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'attendees')]
     #[ORM\JoinColumn(nullable: false)]
     protected Event $event;
 
+    #[Groups(['eventattendee:read'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'attendee', fetch: 'LAZY')]
     protected Collection $notifications;
 
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $optional = false;
 
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $organizer = false;
 
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $phone = null;
 
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'eventAttendances')]
     protected ?User $user = null;
 
@@ -69,6 +84,17 @@ abstract class EventAttendeeGenerated extends EntityBase
     {
         parent::__construct();
         $this->notifications = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -81,11 +107,11 @@ abstract class EventAttendeeGenerated extends EntityBase
         return $this;
     }
 
-    public function getAttendeestatus(): ?int    {
+    public function getAttendeeStatus(): ?int    {
         return $this->attendeeStatus;
     }
 
-    public function setAttendeestatus(?int $attendeeStatus): self
+    public function setAttendeeStatus(?int $attendeeStatus): self
     {
         $this->attendeeStatus = $attendeeStatus;
         return $this;

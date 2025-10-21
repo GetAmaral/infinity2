@@ -7,6 +7,7 @@ namespace App\Entity\Generated;
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\City;
 use App\Entity\Country;
 
@@ -23,24 +24,31 @@ use App\Entity\Country;
 #[ORM\HasLifecycleCallbacks]
 abstract class HolidayTemplateGenerated extends EntityBase
 {
+    #[Groups(['holidaytemplate:read', 'holidaytemplate:write'])]
     #[ORM\Column(type: 'string')]
     protected string $name;
 
+    #[Groups(['holidaytemplate:read', 'holidaytemplate:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $blocksScheduling = null;
 
+    #[Groups(['holidaytemplate:read', 'holidaytemplate:write'])]
     #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'holidayTemplates')]
     protected ?City $city = null;
 
+    #[Groups(['holidaytemplate:read', 'holidaytemplate:write'])]
     #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'holidayTemplates')]
     protected ?Country $country = null;
 
+    #[Groups(['holidaytemplate:read', 'holidaytemplate:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $recurrenceFrequency = null;
 
+    #[Groups(['holidaytemplate:read', 'holidaytemplate:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $recurrenceInterval = null;
 
+    #[Groups(['holidaytemplate:read', 'holidaytemplate:write'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $sentAt = null;
 
@@ -60,17 +68,17 @@ abstract class HolidayTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getBlocksscheduling(): ?bool    {
+    public function getBlocksScheduling(): ?bool    {
         return $this->blocksScheduling;
     }
 
-    public function setBlocksscheduling(?bool $blocksScheduling): self
+    public function setBlocksScheduling(?bool $blocksScheduling): self
     {
         $this->blocksScheduling = $blocksScheduling;
         return $this;
     }
 
-    public function isBlocksscheduling(): bool
+    public function isBlocksScheduling(): bool
     {
         return $this->blocksScheduling === true;
     }
@@ -97,31 +105,31 @@ abstract class HolidayTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getRecurrencefrequency(): ?int    {
+    public function getRecurrenceFrequency(): ?int    {
         return $this->recurrenceFrequency;
     }
 
-    public function setRecurrencefrequency(?int $recurrenceFrequency): self
+    public function setRecurrenceFrequency(?int $recurrenceFrequency): self
     {
         $this->recurrenceFrequency = $recurrenceFrequency;
         return $this;
     }
 
-    public function getRecurrenceinterval(): ?int    {
+    public function getRecurrenceInterval(): ?int    {
         return $this->recurrenceInterval;
     }
 
-    public function setRecurrenceinterval(?int $recurrenceInterval): self
+    public function setRecurrenceInterval(?int $recurrenceInterval): self
     {
         $this->recurrenceInterval = $recurrenceInterval;
         return $this;
     }
 
-    public function getSentat(): ?\DateTimeImmutable    {
+    public function getSentAt(): ?\DateTimeImmutable    {
         return $this->sentAt;
     }
 
-    public function setSentat(?\DateTimeImmutable $sentAt): self
+    public function setSentAt(?\DateTimeImmutable $sentAt): self
     {
         $this->sentAt = $sentAt;
         return $this;

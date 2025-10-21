@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 
 /**
  * Flag Entity (Generated Base Class)
@@ -22,41 +23,61 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 abstract class FlagGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['flag:read', 'flag:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'flags')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    protected string $category = 'custom';
-
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['flag:read', 'flag:write'])]
+    #[ORM\Column(type: 'string', length: 50)]
+    #[Assert\Length(max: 50)]
+    protected string $category = 'custom';
+
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'string', length: 7, nullable: true)]
+    #[Assert\Length(max: 7)]
     protected ?string $color = '#0dcaf0';
 
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
     protected ?string $icon = 'bi-flag';
 
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'string', length: 50)]
+    #[Assert\Length(max: 50)]
     protected string $entityType;
 
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'uuid')]
     protected string $entityId;
 
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'integer')]
+    #[Assert\Range(max: 5, min: 1)]
     protected int $priority = 2;
 
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $displayOrder = 0;
 
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(name: 'system_prop', type: 'boolean')]
     protected bool $system = false;
 
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $dueDate = null;
 
@@ -64,6 +85,17 @@ abstract class FlagGenerated extends EntityBase
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -76,16 +108,6 @@ abstract class FlagGenerated extends EntityBase
         return $this;
     }
 
-    public function getCategory(): string    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
-        return $this;
-    }
-
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -93,6 +115,16 @@ abstract class FlagGenerated extends EntityBase
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getCategory(): string    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
         return $this;
     }
 
@@ -116,21 +148,21 @@ abstract class FlagGenerated extends EntityBase
         return $this;
     }
 
-    public function getEntitytype(): string    {
+    public function getEntityType(): string    {
         return $this->entityType;
     }
 
-    public function setEntitytype(string $entityType): self
+    public function setEntityType(string $entityType): self
     {
         $this->entityType = $entityType;
         return $this;
     }
 
-    public function getEntityid(): string    {
+    public function getEntityId(): string    {
         return $this->entityId;
     }
 
-    public function setEntityid(string $entityId): self
+    public function setEntityId(string $entityId): self
     {
         $this->entityId = $entityId;
         return $this;
@@ -146,11 +178,11 @@ abstract class FlagGenerated extends EntityBase
         return $this;
     }
 
-    public function getDisplayorder(): int    {
+    public function getDisplayOrder(): int    {
         return $this->displayOrder;
     }
 
-    public function setDisplayorder(int $displayOrder): self
+    public function setDisplayOrder(int $displayOrder): self
     {
         $this->displayOrder = $displayOrder;
         return $this;
@@ -186,11 +218,11 @@ abstract class FlagGenerated extends EntityBase
         return $this->system === true;
     }
 
-    public function getDuedate(): ?\DateTimeImmutable    {
+    public function getDueDate(): ?\DateTimeImmutable    {
         return $this->dueDate;
     }
 
-    public function setDuedate(?\DateTimeImmutable $dueDate): self
+    public function setDueDate(?\DateTimeImmutable $dueDate): self
     {
         $this->dueDate = $dueDate;
         return $this;

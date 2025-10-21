@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\User;
 use App\Entity\Course;
 use App\Entity\CourseLecture;
@@ -28,40 +29,55 @@ use App\Entity\StudentLecture;
 #[ORM\HasLifecycleCallbacks]
 abstract class StudentCourseGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'studentCourses')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
     #[ORM\Column(type: 'datetime_immutable')]
     protected \DateTimeImmutable $enrolledAt;
 
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $startDate = null;
 
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastDate = null;
 
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2)]
     protected float $progressSeconds = 0;
 
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
-    protected float $progressPercentage = 0;
+    #[Assert\Range(max: 100, min: 0)]
+    protected string $progressPercentage = '0';
 
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $completedAt = null;
 
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'studentCourses')]
     #[ORM\JoinColumn(nullable: false)]
     protected User $student;
 
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
     #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'studentCourses')]
     #[ORM\JoinColumn(nullable: false)]
     protected Course $course;
 
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
     #[ORM\ManyToOne(targetEntity: CourseLecture::class, inversedBy: 'studentCoursesOnThisLecture')]
     protected ?CourseLecture $currentLecture = null;
 
+    #[Groups(['studentcourse:read'])]
     #[ORM\OneToMany(targetEntity: StudentLecture::class, mappedBy: 'studentCourse', fetch: 'LAZY')]
     protected Collection $studentLectures;
 
+    #[Groups(['studentcourse:read', 'studentcourse:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
@@ -72,61 +88,72 @@ abstract class StudentCourseGenerated extends EntityBase
         $this->studentLectures = new ArrayCollection();
     }
 
-    public function getEnrolledat(): \DateTimeImmutable    {
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getEnrolledAt(): \DateTimeImmutable    {
         return $this->enrolledAt;
     }
 
-    public function setEnrolledat(\DateTimeImmutable $enrolledAt): self
+    public function setEnrolledAt(\DateTimeImmutable $enrolledAt): self
     {
         $this->enrolledAt = $enrolledAt;
         return $this;
     }
 
-    public function getStartdate(): ?\DateTimeImmutable    {
+    public function getStartDate(): ?\DateTimeImmutable    {
         return $this->startDate;
     }
 
-    public function setStartdate(?\DateTimeImmutable $startDate): self
+    public function setStartDate(?\DateTimeImmutable $startDate): self
     {
         $this->startDate = $startDate;
         return $this;
     }
 
-    public function getLastdate(): ?\DateTimeImmutable    {
+    public function getLastDate(): ?\DateTimeImmutable    {
         return $this->lastDate;
     }
 
-    public function setLastdate(?\DateTimeImmutable $lastDate): self
+    public function setLastDate(?\DateTimeImmutable $lastDate): self
     {
         $this->lastDate = $lastDate;
         return $this;
     }
 
-    public function getProgressseconds(): float    {
+    public function getProgressSeconds(): float    {
         return $this->progressSeconds;
     }
 
-    public function setProgressseconds(float $progressSeconds): self
+    public function setProgressSeconds(float $progressSeconds): self
     {
         $this->progressSeconds = $progressSeconds;
         return $this;
     }
 
-    public function getProgresspercentage(): float    {
+    public function getProgressPercentage(): string    {
         return $this->progressPercentage;
     }
 
-    public function setProgresspercentage(float $progressPercentage): self
+    public function setProgressPercentage(string $progressPercentage): self
     {
         $this->progressPercentage = $progressPercentage;
         return $this;
     }
 
-    public function getCompletedat(): ?\DateTimeImmutable    {
+    public function getCompletedAt(): ?\DateTimeImmutable    {
         return $this->completedAt;
     }
 
-    public function setCompletedat(?\DateTimeImmutable $completedAt): self
+    public function setCompletedAt(?\DateTimeImmutable $completedAt): self
     {
         $this->completedAt = $completedAt;
         return $this;
@@ -154,12 +181,12 @@ abstract class StudentCourseGenerated extends EntityBase
         return $this;
     }
 
-    public function getCurrentlecture(): ?App\Entity\CourseLecture
+    public function getCurrentLecture(): ?App\Entity\CourseLecture
     {
         return $this->currentLecture;
     }
 
-    public function setCurrentlecture(?App\Entity\CourseLecture $currentLecture): self
+    public function setCurrentLecture(?App\Entity\CourseLecture $currentLecture): self
     {
         $this->currentLecture = $currentLecture;
         return $this;
@@ -168,25 +195,25 @@ abstract class StudentCourseGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\StudentLecture>
      */
-    public function getStudentlectures(): Collection
+    public function getStudentLectures(): Collection
     {
         return $this->studentLectures;
     }
 
-    public function addStudentlecture(App\Entity\StudentLecture $tudentLecture): self
+    public function addStudentLecture(App\Entity\StudentLecture $studentLecture): self
     {
-        if (!$this->studentLectures->contains($tudentLecture)) {
-            $this->studentLectures->add($tudentLecture);
-            $tudentLecture->setStudentcourse($this);
+        if (!$this->studentLectures->contains($studentLecture)) {
+            $this->studentLectures->add($studentLecture);
+            $studentLecture->setStudentCourse($this);
         }
         return $this;
     }
 
-    public function removeStudentlecture(App\Entity\StudentLecture $tudentLecture): self
+    public function removeStudentLecture(App\Entity\StudentLecture $studentLecture): self
     {
-        if ($this->studentLectures->removeElement($tudentLecture)) {
-            if ($tudentLecture->getStudentcourse() === $this) {
-                $tudentLecture->setStudentcourse(null);
+        if ($this->studentLectures->removeElement($studentLecture)) {
+            if ($studentLecture->getStudentCourse() === $this) {
+                $studentLecture->setStudentCourse(null);
             }
         }
         return $this;

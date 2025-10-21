@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\PipelineStageTemplate;
 
 /**
@@ -25,50 +26,68 @@ use App\Entity\PipelineStageTemplate;
 #[ORM\HasLifecycleCallbacks]
 abstract class PipelineTemplateGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'pipelineTemplates')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $name;
-
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $name;
 
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(name: 'public_prop', type: 'boolean')]
     protected bool $public = false;
 
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $description = null;
+
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $templateCategory = null;
 
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $estimatedDuration = null;
 
-    #[ORM\Column(type: 'integer')]
-    protected int $stageCount;
-
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $industry = null;
 
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $targetDealSize = null;
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\Column(type: 'integer')]
+    protected int $stageCount;
 
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    protected ?string $targetDealSize = null;
+
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'string', length: 7)]
     protected string $color = '#0dcaf0';
 
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'string', length: 50)]
     protected string $icon = 'bi-diagram-3-fill';
 
-    #[ORM\Column(type: 'integer')]
-    protected int $usageCount = 0;
-
+    #[Groups(['pipelinetemplate:read'])]
     #[ORM\OneToMany(targetEntity: PipelineStageTemplate::class, mappedBy: 'pipelineTemplate', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $stages;
 
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\Column(type: 'integer')]
+    protected int $usageCount = 0;
+
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $tags = null;
 
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $active = true;
 
@@ -79,13 +98,14 @@ abstract class PipelineTemplateGenerated extends EntityBase
         $this->stages = new ArrayCollection();
     }
 
-    public function getName(): string    {
-        return $this->name;
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
     }
 
-    public function setName(string $name): self
+    public function setOrganization(App\Entity\Organization $organization): self
     {
-        $this->name = $name;
+        $this->organization = $organization;
         return $this;
     }
 
@@ -104,13 +124,13 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this->default === true;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
+    public function getName(): string    {
+        return $this->name;
     }
 
-    public function setDescription(?string $description): self
+    public function setName(string $name): self
     {
-        $this->description = $description;
+        $this->name = $name;
         return $this;
     }
 
@@ -129,33 +149,33 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this->public === true;
     }
 
-    public function getTemplatecategory(): ?string    {
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getTemplateCategory(): ?string    {
         return $this->templateCategory;
     }
 
-    public function setTemplatecategory(?string $templateCategory): self
+    public function setTemplateCategory(?string $templateCategory): self
     {
         $this->templateCategory = $templateCategory;
         return $this;
     }
 
-    public function getEstimatedduration(): ?int    {
+    public function getEstimatedDuration(): ?int    {
         return $this->estimatedDuration;
     }
 
-    public function setEstimatedduration(?int $estimatedDuration): self
+    public function setEstimatedDuration(?int $estimatedDuration): self
     {
         $this->estimatedDuration = $estimatedDuration;
-        return $this;
-    }
-
-    public function getStagecount(): int    {
-        return $this->stageCount;
-    }
-
-    public function setStagecount(int $stageCount): self
-    {
-        $this->stageCount = $stageCount;
         return $this;
     }
 
@@ -169,11 +189,21 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getTargetdealsize(): ?float    {
+    public function getStageCount(): int    {
+        return $this->stageCount;
+    }
+
+    public function setStageCount(int $stageCount): self
+    {
+        $this->stageCount = $stageCount;
+        return $this;
+    }
+
+    public function getTargetDealSize(): ?string    {
         return $this->targetDealSize;
     }
 
-    public function setTargetdealsize(?float $targetDealSize): self
+    public function setTargetDealSize(?string $targetDealSize): self
     {
         $this->targetDealSize = $targetDealSize;
         return $this;
@@ -199,16 +229,6 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getUsagecount(): int    {
-        return $this->usageCount;
-    }
-
-    public function setUsagecount(int $usageCount): self
-    {
-        $this->usageCount = $usageCount;
-        return $this;
-    }
-
     /**
      * @return Collection<int, App\Entity\PipelineStageTemplate>
      */
@@ -217,22 +237,32 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this->stages;
     }
 
-    public function addStage(App\Entity\PipelineStageTemplate $tage): self
+    public function addStage(App\Entity\PipelineStageTemplate $stage): self
     {
-        if (!$this->stages->contains($tage)) {
-            $this->stages->add($tage);
-            $tage->setPipelinetemplate($this);
+        if (!$this->stages->contains($stage)) {
+            $this->stages->add($stage);
+            $stage->setPipelineTemplate($this);
         }
         return $this;
     }
 
-    public function removeStage(App\Entity\PipelineStageTemplate $tage): self
+    public function removeStage(App\Entity\PipelineStageTemplate $stage): self
     {
-        if ($this->stages->removeElement($tage)) {
-            if ($tage->getPipelinetemplate() === $this) {
-                $tage->setPipelinetemplate(null);
+        if ($this->stages->removeElement($stage)) {
+            if ($stage->getPipelineTemplate() === $this) {
+                $stage->setPipelineTemplate(null);
             }
         }
+        return $this;
+    }
+
+    public function getUsageCount(): int    {
+        return $this->usageCount;
+    }
+
+    public function setUsageCount(int $usageCount): self
+    {
+        $this->usageCount = $usageCount;
         return $this;
     }
 

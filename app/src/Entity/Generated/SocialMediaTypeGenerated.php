@@ -7,6 +7,7 @@ namespace App\Entity\Generated;
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * SocialMediaType Entity (Generated Base Class)
@@ -21,12 +22,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 abstract class SocialMediaTypeGenerated extends EntityBase
 {
+    #[Groups(['socialmediatype:read', 'socialmediatype:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['socialmediatype:read', 'socialmediatype:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $iconUrl = null;
 
+    #[Groups(['socialmediatype:read', 'socialmediatype:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $url = null;
 
@@ -46,11 +50,11 @@ abstract class SocialMediaTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getIconurl(): ?string    {
+    public function getIconUrl(): ?string    {
         return $this->iconUrl;
     }
 
-    public function setIconurl(?string $iconUrl): self
+    public function setIconUrl(?string $iconUrl): self
     {
         $this->iconUrl = $iconUrl;
         return $this;

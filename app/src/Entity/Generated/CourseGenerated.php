@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\CourseModule;
 use App\Entity\User;
 use App\Entity\StudentCourse;
@@ -27,30 +28,42 @@ use App\Entity\StudentCourse;
 #[ORM\HasLifecycleCallbacks]
 abstract class CourseGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['course:read', 'course:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'courses')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $name;
-
+    #[Groups(['course:read', 'course:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $releaseDate = null;
 
+    #[Groups(['course:read', 'course:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
+    protected string $name;
+
+    #[Groups(['course:read', 'course:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['course:read'])]
     #[ORM\OneToMany(targetEntity: CourseModule::class, mappedBy: 'course', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $modules;
 
+    #[Groups(['course:read', 'course:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['course:read', 'course:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedCourses')]
     #[ORM\JoinColumn(nullable: false)]
     protected User $owner;
 
+    #[Groups(['course:read'])]
     #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'course', fetch: 'LAZY')]
     protected Collection $studentCourses;
 
+    #[Groups(['course:read', 'course:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $totalLengthSeconds = 0;
 
@@ -62,6 +75,27 @@ abstract class CourseGenerated extends EntityBase
         $this->studentCourses = new ArrayCollection();
     }
 
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getReleaseDate(): ?\DateTimeImmutable    {
+        return $this->releaseDate;
+    }
+
+    public function setReleaseDate(?\DateTimeImmutable $releaseDate): self
+    {
+        $this->releaseDate = $releaseDate;
+        return $this;
+    }
+
     public function getName(): string    {
         return $this->name;
     }
@@ -69,16 +103,6 @@ abstract class CourseGenerated extends EntityBase
     public function setName(string $name): self
     {
         $this->name = $name;
-        return $this;
-    }
-
-    public function getReleasedate(): ?\DateTimeImmutable    {
-        return $this->releaseDate;
-    }
-
-    public function setReleasedate(?\DateTimeImmutable $releaseDate): self
-    {
-        $this->releaseDate = $releaseDate;
         return $this;
     }
 
@@ -148,35 +172,35 @@ abstract class CourseGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\StudentCourse>
      */
-    public function getStudentcourses(): Collection
+    public function getStudentCourses(): Collection
     {
         return $this->studentCourses;
     }
 
-    public function addStudentcoure(App\Entity\StudentCourse $tudentCoure): self
+    public function addStudentCours(App\Entity\StudentCourse $studentCours): self
     {
-        if (!$this->studentCourses->contains($tudentCoure)) {
-            $this->studentCourses->add($tudentCoure);
-            $tudentCoure->setCourse($this);
+        if (!$this->studentCourses->contains($studentCours)) {
+            $this->studentCourses->add($studentCours);
+            $studentCours->setCourse($this);
         }
         return $this;
     }
 
-    public function removeStudentcoure(App\Entity\StudentCourse $tudentCoure): self
+    public function removeStudentCours(App\Entity\StudentCourse $studentCours): self
     {
-        if ($this->studentCourses->removeElement($tudentCoure)) {
-            if ($tudentCoure->getCourse() === $this) {
-                $tudentCoure->setCourse(null);
+        if ($this->studentCourses->removeElement($studentCours)) {
+            if ($studentCours->getCourse() === $this) {
+                $studentCours->setCourse(null);
             }
         }
         return $this;
     }
 
-    public function getTotallengthseconds(): int    {
+    public function getTotalLengthSeconds(): int    {
         return $this->totalLengthSeconds;
     }
 
-    public function setTotallengthseconds(int $totalLengthSeconds): self
+    public function setTotalLengthSeconds(int $totalLengthSeconds): self
     {
         $this->totalLengthSeconds = $totalLengthSeconds;
         return $this;

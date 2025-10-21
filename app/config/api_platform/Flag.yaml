@@ -33,18 +33,20 @@ resources:
         security: "is_granted('ROLE_CRM_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"
-      category:
-        description: "Category (text field)"
-        example: "Sample text"
       description:
         description: "..."
         example: "..."
+      category:
+        description: "Category (text field)"
+        example: "Sample text"
       color:
         description: "Color (text field)"
         example: "Sample text"

@@ -33,16 +33,15 @@ resources:
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"
       description:
-        description: "..."
-        example: "..."
-      order:
         description: "..."
         example: "..."
       probability:
@@ -51,6 +50,9 @@ resources:
         # Advanced filters
         filters:
           - type: NumericFilter
+      order:
+        description: "..."
+        example: "..."
       active:
         description: "Indicates whether this pipeline stage template is active and available for creating new pipeline instances"
         example: "true"
@@ -69,15 +71,15 @@ resources:
       pipelineTemplate:
         description: "..."
         example: "..."
+      tasks:
+        description: "..."
+        example: "..."
       final:
         description: "Indicates if this is a final\/terminal stage where deals cannot progress further (e.g., Won, Lost, Closed)"
         example: "false"
         # Advanced filters
         filters:
           - type: BooleanFilter
-      tasks:
-        description: "..."
-        example: "..."
       stageType:
         description: "Categorizes the stage type: \"active\" for in-progress stages, \"won\" for successful closes, \"lost\" for unsuccessful closes"
         example: "\"active\""

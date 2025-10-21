@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Calendar;
 use App\Entity\Event;
 use App\Entity\TimeZone;
@@ -25,32 +26,44 @@ use App\Entity\TimeZone;
 #[ORM\HasLifecycleCallbacks]
 abstract class WorkingHourGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['workinghour:read', 'workinghour:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'workingHours')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['workinghour:read', 'workinghour:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['workinghour:read', 'workinghour:write'])]
     #[ORM\ManyToOne(targetEntity: Calendar::class, inversedBy: 'workingHours')]
     protected ?Calendar $calendar = null;
 
+    #[Groups(['workinghour:read', 'workinghour:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $dayOfWeek = null;
 
+    #[Groups(['workinghour:read', 'workinghour:write'])]
     #[ORM\Column(type: 'time', nullable: true)]
     protected ?string $endTime = null;
 
+    #[Groups(['workinghour:read', 'workinghour:write'])]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'workingHours')]
     protected ?Event $event = null;
 
+    #[Groups(['workinghour:read', 'workinghour:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $minimalMinutesEventDuration = null;
 
+    #[Groups(['workinghour:read', 'workinghour:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
+    #[Groups(['workinghour:read', 'workinghour:write'])]
     #[ORM\Column(type: 'time', nullable: true)]
     protected ?string $startTime = null;
 
+    #[Groups(['workinghour:read', 'workinghour:write'])]
     #[ORM\ManyToOne(targetEntity: TimeZone::class, inversedBy: 'workingHours')]
     #[ORM\JoinColumn(nullable: false)]
     protected TimeZone $timeZone;
@@ -59,6 +72,17 @@ abstract class WorkingHourGenerated extends EntityBase
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getDescription(): ?string    {
@@ -82,21 +106,21 @@ abstract class WorkingHourGenerated extends EntityBase
         return $this;
     }
 
-    public function getDayofweek(): ?int    {
+    public function getDayOfWeek(): ?int    {
         return $this->dayOfWeek;
     }
 
-    public function setDayofweek(?int $dayOfWeek): self
+    public function setDayOfWeek(?int $dayOfWeek): self
     {
         $this->dayOfWeek = $dayOfWeek;
         return $this;
     }
 
-    public function getEndtime(): ?string    {
+    public function getEndTime(): ?string    {
         return $this->endTime;
     }
 
-    public function setEndtime(?string $endTime): self
+    public function setEndTime(?string $endTime): self
     {
         $this->endTime = $endTime;
         return $this;
@@ -113,11 +137,11 @@ abstract class WorkingHourGenerated extends EntityBase
         return $this;
     }
 
-    public function getMinimalminuteseventduration(): ?int    {
+    public function getMinimalMinutesEventDuration(): ?int    {
         return $this->minimalMinutesEventDuration;
     }
 
-    public function setMinimalminuteseventduration(?int $minimalMinutesEventDuration): self
+    public function setMinimalMinutesEventDuration(?int $minimalMinutesEventDuration): self
     {
         $this->minimalMinutesEventDuration = $minimalMinutesEventDuration;
         return $this;
@@ -133,22 +157,22 @@ abstract class WorkingHourGenerated extends EntityBase
         return $this;
     }
 
-    public function getStarttime(): ?string    {
+    public function getStartTime(): ?string    {
         return $this->startTime;
     }
 
-    public function setStarttime(?string $startTime): self
+    public function setStartTime(?string $startTime): self
     {
         $this->startTime = $startTime;
         return $this;
     }
 
-    public function getTimezone(): App\Entity\TimeZone
+    public function getTimeZone(): App\Entity\TimeZone
     {
         return $this->timeZone;
     }
 
-    public function setTimezone(App\Entity\TimeZone $timeZone): self
+    public function setTimeZone(App\Entity\TimeZone $timeZone): self
     {
         $this->timeZone = $timeZone;
         return $this;

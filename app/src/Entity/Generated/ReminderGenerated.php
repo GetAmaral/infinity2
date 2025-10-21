@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\CommunicationMethod;
 use App\Entity\Event;
 use App\Entity\Notification;
@@ -27,23 +28,32 @@ use App\Entity\Notification;
 #[ORM\HasLifecycleCallbacks]
 abstract class ReminderGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['reminder:read', 'reminder:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'reminders')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['reminder:read', 'reminder:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['reminder:read', 'reminder:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $active = true;
 
+    #[Groups(['reminder:read', 'reminder:write'])]
     #[ORM\ManyToOne(targetEntity: CommunicationMethod::class, inversedBy: 'reminders')]
     protected ?CommunicationMethod $communicationMethod = null;
 
+    #[Groups(['reminder:read', 'reminder:write'])]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'reminders')]
     protected ?Event $event = null;
 
+    #[Groups(['reminder:read', 'reminder:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $minutesBeforeStart = 15;
 
+    #[Groups(['reminder:read'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'reminder', fetch: 'LAZY')]
     protected Collection $notifications;
 
@@ -52,6 +62,17 @@ abstract class ReminderGenerated extends EntityBase
     {
         parent::__construct();
         $this->notifications = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -79,12 +100,12 @@ abstract class ReminderGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getCommunicationmethod(): ?App\Entity\CommunicationMethod
+    public function getCommunicationMethod(): ?App\Entity\CommunicationMethod
     {
         return $this->communicationMethod;
     }
 
-    public function setCommunicationmethod(?App\Entity\CommunicationMethod $communicationMethod): self
+    public function setCommunicationMethod(?App\Entity\CommunicationMethod $communicationMethod): self
     {
         $this->communicationMethod = $communicationMethod;
         return $this;
@@ -101,11 +122,11 @@ abstract class ReminderGenerated extends EntityBase
         return $this;
     }
 
-    public function getMinutesbeforestart(): int    {
+    public function getMinutesBeforeStart(): int    {
         return $this->minutesBeforeStart;
     }
 
-    public function setMinutesbeforestart(int $minutesBeforeStart): self
+    public function setMinutesBeforeStart(int $minutesBeforeStart): self
     {
         $this->minutesBeforeStart = $minutesBeforeStart;
         return $this;

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\User;
 use App\Entity\City;
 use App\Entity\Campaign;
@@ -34,143 +35,197 @@ use App\Entity\Task;
 #[ORM\HasLifecycleCallbacks]
 abstract class ContactGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'contacts')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100)]
+    #[Assert\Length(max: 100)]
     protected string $firstName;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100)]
+    #[Assert\Length(max: 100)]
     protected string $lastName;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'managedContacts')]
     protected ?User $accountManager = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $website = null;
 
+    #[Groups(['contact:read'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'contacts', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'contact_accountTeam')]
     protected Collection $accountTeam;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $address = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $billingAddress = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\ManyToOne(targetEntity: City::class)]
     protected ?City $billingCity = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $birthDate = null;
 
-    #[ORM\ManyToMany(targetEntity: Campaign::class, inversedBy: 'contacts', fetch: 'LAZY')]
+    #[Groups(['contact:read'])]
+    #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'contacts', fetch: 'LAZY')]
     protected Collection $campaigns;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\ManyToOne(targetEntity: City::class)]
     protected ?City $city = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'contacts')]
     #[ORM\JoinColumn(nullable: false)]
     protected Company $company;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 25, nullable: true)]
     protected ?string $mobilePhone = null;
 
-    #[ORM\ManyToMany(targetEntity: Deal::class, inversedBy: 'contacts', fetch: 'LAZY')]
+    #[Groups(['contact:read'])]
+    #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'contacts', fetch: 'LAZY')]
     protected Collection $deals;
 
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
+    protected ?string $linkedinUrl = null;
+
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 150, nullable: true)]
     protected ?string $title = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected ?string $linkedinUrl = null;
-
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    protected ?string $department = null;
-
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $emailOptOut;
 
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    protected ?string $department = null;
+
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    protected ?string $leadSource = null;
+
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $doNotCall;
 
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    protected ?string $leadSource = null;
-
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $preferredContactMethod = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $lastContactDate = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(name: 'document_prop', type: 'string', length: 20, nullable: true)]
+    #[Assert\Length(max: 20)]
     protected ?string $document = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Assert\Email]
-    #[Assert\Length(max: 180)]
     protected string $email;
 
+    #[Groups(['contact:read'])]
     #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'contact', fetch: 'LAZY')]
     protected Collection $eventAttendances;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $firstTalkDate = null;
 
+    #[Groups(['contact:read'])]
     #[ORM\OneToMany(targetEntity: Flag::class, mappedBy: 'contact', fetch: 'LAZY')]
     protected Collection $flags;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $gender = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $geo = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $lastTalkDate = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $neighborhood = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $nickname = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $origin = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 25, nullable: true)]
     protected ?string $phone = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $postalCode = null;
 
+    #[Groups(['contact:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'primaryContact', fetch: 'LAZY')]
     protected Collection $primaryDeals;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $profilePictureUrl = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $ranking = null;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $score = null;
 
+    #[Groups(['contact:read'])]
     #[ORM\OneToMany(targetEntity: SocialMedia::class, mappedBy: 'contact', fetch: 'LAZY')]
     protected Collection $socialMedias;
 
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $status = null;
 
+    #[Groups(['contact:read'])]
     #[ORM\OneToMany(targetEntity: Talk::class, mappedBy: 'contact', fetch: 'LAZY')]
     protected Collection $talks;
 
+    #[Groups(['contact:read'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'contact', fetch: 'LAZY')]
     protected Collection $tasks;
 
@@ -189,6 +244,17 @@ abstract class ContactGenerated extends EntityBase
         $this->tasks = new ArrayCollection();
     }
 
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
     public function getName(): string    {
         return $this->name;
     }
@@ -199,32 +265,32 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getFirstname(): string    {
+    public function getFirstName(): string    {
         return $this->firstName;
     }
 
-    public function setFirstname(string $firstName): self
+    public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
         return $this;
     }
 
-    public function getLastname(): string    {
+    public function getLastName(): string    {
         return $this->lastName;
     }
 
-    public function setLastname(string $lastName): self
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
         return $this;
     }
 
-    public function getAccountmanager(): ?App\Entity\User
+    public function getAccountManager(): ?App\Entity\User
     {
         return $this->accountManager;
     }
 
-    public function setAccountmanager(?App\Entity\User $accountManager): self
+    public function setAccountManager(?App\Entity\User $accountManager): self
     {
         $this->accountManager = $accountManager;
         return $this;
@@ -243,12 +309,12 @@ abstract class ContactGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\User>
      */
-    public function getAccountteam(): Collection
+    public function getAccountTeam(): Collection
     {
         return $this->accountTeam;
     }
 
-    public function addAccountteam(App\Entity\User $accountTeam): self
+    public function addAccountTeam(App\Entity\User $accountTeam): self
     {
         if (!$this->accountTeam->contains($accountTeam)) {
             $this->accountTeam->add($accountTeam);
@@ -256,7 +322,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removeAccountteam(App\Entity\User $accountTeam): self
+    public function removeAccountTeam(App\Entity\User $accountTeam): self
     {
         if ($this->accountTeam->removeElement($accountTeam)) {
         }
@@ -273,32 +339,32 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getBillingaddress(): ?string    {
+    public function getBillingAddress(): ?string    {
         return $this->billingAddress;
     }
 
-    public function setBillingaddress(?string $billingAddress): self
+    public function setBillingAddress(?string $billingAddress): self
     {
         $this->billingAddress = $billingAddress;
         return $this;
     }
 
-    public function getBillingcity(): ?App\Entity\City
+    public function getBillingCity(): ?App\Entity\City
     {
         return $this->billingCity;
     }
 
-    public function setBillingcity(?App\Entity\City $billingCity): self
+    public function setBillingCity(?App\Entity\City $billingCity): self
     {
         $this->billingCity = $billingCity;
         return $this;
     }
 
-    public function getBirthdate(): ?\DateTimeImmutable    {
+    public function getBirthDate(): ?\DateTimeImmutable    {
         return $this->birthDate;
     }
 
-    public function setBirthdate(?\DateTimeImmutable $birthDate): self
+    public function setBirthDate(?\DateTimeImmutable $birthDate): self
     {
         $this->birthDate = $birthDate;
         return $this;
@@ -316,6 +382,7 @@ abstract class ContactGenerated extends EntityBase
     {
         if (!$this->campaigns->contains($campaign)) {
             $this->campaigns->add($campaign);
+            $campaign->setContacts($this);
         }
         return $this;
     }
@@ -323,6 +390,9 @@ abstract class ContactGenerated extends EntityBase
     public function removeCampaign(App\Entity\Campaign $campaign): self
     {
         if ($this->campaigns->removeElement($campaign)) {
+            if ($campaign->getContacts() === $this) {
+                $campaign->setContacts(null);
+            }
         }
         return $this;
     }
@@ -349,11 +419,11 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getMobilephone(): ?string    {
+    public function getMobilePhone(): ?string    {
         return $this->mobilePhone;
     }
 
-    public function setMobilephone(?string $mobilePhone): self
+    public function setMobilePhone(?string $mobilePhone): self
     {
         $this->mobilePhone = $mobilePhone;
         return $this;
@@ -371,6 +441,7 @@ abstract class ContactGenerated extends EntityBase
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
+            $deal->setContacts($this);
         }
         return $this;
     }
@@ -378,7 +449,20 @@ abstract class ContactGenerated extends EntityBase
     public function removeDeal(App\Entity\Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
+            if ($deal->getContacts() === $this) {
+                $deal->setContacts(null);
+            }
         }
+        return $this;
+    }
+
+    public function getLinkedinUrl(): ?string    {
+        return $this->linkedinUrl;
+    }
+
+    public function setLinkedinUrl(?string $linkedinUrl): self
+    {
+        $this->linkedinUrl = $linkedinUrl;
         return $this;
     }
 
@@ -392,14 +476,19 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getLinkedinurl(): ?string    {
-        return $this->linkedinUrl;
+    public function getEmailOptOut(): bool    {
+        return $this->emailOptOut;
     }
 
-    public function setLinkedinurl(?string $linkedinUrl): self
+    public function setEmailOptOut(bool $emailOptOut): self
     {
-        $this->linkedinUrl = $linkedinUrl;
+        $this->emailOptOut = $emailOptOut;
         return $this;
+    }
+
+    public function isEmailOptOut(): bool
+    {
+        return $this->emailOptOut === true;
     }
 
     public function getDepartment(): ?string    {
@@ -412,61 +501,46 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getEmailoptout(): bool    {
-        return $this->emailOptOut;
-    }
-
-    public function setEmailoptout(bool $emailOptOut): self
-    {
-        $this->emailOptOut = $emailOptOut;
-        return $this;
-    }
-
-    public function isEmailoptout(): bool
-    {
-        return $this->emailOptOut === true;
-    }
-
-    public function getDonotcall(): bool    {
-        return $this->doNotCall;
-    }
-
-    public function setDonotcall(bool $doNotCall): self
-    {
-        $this->doNotCall = $doNotCall;
-        return $this;
-    }
-
-    public function isDonotcall(): bool
-    {
-        return $this->doNotCall === true;
-    }
-
-    public function getLeadsource(): ?string    {
+    public function getLeadSource(): ?string    {
         return $this->leadSource;
     }
 
-    public function setLeadsource(?string $leadSource): self
+    public function setLeadSource(?string $leadSource): self
     {
         $this->leadSource = $leadSource;
         return $this;
     }
 
-    public function getPreferredcontactmethod(): ?string    {
+    public function getDoNotCall(): bool    {
+        return $this->doNotCall;
+    }
+
+    public function setDoNotCall(bool $doNotCall): self
+    {
+        $this->doNotCall = $doNotCall;
+        return $this;
+    }
+
+    public function isDoNotCall(): bool
+    {
+        return $this->doNotCall === true;
+    }
+
+    public function getPreferredContactMethod(): ?string    {
         return $this->preferredContactMethod;
     }
 
-    public function setPreferredcontactmethod(?string $preferredContactMethod): self
+    public function setPreferredContactMethod(?string $preferredContactMethod): self
     {
         $this->preferredContactMethod = $preferredContactMethod;
         return $this;
     }
 
-    public function getLastcontactdate(): ?\DateTimeImmutable    {
+    public function getLastContactDate(): ?\DateTimeImmutable    {
         return $this->lastContactDate;
     }
 
-    public function setLastcontactdate(?\DateTimeImmutable $lastContactDate): self
+    public function setLastContactDate(?\DateTimeImmutable $lastContactDate): self
     {
         $this->lastContactDate = $lastContactDate;
         return $this;
@@ -495,12 +569,12 @@ abstract class ContactGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\EventAttendee>
      */
-    public function getEventattendances(): Collection
+    public function getEventAttendances(): Collection
     {
         return $this->eventAttendances;
     }
 
-    public function addEventattendance(App\Entity\EventAttendee $eventAttendance): self
+    public function addEventAttendance(App\Entity\EventAttendee $eventAttendance): self
     {
         if (!$this->eventAttendances->contains($eventAttendance)) {
             $this->eventAttendances->add($eventAttendance);
@@ -509,7 +583,7 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function removeEventattendance(App\Entity\EventAttendee $eventAttendance): self
+    public function removeEventAttendance(App\Entity\EventAttendee $eventAttendance): self
     {
         if ($this->eventAttendances->removeElement($eventAttendance)) {
             if ($eventAttendance->getContact() === $this) {
@@ -519,11 +593,11 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getFirsttalkdate(): ?\DateTimeImmutable    {
+    public function getFirstTalkDate(): ?\DateTimeImmutable    {
         return $this->firstTalkDate;
     }
 
-    public function setFirsttalkdate(?\DateTimeImmutable $firstTalkDate): self
+    public function setFirstTalkDate(?\DateTimeImmutable $firstTalkDate): self
     {
         $this->firstTalkDate = $firstTalkDate;
         return $this;
@@ -576,11 +650,11 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getLasttalkdate(): ?\DateTimeImmutable    {
+    public function getLastTalkDate(): ?\DateTimeImmutable    {
         return $this->lastTalkDate;
     }
 
-    public function setLasttalkdate(?\DateTimeImmutable $lastTalkDate): self
+    public function setLastTalkDate(?\DateTimeImmutable $lastTalkDate): self
     {
         $this->lastTalkDate = $lastTalkDate;
         return $this;
@@ -636,11 +710,11 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getPostalcode(): ?string    {
+    public function getPostalCode(): ?string    {
         return $this->postalCode;
     }
 
-    public function setPostalcode(?string $postalCode): self
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
         return $this;
@@ -649,35 +723,35 @@ abstract class ContactGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\Deal>
      */
-    public function getPrimarydeals(): Collection
+    public function getPrimaryDeals(): Collection
     {
         return $this->primaryDeals;
     }
 
-    public function addPrimarydeal(App\Entity\Deal $primaryDeal): self
+    public function addPrimaryDeal(App\Entity\Deal $primaryDeal): self
     {
         if (!$this->primaryDeals->contains($primaryDeal)) {
             $this->primaryDeals->add($primaryDeal);
-            $primaryDeal->setPrimarycontact($this);
+            $primaryDeal->setPrimaryContact($this);
         }
         return $this;
     }
 
-    public function removePrimarydeal(App\Entity\Deal $primaryDeal): self
+    public function removePrimaryDeal(App\Entity\Deal $primaryDeal): self
     {
         if ($this->primaryDeals->removeElement($primaryDeal)) {
-            if ($primaryDeal->getPrimarycontact() === $this) {
-                $primaryDeal->setPrimarycontact(null);
+            if ($primaryDeal->getPrimaryContact() === $this) {
+                $primaryDeal->setPrimaryContact(null);
             }
         }
         return $this;
     }
 
-    public function getProfilepictureurl(): ?string    {
+    public function getProfilePictureUrl(): ?string    {
         return $this->profilePictureUrl;
     }
 
-    public function setProfilepictureurl(?string $profilePictureUrl): self
+    public function setProfilePictureUrl(?string $profilePictureUrl): self
     {
         $this->profilePictureUrl = $profilePictureUrl;
         return $this;
@@ -706,25 +780,25 @@ abstract class ContactGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\SocialMedia>
      */
-    public function getSocialmedias(): Collection
+    public function getSocialMedias(): Collection
     {
         return $this->socialMedias;
     }
 
-    public function addSocialmedia(App\Entity\SocialMedia $ocialMedia): self
+    public function addSocialMedia(App\Entity\SocialMedia $socialMedia): self
     {
-        if (!$this->socialMedias->contains($ocialMedia)) {
-            $this->socialMedias->add($ocialMedia);
-            $ocialMedia->setContact($this);
+        if (!$this->socialMedias->contains($socialMedia)) {
+            $this->socialMedias->add($socialMedia);
+            $socialMedia->setContact($this);
         }
         return $this;
     }
 
-    public function removeSocialmedia(App\Entity\SocialMedia $ocialMedia): self
+    public function removeSocialMedia(App\Entity\SocialMedia $socialMedia): self
     {
-        if ($this->socialMedias->removeElement($ocialMedia)) {
-            if ($ocialMedia->getContact() === $this) {
-                $ocialMedia->setContact(null);
+        if ($this->socialMedias->removeElement($socialMedia)) {
+            if ($socialMedia->getContact() === $this) {
+                $socialMedia->setContact(null);
             }
         }
         return $this;
@@ -775,20 +849,20 @@ abstract class ContactGenerated extends EntityBase
         return $this->tasks;
     }
 
-    public function addTak(App\Entity\Task $tak): self
+    public function addTask(App\Entity\Task $task): self
     {
-        if (!$this->tasks->contains($tak)) {
-            $this->tasks->add($tak);
-            $tak->setContact($this);
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setContact($this);
         }
         return $this;
     }
 
-    public function removeTak(App\Entity\Task $tak): self
+    public function removeTask(App\Entity\Task $task): self
     {
-        if ($this->tasks->removeElement($tak)) {
-            if ($tak->getContact() === $this) {
-                $tak->setContact(null);
+        if ($this->tasks->removeElement($task)) {
+            if ($task->getContact() === $this) {
+                $task->setContact(null);
             }
         }
         return $this;

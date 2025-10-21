@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\User;
 use App\Entity\Event;
 use App\Entity\EventResource;
@@ -25,56 +26,76 @@ use App\Entity\EventResource;
 #[ORM\HasLifecycleCallbacks]
 abstract class EventResourceBookingGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'eventResourceBookings')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'resourceBookings')]
     protected ?User $bookedBy = null;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'datetime')]
     protected \DateTimeImmutable $startTime;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'datetime')]
     protected \DateTimeImmutable $endTime;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $confirmed = false;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $cancelled = false;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $paid = false;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $depositAmount = 0;
+    protected ?string $depositAmount = '0';
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $totalAmount = 0;
+    protected ?string $totalAmount = '0';
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $confirmedAt = null;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $cancelledAt = null;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $cancellationReason = null;
 
-    #[ORM\Column(type: 'boolean')]
-    protected bool $reminderSent = false;
-
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'resourceBookings')]
     protected ?Event $event = null;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $reminderSent = false;
+
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $quantity = 1;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\ManyToOne(targetEntity: EventResource::class, inversedBy: 'eventBookings')]
     protected ?EventResource $resource = null;
 
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'string', length: 50)]
     protected string $status = 'pending';
 
@@ -84,32 +105,43 @@ abstract class EventResourceBookingGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getBookedby(): ?App\Entity\User
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getBookedBy(): ?App\Entity\User
     {
         return $this->bookedBy;
     }
 
-    public function setBookedby(?App\Entity\User $bookedBy): self
+    public function setBookedBy(?App\Entity\User $bookedBy): self
     {
         $this->bookedBy = $bookedBy;
         return $this;
     }
 
-    public function getStarttime(): \DateTimeImmutable    {
+    public function getStartTime(): \DateTimeImmutable    {
         return $this->startTime;
     }
 
-    public function setStarttime(\DateTimeImmutable $startTime): self
+    public function setStartTime(\DateTimeImmutable $startTime): self
     {
         $this->startTime = $startTime;
         return $this;
     }
 
-    public function getEndtime(): \DateTimeImmutable    {
+    public function getEndTime(): \DateTimeImmutable    {
         return $this->endTime;
     }
 
-    public function setEndtime(\DateTimeImmutable $endTime): self
+    public function setEndTime(\DateTimeImmutable $endTime): self
     {
         $this->endTime = $endTime;
         return $this;
@@ -160,69 +192,54 @@ abstract class EventResourceBookingGenerated extends EntityBase
         return $this->paid === true;
     }
 
-    public function getDepositamount(): ?float    {
+    public function getDepositAmount(): ?string    {
         return $this->depositAmount;
     }
 
-    public function setDepositamount(?float $depositAmount): self
+    public function setDepositAmount(?string $depositAmount): self
     {
         $this->depositAmount = $depositAmount;
         return $this;
     }
 
-    public function getTotalamount(): ?float    {
+    public function getTotalAmount(): ?string    {
         return $this->totalAmount;
     }
 
-    public function setTotalamount(?float $totalAmount): self
+    public function setTotalAmount(?string $totalAmount): self
     {
         $this->totalAmount = $totalAmount;
         return $this;
     }
 
-    public function getConfirmedat(): ?\DateTimeImmutable    {
+    public function getConfirmedAt(): ?\DateTimeImmutable    {
         return $this->confirmedAt;
     }
 
-    public function setConfirmedat(?\DateTimeImmutable $confirmedAt): self
+    public function setConfirmedAt(?\DateTimeImmutable $confirmedAt): self
     {
         $this->confirmedAt = $confirmedAt;
         return $this;
     }
 
-    public function getCancelledat(): ?\DateTimeImmutable    {
+    public function getCancelledAt(): ?\DateTimeImmutable    {
         return $this->cancelledAt;
     }
 
-    public function setCancelledat(?\DateTimeImmutable $cancelledAt): self
+    public function setCancelledAt(?\DateTimeImmutable $cancelledAt): self
     {
         $this->cancelledAt = $cancelledAt;
         return $this;
     }
 
-    public function getCancellationreason(): ?string    {
+    public function getCancellationReason(): ?string    {
         return $this->cancellationReason;
     }
 
-    public function setCancellationreason(?string $cancellationReason): self
+    public function setCancellationReason(?string $cancellationReason): self
     {
         $this->cancellationReason = $cancellationReason;
         return $this;
-    }
-
-    public function getRemindersent(): bool    {
-        return $this->reminderSent;
-    }
-
-    public function setRemindersent(bool $reminderSent): self
-    {
-        $this->reminderSent = $reminderSent;
-        return $this;
-    }
-
-    public function isRemindersent(): bool
-    {
-        return $this->reminderSent === true;
     }
 
     public function getEvent(): ?App\Entity\Event
@@ -234,6 +251,21 @@ abstract class EventResourceBookingGenerated extends EntityBase
     {
         $this->event = $event;
         return $this;
+    }
+
+    public function getReminderSent(): bool    {
+        return $this->reminderSent;
+    }
+
+    public function setReminderSent(bool $reminderSent): self
+    {
+        $this->reminderSent = $reminderSent;
+        return $this;
+    }
+
+    public function isReminderSent(): bool
+    {
+        return $this->reminderSent === true;
     }
 
     public function getNotes(): ?string    {

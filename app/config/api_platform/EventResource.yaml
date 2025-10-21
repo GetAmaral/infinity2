@@ -33,9 +33,11 @@ resources:
         security: "is_granted('ROLE_EVENT_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"
@@ -69,12 +71,12 @@ resources:
       maximumBookingDuration:
         description: "Maximum booking duration in minutes (null = unlimited)"
         example: "480"
-      pricePerHour:
-        description: "Hourly rental cost for this resource"
-        example: "50.00"
       bookingRules:
         description: "Custom booking rules and restrictions for this resource"
         example: "{\"maxAdvanceBookingDays\": 90, \"bufferMinutes\": 15, \"allowWeekends\": true, \"allowedRoles\": [\"ROLE_EMPLOYEE\", \"ROLE_MANAGER\"]}"
+      pricePerHour:
+        description: "Hourly rental cost for this resource"
+        example: "50.00"
       pricePerDay:
         description: "Daily rental cost for this resource"
         example: "300.00"

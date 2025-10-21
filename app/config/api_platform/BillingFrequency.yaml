@@ -34,9 +34,11 @@ resources:
         security: "is_granted('ROLE_DATA_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       value:
         description: "Unique code identifier for the billing frequency (e.g., \"monthly\", \"quarterly\", \"annual\"). Lowercase, underscore-separated."
         example: "monthly"

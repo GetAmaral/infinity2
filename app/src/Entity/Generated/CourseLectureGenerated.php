@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\CourseModule;
 use App\Entity\StudentLecture;
 use App\Entity\StudentCourse;
@@ -26,46 +27,66 @@ use App\Entity\StudentCourse;
 #[ORM\HasLifecycleCallbacks]
 abstract class CourseLectureGenerated extends EntityBase
 {
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $name;
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $videoFileName = null;
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     protected ?string $videoPath = null;
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'string', length: 20)]
+    #[Assert\Length(max: 20)]
     protected string $processingStatus = 'pending';
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $processingStep = null;
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'integer')]
+    #[Assert\Range(max: 150, min: 0)]
     protected int $processingPercentage = 0;
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $processingError = null;
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $processedAt = null;
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $viewOrder = 0;
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $lengthSeconds = 0;
 
+    #[Groups(['courselecture:read', 'courselecture:write'])]
     #[ORM\ManyToOne(targetEntity: CourseModule::class, inversedBy: 'lectures')]
     #[ORM\JoinColumn(nullable: false)]
     protected CourseModule $courseModule;
 
+    #[Groups(['courselecture:read'])]
     #[ORM\OneToMany(targetEntity: StudentLecture::class, mappedBy: 'lecture', fetch: 'LAZY')]
     protected Collection $studentLectures;
 
+    #[Groups(['courselecture:read'])]
     #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'currentLecture', fetch: 'LAZY')]
     protected Collection $studentCoursesOnThisLecture;
 
@@ -97,102 +118,102 @@ abstract class CourseLectureGenerated extends EntityBase
         return $this;
     }
 
-    public function getVideofilename(): ?string    {
+    public function getVideoFileName(): ?string    {
         return $this->videoFileName;
     }
 
-    public function setVideofilename(?string $videoFileName): self
+    public function setVideoFileName(?string $videoFileName): self
     {
         $this->videoFileName = $videoFileName;
         return $this;
     }
 
-    public function getVideopath(): ?string    {
+    public function getVideoPath(): ?string    {
         return $this->videoPath;
     }
 
-    public function setVideopath(?string $videoPath): self
+    public function setVideoPath(?string $videoPath): self
     {
         $this->videoPath = $videoPath;
         return $this;
     }
 
-    public function getProcessingstatus(): string    {
+    public function getProcessingStatus(): string    {
         return $this->processingStatus;
     }
 
-    public function setProcessingstatus(string $processingStatus): self
+    public function setProcessingStatus(string $processingStatus): self
     {
         $this->processingStatus = $processingStatus;
         return $this;
     }
 
-    public function getProcessingstep(): ?string    {
+    public function getProcessingStep(): ?string    {
         return $this->processingStep;
     }
 
-    public function setProcessingstep(?string $processingStep): self
+    public function setProcessingStep(?string $processingStep): self
     {
         $this->processingStep = $processingStep;
         return $this;
     }
 
-    public function getProcessingpercentage(): int    {
+    public function getProcessingPercentage(): int    {
         return $this->processingPercentage;
     }
 
-    public function setProcessingpercentage(int $processingPercentage): self
+    public function setProcessingPercentage(int $processingPercentage): self
     {
         $this->processingPercentage = $processingPercentage;
         return $this;
     }
 
-    public function getProcessingerror(): ?string    {
+    public function getProcessingError(): ?string    {
         return $this->processingError;
     }
 
-    public function setProcessingerror(?string $processingError): self
+    public function setProcessingError(?string $processingError): self
     {
         $this->processingError = $processingError;
         return $this;
     }
 
-    public function getProcessedat(): ?\DateTimeImmutable    {
+    public function getProcessedAt(): ?\DateTimeImmutable    {
         return $this->processedAt;
     }
 
-    public function setProcessedat(?\DateTimeImmutable $processedAt): self
+    public function setProcessedAt(?\DateTimeImmutable $processedAt): self
     {
         $this->processedAt = $processedAt;
         return $this;
     }
 
-    public function getVieworder(): int    {
+    public function getViewOrder(): int    {
         return $this->viewOrder;
     }
 
-    public function setVieworder(int $viewOrder): self
+    public function setViewOrder(int $viewOrder): self
     {
         $this->viewOrder = $viewOrder;
         return $this;
     }
 
-    public function getLengthseconds(): int    {
+    public function getLengthSeconds(): int    {
         return $this->lengthSeconds;
     }
 
-    public function setLengthseconds(int $lengthSeconds): self
+    public function setLengthSeconds(int $lengthSeconds): self
     {
         $this->lengthSeconds = $lengthSeconds;
         return $this;
     }
 
-    public function getCoursemodule(): App\Entity\CourseModule
+    public function getCourseModule(): App\Entity\CourseModule
     {
         return $this->courseModule;
     }
 
-    public function setCoursemodule(App\Entity\CourseModule $courseModule): self
+    public function setCourseModule(App\Entity\CourseModule $courseModule): self
     {
         $this->courseModule = $courseModule;
         return $this;
@@ -201,25 +222,25 @@ abstract class CourseLectureGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\StudentLecture>
      */
-    public function getStudentlectures(): Collection
+    public function getStudentLectures(): Collection
     {
         return $this->studentLectures;
     }
 
-    public function addStudentlecture(App\Entity\StudentLecture $tudentLecture): self
+    public function addStudentLecture(App\Entity\StudentLecture $studentLecture): self
     {
-        if (!$this->studentLectures->contains($tudentLecture)) {
-            $this->studentLectures->add($tudentLecture);
-            $tudentLecture->setLecture($this);
+        if (!$this->studentLectures->contains($studentLecture)) {
+            $this->studentLectures->add($studentLecture);
+            $studentLecture->setLecture($this);
         }
         return $this;
     }
 
-    public function removeStudentlecture(App\Entity\StudentLecture $tudentLecture): self
+    public function removeStudentLecture(App\Entity\StudentLecture $studentLecture): self
     {
-        if ($this->studentLectures->removeElement($tudentLecture)) {
-            if ($tudentLecture->getLecture() === $this) {
-                $tudentLecture->setLecture(null);
+        if ($this->studentLectures->removeElement($studentLecture)) {
+            if ($studentLecture->getLecture() === $this) {
+                $studentLecture->setLecture(null);
             }
         }
         return $this;
@@ -228,25 +249,25 @@ abstract class CourseLectureGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\StudentCourse>
      */
-    public function getStudentcoursesonthislecture(): Collection
+    public function getStudentCoursesOnThisLecture(): Collection
     {
         return $this->studentCoursesOnThisLecture;
     }
 
-    public function addStudentcoureonthilecture(App\Entity\StudentCourse $tudentCoureOnThiLecture): self
+    public function addStudentCoursesOnThisLecture(App\Entity\StudentCourse $studentCoursesOnThisLecture): self
     {
-        if (!$this->studentCoursesOnThisLecture->contains($tudentCoureOnThiLecture)) {
-            $this->studentCoursesOnThisLecture->add($tudentCoureOnThiLecture);
-            $tudentCoureOnThiLecture->setCurrentlecture($this);
+        if (!$this->studentCoursesOnThisLecture->contains($studentCoursesOnThisLecture)) {
+            $this->studentCoursesOnThisLecture->add($studentCoursesOnThisLecture);
+            $studentCoursesOnThisLecture->setCurrentLecture($this);
         }
         return $this;
     }
 
-    public function removeStudentcoureonthilecture(App\Entity\StudentCourse $tudentCoureOnThiLecture): self
+    public function removeStudentCoursesOnThisLecture(App\Entity\StudentCourse $studentCoursesOnThisLecture): self
     {
-        if ($this->studentCoursesOnThisLecture->removeElement($tudentCoureOnThiLecture)) {
-            if ($tudentCoureOnThiLecture->getCurrentlecture() === $this) {
-                $tudentCoureOnThiLecture->setCurrentlecture(null);
+        if ($this->studentCoursesOnThisLecture->removeElement($studentCoursesOnThisLecture)) {
+            if ($studentCoursesOnThisLecture->getCurrentLecture() === $this) {
+                $studentCoursesOnThisLecture->setCurrentLecture(null);
             }
         }
         return $this;

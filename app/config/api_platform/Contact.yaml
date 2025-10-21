@@ -33,9 +33,11 @@ resources:
         security: "is_granted('ROLE_SALES_MANAGER')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"
@@ -81,24 +83,24 @@ resources:
       deals:
         description: "Deals"
         example: "sample value"
-      title:
-        description: "Job Title (text field)"
-        example: "Sample longer text value"
       linkedinUrl:
         description: "LinkedIn URL (text field)"
         example: "Sample longer text value"
-      department:
-        description: "Department (text field)"
+      title:
+        description: "Job Title (text field)"
         example: "Sample longer text value"
       emailOptOut:
         description: "Email Opt-Out (yes\/no)"
         example: "true"
-      doNotCall:
-        description: "Do Not Call (yes\/no)"
-        example: "true"
+      department:
+        description: "Department (text field)"
+        example: "Sample longer text value"
       leadSource:
         description: "Lead Source (text field)"
         example: "Sample longer text value"
+      doNotCall:
+        description: "Do Not Call (yes\/no)"
+        example: "true"
       preferredContactMethod:
         description: "Preferred Contact Method (text field)"
         example: "Sample longer text value"

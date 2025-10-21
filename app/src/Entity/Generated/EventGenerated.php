@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Calendar;
 use App\Entity\User;
 use App\Entity\EventAttendee;
@@ -18,6 +19,10 @@ use App\Entity\Attachment;
 use App\Entity\Reminder;
 use App\Entity\EventResourceBooking;
 use App\Entity\Event;
+use App\Entity\WorkingHour;
+use App\Entity\Holiday;
+use App\Entity\Notification;
+use App\Entity\MeetingData;
 use App\Entity\Contact;
 use App\Entity\Company;
 use App\Entity\Deal;
@@ -35,194 +40,277 @@ use App\Entity\Deal;
 #[ORM\HasLifecycleCallbacks]
 abstract class EventGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['event:read', 'event:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'events')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
-
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'datetime')]
     protected \DateTimeImmutable $startTime;
 
+    #[Groups(['event:read', 'event:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $description = null;
+
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'datetime')]
     protected \DateTimeImmutable $endTime;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $allDay = false;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $location = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $meetingUrl = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\ManyToOne(targetEntity: Calendar::class, inversedBy: 'events')]
     protected ?Calendar $calendar = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizedEvents')]
     protected ?User $organizer = null;
 
+    #[Groups(['event:read'])]
     #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'event', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $attendees;
 
+    #[Groups(['event:read'])]
     #[ORM\ManyToMany(targetEntity: EventCategory::class, inversedBy: 'events', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'event_categories')]
     protected Collection $categories;
 
+    #[Groups(['event:read'])]
     #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'event', fetch: 'LAZY')]
     protected Collection $attachments;
 
+    #[Groups(['event:read'])]
     #[ORM\OneToMany(targetEntity: Reminder::class, mappedBy: 'event', fetch: 'LAZY')]
     protected Collection $reminders;
 
+    #[Groups(['event:read'])]
     #[ORM\OneToMany(targetEntity: EventResourceBooking::class, mappedBy: 'event', fetch: 'LAZY')]
     protected Collection $resourceBookings;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'childrenEvents')]
     protected ?Event $parentEvent = null;
 
+    #[Groups(['event:read'])]
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'parentEvent', fetch: 'LAZY')]
     protected Collection $childrenEvents;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $originalStartTime = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(name: 'sequence_prop', type: 'integer', nullable: true)]
     protected ?int $sequence = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $conferenceData = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $extendedProperties = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $source = null;
 
+    #[Groups(['event:read'])]
+    #[ORM\OneToMany(targetEntity: WorkingHour::class, mappedBy: 'event', fetch: 'LAZY')]
+    protected Collection $workingHours;
+
+    #[Groups(['event:read'])]
+    #[ORM\OneToMany(targetEntity: Holiday::class, mappedBy: 'event', fetch: 'LAZY')]
+    protected Collection $holidays;
+
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $subject = null;
 
+    #[Groups(['event:read'])]
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'event', fetch: 'LAZY')]
+    protected Collection $notifications;
+
+    #[Groups(['event:read'])]
+    #[ORM\OneToMany(targetEntity: MeetingData::class, mappedBy: 'event', fetch: 'LAZY')]
+    protected Collection $meetingDatas;
+
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $status = 'Planned';
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $showAs = 'Busy';
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $eventType = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $importance = 'Normal';
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $sensitivity = 'Normal';
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $timezone = 'UTC';
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $startTimezone = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $endTimezone = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $duration = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $locationDisplayName = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $locationUrl = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $locationCoordinates = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $onlineMeeting = false;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $onlineMeetingProvider = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $meetingId = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $meetingPassword = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $recurring = false;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $recurrenceRule = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $recurrenceExceptions = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $cancelled = false;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $draft = false;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $responseStatus = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $responseRequested = true;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $allowNewTimeProposals = true;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $hideAttendees = false;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $guestsCanModify = false;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $guestsCanInviteOthers = true;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $guestsCanSeeOtherGuests = true;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $transparency = 'Opaque';
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $reminderMinutes = 15;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $externalCalendarId = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $externalCalendarProvider = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $icalUid = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $webLink = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $htmlLink = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $colorId = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $locked = false;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $assignedTo = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\ManyToOne(targetEntity: Contact::class)]
     protected ?Contact $contact = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\ManyToOne(targetEntity: Company::class)]
     protected ?Company $company = null;
 
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\ManyToOne(targetEntity: Deal::class)]
     protected ?Deal $deal = null;
 
@@ -236,6 +324,21 @@ abstract class EventGenerated extends EntityBase
         $this->reminders = new ArrayCollection();
         $this->resourceBookings = new ArrayCollection();
         $this->childrenEvents = new ArrayCollection();
+        $this->workingHours = new ArrayCollection();
+        $this->holidays = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+        $this->meetingDatas = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -245,6 +348,16 @@ abstract class EventGenerated extends EntityBase
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getStartTime(): \DateTimeImmutable    {
+        return $this->startTime;
+    }
+
+    public function setStartTime(\DateTimeImmutable $startTime): self
+    {
+        $this->startTime = $startTime;
         return $this;
     }
 
@@ -258,37 +371,27 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getStarttime(): \DateTimeImmutable    {
-        return $this->startTime;
-    }
-
-    public function setStarttime(\DateTimeImmutable $startTime): self
-    {
-        $this->startTime = $startTime;
-        return $this;
-    }
-
-    public function getEndtime(): \DateTimeImmutable    {
+    public function getEndTime(): \DateTimeImmutable    {
         return $this->endTime;
     }
 
-    public function setEndtime(\DateTimeImmutable $endTime): self
+    public function setEndTime(\DateTimeImmutable $endTime): self
     {
         $this->endTime = $endTime;
         return $this;
     }
 
-    public function getAllday(): bool    {
+    public function getAllDay(): bool    {
         return $this->allDay;
     }
 
-    public function setAllday(bool $allDay): self
+    public function setAllDay(bool $allDay): self
     {
         $this->allDay = $allDay;
         return $this;
     }
 
-    public function isAllday(): bool
+    public function isAllDay(): bool
     {
         return $this->allDay === true;
     }
@@ -303,11 +406,11 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getMeetingurl(): ?string    {
+    public function getMeetingUrl(): ?string    {
         return $this->meetingUrl;
     }
 
-    public function setMeetingurl(?string $meetingUrl): self
+    public function setMeetingUrl(?string $meetingUrl): self
     {
         $this->meetingUrl = $meetingUrl;
         return $this;
@@ -442,36 +545,36 @@ abstract class EventGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\EventResourceBooking>
      */
-    public function getResourcebookings(): Collection
+    public function getResourceBookings(): Collection
     {
         return $this->resourceBookings;
     }
 
-    public function addReourcebooking(App\Entity\EventResourceBooking $reourceBooking): self
+    public function addResourceBooking(App\Entity\EventResourceBooking $resourceBooking): self
     {
-        if (!$this->resourceBookings->contains($reourceBooking)) {
-            $this->resourceBookings->add($reourceBooking);
-            $reourceBooking->setEvent($this);
+        if (!$this->resourceBookings->contains($resourceBooking)) {
+            $this->resourceBookings->add($resourceBooking);
+            $resourceBooking->setEvent($this);
         }
         return $this;
     }
 
-    public function removeReourcebooking(App\Entity\EventResourceBooking $reourceBooking): self
+    public function removeResourceBooking(App\Entity\EventResourceBooking $resourceBooking): self
     {
-        if ($this->resourceBookings->removeElement($reourceBooking)) {
-            if ($reourceBooking->getEvent() === $this) {
-                $reourceBooking->setEvent(null);
+        if ($this->resourceBookings->removeElement($resourceBooking)) {
+            if ($resourceBooking->getEvent() === $this) {
+                $resourceBooking->setEvent(null);
             }
         }
         return $this;
     }
 
-    public function getParentevent(): ?App\Entity\Event
+    public function getParentEvent(): ?App\Entity\Event
     {
         return $this->parentEvent;
     }
 
-    public function setParentevent(?App\Entity\Event $parentEvent): self
+    public function setParentEvent(?App\Entity\Event $parentEvent): self
     {
         $this->parentEvent = $parentEvent;
         return $this;
@@ -480,35 +583,35 @@ abstract class EventGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\Event>
      */
-    public function getChildrenevents(): Collection
+    public function getChildrenEvents(): Collection
     {
         return $this->childrenEvents;
     }
 
-    public function addChildrenevent(App\Entity\Event $childrenEvent): self
+    public function addChildrenEvent(App\Entity\Event $childrenEvent): self
     {
         if (!$this->childrenEvents->contains($childrenEvent)) {
             $this->childrenEvents->add($childrenEvent);
-            $childrenEvent->setParentevent($this);
+            $childrenEvent->setParentEvent($this);
         }
         return $this;
     }
 
-    public function removeChildrenevent(App\Entity\Event $childrenEvent): self
+    public function removeChildrenEvent(App\Entity\Event $childrenEvent): self
     {
         if ($this->childrenEvents->removeElement($childrenEvent)) {
-            if ($childrenEvent->getParentevent() === $this) {
-                $childrenEvent->setParentevent(null);
+            if ($childrenEvent->getParentEvent() === $this) {
+                $childrenEvent->setParentEvent(null);
             }
         }
         return $this;
     }
 
-    public function getOriginalstarttime(): ?\DateTimeImmutable    {
+    public function getOriginalStartTime(): ?\DateTimeImmutable    {
         return $this->originalStartTime;
     }
 
-    public function setOriginalstarttime(?\DateTimeImmutable $originalStartTime): self
+    public function setOriginalStartTime(?\DateTimeImmutable $originalStartTime): self
     {
         $this->originalStartTime = $originalStartTime;
         return $this;
@@ -524,21 +627,21 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getConferencedata(): ?array    {
+    public function getConferenceData(): ?array    {
         return $this->conferenceData;
     }
 
-    public function setConferencedata(?array $conferenceData): self
+    public function setConferenceData(?array $conferenceData): self
     {
         $this->conferenceData = $conferenceData;
         return $this;
     }
 
-    public function getExtendedproperties(): ?array    {
+    public function getExtendedProperties(): ?array    {
         return $this->extendedProperties;
     }
 
-    public function setExtendedproperties(?array $extendedProperties): self
+    public function setExtendedProperties(?array $extendedProperties): self
     {
         $this->extendedProperties = $extendedProperties;
         return $this;
@@ -554,6 +657,60 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
+    /**
+     * @return Collection<int, App\Entity\WorkingHour>
+     */
+    public function getWorkingHours(): Collection
+    {
+        return $this->workingHours;
+    }
+
+    public function addWorkingHour(App\Entity\WorkingHour $workingHour): self
+    {
+        if (!$this->workingHours->contains($workingHour)) {
+            $this->workingHours->add($workingHour);
+            $workingHour->setEvent($this);
+        }
+        return $this;
+    }
+
+    public function removeWorkingHour(App\Entity\WorkingHour $workingHour): self
+    {
+        if ($this->workingHours->removeElement($workingHour)) {
+            if ($workingHour->getEvent() === $this) {
+                $workingHour->setEvent(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\Holiday>
+     */
+    public function getHolidays(): Collection
+    {
+        return $this->holidays;
+    }
+
+    public function addHoliday(App\Entity\Holiday $holiday): self
+    {
+        if (!$this->holidays->contains($holiday)) {
+            $this->holidays->add($holiday);
+            $holiday->setEvent($this);
+        }
+        return $this;
+    }
+
+    public function removeHoliday(App\Entity\Holiday $holiday): self
+    {
+        if ($this->holidays->removeElement($holiday)) {
+            if ($holiday->getEvent() === $this) {
+                $holiday->setEvent(null);
+            }
+        }
+        return $this;
+    }
+
     public function getSubject(): ?string    {
         return $this->subject;
     }
@@ -561,6 +718,60 @@ abstract class EventGenerated extends EntityBase
     public function setSubject(?string $subject): self
     {
         $this->subject = $subject;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(App\Entity\Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setEvent($this);
+        }
+        return $this;
+    }
+
+    public function removeNotification(App\Entity\Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getEvent() === $this) {
+                $notification->setEvent(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, App\Entity\MeetingData>
+     */
+    public function getMeetingDatas(): Collection
+    {
+        return $this->meetingDatas;
+    }
+
+    public function addMeetingData(App\Entity\MeetingData $meetingData): self
+    {
+        if (!$this->meetingDatas->contains($meetingData)) {
+            $this->meetingDatas->add($meetingData);
+            $meetingData->setEvent($this);
+        }
+        return $this;
+    }
+
+    public function removeMeetingData(App\Entity\MeetingData $meetingData): self
+    {
+        if ($this->meetingDatas->removeElement($meetingData)) {
+            if ($meetingData->getEvent() === $this) {
+                $meetingData->setEvent(null);
+            }
+        }
         return $this;
     }
 
@@ -574,21 +785,21 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getShowas(): string    {
+    public function getShowAs(): string    {
         return $this->showAs;
     }
 
-    public function setShowas(string $showAs): self
+    public function setShowAs(string $showAs): self
     {
         $this->showAs = $showAs;
         return $this;
     }
 
-    public function getEventtype(): ?string    {
+    public function getEventType(): ?string    {
         return $this->eventType;
     }
 
-    public function setEventtype(?string $eventType): self
+    public function setEventType(?string $eventType): self
     {
         $this->eventType = $eventType;
         return $this;
@@ -624,21 +835,21 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getStarttimezone(): ?string    {
+    public function getStartTimezone(): ?string    {
         return $this->startTimezone;
     }
 
-    public function setStarttimezone(?string $startTimezone): self
+    public function setStartTimezone(?string $startTimezone): self
     {
         $this->startTimezone = $startTimezone;
         return $this;
     }
 
-    public function getEndtimezone(): ?string    {
+    public function getEndTimezone(): ?string    {
         return $this->endTimezone;
     }
 
-    public function setEndtimezone(?string $endTimezone): self
+    public function setEndTimezone(?string $endTimezone): self
     {
         $this->endTimezone = $endTimezone;
         return $this;
@@ -654,76 +865,76 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getLocationdisplayname(): ?string    {
+    public function getLocationDisplayName(): ?string    {
         return $this->locationDisplayName;
     }
 
-    public function setLocationdisplayname(?string $locationDisplayName): self
+    public function setLocationDisplayName(?string $locationDisplayName): self
     {
         $this->locationDisplayName = $locationDisplayName;
         return $this;
     }
 
-    public function getLocationurl(): ?string    {
+    public function getLocationUrl(): ?string    {
         return $this->locationUrl;
     }
 
-    public function setLocationurl(?string $locationUrl): self
+    public function setLocationUrl(?string $locationUrl): self
     {
         $this->locationUrl = $locationUrl;
         return $this;
     }
 
-    public function getLocationcoordinates(): ?array    {
+    public function getLocationCoordinates(): ?array    {
         return $this->locationCoordinates;
     }
 
-    public function setLocationcoordinates(?array $locationCoordinates): self
+    public function setLocationCoordinates(?array $locationCoordinates): self
     {
         $this->locationCoordinates = $locationCoordinates;
         return $this;
     }
 
-    public function getOnlinemeeting(): bool    {
+    public function getOnlineMeeting(): bool    {
         return $this->onlineMeeting;
     }
 
-    public function setOnlinemeeting(bool $onlineMeeting): self
+    public function setOnlineMeeting(bool $onlineMeeting): self
     {
         $this->onlineMeeting = $onlineMeeting;
         return $this;
     }
 
-    public function isOnlinemeeting(): bool
+    public function isOnlineMeeting(): bool
     {
         return $this->onlineMeeting === true;
     }
 
-    public function getOnlinemeetingprovider(): ?string    {
+    public function getOnlineMeetingProvider(): ?string    {
         return $this->onlineMeetingProvider;
     }
 
-    public function setOnlinemeetingprovider(?string $onlineMeetingProvider): self
+    public function setOnlineMeetingProvider(?string $onlineMeetingProvider): self
     {
         $this->onlineMeetingProvider = $onlineMeetingProvider;
         return $this;
     }
 
-    public function getMeetingid(): ?string    {
+    public function getMeetingId(): ?string    {
         return $this->meetingId;
     }
 
-    public function setMeetingid(?string $meetingId): self
+    public function setMeetingId(?string $meetingId): self
     {
         $this->meetingId = $meetingId;
         return $this;
     }
 
-    public function getMeetingpassword(): ?string    {
+    public function getMeetingPassword(): ?string    {
         return $this->meetingPassword;
     }
 
-    public function setMeetingpassword(?string $meetingPassword): self
+    public function setMeetingPassword(?string $meetingPassword): self
     {
         $this->meetingPassword = $meetingPassword;
         return $this;
@@ -744,21 +955,21 @@ abstract class EventGenerated extends EntityBase
         return $this->recurring === true;
     }
 
-    public function getRecurrencerule(): ?string    {
+    public function getRecurrenceRule(): ?string    {
         return $this->recurrenceRule;
     }
 
-    public function setRecurrencerule(?string $recurrenceRule): self
+    public function setRecurrenceRule(?string $recurrenceRule): self
     {
         $this->recurrenceRule = $recurrenceRule;
         return $this;
     }
 
-    public function getRecurrenceexceptions(): ?array    {
+    public function getRecurrenceExceptions(): ?array    {
         return $this->recurrenceExceptions;
     }
 
-    public function setRecurrenceexceptions(?array $recurrenceExceptions): self
+    public function setRecurrenceExceptions(?array $recurrenceExceptions): self
     {
         $this->recurrenceExceptions = $recurrenceExceptions;
         return $this;
@@ -794,102 +1005,102 @@ abstract class EventGenerated extends EntityBase
         return $this->draft === true;
     }
 
-    public function getResponsestatus(): ?string    {
+    public function getResponseStatus(): ?string    {
         return $this->responseStatus;
     }
 
-    public function setResponsestatus(?string $responseStatus): self
+    public function setResponseStatus(?string $responseStatus): self
     {
         $this->responseStatus = $responseStatus;
         return $this;
     }
 
-    public function getResponserequested(): bool    {
+    public function getResponseRequested(): bool    {
         return $this->responseRequested;
     }
 
-    public function setResponserequested(bool $responseRequested): self
+    public function setResponseRequested(bool $responseRequested): self
     {
         $this->responseRequested = $responseRequested;
         return $this;
     }
 
-    public function isResponserequested(): bool
+    public function isResponseRequested(): bool
     {
         return $this->responseRequested === true;
     }
 
-    public function getAllownewtimeproposals(): bool    {
+    public function getAllowNewTimeProposals(): bool    {
         return $this->allowNewTimeProposals;
     }
 
-    public function setAllownewtimeproposals(bool $allowNewTimeProposals): self
+    public function setAllowNewTimeProposals(bool $allowNewTimeProposals): self
     {
         $this->allowNewTimeProposals = $allowNewTimeProposals;
         return $this;
     }
 
-    public function isAllownewtimeproposals(): bool
+    public function isAllowNewTimeProposals(): bool
     {
         return $this->allowNewTimeProposals === true;
     }
 
-    public function getHideattendees(): bool    {
+    public function getHideAttendees(): bool    {
         return $this->hideAttendees;
     }
 
-    public function setHideattendees(bool $hideAttendees): self
+    public function setHideAttendees(bool $hideAttendees): self
     {
         $this->hideAttendees = $hideAttendees;
         return $this;
     }
 
-    public function isHideattendees(): bool
+    public function isHideAttendees(): bool
     {
         return $this->hideAttendees === true;
     }
 
-    public function getGuestscanmodify(): bool    {
+    public function getGuestsCanModify(): bool    {
         return $this->guestsCanModify;
     }
 
-    public function setGuestscanmodify(bool $guestsCanModify): self
+    public function setGuestsCanModify(bool $guestsCanModify): self
     {
         $this->guestsCanModify = $guestsCanModify;
         return $this;
     }
 
-    public function isGuestscanmodify(): bool
+    public function isGuestsCanModify(): bool
     {
         return $this->guestsCanModify === true;
     }
 
-    public function getGuestscaninviteothers(): bool    {
+    public function getGuestsCanInviteOthers(): bool    {
         return $this->guestsCanInviteOthers;
     }
 
-    public function setGuestscaninviteothers(bool $guestsCanInviteOthers): self
+    public function setGuestsCanInviteOthers(bool $guestsCanInviteOthers): self
     {
         $this->guestsCanInviteOthers = $guestsCanInviteOthers;
         return $this;
     }
 
-    public function isGuestscaninviteothers(): bool
+    public function isGuestsCanInviteOthers(): bool
     {
         return $this->guestsCanInviteOthers === true;
     }
 
-    public function getGuestscanseeotherguests(): bool    {
+    public function getGuestsCanSeeOtherGuests(): bool    {
         return $this->guestsCanSeeOtherGuests;
     }
 
-    public function setGuestscanseeotherguests(bool $guestsCanSeeOtherGuests): self
+    public function setGuestsCanSeeOtherGuests(bool $guestsCanSeeOtherGuests): self
     {
         $this->guestsCanSeeOtherGuests = $guestsCanSeeOtherGuests;
         return $this;
     }
 
-    public function isGuestscanseeotherguests(): bool
+    public function isGuestsCanSeeOtherGuests(): bool
     {
         return $this->guestsCanSeeOtherGuests === true;
     }
@@ -904,71 +1115,71 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getReminderminutes(): ?int    {
+    public function getReminderMinutes(): ?int    {
         return $this->reminderMinutes;
     }
 
-    public function setReminderminutes(?int $reminderMinutes): self
+    public function setReminderMinutes(?int $reminderMinutes): self
     {
         $this->reminderMinutes = $reminderMinutes;
         return $this;
     }
 
-    public function getExternalcalendarid(): ?string    {
+    public function getExternalCalendarId(): ?string    {
         return $this->externalCalendarId;
     }
 
-    public function setExternalcalendarid(?string $externalCalendarId): self
+    public function setExternalCalendarId(?string $externalCalendarId): self
     {
         $this->externalCalendarId = $externalCalendarId;
         return $this;
     }
 
-    public function getExternalcalendarprovider(): ?string    {
+    public function getExternalCalendarProvider(): ?string    {
         return $this->externalCalendarProvider;
     }
 
-    public function setExternalcalendarprovider(?string $externalCalendarProvider): self
+    public function setExternalCalendarProvider(?string $externalCalendarProvider): self
     {
         $this->externalCalendarProvider = $externalCalendarProvider;
         return $this;
     }
 
-    public function getIcaluid(): ?string    {
+    public function getIcalUid(): ?string    {
         return $this->icalUid;
     }
 
-    public function setIcaluid(?string $icalUid): self
+    public function setIcalUid(?string $icalUid): self
     {
         $this->icalUid = $icalUid;
         return $this;
     }
 
-    public function getWeblink(): ?string    {
+    public function getWebLink(): ?string    {
         return $this->webLink;
     }
 
-    public function setWeblink(?string $webLink): self
+    public function setWebLink(?string $webLink): self
     {
         $this->webLink = $webLink;
         return $this;
     }
 
-    public function getHtmllink(): ?string    {
+    public function getHtmlLink(): ?string    {
         return $this->htmlLink;
     }
 
-    public function setHtmllink(?string $htmlLink): self
+    public function setHtmlLink(?string $htmlLink): self
     {
         $this->htmlLink = $htmlLink;
         return $this;
     }
 
-    public function getColorid(): ?string    {
+    public function getColorId(): ?string    {
         return $this->colorId;
     }
 
-    public function setColorid(?string $colorId): self
+    public function setColorId(?string $colorId): self
     {
         $this->colorId = $colorId;
         return $this;
@@ -989,12 +1200,12 @@ abstract class EventGenerated extends EntityBase
         return $this->locked === true;
     }
 
-    public function getAssignedto(): ?App\Entity\User
+    public function getAssignedTo(): ?App\Entity\User
     {
         return $this->assignedTo;
     }
 
-    public function setAssignedto(?App\Entity\User $assignedTo): self
+    public function setAssignedTo(?App\Entity\User $assignedTo): self
     {
         $this->assignedTo = $assignedTo;
         return $this;

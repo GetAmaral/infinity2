@@ -7,6 +7,7 @@ namespace App\Entity\Generated;
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Step;
 use App\Entity\StepConnection;
 
@@ -23,24 +24,31 @@ use App\Entity\StepConnection;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepOutputGenerated extends EntityBase
 {
+    #[Groups(['stepoutput:read', 'stepoutput:write'])]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'outputs')]
     #[ORM\JoinColumn(nullable: false)]
     protected Step $step;
 
+    #[Groups(['stepoutput:read', 'stepoutput:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $name;
 
+    #[Groups(['stepoutput:read', 'stepoutput:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['stepoutput:read', 'stepoutput:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Assert\3(max: 255, constraint: 'Length')]
+    #[Assert\Length(max: 255)]
     protected ?string $slug = null;
 
+    #[Groups(['stepoutput:read', 'stepoutput:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $conditional = null;
 
-    #[ORM\OneToOne(targetEntity: StepConnection::class)]
+    #[Groups(['stepoutput:read', 'stepoutput:write'])]
+    #[ORM\OneToOne(targetEntity: StepConnection::class, mappedBy: 'sourceOutput')]
     protected ?StepConnection $connection = null;
 
 

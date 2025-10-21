@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Course;
 use App\Entity\CourseLecture;
 
@@ -25,28 +26,37 @@ use App\Entity\CourseLecture;
 #[ORM\HasLifecycleCallbacks]
 abstract class CourseModuleGenerated extends EntityBase
 {
+    #[Groups(['coursemodule:read', 'coursemodule:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $name;
 
+    #[Groups(['coursemodule:read', 'coursemodule:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['coursemodule:read', 'coursemodule:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $releaseDate = null;
 
+    #[Groups(['coursemodule:read', 'coursemodule:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $viewOrder = 0;
 
+    #[Groups(['coursemodule:read', 'coursemodule:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $totalLengthSeconds = 0;
 
+    #[Groups(['coursemodule:read', 'coursemodule:write'])]
     #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'modules')]
     #[ORM\JoinColumn(nullable: false)]
     protected Course $course;
 
+    #[Groups(['coursemodule:read'])]
     #[ORM\OneToMany(targetEntity: CourseLecture::class, mappedBy: 'courseModule', fetch: 'LAZY')]
     protected Collection $lectures;
 
+    #[Groups(['coursemodule:read', 'coursemodule:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
@@ -77,31 +87,31 @@ abstract class CourseModuleGenerated extends EntityBase
         return $this;
     }
 
-    public function getReleasedate(): ?\DateTimeImmutable    {
+    public function getReleaseDate(): ?\DateTimeImmutable    {
         return $this->releaseDate;
     }
 
-    public function setReleasedate(?\DateTimeImmutable $releaseDate): self
+    public function setReleaseDate(?\DateTimeImmutable $releaseDate): self
     {
         $this->releaseDate = $releaseDate;
         return $this;
     }
 
-    public function getVieworder(): int    {
+    public function getViewOrder(): int    {
         return $this->viewOrder;
     }
 
-    public function setVieworder(int $viewOrder): self
+    public function setViewOrder(int $viewOrder): self
     {
         $this->viewOrder = $viewOrder;
         return $this;
     }
 
-    public function getTotallengthseconds(): int    {
+    public function getTotalLengthSeconds(): int    {
         return $this->totalLengthSeconds;
     }
 
-    public function setTotallengthseconds(int $totalLengthSeconds): self
+    public function setTotalLengthSeconds(int $totalLengthSeconds): self
     {
         $this->totalLengthSeconds = $totalLengthSeconds;
         return $this;
@@ -130,7 +140,7 @@ abstract class CourseModuleGenerated extends EntityBase
     {
         if (!$this->lectures->contains($lecture)) {
             $this->lectures->add($lecture);
-            $lecture->setCoursemodule($this);
+            $lecture->setCourseModule($this);
         }
         return $this;
     }
@@ -138,8 +148,8 @@ abstract class CourseModuleGenerated extends EntityBase
     public function removeLecture(App\Entity\CourseLecture $lecture): self
     {
         if ($this->lectures->removeElement($lecture)) {
-            if ($lecture->getCoursemodule() === $this) {
-                $lecture->setCoursemodule(null);
+            if ($lecture->getCourseModule() === $this) {
+                $lecture->setCourseModule(null);
             }
         }
         return $this;

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\User;
 use App\Entity\CalendarType;
 use App\Entity\Event;
@@ -30,74 +31,104 @@ use App\Entity\Holiday;
 #[ORM\HasLifecycleCallbacks]
 abstract class CalendarGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['calendar:read', 'calendar:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'calendars')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $name;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'calendars')]
     protected ?User $user = null;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $timeZone = 'UTC';
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'string', length: 7, nullable: true)]
+    #[Assert\Length(max: 7)]
     protected ?string $color = '#0dcaf0';
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(name: 'primary_prop', type: 'boolean', nullable: true)]
     protected ?bool $primary = false;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $visible = true;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $accessRole = null;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\ManyToOne(targetEntity: CalendarType::class, inversedBy: 'calendars')]
     protected ?CalendarType $calendarType = null;
 
+    #[Groups(['calendar:read'])]
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'calendar', fetch: 'LAZY')]
     protected Collection $events;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\ManyToOne(targetEntity: CalendarExternalLink::class, inversedBy: 'calendars')]
     protected ?CalendarExternalLink $externalLink = null;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $externalApiKey = null;
 
+    #[Groups(['calendar:read'])]
     #[ORM\OneToMany(targetEntity: WorkingHour::class, mappedBy: 'calendar', fetch: 'LAZY')]
     protected Collection $workingHours;
 
+    #[Groups(['calendar:read'])]
     #[ORM\OneToMany(targetEntity: Holiday::class, mappedBy: 'calendar', fetch: 'LAZY')]
     protected Collection $holidays;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(name: 'public_prop', type: 'boolean')]
     protected bool $public = false;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
     protected ?string $icon = null;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $sortOrder = null;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $externalId = null;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastSyncedAt = null;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $permissions = null;
 
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $settings = null;
 
@@ -108,6 +139,17 @@ abstract class CalendarGenerated extends EntityBase
         $this->events = new ArrayCollection();
         $this->workingHours = new ArrayCollection();
         $this->holidays = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -141,11 +183,11 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function getTimezone(): string    {
+    public function getTimeZone(): string    {
         return $this->timeZone;
     }
 
-    public function setTimezone(string $timeZone): self
+    public function setTimeZone(string $timeZone): self
     {
         $this->timeZone = $timeZone;
         return $this;
@@ -191,22 +233,22 @@ abstract class CalendarGenerated extends EntityBase
         return $this->visible === true;
     }
 
-    public function getAccessrole(): ?string    {
+    public function getAccessRole(): ?string    {
         return $this->accessRole;
     }
 
-    public function setAccessrole(?string $accessRole): self
+    public function setAccessRole(?string $accessRole): self
     {
         $this->accessRole = $accessRole;
         return $this;
     }
 
-    public function getCalendartype(): ?App\Entity\CalendarType
+    public function getCalendarType(): ?App\Entity\CalendarType
     {
         return $this->calendarType;
     }
 
-    public function setCalendartype(?App\Entity\CalendarType $calendarType): self
+    public function setCalendarType(?App\Entity\CalendarType $calendarType): self
     {
         $this->calendarType = $calendarType;
         return $this;
@@ -239,22 +281,22 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function getExternallink(): ?App\Entity\CalendarExternalLink
+    public function getExternalLink(): ?App\Entity\CalendarExternalLink
     {
         return $this->externalLink;
     }
 
-    public function setExternallink(?App\Entity\CalendarExternalLink $externalLink): self
+    public function setExternalLink(?App\Entity\CalendarExternalLink $externalLink): self
     {
         $this->externalLink = $externalLink;
         return $this;
     }
 
-    public function getExternalapikey(): ?string    {
+    public function getExternalApiKey(): ?string    {
         return $this->externalApiKey;
     }
 
-    public function setExternalapikey(?string $externalApiKey): self
+    public function setExternalApiKey(?string $externalApiKey): self
     {
         $this->externalApiKey = $externalApiKey;
         return $this;
@@ -263,12 +305,12 @@ abstract class CalendarGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\WorkingHour>
      */
-    public function getWorkinghours(): Collection
+    public function getWorkingHours(): Collection
     {
         return $this->workingHours;
     }
 
-    public function addWorkinghour(App\Entity\WorkingHour $workingHour): self
+    public function addWorkingHour(App\Entity\WorkingHour $workingHour): self
     {
         if (!$this->workingHours->contains($workingHour)) {
             $this->workingHours->add($workingHour);
@@ -277,7 +319,7 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function removeWorkinghour(App\Entity\WorkingHour $workingHour): self
+    public function removeWorkingHour(App\Entity\WorkingHour $workingHour): self
     {
         if ($this->workingHours->removeElement($workingHour)) {
             if ($workingHour->getCalendar() === $this) {
@@ -369,31 +411,31 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function getSortorder(): ?int    {
+    public function getSortOrder(): ?int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(?int $sortOrder): self
+    public function setSortOrder(?int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;
     }
 
-    public function getExternalid(): ?string    {
+    public function getExternalId(): ?string    {
         return $this->externalId;
     }
 
-    public function setExternalid(?string $externalId): self
+    public function setExternalId(?string $externalId): self
     {
         $this->externalId = $externalId;
         return $this;
     }
 
-    public function getLastsyncedat(): ?\DateTimeImmutable    {
+    public function getLastSyncedAt(): ?\DateTimeImmutable    {
         return $this->lastSyncedAt;
     }
 
-    public function setLastsyncedat(?\DateTimeImmutable $lastSyncedAt): self
+    public function setLastSyncedAt(?\DateTimeImmutable $lastSyncedAt): self
     {
         $this->lastSyncedAt = $lastSyncedAt;
         return $this;

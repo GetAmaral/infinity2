@@ -45,9 +45,11 @@ resources:
           groups: ["Default","create","update","strict"]
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       batchNumber:
         description: "Batch Number (text field)"
         example: "Sample longer text value"

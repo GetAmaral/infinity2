@@ -7,6 +7,7 @@ namespace App\Entity\Generated;
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Module Entity (Generated Base Class)
@@ -21,15 +22,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 abstract class ModuleGenerated extends EntityBase
 {
+    #[Groups(['module:read', 'module:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['module:read', 'module:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['module:read', 'module:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $enabled = null;
 
+    #[Groups(['module:read', 'module:write'])]
     #[ORM\Column(name: 'version_prop', type: 'string', length: 255, nullable: true)]
     protected ?string $version = null;
 

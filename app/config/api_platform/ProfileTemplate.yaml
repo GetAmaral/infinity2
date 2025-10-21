@@ -33,7 +33,6 @@ resources:
         security: "is_granted('ROLE_SUPER_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
       name:

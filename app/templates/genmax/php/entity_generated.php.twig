@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-{% if entity.isHasOrganization() %}
-use App\Entity\Trait\OrganizationTrait;
-{% endif %}
 use Doctrine\ORM\Mapping as ORM;
 {% set hasCollections = false %}
 {% for property in entity.getProperties() %}
@@ -45,32 +42,30 @@ use {{ targetEntity }};
 #[ORM\HasLifecycleCallbacks]
 abstract class {{ entity.getEntityName() }}Generated extends EntityBase
 {
-{% if entity.isHasOrganization() %}
-    use OrganizationTrait;
-
-{% endif %}
 {% set entityNameLower = entity.getEntityName()|lower %}
 {% for property in entity.getProperties() %}
-{% if entity.isHasOrganization() and property.getPropertyName() == 'organization' %}
-{# Skip organization property - provided by OrganizationTrait #}
-{% elseif not property.getRelationshipType() %}
+{% if not property.getRelationshipType() %}
 {# Scalar properties #}
     #[Groups(['{{ entityNameLower }}:read', '{{ entityNameLower }}:write'])]
     #[ORM\Column({% if isReservedKeyword(property.getPropertyName()) %}name: '{{ getSafeColumnName(property.getPropertyName()) }}', {% endif %}type: '{{ property.getPropertyType() }}'{% if property.getLength() %}, length: {{ property.getLength() }}{% endif %}{% if property.getPrecision() %}, precision: {{ property.getPrecision() }}{% endif %}{% if property.getScale() %}, scale: {{ property.getScale() }}{% endif %}{% if property.isNullable() %}, nullable: true{% endif %}{% if property.isUnique() %}, unique: true{% endif %})]
 {% if property.getValidationRules() and property.getValidationRules() is iterable %}
-{% for ruleName, ruleConfig in property.getValidationRules() %}
-{% if ruleName is string and ruleName is not empty %}
-    #[Assert\{{ ruleName }}{% if ruleConfig is not empty and ruleConfig is iterable %}({% for paramKey, paramValue in ruleConfig %}{% if paramKey is string %}{{ paramKey }}: {% if paramValue is iterable %}[{% for item in paramValue %}'{{ item }}'{% if not loop.last %}, {% endif %}{% endfor %}]{% elseif paramValue is same as(true) %}true{% elseif paramValue is same as(false) %}false{% elseif paramValue is null %}null{% elseif paramValue is number %}{{ paramValue }}{% else %}'{{ paramValue }}'{% endif %}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %}){% elseif ruleConfig is not iterable and ruleConfig is not empty %}({{ ruleConfig }}){% endif %}]
+{% for rule in property.getValidationRules() %}
+{% if rule.constraint is defined and rule.constraint is not empty %}
+{% set ruleOptions = rule.options is defined ? rule.options : (rule|filter((v, k) => k != 'constraint')) %}
+    #[Assert\{{ rule.constraint }}{% if ruleOptions is not empty %}({% for paramKey, paramValue in ruleOptions %}{{ paramKey }}: {% if paramValue is iterable %}[{% for item in paramValue %}'{{ item }}'{% if not loop.last %}, {% endif %}{% endfor %}]{% elseif paramValue is same as(true) %}true{% elseif paramValue is same as(false) %}false{% elseif paramValue is null %}null{% elseif paramValue matches '/^[0-9.]+$/' %}{{ paramValue }}{% else %}'{{ paramValue }}'{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}){% endif %}]
 {% endif %}
 {% endfor %}
 {% endif %}
-    protected {% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' or property.getPropertyType() == 'decimal' %}float{% elseif property.getPropertyType() == 'datetime' or property.getPropertyType() == 'datetime_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'date' or property.getPropertyType() == 'date_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %} ${{ property.getPropertyName() }}{% if property.getDefaultValue() is same as(true) %} = true{% elseif property.getDefaultValue() is same as(false) %} = false{% elseif property.getDefaultValue() is not null and property.getPropertyType() in ['string', 'text'] %} = '{{ property.getDefaultValue() }}'{% elseif property.getDefaultValue() is not null %} = {{ property.getDefaultValue() }}{% elseif property.isNullable() %} = null{% endif %};
+    protected {% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' %}float{% elseif property.getPropertyType() == 'decimal' %}string{% elseif property.getPropertyType() == 'datetime' or property.getPropertyType() == 'datetime_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'date' or property.getPropertyType() == 'date_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %} ${{ property.getPropertyName() }}{% if property.getDefaultValue() is same as(true) %} = true{% elseif property.getDefaultValue() is same as(false) %} = false{% elseif property.getDefaultValue() is not null and property.getPropertyType() in ['string', 'text', 'decimal'] %} = '{{ property.getDefaultValue() }}'{% elseif property.getDefaultValue() is not null %} = {{ property.getDefaultValue() }}{% elseif property.isNullable() %} = null{% endif %};
 
 {% else %}
 {# Relationship properties #}
 {% if property.getRelationshipType() in ['OneToMany', 'ManyToMany'] %}
     #[Groups(['{{ entityNameLower }}:read'])]
-    #[ORM\{{ property.getRelationshipType() }}(targetEntity: {{ getClassName(property.getTargetEntity()) }}::class{% if property.getMappedBy() %}, mappedBy: '{{ property.getMappedBy() }}'{% endif %}{% if property.getInversedBy() %}, inversedBy: '{{ property.getInversedBy() }}'{% endif %}{% if property.getCascade() %}, cascade: [{% for op in property.getCascade() %}'{{ op }}'{% if not loop.last %}, {% endif %}{% endfor %}]{% endif %}{% if property.isOrphanRemoval() %}, orphanRemoval: true{% endif %}{% if property.getFetch() %}, fetch: '{{ property.getFetch() }}'{% endif %})]
+    #[ORM\{{ property.getRelationshipType() }}(targetEntity: {{ getClassName(property.getTargetEntity()) }}::class{% if property.getMappedBy() %}, mappedBy: '{{ property.getMappedBy() }}'{% elseif property.getInversedBy() %}, inversedBy: '{{ property.getInversedBy() }}'{% endif %}{% if property.getCascade() %}, cascade: [{% for op in property.getCascade() %}'{{ op }}'{% if not loop.last %}, {% endif %}{% endfor %}]{% endif %}{% if property.isOrphanRemoval() %}, orphanRemoval: true{% endif %}{% if property.getFetch() %}, fetch: '{{ property.getFetch() }}'{% endif %})]
+{% if property.getRelationshipType() == 'ManyToMany' and property.getInversedBy() %}
+    #[ORM\JoinTable(name: '{{ getSafeTableName(entity.getEntityName()) }}_{{ property.getPropertyName() }}')]
+{% endif %}
 {% if property.getOrderBy() %}
     #[ORM\OrderBy([{% for field, direction in property.getOrderBy() %}'{{ field }}' => '{{ direction|upper }}'{% if not loop.last %}, {% endif %}{% endfor %}])]
 {% endif %}
@@ -79,7 +74,7 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
 {% else %}
 {# ManyToOne or OneToOne #}
     #[Groups(['{{ entityNameLower }}:read', '{{ entityNameLower }}:write'])]
-    #[ORM\{{ property.getRelationshipType() }}(targetEntity: {{ getClassName(property.getTargetEntity()) }}::class{% if property.getInversedBy() %}, inversedBy: '{{ property.getInversedBy() }}'{% endif %})]
+    #[ORM\{{ property.getRelationshipType() }}(targetEntity: {{ getClassName(property.getTargetEntity()) }}::class{% if property.getMappedBy() %}, mappedBy: '{{ property.getMappedBy() }}'{% elseif property.getInversedBy() %}, inversedBy: '{{ property.getInversedBy() }}'{% endif %})]
 {% if not property.isNullable() %}
     #[ORM\JoinColumn(nullable: false)]
 {% endif %}
@@ -100,16 +95,14 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
     }
 
 {% for property in entity.getProperties() %}
-{% if entity.isHasOrganization() and property.getPropertyName() == 'organization' %}
-{# Skip organization methods - provided by OrganizationTrait #}
-{% elseif not property.getRelationshipType() %}
+{% if not property.getRelationshipType() %}
 {# Scalar getters/setters #}
-    public function get{{ toPascalCase(property.getPropertyName()) }}(): {% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' or property.getPropertyType() == 'decimal' %}float{% elseif property.getPropertyType() == 'datetime' or property.getPropertyType() == 'datetime_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'date' or property.getPropertyType() == 'date_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %}
+    public function get{{ toPascalCase(property.getPropertyName()) }}(): {% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' %}float{% elseif property.getPropertyType() == 'decimal' %}string{% elseif property.getPropertyType() == 'datetime' or property.getPropertyType() == 'datetime_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'date' or property.getPropertyType() == 'date_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %}
     {
         return $this->{{ property.getPropertyName() }};
     }
 
-    public function set{{ toPascalCase(property.getPropertyName()) }}({% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' or property.getPropertyType() == 'decimal' %}float{% elseif property.getPropertyType() == 'datetime' or property.getPropertyType() == 'datetime_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'date' or property.getPropertyType() == 'date_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %} ${{ property.getPropertyName() }}): self
+    public function set{{ toPascalCase(property.getPropertyName()) }}({% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' %}float{% elseif property.getPropertyType() == 'decimal' %}string{% elseif property.getPropertyType() == 'datetime' or property.getPropertyType() == 'datetime_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'date' or property.getPropertyType() == 'date_immutable' %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %} ${{ property.getPropertyName() }}): self
     {
         $this->{{ property.getPropertyName() }} = ${{ property.getPropertyName() }};
         return $this;

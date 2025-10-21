@@ -67,7 +67,6 @@ class EntityGenerator
                 'namespace' => 'App\\Entity\\Generated',
                 'className' => $entity->entityName . 'Generated',
                 'extendsClass' => 'EntityBase',
-                'usesOrganizationTrait' => $entity->hasOrganization,
             ]);
 
             // Atomic write using Filesystem component

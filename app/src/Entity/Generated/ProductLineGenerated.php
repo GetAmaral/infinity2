@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Product;
 
 /**
@@ -25,17 +26,24 @@ use App\Entity\Product;
 #[ORM\HasLifecycleCallbacks]
 abstract class ProductLineGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['productline:read', 'productline:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'productLines')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['productline:read', 'productline:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['productline:read', 'productline:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['productline:read', 'productline:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $active = null;
 
+    #[Groups(['productline:read'])]
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'productLine', fetch: 'LAZY')]
     protected Collection $products;
 
@@ -44,6 +52,17 @@ abstract class ProductLineGenerated extends EntityBase
     {
         parent::__construct();
         $this->products = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -93,7 +112,7 @@ abstract class ProductLineGenerated extends EntityBase
     {
         if (!$this->products->contains($product)) {
             $this->products->add($product);
-            $product->setProductline($this);
+            $product->setProductLine($this);
         }
         return $this;
     }
@@ -101,8 +120,8 @@ abstract class ProductLineGenerated extends EntityBase
     public function removeProduct(App\Entity\Product $product): self
     {
         if ($this->products->removeElement($product)) {
-            if ($product->getProductline() === $this) {
-                $product->setProductline(null);
+            if ($product->getProductLine() === $this) {
+                $product->setProductLine(null);
             }
         }
         return $this;

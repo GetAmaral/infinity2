@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Deal;
 
 /**
@@ -25,74 +26,100 @@ use App\Entity\Deal;
 #[ORM\HasLifecycleCallbacks]
 abstract class CompetitorGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['competitor:read', 'competitor:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'competitors')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $industry = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $targetMarket = null;
 
-    #[ORM\ManyToMany(targetEntity: Deal::class, inversedBy: 'competitors', fetch: 'LAZY')]
+    #[Groups(['competitor:read'])]
+    #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'competitors', fetch: 'LAZY')]
     protected Collection $deals;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $foundedYear = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $website = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $marketPosition = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $strengths = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $products = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $weaknesses = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $revenue = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $employeeCount = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $winRate = null;
+    protected ?string $winRate = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $lossRate = null;
+    protected ?string $lossRate = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $pricingModel = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $headquarters = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $opportunities = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $threats = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $lastAnalyzedAt = null;
 
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $keyDifferentiators = null;
 
@@ -101,6 +128,17 @@ abstract class CompetitorGenerated extends EntityBase
     {
         parent::__construct();
         $this->deals = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -133,11 +171,11 @@ abstract class CompetitorGenerated extends EntityBase
         return $this;
     }
 
-    public function getTargetmarket(): ?string    {
+    public function getTargetMarket(): ?string    {
         return $this->targetMarket;
     }
 
-    public function setTargetmarket(?string $targetMarket): self
+    public function setTargetMarket(?string $targetMarket): self
     {
         $this->targetMarket = $targetMarket;
         return $this;
@@ -155,6 +193,7 @@ abstract class CompetitorGenerated extends EntityBase
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
+            $deal->setCompetitors($this);
         }
         return $this;
     }
@@ -162,15 +201,18 @@ abstract class CompetitorGenerated extends EntityBase
     public function removeDeal(App\Entity\Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
+            if ($deal->getCompetitors() === $this) {
+                $deal->setCompetitors(null);
+            }
         }
         return $this;
     }
 
-    public function getFoundedyear(): ?int    {
+    public function getFoundedYear(): ?int    {
         return $this->foundedYear;
     }
 
-    public function setFoundedyear(?int $foundedYear): self
+    public function setFoundedYear(?int $foundedYear): self
     {
         $this->foundedYear = $foundedYear;
         return $this;
@@ -201,11 +243,11 @@ abstract class CompetitorGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getMarketposition(): ?string    {
+    public function getMarketPosition(): ?string    {
         return $this->marketPosition;
     }
 
-    public function setMarketposition(?string $marketPosition): self
+    public function setMarketPosition(?string $marketPosition): self
     {
         $this->marketPosition = $marketPosition;
         return $this;
@@ -251,41 +293,41 @@ abstract class CompetitorGenerated extends EntityBase
         return $this;
     }
 
-    public function getEmployeecount(): ?int    {
+    public function getEmployeeCount(): ?int    {
         return $this->employeeCount;
     }
 
-    public function setEmployeecount(?int $employeeCount): self
+    public function setEmployeeCount(?int $employeeCount): self
     {
         $this->employeeCount = $employeeCount;
         return $this;
     }
 
-    public function getWinrate(): ?float    {
+    public function getWinRate(): ?string    {
         return $this->winRate;
     }
 
-    public function setWinrate(?float $winRate): self
+    public function setWinRate(?string $winRate): self
     {
         $this->winRate = $winRate;
         return $this;
     }
 
-    public function getLossrate(): ?float    {
+    public function getLossRate(): ?string    {
         return $this->lossRate;
     }
 
-    public function setLossrate(?float $lossRate): self
+    public function setLossRate(?string $lossRate): self
     {
         $this->lossRate = $lossRate;
         return $this;
     }
 
-    public function getPricingmodel(): ?string    {
+    public function getPricingModel(): ?string    {
         return $this->pricingModel;
     }
 
-    public function setPricingmodel(?string $pricingModel): self
+    public function setPricingModel(?string $pricingModel): self
     {
         $this->pricingModel = $pricingModel;
         return $this;
@@ -331,21 +373,21 @@ abstract class CompetitorGenerated extends EntityBase
         return $this;
     }
 
-    public function getLastanalyzedat(): ?\DateTimeImmutable    {
+    public function getLastAnalyzedAt(): ?\DateTimeImmutable    {
         return $this->lastAnalyzedAt;
     }
 
-    public function setLastanalyzedat(?\DateTimeImmutable $lastAnalyzedAt): self
+    public function setLastAnalyzedAt(?\DateTimeImmutable $lastAnalyzedAt): self
     {
         $this->lastAnalyzedAt = $lastAnalyzedAt;
         return $this;
     }
 
-    public function getKeydifferentiators(): ?string    {
+    public function getKeyDifferentiators(): ?string    {
         return $this->keyDifferentiators;
     }
 
-    public function setKeydifferentiators(?string $keyDifferentiators): self
+    public function setKeyDifferentiators(?string $keyDifferentiators): self
     {
         $this->keyDifferentiators = $keyDifferentiators;
         return $this;

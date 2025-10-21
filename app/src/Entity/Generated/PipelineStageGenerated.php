@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\DealStage;
 use App\Entity\Deal;
 use App\Entity\PipelineStage;
@@ -29,53 +30,72 @@ use App\Entity\Task;
 #[ORM\HasLifecycleCallbacks]
 abstract class PipelineStageGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'pipelineStages')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['pipelinestage:read'])]
     #[ORM\OneToMany(targetEntity: DealStage::class, mappedBy: 'pipelineStage', fetch: 'LAZY')]
     protected Collection $dealStages;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $probability;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(name: 'final_prop', type: 'boolean')]
     protected bool $final = false;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $won = false;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $lost = false;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'string', length: 7)]
     protected string $color = '#0dcaf0';
 
+    #[Groups(['pipelinestage:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'currentStage', fetch: 'LAZY')]
     protected Collection $deals;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $displayOrder = null;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $migrationCriteria = null;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\OneToOne(targetEntity: PipelineStage::class, inversedBy: 'previous')]
     protected ?PipelineStage $next = null;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\ManyToOne(targetEntity: Pipeline::class, inversedBy: 'stages')]
     protected ?Pipeline $pipeline = null;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\OneToOne(targetEntity: PipelineStage::class, inversedBy: 'next')]
     protected ?PipelineStage $previous = null;
 
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $stageName;
 
+    #[Groups(['pipelinestage:read'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'pipelineStage', fetch: 'LAZY')]
     protected Collection $tasks;
 
@@ -86,6 +106,17 @@ abstract class PipelineStageGenerated extends EntityBase
         $this->dealStages = new ArrayCollection();
         $this->deals = new ArrayCollection();
         $this->tasks = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getDescription(): ?string    {
@@ -101,25 +132,25 @@ abstract class PipelineStageGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\DealStage>
      */
-    public function getDealstages(): Collection
+    public function getDealStages(): Collection
     {
         return $this->dealStages;
     }
 
-    public function addDealtage(App\Entity\DealStage $dealStage): self
+    public function addDealStage(App\Entity\DealStage $dealStage): self
     {
         if (!$this->dealStages->contains($dealStage)) {
             $this->dealStages->add($dealStage);
-            $dealStage->setPipelinestage($this);
+            $dealStage->setPipelineStage($this);
         }
         return $this;
     }
 
-    public function removeDealtage(App\Entity\DealStage $dealStage): self
+    public function removeDealStage(App\Entity\DealStage $dealStage): self
     {
         if ($this->dealStages->removeElement($dealStage)) {
-            if ($dealStage->getPipelinestage() === $this) {
-                $dealStage->setPipelinestage(null);
+            if ($dealStage->getPipelineStage() === $this) {
+                $dealStage->setPipelineStage(null);
             }
         }
         return $this;
@@ -217,7 +248,7 @@ abstract class PipelineStageGenerated extends EntityBase
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
-            $deal->setCurrentstage($this);
+            $deal->setCurrentStage($this);
         }
         return $this;
     }
@@ -225,28 +256,28 @@ abstract class PipelineStageGenerated extends EntityBase
     public function removeDeal(App\Entity\Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
-            if ($deal->getCurrentstage() === $this) {
-                $deal->setCurrentstage(null);
+            if ($deal->getCurrentStage() === $this) {
+                $deal->setCurrentStage(null);
             }
         }
         return $this;
     }
 
-    public function getDisplayorder(): ?int    {
+    public function getDisplayOrder(): ?int    {
         return $this->displayOrder;
     }
 
-    public function setDisplayorder(?int $displayOrder): self
+    public function setDisplayOrder(?int $displayOrder): self
     {
         $this->displayOrder = $displayOrder;
         return $this;
     }
 
-    public function getMigrationcriteria(): ?string    {
+    public function getMigrationCriteria(): ?string    {
         return $this->migrationCriteria;
     }
 
-    public function setMigrationcriteria(?string $migrationCriteria): self
+    public function setMigrationCriteria(?string $migrationCriteria): self
     {
         $this->migrationCriteria = $migrationCriteria;
         return $this;
@@ -285,11 +316,11 @@ abstract class PipelineStageGenerated extends EntityBase
         return $this;
     }
 
-    public function getStagename(): string    {
+    public function getStageName(): string    {
         return $this->stageName;
     }
 
-    public function setStagename(string $stageName): self
+    public function setStageName(string $stageName): self
     {
         $this->stageName = $stageName;
         return $this;
@@ -303,20 +334,20 @@ abstract class PipelineStageGenerated extends EntityBase
         return $this->tasks;
     }
 
-    public function addTak(App\Entity\Task $tak): self
+    public function addTask(App\Entity\Task $task): self
     {
-        if (!$this->tasks->contains($tak)) {
-            $this->tasks->add($tak);
-            $tak->setPipelinestage($this);
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setPipelineStage($this);
         }
         return $this;
     }
 
-    public function removeTak(App\Entity\Task $tak): self
+    public function removeTask(App\Entity\Task $task): self
     {
-        if ($this->tasks->removeElement($tak)) {
-            if ($tak->getPipelinestage() === $this) {
-                $tak->setPipelinestage(null);
+        if ($this->tasks->removeElement($task)) {
+            if ($task->getPipelineStage() === $this) {
+                $task->setPipelineStage(null);
             }
         }
         return $this;

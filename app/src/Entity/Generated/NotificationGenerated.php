@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\User;
 use App\Entity\EventAttendee;
 use App\Entity\CommunicationMethod;
@@ -29,57 +30,80 @@ use App\Entity\NotificationType;
 #[ORM\HasLifecycleCallbacks]
 abstract class NotificationGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['notification:read', 'notification:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'notifications')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $title;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     protected User $recipient;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $sender = null;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\Column(type: 'string', length: 20)]
+    #[Assert\Length(max: 20)]
     protected string $priority;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     protected ?string $actionUrl = null;
 
-    #[ORM\Column(name: 'read_prop', type: 'boolean')]
-    protected bool $read;
-
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\ManyToOne(targetEntity: EventAttendee::class, inversedBy: 'notifications')]
     protected ?EventAttendee $attendee = null;
 
+    #[Groups(['notification:read', 'notification:write'])]
+    #[ORM\Column(name: 'read_prop', type: 'boolean')]
+    protected bool $read;
+
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $archived;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $readAt = null;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\ManyToOne(targetEntity: CommunicationMethod::class, inversedBy: 'notifications')]
     protected ?CommunicationMethod $communicationMethod = null;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'notifications')]
     protected ?Event $event = null;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $message = null;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $notificationStatus = null;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\ManyToOne(targetEntity: Reminder::class, inversedBy: 'notifications')]
     protected ?Reminder $reminder = null;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $sentAt = null;
 
-    #[ORM\OneToOne(targetEntity: TalkMessage::class, inversedBy: 'notification')]
+    #[Groups(['notification:read', 'notification:write'])]
+    #[ORM\OneToOne(targetEntity: TalkMessage::class, mappedBy: 'notification')]
     protected ?TalkMessage $talkMessage = null;
 
+    #[Groups(['notification:read', 'notification:write'])]
     #[ORM\ManyToOne(targetEntity: NotificationType::class, inversedBy: 'notifications')]
     protected ?NotificationType $type = null;
 
@@ -87,6 +111,17 @@ abstract class NotificationGenerated extends EntityBase
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getTitle(): string    {
@@ -131,13 +166,24 @@ abstract class NotificationGenerated extends EntityBase
         return $this;
     }
 
-    public function getActionurl(): ?string    {
+    public function getActionUrl(): ?string    {
         return $this->actionUrl;
     }
 
-    public function setActionurl(?string $actionUrl): self
+    public function setActionUrl(?string $actionUrl): self
     {
         $this->actionUrl = $actionUrl;
+        return $this;
+    }
+
+    public function getAttendee(): ?App\Entity\EventAttendee
+    {
+        return $this->attendee;
+    }
+
+    public function setAttendee(?App\Entity\EventAttendee $attendee): self
+    {
+        $this->attendee = $attendee;
         return $this;
     }
 
@@ -156,17 +202,6 @@ abstract class NotificationGenerated extends EntityBase
         return $this->read === true;
     }
 
-    public function getAttendee(): ?App\Entity\EventAttendee
-    {
-        return $this->attendee;
-    }
-
-    public function setAttendee(?App\Entity\EventAttendee $attendee): self
-    {
-        $this->attendee = $attendee;
-        return $this;
-    }
-
     public function getArchived(): bool    {
         return $this->archived;
     }
@@ -182,22 +217,22 @@ abstract class NotificationGenerated extends EntityBase
         return $this->archived === true;
     }
 
-    public function getReadat(): ?\DateTimeImmutable    {
+    public function getReadAt(): ?\DateTimeImmutable    {
         return $this->readAt;
     }
 
-    public function setReadat(?\DateTimeImmutable $readAt): self
+    public function setReadAt(?\DateTimeImmutable $readAt): self
     {
         $this->readAt = $readAt;
         return $this;
     }
 
-    public function getCommunicationmethod(): ?App\Entity\CommunicationMethod
+    public function getCommunicationMethod(): ?App\Entity\CommunicationMethod
     {
         return $this->communicationMethod;
     }
 
-    public function setCommunicationmethod(?App\Entity\CommunicationMethod $communicationMethod): self
+    public function setCommunicationMethod(?App\Entity\CommunicationMethod $communicationMethod): self
     {
         $this->communicationMethod = $communicationMethod;
         return $this;
@@ -224,11 +259,11 @@ abstract class NotificationGenerated extends EntityBase
         return $this;
     }
 
-    public function getNotificationstatus(): ?int    {
+    public function getNotificationStatus(): ?int    {
         return $this->notificationStatus;
     }
 
-    public function setNotificationstatus(?int $notificationStatus): self
+    public function setNotificationStatus(?int $notificationStatus): self
     {
         $this->notificationStatus = $notificationStatus;
         return $this;
@@ -245,22 +280,22 @@ abstract class NotificationGenerated extends EntityBase
         return $this;
     }
 
-    public function getSentat(): ?\DateTimeImmutable    {
+    public function getSentAt(): ?\DateTimeImmutable    {
         return $this->sentAt;
     }
 
-    public function setSentat(?\DateTimeImmutable $sentAt): self
+    public function setSentAt(?\DateTimeImmutable $sentAt): self
     {
         $this->sentAt = $sentAt;
         return $this;
     }
 
-    public function getTalkmessage(): ?App\Entity\TalkMessage
+    public function getTalkMessage(): ?App\Entity\TalkMessage
     {
         return $this->talkMessage;
     }
 
-    public function setTalkmessage(?App\Entity\TalkMessage $talkMessage): self
+    public function setTalkMessage(?App\Entity\TalkMessage $talkMessage): self
     {
         $this->talkMessage = $talkMessage;
         return $this;

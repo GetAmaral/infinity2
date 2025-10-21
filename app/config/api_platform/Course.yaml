@@ -33,15 +33,17 @@ resources:
         security: "is_granted('ROLE_EDUCATION_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
-      name:
-        description: "The brand name"
-        example: "Nike"
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       releaseDate:
         description: "Release Date"
         example: "sample value"
+      name:
+        description: "The brand name"
+        example: "Nike"
       description:
         description: "..."
         example: "..."

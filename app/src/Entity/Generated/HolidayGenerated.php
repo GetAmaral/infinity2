@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Calendar;
 use App\Entity\Event;
 
@@ -24,62 +25,84 @@ use App\Entity\Event;
 #[ORM\HasLifecycleCallbacks]
 abstract class HolidayGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['holiday:read', 'holiday:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'holidays')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    protected ?bool $blocksScheduling = null;
-
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $recurring;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    protected ?bool $blocksScheduling = null;
+
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $observed;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
-    #[ORM\ManyToOne(targetEntity: Calendar::class, inversedBy: 'holidays')]
-    protected ?Calendar $calendar = null;
-
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'string', length: 2, nullable: true)]
     protected ?string $country = null;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
+    #[ORM\ManyToOne(targetEntity: Calendar::class, inversedBy: 'holidays')]
+    protected ?Calendar $calendar = null;
+
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $region = null;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(name: 'year_prop', type: 'integer', nullable: true)]
     protected ?int $year = null;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    protected ?string $holidayType = null;
-
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'holidays')]
     protected ?Event $event = null;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    protected ?string $holidayType = null;
+
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $originalDate = null;
 
-    #[ORM\Column(type: 'date')]
-    protected \DateTimeImmutable $sentAt;
-
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $affectsSLA = true;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
+    #[ORM\Column(type: 'date')]
+    protected \DateTimeImmutable $sentAt;
+
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $workingDay = false;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'time', nullable: true)]
     protected ?string $startTime = null;
 
+    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'time', nullable: true)]
     protected ?string $endTime = null;
 
@@ -87,6 +110,17 @@ abstract class HolidayGenerated extends EntityBase
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -109,21 +143,6 @@ abstract class HolidayGenerated extends EntityBase
         return $this;
     }
 
-    public function getBlocksscheduling(): ?bool    {
-        return $this->blocksScheduling;
-    }
-
-    public function setBlocksscheduling(?bool $blocksScheduling): self
-    {
-        $this->blocksScheduling = $blocksScheduling;
-        return $this;
-    }
-
-    public function isBlocksscheduling(): bool
-    {
-        return $this->blocksScheduling === true;
-    }
-
     public function getRecurring(): bool    {
         return $this->recurring;
     }
@@ -137,6 +156,21 @@ abstract class HolidayGenerated extends EntityBase
     public function isRecurring(): bool
     {
         return $this->recurring === true;
+    }
+
+    public function getBlocksScheduling(): ?bool    {
+        return $this->blocksScheduling;
+    }
+
+    public function setBlocksScheduling(?bool $blocksScheduling): self
+    {
+        $this->blocksScheduling = $blocksScheduling;
+        return $this;
+    }
+
+    public function isBlocksScheduling(): bool
+    {
+        return $this->blocksScheduling === true;
     }
 
     public function getObserved(): bool    {
@@ -169,6 +203,16 @@ abstract class HolidayGenerated extends EntityBase
         return $this->active === true;
     }
 
+    public function getCountry(): ?string    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+        return $this;
+    }
+
     public function getCalendar(): ?App\Entity\Calendar
     {
         return $this->calendar;
@@ -177,16 +221,6 @@ abstract class HolidayGenerated extends EntityBase
     public function setCalendar(?App\Entity\Calendar $calendar): self
     {
         $this->calendar = $calendar;
-        return $this;
-    }
-
-    public function getCountry(): ?string    {
-        return $this->country;
-    }
-
-    public function setCountry(?string $country): self
-    {
-        $this->country = $country;
         return $this;
     }
 
@@ -210,16 +244,6 @@ abstract class HolidayGenerated extends EntityBase
         return $this;
     }
 
-    public function getHolidaytype(): ?string    {
-        return $this->holidayType;
-    }
-
-    public function setHolidaytype(?string $holidayType): self
-    {
-        $this->holidayType = $holidayType;
-        return $this;
-    }
-
     public function getEvent(): ?App\Entity\Event
     {
         return $this->event;
@@ -231,52 +255,62 @@ abstract class HolidayGenerated extends EntityBase
         return $this;
     }
 
-    public function getOriginaldate(): ?\DateTimeImmutable    {
+    public function getHolidayType(): ?string    {
+        return $this->holidayType;
+    }
+
+    public function setHolidayType(?string $holidayType): self
+    {
+        $this->holidayType = $holidayType;
+        return $this;
+    }
+
+    public function getOriginalDate(): ?\DateTimeImmutable    {
         return $this->originalDate;
     }
 
-    public function setOriginaldate(?\DateTimeImmutable $originalDate): self
+    public function setOriginalDate(?\DateTimeImmutable $originalDate): self
     {
         $this->originalDate = $originalDate;
         return $this;
     }
 
-    public function getSentat(): \DateTimeImmutable    {
-        return $this->sentAt;
-    }
-
-    public function setSentat(\DateTimeImmutable $sentAt): self
-    {
-        $this->sentAt = $sentAt;
-        return $this;
-    }
-
-    public function getAffectssla(): bool    {
+    public function getAffectsSLA(): bool    {
         return $this->affectsSLA;
     }
 
-    public function setAffectssla(bool $affectsSLA): self
+    public function setAffectsSLA(bool $affectsSLA): self
     {
         $this->affectsSLA = $affectsSLA;
         return $this;
     }
 
-    public function isAffectssla(): bool
+    public function isAffectsSLA(): bool
     {
         return $this->affectsSLA === true;
     }
 
-    public function getWorkingday(): bool    {
+    public function getSentAt(): \DateTimeImmutable    {
+        return $this->sentAt;
+    }
+
+    public function setSentAt(\DateTimeImmutable $sentAt): self
+    {
+        $this->sentAt = $sentAt;
+        return $this;
+    }
+
+    public function getWorkingDay(): bool    {
         return $this->workingDay;
     }
 
-    public function setWorkingday(bool $workingDay): self
+    public function setWorkingDay(bool $workingDay): self
     {
         $this->workingDay = $workingDay;
         return $this;
     }
 
-    public function isWorkingday(): bool
+    public function isWorkingDay(): bool
     {
         return $this->workingDay === true;
     }
@@ -291,21 +325,21 @@ abstract class HolidayGenerated extends EntityBase
         return $this;
     }
 
-    public function getStarttime(): ?string    {
+    public function getStartTime(): ?string    {
         return $this->startTime;
     }
 
-    public function setStarttime(?string $startTime): self
+    public function setStartTime(?string $startTime): self
     {
         $this->startTime = $startTime;
         return $this;
     }
 
-    public function getEndtime(): ?string    {
+    public function getEndTime(): ?string    {
         return $this->endTime;
     }
 
-    public function setEndtime(?string $endTime): self
+    public function setEndTime(?string $endTime): self
     {
         $this->endTime = $endTime;
         return $this;

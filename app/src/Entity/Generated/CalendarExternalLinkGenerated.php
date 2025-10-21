@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Calendar;
 use App\Entity\User;
 
@@ -25,69 +26,97 @@ use App\Entity\User;
 #[ORM\HasLifecycleCallbacks]
 abstract class CalendarExternalLinkGenerated extends EntityBase
 {
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 100)]
     protected string $name;
 
+    #[Groups(['calendarexternallink:read'])]
     #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'externalLink', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $calendars;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'string', length: 50)]
+    #[Assert\Length(max: 50)]
     protected string $externalProvider;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $externalId = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     protected ?string $url = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $accessToken = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $refreshToken = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $tokenExpiresAt = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     protected ?string $syncToken = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $lastSyncedAt = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     protected ?string $webhookUrl = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $webhookChannelId = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $webhookExpiresAt = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $syncDirection = 'bidirectional';
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $lastErrorMessage = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $lastErrorAt = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $syncIntervalMinutes = 15;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $retryCount = 0;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $scopes = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $metadata = null;
 
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'calendarExternalLinks')]
     #[ORM\JoinColumn(nullable: false)]
     protected User $user;
@@ -121,7 +150,7 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
     {
         if (!$this->calendars->contains($calendar)) {
             $this->calendars->add($calendar);
-            $calendar->setExternallink($this);
+            $calendar->setExternalLink($this);
         }
         return $this;
     }
@@ -129,18 +158,18 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
     public function removeCalendar(App\Entity\Calendar $calendar): self
     {
         if ($this->calendars->removeElement($calendar)) {
-            if ($calendar->getExternallink() === $this) {
-                $calendar->setExternallink(null);
+            if ($calendar->getExternalLink() === $this) {
+                $calendar->setExternalLink(null);
             }
         }
         return $this;
     }
 
-    public function getExternalprovider(): string    {
+    public function getExternalProvider(): string    {
         return $this->externalProvider;
     }
 
-    public function setExternalprovider(string $externalProvider): self
+    public function setExternalProvider(string $externalProvider): self
     {
         $this->externalProvider = $externalProvider;
         return $this;
@@ -161,11 +190,11 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getExternalid(): ?string    {
+    public function getExternalId(): ?string    {
         return $this->externalId;
     }
 
-    public function setExternalid(?string $externalId): self
+    public function setExternalId(?string $externalId): self
     {
         $this->externalId = $externalId;
         return $this;
@@ -181,131 +210,131 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
         return $this;
     }
 
-    public function getAccesstoken(): ?string    {
+    public function getAccessToken(): ?string    {
         return $this->accessToken;
     }
 
-    public function setAccesstoken(?string $accessToken): self
+    public function setAccessToken(?string $accessToken): self
     {
         $this->accessToken = $accessToken;
         return $this;
     }
 
-    public function getRefreshtoken(): ?string    {
+    public function getRefreshToken(): ?string    {
         return $this->refreshToken;
     }
 
-    public function setRefreshtoken(?string $refreshToken): self
+    public function setRefreshToken(?string $refreshToken): self
     {
         $this->refreshToken = $refreshToken;
         return $this;
     }
 
-    public function getTokenexpiresat(): ?\DateTimeImmutable    {
+    public function getTokenExpiresAt(): ?\DateTimeImmutable    {
         return $this->tokenExpiresAt;
     }
 
-    public function setTokenexpiresat(?\DateTimeImmutable $tokenExpiresAt): self
+    public function setTokenExpiresAt(?\DateTimeImmutable $tokenExpiresAt): self
     {
         $this->tokenExpiresAt = $tokenExpiresAt;
         return $this;
     }
 
-    public function getSynctoken(): ?string    {
+    public function getSyncToken(): ?string    {
         return $this->syncToken;
     }
 
-    public function setSynctoken(?string $syncToken): self
+    public function setSyncToken(?string $syncToken): self
     {
         $this->syncToken = $syncToken;
         return $this;
     }
 
-    public function getLastsyncedat(): ?\DateTimeImmutable    {
+    public function getLastSyncedAt(): ?\DateTimeImmutable    {
         return $this->lastSyncedAt;
     }
 
-    public function setLastsyncedat(?\DateTimeImmutable $lastSyncedAt): self
+    public function setLastSyncedAt(?\DateTimeImmutable $lastSyncedAt): self
     {
         $this->lastSyncedAt = $lastSyncedAt;
         return $this;
     }
 
-    public function getWebhookurl(): ?string    {
+    public function getWebhookUrl(): ?string    {
         return $this->webhookUrl;
     }
 
-    public function setWebhookurl(?string $webhookUrl): self
+    public function setWebhookUrl(?string $webhookUrl): self
     {
         $this->webhookUrl = $webhookUrl;
         return $this;
     }
 
-    public function getWebhookchannelid(): ?string    {
+    public function getWebhookChannelId(): ?string    {
         return $this->webhookChannelId;
     }
 
-    public function setWebhookchannelid(?string $webhookChannelId): self
+    public function setWebhookChannelId(?string $webhookChannelId): self
     {
         $this->webhookChannelId = $webhookChannelId;
         return $this;
     }
 
-    public function getWebhookexpiresat(): ?\DateTimeImmutable    {
+    public function getWebhookExpiresAt(): ?\DateTimeImmutable    {
         return $this->webhookExpiresAt;
     }
 
-    public function setWebhookexpiresat(?\DateTimeImmutable $webhookExpiresAt): self
+    public function setWebhookExpiresAt(?\DateTimeImmutable $webhookExpiresAt): self
     {
         $this->webhookExpiresAt = $webhookExpiresAt;
         return $this;
     }
 
-    public function getSyncdirection(): string    {
+    public function getSyncDirection(): string    {
         return $this->syncDirection;
     }
 
-    public function setSyncdirection(string $syncDirection): self
+    public function setSyncDirection(string $syncDirection): self
     {
         $this->syncDirection = $syncDirection;
         return $this;
     }
 
-    public function getLasterrormessage(): ?string    {
+    public function getLastErrorMessage(): ?string    {
         return $this->lastErrorMessage;
     }
 
-    public function setLasterrormessage(?string $lastErrorMessage): self
+    public function setLastErrorMessage(?string $lastErrorMessage): self
     {
         $this->lastErrorMessage = $lastErrorMessage;
         return $this;
     }
 
-    public function getLasterrorat(): ?\DateTimeImmutable    {
+    public function getLastErrorAt(): ?\DateTimeImmutable    {
         return $this->lastErrorAt;
     }
 
-    public function setLasterrorat(?\DateTimeImmutable $lastErrorAt): self
+    public function setLastErrorAt(?\DateTimeImmutable $lastErrorAt): self
     {
         $this->lastErrorAt = $lastErrorAt;
         return $this;
     }
 
-    public function getSyncintervalminutes(): int    {
+    public function getSyncIntervalMinutes(): int    {
         return $this->syncIntervalMinutes;
     }
 
-    public function setSyncintervalminutes(int $syncIntervalMinutes): self
+    public function setSyncIntervalMinutes(int $syncIntervalMinutes): self
     {
         $this->syncIntervalMinutes = $syncIntervalMinutes;
         return $this;
     }
 
-    public function getRetrycount(): int    {
+    public function getRetryCount(): int    {
         return $this->retryCount;
     }
 
-    public function setRetrycount(int $retryCount): self
+    public function setRetryCount(int $retryCount): self
     {
         $this->retryCount = $retryCount;
         return $this;

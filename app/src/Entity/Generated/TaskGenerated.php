@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Contact;
 use App\Entity\Deal;
 use App\Entity\PipelineStage;
@@ -28,101 +29,147 @@ use App\Entity\User;
 #[ORM\HasLifecycleCallbacks]
 abstract class TaskGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['task:read', 'task:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $name;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $startDate = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\Range(max: 150, min: 0)]
     protected ?int $completionPercentage = 0;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $category = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $notificationSent = false;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $archived = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $command = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $completedDate = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'tasks')]
     protected ?Contact $contact = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\ManyToOne(targetEntity: Deal::class, inversedBy: 'tasks')]
     protected ?Deal $deal = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $durationMinutes = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $location = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\ManyToOne(targetEntity: PipelineStage::class, inversedBy: 'tasks')]
     protected ?PipelineStage $pipelineStage = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\Range(max: 5, min: 1)]
     protected ?int $priority = null;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTimeImmutable $scheduledDate = null;
-
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $completed = false;
 
+    #[Groups(['task:read', 'task:write'])]
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    protected ?\DateTimeImmutable $scheduledDate = null;
+
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\ManyToOne(targetEntity: Company::class)]
     protected ?Company $company = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $reminderDate = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $reminder = false;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $recurring = false;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     protected ?string $recurrenceRule = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $overdue = false;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
     protected ?string $queue = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $emailSubject = null;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    protected ?string $phoneNumber = null;
-
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 20)]
+    #[Assert\Length(max: 20)]
     protected string $taskStatus;
 
+    #[Groups(['task:read', 'task:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
+    protected ?string $phoneNumber = null;
+
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     protected ?string $meetingUrl = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
     protected ?string $outcome = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\ManyToOne(targetEntity: TaskType::class, inversedBy: 'tasks')]
     protected ?TaskType $type = null;
 
+    #[Groups(['task:read', 'task:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasks')]
     protected ?User $user = null;
 
@@ -130,6 +177,17 @@ abstract class TaskGenerated extends EntityBase
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -152,21 +210,21 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getStartdate(): ?\DateTimeImmutable    {
+    public function getStartDate(): ?\DateTimeImmutable    {
         return $this->startDate;
     }
 
-    public function setStartdate(?\DateTimeImmutable $startDate): self
+    public function setStartDate(?\DateTimeImmutable $startDate): self
     {
         $this->startDate = $startDate;
         return $this;
     }
 
-    public function getCompletionpercentage(): ?int    {
+    public function getCompletionPercentage(): ?int    {
         return $this->completionPercentage;
     }
 
-    public function setCompletionpercentage(?int $completionPercentage): self
+    public function setCompletionPercentage(?int $completionPercentage): self
     {
         $this->completionPercentage = $completionPercentage;
         return $this;
@@ -182,17 +240,17 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getNotificationsent(): bool    {
+    public function getNotificationSent(): bool    {
         return $this->notificationSent;
     }
 
-    public function setNotificationsent(bool $notificationSent): self
+    public function setNotificationSent(bool $notificationSent): self
     {
         $this->notificationSent = $notificationSent;
         return $this;
     }
 
-    public function isNotificationsent(): bool
+    public function isNotificationSent(): bool
     {
         return $this->notificationSent === true;
     }
@@ -222,11 +280,11 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getCompleteddate(): ?\DateTimeImmutable    {
+    public function getCompletedDate(): ?\DateTimeImmutable    {
         return $this->completedDate;
     }
 
-    public function setCompleteddate(?\DateTimeImmutable $completedDate): self
+    public function setCompletedDate(?\DateTimeImmutable $completedDate): self
     {
         $this->completedDate = $completedDate;
         return $this;
@@ -254,11 +312,11 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getDurationminutes(): ?int    {
+    public function getDurationMinutes(): ?int    {
         return $this->durationMinutes;
     }
 
-    public function setDurationminutes(?int $durationMinutes): self
+    public function setDurationMinutes(?int $durationMinutes): self
     {
         $this->durationMinutes = $durationMinutes;
         return $this;
@@ -274,12 +332,12 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getPipelinestage(): ?App\Entity\PipelineStage
+    public function getPipelineStage(): ?App\Entity\PipelineStage
     {
         return $this->pipelineStage;
     }
 
-    public function setPipelinestage(?App\Entity\PipelineStage $pipelineStage): self
+    public function setPipelineStage(?App\Entity\PipelineStage $pipelineStage): self
     {
         $this->pipelineStage = $pipelineStage;
         return $this;
@@ -292,16 +350,6 @@ abstract class TaskGenerated extends EntityBase
     public function setPriority(?int $priority): self
     {
         $this->priority = $priority;
-        return $this;
-    }
-
-    public function getScheduleddate(): ?\DateTimeImmutable    {
-        return $this->scheduledDate;
-    }
-
-    public function setScheduleddate(?\DateTimeImmutable $scheduledDate): self
-    {
-        $this->scheduledDate = $scheduledDate;
         return $this;
     }
 
@@ -320,6 +368,16 @@ abstract class TaskGenerated extends EntityBase
         return $this->completed === true;
     }
 
+    public function getScheduledDate(): ?\DateTimeImmutable    {
+        return $this->scheduledDate;
+    }
+
+    public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
+    {
+        $this->scheduledDate = $scheduledDate;
+        return $this;
+    }
+
     public function getCompany(): ?App\Entity\Company
     {
         return $this->company;
@@ -331,11 +389,11 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getReminderdate(): ?\DateTimeImmutable    {
+    public function getReminderDate(): ?\DateTimeImmutable    {
         return $this->reminderDate;
     }
 
-    public function setReminderdate(?\DateTimeImmutable $reminderDate): self
+    public function setReminderDate(?\DateTimeImmutable $reminderDate): self
     {
         $this->reminderDate = $reminderDate;
         return $this;
@@ -371,11 +429,11 @@ abstract class TaskGenerated extends EntityBase
         return $this->recurring === true;
     }
 
-    public function getRecurrencerule(): ?string    {
+    public function getRecurrenceRule(): ?string    {
         return $this->recurrenceRule;
     }
 
-    public function setRecurrencerule(?string $recurrenceRule): self
+    public function setRecurrenceRule(?string $recurrenceRule): self
     {
         $this->recurrenceRule = $recurrenceRule;
         return $this;
@@ -406,41 +464,41 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getEmailsubject(): ?string    {
+    public function getEmailSubject(): ?string    {
         return $this->emailSubject;
     }
 
-    public function setEmailsubject(?string $emailSubject): self
+    public function setEmailSubject(?string $emailSubject): self
     {
         $this->emailSubject = $emailSubject;
         return $this;
     }
 
-    public function getPhonenumber(): ?string    {
-        return $this->phoneNumber;
-    }
-
-    public function setPhonenumber(?string $phoneNumber): self
-    {
-        $this->phoneNumber = $phoneNumber;
-        return $this;
-    }
-
-    public function getTaskstatus(): string    {
+    public function getTaskStatus(): string    {
         return $this->taskStatus;
     }
 
-    public function setTaskstatus(string $taskStatus): self
+    public function setTaskStatus(string $taskStatus): self
     {
         $this->taskStatus = $taskStatus;
         return $this;
     }
 
-    public function getMeetingurl(): ?string    {
+    public function getPhoneNumber(): ?string    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): self
+    {
+        $this->phoneNumber = $phoneNumber;
+        return $this;
+    }
+
+    public function getMeetingUrl(): ?string    {
         return $this->meetingUrl;
     }
 
-    public function setMeetingurl(?string $meetingUrl): self
+    public function setMeetingUrl(?string $meetingUrl): self
     {
         $this->meetingUrl = $meetingUrl;
         return $this;

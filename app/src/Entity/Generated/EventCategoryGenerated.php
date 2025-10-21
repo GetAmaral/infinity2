@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Event;
 
 /**
@@ -25,36 +26,49 @@ use App\Entity\Event;
 #[ORM\HasLifecycleCallbacks]
 abstract class EventCategoryGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'eventCategories')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
     #[ORM\Column(type: 'string', length: 7)]
     protected string $color = '#0dcaf0';
 
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
     #[ORM\Column(type: 'text', length: 500, nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
     #[ORM\Column(type: 'string', length: 50)]
     protected string $icon = 'bi-calendar-event';
 
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
 
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $eventType = null;
 
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $sortOrder = 0;
 
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $allowMultiple = true;
 
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
-    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'categories', fetch: 'LAZY')]
+    #[Groups(['eventcategory:read'])]
+    #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'categories', fetch: 'LAZY')]
     protected Collection $events;
 
 
@@ -62,6 +76,17 @@ abstract class EventCategoryGenerated extends EntityBase
     {
         parent::__construct();
         $this->events = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -119,37 +144,37 @@ abstract class EventCategoryGenerated extends EntityBase
         return $this->default === true;
     }
 
-    public function getEventtype(): ?string    {
+    public function getEventType(): ?string    {
         return $this->eventType;
     }
 
-    public function setEventtype(?string $eventType): self
+    public function setEventType(?string $eventType): self
     {
         $this->eventType = $eventType;
         return $this;
     }
 
-    public function getSortorder(): int    {
+    public function getSortOrder(): int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(int $sortOrder): self
+    public function setSortOrder(int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;
     }
 
-    public function getAllowmultiple(): bool    {
+    public function getAllowMultiple(): bool    {
         return $this->allowMultiple;
     }
 
-    public function setAllowmultiple(bool $allowMultiple): self
+    public function setAllowMultiple(bool $allowMultiple): self
     {
         $this->allowMultiple = $allowMultiple;
         return $this;
     }
 
-    public function isAllowmultiple(): bool
+    public function isAllowMultiple(): bool
     {
         return $this->allowMultiple === true;
     }
@@ -181,6 +206,7 @@ abstract class EventCategoryGenerated extends EntityBase
     {
         if (!$this->events->contains($event)) {
             $this->events->add($event);
+            $event->setCategories($this);
         }
         return $this;
     }
@@ -188,6 +214,9 @@ abstract class EventCategoryGenerated extends EntityBase
     public function removeEvent(App\Entity\Event $event): self
     {
         if ($this->events->removeElement($event)) {
+            if ($event->getCategories() === $this) {
+                $event->setCategories(null);
+            }
         }
         return $this;
     }

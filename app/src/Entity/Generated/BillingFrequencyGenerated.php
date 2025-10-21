@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Product;
 
 /**
@@ -25,41 +26,56 @@ use App\Entity\Product;
 #[ORM\HasLifecycleCallbacks]
 abstract class BillingFrequencyGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'billingFrequencies')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(name: 'value_prop', type: 'string', length: 50, unique: true)]
     protected string $value;
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'text', length: 500, nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $displayName = null;
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'string', length: 20)]
     protected string $intervalType;
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $intervalCount = 1;
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $daysInCycle = null;
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $discountPercentage = 0;
+    protected ?string $discountPercentage = '0';
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $sortOrder = 0;
 
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['billingfrequency:read'])]
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'billingFrequency', fetch: 'LAZY')]
     protected Collection $products;
 
@@ -68,6 +84,17 @@ abstract class BillingFrequencyGenerated extends EntityBase
     {
         parent::__construct();
         $this->products = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getValue(): string    {
@@ -100,51 +127,51 @@ abstract class BillingFrequencyGenerated extends EntityBase
         return $this;
     }
 
-    public function getDisplayname(): ?string    {
+    public function getDisplayName(): ?string    {
         return $this->displayName;
     }
 
-    public function setDisplayname(?string $displayName): self
+    public function setDisplayName(?string $displayName): self
     {
         $this->displayName = $displayName;
         return $this;
     }
 
-    public function getIntervaltype(): string    {
+    public function getIntervalType(): string    {
         return $this->intervalType;
     }
 
-    public function setIntervaltype(string $intervalType): self
+    public function setIntervalType(string $intervalType): self
     {
         $this->intervalType = $intervalType;
         return $this;
     }
 
-    public function getIntervalcount(): int    {
+    public function getIntervalCount(): int    {
         return $this->intervalCount;
     }
 
-    public function setIntervalcount(int $intervalCount): self
+    public function setIntervalCount(int $intervalCount): self
     {
         $this->intervalCount = $intervalCount;
         return $this;
     }
 
-    public function getDaysincycle(): ?int    {
+    public function getDaysInCycle(): ?int    {
         return $this->daysInCycle;
     }
 
-    public function setDaysincycle(?int $daysInCycle): self
+    public function setDaysInCycle(?int $daysInCycle): self
     {
         $this->daysInCycle = $daysInCycle;
         return $this;
     }
 
-    public function getDiscountpercentage(): ?float    {
+    public function getDiscountPercentage(): ?string    {
         return $this->discountPercentage;
     }
 
-    public function setDiscountpercentage(?float $discountPercentage): self
+    public function setDiscountPercentage(?string $discountPercentage): self
     {
         $this->discountPercentage = $discountPercentage;
         return $this;
@@ -165,11 +192,11 @@ abstract class BillingFrequencyGenerated extends EntityBase
         return $this->default === true;
     }
 
-    public function getSortorder(): int    {
+    public function getSortOrder(): int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(int $sortOrder): self
+    public function setSortOrder(int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;
@@ -202,7 +229,7 @@ abstract class BillingFrequencyGenerated extends EntityBase
     {
         if (!$this->products->contains($product)) {
             $this->products->add($product);
-            $product->setBillingfrequency($this);
+            $product->setBillingFrequency($this);
         }
         return $this;
     }
@@ -210,8 +237,8 @@ abstract class BillingFrequencyGenerated extends EntityBase
     public function removeProduct(App\Entity\Product $product): self
     {
         if ($this->products->removeElement($product)) {
-            if ($product->getBillingfrequency() === $this) {
-                $product->setBillingfrequency(null);
+            if ($product->getBillingFrequency() === $this) {
+                $product->setBillingFrequency(null);
             }
         }
         return $this;

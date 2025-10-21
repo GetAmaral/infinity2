@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Company;
 use App\Entity\Contact;
 use App\Entity\Deal;
 use App\Entity\User;
+use App\Entity\Campaign;
 use App\Entity\SocialMedia;
 use App\Entity\Talk;
 
@@ -30,137 +32,192 @@ use App\Entity\Talk;
 #[ORM\HasLifecycleCallbacks]
 abstract class CampaignGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['campaign:read', 'campaign:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'campaigns')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $actualBudget = null;
+    protected ?string $actualBudget = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $actualCost = null;
+    protected ?string $actualCost = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $actualReturn = null;
+    protected ?string $actualReturn = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $actualRevenue = null;
+    protected ?string $actualRevenue = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $archived;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $budgetedCost = null;
+    protected ?string $budgetedCost = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $campaignStatus = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $campaignType;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
     protected ?string $codeName = null;
 
+    #[Groups(['campaign:read'])]
     #[ORM\ManyToMany(targetEntity: Company::class, inversedBy: 'campaigns', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'campaign_companies')]
     protected Collection $companies;
 
+    #[Groups(['campaign:read'])]
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'campaigns', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'campaign_contacts')]
     protected Collection $contacts;
 
+    #[Groups(['campaign:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'campaign', fetch: 'LAZY')]
     protected Collection $deals;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $draft;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $duration = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected ?string $emailAddress = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $endDate = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $expectedResponse = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $expectedRevenue = null;
+    protected ?string $expectedRevenue = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'managedCampaigns')]
     protected ?User $manager = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $message = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $numberOfContacts = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $numberOfConverted = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $numberOfLeads = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $numberOfResponses = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $objective = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $otherCost = null;
+    protected ?string $otherCost = null;
 
-    #[ORM\Column(type: 'relation')]
-    protected string $owner;
+    #[Groups(['campaign:read', 'campaign:write'])]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedCampaigns')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected User $owner;
 
-    #[ORM\Column(type: 'relation', nullable: true)]
-    protected ?string $parentCampaign = null;
+    #[Groups(['campaign:read', 'campaign:write'])]
+    #[ORM\ManyToOne(targetEntity: Campaign::class, inversedBy: 'childCampaigns')]
+    protected ?Campaign $parentCampaign = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $plannedBudget = null;
+    protected ?string $plannedBudget = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $plannedDuration = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $plannedEndDate = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $plannedReturn = null;
+    protected ?string $plannedReturn = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $plannedStartDate = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $roi = null;
+    protected ?string $roi = null;
 
+    #[Groups(['campaign:read'])]
     #[ORM\ManyToMany(targetEntity: SocialMedia::class, inversedBy: 'campaigns', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'campaign_socialMedias')]
     protected Collection $socialMedias;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $startDate = null;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $status;
 
+    #[Groups(['campaign:read'])]
     #[ORM\ManyToMany(targetEntity: Talk::class, inversedBy: 'campaigns', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'campaign_talks')]
     protected Collection $talks;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $targetAudience = null;
 
+    #[Groups(['campaign:read'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'campaigns', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'campaign_team')]
     protected Collection $team;
 
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $template;
 
@@ -174,6 +231,17 @@ abstract class CampaignGenerated extends EntityBase
         $this->socialMedias = new ArrayCollection();
         $this->talks = new ArrayCollection();
         $this->team = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -196,11 +264,11 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function getActualbudget(): ?float    {
+    public function getActualBudget(): ?string    {
         return $this->actualBudget;
     }
 
-    public function setActualbudget(?float $actualBudget): self
+    public function setActualBudget(?string $actualBudget): self
     {
         $this->actualBudget = $actualBudget;
         return $this;
@@ -221,31 +289,31 @@ abstract class CampaignGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getActualcost(): ?float    {
+    public function getActualCost(): ?string    {
         return $this->actualCost;
     }
 
-    public function setActualcost(?float $actualCost): self
+    public function setActualCost(?string $actualCost): self
     {
         $this->actualCost = $actualCost;
         return $this;
     }
 
-    public function getActualreturn(): ?float    {
+    public function getActualReturn(): ?string    {
         return $this->actualReturn;
     }
 
-    public function setActualreturn(?float $actualReturn): self
+    public function setActualReturn(?string $actualReturn): self
     {
         $this->actualReturn = $actualReturn;
         return $this;
     }
 
-    public function getActualrevenue(): ?float    {
+    public function getActualRevenue(): ?string    {
         return $this->actualRevenue;
     }
 
-    public function setActualrevenue(?float $actualRevenue): self
+    public function setActualRevenue(?string $actualRevenue): self
     {
         $this->actualRevenue = $actualRevenue;
         return $this;
@@ -266,41 +334,41 @@ abstract class CampaignGenerated extends EntityBase
         return $this->archived === true;
     }
 
-    public function getBudgetedcost(): ?float    {
+    public function getBudgetedCost(): ?string    {
         return $this->budgetedCost;
     }
 
-    public function setBudgetedcost(?float $budgetedCost): self
+    public function setBudgetedCost(?string $budgetedCost): self
     {
         $this->budgetedCost = $budgetedCost;
         return $this;
     }
 
-    public function getCampaignstatus(): ?int    {
+    public function getCampaignStatus(): ?int    {
         return $this->campaignStatus;
     }
 
-    public function setCampaignstatus(?int $campaignStatus): self
+    public function setCampaignStatus(?int $campaignStatus): self
     {
         $this->campaignStatus = $campaignStatus;
         return $this;
     }
 
-    public function getCampaigntype(): string    {
+    public function getCampaignType(): string    {
         return $this->campaignType;
     }
 
-    public function setCampaigntype(string $campaignType): self
+    public function setCampaignType(string $campaignType): self
     {
         $this->campaignType = $campaignType;
         return $this;
     }
 
-    public function getCodename(): ?string    {
+    public function getCodeName(): ?string    {
         return $this->codeName;
     }
 
-    public function setCodename(?string $codeName): self
+    public function setCodeName(?string $codeName): self
     {
         $this->codeName = $codeName;
         return $this;
@@ -404,41 +472,41 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function getEmailaddress(): ?string    {
+    public function getEmailAddress(): ?string    {
         return $this->emailAddress;
     }
 
-    public function setEmailaddress(?string $emailAddress): self
+    public function setEmailAddress(?string $emailAddress): self
     {
         $this->emailAddress = $emailAddress;
         return $this;
     }
 
-    public function getEnddate(): ?\DateTimeImmutable    {
+    public function getEndDate(): ?\DateTimeImmutable    {
         return $this->endDate;
     }
 
-    public function setEnddate(?\DateTimeImmutable $endDate): self
+    public function setEndDate(?\DateTimeImmutable $endDate): self
     {
         $this->endDate = $endDate;
         return $this;
     }
 
-    public function getExpectedresponse(): ?int    {
+    public function getExpectedResponse(): ?int    {
         return $this->expectedResponse;
     }
 
-    public function setExpectedresponse(?int $expectedResponse): self
+    public function setExpectedResponse(?int $expectedResponse): self
     {
         $this->expectedResponse = $expectedResponse;
         return $this;
     }
 
-    public function getExpectedrevenue(): ?float    {
+    public function getExpectedRevenue(): ?string    {
         return $this->expectedRevenue;
     }
 
-    public function setExpectedrevenue(?float $expectedRevenue): self
+    public function setExpectedRevenue(?string $expectedRevenue): self
     {
         $this->expectedRevenue = $expectedRevenue;
         return $this;
@@ -465,41 +533,41 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function getNumberofcontacts(): ?int    {
+    public function getNumberOfContacts(): ?int    {
         return $this->numberOfContacts;
     }
 
-    public function setNumberofcontacts(?int $numberOfContacts): self
+    public function setNumberOfContacts(?int $numberOfContacts): self
     {
         $this->numberOfContacts = $numberOfContacts;
         return $this;
     }
 
-    public function getNumberofconverted(): ?int    {
+    public function getNumberOfConverted(): ?int    {
         return $this->numberOfConverted;
     }
 
-    public function setNumberofconverted(?int $numberOfConverted): self
+    public function setNumberOfConverted(?int $numberOfConverted): self
     {
         $this->numberOfConverted = $numberOfConverted;
         return $this;
     }
 
-    public function getNumberofleads(): ?int    {
+    public function getNumberOfLeads(): ?int    {
         return $this->numberOfLeads;
     }
 
-    public function setNumberofleads(?int $numberOfLeads): self
+    public function setNumberOfLeads(?int $numberOfLeads): self
     {
         $this->numberOfLeads = $numberOfLeads;
         return $this;
     }
 
-    public function getNumberofresponses(): ?int    {
+    public function getNumberOfResponses(): ?int    {
         return $this->numberOfResponses;
     }
 
-    public function setNumberofresponses(?int $numberOfResponses): self
+    public function setNumberOfResponses(?int $numberOfResponses): self
     {
         $this->numberOfResponses = $numberOfResponses;
         return $this;
@@ -515,91 +583,93 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function getOthercost(): ?float    {
+    public function getOtherCost(): ?string    {
         return $this->otherCost;
     }
 
-    public function setOthercost(?float $otherCost): self
+    public function setOtherCost(?string $otherCost): self
     {
         $this->otherCost = $otherCost;
         return $this;
     }
 
-    public function getOwner(): string    {
+    public function getOwner(): App\Entity\User
+    {
         return $this->owner;
     }
 
-    public function setOwner(string $owner): self
+    public function setOwner(App\Entity\User $owner): self
     {
         $this->owner = $owner;
         return $this;
     }
 
-    public function getParentcampaign(): ?string    {
+    public function getParentCampaign(): ?App\Entity\Campaign
+    {
         return $this->parentCampaign;
     }
 
-    public function setParentcampaign(?string $parentCampaign): self
+    public function setParentCampaign(?App\Entity\Campaign $parentCampaign): self
     {
         $this->parentCampaign = $parentCampaign;
         return $this;
     }
 
-    public function getPlannedbudget(): ?float    {
+    public function getPlannedBudget(): ?string    {
         return $this->plannedBudget;
     }
 
-    public function setPlannedbudget(?float $plannedBudget): self
+    public function setPlannedBudget(?string $plannedBudget): self
     {
         $this->plannedBudget = $plannedBudget;
         return $this;
     }
 
-    public function getPlannedduration(): ?int    {
+    public function getPlannedDuration(): ?int    {
         return $this->plannedDuration;
     }
 
-    public function setPlannedduration(?int $plannedDuration): self
+    public function setPlannedDuration(?int $plannedDuration): self
     {
         $this->plannedDuration = $plannedDuration;
         return $this;
     }
 
-    public function getPlannedenddate(): ?\DateTimeImmutable    {
+    public function getPlannedEndDate(): ?\DateTimeImmutable    {
         return $this->plannedEndDate;
     }
 
-    public function setPlannedenddate(?\DateTimeImmutable $plannedEndDate): self
+    public function setPlannedEndDate(?\DateTimeImmutable $plannedEndDate): self
     {
         $this->plannedEndDate = $plannedEndDate;
         return $this;
     }
 
-    public function getPlannedreturn(): ?float    {
+    public function getPlannedReturn(): ?string    {
         return $this->plannedReturn;
     }
 
-    public function setPlannedreturn(?float $plannedReturn): self
+    public function setPlannedReturn(?string $plannedReturn): self
     {
         $this->plannedReturn = $plannedReturn;
         return $this;
     }
 
-    public function getPlannedstartdate(): ?\DateTimeImmutable    {
+    public function getPlannedStartDate(): ?\DateTimeImmutable    {
         return $this->plannedStartDate;
     }
 
-    public function setPlannedstartdate(?\DateTimeImmutable $plannedStartDate): self
+    public function setPlannedStartDate(?\DateTimeImmutable $plannedStartDate): self
     {
         $this->plannedStartDate = $plannedStartDate;
         return $this;
     }
 
-    public function getRoi(): ?float    {
+    public function getRoi(): ?string    {
         return $this->roi;
     }
 
-    public function setRoi(?float $roi): self
+    public function setRoi(?string $roi): self
     {
         $this->roi = $roi;
         return $this;
@@ -608,31 +678,31 @@ abstract class CampaignGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\SocialMedia>
      */
-    public function getSocialmedias(): Collection
+    public function getSocialMedias(): Collection
     {
         return $this->socialMedias;
     }
 
-    public function addSocialmedia(App\Entity\SocialMedia $ocialMedia): self
+    public function addSocialMedia(App\Entity\SocialMedia $socialMedia): self
     {
-        if (!$this->socialMedias->contains($ocialMedia)) {
-            $this->socialMedias->add($ocialMedia);
+        if (!$this->socialMedias->contains($socialMedia)) {
+            $this->socialMedias->add($socialMedia);
         }
         return $this;
     }
 
-    public function removeSocialmedia(App\Entity\SocialMedia $ocialMedia): self
+    public function removeSocialMedia(App\Entity\SocialMedia $socialMedia): self
     {
-        if ($this->socialMedias->removeElement($ocialMedia)) {
+        if ($this->socialMedias->removeElement($socialMedia)) {
         }
         return $this;
     }
 
-    public function getStartdate(): ?\DateTimeImmutable    {
+    public function getStartDate(): ?\DateTimeImmutable    {
         return $this->startDate;
     }
 
-    public function setStartdate(?\DateTimeImmutable $startDate): self
+    public function setStartDate(?\DateTimeImmutable $startDate): self
     {
         $this->startDate = $startDate;
         return $this;
@@ -671,11 +741,11 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function getTargetaudience(): ?string    {
+    public function getTargetAudience(): ?string    {
         return $this->targetAudience;
     }
 
-    public function setTargetaudience(?string $targetAudience): self
+    public function setTargetAudience(?string $targetAudience): self
     {
         $this->targetAudience = $targetAudience;
         return $this;

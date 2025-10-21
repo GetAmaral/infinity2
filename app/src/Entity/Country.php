@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @generated once by Genmax Code Generator
  */
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
-#[ORM\Table(name: 'country_table')]
+#[ORM\Table(name: 'country')]
 class Country extends CountryGenerated
 {
     // Add custom properties here

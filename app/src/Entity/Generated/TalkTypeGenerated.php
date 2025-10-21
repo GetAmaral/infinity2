@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Talk;
 
 /**
@@ -25,17 +26,24 @@ use App\Entity\Talk;
 #[ORM\HasLifecycleCallbacks]
 abstract class TalkTypeGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['talktype:read', 'talktype:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'talkTypes')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['talktype:read', 'talktype:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['talktype:read', 'talktype:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['talktype:read', 'talktype:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $iconUrl = null;
 
+    #[Groups(['talktype:read'])]
     #[ORM\OneToMany(targetEntity: Talk::class, mappedBy: 'talkType', fetch: 'LAZY')]
     protected Collection $talks;
 
@@ -44,6 +52,17 @@ abstract class TalkTypeGenerated extends EntityBase
     {
         parent::__construct();
         $this->talks = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -66,11 +85,11 @@ abstract class TalkTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getIconurl(): ?string    {
+    public function getIconUrl(): ?string    {
         return $this->iconUrl;
     }
 
-    public function setIconurl(?string $iconUrl): self
+    public function setIconUrl(?string $iconUrl): self
     {
         $this->iconUrl = $iconUrl;
         return $this;
@@ -88,7 +107,7 @@ abstract class TalkTypeGenerated extends EntityBase
     {
         if (!$this->talks->contains($talk)) {
             $this->talks->add($talk);
-            $talk->setTalktype($this);
+            $talk->setTalkType($this);
         }
         return $this;
     }
@@ -96,8 +115,8 @@ abstract class TalkTypeGenerated extends EntityBase
     public function removeTalk(App\Entity\Talk $talk): self
     {
         if ($this->talks->removeElement($talk)) {
-            if ($talk->getTalktype() === $this) {
-                $talk->setTalktype(null);
+            if ($talk->getTalkType() === $this) {
+                $talk->setTalkType(null);
             }
         }
         return $this;

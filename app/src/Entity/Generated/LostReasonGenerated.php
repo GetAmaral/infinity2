@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Deal;
 
 /**
@@ -25,53 +26,72 @@ use App\Entity\Deal;
 #[ORM\HasLifecycleCallbacks]
 abstract class LostReasonGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['lostreason:read', 'lostreason:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'lostReasons')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $category;
 
+    #[Groups(['lostreason:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'lostReason', fetch: 'LAZY')]
     protected Collection $deals;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $sortOrder = 0;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $requiresNotes = false;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'string', length: 7, nullable: true)]
     protected ?string $color = '#0dcaf0';
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $critical = false;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $impact = null;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $winBackPotential = null;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $actionable = true;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $internal = false;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $competitorName = null;
 
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'text', length: 500, nullable: true)]
     protected ?string $automationRule = null;
 
@@ -80,6 +100,17 @@ abstract class LostReasonGenerated extends EntityBase
     {
         parent::__construct();
         $this->deals = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -124,7 +155,7 @@ abstract class LostReasonGenerated extends EntityBase
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
-            $deal->setLostreason($this);
+            $deal->setLostReason($this);
         }
         return $this;
     }
@@ -132,8 +163,8 @@ abstract class LostReasonGenerated extends EntityBase
     public function removeDeal(App\Entity\Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
-            if ($deal->getLostreason() === $this) {
-                $deal->setLostreason(null);
+            if ($deal->getLostReason() === $this) {
+                $deal->setLostReason(null);
             }
         }
         return $this;
@@ -169,27 +200,27 @@ abstract class LostReasonGenerated extends EntityBase
         return $this->default === true;
     }
 
-    public function getSortorder(): int    {
+    public function getSortOrder(): int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(int $sortOrder): self
+    public function setSortOrder(int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;
     }
 
-    public function getRequiresnotes(): bool    {
+    public function getRequiresNotes(): bool    {
         return $this->requiresNotes;
     }
 
-    public function setRequiresnotes(bool $requiresNotes): self
+    public function setRequiresNotes(bool $requiresNotes): self
     {
         $this->requiresNotes = $requiresNotes;
         return $this;
     }
 
-    public function isRequiresnotes(): bool
+    public function isRequiresNotes(): bool
     {
         return $this->requiresNotes === true;
     }
@@ -229,11 +260,11 @@ abstract class LostReasonGenerated extends EntityBase
         return $this;
     }
 
-    public function getWinbackpotential(): ?string    {
+    public function getWinBackPotential(): ?string    {
         return $this->winBackPotential;
     }
 
-    public function setWinbackpotential(?string $winBackPotential): self
+    public function setWinBackPotential(?string $winBackPotential): self
     {
         $this->winBackPotential = $winBackPotential;
         return $this;
@@ -269,21 +300,21 @@ abstract class LostReasonGenerated extends EntityBase
         return $this->internal === true;
     }
 
-    public function getCompetitorname(): ?string    {
+    public function getCompetitorName(): ?string    {
         return $this->competitorName;
     }
 
-    public function setCompetitorname(?string $competitorName): self
+    public function setCompetitorName(?string $competitorName): self
     {
         $this->competitorName = $competitorName;
         return $this;
     }
 
-    public function getAutomationrule(): ?string    {
+    public function getAutomationRule(): ?string    {
         return $this->automationRule;
     }
 
-    public function setAutomationrule(?string $automationRule): self
+    public function setAutomationRule(?string $automationRule): self
     {
         $this->automationRule = $automationRule;
         return $this;

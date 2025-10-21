@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\City;
 use App\Entity\EventResourceBooking;
 use App\Entity\EventResourceType;
@@ -27,77 +28,104 @@ use App\Entity\EventResourceType;
 #[ORM\HasLifecycleCallbacks]
 abstract class EventResourceGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['eventresource:read', 'eventresource:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'eventResources')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $availabilitySchedule = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $available = true;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $bookable = true;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'string', length: 64, nullable: true)]
     protected ?string $timezone = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $requiresApproval = false;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $autoConfirm = true;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $minimumBookingDuration = 30;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $maximumBookingDuration = null;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $pricePerHour = null;
-
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $bookingRules = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    protected ?float $pricePerDay = null;
+    protected ?string $pricePerHour = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    protected ?string $pricePerDay = null;
+
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'string', length: 2048, nullable: true)]
     protected ?string $imageUrl = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'string', length: 2048, nullable: true)]
     protected ?string $thumbnailUrl = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $tags = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $capacity = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'eventResources')]
     protected ?City $city = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $equipment = null;
 
+    #[Groups(['eventresource:read'])]
     #[ORM\OneToMany(targetEntity: EventResourceBooking::class, mappedBy: 'resource', fetch: 'LAZY')]
     protected Collection $eventBookings;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $geoCoordinates = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $location = null;
 
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\ManyToOne(targetEntity: EventResourceType::class)]
     #[ORM\JoinColumn(nullable: false)]
     protected EventResourceType $type;
@@ -107,6 +135,17 @@ abstract class EventResourceGenerated extends EntityBase
     {
         parent::__construct();
         $this->eventBookings = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -129,11 +168,11 @@ abstract class EventResourceGenerated extends EntityBase
         return $this;
     }
 
-    public function getAvailabilityschedule(): ?array    {
+    public function getAvailabilitySchedule(): ?array    {
         return $this->availabilitySchedule;
     }
 
-    public function setAvailabilityschedule(?array $availabilitySchedule): self
+    public function setAvailabilitySchedule(?array $availabilitySchedule): self
     {
         $this->availabilitySchedule = $availabilitySchedule;
         return $this;
@@ -194,101 +233,101 @@ abstract class EventResourceGenerated extends EntityBase
         return $this;
     }
 
-    public function getRequiresapproval(): bool    {
+    public function getRequiresApproval(): bool    {
         return $this->requiresApproval;
     }
 
-    public function setRequiresapproval(bool $requiresApproval): self
+    public function setRequiresApproval(bool $requiresApproval): self
     {
         $this->requiresApproval = $requiresApproval;
         return $this;
     }
 
-    public function isRequiresapproval(): bool
+    public function isRequiresApproval(): bool
     {
         return $this->requiresApproval === true;
     }
 
-    public function getAutoconfirm(): bool    {
+    public function getAutoConfirm(): bool    {
         return $this->autoConfirm;
     }
 
-    public function setAutoconfirm(bool $autoConfirm): self
+    public function setAutoConfirm(bool $autoConfirm): self
     {
         $this->autoConfirm = $autoConfirm;
         return $this;
     }
 
-    public function isAutoconfirm(): bool
+    public function isAutoConfirm(): bool
     {
         return $this->autoConfirm === true;
     }
 
-    public function getMinimumbookingduration(): ?int    {
+    public function getMinimumBookingDuration(): ?int    {
         return $this->minimumBookingDuration;
     }
 
-    public function setMinimumbookingduration(?int $minimumBookingDuration): self
+    public function setMinimumBookingDuration(?int $minimumBookingDuration): self
     {
         $this->minimumBookingDuration = $minimumBookingDuration;
         return $this;
     }
 
-    public function getMaximumbookingduration(): ?int    {
+    public function getMaximumBookingDuration(): ?int    {
         return $this->maximumBookingDuration;
     }
 
-    public function setMaximumbookingduration(?int $maximumBookingDuration): self
+    public function setMaximumBookingDuration(?int $maximumBookingDuration): self
     {
         $this->maximumBookingDuration = $maximumBookingDuration;
         return $this;
     }
 
-    public function getPriceperhour(): ?float    {
-        return $this->pricePerHour;
-    }
-
-    public function setPriceperhour(?float $pricePerHour): self
-    {
-        $this->pricePerHour = $pricePerHour;
-        return $this;
-    }
-
-    public function getBookingrules(): ?array    {
+    public function getBookingRules(): ?array    {
         return $this->bookingRules;
     }
 
-    public function setBookingrules(?array $bookingRules): self
+    public function setBookingRules(?array $bookingRules): self
     {
         $this->bookingRules = $bookingRules;
         return $this;
     }
 
-    public function getPriceperday(): ?float    {
+    public function getPricePerHour(): ?string    {
+        return $this->pricePerHour;
+    }
+
+    public function setPricePerHour(?string $pricePerHour): self
+    {
+        $this->pricePerHour = $pricePerHour;
+        return $this;
+    }
+
+    public function getPricePerDay(): ?string    {
         return $this->pricePerDay;
     }
 
-    public function setPriceperday(?float $pricePerDay): self
+    public function setPricePerDay(?string $pricePerDay): self
     {
         $this->pricePerDay = $pricePerDay;
         return $this;
     }
 
-    public function getImageurl(): ?string    {
+    public function getImageUrl(): ?string    {
         return $this->imageUrl;
     }
 
-    public function setImageurl(?string $imageUrl): self
+    public function setImageUrl(?string $imageUrl): self
     {
         $this->imageUrl = $imageUrl;
         return $this;
     }
 
-    public function getThumbnailurl(): ?string    {
+    public function getThumbnailUrl(): ?string    {
         return $this->thumbnailUrl;
     }
 
-    public function setThumbnailurl(?string $thumbnailUrl): self
+    public function setThumbnailUrl(?string $thumbnailUrl): self
     {
         $this->thumbnailUrl = $thumbnailUrl;
         return $this;
@@ -338,12 +377,12 @@ abstract class EventResourceGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\EventResourceBooking>
      */
-    public function getEventbookings(): Collection
+    public function getEventBookings(): Collection
     {
         return $this->eventBookings;
     }
 
-    public function addEventbooking(App\Entity\EventResourceBooking $eventBooking): self
+    public function addEventBooking(App\Entity\EventResourceBooking $eventBooking): self
     {
         if (!$this->eventBookings->contains($eventBooking)) {
             $this->eventBookings->add($eventBooking);
@@ -352,7 +391,7 @@ abstract class EventResourceGenerated extends EntityBase
         return $this;
     }
 
-    public function removeEventbooking(App\Entity\EventResourceBooking $eventBooking): self
+    public function removeEventBooking(App\Entity\EventResourceBooking $eventBooking): self
     {
         if ($this->eventBookings->removeElement($eventBooking)) {
             if ($eventBooking->getResource() === $this) {
@@ -362,11 +401,11 @@ abstract class EventResourceGenerated extends EntityBase
         return $this;
     }
 
-    public function getGeocoordinates(): ?string    {
+    public function getGeoCoordinates(): ?string    {
         return $this->geoCoordinates;
     }
 
-    public function setGeocoordinates(?string $geoCoordinates): self
+    public function setGeoCoordinates(?string $geoCoordinates): self
     {
         $this->geoCoordinates = $geoCoordinates;
         return $this;

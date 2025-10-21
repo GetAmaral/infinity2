@@ -33,15 +33,17 @@ resources:
         security: "is_granted('ROLE_DATA_ADMIN')"
 
 
-
     # Property-level configuration
     properties:
-      name:
-        description: "The brand name"
-        example: "Nike"
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       sku:
         description: "SKU (text field)"
         example: "Sample longer text value"
+      name:
+        description: "The brand name"
+        example: "Nike"
       description:
         description: "..."
         example: "..."
@@ -84,12 +86,12 @@ resources:
       leadTime:
         description: "Lead Time (days) (numeric value)"
         example: "42"
-      minOrderQuantity:
-        description: "Min Order Quantity (numeric value)"
-        example: "42"
       active:
         description: "Whether this record is active"
         example: "true"
+      minOrderQuantity:
+        description: "Min Order Quantity (numeric value)"
+        example: "42"
       maxOrderQuantity:
         description: "Max Order Quantity (numeric value)"
         example: "42"

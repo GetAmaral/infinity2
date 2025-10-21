@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Step;
 
 /**
@@ -25,30 +26,42 @@ use App\Entity\Step;
 #[ORM\HasLifecycleCallbacks]
 abstract class TreeFlowGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['treeflow:read', 'treeflow:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'treeFlows')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['treeflow:read', 'treeflow:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $name;
 
+    #[Groups(['treeflow:read', 'treeflow:write'])]
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\3(max: 255, constraint: 'Length')]
+    #[Assert\Length(max: 255)]
     protected string $slug;
 
+    #[Groups(['treeflow:read', 'treeflow:write'])]
     #[ORM\Column(name: 'version_prop', type: 'integer')]
     protected int $version = 1;
 
+    #[Groups(['treeflow:read', 'treeflow:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $canvasViewState = null;
 
+    #[Groups(['treeflow:read', 'treeflow:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $jsonStructure = null;
 
+    #[Groups(['treeflow:read', 'treeflow:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $talkFlow = null;
 
+    #[Groups(['treeflow:read'])]
     #[ORM\OneToMany(targetEntity: Step::class, mappedBy: 'treeFlow', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $steps;
 
+    #[Groups(['treeflow:read', 'treeflow:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
@@ -57,6 +70,17 @@ abstract class TreeFlowGenerated extends EntityBase
     {
         parent::__construct();
         $this->steps = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -89,31 +113,31 @@ abstract class TreeFlowGenerated extends EntityBase
         return $this;
     }
 
-    public function getCanvasviewstate(): ?array    {
+    public function getCanvasViewState(): ?array    {
         return $this->canvasViewState;
     }
 
-    public function setCanvasviewstate(?array $canvasViewState): self
+    public function setCanvasViewState(?array $canvasViewState): self
     {
         $this->canvasViewState = $canvasViewState;
         return $this;
     }
 
-    public function getJsonstructure(): ?array    {
+    public function getJsonStructure(): ?array    {
         return $this->jsonStructure;
     }
 
-    public function setJsonstructure(?array $jsonStructure): self
+    public function setJsonStructure(?array $jsonStructure): self
     {
         $this->jsonStructure = $jsonStructure;
         return $this;
     }
 
-    public function getTalkflow(): ?array    {
+    public function getTalkFlow(): ?array    {
         return $this->talkFlow;
     }
 
-    public function setTalkflow(?array $talkFlow): self
+    public function setTalkFlow(?array $talkFlow): self
     {
         $this->talkFlow = $talkFlow;
         return $this;
@@ -127,20 +151,20 @@ abstract class TreeFlowGenerated extends EntityBase
         return $this->steps;
     }
 
-    public function addStep(App\Entity\Step $tep): self
+    public function addStep(App\Entity\Step $step): self
     {
-        if (!$this->steps->contains($tep)) {
-            $this->steps->add($tep);
-            $tep->setTreeflow($this);
+        if (!$this->steps->contains($step)) {
+            $this->steps->add($step);
+            $step->setTreeFlow($this);
         }
         return $this;
     }
 
-    public function removeStep(App\Entity\Step $tep): self
+    public function removeStep(App\Entity\Step $step): self
     {
-        if ($this->steps->removeElement($tep)) {
-            if ($tep->getTreeflow() === $this) {
-                $tep->setTreeflow(null);
+        if ($this->steps->removeElement($step)) {
+            if ($step->getTreeFlow() === $this) {
+                $step->setTreeFlow(null);
             }
         }
         return $this;

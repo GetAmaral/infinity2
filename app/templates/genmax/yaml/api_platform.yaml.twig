@@ -80,7 +80,7 @@ resources:
 {% if not property.isApiReadable() %}
         readable: false
 {% endif %}
-{% if not property.isApiWritable() or property.isComputed() or property.isAutoCalculated() %}
+{% if not property.isApiWritable() or property.isVirtual() %}
         writable: false
 {% endif %}
 {% if property.getApiDescription() %}
@@ -105,7 +105,7 @@ resources:
 {% elseif property.getPropertyType() == 'json' %}
         example: "{\"key\": \"value\"}"
 {% elseif property.getRelationshipType() %}
-        example: "/api/{{ property.getTargetEntity()|lower }}s/01234567-89ab-cdef-0123-456789abcdef"
+        example: "/api/{{ getClassName(property.getTargetEntity())|lower }}s/01234567-89ab-cdef-0123-456789abcdef"
 {% endif %}
 {% if property.isSubresource() and property.getSubresourcePath() %}
         # Subresource configuration

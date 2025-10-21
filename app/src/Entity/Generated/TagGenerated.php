@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Deal;
 use App\Entity\Product;
 
@@ -26,23 +27,32 @@ use App\Entity\Product;
 #[ORM\HasLifecycleCallbacks]
 abstract class TagGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['tag:read', 'tag:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'tags')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['tag:read', 'tag:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['tag:read', 'tag:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['tag:read', 'tag:write'])]
     #[ORM\Column(type: 'string', length: 7, nullable: true)]
     protected ?string $color = '#0dcaf0';
 
-    #[ORM\ManyToMany(targetEntity: Deal::class, inversedBy: 'tags', fetch: 'LAZY')]
+    #[Groups(['tag:read'])]
+    #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'tags', fetch: 'LAZY')]
     protected Collection $deals;
 
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'tags', fetch: 'LAZY')]
+    #[Groups(['tag:read'])]
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'tags', fetch: 'LAZY')]
     protected Collection $products;
 
+    #[Groups(['tag:read', 'tag:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $sentiment = null;
 
@@ -52,6 +62,17 @@ abstract class TagGenerated extends EntityBase
         parent::__construct();
         $this->deals = new ArrayCollection();
         $this->products = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -96,6 +117,7 @@ abstract class TagGenerated extends EntityBase
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
+            $deal->setTags($this);
         }
         return $this;
     }
@@ -103,6 +125,9 @@ abstract class TagGenerated extends EntityBase
     public function removeDeal(App\Entity\Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
+            if ($deal->getTags() === $this) {
+                $deal->setTags(null);
+            }
         }
         return $this;
     }
@@ -119,6 +144,7 @@ abstract class TagGenerated extends EntityBase
     {
         if (!$this->products->contains($product)) {
             $this->products->add($product);
+            $product->setTags($this);
         }
         return $this;
     }
@@ -126,6 +152,9 @@ abstract class TagGenerated extends EntityBase
     public function removeProduct(App\Entity\Product $product): self
     {
         if ($this->products->removeElement($product)) {
+            if ($product->getTags() === $this) {
+                $product->setTags(null);
+            }
         }
         return $this;
     }

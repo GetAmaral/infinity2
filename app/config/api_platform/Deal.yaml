@@ -33,9 +33,11 @@ resources:
         security: "is_granted('ROLE_SALES_MANAGER')"
 
 
-
     # Property-level configuration
     properties:
+      organization:
+        description: "Organization"
+        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"
@@ -66,12 +68,12 @@ resources:
       category:
         description: "Category"
         example: "sample value"
-      dealNumber:
-        description: "DealNumber (text field)"
-        example: "Sample longer text value"
       expectedAmount:
         description: "ExpectedAmount (decimal value)"
         example: "99.99"
+      dealNumber:
+        description: "DealNumber (text field)"
+        example: "Sample longer text value"
       weightedAmount:
         description: "WeightedAmount (decimal value)"
         example: "99.99"
@@ -126,11 +128,11 @@ resources:
       manager:
         description: "Manager"
         example: "sample value"
-      team:
-        description: "Team"
-        example: "sample value"
       owner:
         description: "Deal Owner"
+        example: "sample value"
+      team:
+        description: "Team"
         example: "sample value"
       primaryContact:
         description: "PrimaryContact"

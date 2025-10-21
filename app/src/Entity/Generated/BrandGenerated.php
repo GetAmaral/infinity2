@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Product;
 use App\Entity\Company;
 
@@ -26,57 +27,77 @@ use App\Entity\Company;
 #[ORM\HasLifecycleCallbacks]
 abstract class BrandGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['brand:read', 'brand:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'brands')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $tagline = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $logoUrl = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $primaryColor = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $industry = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $positioning = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $targetMarket = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $marketShare = null;
+    protected ?string $marketShare = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $brandValue = null;
+    protected ?string $brandValue = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $countryOfOrigin = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $foundedYear = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $website = null;
 
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['brand:read'])]
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'brand', fetch: 'LAZY')]
     protected Collection $products;
 
-    #[ORM\ManyToMany(targetEntity: Company::class, inversedBy: 'manufacturedBrands', fetch: 'LAZY')]
+    #[Groups(['brand:read'])]
+    #[ORM\ManyToMany(targetEntity: Company::class, mappedBy: 'manufacturedBrands', fetch: 'LAZY')]
     protected Collection $manufacturers;
 
-    #[ORM\ManyToMany(targetEntity: Company::class, inversedBy: 'suppliedBrands', fetch: 'LAZY')]
+    #[Groups(['brand:read'])]
+    #[ORM\ManyToMany(targetEntity: Company::class, mappedBy: 'suppliedBrands', fetch: 'LAZY')]
     protected Collection $suppliers;
 
 
@@ -86,6 +107,17 @@ abstract class BrandGenerated extends EntityBase
         $this->products = new ArrayCollection();
         $this->manufacturers = new ArrayCollection();
         $this->suppliers = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -118,21 +150,21 @@ abstract class BrandGenerated extends EntityBase
         return $this;
     }
 
-    public function getLogourl(): ?string    {
+    public function getLogoUrl(): ?string    {
         return $this->logoUrl;
     }
 
-    public function setLogourl(?string $logoUrl): self
+    public function setLogoUrl(?string $logoUrl): self
     {
         $this->logoUrl = $logoUrl;
         return $this;
     }
 
-    public function getPrimarycolor(): ?string    {
+    public function getPrimaryColor(): ?string    {
         return $this->primaryColor;
     }
 
-    public function setPrimarycolor(?string $primaryColor): self
+    public function setPrimaryColor(?string $primaryColor): self
     {
         $this->primaryColor = $primaryColor;
         return $this;
@@ -158,51 +190,51 @@ abstract class BrandGenerated extends EntityBase
         return $this;
     }
 
-    public function getTargetmarket(): ?string    {
+    public function getTargetMarket(): ?string    {
         return $this->targetMarket;
     }
 
-    public function setTargetmarket(?string $targetMarket): self
+    public function setTargetMarket(?string $targetMarket): self
     {
         $this->targetMarket = $targetMarket;
         return $this;
     }
 
-    public function getMarketshare(): ?float    {
+    public function getMarketShare(): ?string    {
         return $this->marketShare;
     }
 
-    public function setMarketshare(?float $marketShare): self
+    public function setMarketShare(?string $marketShare): self
     {
         $this->marketShare = $marketShare;
         return $this;
     }
 
-    public function getBrandvalue(): ?float    {
+    public function getBrandValue(): ?string    {
         return $this->brandValue;
     }
 
-    public function setBrandvalue(?float $brandValue): self
+    public function setBrandValue(?string $brandValue): self
     {
         $this->brandValue = $brandValue;
         return $this;
     }
 
-    public function getCountryoforigin(): ?string    {
+    public function getCountryOfOrigin(): ?string    {
         return $this->countryOfOrigin;
     }
 
-    public function setCountryoforigin(?string $countryOfOrigin): self
+    public function setCountryOfOrigin(?string $countryOfOrigin): self
     {
         $this->countryOfOrigin = $countryOfOrigin;
         return $this;
     }
 
-    public function getFoundedyear(): ?int    {
+    public function getFoundedYear(): ?int    {
         return $this->foundedYear;
     }
 
-    public function setFoundedyear(?int $foundedYear): self
+    public function setFoundedYear(?int $foundedYear): self
     {
         $this->foundedYear = $foundedYear;
         return $this;
@@ -272,6 +304,7 @@ abstract class BrandGenerated extends EntityBase
     {
         if (!$this->manufacturers->contains($manufacturer)) {
             $this->manufacturers->add($manufacturer);
+            $manufacturer->setManufacturedBrands($this);
         }
         return $this;
     }
@@ -279,6 +312,9 @@ abstract class BrandGenerated extends EntityBase
     public function removeManufacturer(App\Entity\Company $manufacturer): self
     {
         if ($this->manufacturers->removeElement($manufacturer)) {
+            if ($manufacturer->getManufacturedBrands() === $this) {
+                $manufacturer->setManufacturedBrands(null);
+            }
         }
         return $this;
     }
@@ -291,17 +327,21 @@ abstract class BrandGenerated extends EntityBase
         return $this->suppliers;
     }
 
-    public function addSupplier(App\Entity\Company $upplier): self
+    public function addSupplier(App\Entity\Company $supplier): self
     {
-        if (!$this->suppliers->contains($upplier)) {
-            $this->suppliers->add($upplier);
+        if (!$this->suppliers->contains($supplier)) {
+            $this->suppliers->add($supplier);
+            $supplier->setSuppliedBrands($this);
         }
         return $this;
     }
 
-    public function removeSupplier(App\Entity\Company $upplier): self
+    public function removeSupplier(App\Entity\Company $supplier): self
     {
-        if ($this->suppliers->removeElement($upplier)) {
+        if ($this->suppliers->removeElement($supplier)) {
+            if ($supplier->getSuppliedBrands() === $this) {
+                $supplier->setSuppliedBrands(null);
+            }
         }
         return $this;
     }

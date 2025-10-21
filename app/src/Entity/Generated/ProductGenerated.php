@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Attachment;
 use App\Entity\ProductBatch;
 use App\Entity\BillingFrequency;
@@ -35,212 +36,304 @@ use App\Entity\TaxCategory;
 #[ORM\HasLifecycleCallbacks]
 abstract class ProductGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['product:read', 'product:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['product:read', 'product:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    protected ?string $sku = null;
+
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    protected ?string $sku = null;
-
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 14, nullable: true)]
+    #[Assert\Length(max: 14)]
     protected ?string $gtin = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 12, nullable: true)]
+    #[Assert\Length(max: 12)]
     protected ?string $upc = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 13, nullable: true)]
+    #[Assert\Length(max: 13)]
     protected ?string $ean = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
     protected ?string $mpn = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
     protected ?string $barcode = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $available = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $price = null;
+    #[Assert\PositiveOrZero]
+    protected ?string $price = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $compareAtPrice = null;
+    #[Assert\PositiveOrZero]
+    protected ?string $compareAtPrice = null;
 
+    #[Groups(['product:read'])]
     #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'product', fetch: 'LAZY')]
     protected Collection $attachments;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Assert\Choice(choices: ['draft', 'active', 'archived', 'discontinued'])]
     protected ?string $status = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\PositiveOrZero]
     protected ?int $reorderLevel = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\PositiveOrZero]
     protected ?int $reorderQuantity = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\PositiveOrZero]
     protected ?int $leadTime = null;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $minOrderQuantity = null;
-
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $active = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\Positive]
+    protected ?int $minOrderQuantity = null;
+
+    #[Groups(['product:read', 'product:write'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\Positive]
     protected ?int $maxOrderQuantity = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $availableQuantity = null;
 
+    #[Groups(['product:read'])]
     #[ORM\OneToMany(targetEntity: ProductBatch::class, mappedBy: 'product', fetch: 'LAZY')]
     protected Collection $batches;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToOne(targetEntity: BillingFrequency::class, inversedBy: 'products')]
     protected ?BillingFrequency $billingFrequency = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'products')]
     protected ?Brand $brand = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $cancellationFee = null;
+    protected ?string $cancellationFee = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'products')]
     protected ?ProductCategory $category = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $commissionAmount = null;
+    protected ?string $commissionAmount = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $commissionRate = null;
+    #[Assert\Range(max: 100, min: 0)]
+    protected ?string $commissionRate = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $costPrice = null;
+    protected ?string $costPrice = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $currency = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $customFields = null;
 
-    #[ORM\ManyToMany(targetEntity: Deal::class, inversedBy: 'products', fetch: 'LAZY')]
+    #[Groups(['product:read'])]
+    #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'products', fetch: 'LAZY')]
     protected Collection $deals;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $dimensions = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $discountAmount = null;
+    protected ?string $discountAmount = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $discountPercentage = null;
+    #[Assert\Range(max: 100, min: 0)]
+    protected ?string $discountPercentage = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $endOfLifeDate = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2, nullable: true)]
     protected ?float $exchangeRate = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $features = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $launchDate = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $lifecycleStage = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $listPrice = null;
+    protected ?string $listPrice = null;
 
-    #[ORM\ManyToMany(targetEntity: Company::class, inversedBy: 'manufacturedProducts', fetch: 'LAZY')]
+    #[Groups(['product:read'])]
+    #[ORM\ManyToMany(targetEntity: Company::class, mappedBy: 'manufacturedProducts', fetch: 'LAZY')]
     protected Collection $manufacturer;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $marginPercentage = null;
+    #[Assert\Range(max: 100, min: 0)]
+    protected ?string $marginPercentage = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $maximumDiscount = null;
+    protected ?string $maximumDiscount = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $minimumPrice = null;
+    protected ?string $minimumPrice = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $productCode = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToOne(targetEntity: ProductLine::class, inversedBy: 'products')]
     protected ?ProductLine $productLine = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $productType = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $purchasable = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $recurringFee = null;
+    protected ?string $recurringFee = null;
 
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'relatedTo', fetch: 'LAZY')]
+    #[Groups(['product:read'])]
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'relatedTo', fetch: 'LAZY')]
     protected Collection $relatedFrom;
 
+    #[Groups(['product:read'])]
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'relatedFrom', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'product_relatedTo')]
     protected Collection $relatedTo;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $requiresApproval = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $reservedQuantity = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $sellable = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $setupFee = null;
+    protected ?string $setupFee = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $shortDescription = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $specifications = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $stockQuantity = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $subscription = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $subscriptionPeriod = null;
 
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'substituteTo', fetch: 'LAZY')]
+    #[Groups(['product:read'])]
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'substituteTo', fetch: 'LAZY')]
     protected Collection $substituteFrom;
 
+    #[Groups(['product:read'])]
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'substituteFrom', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'product_substituteTo')]
     protected Collection $substituteTo;
 
-    #[ORM\ManyToMany(targetEntity: Company::class, inversedBy: 'suppliedProducts', fetch: 'LAZY')]
+    #[Groups(['product:read'])]
+    #[ORM\ManyToMany(targetEntity: Company::class, mappedBy: 'suppliedProducts', fetch: 'LAZY')]
     protected Collection $supplier;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $supportPeriod = null;
 
+    #[Groups(['product:read'])]
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'products', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'product_tags')]
     protected Collection $tags;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToOne(targetEntity: TaxCategory::class, inversedBy: 'products')]
     protected ?TaxCategory $taxCategory = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $unitOfMeasure = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $warrantyPeriod = null;
 
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2, nullable: true)]
     protected ?float $weight = null;
 
@@ -260,13 +353,14 @@ abstract class ProductGenerated extends EntityBase
         $this->tags = new ArrayCollection();
     }
 
-    public function getName(): string    {
-        return $this->name;
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
     }
 
-    public function setName(string $name): self
+    public function setOrganization(App\Entity\Organization $organization): self
     {
-        $this->name = $name;
+        $this->organization = $organization;
         return $this;
     }
 
@@ -277,6 +371,16 @@ abstract class ProductGenerated extends EntityBase
     public function setSku(?string $sku): self
     {
         $this->sku = $sku;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -355,21 +459,21 @@ abstract class ProductGenerated extends EntityBase
         return $this->available === true;
     }
 
-    public function getPrice(): ?float    {
+    public function getPrice(): ?string    {
         return $this->price;
     }
 
-    public function setPrice(?float $price): self
+    public function setPrice(?string $price): self
     {
         $this->price = $price;
         return $this;
     }
 
-    public function getCompareatprice(): ?float    {
+    public function getCompareAtPrice(): ?string    {
         return $this->compareAtPrice;
     }
 
-    public function setCompareatprice(?float $compareAtPrice): self
+    public function setCompareAtPrice(?string $compareAtPrice): self
     {
         $this->compareAtPrice = $compareAtPrice;
         return $this;
@@ -412,43 +516,33 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getReorderlevel(): ?int    {
+    public function getReorderLevel(): ?int    {
         return $this->reorderLevel;
     }
 
-    public function setReorderlevel(?int $reorderLevel): self
+    public function setReorderLevel(?int $reorderLevel): self
     {
         $this->reorderLevel = $reorderLevel;
         return $this;
     }
 
-    public function getReorderquantity(): ?int    {
+    public function getReorderQuantity(): ?int    {
         return $this->reorderQuantity;
     }
 
-    public function setReorderquantity(?int $reorderQuantity): self
+    public function setReorderQuantity(?int $reorderQuantity): self
     {
         $this->reorderQuantity = $reorderQuantity;
         return $this;
     }
 
-    public function getLeadtime(): ?int    {
+    public function getLeadTime(): ?int    {
         return $this->leadTime;
     }
 
-    public function setLeadtime(?int $leadTime): self
+    public function setLeadTime(?int $leadTime): self
     {
         $this->leadTime = $leadTime;
-        return $this;
-    }
-
-    public function getMinorderquantity(): ?int    {
-        return $this->minOrderQuantity;
-    }
-
-    public function setMinorderquantity(?int $minOrderQuantity): self
-    {
-        $this->minOrderQuantity = $minOrderQuantity;
         return $this;
     }
 
@@ -467,21 +561,31 @@ abstract class ProductGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getMaxorderquantity(): ?int    {
+    public function getMinOrderQuantity(): ?int    {
+        return $this->minOrderQuantity;
+    }
+
+    public function setMinOrderQuantity(?int $minOrderQuantity): self
+    {
+        $this->minOrderQuantity = $minOrderQuantity;
+        return $this;
+    }
+
+    public function getMaxOrderQuantity(): ?int    {
         return $this->maxOrderQuantity;
     }
 
-    public function setMaxorderquantity(?int $maxOrderQuantity): self
+    public function setMaxOrderQuantity(?int $maxOrderQuantity): self
     {
         $this->maxOrderQuantity = $maxOrderQuantity;
         return $this;
     }
 
-    public function getAvailablequantity(): ?int    {
+    public function getAvailableQuantity(): ?int    {
         return $this->availableQuantity;
     }
 
-    public function setAvailablequantity(?int $availableQuantity): self
+    public function setAvailableQuantity(?int $availableQuantity): self
     {
         $this->availableQuantity = $availableQuantity;
         return $this;
@@ -495,31 +599,31 @@ abstract class ProductGenerated extends EntityBase
         return $this->batches;
     }
 
-    public function addBatche(App\Entity\ProductBatch $batche): self
+    public function addBatch(App\Entity\ProductBatch $batch): self
     {
-        if (!$this->batches->contains($batche)) {
-            $this->batches->add($batche);
-            $batche->setProduct($this);
+        if (!$this->batches->contains($batch)) {
+            $this->batches->add($batch);
+            $batch->setProduct($this);
         }
         return $this;
     }
 
-    public function removeBatche(App\Entity\ProductBatch $batche): self
+    public function removeBatch(App\Entity\ProductBatch $batch): self
     {
-        if ($this->batches->removeElement($batche)) {
-            if ($batche->getProduct() === $this) {
-                $batche->setProduct(null);
+        if ($this->batches->removeElement($batch)) {
+            if ($batch->getProduct() === $this) {
+                $batch->setProduct(null);
             }
         }
         return $this;
     }
 
-    public function getBillingfrequency(): ?App\Entity\BillingFrequency
+    public function getBillingFrequency(): ?App\Entity\BillingFrequency
     {
         return $this->billingFrequency;
     }
 
-    public function setBillingfrequency(?App\Entity\BillingFrequency $billingFrequency): self
+    public function setBillingFrequency(?App\Entity\BillingFrequency $billingFrequency): self
     {
         $this->billingFrequency = $billingFrequency;
         return $this;
@@ -536,11 +640,11 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getCancellationfee(): ?float    {
+    public function getCancellationFee(): ?string    {
         return $this->cancellationFee;
     }
 
-    public function setCancellationfee(?float $cancellationFee): self
+    public function setCancellationFee(?string $cancellationFee): self
     {
         $this->cancellationFee = $cancellationFee;
         return $this;
@@ -557,31 +661,31 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getCommissionamount(): ?float    {
+    public function getCommissionAmount(): ?string    {
         return $this->commissionAmount;
     }
 
-    public function setCommissionamount(?float $commissionAmount): self
+    public function setCommissionAmount(?string $commissionAmount): self
     {
         $this->commissionAmount = $commissionAmount;
         return $this;
     }
 
-    public function getCommissionrate(): ?float    {
+    public function getCommissionRate(): ?string    {
         return $this->commissionRate;
     }
 
-    public function setCommissionrate(?float $commissionRate): self
+    public function setCommissionRate(?string $commissionRate): self
     {
         $this->commissionRate = $commissionRate;
         return $this;
     }
 
-    public function getCostprice(): ?float    {
+    public function getCostPrice(): ?string    {
         return $this->costPrice;
     }
 
-    public function setCostprice(?float $costPrice): self
+    public function setCostPrice(?string $costPrice): self
     {
         $this->costPrice = $costPrice;
         return $this;
@@ -597,11 +701,11 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getCustomfields(): ?array    {
+    public function getCustomFields(): ?array    {
         return $this->customFields;
     }
 
-    public function setCustomfields(?array $customFields): self
+    public function setCustomFields(?array $customFields): self
     {
         $this->customFields = $customFields;
         return $this;
@@ -619,6 +723,7 @@ abstract class ProductGenerated extends EntityBase
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
+            $deal->setProducts($this);
         }
         return $this;
     }
@@ -626,6 +731,9 @@ abstract class ProductGenerated extends EntityBase
     public function removeDeal(App\Entity\Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
+            if ($deal->getProducts() === $this) {
+                $deal->setProducts(null);
+            }
         }
         return $this;
     }
@@ -640,41 +748,41 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getDiscountamount(): ?float    {
+    public function getDiscountAmount(): ?string    {
         return $this->discountAmount;
     }
 
-    public function setDiscountamount(?float $discountAmount): self
+    public function setDiscountAmount(?string $discountAmount): self
     {
         $this->discountAmount = $discountAmount;
         return $this;
     }
 
-    public function getDiscountpercentage(): ?float    {
+    public function getDiscountPercentage(): ?string    {
         return $this->discountPercentage;
     }
 
-    public function setDiscountpercentage(?float $discountPercentage): self
+    public function setDiscountPercentage(?string $discountPercentage): self
     {
         $this->discountPercentage = $discountPercentage;
         return $this;
     }
 
-    public function getEndoflifedate(): ?\DateTimeImmutable    {
+    public function getEndOfLifeDate(): ?\DateTimeImmutable    {
         return $this->endOfLifeDate;
     }
 
-    public function setEndoflifedate(?\DateTimeImmutable $endOfLifeDate): self
+    public function setEndOfLifeDate(?\DateTimeImmutable $endOfLifeDate): self
     {
         $this->endOfLifeDate = $endOfLifeDate;
         return $this;
     }
 
-    public function getExchangerate(): ?float    {
+    public function getExchangeRate(): ?float    {
         return $this->exchangeRate;
     }
 
-    public function setExchangerate(?float $exchangeRate): self
+    public function setExchangeRate(?float $exchangeRate): self
     {
         $this->exchangeRate = $exchangeRate;
         return $this;
@@ -690,31 +798,31 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getLaunchdate(): ?\DateTimeImmutable    {
+    public function getLaunchDate(): ?\DateTimeImmutable    {
         return $this->launchDate;
     }
 
-    public function setLaunchdate(?\DateTimeImmutable $launchDate): self
+    public function setLaunchDate(?\DateTimeImmutable $launchDate): self
     {
         $this->launchDate = $launchDate;
         return $this;
     }
 
-    public function getLifecyclestage(): ?string    {
+    public function getLifecycleStage(): ?string    {
         return $this->lifecycleStage;
     }
 
-    public function setLifecyclestage(?string $lifecycleStage): self
+    public function setLifecycleStage(?string $lifecycleStage): self
     {
         $this->lifecycleStage = $lifecycleStage;
         return $this;
     }
 
-    public function getListprice(): ?float    {
+    public function getListPrice(): ?string    {
         return $this->listPrice;
     }
 
-    public function setListprice(?float $listPrice): self
+    public function setListPrice(?string $listPrice): self
     {
         $this->listPrice = $listPrice;
         return $this;
@@ -732,6 +840,7 @@ abstract class ProductGenerated extends EntityBase
     {
         if (!$this->manufacturer->contains($manufacturer)) {
             $this->manufacturer->add($manufacturer);
+            $manufacturer->setManufacturedProducts($this);
         }
         return $this;
     }
@@ -739,66 +848,69 @@ abstract class ProductGenerated extends EntityBase
     public function removeManufacturer(App\Entity\Company $manufacturer): self
     {
         if ($this->manufacturer->removeElement($manufacturer)) {
+            if ($manufacturer->getManufacturedProducts() === $this) {
+                $manufacturer->setManufacturedProducts(null);
+            }
         }
         return $this;
     }
 
-    public function getMarginpercentage(): ?float    {
+    public function getMarginPercentage(): ?string    {
         return $this->marginPercentage;
     }
 
-    public function setMarginpercentage(?float $marginPercentage): self
+    public function setMarginPercentage(?string $marginPercentage): self
     {
         $this->marginPercentage = $marginPercentage;
         return $this;
     }
 
-    public function getMaximumdiscount(): ?float    {
+    public function getMaximumDiscount(): ?string    {
         return $this->maximumDiscount;
     }
 
-    public function setMaximumdiscount(?float $maximumDiscount): self
+    public function setMaximumDiscount(?string $maximumDiscount): self
     {
         $this->maximumDiscount = $maximumDiscount;
         return $this;
     }
 
-    public function getMinimumprice(): ?float    {
+    public function getMinimumPrice(): ?string    {
         return $this->minimumPrice;
     }
 
-    public function setMinimumprice(?float $minimumPrice): self
+    public function setMinimumPrice(?string $minimumPrice): self
     {
         $this->minimumPrice = $minimumPrice;
         return $this;
     }
 
-    public function getProductcode(): ?string    {
+    public function getProductCode(): ?string    {
         return $this->productCode;
     }
 
-    public function setProductcode(?string $productCode): self
+    public function setProductCode(?string $productCode): self
     {
         $this->productCode = $productCode;
         return $this;
     }
 
-    public function getProductline(): ?App\Entity\ProductLine
+    public function getProductLine(): ?App\Entity\ProductLine
     {
         return $this->productLine;
     }
 
-    public function setProductline(?App\Entity\ProductLine $productLine): self
+    public function setProductLine(?App\Entity\ProductLine $productLine): self
     {
         $this->productLine = $productLine;
         return $this;
     }
 
-    public function getProducttype(): ?int    {
+    public function getProductType(): ?int    {
         return $this->productType;
     }
 
-    public function setProducttype(?int $productType): self
+    public function setProductType(?int $productType): self
     {
         $this->productType = $productType;
         return $this;
@@ -819,11 +931,11 @@ abstract class ProductGenerated extends EntityBase
         return $this->purchasable === true;
     }
 
-    public function getRecurringfee(): ?float    {
+    public function getRecurringFee(): ?string    {
         return $this->recurringFee;
     }
 
-    public function setRecurringfee(?float $recurringFee): self
+    public function setRecurringFee(?string $recurringFee): self
     {
         $this->recurringFee = $recurringFee;
         return $this;
@@ -832,22 +944,26 @@ abstract class ProductGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\Product>
      */
-    public function getRelatedfrom(): Collection
+    public function getRelatedFrom(): Collection
     {
         return $this->relatedFrom;
     }
 
-    public function addRelatedfrom(App\Entity\Product $relatedFrom): self
+    public function addRelatedFrom(App\Entity\Product $relatedFrom): self
     {
         if (!$this->relatedFrom->contains($relatedFrom)) {
             $this->relatedFrom->add($relatedFrom);
+            $relatedFrom->setRelatedTo($this);
         }
         return $this;
     }
 
-    public function removeRelatedfrom(App\Entity\Product $relatedFrom): self
+    public function removeRelatedFrom(App\Entity\Product $relatedFrom): self
     {
         if ($this->relatedFrom->removeElement($relatedFrom)) {
+            if ($relatedFrom->getRelatedTo() === $this) {
+                $relatedFrom->setRelatedTo(null);
+            }
         }
         return $this;
     }
@@ -855,12 +971,12 @@ abstract class ProductGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\Product>
      */
-    public function getRelatedto(): Collection
+    public function getRelatedTo(): Collection
     {
         return $this->relatedTo;
     }
 
-    public function addRelatedto(App\Entity\Product $relatedTo): self
+    public function addRelatedTo(App\Entity\Product $relatedTo): self
     {
         if (!$this->relatedTo->contains($relatedTo)) {
             $this->relatedTo->add($relatedTo);
@@ -868,33 +984,33 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function removeRelatedto(App\Entity\Product $relatedTo): self
+    public function removeRelatedTo(App\Entity\Product $relatedTo): self
     {
         if ($this->relatedTo->removeElement($relatedTo)) {
         }
         return $this;
     }
 
-    public function getRequiresapproval(): ?bool    {
+    public function getRequiresApproval(): ?bool    {
         return $this->requiresApproval;
     }
 
-    public function setRequiresapproval(?bool $requiresApproval): self
+    public function setRequiresApproval(?bool $requiresApproval): self
     {
         $this->requiresApproval = $requiresApproval;
         return $this;
     }
 
-    public function isRequiresapproval(): bool
+    public function isRequiresApproval(): bool
     {
         return $this->requiresApproval === true;
     }
 
-    public function getReservedquantity(): ?int    {
+    public function getReservedQuantity(): ?int    {
         return $this->reservedQuantity;
     }
 
-    public function setReservedquantity(?int $reservedQuantity): self
+    public function setReservedQuantity(?int $reservedQuantity): self
     {
         $this->reservedQuantity = $reservedQuantity;
         return $this;
@@ -915,21 +1031,21 @@ abstract class ProductGenerated extends EntityBase
         return $this->sellable === true;
     }
 
-    public function getSetupfee(): ?float    {
+    public function getSetupFee(): ?string    {
         return $this->setupFee;
     }
 
-    public function setSetupfee(?float $setupFee): self
+    public function setSetupFee(?string $setupFee): self
     {
         $this->setupFee = $setupFee;
         return $this;
     }
 
-    public function getShortdescription(): ?string    {
+    public function getShortDescription(): ?string    {
         return $this->shortDescription;
     }
 
-    public function setShortdescription(?string $shortDescription): self
+    public function setShortDescription(?string $shortDescription): self
     {
         $this->shortDescription = $shortDescription;
         return $this;
@@ -945,11 +1061,11 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getStockquantity(): ?int    {
+    public function getStockQuantity(): ?int    {
         return $this->stockQuantity;
     }
 
-    public function setStockquantity(?int $stockQuantity): self
+    public function setStockQuantity(?int $stockQuantity): self
     {
         $this->stockQuantity = $stockQuantity;
         return $this;
@@ -970,11 +1086,11 @@ abstract class ProductGenerated extends EntityBase
         return $this->subscription === true;
     }
 
-    public function getSubscriptionperiod(): ?string    {
+    public function getSubscriptionPeriod(): ?string    {
         return $this->subscriptionPeriod;
     }
 
-    public function setSubscriptionperiod(?string $subscriptionPeriod): self
+    public function setSubscriptionPeriod(?string $subscriptionPeriod): self
     {
         $this->subscriptionPeriod = $subscriptionPeriod;
         return $this;
@@ -983,22 +1099,26 @@ abstract class ProductGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\Product>
      */
-    public function getSubstitutefrom(): Collection
+    public function getSubstituteFrom(): Collection
     {
         return $this->substituteFrom;
     }
 
-    public function addSubtitutefrom(App\Entity\Product $ubtituteFrom): self
+    public function addSubstituteFrom(App\Entity\Product $substituteFrom): self
     {
-        if (!$this->substituteFrom->contains($ubtituteFrom)) {
-            $this->substituteFrom->add($ubtituteFrom);
+        if (!$this->substituteFrom->contains($substituteFrom)) {
+            $this->substituteFrom->add($substituteFrom);
+            $substituteFrom->setSubstituteTo($this);
         }
         return $this;
     }
 
-    public function removeSubtitutefrom(App\Entity\Product $ubtituteFrom): self
+    public function removeSubstituteFrom(App\Entity\Product $substituteFrom): self
     {
-        if ($this->substituteFrom->removeElement($ubtituteFrom)) {
+        if ($this->substituteFrom->removeElement($substituteFrom)) {
+            if ($substituteFrom->getSubstituteTo() === $this) {
+                $substituteFrom->setSubstituteTo(null);
+            }
         }
         return $this;
     }
@@ -1006,22 +1126,22 @@ abstract class ProductGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\Product>
      */
-    public function getSubstituteto(): Collection
+    public function getSubstituteTo(): Collection
     {
         return $this->substituteTo;
     }
 
-    public function addSubtituteto(App\Entity\Product $ubtituteTo): self
+    public function addSubstituteTo(App\Entity\Product $substituteTo): self
     {
-        if (!$this->substituteTo->contains($ubtituteTo)) {
-            $this->substituteTo->add($ubtituteTo);
+        if (!$this->substituteTo->contains($substituteTo)) {
+            $this->substituteTo->add($substituteTo);
         }
         return $this;
     }
 
-    public function removeSubtituteto(App\Entity\Product $ubtituteTo): self
+    public function removeSubstituteTo(App\Entity\Product $substituteTo): self
     {
-        if ($this->substituteTo->removeElement($ubtituteTo)) {
+        if ($this->substituteTo->removeElement($substituteTo)) {
         }
         return $this;
     }
@@ -1034,26 +1154,30 @@ abstract class ProductGenerated extends EntityBase
         return $this->supplier;
     }
 
-    public function addSupplier(App\Entity\Company $upplier): self
+    public function addSupplier(App\Entity\Company $supplier): self
     {
-        if (!$this->supplier->contains($upplier)) {
-            $this->supplier->add($upplier);
+        if (!$this->supplier->contains($supplier)) {
+            $this->supplier->add($supplier);
+            $supplier->setSuppliedProducts($this);
         }
         return $this;
     }
 
-    public function removeSupplier(App\Entity\Company $upplier): self
+    public function removeSupplier(App\Entity\Company $supplier): self
     {
-        if ($this->supplier->removeElement($upplier)) {
+        if ($this->supplier->removeElement($supplier)) {
+            if ($supplier->getSuppliedProducts() === $this) {
+                $supplier->setSuppliedProducts(null);
+            }
         }
         return $this;
     }
 
-    public function getSupportperiod(): ?int    {
+    public function getSupportPeriod(): ?int    {
         return $this->supportPeriod;
     }
 
-    public function setSupportperiod(?int $supportPeriod): self
+    public function setSupportPeriod(?int $supportPeriod): self
     {
         $this->supportPeriod = $supportPeriod;
         return $this;
@@ -1082,32 +1206,32 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getTaxcategory(): ?App\Entity\TaxCategory
+    public function getTaxCategory(): ?App\Entity\TaxCategory
     {
         return $this->taxCategory;
     }
 
-    public function setTaxcategory(?App\Entity\TaxCategory $taxCategory): self
+    public function setTaxCategory(?App\Entity\TaxCategory $taxCategory): self
     {
         $this->taxCategory = $taxCategory;
         return $this;
     }
 
-    public function getUnitofmeasure(): ?string    {
+    public function getUnitOfMeasure(): ?string    {
         return $this->unitOfMeasure;
     }
 
-    public function setUnitofmeasure(?string $unitOfMeasure): self
+    public function setUnitOfMeasure(?string $unitOfMeasure): self
     {
         $this->unitOfMeasure = $unitOfMeasure;
         return $this;
     }
 
-    public function getWarrantyperiod(): ?int    {
+    public function getWarrantyPeriod(): ?int    {
         return $this->warrantyPeriod;
     }
 
-    public function setWarrantyperiod(?int $warrantyPeriod): self
+    public function setWarrantyPeriod(?int $warrantyPeriod): self
     {
         $this->warrantyPeriod = $warrantyPeriod;
         return $this;

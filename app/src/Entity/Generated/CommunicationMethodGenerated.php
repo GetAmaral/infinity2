@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Notification;
 use App\Entity\Reminder;
 
@@ -25,18 +26,23 @@ use App\Entity\Reminder;
 #[ORM\HasLifecycleCallbacks]
 abstract class CommunicationMethodGenerated extends EntityBase
 {
+    #[Groups(['communicationmethod:read', 'communicationmethod:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['communicationmethod:read', 'communicationmethod:write'])]
     #[ORM\Column(name: 'function_prop', type: 'string', length: 255, nullable: true)]
     protected ?string $function = null;
 
+    #[Groups(['communicationmethod:read'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'communicationMethod', fetch: 'LAZY')]
     protected Collection $notifications;
 
+    #[Groups(['communicationmethod:read', 'communicationmethod:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $property = null;
 
+    #[Groups(['communicationmethod:read'])]
     #[ORM\OneToMany(targetEntity: Reminder::class, mappedBy: 'communicationMethod', fetch: 'LAZY')]
     protected Collection $reminders;
 
@@ -80,7 +86,7 @@ abstract class CommunicationMethodGenerated extends EntityBase
     {
         if (!$this->notifications->contains($notification)) {
             $this->notifications->add($notification);
-            $notification->setCommunicationmethod($this);
+            $notification->setCommunicationMethod($this);
         }
         return $this;
     }
@@ -88,8 +94,8 @@ abstract class CommunicationMethodGenerated extends EntityBase
     public function removeNotification(App\Entity\Notification $notification): self
     {
         if ($this->notifications->removeElement($notification)) {
-            if ($notification->getCommunicationmethod() === $this) {
-                $notification->setCommunicationmethod(null);
+            if ($notification->getCommunicationMethod() === $this) {
+                $notification->setCommunicationMethod(null);
             }
         }
         return $this;
@@ -117,7 +123,7 @@ abstract class CommunicationMethodGenerated extends EntityBase
     {
         if (!$this->reminders->contains($reminder)) {
             $this->reminders->add($reminder);
-            $reminder->setCommunicationmethod($this);
+            $reminder->setCommunicationMethod($this);
         }
         return $this;
     }
@@ -125,8 +131,8 @@ abstract class CommunicationMethodGenerated extends EntityBase
     public function removeReminder(App\Entity\Reminder $reminder): self
     {
         if ($this->reminders->removeElement($reminder)) {
-            if ($reminder->getCommunicationmethod() === $this) {
-                $reminder->setCommunicationmethod(null);
+            if ($reminder->getCommunicationMethod() === $this) {
+                $reminder->setCommunicationMethod(null);
             }
         }
         return $this;

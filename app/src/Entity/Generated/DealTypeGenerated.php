@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Deal;
 
 /**
@@ -25,46 +26,71 @@ use App\Entity\Deal;
 #[ORM\HasLifecycleCallbacks]
 abstract class DealTypeGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['dealtype:read', 'dealtype:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'dealTypes')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $category = null;
 
-    #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'dealType', fetch: 'LAZY')]
-    protected Collection $deals;
-
+    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'string', length: 7)]
     protected string $color = '#0dcaf0';
 
+    #[Groups(['dealtype:read'])]
+    #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'dealType', fetch: 'LAZY')]
+    protected Collection $deals;
+
+    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'string', length: 50)]
     protected string $icon = 'bi-briefcase';
 
+    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
 
-    #[ORM\Column(type: 'integer')]
-    protected int $sortOrder = 0;
-
+    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['dealtype:read', 'dealtype:write'])]
+    #[ORM\Column(type: 'integer')]
+    protected int $sortOrder = 0;
+
+    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $expectedDuration = null;
 
+    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $winProbability = null;
+    protected ?string $winProbability = null;
 
 
     public function __construct()
     {
         parent::__construct();
         $this->deals = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -97,6 +123,16 @@ abstract class DealTypeGenerated extends EntityBase
         return $this;
     }
 
+    public function getColor(): string    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
+        return $this;
+    }
+
     /**
      * @return Collection<int, App\Entity\Deal>
      */
@@ -109,7 +145,7 @@ abstract class DealTypeGenerated extends EntityBase
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
-            $deal->setDealtype($this);
+            $deal->setDealType($this);
         }
         return $this;
     }
@@ -117,20 +153,10 @@ abstract class DealTypeGenerated extends EntityBase
     public function removeDeal(App\Entity\Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
-            if ($deal->getDealtype() === $this) {
-                $deal->setDealtype(null);
+            if ($deal->getDealType() === $this) {
+                $deal->setDealType(null);
             }
         }
-        return $this;
-    }
-
-    public function getColor(): string    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): self
-    {
-        $this->color = $color;
         return $this;
     }
 
@@ -159,16 +185,6 @@ abstract class DealTypeGenerated extends EntityBase
         return $this->default === true;
     }
 
-    public function getSortorder(): int    {
-        return $this->sortOrder;
-    }
-
-    public function setSortorder(int $sortOrder): self
-    {
-        $this->sortOrder = $sortOrder;
-        return $this;
-    }
-
     public function getActive(): bool    {
         return $this->active;
     }
@@ -184,21 +200,31 @@ abstract class DealTypeGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getExpectedduration(): ?int    {
+    public function getSortOrder(): int    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(int $sortOrder): self
+    {
+        $this->sortOrder = $sortOrder;
+        return $this;
+    }
+
+    public function getExpectedDuration(): ?int    {
         return $this->expectedDuration;
     }
 
-    public function setExpectedduration(?int $expectedDuration): self
+    public function setExpectedDuration(?int $expectedDuration): self
     {
         $this->expectedDuration = $expectedDuration;
         return $this;
     }
 
-    public function getWinprobability(): ?float    {
+    public function getWinProbability(): ?string    {
         return $this->winProbability;
     }
 
-    public function setWinprobability(?float $winProbability): self
+    public function setWinProbability(?string $winProbability): self
     {
         $this->winProbability = $winProbability;
         return $this;

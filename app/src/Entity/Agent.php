@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @generated once by Genmax Code Generator
  */
 #[ORM\Entity(repositoryClass: AgentRepository::class)]
-#[ORM\Table(name: 'agent_table')]
+#[ORM\Table(name: 'agent')]
 class Agent extends AgentGenerated
 {
     // Add custom properties here

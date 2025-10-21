@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\User;
 use App\Entity\Deal;
 use App\Entity\PipelineStage;
@@ -25,56 +26,76 @@ use App\Entity\PipelineStage;
 #[ORM\HasLifecycleCallbacks]
 abstract class DealStageGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['dealstage:read', 'dealstage:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'dealStages')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $stageName = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    protected ?float $probability = 0;
+    protected ?string $probability = '0';
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $rottenDays = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $rotten = false;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $enteredBy = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $exitedBy = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $expectedCloseDate = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $stageValue = null;
+    protected ?string $stageValue = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2, nullable: true)]
     protected ?float $daysInStage = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $weightedValue = null;
+    protected ?string $weightedValue = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\ManyToOne(targetEntity: Deal::class, inversedBy: 'dealStages')]
     protected ?Deal $deal = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $endedAt = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $lastUpdatedAt = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\ManyToOne(targetEntity: PipelineStage::class, inversedBy: 'dealStages')]
     protected ?PipelineStage $pipelineStage = null;
 
+    #[Groups(['dealstage:read', 'dealstage:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $startedAt = null;
 
@@ -84,31 +105,42 @@ abstract class DealStageGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getStagename(): ?string    {
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getStageName(): ?string    {
         return $this->stageName;
     }
 
-    public function setStagename(?string $stageName): self
+    public function setStageName(?string $stageName): self
     {
         $this->stageName = $stageName;
         return $this;
     }
 
-    public function getProbability(): ?float    {
+    public function getProbability(): ?string    {
         return $this->probability;
     }
 
-    public function setProbability(?float $probability): self
+    public function setProbability(?string $probability): self
     {
         $this->probability = $probability;
         return $this;
     }
 
-    public function getRottendays(): ?int    {
+    public function getRottenDays(): ?int    {
         return $this->rottenDays;
     }
 
-    public function setRottendays(?int $rottenDays): self
+    public function setRottenDays(?int $rottenDays): self
     {
         $this->rottenDays = $rottenDays;
         return $this;
@@ -129,63 +161,63 @@ abstract class DealStageGenerated extends EntityBase
         return $this->rotten === true;
     }
 
-    public function getEnteredby(): ?App\Entity\User
+    public function getEnteredBy(): ?App\Entity\User
     {
         return $this->enteredBy;
     }
 
-    public function setEnteredby(?App\Entity\User $enteredBy): self
+    public function setEnteredBy(?App\Entity\User $enteredBy): self
     {
         $this->enteredBy = $enteredBy;
         return $this;
     }
 
-    public function getExitedby(): ?App\Entity\User
+    public function getExitedBy(): ?App\Entity\User
     {
         return $this->exitedBy;
     }
 
-    public function setExitedby(?App\Entity\User $exitedBy): self
+    public function setExitedBy(?App\Entity\User $exitedBy): self
     {
         $this->exitedBy = $exitedBy;
         return $this;
     }
 
-    public function getExpectedclosedate(): ?\DateTimeImmutable    {
+    public function getExpectedCloseDate(): ?\DateTimeImmutable    {
         return $this->expectedCloseDate;
     }
 
-    public function setExpectedclosedate(?\DateTimeImmutable $expectedCloseDate): self
+    public function setExpectedCloseDate(?\DateTimeImmutable $expectedCloseDate): self
     {
         $this->expectedCloseDate = $expectedCloseDate;
         return $this;
     }
 
-    public function getStagevalue(): ?float    {
+    public function getStageValue(): ?string    {
         return $this->stageValue;
     }
 
-    public function setStagevalue(?float $stageValue): self
+    public function setStageValue(?string $stageValue): self
     {
         $this->stageValue = $stageValue;
         return $this;
     }
 
-    public function getDaysinstage(): ?float    {
+    public function getDaysInStage(): ?float    {
         return $this->daysInStage;
     }
 
-    public function setDaysinstage(?float $daysInStage): self
+    public function setDaysInStage(?float $daysInStage): self
     {
         $this->daysInStage = $daysInStage;
         return $this;
     }
 
-    public function getWeightedvalue(): ?float    {
+    public function getWeightedValue(): ?string    {
         return $this->weightedValue;
     }
 
-    public function setWeightedvalue(?float $weightedValue): self
+    public function setWeightedValue(?string $weightedValue): self
     {
         $this->weightedValue = $weightedValue;
         return $this;
@@ -217,21 +249,21 @@ abstract class DealStageGenerated extends EntityBase
         return $this;
     }
 
-    public function getEndedat(): ?\DateTimeImmutable    {
+    public function getEndedAt(): ?\DateTimeImmutable    {
         return $this->endedAt;
     }
 
-    public function setEndedat(?\DateTimeImmutable $endedAt): self
+    public function setEndedAt(?\DateTimeImmutable $endedAt): self
     {
         $this->endedAt = $endedAt;
         return $this;
     }
 
-    public function getLastupdatedat(): ?\DateTimeImmutable    {
+    public function getLastUpdatedAt(): ?\DateTimeImmutable    {
         return $this->lastUpdatedAt;
     }
 
-    public function setLastupdatedat(?\DateTimeImmutable $lastUpdatedAt): self
+    public function setLastUpdatedAt(?\DateTimeImmutable $lastUpdatedAt): self
     {
         $this->lastUpdatedAt = $lastUpdatedAt;
         return $this;
@@ -247,22 +279,22 @@ abstract class DealStageGenerated extends EntityBase
         return $this;
     }
 
-    public function getPipelinestage(): ?App\Entity\PipelineStage
+    public function getPipelineStage(): ?App\Entity\PipelineStage
     {
         return $this->pipelineStage;
     }
 
-    public function setPipelinestage(?App\Entity\PipelineStage $pipelineStage): self
+    public function setPipelineStage(?App\Entity\PipelineStage $pipelineStage): self
     {
         $this->pipelineStage = $pipelineStage;
         return $this;
     }
 
-    public function getStartedat(): ?\DateTimeImmutable    {
+    public function getStartedAt(): ?\DateTimeImmutable    {
         return $this->startedAt;
     }
 
-    public function setStartedat(?\DateTimeImmutable $startedAt): self
+    public function setStartedAt(?\DateTimeImmutable $startedAt): self
     {
         $this->startedAt = $startedAt;
         return $this;

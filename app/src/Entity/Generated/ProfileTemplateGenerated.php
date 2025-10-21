@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Role;
 
 /**
@@ -24,9 +25,11 @@ use App\Entity\Role;
 #[ORM\HasLifecycleCallbacks]
 abstract class ProfileTemplateGenerated extends EntityBase
 {
+    #[Groups(['profiletemplate:read', 'profiletemplate:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['profiletemplate:read'])]
     #[ORM\ManyToMany(targetEntity: Role::class, fetch: 'LAZY')]
     protected Collection $grantedRoles;
 
@@ -50,12 +53,12 @@ abstract class ProfileTemplateGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\Role>
      */
-    public function getGrantedroles(): Collection
+    public function getGrantedRoles(): Collection
     {
         return $this->grantedRoles;
     }
 
-    public function addGrantedrole(App\Entity\Role $grantedRole): self
+    public function addGrantedRole(App\Entity\Role $grantedRole): self
     {
         if (!$this->grantedRoles->contains($grantedRole)) {
             $this->grantedRoles->add($grantedRole);
@@ -63,7 +66,7 @@ abstract class ProfileTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function removeGrantedrole(App\Entity\Role $grantedRole): self
+    public function removeGrantedRole(App\Entity\Role $grantedRole): self
     {
         if ($this->grantedRoles->removeElement($grantedRole)) {
         }

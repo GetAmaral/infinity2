@@ -7,6 +7,7 @@ namespace App\Entity\Generated;
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Organization;
 
 /**
@@ -22,12 +23,15 @@ use App\Entity\Organization;
 #[ORM\HasLifecycleCallbacks]
 abstract class EventResourceTypeGenerated extends EntityBase
 {
+    #[Groups(['eventresourcetype:read', 'eventresourcetype:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['eventresourcetype:read', 'eventresourcetype:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['eventresourcetype:read', 'eventresourcetype:write'])]
     #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'eventResourceTypes')]
     protected ?Organization $organization = null;
 

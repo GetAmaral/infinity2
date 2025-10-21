@@ -7,6 +7,7 @@ namespace App\Entity\Generated;
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\User;
 
 /**
@@ -22,24 +23,34 @@ use App\Entity\User;
 #[ORM\HasLifecycleCallbacks]
 abstract class AuditLogGenerated extends EntityBase
 {
+    #[Groups(['auditlog:read', 'auditlog:write'])]
     #[ORM\Column(type: 'json')]
     protected array $changes;
 
+    #[Groups(['auditlog:read', 'auditlog:write'])]
     #[ORM\Column(name: 'action_prop', type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $action;
 
+    #[Groups(['auditlog:read', 'auditlog:write'])]
     #[ORM\Column(type: 'string', length: 64, nullable: true)]
+    #[Assert\Length(max: 64)]
     protected ?string $checksum = null;
 
+    #[Groups(['auditlog:read', 'auditlog:write'])]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
     protected string $entityClass;
 
+    #[Groups(['auditlog:read', 'auditlog:write'])]
     #[ORM\Column(type: 'uuid')]
     protected string $entityId;
 
+    #[Groups(['auditlog:read', 'auditlog:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $metadata = null;
 
+    #[Groups(['auditlog:read', 'auditlog:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
 
@@ -79,21 +90,21 @@ abstract class AuditLogGenerated extends EntityBase
         return $this;
     }
 
-    public function getEntityclass(): string    {
+    public function getEntityClass(): string    {
         return $this->entityClass;
     }
 
-    public function setEntityclass(string $entityClass): self
+    public function setEntityClass(string $entityClass): self
     {
         $this->entityClass = $entityClass;
         return $this;
     }
 
-    public function getEntityid(): string    {
+    public function getEntityId(): string    {
         return $this->entityId;
     }
 
-    public function setEntityid(string $entityId): self
+    public function setEntityId(string $entityId): self
     {
         $this->entityId = $entityId;
         return $this;

@@ -7,6 +7,7 @@ namespace App\Entity\Generated;
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * NotificationTypeTemplate Entity (Generated Base Class)
@@ -21,9 +22,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 abstract class NotificationTypeTemplateGenerated extends EntityBase
 {
+    #[Groups(['notificationtypetemplate:read', 'notificationtypetemplate:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['notificationtypetemplate:read', 'notificationtypetemplate:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 

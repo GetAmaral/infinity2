@@ -7,6 +7,7 @@ namespace App\Entity\Generated;
 use App\Entity\EntityBase;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * TalkTypeTemplate Entity (Generated Base Class)
@@ -21,12 +22,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 abstract class TalkTypeTemplateGenerated extends EntityBase
 {
+    #[Groups(['talktypetemplate:read', 'talktypetemplate:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['talktypetemplate:read', 'talktypetemplate:write'])]
     #[ORM\Column(type: 'text')]
     protected string $description;
 
+    #[Groups(['talktypetemplate:read', 'talktypetemplate:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $iconUrl = null;
 
@@ -56,11 +60,11 @@ abstract class TalkTypeTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getIconurl(): ?string    {
+    public function getIconUrl(): ?string    {
         return $this->iconUrl;
     }
 
-    public function setIconurl(?string $iconUrl): self
+    public function setIconUrl(?string $iconUrl): self
     {
         $this->iconUrl = $iconUrl;
         return $this;

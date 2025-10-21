@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Event;
 use App\Entity\Product;
 use App\Entity\TalkMessage;
@@ -25,26 +26,36 @@ use App\Entity\TalkMessage;
 #[ORM\HasLifecycleCallbacks]
 abstract class AttachmentGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['attachment:read', 'attachment:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'attachments')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['attachment:read', 'attachment:write'])]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'attachments')]
     protected ?Event $event = null;
 
+    #[Groups(['attachment:read', 'attachment:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $fileSize = null;
 
+    #[Groups(['attachment:read', 'attachment:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $fileType = null;
 
+    #[Groups(['attachment:read', 'attachment:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $filename;
 
+    #[Groups(['attachment:read', 'attachment:write'])]
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'attachments')]
     protected ?Product $product = null;
 
+    #[Groups(['attachment:read', 'attachment:write'])]
     #[ORM\ManyToOne(targetEntity: TalkMessage::class, inversedBy: 'attachments')]
     protected ?TalkMessage $talkMessage = null;
 
+    #[Groups(['attachment:read', 'attachment:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $url = null;
 
@@ -52,6 +63,17 @@ abstract class AttachmentGenerated extends EntityBase
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getEvent(): ?App\Entity\Event
@@ -65,21 +87,21 @@ abstract class AttachmentGenerated extends EntityBase
         return $this;
     }
 
-    public function getFilesize(): ?int    {
+    public function getFileSize(): ?int    {
         return $this->fileSize;
     }
 
-    public function setFilesize(?int $fileSize): self
+    public function setFileSize(?int $fileSize): self
     {
         $this->fileSize = $fileSize;
         return $this;
     }
 
-    public function getFiletype(): ?string    {
+    public function getFileType(): ?string    {
         return $this->fileType;
     }
 
-    public function setFiletype(?string $fileType): self
+    public function setFileType(?string $fileType): self
     {
         $this->fileType = $fileType;
         return $this;
@@ -106,12 +128,12 @@ abstract class AttachmentGenerated extends EntityBase
         return $this;
     }
 
-    public function getTalkmessage(): ?App\Entity\TalkMessage
+    public function getTalkMessage(): ?App\Entity\TalkMessage
     {
         return $this->talkMessage;
     }
 
-    public function setTalkmessage(?App\Entity\TalkMessage $talkMessage): self
+    public function setTalkMessage(?App\Entity\TalkMessage $talkMessage): self
     {
         $this->talkMessage = $talkMessage;
         return $this;

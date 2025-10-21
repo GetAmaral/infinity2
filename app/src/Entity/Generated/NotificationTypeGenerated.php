@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Notification;
 
 /**
@@ -25,77 +26,104 @@ use App\Entity\Notification;
 #[ORM\HasLifecycleCallbacks]
 abstract class NotificationTypeGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'notificationTypes')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     protected string $name;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'string', length: 50)]
     protected string $icon = 'bi-bell-fill';
 
+    #[Groups(['notificationtype:read'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'type', fetch: 'LAZY')]
     protected Collection $notifications;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'json')]
     protected array $channels;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $priority = 'normal';
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'string', length: 7)]
     protected string $color = '#0dcaf0';
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $emailSubject = null;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $emailTemplate = null;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     protected ?string $smsTemplate = null;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $pushTitle = null;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
     protected ?string $pushBody = null;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $frequency = 'immediate';
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $retryEnabled = true;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $maxRetries = 3;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $throttleEnabled = false;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $throttleLimit = 10;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $tags = null;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $metadata = null;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $userPreferenceAllowed = true;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $requiresAction = false;
 
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $expiresAfterHours = null;
 
@@ -104,6 +132,17 @@ abstract class NotificationTypeGenerated extends EntityBase
     {
         parent::__construct();
         $this->notifications = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -223,51 +262,51 @@ abstract class NotificationTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getEmailsubject(): ?string    {
+    public function getEmailSubject(): ?string    {
         return $this->emailSubject;
     }
 
-    public function setEmailsubject(?string $emailSubject): self
+    public function setEmailSubject(?string $emailSubject): self
     {
         $this->emailSubject = $emailSubject;
         return $this;
     }
 
-    public function getEmailtemplate(): ?string    {
+    public function getEmailTemplate(): ?string    {
         return $this->emailTemplate;
     }
 
-    public function setEmailtemplate(?string $emailTemplate): self
+    public function setEmailTemplate(?string $emailTemplate): self
     {
         $this->emailTemplate = $emailTemplate;
         return $this;
     }
 
-    public function getSmstemplate(): ?string    {
+    public function getSmsTemplate(): ?string    {
         return $this->smsTemplate;
     }
 
-    public function setSmstemplate(?string $smsTemplate): self
+    public function setSmsTemplate(?string $smsTemplate): self
     {
         $this->smsTemplate = $smsTemplate;
         return $this;
     }
 
-    public function getPushtitle(): ?string    {
+    public function getPushTitle(): ?string    {
         return $this->pushTitle;
     }
 
-    public function setPushtitle(?string $pushTitle): self
+    public function setPushTitle(?string $pushTitle): self
     {
         $this->pushTitle = $pushTitle;
         return $this;
     }
 
-    public function getPushbody(): ?string    {
+    public function getPushBody(): ?string    {
         return $this->pushBody;
     }
 
-    public function setPushbody(?string $pushBody): self
+    public function setPushBody(?string $pushBody): self
     {
         $this->pushBody = $pushBody;
         return $this;
@@ -283,51 +322,51 @@ abstract class NotificationTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getRetryenabled(): bool    {
+    public function getRetryEnabled(): bool    {
         return $this->retryEnabled;
     }
 
-    public function setRetryenabled(bool $retryEnabled): self
+    public function setRetryEnabled(bool $retryEnabled): self
     {
         $this->retryEnabled = $retryEnabled;
         return $this;
     }
 
-    public function isRetryenabled(): bool
+    public function isRetryEnabled(): bool
     {
         return $this->retryEnabled === true;
     }
 
-    public function getMaxretries(): ?int    {
+    public function getMaxRetries(): ?int    {
         return $this->maxRetries;
     }
 
-    public function setMaxretries(?int $maxRetries): self
+    public function setMaxRetries(?int $maxRetries): self
     {
         $this->maxRetries = $maxRetries;
         return $this;
     }
 
-    public function getThrottleenabled(): bool    {
+    public function getThrottleEnabled(): bool    {
         return $this->throttleEnabled;
     }
 
-    public function setThrottleenabled(bool $throttleEnabled): self
+    public function setThrottleEnabled(bool $throttleEnabled): self
     {
         $this->throttleEnabled = $throttleEnabled;
         return $this;
     }
 
-    public function isThrottleenabled(): bool
+    public function isThrottleEnabled(): bool
     {
         return $this->throttleEnabled === true;
     }
 
-    public function getThrottlelimit(): ?int    {
+    public function getThrottleLimit(): ?int    {
         return $this->throttleLimit;
     }
 
-    public function setThrottlelimit(?int $throttleLimit): self
+    public function setThrottleLimit(?int $throttleLimit): self
     {
         $this->throttleLimit = $throttleLimit;
         return $this;
@@ -353,41 +392,41 @@ abstract class NotificationTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getUserpreferenceallowed(): bool    {
+    public function getUserPreferenceAllowed(): bool    {
         return $this->userPreferenceAllowed;
     }
 
-    public function setUserpreferenceallowed(bool $userPreferenceAllowed): self
+    public function setUserPreferenceAllowed(bool $userPreferenceAllowed): self
     {
         $this->userPreferenceAllowed = $userPreferenceAllowed;
         return $this;
     }
 
-    public function isUserpreferenceallowed(): bool
+    public function isUserPreferenceAllowed(): bool
     {
         return $this->userPreferenceAllowed === true;
     }
 
-    public function getRequiresaction(): bool    {
+    public function getRequiresAction(): bool    {
         return $this->requiresAction;
     }
 
-    public function setRequiresaction(bool $requiresAction): self
+    public function setRequiresAction(bool $requiresAction): self
     {
         $this->requiresAction = $requiresAction;
         return $this;
     }
 
-    public function isRequiresaction(): bool
+    public function isRequiresAction(): bool
     {
         return $this->requiresAction === true;
     }
 
-    public function getExpiresafterhours(): ?int    {
+    public function getExpiresAfterHours(): ?int    {
         return $this->expiresAfterHours;
     }
 
-    public function setExpiresafterhours(?int $expiresAfterHours): self
+    public function setExpiresAfterHours(?int $expiresAfterHours): self
     {
         $this->expiresAfterHours = $expiresAfterHours;
         return $this;

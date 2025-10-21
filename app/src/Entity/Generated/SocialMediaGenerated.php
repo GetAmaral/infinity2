@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Campaign;
 use App\Entity\Company;
 use App\Entity\Contact;
@@ -29,29 +30,40 @@ use App\Entity\User;
 #[ORM\HasLifecycleCallbacks]
 abstract class SocialMediaGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['socialmedia:read', 'socialmedia:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'socialMedias')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['socialmedia:read', 'socialmedia:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['socialmedia:read', 'socialmedia:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $apiKey = null;
 
-    #[ORM\ManyToMany(targetEntity: Campaign::class, inversedBy: 'socialMedias', fetch: 'LAZY')]
+    #[Groups(['socialmedia:read'])]
+    #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'socialMedias', fetch: 'LAZY')]
     protected Collection $campaigns;
 
+    #[Groups(['socialmedia:read', 'socialmedia:write'])]
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'socialMedias')]
     protected ?Company $company = null;
 
+    #[Groups(['socialmedia:read', 'socialmedia:write'])]
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'socialMedias')]
     protected ?Contact $contact = null;
 
+    #[Groups(['socialmedia:read', 'socialmedia:write'])]
     #[ORM\ManyToOne(targetEntity: SocialMediaType::class)]
     protected ?SocialMediaType $socialMediaType = null;
 
+    #[Groups(['socialmedia:read', 'socialmedia:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $url = null;
 
+    #[Groups(['socialmedia:read', 'socialmedia:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'socialMedias')]
     protected ?User $user = null;
 
@@ -60,6 +72,17 @@ abstract class SocialMediaGenerated extends EntityBase
     {
         parent::__construct();
         $this->campaigns = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -72,11 +95,11 @@ abstract class SocialMediaGenerated extends EntityBase
         return $this;
     }
 
-    public function getApikey(): ?string    {
+    public function getApiKey(): ?string    {
         return $this->apiKey;
     }
 
-    public function setApikey(?string $apiKey): self
+    public function setApiKey(?string $apiKey): self
     {
         $this->apiKey = $apiKey;
         return $this;
@@ -94,6 +117,7 @@ abstract class SocialMediaGenerated extends EntityBase
     {
         if (!$this->campaigns->contains($campaign)) {
             $this->campaigns->add($campaign);
+            $campaign->setSocialMedias($this);
         }
         return $this;
     }
@@ -101,6 +125,9 @@ abstract class SocialMediaGenerated extends EntityBase
     public function removeCampaign(App\Entity\Campaign $campaign): self
     {
         if ($this->campaigns->removeElement($campaign)) {
+            if ($campaign->getSocialMedias() === $this) {
+                $campaign->setSocialMedias(null);
+            }
         }
         return $this;
     }
@@ -127,12 +154,12 @@ abstract class SocialMediaGenerated extends EntityBase
         return $this;
     }
 
-    public function getSocialmediatype(): ?App\Entity\SocialMediaType
+    public function getSocialMediaType(): ?App\Entity\SocialMediaType
     {
         return $this->socialMediaType;
     }
 
-    public function setSocialmediatype(?App\Entity\SocialMediaType $socialMediaType): self
+    public function setSocialMediaType(?App\Entity\SocialMediaType $socialMediaType): self
     {
         $this->socialMediaType = $socialMediaType;
         return $this;

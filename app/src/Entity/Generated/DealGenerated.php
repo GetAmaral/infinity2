@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Company;
 use App\Entity\PipelineStage;
 use App\Entity\DealType;
@@ -41,148 +42,205 @@ use App\Entity\WinReason;
 #[ORM\HasLifecycleCallbacks]
 abstract class DealGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'deals')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'deals')]
     protected ?Company $company = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $dealStatus;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: PipelineStage::class, inversedBy: 'deals')]
     #[ORM\JoinColumn(nullable: false)]
     protected PipelineStage $currentStage;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $probability = null;
+    protected ?string $probability = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: DealType::class, inversedBy: 'deals')]
     protected ?DealType $dealType = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: Pipeline::class, inversedBy: 'deals')]
     protected ?Pipeline $pipeline = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $priority = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: DealCategory::class, inversedBy: 'deals')]
     protected ?DealCategory $category = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    protected ?string $expectedAmount = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $dealNumber = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $expectedAmount = null;
+    protected ?string $weightedAmount = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $weightedAmount = null;
+    protected ?string $closureAmount = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $closureAmount = null;
+    protected ?string $initialAmount = null;
 
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $initialAmount = null;
-
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'string', length: 3, nullable: true)]
     protected ?string $currency = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2, nullable: true)]
     protected ?float $exchangeRate = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $discountPercentage = null;
+    #[Assert\Range(max: 100, min: 0)]
+    protected ?string $discountPercentage = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $discountAmount = null;
+    protected ?string $discountAmount = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $commissionRate = null;
+    #[Assert\Range(max: 100, min: 0)]
+    protected ?string $commissionRate = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    protected ?float $commissionAmount = null;
+    protected ?string $commissionAmount = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $expectedClosureDate = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $closureDate = null;
 
+    #[Groups(['deal:read'])]
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'deals', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'deal_products')]
     protected Collection $products;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $initialDate = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $lastActivityDate = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $nextFollowUp = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2, nullable: true)]
     protected ?float $daysInCurrentStage = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $forecastCategory = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'managedDeals')]
     protected ?User $manager = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'deals', fetch: 'LAZY')]
-    protected Collection $team;
-
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedDeals')]
     #[ORM\JoinColumn(nullable: false)]
     protected User $owner;
 
+    #[Groups(['deal:read'])]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'deals', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'deal_team')]
+    protected Collection $team;
+
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'primaryDeals')]
     protected ?Contact $primaryContact = null;
 
+    #[Groups(['deal:read'])]
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'deals', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'deal_contacts')]
     protected Collection $contacts;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: LeadSource::class, inversedBy: 'deals')]
     protected ?LeadSource $leadSource = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: Campaign::class, inversedBy: 'deals')]
     protected ?Campaign $campaign = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $sourceDetails = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
+    #[Groups(['deal:read'])]
     #[ORM\OneToMany(targetEntity: DealStage::class, mappedBy: 'deal', fetch: 'LAZY')]
     protected Collection $dealStages;
 
+    #[Groups(['deal:read'])]
     #[ORM\OneToMany(targetEntity: Talk::class, mappedBy: 'deal', fetch: 'LAZY')]
     protected Collection $talks;
 
+    #[Groups(['deal:read'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'deal', fetch: 'LAZY')]
     protected Collection $tasks;
 
+    #[Groups(['deal:read'])]
     #[ORM\ManyToMany(targetEntity: Competitor::class, inversedBy: 'deals', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'deal_competitors')]
     protected Collection $competitors;
 
+    #[Groups(['deal:read'])]
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'deals', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'deal_tags')]
     protected Collection $tags;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $customFields = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: LostReason::class, inversedBy: 'deals')]
     protected ?LostReason $lostReason = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: WinReason::class, inversedBy: 'deals')]
     protected ?WinReason $winReason = null;
 
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $actualClosureDate = null;
 
@@ -198,6 +256,17 @@ abstract class DealGenerated extends EntityBase
         $this->tasks = new ArrayCollection();
         $this->competitors = new ArrayCollection();
         $this->tags = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -231,43 +300,43 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getDealstatus(): string    {
+    public function getDealStatus(): string    {
         return $this->dealStatus;
     }
 
-    public function setDealstatus(string $dealStatus): self
+    public function setDealStatus(string $dealStatus): self
     {
         $this->dealStatus = $dealStatus;
         return $this;
     }
 
-    public function getCurrentstage(): App\Entity\PipelineStage
+    public function getCurrentStage(): App\Entity\PipelineStage
     {
         return $this->currentStage;
     }
 
-    public function setCurrentstage(App\Entity\PipelineStage $currentStage): self
+    public function setCurrentStage(App\Entity\PipelineStage $currentStage): self
     {
         $this->currentStage = $currentStage;
         return $this;
     }
 
-    public function getProbability(): ?float    {
+    public function getProbability(): ?string    {
         return $this->probability;
     }
 
-    public function setProbability(?float $probability): self
+    public function setProbability(?string $probability): self
     {
         $this->probability = $probability;
         return $this;
     }
 
-    public function getDealtype(): ?App\Entity\DealType
+    public function getDealType(): ?App\Entity\DealType
     {
         return $this->dealType;
     }
 
-    public function setDealtype(?App\Entity\DealType $dealType): self
+    public function setDealType(?App\Entity\DealType $dealType): self
     {
         $this->dealType = $dealType;
         return $this;
@@ -305,51 +374,51 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getDealnumber(): ?string    {
-        return $this->dealNumber;
-    }
-
-    public function setDealnumber(?string $dealNumber): self
-    {
-        $this->dealNumber = $dealNumber;
-        return $this;
-    }
-
-    public function getExpectedamount(): ?float    {
+    public function getExpectedAmount(): ?string    {
         return $this->expectedAmount;
     }
 
-    public function setExpectedamount(?float $expectedAmount): self
+    public function setExpectedAmount(?string $expectedAmount): self
     {
         $this->expectedAmount = $expectedAmount;
         return $this;
     }
 
-    public function getWeightedamount(): ?float    {
+    public function getDealNumber(): ?string    {
+        return $this->dealNumber;
+    }
+
+    public function setDealNumber(?string $dealNumber): self
+    {
+        $this->dealNumber = $dealNumber;
+        return $this;
+    }
+
+    public function getWeightedAmount(): ?string    {
         return $this->weightedAmount;
     }
 
-    public function setWeightedamount(?float $weightedAmount): self
+    public function setWeightedAmount(?string $weightedAmount): self
     {
         $this->weightedAmount = $weightedAmount;
         return $this;
     }
 
-    public function getClosureamount(): ?float    {
+    public function getClosureAmount(): ?string    {
         return $this->closureAmount;
     }
 
-    public function setClosureamount(?float $closureAmount): self
+    public function setClosureAmount(?string $closureAmount): self
     {
         $this->closureAmount = $closureAmount;
         return $this;
     }
 
-    public function getInitialamount(): ?float    {
+    public function getInitialAmount(): ?string    {
         return $this->initialAmount;
     }
 
-    public function setInitialamount(?float $initialAmount): self
+    public function setInitialAmount(?string $initialAmount): self
     {
         $this->initialAmount = $initialAmount;
         return $this;
@@ -365,71 +434,71 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getExchangerate(): ?float    {
+    public function getExchangeRate(): ?float    {
         return $this->exchangeRate;
     }
 
-    public function setExchangerate(?float $exchangeRate): self
+    public function setExchangeRate(?float $exchangeRate): self
     {
         $this->exchangeRate = $exchangeRate;
         return $this;
     }
 
-    public function getDiscountpercentage(): ?float    {
+    public function getDiscountPercentage(): ?string    {
         return $this->discountPercentage;
     }
 
-    public function setDiscountpercentage(?float $discountPercentage): self
+    public function setDiscountPercentage(?string $discountPercentage): self
     {
         $this->discountPercentage = $discountPercentage;
         return $this;
     }
 
-    public function getDiscountamount(): ?float    {
+    public function getDiscountAmount(): ?string    {
         return $this->discountAmount;
     }
 
-    public function setDiscountamount(?float $discountAmount): self
+    public function setDiscountAmount(?string $discountAmount): self
     {
         $this->discountAmount = $discountAmount;
         return $this;
     }
 
-    public function getCommissionrate(): ?float    {
+    public function getCommissionRate(): ?string    {
         return $this->commissionRate;
     }
 
-    public function setCommissionrate(?float $commissionRate): self
+    public function setCommissionRate(?string $commissionRate): self
     {
         $this->commissionRate = $commissionRate;
         return $this;
     }
 
-    public function getCommissionamount(): ?float    {
+    public function getCommissionAmount(): ?string    {
         return $this->commissionAmount;
     }
 
-    public function setCommissionamount(?float $commissionAmount): self
+    public function setCommissionAmount(?string $commissionAmount): self
     {
         $this->commissionAmount = $commissionAmount;
         return $this;
     }
 
-    public function getExpectedclosuredate(): ?\DateTimeImmutable    {
+    public function getExpectedClosureDate(): ?\DateTimeImmutable    {
         return $this->expectedClosureDate;
     }
 
-    public function setExpectedclosuredate(?\DateTimeImmutable $expectedClosureDate): self
+    public function setExpectedClosureDate(?\DateTimeImmutable $expectedClosureDate): self
     {
         $this->expectedClosureDate = $expectedClosureDate;
         return $this;
     }
 
-    public function getClosuredate(): ?\DateTimeImmutable    {
+    public function getClosureDate(): ?\DateTimeImmutable    {
         return $this->closureDate;
     }
 
-    public function setClosuredate(?\DateTimeImmutable $closureDate): self
+    public function setClosureDate(?\DateTimeImmutable $closureDate): self
     {
         $this->closureDate = $closureDate;
         return $this;
@@ -458,51 +527,51 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getInitialdate(): ?\DateTimeImmutable    {
+    public function getInitialDate(): ?\DateTimeImmutable    {
         return $this->initialDate;
     }
 
-    public function setInitialdate(?\DateTimeImmutable $initialDate): self
+    public function setInitialDate(?\DateTimeImmutable $initialDate): self
     {
         $this->initialDate = $initialDate;
         return $this;
     }
 
-    public function getLastactivitydate(): ?\DateTimeImmutable    {
+    public function getLastActivityDate(): ?\DateTimeImmutable    {
         return $this->lastActivityDate;
     }
 
-    public function setLastactivitydate(?\DateTimeImmutable $lastActivityDate): self
+    public function setLastActivityDate(?\DateTimeImmutable $lastActivityDate): self
     {
         $this->lastActivityDate = $lastActivityDate;
         return $this;
     }
 
-    public function getNextfollowup(): ?\DateTimeImmutable    {
+    public function getNextFollowUp(): ?\DateTimeImmutable    {
         return $this->nextFollowUp;
     }
 
-    public function setNextfollowup(?\DateTimeImmutable $nextFollowUp): self
+    public function setNextFollowUp(?\DateTimeImmutable $nextFollowUp): self
     {
         $this->nextFollowUp = $nextFollowUp;
         return $this;
     }
 
-    public function getDaysincurrentstage(): ?float    {
+    public function getDaysInCurrentStage(): ?float    {
         return $this->daysInCurrentStage;
     }
 
-    public function setDaysincurrentstage(?float $daysInCurrentStage): self
+    public function setDaysInCurrentStage(?float $daysInCurrentStage): self
     {
         $this->daysInCurrentStage = $daysInCurrentStage;
         return $this;
     }
 
-    public function getForecastcategory(): ?int    {
+    public function getForecastCategory(): ?int    {
         return $this->forecastCategory;
     }
 
-    public function setForecastcategory(?int $forecastCategory): self
+    public function setForecastCategory(?int $forecastCategory): self
     {
         $this->forecastCategory = $forecastCategory;
         return $this;
@@ -516,6 +585,17 @@ abstract class DealGenerated extends EntityBase
     public function setManager(?App\Entity\User $manager): self
     {
         $this->manager = $manager;
+        return $this;
+    }
+
+    public function getOwner(): App\Entity\User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(App\Entity\User $owner): self
+    {
+        $this->owner = $owner;
         return $this;
     }
 
@@ -542,23 +622,12 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getOwner(): App\Entity\User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(App\Entity\User $owner): self
-    {
-        $this->owner = $owner;
-        return $this;
-    }
-
-    public function getPrimarycontact(): ?App\Entity\Contact
+    public function getPrimaryContact(): ?App\Entity\Contact
     {
         return $this->primaryContact;
     }
 
-    public function setPrimarycontact(?App\Entity\Contact $primaryContact): self
+    public function setPrimaryContact(?App\Entity\Contact $primaryContact): self
     {
         $this->primaryContact = $primaryContact;
         return $this;
@@ -587,12 +656,12 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getLeadsource(): ?App\Entity\LeadSource
+    public function getLeadSource(): ?App\Entity\LeadSource
     {
         return $this->leadSource;
     }
 
-    public function setLeadsource(?App\Entity\LeadSource $leadSource): self
+    public function setLeadSource(?App\Entity\LeadSource $leadSource): self
     {
         $this->leadSource = $leadSource;
         return $this;
@@ -609,11 +678,11 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getSourcedetails(): ?string    {
+    public function getSourceDetails(): ?string    {
         return $this->sourceDetails;
     }
 
-    public function setSourcedetails(?string $sourceDetails): self
+    public function setSourceDetails(?string $sourceDetails): self
     {
         $this->sourceDetails = $sourceDetails;
         return $this;
@@ -632,12 +701,12 @@ abstract class DealGenerated extends EntityBase
     /**
      * @return Collection<int, App\Entity\DealStage>
      */
-    public function getDealstages(): Collection
+    public function getDealStages(): Collection
     {
         return $this->dealStages;
     }
 
-    public function addDealtage(App\Entity\DealStage $dealStage): self
+    public function addDealStage(App\Entity\DealStage $dealStage): self
     {
         if (!$this->dealStages->contains($dealStage)) {
             $this->dealStages->add($dealStage);
@@ -646,7 +715,7 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function removeDealtage(App\Entity\DealStage $dealStage): self
+    public function removeDealStage(App\Entity\DealStage $dealStage): self
     {
         if ($this->dealStages->removeElement($dealStage)) {
             if ($dealStage->getDeal() === $this) {
@@ -691,20 +760,20 @@ abstract class DealGenerated extends EntityBase
         return $this->tasks;
     }
 
-    public function addTak(App\Entity\Task $tak): self
+    public function addTask(App\Entity\Task $task): self
     {
-        if (!$this->tasks->contains($tak)) {
-            $this->tasks->add($tak);
-            $tak->setDeal($this);
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setDeal($this);
         }
         return $this;
     }
 
-    public function removeTak(App\Entity\Task $tak): self
+    public function removeTask(App\Entity\Task $task): self
     {
-        if ($this->tasks->removeElement($tak)) {
-            if ($tak->getDeal() === $this) {
-                $tak->setDeal(null);
+        if ($this->tasks->removeElement($task)) {
+            if ($task->getDeal() === $this) {
+                $task->setDeal(null);
             }
         }
         return $this;
@@ -756,43 +825,43 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getCustomfields(): ?array    {
+    public function getCustomFields(): ?array    {
         return $this->customFields;
     }
 
-    public function setCustomfields(?array $customFields): self
+    public function setCustomFields(?array $customFields): self
     {
         $this->customFields = $customFields;
         return $this;
     }
 
-    public function getLostreason(): ?App\Entity\LostReason
+    public function getLostReason(): ?App\Entity\LostReason
     {
         return $this->lostReason;
     }
 
-    public function setLostreason(?App\Entity\LostReason $lostReason): self
+    public function setLostReason(?App\Entity\LostReason $lostReason): self
     {
         $this->lostReason = $lostReason;
         return $this;
     }
 
-    public function getWinreason(): ?App\Entity\WinReason
+    public function getWinReason(): ?App\Entity\WinReason
     {
         return $this->winReason;
     }
 
-    public function setWinreason(?App\Entity\WinReason $winReason): self
+    public function setWinReason(?App\Entity\WinReason $winReason): self
     {
         $this->winReason = $winReason;
         return $this;
     }
 
-    public function getActualclosuredate(): ?\DateTimeImmutable    {
+    public function getActualClosureDate(): ?\DateTimeImmutable    {
         return $this->actualClosureDate;
     }
 
-    public function setActualclosuredate(?\DateTimeImmutable $actualClosureDate): self
+    public function setActualClosureDate(?\DateTimeImmutable $actualClosureDate): self
     {
         $this->actualClosureDate = $actualClosureDate;
         return $this;

@@ -1,5 +1,43 @@
 # LUMINAI - Quick Reference
 
+---
+
+# ⛔ CRITICAL DATABASE WARNING ⛔
+
+## 🚨 **NEVER DROP DATABASE SCHEMA OR ERASE DATABASE DATA WITHOUT EXPLICIT USER COMMAND** 🚨
+
+### **ABSOLUTE RULES - NO EXCEPTIONS:**
+
+1. ❌ **NEVER** run `doctrine:schema:drop`
+2. ❌ **NEVER** run `doctrine:database:drop`
+3. ❌ **NEVER** run `DROP TABLE` or `DROP DATABASE` SQL commands
+4. ❌ **NEVER** run `TRUNCATE` commands
+5. ❌ **NEVER** delete data without explicit user request
+6. ❌ **NEVER** assume it's okay to "reset" or "clean" the database
+7. ❌ **NEVER** run destructive commands "to fix" issues
+
+### **ONLY ALLOWED DATABASE OPERATIONS (unless explicitly commanded otherwise):**
+
+- ✅ `doctrine:migrations:migrate` - Run migrations (adds/modifies schema)
+- ✅ `doctrine:schema:validate` - Validate schema (read-only)
+- ✅ `doctrine:schema:update --dump-sql` - Show what would change (read-only)
+- ✅ Reading/querying data
+- ✅ Creating new migrations
+
+### **IF USER ASKS TO "RESET", "CLEAN", "FIX", OR "START FRESH":**
+
+**STOP AND ASK FOR EXPLICIT CONFIRMATION:**
+
+> "⚠️ This operation will **DELETE ALL DATABASE DATA**. Are you absolutely sure you want to:
+> - Drop all tables and data?
+> - Lose all existing records?
+>
+> Please type 'YES, DELETE EVERYTHING' to confirm."
+
+### **DATABASE DATA IS SACRED - HOURS OF WORK CAN BE LOST IN SECONDS**
+
+---
+
 > **Note**: This is a minimal reference guide. For detailed documentation, see the [/docs folder](#documentation-index).
 
 ---

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Agent;
 
 /**
@@ -24,33 +25,43 @@ use App\Entity\Agent;
 #[ORM\HasLifecycleCallbacks]
 abstract class AgentTypeGenerated extends EntityBase
 {
+    #[Groups(['agenttype:read', 'agenttype:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
+    #[Groups(['agenttype:read', 'agenttype:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['agenttype:read'])]
     #[ORM\OneToMany(targetEntity: Agent::class, mappedBy: 'agentType', fetch: 'LAZY')]
     protected Collection $agents;
 
+    #[Groups(['agenttype:read', 'agenttype:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $active = null;
 
+    #[Groups(['agenttype:read', 'agenttype:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $code = null;
 
+    #[Groups(['agenttype:read', 'agenttype:write'])]
     #[ORM\Column(type: 'string', length: 7, nullable: true)]
     protected ?string $color = '#0dcaf0';
 
+    #[Groups(['agenttype:read', 'agenttype:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean', nullable: true)]
     protected ?bool $default = null;
 
+    #[Groups(['agenttype:read', 'agenttype:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $defaultPrompt = null;
 
+    #[Groups(['agenttype:read', 'agenttype:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $icon = null;
 
+    #[Groups(['agenttype:read', 'agenttype:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $sortOrder = null;
 
@@ -93,7 +104,7 @@ abstract class AgentTypeGenerated extends EntityBase
     {
         if (!$this->agents->contains($agent)) {
             $this->agents->add($agent);
-            $agent->setAgenttype($this);
+            $agent->setAgentType($this);
         }
         return $this;
     }
@@ -101,8 +112,8 @@ abstract class AgentTypeGenerated extends EntityBase
     public function removeAgent(App\Entity\Agent $agent): self
     {
         if ($this->agents->removeElement($agent)) {
-            if ($agent->getAgenttype() === $this) {
-                $agent->setAgenttype(null);
+            if ($agent->getAgentType() === $this) {
+                $agent->setAgentType(null);
             }
         }
         return $this;
@@ -158,11 +169,11 @@ abstract class AgentTypeGenerated extends EntityBase
         return $this->default === true;
     }
 
-    public function getDefaultprompt(): ?string    {
+    public function getDefaultPrompt(): ?string    {
         return $this->defaultPrompt;
     }
 
-    public function setDefaultprompt(?string $defaultPrompt): self
+    public function setDefaultPrompt(?string $defaultPrompt): self
     {
         $this->defaultPrompt = $defaultPrompt;
         return $this;
@@ -178,11 +189,11 @@ abstract class AgentTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getSortorder(): ?int    {
+    public function getSortOrder(): ?int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(?int $sortOrder): self
+    public function setSortOrder(?int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;

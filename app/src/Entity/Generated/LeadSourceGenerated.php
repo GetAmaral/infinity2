@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Entity\Generated;
 
 use App\Entity\EntityBase;
-use App\Entity\Trait\OrganizationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Organization;
 use App\Entity\Deal;
 
 /**
@@ -25,20 +26,28 @@ use App\Entity\Deal;
 #[ORM\HasLifecycleCallbacks]
 abstract class LeadSourceGenerated extends EntityBase
 {
-    use OrganizationTrait;
+    #[Groups(['leadsource:read', 'leadsource:write'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'leadSources')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Organization $organization;
 
+    #[Groups(['leadsource:read', 'leadsource:write'])]
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     protected string $name;
 
+    #[Groups(['leadsource:read', 'leadsource:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Groups(['leadsource:read', 'leadsource:write'])]
     #[ORM\Column(type: 'string', length: 50)]
     protected string $category;
 
+    #[Groups(['leadsource:read', 'leadsource:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
+    #[Groups(['leadsource:read'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'leadSource', fetch: 'LAZY')]
     protected Collection $deals;
 
@@ -47,6 +56,17 @@ abstract class LeadSourceGenerated extends EntityBase
     {
         parent::__construct();
         $this->deals = new ArrayCollection();
+    }
+
+    public function getOrganization(): App\Entity\Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(App\Entity\Organization $organization): self
+    {
+        $this->organization = $organization;
+        return $this;
     }
 
     public function getName(): string    {
@@ -106,7 +126,7 @@ abstract class LeadSourceGenerated extends EntityBase
     {
         if (!$this->deals->contains($deal)) {
             $this->deals->add($deal);
-            $deal->setLeadsource($this);
+            $deal->setLeadSource($this);
         }
         return $this;
     }
@@ -114,8 +134,8 @@ abstract class LeadSourceGenerated extends EntityBase
     public function removeDeal(App\Entity\Deal $deal): self
     {
         if ($this->deals->removeElement($deal)) {
-            if ($deal->getLeadsource() === $this) {
-                $deal->setLeadsource(null);
+            if ($deal->getLeadSource() === $this) {
+                $deal->setLeadSource(null);
             }
         }
         return $this;
