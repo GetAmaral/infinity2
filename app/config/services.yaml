@@ -95,3 +95,12 @@ services:
     App\Service\Genmax\ApiGenerator:
         arguments:
             $projectDir: '%kernel.project_dir%'
+
+    # API Platform OrganizationAware Processor
+    # Automatically sets organization and owner from authenticated user for API create operations
+    App\State\OrganizationAwareProcessor:
+        decorates: 'api_platform.doctrine.orm.state.persist_processor'
+        arguments:
+            $persistProcessor: '@.inner'
+            $security: '@security.helper'
+            $logger: '@logger'

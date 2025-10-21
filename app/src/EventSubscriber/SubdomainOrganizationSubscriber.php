@@ -41,6 +41,13 @@ final class SubdomainOrganizationSubscriber implements EventSubscriberInterface
         }
 
         $request = $event->getRequest();
+
+        // Skip for API requests (stateless, no subdomain logic needed)
+        // API requests use token authentication and get organization from authenticated user
+        if (str_starts_with($request->getPathInfo(), '/api/')) {
+            return;
+        }
+
         $host = $request->getHost();
 
         // Extract slug from subdomain

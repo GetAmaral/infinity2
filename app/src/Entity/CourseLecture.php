@@ -266,7 +266,7 @@ class CourseLecture extends EntityBase
 
     #[ORM\ManyToOne(targetEntity: CourseModule::class, inversedBy: 'lectures')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['course_lecture:read'])]
+    #[Groups(['course_lecture:read', 'course_lecture:write'])]
     protected CourseModule $courseModule;
 
     #[ORM\OneToMany(mappedBy: 'lecture', targetEntity: StudentLecture::class, cascade: ['persist', 'remove'])]
