@@ -24,15 +24,15 @@ use App\Entity\StepConnection;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepOutputGenerated extends EntityBase
 {
-    #[Groups(['output:read', 'output:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Length(max: 255)]
-    protected string $name;
-
     #[Groups(['output:read'])]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'outputs')]
     #[ORM\JoinColumn(nullable: false)]
     protected Step $step;
+
+    #[Groups(['output:read', 'output:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
+    protected string $name;
 
     #[Groups(['output:read', 'output:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
@@ -57,16 +57,6 @@ abstract class StepOutputGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getStep(): Step
     {
         return $this->step;
@@ -75,6 +65,16 @@ abstract class StepOutputGenerated extends EntityBase
     public function setStep(Step $step): self
     {
         $this->step = $step;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 

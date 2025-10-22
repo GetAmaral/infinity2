@@ -44,11 +44,11 @@ abstract class ProductCategoryGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'subcategories')]
     protected ?ProductCategory $parentCategory = null;
 
-    #[Groups(['productcategory:read'])]
+    #[Groups(['productcategory:read', 'productcategory:write'])]
     #[ORM\OneToMany(targetEntity: ProductCategory::class, mappedBy: 'parentCategory', fetch: 'LAZY')]
     protected Collection $subcategories;
 
-    #[Groups(['productcategory:read'])]
+    #[Groups(['productcategory:read', 'productcategory:write'])]
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category', fetch: 'LAZY')]
     protected Collection $products;
 

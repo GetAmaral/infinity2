@@ -7,6 +7,10 @@ resources:
     shortName: ProductBatch
     description: "Tracks product batches with manufacturing dates, expiry dates, lot numbers, and inventory quantities for complete supply chain traceability"
 
+    input: App\Dto\ProductBatchInputDto
+    output: App\Dto\ProductBatchOutputDto
+    processor: App\State\ProductBatchProcessor
+
     normalizationContext:
       groups: ["productbatch:read","productbatch:list"]
 

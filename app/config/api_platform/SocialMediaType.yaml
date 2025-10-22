@@ -7,6 +7,10 @@ resources:
     shortName: SocialMediaType
     description: "Social media platform types (Facebook, LinkedIn, Twitter, etc.)"
 
+    input: App\Dto\SocialMediaTypeInputDto
+    output: App\Dto\SocialMediaTypeOutputDto
+    processor: App\State\SocialMediaTypeProcessor
+
     normalizationContext:
       groups: ["socialmediatype:read"]
 

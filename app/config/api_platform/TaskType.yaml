@@ -7,6 +7,10 @@ resources:
     shortName: TaskType
     description: "Task types for categorization (Call, Email, Meeting, etc.)"
 
+    input: App\Dto\TaskTypeInputDto
+    output: App\Dto\TaskTypeOutputDto
+    processor: App\State\TaskTypeProcessor
+
     normalizationContext:
       groups: ["tasktype:read"]
 

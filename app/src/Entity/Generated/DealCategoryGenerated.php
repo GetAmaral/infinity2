@@ -33,20 +33,20 @@ abstract class DealCategoryGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['dealcategory:read', 'dealcategory:write'])]
-    #[ORM\Column(type: 'string', length: 7, nullable: true)]
-    protected ?string $color = '#0dcaf0';
-
-    #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
     #[Groups(['dealcategory:read', 'dealcategory:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
+    #[ORM\Column(type: 'string', length: 7, nullable: true)]
+    protected ?string $color = '#0dcaf0';
 
     #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $icon = null;
+
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $description = null;
 
     #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
@@ -64,7 +64,7 @@ abstract class DealCategoryGenerated extends EntityBase
     #[ORM\OneToMany(targetEntity: DealCategory::class, mappedBy: 'parentCategory', fetch: 'LAZY')]
     protected Collection $subcategories;
 
-    #[Groups(['dealcategory:read'])]
+    #[Groups(['dealcategory:read', 'dealcategory:write'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'category', fetch: 'LAZY')]
     protected Collection $deals;
 
@@ -95,16 +95,6 @@ abstract class DealCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function getColor(): ?string    {
-        return $this->color;
-    }
-
-    public function setColor(?string $color): self
-    {
-        $this->color = $color;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -115,13 +105,13 @@ abstract class DealCategoryGenerated extends EntityBase
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
+    public function getColor(): ?string    {
+        return $this->color;
     }
 
-    public function setDescription(?string $description): self
+    public function setColor(?string $color): self
     {
-        $this->description = $description;
+        $this->color = $color;
         return $this;
     }
 
@@ -132,6 +122,16 @@ abstract class DealCategoryGenerated extends EntityBase
     public function setIcon(?string $icon): self
     {
         $this->icon = $icon;
+        return $this;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 

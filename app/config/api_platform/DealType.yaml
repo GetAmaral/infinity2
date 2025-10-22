@@ -7,6 +7,10 @@ resources:
     shortName: DealType
     description: "Deal types for categorizing opportunities"
 
+    input: App\Dto\DealTypeInputDto
+    output: App\Dto\DealTypeOutputDto
+    processor: App\State\DealTypeProcessor
+
     normalizationContext:
       groups: ["dealtype:read"]
 

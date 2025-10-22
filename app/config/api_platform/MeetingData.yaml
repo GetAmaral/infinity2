@@ -7,6 +7,10 @@ resources:
     shortName: MeetingData
     description: "Meeting data including links, notes, recordings, agenda, minutes, and attendee tracking for comprehensive meeting management"
 
+    input: App\Dto\MeetingDataInputDto
+    output: App\Dto\MeetingDataOutputDto
+    processor: App\State\MeetingDataProcessor
+
     normalizationContext:
       groups: ["meetingdata:read"]
 
@@ -80,12 +84,12 @@ resources:
       minutes:
         description: "Formal minutes documenting decisions and discussions"
         example: "Board approved Q1 budget of $500K"
-      meetingId:
-        description: "The unique meeting identifier from the platform (e.g., Zoom meeting ID)"
-        example: "123-456-789"
       attendees:
         description: "Array of attendees with their attendance status"
         example: "{\"attendees\": [{\"name\": \"John Doe\", \"email\": \"john@example.com\", \"status\": \"attended\", \"role\": \"presenter\"}]}"
+      meetingId:
+        description: "The unique meeting identifier from the platform (e.g., Zoom meeting ID)"
+        example: "123-456-789"
       absentees:
         description: "Array of people who were expected but did not attend"
         example: "{\"absentees\": [{\"name\": \"Jane Smith\", \"email\": \"jane@example.com\", \"reason\": \"sick leave\"}]}"

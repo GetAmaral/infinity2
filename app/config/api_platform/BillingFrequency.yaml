@@ -7,6 +7,10 @@ resources:
     shortName: BillingFrequency
     description: "Defines billing frequency options for subscriptions (Daily, Weekly, Biweekly, Monthly, Quarterly, Semi-Annual, Annual, Biennial). Controls recurring billing intervals with support for custom cycles and discount management."
 
+    input: App\Dto\BillingFrequencyInputDto
+    output: App\Dto\BillingFrequencyOutputDto
+    processor: App\State\BillingFrequencyProcessor
+
     normalizationContext:
       groups: ["billingfrequency:read"]
 

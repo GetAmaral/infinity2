@@ -75,12 +75,12 @@ class DtoGenerator
     }
 
     /**
-     * Generate Input DTO base class: src/Dto/Generated/{Entity}InputGenerated.php
+     * Generate Input DTO base class: src/Dto/Generated/{Entity}InputDtoGenerated.php
      */
     private function generateInputDtoGenerated(GeneratorEntity $entity): string
     {
         $filePath = sprintf(
-            '%s/%s/%sInputGenerated.php',
+            '%s/%s/%sInputDtoGenerated.php',
             $this->projectDir,
             $this->paths['dto_generated_dir'],
             $entity->getEntityName()
@@ -94,11 +94,13 @@ class DtoGenerator
 
             $content = $this->twig->render($this->templates['dto_input_generated'], [
                 'entity' => $entity,
-                'namespace' => $this->paths['dto_namespace'],
                 'generated_namespace' => $this->paths['dto_generated_namespace'],
+                'dto_namespace' => $this->paths['dto_namespace'],
+                'entity_namespace' => $this->paths['entity_namespace'],
             ]);
 
             $this->filesystem->dumpFile($filePath, $content);
+            chmod($filePath, 0666);
 
             $this->logger->info('[GENMAX] Generated Input DTO base class', [
                 'file' => $filePath,
@@ -122,12 +124,12 @@ class DtoGenerator
     }
 
     /**
-     * Generate Input DTO extension class: src/Dto/{Entity}Input.php
+     * Generate Input DTO extension class: src/Dto/{Entity}InputDto.php
      */
     private function generateInputDtoExtension(GeneratorEntity $entity): ?string
     {
         $filePath = sprintf(
-            '%s/%s/%sInput.php',
+            '%s/%s/%sInputDto.php',
             $this->projectDir,
             $this->paths['dto_dir'],
             $entity->getEntityName()
@@ -149,6 +151,7 @@ class DtoGenerator
             ]);
 
             $this->filesystem->dumpFile($filePath, $content);
+            chmod($filePath, 0666);
 
             $this->logger->info('[GENMAX] Generated Input DTO extension class', [
                 'file' => $filePath,
@@ -172,12 +175,12 @@ class DtoGenerator
     }
 
     /**
-     * Generate Output DTO base class: src/Dto/Generated/{Entity}OutputGenerated.php
+     * Generate Output DTO base class: src/Dto/Generated/{Entity}OutputDtoGenerated.php
      */
     private function generateOutputDtoGenerated(GeneratorEntity $entity): string
     {
         $filePath = sprintf(
-            '%s/%s/%sOutputGenerated.php',
+            '%s/%s/%sOutputDtoGenerated.php',
             $this->projectDir,
             $this->paths['dto_generated_dir'],
             $entity->getEntityName()
@@ -191,11 +194,13 @@ class DtoGenerator
 
             $content = $this->twig->render($this->templates['dto_output_generated'], [
                 'entity' => $entity,
-                'namespace' => $this->paths['dto_namespace'],
                 'generated_namespace' => $this->paths['dto_generated_namespace'],
+                'dto_namespace' => $this->paths['dto_namespace'],
+                'entity_namespace' => $this->paths['entity_namespace'],
             ]);
 
             $this->filesystem->dumpFile($filePath, $content);
+            chmod($filePath, 0666);
 
             $this->logger->info('[GENMAX] Generated Output DTO base class', [
                 'file' => $filePath,
@@ -219,12 +224,12 @@ class DtoGenerator
     }
 
     /**
-     * Generate Output DTO extension class: src/Dto/{Entity}Output.php
+     * Generate Output DTO extension class: src/Dto/{Entity}OutputDto.php
      */
     private function generateOutputDtoExtension(GeneratorEntity $entity): ?string
     {
         $filePath = sprintf(
-            '%s/%s/%sOutput.php',
+            '%s/%s/%sOutputDto.php',
             $this->projectDir,
             $this->paths['dto_dir'],
             $entity->getEntityName()
@@ -246,6 +251,7 @@ class DtoGenerator
             ]);
 
             $this->filesystem->dumpFile($filePath, $content);
+            chmod($filePath, 0666);
 
             $this->logger->info('[GENMAX] Generated Output DTO extension class', [
                 'file' => $filePath,

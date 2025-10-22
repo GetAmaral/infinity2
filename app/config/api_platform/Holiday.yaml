@@ -7,6 +7,10 @@ resources:
     shortName: Holiday
     description: "Company and regional holidays"
 
+    input: App\Dto\HolidayInputDto
+    output: App\Dto\HolidayOutputDto
+    processor: App\State\HolidayProcessor
+
     normalizationContext:
       groups: ["holiday:read"]
 
@@ -69,9 +73,6 @@ resources:
         # Advanced filters
         filters:
           - type: BooleanFilter
-      calendar:
-        description: "The calendar to which this holiday belongs"
-        example: "\/api\/calendars\/0199cadd-5678-7bcb-a551-8ede90d819b3"
       country:
         description: "ISO 3166-1 alpha-2 country code where this holiday is observed"
         example: "US"
@@ -79,6 +80,9 @@ resources:
         filters:
           - type: SearchFilter
             strategy: partial
+      calendar:
+        description: "The calendar to which this holiday belongs"
+        example: "\/api\/calendars\/0199cadd-5678-7bcb-a551-8ede90d819b3"
       region:
         description: "Specific region or state within the country where this holiday applies (e.g., California, Texas)"
         example: "California"

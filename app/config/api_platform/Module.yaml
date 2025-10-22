@@ -7,6 +7,10 @@ resources:
     shortName: Module
     description: "System modules for role-based access control"
 
+    input: App\Dto\ModuleInputDto
+    output: App\Dto\ModuleOutputDto
+    processor: App\State\ModuleProcessor
+
     normalizationContext:
       groups: ["module:read"]
 

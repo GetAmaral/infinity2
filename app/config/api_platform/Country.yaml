@@ -7,6 +7,10 @@ resources:
     shortName: Country
     description: "Countries reference data for international operations"
 
+    input: App\Dto\CountryInputDto
+    output: App\Dto\CountryOutputDto
+    processor: App\State\CountryProcessor
+
     normalizationContext:
       groups: ["country:read"]
 
@@ -35,16 +39,6 @@ resources:
 
     # Property-level configuration
     properties:
-      name:
-        description: "The brand name"
-        example: "Nike"
-        # Advanced filters
-        filters:
-          - type: SearchFilter
-            strategy: partial
-          - type: SearchFilter
-            strategy: partial
-          - type: OrderFilter
       iso2:
         description: "Two-letter country code (ISO 3166-1 alpha-2)"
         example: "US"
@@ -52,6 +46,16 @@ resources:
         filters:
           - type: SearchFilter
             strategy: exact
+          - type: SearchFilter
+            strategy: partial
+          - type: OrderFilter
+      name:
+        description: "The brand name"
+        example: "Nike"
+        # Advanced filters
+        filters:
+          - type: SearchFilter
+            strategy: partial
           - type: SearchFilter
             strategy: partial
           - type: OrderFilter
@@ -134,9 +138,6 @@ resources:
       officialName:
         description: "Official full country name"
         example: "United States of America"
-      subregion:
-        description: "UN geographic subregion"
-        example: "Northern America"
       active:
         description: "Whether country is active in the system"
         example: "1"
@@ -144,6 +145,9 @@ resources:
         filters:
           - type: OrderFilter
           - type: BooleanFilter
+      subregion:
+        description: "UN geographic subregion"
+        example: "Northern America"
       latitude:
         description: "Geographic latitude"
         example: "38.9072"

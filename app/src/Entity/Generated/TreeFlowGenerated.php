@@ -36,7 +36,7 @@ abstract class TreeFlowGenerated extends EntityBase
     #[Assert\Length(max: 255)]
     protected string $name;
 
-    #[Groups(['treeflow:read', 'treeflow:write'])]
+    #[Groups(['treeflow:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $slug;
@@ -49,11 +49,11 @@ abstract class TreeFlowGenerated extends EntityBase
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $canvasViewState = null;
 
-    #[Groups(['treeflow:read', 'treeflow:write'])]
+    #[Groups(['treeflow:read', 'treeflow:json'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $jsonStructure = null;
 
-    #[Groups(['treeflow:read', 'treeflow:write'])]
+    #[Groups(['treeflow:read', 'treeflow:json'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $talkFlow = null;
 

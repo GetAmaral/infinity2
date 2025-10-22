@@ -7,6 +7,10 @@ resources:
     shortName: Competitor
     description: "Competitor tracking for sales and market analysis"
 
+    input: App\Dto\CompetitorInputDto
+    output: App\Dto\CompetitorOutputDto
+    processor: App\State\CompetitorProcessor
+
     normalizationContext:
       groups: ["competitor:read"]
 

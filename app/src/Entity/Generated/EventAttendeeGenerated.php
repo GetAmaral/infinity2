@@ -59,7 +59,7 @@ abstract class EventAttendeeGenerated extends EntityBase
     #[ORM\JoinColumn(nullable: false)]
     protected Event $event;
 
-    #[Groups(['eventattendee:read'])]
+    #[Groups(['eventattendee:read', 'eventattendee:write'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'attendee', fetch: 'LAZY')]
     protected Collection $notifications;
 

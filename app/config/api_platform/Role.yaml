@@ -7,6 +7,10 @@ resources:
     shortName: Role
     description: "User roles for permission management and access control"
 
+    input: App\Dto\RoleInputDto
+    output: App\Dto\RoleOutputDto
+    processor: App\State\RoleProcessor
+
     normalizationContext:
       groups: ["role:read"]
 

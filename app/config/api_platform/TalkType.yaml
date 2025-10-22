@@ -7,6 +7,10 @@ resources:
     shortName: TalkType
     description: "Communication types for the organization"
 
+    input: App\Dto\TalkTypeInputDto
+    output: App\Dto\TalkTypeOutputDto
+    processor: App\State\TalkTypeProcessor
+
     normalizationContext:
       groups: ["talktype:read"]
 

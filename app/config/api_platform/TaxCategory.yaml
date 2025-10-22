@@ -7,6 +7,10 @@ resources:
     shortName: TaxCategory
     description: "Tax categories for financial management"
 
+    input: App\Dto\TaxCategoryInputDto
+    output: App\Dto\TaxCategoryOutputDto
+    processor: App\State\TaxCategoryProcessor
+
     normalizationContext:
       groups: ["taxcategory:read"]
 

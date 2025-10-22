@@ -7,6 +7,10 @@ resources:
     shortName: Calendar
     description: "Calendars for organizing events and meetings"
 
+    input: App\Dto\CalendarInputDto
+    output: App\Dto\CalendarOutputDto
+    processor: App\State\CalendarProcessor
+
     normalizationContext:
       groups: ["calendar:read"]
 
@@ -41,12 +45,12 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
-      user:
-        description: "User"
-        example: "sample value"
       description:
         description: "..."
         example: "..."
+      user:
+        description: "User"
+        example: "sample value"
       timeZone:
         description: "TimeZone (text field)"
         example: "Sample longer text value"

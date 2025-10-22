@@ -9,6 +9,12 @@ resources:
     description: {{ entity.getDescription()|json_encode|raw }}
 {% endif %}
 
+{% if entity.isDtoEnabled() %}
+    input: App\Dto\{{ entity.getEntityName() }}InputDto
+    output: App\Dto\{{ entity.getEntityName() }}OutputDto
+    processor: App\State\{{ entity.getEntityName() }}Processor
+{% endif %}
+
 {% if entity.getApiNormalizationContext() %}
     normalizationContext:
       groups: {{ entity.getApiNormalizationContext()['groups']|json_encode|raw }}

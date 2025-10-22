@@ -7,6 +7,10 @@ resources:
     shortName: Flag
     description: "Categorizable flags and labels for follow-ups, reminders, and entity tagging with polymorphic relationships"
 
+    input: App\Dto\FlagInputDto
+    output: App\Dto\FlagOutputDto
+    processor: App\State\FlagProcessor
+
     normalizationContext:
       groups: ["flag:read"]
 

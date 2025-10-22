@@ -7,6 +7,10 @@ resources:
     shortName: AgentType
     description: "Agent types for customer support and sales teams"
 
+    input: App\Dto\AgentTypeInputDto
+    output: App\Dto\AgentTypeOutputDto
+    processor: App\State\AgentTypeProcessor
+
     normalizationContext:
       groups: ["agenttype:read"]
 

@@ -39,7 +39,7 @@ abstract class PipelineStageGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $description = null;
 
-    #[Groups(['pipelinestage:read'])]
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\OneToMany(targetEntity: DealStage::class, mappedBy: 'pipelineStage', fetch: 'LAZY')]
     protected Collection $dealStages;
 
@@ -67,7 +67,7 @@ abstract class PipelineStageGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 7)]
     protected string $color = '#0dcaf0';
 
-    #[Groups(['pipelinestage:read'])]
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'currentStage', fetch: 'LAZY')]
     protected Collection $deals;
 
@@ -95,7 +95,7 @@ abstract class PipelineStageGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255)]
     protected string $stageName;
 
-    #[Groups(['pipelinestage:read'])]
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'pipelineStage', fetch: 'LAZY')]
     protected Collection $tasks;
 

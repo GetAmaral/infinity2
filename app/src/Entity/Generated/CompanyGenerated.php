@@ -82,7 +82,7 @@ abstract class CompanyGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: City::class)]
     protected ?City $shippingCity = null;
 
-    #[Groups(['company:read'])]
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'companies', fetch: 'LAZY')]
     protected Collection $campaigns;
 
@@ -193,7 +193,7 @@ abstract class CompanyGenerated extends EntityBase
     #[Assert\Length(max: 20)]
     protected ?string $fax = null;
 
-    #[Groups(['company:read'])]
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'company', fetch: 'LAZY')]
     protected Collection $contacts;
 
@@ -202,7 +202,7 @@ abstract class CompanyGenerated extends EntityBase
     #[Assert\Length(max: 50)]
     protected ?string $coordinates = null;
 
-    #[Groups(['company:read'])]
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'company', fetch: 'LAZY')]
     protected Collection $deals;
 
@@ -215,12 +215,12 @@ abstract class CompanyGenerated extends EntityBase
     #[ORM\OneToMany(targetEntity: Talk::class, mappedBy: 'company', fetch: 'LAZY')]
     protected Collection $talks;
 
-    #[Groups(['company:read'])]
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\ManyToMany(targetEntity: Brand::class, inversedBy: 'manufacturers', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'company_manufacturedBrands')]
     protected Collection $manufacturedBrands;
 
-    #[Groups(['company:read'])]
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'manufacturer', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'company_manufacturedProducts')]
     protected Collection $manufacturedProducts;
@@ -249,7 +249,7 @@ abstract class CompanyGenerated extends EntityBase
     #[Assert\Length(max: 255)]
     protected ?string $primaryContactName = null;
 
-    #[Groups(['company:read'])]
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\OneToMany(targetEntity: SocialMedia::class, mappedBy: 'company', fetch: 'LAZY')]
     protected Collection $socialMedias;
 
@@ -257,12 +257,12 @@ abstract class CompanyGenerated extends EntityBase
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $status = null;
 
-    #[Groups(['company:read'])]
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\ManyToMany(targetEntity: Brand::class, inversedBy: 'suppliers', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'company_suppliedBrands')]
     protected Collection $suppliedBrands;
 
-    #[Groups(['company:read'])]
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'supplier', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'company_suppliedProducts')]
     protected Collection $suppliedProducts;
@@ -276,7 +276,7 @@ abstract class CompanyGenerated extends EntityBase
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $nextActivityDate = null;
 
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read'])]
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $lastActivityDate = null;
 
@@ -309,11 +309,11 @@ abstract class CompanyGenerated extends EntityBase
     #[Assert\Length(max: 50)]
     protected ?string $leadStatus = null;
 
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $numberOfAssociatedDeals = null;
 
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $numberOfAssociatedContacts = null;
 

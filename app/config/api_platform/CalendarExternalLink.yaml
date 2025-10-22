@@ -7,6 +7,10 @@ resources:
     shortName: CalendarExternalLink
     description: "Manages OAuth-based external calendar integrations (Google Calendar, Microsoft Outlook, Apple Calendar) with bi-directional sync, webhook support, and token refresh management"
 
+    input: App\Dto\CalendarExternalLinkInputDto
+    output: App\Dto\CalendarExternalLinkOutputDto
+    processor: App\State\CalendarExternalLinkProcessor
+
     normalizationContext:
       groups: ["calendarexternallink:read"]
 

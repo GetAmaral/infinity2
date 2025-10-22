@@ -7,6 +7,10 @@ resources:
     shortName: PipelineStage
     description: "Pipeline stage configurations"
 
+    input: App\Dto\PipelineStageInputDto
+    output: App\Dto\PipelineStageOutputDto
+    processor: App\State\PipelineStageProcessor
+
     normalizationContext:
       groups: ["pipelinestage:read"]
 

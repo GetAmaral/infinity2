@@ -7,6 +7,10 @@ resources:
     shortName: Organization
     description: "Multi-tenant organization entity that isolates data by organization"
 
+    input: App\Dto\OrganizationInputDto
+    output: App\Dto\OrganizationOutputDto
+    processor: App\State\OrganizationProcessor
+
     normalizationContext:
       groups: ["organization:read"]
 
@@ -96,41 +100,41 @@ resources:
         writable: false
         description: "PipelineStageTemplates"
         example: "/api/pipelinestagetemplates/01234567-89ab-cdef-0123-456789abcdef"
-      celPhone:
-        description: "CelPhone (text field)"
-        example: "Sample text"
-      attachments:
-        writable: false
-        description: "Attachments"
-        example: "/api/attachments/01234567-89ab-cdef-0123-456789abcdef"
-      calendarTypes:
-        writable: false
-        description: "CalendarTypes"
-        example: "/api/calendartypes/01234567-89ab-cdef-0123-456789abcdef"
-      cities:
-        writable: false
-        description: "Citys"
-        example: "/api/citys/01234567-89ab-cdef-0123-456789abcdef"
-      treeFlows:
-        writable: false
-        description: "TreeFlows"
-        example: "/api/treeflows/01234567-89ab-cdef-0123-456789abcdef"
-      winReasons:
-        writable: false
-        description: "WinReasons"
-        example: "/api/winreasons/01234567-89ab-cdef-0123-456789abcdef"
-      pipelineTemplates:
-        writable: false
-        description: "PipelineTemplates"
-        example: "/api/pipelinetemplates/01234567-89ab-cdef-0123-456789abcdef"
-      reminders:
-        writable: false
-        description: "Reminders"
-        example: "/api/reminders/01234567-89ab-cdef-0123-456789abcdef"
       taskTemplates:
         writable: false
         description: "TaskTemplates"
         example: "/api/tasktemplates/01234567-89ab-cdef-0123-456789abcdef"
+      reminders:
+        writable: false
+        description: "Reminders"
+        example: "/api/reminders/01234567-89ab-cdef-0123-456789abcdef"
+      celPhone:
+        description: "CelPhone (text field)"
+        example: "Sample text"
+      pipelineTemplates:
+        writable: false
+        description: "PipelineTemplates"
+        example: "/api/pipelinetemplates/01234567-89ab-cdef-0123-456789abcdef"
+      winReasons:
+        writable: false
+        description: "WinReasons"
+        example: "/api/winreasons/01234567-89ab-cdef-0123-456789abcdef"
+      treeFlows:
+        writable: false
+        description: "TreeFlows"
+        example: "/api/treeflows/01234567-89ab-cdef-0123-456789abcdef"
+      cities:
+        writable: false
+        description: "Citys"
+        example: "/api/citys/01234567-89ab-cdef-0123-456789abcdef"
+      calendarTypes:
+        writable: false
+        description: "CalendarTypes"
+        example: "/api/calendartypes/01234567-89ab-cdef-0123-456789abcdef"
+      attachments:
+        writable: false
+        description: "Attachments"
+        example: "/api/attachments/01234567-89ab-cdef-0123-456789abcdef"
       dealCategories:
         writable: false
         description: "DealCategorys"

@@ -73,7 +73,7 @@ abstract class FlagGenerated extends EntityBase
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
-    #[Groups(['flag:read', 'flag:write'])]
+    #[Groups(['flag:read'])]
     #[ORM\Column(name: 'system_prop', type: 'boolean')]
     protected bool $system = false;
 

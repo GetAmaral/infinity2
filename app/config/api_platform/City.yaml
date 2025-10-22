@@ -7,6 +7,10 @@ resources:
     shortName: City
     description: "Cities with geographic coordinates, timezone and location data for CRM operations"
 
+    input: App\Dto\CityInputDto
+    output: App\Dto\CityOutputDto
+    processor: App\State\CityProcessor
+
     normalizationContext:
       groups: ["city:read"]
 

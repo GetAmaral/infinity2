@@ -42,12 +42,12 @@ abstract class CalendarGenerated extends EntityBase
     protected string $name;
 
     #[Groups(['calendar:read', 'calendar:write'])]
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'calendars')]
-    protected ?User $user = null;
-
-    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
+
+    #[Groups(['calendar:read', 'calendar:write'])]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'calendars')]
+    protected ?User $user = null;
 
     #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -74,7 +74,7 @@ abstract class CalendarGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: CalendarType::class, inversedBy: 'calendars')]
     protected ?CalendarType $calendarType = null;
 
-    #[Groups(['calendar:read'])]
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'calendar', fetch: 'LAZY')]
     protected Collection $events;
 
@@ -86,11 +86,11 @@ abstract class CalendarGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $externalApiKey = null;
 
-    #[Groups(['calendar:read'])]
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\OneToMany(targetEntity: WorkingHour::class, mappedBy: 'calendar', fetch: 'LAZY')]
     protected Collection $workingHours;
 
-    #[Groups(['calendar:read'])]
+    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\OneToMany(targetEntity: Holiday::class, mappedBy: 'calendar', fetch: 'LAZY')]
     protected Collection $holidays;
 
@@ -120,7 +120,7 @@ abstract class CalendarGenerated extends EntityBase
     #[Assert\Length(max: 255)]
     protected ?string $externalId = null;
 
-    #[Groups(['calendar:read', 'calendar:write'])]
+    #[Groups(['calendar:read'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastSyncedAt = null;
 
@@ -162,6 +162,16 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -170,16 +180,6 @@ abstract class CalendarGenerated extends EntityBase
     public function setUser(?User $user): self
     {
         $this->user = $user;
-        return $this;
-    }
-
-    public function getDescription(): ?string    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
         return $this;
     }
 

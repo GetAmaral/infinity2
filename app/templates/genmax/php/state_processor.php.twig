@@ -7,13 +7,14 @@ namespace {{ namespace }};
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use {{ entity_namespace }}\{{ entity.getEntityName() }};
-use {{ dto_namespace }}\{{ entity.getEntityName() }}Input;
+use {{ dto_namespace }}\{{ entity.getEntityName() }}InputDto;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 {% set targetEntities = [] %}
 {% for property in entity.getProperties() %}
-{% if property.getRelationshipType() and property.getTargetEntity() and property.getTargetEntity() not in targetEntities %}
+{% if property.getRelationshipType() and property.getTargetEntity() and property.getTargetEntity() not in targetEntities and property.getTargetEntity() != entity.getEntityName() %}
 {% set targetEntities = targetEntities|merge([property.getTargetEntity()]) %}
 {% endif %}
 {% endfor %}
@@ -36,15 +37,16 @@ class {{ entity.getEntityName() }}Processor implements ProcessorInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        #[Autowire(service: 'App\MultiTenant\TenantEntityProcessor')]
         private readonly ProcessorInterface $persistProcessor
     ) {}
 
     /**
-     * @param {{ entity.getEntityName() }}Input $data
+     * @param {{ entity.getEntityName() }}InputDto $data
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): {{ entity.getEntityName() }}
     {
-        if (!$data instanceof {{ entity.getEntityName() }}Input) {
+        if (!$data instanceof {{ entity.getEntityName() }}InputDto) {
             throw new BadRequestHttpException('Invalid input data type');
         }
 
@@ -168,8 +170,8 @@ class {{ entity.getEntityName() }}Processor implements ProcessorInterface
                     throw new BadRequestHttpException('{{ property.getTargetEntity() }} not found: ' . $itemId);
                 }
 
-                // Update item properties from DTO
-                // TODO: Map properties from $itemData to $item
+                // Update item properties from DTO array
+                $this->mapArrayToEntity($itemData, $item);
 
                 $processedIds[] = $item->getId()->toString();
             } else {
@@ -180,8 +182,11 @@ class {{ entity.getEntityName() }}Processor implements ProcessorInterface
 
                 $item = new {{ getClassName(property.getTargetEntity()) }}();
 
-                // Set properties from DTO
-                // TODO: Map properties from $itemData to $item
+                // Set properties from DTO array
+                $this->mapArrayToEntity($itemData, $item);
+
+                // Set parent relationship ({{ entity.getEntityName()|lower }})
+                $item->set{{ entity.getEntityName()|capitalize }}($entity);
 
                 $entity->add{{ property.getPropertyName()|slice(0, -1)|capitalize }}($item);
                 $this->entityManager->persist($item);
@@ -201,4 +206,49 @@ class {{ entity.getEntityName() }}Processor implements ProcessorInterface
 
 {% endif %}
 {% endfor %}
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = '{{ entity_namespace }}\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

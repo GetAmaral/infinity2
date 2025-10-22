@@ -43,7 +43,7 @@ abstract class TalkTypeGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $iconUrl = null;
 
-    #[Groups(['talktype:read'])]
+    #[Groups(['talktype:read', 'talktype:write'])]
     #[ORM\OneToMany(targetEntity: Talk::class, mappedBy: 'talkType', fetch: 'LAZY')]
     protected Collection $talks;
 

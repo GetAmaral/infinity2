@@ -7,6 +7,10 @@ resources:
     shortName: CourseLecture
     description: "Individual lectures and learning content"
 
+    input: App\Dto\CourseLectureInputDto
+    output: App\Dto\CourseLectureOutputDto
+    processor: App\State\CourseLectureProcessor
+
     normalizationContext:
       groups: ["course_lecture:read"]
 

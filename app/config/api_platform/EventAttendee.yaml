@@ -7,6 +7,10 @@ resources:
     shortName: EventAttendee
     description: "Comprehensive event attendee tracking with RSVP status, check-in management, and attendance confirmation"
 
+    input: App\Dto\EventAttendeeInputDto
+    output: App\Dto\EventAttendeeOutputDto
+    processor: App\State\EventAttendeeProcessor
+
     normalizationContext:
       groups: ["eventattendee:read"]
 

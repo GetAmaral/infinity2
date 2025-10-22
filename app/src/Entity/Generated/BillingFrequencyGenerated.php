@@ -55,7 +55,7 @@ abstract class BillingFrequencyGenerated extends EntityBase
     #[ORM\Column(type: 'integer')]
     protected int $intervalCount = 1;
 
-    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
+    #[Groups(['billingfrequency:read'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $daysInCycle = null;
 
@@ -75,7 +75,7 @@ abstract class BillingFrequencyGenerated extends EntityBase
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
-    #[Groups(['billingfrequency:read'])]
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'billingFrequency', fetch: 'LAZY')]
     protected Collection $products;
 

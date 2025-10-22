@@ -7,6 +7,10 @@ resources:
     shortName: EventCategory
     description: "Event categories for calendar organization"
 
+    input: App\Dto\EventCategoryInputDto
+    output: App\Dto\EventCategoryOutputDto
+    processor: App\State\EventCategoryProcessor
+
     normalizationContext:
       groups: ["eventcategory:read"]
 

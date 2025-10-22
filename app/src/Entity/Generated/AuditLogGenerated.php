@@ -27,12 +27,12 @@ abstract class AuditLogGenerated extends EntityBase
     #[ORM\Column(type: 'json')]
     protected array $changes;
 
-    #[Groups(['auditlog:read', 'auditlog:write'])]
+    #[Groups(['audit:read', 'audit:write'])]
     #[ORM\Column(name: 'action_prop', type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $action;
 
-    #[Groups(['auditlog:read', 'auditlog:write'])]
+    #[Groups(['audit:read', 'audit:write'])]
     #[ORM\Column(type: 'string', length: 64, nullable: true)]
     #[Assert\Length(max: 64)]
     protected ?string $checksum = null;
@@ -46,7 +46,7 @@ abstract class AuditLogGenerated extends EntityBase
     #[ORM\Column(type: 'uuid')]
     protected string $entityId;
 
-    #[Groups(['auditlog:read', 'auditlog:write'])]
+    #[Groups(['audit:read', 'audit:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $metadata = null;
 

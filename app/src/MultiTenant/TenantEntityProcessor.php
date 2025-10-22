@@ -94,27 +94,15 @@ final class TenantEntityProcessor implements ProcessorInterface
 
     /**
      * Auto-assign tenant/organization to entity
+     *
+     * 🔒 SECURITY: Non-admin users CANNOT override organization - it's always set from tenant context
+     * Only ADMIN/SUPER_ADMIN can explicitly set a different organization
      */
     private function assignTenantToEntity(object $entity, string $source): void
     {
         // Check if entity has organization field
         if (!method_exists($entity, 'setOrganization') || !method_exists($entity, 'getOrganization')) {
             return;
-        }
-
-        // Check if organization already set (allow explicit override)
-        try {
-            $existingOrg = $entity->getOrganization();
-            if ($existingOrg instanceof Organization && $existingOrg->getId()) {
-                $this->logger->debug('Tenant already set on entity, skipping auto-assignment', [
-                    'entity_class' => get_class($entity),
-                    'existing_tenant_id' => $existingOrg->getId()->toRfc4122(),
-                    'source' => $source,
-                ]);
-                return; // Already set, don't override
-            }
-        } catch (\Throwable $e) {
-            // getOrganization() might throw if uninitialized - continue
         }
 
         // Get tenant from TenantContext (single source of truth!)
@@ -132,7 +120,45 @@ final class TenantEntityProcessor implements ProcessorInterface
             return;
         }
 
-        // Auto-assign tenant
+        // Check if user is admin (only admins can override organization)
+        $user = $this->security->getUser();
+        $isAdmin = $user instanceof \App\Entity\User &&
+                   ($this->security->isGranted('ROLE_ADMIN') ||
+                    $this->security->isGranted('ROLE_SUPER_ADMIN'));
+
+        // Check if organization already set
+        $existingOrg = null;
+        try {
+            $existingOrg = $entity->getOrganization();
+        } catch (\Throwable $e) {
+            // getOrganization() might throw if uninitialized - continue
+        }
+
+        if ($existingOrg instanceof Organization && $existingOrg->getId()) {
+            if ($isAdmin) {
+                // ✅ Admin override allowed - validate organization exists and log
+                $this->logger->warning('Admin explicitly set organization on entity', [
+                    'entity_class' => get_class($entity),
+                    'admin_user_id' => $user->getId()->toRfc4122(),
+                    'explicit_org_id' => $existingOrg->getId()->toRfc4122(),
+                    'tenant_context_id' => $tenant->getId()->toRfc4122(),
+                    'source' => $source,
+                ]);
+                return; // Allow admin override
+            } else {
+                // 🔒 Non-admin tried to set organization - ALWAYS override with tenant context
+                $this->logger->warning('Non-admin attempted to set organization - overriding with tenant context', [
+                    'entity_class' => get_class($entity),
+                    'user_id' => $user?->getId()?->toRfc4122(),
+                    'attempted_org_id' => $existingOrg->getId()->toRfc4122(),
+                    'enforced_tenant_id' => $tenant->getId()->toRfc4122(),
+                    'source' => $source,
+                ]);
+                // Fall through to force assignment
+            }
+        }
+
+        // Auto-assign tenant (overwrites non-admin attempts)
         $entity->setOrganization($tenant);
 
         $this->logger->info('Tenant auto-assigned to entity', [
@@ -140,6 +166,7 @@ final class TenantEntityProcessor implements ProcessorInterface
             'tenant_id' => $tenant->getId()->toRfc4122(),
             'tenant_slug' => $tenant->getSlug(),
             'source' => $source,
+            'was_override' => isset($existingOrg),
         ]);
     }
 

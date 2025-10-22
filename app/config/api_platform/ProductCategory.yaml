@@ -7,6 +7,10 @@ resources:
     shortName: ProductCategory
     description: "Product categories for catalog organization"
 
+    input: App\Dto\ProductCategoryInputDto
+    output: App\Dto\ProductCategoryOutputDto
+    processor: App\State\ProductCategoryProcessor
+
     normalizationContext:
       groups: ["productcategory:read"]
 

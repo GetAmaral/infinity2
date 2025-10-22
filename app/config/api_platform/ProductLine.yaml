@@ -7,6 +7,10 @@ resources:
     shortName: ProductLine
     description: "Product lines for business organization"
 
+    input: App\Dto\ProductLineInputDto
+    output: App\Dto\ProductLineOutputDto
+    processor: App\State\ProductLineProcessor
+
     normalizationContext:
       groups: ["productline:read"]
 

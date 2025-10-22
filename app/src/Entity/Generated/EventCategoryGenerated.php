@@ -67,7 +67,7 @@ abstract class EventCategoryGenerated extends EntityBase
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
-    #[Groups(['eventcategory:read'])]
+    #[Groups(['eventcategory:read', 'eventcategory:write'])]
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'categories', fetch: 'LAZY')]
     protected Collection $events;
 

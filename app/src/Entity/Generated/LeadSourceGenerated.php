@@ -47,7 +47,7 @@ abstract class LeadSourceGenerated extends EntityBase
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
-    #[Groups(['leadsource:read'])]
+    #[Groups(['leadsource:read', 'leadsource:write'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'leadSource', fetch: 'LAZY')]
     protected Collection $deals;
 

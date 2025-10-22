@@ -7,6 +7,10 @@ resources:
     shortName: TalkTypeTemplate
     description: "Templates for communication types (Call, Email, Meeting, etc.)"
 
+    input: App\Dto\TalkTypeTemplateInputDto
+    output: App\Dto\TalkTypeTemplateOutputDto
+    processor: App\State\TalkTypeTemplateProcessor
+
     normalizationContext:
       groups: ["talktypetemplate:read"]
 

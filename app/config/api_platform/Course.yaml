@@ -7,6 +7,10 @@ resources:
     shortName: Course
     description: "Educational courses and training programs"
 
+    input: App\Dto\CourseInputDto
+    output: App\Dto\CourseOutputDto
+    processor: App\State\CourseProcessor
+
     normalizationContext:
       groups: ["course:read"]
 

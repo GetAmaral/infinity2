@@ -44,7 +44,7 @@ abstract class TaxCategoryGenerated extends EntityBase
     #[Assert\Range(max: 100, min: 0)]
     protected ?string $taxRate = null;
 
-    #[Groups(['taxcategory:read'])]
+    #[Groups(['taxcategory:read', 'taxcategory:write'])]
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'taxCategory', fetch: 'LAZY')]
     protected Collection $products;
 

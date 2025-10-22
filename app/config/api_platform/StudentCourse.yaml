@@ -7,6 +7,10 @@ resources:
     shortName: StudentCourse
     description: "Student course enrollments and participation"
 
+    input: App\Dto\StudentCourseInputDto
+    output: App\Dto\StudentCourseOutputDto
+    processor: App\State\StudentCourseProcessor
+
     normalizationContext:
       groups: ["student_course:read"]
 

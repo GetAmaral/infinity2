@@ -43,7 +43,7 @@ abstract class DealTypeGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $category = null;
 
-    #[Groups(['dealtype:read'])]
+    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'dealType', fetch: 'LAZY')]
     protected Collection $deals;
 

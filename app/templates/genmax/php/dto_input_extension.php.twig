@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use {{ generated_namespace }}\{{ entity.getEntityName() }}InputGenerated;
+use {{ generated_namespace }}\{{ entity.getEntityName() }}InputDtoGenerated;
 
 /**
  * {{ entity.getEntityLabel() }} Input DTO
@@ -21,7 +21,7 @@ use {{ generated_namespace }}\{{ entity.getEntityName() }}InputGenerated;
  *
  * @generated once by Genmax Code Generator
  */
-class {{ entity.getEntityName() }}Input extends {{ entity.getEntityName() }}InputGenerated
+class {{ entity.getEntityName() }}InputDto extends {{ entity.getEntityName() }}InputDtoGenerated
 {
     // Add custom properties here
 

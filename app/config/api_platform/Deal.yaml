@@ -7,6 +7,10 @@ resources:
     shortName: Deal
     description: "Sales opportunities and deals tracking"
 
+    input: App\Dto\DealInputDto
+    output: App\Dto\DealOutputDto
+    processor: App\State\DealProcessor
+
     normalizationContext:
       groups: ["deal:read"]
 

@@ -43,7 +43,7 @@ abstract class LostReasonGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255)]
     protected string $category;
 
-    #[Groups(['lostreason:read'])]
+    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'lostReason', fetch: 'LAZY')]
     protected Collection $deals;
 

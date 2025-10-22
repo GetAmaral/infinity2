@@ -7,6 +7,10 @@ resources:
     shortName: NotificationTypeTemplate
     description: "Templates for system notification types"
 
+    input: App\Dto\NotificationTypeTemplateInputDto
+    output: App\Dto\NotificationTypeTemplateOutputDto
+    processor: App\State\NotificationTypeTemplateProcessor
+
     normalizationContext:
       groups: ["notificationtypetemplate:read"]
 

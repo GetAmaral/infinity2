@@ -7,6 +7,10 @@ resources:
     shortName: Talk
     description: "Communication threads with customers and prospects"
 
+    input: App\Dto\TalkInputDto
+    output: App\Dto\TalkOutputDto
+    processor: App\State\TalkProcessor
+
     normalizationContext:
       groups: ["talk:read"]
 
@@ -47,12 +51,12 @@ resources:
       company:
         description: "Company"
         example: "sample value"
-      deal:
-        description: "Deal"
-        example: "sample value"
       contact:
         description: "Contact"
         example: "/api/contacts/01234567-89ab-cdef-0123-456789abcdef"
+      deal:
+        description: "Deal"
+        example: "sample value"
       talkType:
         description: "TalkType"
         example: "sample value"

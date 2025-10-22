@@ -33,7 +33,7 @@ abstract class TimeZoneGenerated extends EntityBase
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $offsetMinutes = null;
 
-    #[Groups(['timezone:read'])]
+    #[Groups(['timezone:read', 'timezone:write'])]
     #[ORM\OneToMany(targetEntity: WorkingHour::class, mappedBy: 'timeZone', fetch: 'LAZY')]
     protected Collection $workingHours;
 

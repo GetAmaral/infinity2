@@ -7,6 +7,10 @@ resources:
     shortName: PipelineStageTemplate
     description: "Templates for pipeline stages"
 
+    input: App\Dto\PipelineStageTemplateInputDto
+    output: App\Dto\PipelineStageTemplateOutputDto
+    processor: App\State\PipelineStageTemplateProcessor
+
     normalizationContext:
       groups: ["pipelinestagetemplate:read"]
 
@@ -44,15 +48,15 @@ resources:
       description:
         description: "..."
         example: "..."
-      order:
-        description: "..."
-        example: "..."
       probability:
         description: "The probability percentage (0-100) that a deal in this stage will close successfully. Used for weighted pipeline forecasting."
         example: "75.50"
         # Advanced filters
         filters:
           - type: NumericFilter
+      order:
+        description: "..."
+        example: "..."
       active:
         description: "Indicates whether this pipeline stage template is active and available for creating new pipeline instances"
         example: "true"
@@ -62,15 +66,15 @@ resources:
       color:
         description: "Hexadecimal color code for visual representation of this stage in UI (format: #RRGGBB)"
         example: "\"#4CAF50\""
-      pipelineTemplate:
-        description: "..."
-        example: "..."
       rottingDays:
         description: "Number of days after which a deal in this stage is flagged as rotting\/stale (requires attention)"
         example: "30"
         # Advanced filters
         filters:
           - type: NumericFilter
+      pipelineTemplate:
+        description: "..."
+        example: "..."
       tasks:
         description: "..."
         example: "..."

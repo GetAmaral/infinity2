@@ -47,7 +47,7 @@ abstract class CompetitorGenerated extends EntityBase
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $targetMarket = null;
 
-    #[Groups(['competitor:read'])]
+    #[Groups(['competitor:read', 'competitor:write'])]
     #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'competitors', fetch: 'LAZY')]
     protected Collection $deals;
 

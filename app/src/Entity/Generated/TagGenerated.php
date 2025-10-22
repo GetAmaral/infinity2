@@ -44,11 +44,11 @@ abstract class TagGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 7, nullable: true)]
     protected ?string $color = '#0dcaf0';
 
-    #[Groups(['tag:read'])]
+    #[Groups(['tag:read', 'tag:write'])]
     #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'tags', fetch: 'LAZY')]
     protected Collection $deals;
 
-    #[Groups(['tag:read'])]
+    #[Groups(['tag:read', 'tag:write'])]
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'tags', fetch: 'LAZY')]
     protected Collection $products;
 

@@ -129,7 +129,7 @@ abstract class AgentGenerated extends EntityBase
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $prompt = null;
 
-    #[Groups(['agent:read'])]
+    #[Groups(['agent:read', 'agent:write'])]
     #[ORM\ManyToMany(targetEntity: Talk::class, mappedBy: 'agents', fetch: 'LAZY')]
     protected Collection $talks;
 

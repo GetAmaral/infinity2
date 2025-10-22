@@ -7,6 +7,10 @@ resources:
     shortName: Company
     description: "Business accounts and company profiles"
 
+    input: App\Dto\CompanyInputDto
+    output: App\Dto\CompanyOutputDto
+    processor: App\State\CompanyProcessor
+
     normalizationContext:
       groups: ["company:read"]
 

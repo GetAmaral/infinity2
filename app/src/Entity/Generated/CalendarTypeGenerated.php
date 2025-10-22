@@ -39,7 +39,7 @@ abstract class CalendarTypeGenerated extends EntityBase
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[Groups(['calendartype:read'])]
+    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'calendarType', fetch: 'LAZY')]
     protected Collection $calendars;
 

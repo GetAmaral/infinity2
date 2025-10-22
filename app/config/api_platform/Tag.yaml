@@ -7,6 +7,10 @@ resources:
     shortName: Tag
     description: "Tags for flexible categorization across all entities"
 
+    input: App\Dto\TagInputDto
+    output: App\Dto\TagOutputDto
+    processor: App\State\TagProcessor
+
     normalizationContext:
       groups: ["tag:read"]
 

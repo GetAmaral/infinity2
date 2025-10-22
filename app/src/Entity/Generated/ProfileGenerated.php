@@ -40,11 +40,11 @@ abstract class ProfileGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255)]
     protected string $description;
 
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'profile:write'])]
     #[ORM\ManyToMany(targetEntity: Role::class, fetch: 'LAZY')]
     protected Collection $grantedRoles;
 
-    #[Groups(['profile:read'])]
+    #[Groups(['profile:read', 'profile:write'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'profiles', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'profile_users')]
     protected Collection $users;

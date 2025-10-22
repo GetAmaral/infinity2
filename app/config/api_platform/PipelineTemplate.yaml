@@ -7,6 +7,10 @@ resources:
     shortName: PipelineTemplate
     description: "Pipeline templates for quick setup"
 
+    input: App\Dto\PipelineTemplateInputDto
+    output: App\Dto\PipelineTemplateOutputDto
+    processor: App\State\PipelineTemplateProcessor
+
     normalizationContext:
       groups: ["pipelinetemplate:read"]
 
@@ -38,12 +42,12 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
-      default:
-        description: "Whether this is a default system template that cannot be deleted"
-        example: "false"
       name:
         description: "The brand name"
         example: "Nike"
+      default:
+        description: "Whether this is a default system template that cannot be deleted"
+        example: "false"
       description:
         description: "..."
         example: "..."
@@ -56,13 +60,13 @@ resources:
       estimatedDuration:
         description: "Estimated average duration for completing this pipeline in days"
         example: "90"
+      industry:
+        description: "The target industry for this pipeline template (e.g., SaaS, Real Estate, Healthcare)"
+        example: "SaaS"
       stageCount:
         writable: false
         description: "Total number of stages in this template (computed from stages relationship)"
         example: "7"
-      industry:
-        description: "The target industry for this pipeline template (e.g., SaaS, Real Estate, Healthcare)"
-        example: "SaaS"
       targetDealSize:
         description: "Target average deal size for this pipeline template"
         example: "50000.00"

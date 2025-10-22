@@ -26,12 +26,12 @@ use App\Entity\HolidayTemplate;
 abstract class CountryGenerated extends EntityBase
 {
     #[Groups(['country:read', 'country:write'])]
-    #[ORM\Column(type: 'string', length: 255, unique: true)]
-    protected string $name;
-
-    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 2, unique: true)]
     protected string $iso2;
+
+    #[Groups(['country:read', 'country:write'])]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    protected string $name;
 
     #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 3, unique: true)]
@@ -78,12 +78,12 @@ abstract class CountryGenerated extends EntityBase
     protected ?string $officialName = null;
 
     #[Groups(['country:read', 'country:write'])]
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    protected ?string $subregion = null;
-
-    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
+
+    #[Groups(['country:read', 'country:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $subregion = null;
 
     #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 7, nullable: true)]
@@ -176,16 +176,6 @@ abstract class CountryGenerated extends EntityBase
         $this->holidayTemplates = new ArrayCollection();
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getIso2(): string    {
         return $this->iso2;
     }
@@ -193,6 +183,16 @@ abstract class CountryGenerated extends EntityBase
     public function setIso2(string $iso2): self
     {
         $this->iso2 = $iso2;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -311,16 +311,6 @@ abstract class CountryGenerated extends EntityBase
         return $this;
     }
 
-    public function getSubregion(): ?string    {
-        return $this->subregion;
-    }
-
-    public function setSubregion(?string $subregion): self
-    {
-        $this->subregion = $subregion;
-        return $this;
-    }
-
     public function getActive(): bool    {
         return $this->active;
     }
@@ -334,6 +324,16 @@ abstract class CountryGenerated extends EntityBase
     public function isActive(): bool
     {
         return $this->active === true;
+    }
+
+    public function getSubregion(): ?string    {
+        return $this->subregion;
+    }
+
+    public function setSubregion(?string $subregion): self
+    {
+        $this->subregion = $subregion;
+        return $this;
     }
 
     public function getLatitude(): ?string    {

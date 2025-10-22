@@ -7,6 +7,10 @@ resources:
     shortName: Attachment
     description: "File attachments for documents and media"
 
+    input: App\Dto\AttachmentInputDto
+    output: App\Dto\AttachmentOutputDto
+    processor: App\State\AttachmentProcessor
+
     normalizationContext:
       groups: ["attachment:read"]
 

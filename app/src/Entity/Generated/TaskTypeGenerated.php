@@ -40,11 +40,11 @@ abstract class TaskTypeGenerated extends EntityBase
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $taskFunction = null;
 
-    #[Groups(['tasktype:read'])]
+    #[Groups(['tasktype:read', 'tasktype:write'])]
     #[ORM\OneToMany(targetEntity: TaskTemplate::class, mappedBy: 'type', fetch: 'LAZY')]
     protected Collection $taskTemplates;
 
-    #[Groups(['tasktype:read'])]
+    #[Groups(['tasktype:read', 'tasktype:write'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'type', fetch: 'LAZY')]
     protected Collection $tasks;
 

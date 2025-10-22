@@ -7,6 +7,10 @@ resources:
     shortName: DealStage
     description: "Stages within sales pipelines"
 
+    input: App\Dto\DealStageInputDto
+    output: App\Dto\DealStageOutputDto
+    processor: App\State\DealStageProcessor
+
     normalizationContext:
       groups: ["dealstage:read"]
 

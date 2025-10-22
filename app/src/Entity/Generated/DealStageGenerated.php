@@ -31,7 +31,7 @@ abstract class DealStageGenerated extends EntityBase
     #[ORM\JoinColumn(nullable: false)]
     protected Organization $organization;
 
-    #[Groups(['dealstage:read', 'dealstage:write'])]
+    #[Groups(['dealstage:read'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $stageName = null;
 
@@ -43,15 +43,15 @@ abstract class DealStageGenerated extends EntityBase
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $rottenDays = null;
 
-    #[Groups(['dealstage:read', 'dealstage:write'])]
+    #[Groups(['dealstage:read'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $rotten = false;
 
-    #[Groups(['dealstage:read', 'dealstage:write'])]
+    #[Groups(['dealstage:read'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $enteredBy = null;
 
-    #[Groups(['dealstage:read', 'dealstage:write'])]
+    #[Groups(['dealstage:read'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $exitedBy = null;
 
@@ -67,7 +67,7 @@ abstract class DealStageGenerated extends EntityBase
     #[ORM\Column(type: 'float', precision: 10, scale: 2, nullable: true)]
     protected ?float $daysInStage = null;
 
-    #[Groups(['dealstage:read', 'dealstage:write'])]
+    #[Groups(['dealstage:read'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     protected ?string $weightedValue = null;
 

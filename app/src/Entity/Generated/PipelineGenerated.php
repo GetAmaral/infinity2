@@ -57,7 +57,7 @@ abstract class PipelineGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'managedPipelines')]
     protected ?User $owner = null;
 
-    #[Groups(['pipeline:read'])]
+    #[Groups(['pipeline:read', 'pipeline:write'])]
     #[ORM\OneToMany(targetEntity: PipelineStage::class, mappedBy: 'pipeline', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
     #[ORM\OrderBy(['displayOrder' => 'ASC'])]
     protected Collection $stages;

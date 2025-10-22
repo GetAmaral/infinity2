@@ -86,17 +86,17 @@ abstract class CampaignGenerated extends EntityBase
     #[Assert\Length(max: 100)]
     protected ?string $codeName = null;
 
-    #[Groups(['campaign:read'])]
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\ManyToMany(targetEntity: Company::class, inversedBy: 'campaigns', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'campaign_companies')]
     protected Collection $companies;
 
-    #[Groups(['campaign:read'])]
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'campaigns', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'campaign_contacts')]
     protected Collection $contacts;
 
-    #[Groups(['campaign:read'])]
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'campaign', fetch: 'LAZY')]
     protected Collection $deals;
 
@@ -129,13 +129,13 @@ abstract class CampaignGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'managedCampaigns')]
     protected ?User $manager = null;
 
-    #[Groups(['campaign:read'])]
-    #[ORM\OneToMany(targetEntity: Campaign::class, mappedBy: 'parentCampaign', fetch: 'LAZY')]
-    protected Collection $childCampaigns;
-
     #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $message = null;
+
+    #[Groups(['campaign:read'])]
+    #[ORM\OneToMany(targetEntity: Campaign::class, mappedBy: 'parentCampaign', fetch: 'LAZY')]
+    protected Collection $childCampaigns;
 
     #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -194,7 +194,7 @@ abstract class CampaignGenerated extends EntityBase
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     protected ?string $roi = null;
 
-    #[Groups(['campaign:read'])]
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\ManyToMany(targetEntity: SocialMedia::class, inversedBy: 'campaigns', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'campaign_socialMedias')]
     protected Collection $socialMedias;
@@ -207,7 +207,7 @@ abstract class CampaignGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255)]
     protected string $status;
 
-    #[Groups(['campaign:read'])]
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\ManyToMany(targetEntity: Talk::class, inversedBy: 'campaigns', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'campaign_talks')]
     protected Collection $talks;
@@ -216,7 +216,7 @@ abstract class CampaignGenerated extends EntityBase
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $targetAudience = null;
 
-    #[Groups(['campaign:read'])]
+    #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'campaigns', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'campaign_team')]
     protected Collection $team;
@@ -528,6 +528,16 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
+    public function getMessage(): ?string    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): self
+    {
+        $this->message = $message;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Campaign>
      */
@@ -552,16 +562,6 @@ abstract class CampaignGenerated extends EntityBase
                 $childCampaign->setParentCampaign(null);
             }
         }
-        return $this;
-    }
-
-    public function getMessage(): ?string    {
-        return $this->message;
-    }
-
-    public function setMessage(?string $message): self
-    {
-        $this->message = $message;
         return $this;
     }
 

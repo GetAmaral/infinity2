@@ -7,6 +7,10 @@ resources:
     shortName: LostReason
     description: "Tracks and categorizes reasons for lost deals with advanced analytics capabilities. Supports win-loss analysis, competitor tracking, and actionable insights to improve win rates. Implements CRM best practices for structured data collection and longitudinal analysis."
 
+    input: App\Dto\LostReasonInputDto
+    output: App\Dto\LostReasonOutputDto
+    processor: App\State\LostReasonProcessor
+
     normalizationContext:
       groups: ["lostreason:read"]
 

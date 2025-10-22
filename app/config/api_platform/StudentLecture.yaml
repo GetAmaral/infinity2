@@ -7,6 +7,10 @@ resources:
     shortName: StudentLecture
     description: "Student lecture progress and completion tracking"
 
+    input: App\Dto\StudentLectureInputDto
+    output: App\Dto\StudentLectureOutputDto
+    processor: App\State\StudentLectureProcessor
+
     normalizationContext:
       groups: ["student_lecture:read"]
 

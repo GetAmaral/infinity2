@@ -7,6 +7,10 @@ resources:
     shortName: Notification
     description: "System notifications for users"
 
+    input: App\Dto\NotificationInputDto
+    output: App\Dto\NotificationOutputDto
+    processor: App\State\NotificationProcessor
+
     normalizationContext:
       groups: ["notification:read"]
 

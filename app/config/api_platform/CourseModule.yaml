@@ -7,6 +7,10 @@ resources:
     shortName: CourseModule
     description: "Course modules for structured learning paths"
 
+    input: App\Dto\CourseModuleInputDto
+    output: App\Dto\CourseModuleOutputDto
+    processor: App\State\CourseModuleProcessor
+
     normalizationContext:
       groups: ["course_module:read"]
 

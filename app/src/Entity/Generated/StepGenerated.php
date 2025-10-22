@@ -29,14 +29,14 @@ use App\Entity\StepInput;
 abstract class StepGenerated extends EntityBase
 {
     #[Groups(['step:read', 'step:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Length(max: 255)]
-    protected string $name;
-
-    #[Groups(['step:read', 'step:write'])]
     #[ORM\ManyToOne(targetEntity: TreeFlow::class, inversedBy: 'steps')]
     #[ORM\JoinColumn(nullable: false)]
     protected TreeFlow $treeFlow;
+
+    #[Groups(['step:read', 'step:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
+    protected string $name;
 
     #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(name: 'first_prop', type: 'boolean')]
@@ -88,16 +88,6 @@ abstract class StepGenerated extends EntityBase
         $this->inputs = new ArrayCollection();
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getTreeFlow(): TreeFlow
     {
         return $this->treeFlow;
@@ -106,6 +96,16 @@ abstract class StepGenerated extends EntityBase
     public function setTreeFlow(TreeFlow $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 

@@ -32,12 +32,12 @@ abstract class EventResourceBookingGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'resourceBookings')]
-    protected ?User $bookedBy = null;
-
-    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'datetime')]
     protected \DateTimeImmutable $startTime;
+
+    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'resourceBookings')]
+    protected ?User $bookedBy = null;
 
     #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
     #[ORM\Column(type: 'datetime')]
@@ -63,11 +63,11 @@ abstract class EventResourceBookingGenerated extends EntityBase
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     protected ?string $totalAmount = '0';
 
-    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
+    #[Groups(['eventresourcebooking:read'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $confirmedAt = null;
 
-    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
+    #[Groups(['eventresourcebooking:read'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $cancelledAt = null;
 
@@ -79,7 +79,7 @@ abstract class EventResourceBookingGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'resourceBookings')]
     protected ?Event $event = null;
 
-    #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
+    #[Groups(['eventresourcebooking:read'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $reminderSent = false;
 
@@ -116,6 +116,16 @@ abstract class EventResourceBookingGenerated extends EntityBase
         return $this;
     }
 
+    public function getStartTime(): \DateTimeImmutable    {
+        return $this->startTime;
+    }
+
+    public function setStartTime(\DateTimeImmutable $startTime): self
+    {
+        $this->startTime = $startTime;
+        return $this;
+    }
+
     public function getBookedBy(): ?User
     {
         return $this->bookedBy;
@@ -124,16 +134,6 @@ abstract class EventResourceBookingGenerated extends EntityBase
     public function setBookedBy(?User $bookedBy): self
     {
         $this->bookedBy = $bookedBy;
-        return $this;
-    }
-
-    public function getStartTime(): \DateTimeImmutable    {
-        return $this->startTime;
-    }
-
-    public function setStartTime(\DateTimeImmutable $startTime): self
-    {
-        $this->startTime = $startTime;
         return $this;
     }
 

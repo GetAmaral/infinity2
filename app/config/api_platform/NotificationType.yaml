@@ -7,6 +7,10 @@ resources:
     shortName: NotificationType
     description: "Notification types for the organization"
 
+    input: App\Dto\NotificationTypeInputDto
+    output: App\Dto\NotificationTypeOutputDto
+    processor: App\State\NotificationTypeProcessor
+
     normalizationContext:
       groups: ["notificationtype:read"]
 

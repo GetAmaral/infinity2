@@ -7,6 +7,10 @@ resources:
     shortName: EventResourceType
     description: "Types of event resources (Meeting Room, Equipment, Vehicle, etc.)"
 
+    input: App\Dto\EventResourceTypeInputDto
+    output: App\Dto\EventResourceTypeOutputDto
+    processor: App\State\EventResourceTypeProcessor
+
     normalizationContext:
       groups: ["eventresourcetype:read"]
 

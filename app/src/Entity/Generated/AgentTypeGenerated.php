@@ -33,7 +33,7 @@ abstract class AgentTypeGenerated extends EntityBase
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[Groups(['agenttype:read'])]
+    #[Groups(['agenttype:read', 'agenttype:write'])]
     #[ORM\OneToMany(targetEntity: Agent::class, mappedBy: 'agentType', fetch: 'LAZY')]
     protected Collection $agents;
 

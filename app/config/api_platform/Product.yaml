@@ -7,6 +7,10 @@ resources:
     shortName: Product
     description: "Products and services catalog"
 
+    input: App\Dto\ProductInputDto
+    output: App\Dto\ProductOutputDto
+    processor: App\State\ProductProcessor
+
     normalizationContext:
       groups: ["product:read"]
 
@@ -86,12 +90,12 @@ resources:
       leadTime:
         description: "Lead Time (days) (numeric value)"
         example: "42"
-      minOrderQuantity:
-        description: "Min Order Quantity (numeric value)"
-        example: "42"
       active:
         description: "Whether this record is active"
         example: "true"
+      minOrderQuantity:
+        description: "Min Order Quantity (numeric value)"
+        example: "42"
       maxOrderQuantity:
         description: "Max Order Quantity (numeric value)"
         example: "42"

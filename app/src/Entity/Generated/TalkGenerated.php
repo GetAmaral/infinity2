@@ -12,8 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Organization;
 use App\Entity\Company;
-use App\Entity\Deal;
 use App\Entity\Contact;
+use App\Entity\Deal;
 use App\Entity\TalkType;
 use App\Entity\User;
 use App\Entity\Agent;
@@ -51,12 +51,12 @@ abstract class TalkGenerated extends EntityBase
     protected ?Company $company = null;
 
     #[Groups(['talk:read', 'talk:write'])]
-    #[ORM\ManyToOne(targetEntity: Deal::class, inversedBy: 'talks')]
-    protected ?Deal $deal = null;
-
-    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'talks')]
     protected ?Contact $contact = null;
+
+    #[Groups(['talk:read', 'talk:write'])]
+    #[ORM\ManyToOne(targetEntity: Deal::class, inversedBy: 'talks')]
+    protected ?Deal $deal = null;
 
     #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToOne(targetEntity: TalkType::class, inversedBy: 'talks')]
@@ -105,7 +105,7 @@ abstract class TalkGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $recordingUrl = null;
 
-    #[Groups(['talk:read'])]
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'talks', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'talk_users')]
     protected Collection $users;
@@ -119,20 +119,20 @@ abstract class TalkGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $assignedTo = null;
 
-    #[Groups(['talk:read'])]
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToMany(targetEntity: Agent::class, inversedBy: 'talks', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'talk_agents')]
     protected Collection $agents;
 
-    #[Groups(['talk:read'])]
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'talks', fetch: 'LAZY')]
     protected Collection $campaigns;
 
-    #[Groups(['talk:read'])]
+    #[Groups(['talk:read', 'talk:write'])]
     #[ORM\OneToMany(targetEntity: TalkMessage::class, mappedBy: 'talk', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $messages;
 
-    #[Groups(['talk:read', 'talk:write'])]
+    #[Groups(['talk:read'])]
     #[ORM\Column(type: 'integer')]
     #[Assert\Range(max: 150, min: 0)]
     protected int $messageCount = 0;
@@ -201,17 +201,6 @@ abstract class TalkGenerated extends EntityBase
         return $this;
     }
 
-    public function getDeal(): ?Deal
-    {
-        return $this->deal;
-    }
-
-    public function setDeal(?Deal $deal): self
-    {
-        $this->deal = $deal;
-        return $this;
-    }
-
     public function getContact(): ?Contact
     {
         return $this->contact;
@@ -220,6 +209,17 @@ abstract class TalkGenerated extends EntityBase
     public function setContact(?Contact $contact): self
     {
         $this->contact = $contact;
+        return $this;
+    }
+
+    public function getDeal(): ?Deal
+    {
+        return $this->deal;
+    }
+
+    public function setDeal(?Deal $deal): self
+    {
+        $this->deal = $deal;
         return $this;
     }
 

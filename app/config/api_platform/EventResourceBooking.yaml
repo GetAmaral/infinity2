@@ -7,6 +7,10 @@ resources:
     shortName: EventResourceBooking
     description: "Resource booking reservations"
 
+    input: App\Dto\EventResourceBookingInputDto
+    output: App\Dto\EventResourceBookingOutputDto
+    processor: App\State\EventResourceBookingProcessor
+
     normalizationContext:
       groups: ["eventresourcebooking:read"]
 
@@ -38,12 +42,12 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
-      bookedBy:
-        description: "User who made this booking"
-        example: "\/api\/users\/0199cadd-6516-71c2-a3f5-08a1640fefa8"
       startTime:
         description: "Start date and time of the resource booking"
         example: "2025-10-20T14:00:00+00:00"
+      bookedBy:
+        description: "User who made this booking"
+        example: "\/api\/users\/0199cadd-6516-71c2-a3f5-08a1640fefa8"
       endTime:
         description: "End date and time of the resource booking"
         example: "2025-10-20T16:00:00+00:00"

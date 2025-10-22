@@ -7,6 +7,10 @@ resources:
     shortName: Contact
     description: "Customer contacts with full profile and interaction history"
 
+    input: App\Dto\ContactInputDto
+    output: App\Dto\ContactOutputDto
+    processor: App\State\ContactProcessor
+
     normalizationContext:
       groups: ["contact:read"]
 

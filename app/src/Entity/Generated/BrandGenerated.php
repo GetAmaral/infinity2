@@ -88,15 +88,15 @@ abstract class BrandGenerated extends EntityBase
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 
-    #[Groups(['brand:read'])]
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'brand', fetch: 'LAZY')]
     protected Collection $products;
 
-    #[Groups(['brand:read'])]
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\ManyToMany(targetEntity: Company::class, mappedBy: 'manufacturedBrands', fetch: 'LAZY')]
     protected Collection $manufacturers;
 
-    #[Groups(['brand:read'])]
+    #[Groups(['brand:read', 'brand:write'])]
     #[ORM\ManyToMany(targetEntity: Company::class, mappedBy: 'suppliedBrands', fetch: 'LAZY')]
     protected Collection $suppliers;
 

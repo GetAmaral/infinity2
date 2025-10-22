@@ -53,7 +53,7 @@ abstract class ReminderGenerated extends EntityBase
     #[ORM\Column(type: 'integer')]
     protected int $minutesBeforeStart = 15;
 
-    #[Groups(['reminder:read'])]
+    #[Groups(['reminder:read', 'reminder:write'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'reminder', fetch: 'LAZY')]
     protected Collection $notifications;
 

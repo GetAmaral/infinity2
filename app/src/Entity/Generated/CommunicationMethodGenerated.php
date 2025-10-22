@@ -34,7 +34,7 @@ abstract class CommunicationMethodGenerated extends EntityBase
     #[ORM\Column(name: 'function_prop', type: 'string', length: 255, nullable: true)]
     protected ?string $function = null;
 
-    #[Groups(['communicationmethod:read'])]
+    #[Groups(['communicationmethod:read', 'communicationmethod:write'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'communicationMethod', fetch: 'LAZY')]
     protected Collection $notifications;
 
@@ -42,7 +42,7 @@ abstract class CommunicationMethodGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $property = null;
 
-    #[Groups(['communicationmethod:read'])]
+    #[Groups(['communicationmethod:read', 'communicationmethod:write'])]
     #[ORM\OneToMany(targetEntity: Reminder::class, mappedBy: 'communicationMethod', fetch: 'LAZY')]
     protected Collection $reminders;
 

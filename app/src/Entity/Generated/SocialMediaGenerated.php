@@ -43,7 +43,7 @@ abstract class SocialMediaGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $apiKey = null;
 
-    #[Groups(['socialmedia:read'])]
+    #[Groups(['socialmedia:read', 'socialmedia:write'])]
     #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'socialMedias', fetch: 'LAZY')]
     protected Collection $campaigns;
 

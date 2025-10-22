@@ -43,7 +43,7 @@ abstract class NotificationTypeGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 50)]
     protected string $icon = 'bi-bell-fill';
 
-    #[Groups(['notificationtype:read'])]
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'type', fetch: 'LAZY')]
     protected Collection $notifications;
 

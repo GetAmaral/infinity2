@@ -7,6 +7,10 @@ resources:
     shortName: HolidayTemplate
     description: "Templates for holidays (National, Regional, Company, etc.)"
 
+    input: App\Dto\HolidayTemplateInputDto
+    output: App\Dto\HolidayTemplateOutputDto
+    processor: App\State\HolidayTemplateProcessor
+
     normalizationContext:
       groups: ["holidaytemplate:read"]
 

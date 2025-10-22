@@ -7,6 +7,10 @@ resources:
     shortName: TalkMessage
     description: "Individual messages within communication threads"
 
+    input: App\Dto\TalkMessageInputDto
+    output: App\Dto\TalkMessageOutputDto
+    processor: App\State\TalkMessageProcessor
+
     normalizationContext:
       groups: ["talkmessage:read"]
 

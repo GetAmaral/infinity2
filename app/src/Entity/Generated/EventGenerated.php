@@ -19,10 +19,10 @@ use App\Entity\Attachment;
 use App\Entity\Reminder;
 use App\Entity\EventResourceBooking;
 use App\Entity\Event;
-use App\Entity\Holiday;
-use App\Entity\MeetingData;
-use App\Entity\Notification;
 use App\Entity\WorkingHour;
+use App\Entity\Notification;
+use App\Entity\MeetingData;
+use App\Entity\Holiday;
 use App\Entity\Contact;
 use App\Entity\Company;
 use App\Entity\Deal;
@@ -50,12 +50,12 @@ abstract class EventGenerated extends EntityBase
     protected string $name;
 
     #[Groups(['event:read', 'event:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
-
-    #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'datetime')]
     protected \DateTimeImmutable $startTime;
+
+    #[Groups(['event:read', 'event:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $description = null;
 
     #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'datetime')]
@@ -81,24 +81,24 @@ abstract class EventGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizedEvents')]
     protected ?User $organizer = null;
 
-    #[Groups(['event:read'])]
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'event', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $attendees;
 
-    #[Groups(['event:read'])]
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\ManyToMany(targetEntity: EventCategory::class, inversedBy: 'events', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'event_categories')]
     protected Collection $categories;
 
-    #[Groups(['event:read'])]
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'event', fetch: 'LAZY')]
     protected Collection $attachments;
 
-    #[Groups(['event:read'])]
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\OneToMany(targetEntity: Reminder::class, mappedBy: 'event', fetch: 'LAZY')]
     protected Collection $reminders;
 
-    #[Groups(['event:read'])]
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\OneToMany(targetEntity: EventResourceBooking::class, mappedBy: 'event', fetch: 'LAZY')]
     protected Collection $resourceBookings;
 
@@ -106,7 +106,7 @@ abstract class EventGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'childrenEvents')]
     protected ?Event $parentEvent = null;
 
-    #[Groups(['event:read'])]
+    #[Groups(['event:read', 'event:write'])]
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'parentEvent', fetch: 'LAZY')]
     protected Collection $childrenEvents;
 
@@ -131,24 +131,24 @@ abstract class EventGenerated extends EntityBase
     protected ?array $source = null;
 
     #[Groups(['event:read'])]
-    #[ORM\OneToMany(targetEntity: Holiday::class, mappedBy: 'event', fetch: 'LAZY')]
-    protected Collection $holidays;
+    #[ORM\OneToMany(targetEntity: WorkingHour::class, mappedBy: 'event', fetch: 'LAZY')]
+    protected Collection $workingHours;
 
     #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $subject = null;
 
     #[Groups(['event:read'])]
-    #[ORM\OneToMany(targetEntity: MeetingData::class, mappedBy: 'event', fetch: 'LAZY')]
-    protected Collection $meetingDatas;
-
-    #[Groups(['event:read'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'event', fetch: 'LAZY')]
     protected Collection $notifications;
 
     #[Groups(['event:read'])]
-    #[ORM\OneToMany(targetEntity: WorkingHour::class, mappedBy: 'event', fetch: 'LAZY')]
-    protected Collection $workingHours;
+    #[ORM\OneToMany(targetEntity: MeetingData::class, mappedBy: 'event', fetch: 'LAZY')]
+    protected Collection $meetingDatas;
+
+    #[Groups(['event:read'])]
+    #[ORM\OneToMany(targetEntity: Holiday::class, mappedBy: 'event', fetch: 'LAZY')]
+    protected Collection $holidays;
 
     #[Groups(['event:read', 'event:write'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -324,10 +324,10 @@ abstract class EventGenerated extends EntityBase
         $this->reminders = new ArrayCollection();
         $this->resourceBookings = new ArrayCollection();
         $this->childrenEvents = new ArrayCollection();
-        $this->holidays = new ArrayCollection();
-        $this->meetingDatas = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
         $this->workingHours = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+        $this->meetingDatas = new ArrayCollection();
+        $this->holidays = new ArrayCollection();
     }
 
     public function getOrganization(): Organization
@@ -351,16 +351,6 @@ abstract class EventGenerated extends EntityBase
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
     public function getStartTime(): \DateTimeImmutable    {
         return $this->startTime;
     }
@@ -368,6 +358,16 @@ abstract class EventGenerated extends EntityBase
     public function setStartTime(\DateTimeImmutable $startTime): self
     {
         $this->startTime = $startTime;
+        return $this;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 
@@ -658,27 +658,27 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, Holiday>
+     * @return Collection<int, WorkingHour>
      */
-    public function getHolidays(): Collection
+    public function getWorkingHours(): Collection
     {
-        return $this->holidays;
+        return $this->workingHours;
     }
 
-    public function addHoliday(Holiday $holiday): self
+    public function addWorkingHour(WorkingHour $workingHour): self
     {
-        if (!$this->holidays->contains($holiday)) {
-            $this->holidays->add($holiday);
-            $holiday->setEvent($this);
+        if (!$this->workingHours->contains($workingHour)) {
+            $this->workingHours->add($workingHour);
+            $workingHour->setEvent($this);
         }
         return $this;
     }
 
-    public function removeHoliday(Holiday $holiday): self
+    public function removeWorkingHour(WorkingHour $workingHour): self
     {
-        if ($this->holidays->removeElement($holiday)) {
-            if ($holiday->getEvent() === $this) {
-                $holiday->setEvent(null);
+        if ($this->workingHours->removeElement($workingHour)) {
+            if ($workingHour->getEvent() === $this) {
+                $workingHour->setEvent(null);
             }
         }
         return $this;
@@ -691,33 +691,6 @@ abstract class EventGenerated extends EntityBase
     public function setSubject(?string $subject): self
     {
         $this->subject = $subject;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, MeetingData>
-     */
-    public function getMeetingDatas(): Collection
-    {
-        return $this->meetingDatas;
-    }
-
-    public function addMeetingData(MeetingData $meetingData): self
-    {
-        if (!$this->meetingDatas->contains($meetingData)) {
-            $this->meetingDatas->add($meetingData);
-            $meetingData->setEvent($this);
-        }
-        return $this;
-    }
-
-    public function removeMeetingData(MeetingData $meetingData): self
-    {
-        if ($this->meetingDatas->removeElement($meetingData)) {
-            if ($meetingData->getEvent() === $this) {
-                $meetingData->setEvent(null);
-            }
-        }
         return $this;
     }
 
@@ -749,27 +722,54 @@ abstract class EventGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, WorkingHour>
+     * @return Collection<int, MeetingData>
      */
-    public function getWorkingHours(): Collection
+    public function getMeetingDatas(): Collection
     {
-        return $this->workingHours;
+        return $this->meetingDatas;
     }
 
-    public function addWorkingHour(WorkingHour $workingHour): self
+    public function addMeetingData(MeetingData $meetingData): self
     {
-        if (!$this->workingHours->contains($workingHour)) {
-            $this->workingHours->add($workingHour);
-            $workingHour->setEvent($this);
+        if (!$this->meetingDatas->contains($meetingData)) {
+            $this->meetingDatas->add($meetingData);
+            $meetingData->setEvent($this);
         }
         return $this;
     }
 
-    public function removeWorkingHour(WorkingHour $workingHour): self
+    public function removeMeetingData(MeetingData $meetingData): self
     {
-        if ($this->workingHours->removeElement($workingHour)) {
-            if ($workingHour->getEvent() === $this) {
-                $workingHour->setEvent(null);
+        if ($this->meetingDatas->removeElement($meetingData)) {
+            if ($meetingData->getEvent() === $this) {
+                $meetingData->setEvent(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Holiday>
+     */
+    public function getHolidays(): Collection
+    {
+        return $this->holidays;
+    }
+
+    public function addHoliday(Holiday $holiday): self
+    {
+        if (!$this->holidays->contains($holiday)) {
+            $this->holidays->add($holiday);
+            $holiday->setEvent($this);
+        }
+        return $this;
+    }
+
+    public function removeHoliday(Holiday $holiday): self
+    {
+        if ($this->holidays->removeElement($holiday)) {
+            if ($holiday->getEvent() === $this) {
+                $holiday->setEvent(null);
             }
         }
         return $this;

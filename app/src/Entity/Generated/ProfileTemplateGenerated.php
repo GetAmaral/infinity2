@@ -29,7 +29,7 @@ abstract class ProfileTemplateGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
-    #[Groups(['profiletemplate:read'])]
+    #[Groups(['profiletemplate:read', 'profiletemplate:write'])]
     #[ORM\ManyToMany(targetEntity: Role::class, fetch: 'LAZY')]
     protected Collection $grantedRoles;
 

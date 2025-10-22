@@ -7,6 +7,10 @@ resources:
     shortName: TaskTemplate
     description: "Task templates for recurring task creation"
 
+    input: App\Dto\TaskTemplateInputDto
+    output: App\Dto\TaskTemplateOutputDto
+    processor: App\State\TaskTemplateProcessor
+
     normalizationContext:
       groups: ["tasktemplate:read"]
 

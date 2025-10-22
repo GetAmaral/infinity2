@@ -62,7 +62,7 @@ abstract class ContactGenerated extends EntityBase
     #[Assert\Length(max: 255)]
     protected ?string $website = null;
 
-    #[Groups(['contact:read'])]
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'contacts', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'contact_accountTeam')]
     protected Collection $accountTeam;
@@ -83,7 +83,7 @@ abstract class ContactGenerated extends EntityBase
     #[ORM\Column(type: 'date', nullable: true)]
     protected ?\DateTimeImmutable $birthDate = null;
 
-    #[Groups(['contact:read'])]
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'contacts', fetch: 'LAZY')]
     protected Collection $campaigns;
 
@@ -96,7 +96,7 @@ abstract class ContactGenerated extends EntityBase
     #[ORM\JoinColumn(nullable: false)]
     protected Company $company;
 
-    #[Groups(['contact:read'])]
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'contacts', fetch: 'LAZY')]
     protected Collection $deals;
 
@@ -148,7 +148,7 @@ abstract class ContactGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     protected string $email;
 
-    #[Groups(['contact:read'])]
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'contact', fetch: 'LAZY')]
     protected Collection $eventAttendances;
 
@@ -192,7 +192,7 @@ abstract class ContactGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $postalCode = null;
 
-    #[Groups(['contact:read'])]
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'primaryContact', fetch: 'LAZY')]
     protected Collection $primaryDeals;
 
@@ -208,7 +208,7 @@ abstract class ContactGenerated extends EntityBase
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $score = null;
 
-    #[Groups(['contact:read'])]
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\OneToMany(targetEntity: SocialMedia::class, mappedBy: 'contact', fetch: 'LAZY')]
     protected Collection $socialMedias;
 
@@ -216,11 +216,11 @@ abstract class ContactGenerated extends EntityBase
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $status = null;
 
-    #[Groups(['contact:read'])]
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\OneToMany(targetEntity: Talk::class, mappedBy: 'contact', fetch: 'LAZY')]
     protected Collection $talks;
 
-    #[Groups(['contact:read'])]
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'contact', fetch: 'LAZY')]
     protected Collection $tasks;
 

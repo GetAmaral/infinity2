@@ -7,6 +7,10 @@ resources:
     shortName: Brand
     description: "Product brands for catalog organization"
 
+    input: App\Dto\BrandInputDto
+    output: App\Dto\BrandOutputDto
+    processor: App\State\BrandProcessor
+
     normalizationContext:
       groups: ["brand:read"]
 

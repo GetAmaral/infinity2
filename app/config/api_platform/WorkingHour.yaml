@@ -7,6 +7,10 @@ resources:
     shortName: WorkingHour
     description: "Defines employee\/user working hours and availability schedules for calendar management and appointment booking"
 
+    input: App\Dto\WorkingHourInputDto
+    output: App\Dto\WorkingHourOutputDto
+    processor: App\State\WorkingHourProcessor
+
     normalizationContext:
       groups: ["workinghour:read"]
 

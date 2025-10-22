@@ -31,7 +31,7 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
     #[Assert\Length(max: 100)]
     protected string $name;
 
-    #[Groups(['calendarexternallink:read'])]
+    #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
     #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'externalLink', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $calendars;
 

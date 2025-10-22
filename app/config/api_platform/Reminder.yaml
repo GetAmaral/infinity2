@@ -7,6 +7,10 @@ resources:
     shortName: Reminder
     description: "Automated reminders and notifications for events, tasks, meetings, and follow-ups with multi-channel delivery support"
 
+    input: App\Dto\ReminderInputDto
+    output: App\Dto\ReminderOutputDto
+    processor: App\State\ReminderProcessor
+
     normalizationContext:
       groups: ["reminder:read"]
 

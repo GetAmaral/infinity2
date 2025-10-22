@@ -7,6 +7,10 @@ resources:
     shortName: CommunicationMethod
     description: "Communication methods (Phone, Email, SMS, Video Call, etc.)"
 
+    input: App\Dto\CommunicationMethodInputDto
+    output: App\Dto\CommunicationMethodOutputDto
+    processor: App\State\CommunicationMethodProcessor
+
     normalizationContext:
       groups: ["communicationmethod:read"]
 

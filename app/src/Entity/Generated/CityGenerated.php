@@ -73,11 +73,11 @@ abstract class CityGenerated extends EntityBase
     #[ORM\Column(type: 'boolean')]
     protected bool $active;
 
-    #[Groups(['city:read'])]
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\OneToMany(targetEntity: EventResource::class, mappedBy: 'city', fetch: 'LAZY')]
     protected Collection $eventResources;
 
-    #[Groups(['city:read'])]
+    #[Groups(['city:read', 'city:write'])]
     #[ORM\OneToMany(targetEntity: HolidayTemplate::class, mappedBy: 'city', fetch: 'LAZY')]
     protected Collection $holidayTemplates;
 

@@ -7,6 +7,10 @@ resources:
     shortName: Pipeline
     description: "Sales pipelines for managing deal flow"
 
+    input: App\Dto\PipelineInputDto
+    output: App\Dto\PipelineOutputDto
+    processor: App\State\PipelineProcessor
+
     normalizationContext:
       groups: ["pipeline:read"]
 

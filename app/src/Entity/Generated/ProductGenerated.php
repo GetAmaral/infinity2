@@ -98,7 +98,7 @@ abstract class ProductGenerated extends EntityBase
     #[Assert\Choice(choices: ['draft', 'active', 'archived', 'discontinued'])]
     protected ?string $status = null;
 
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'product', fetch: 'LAZY')]
     protected Collection $attachments;
 
@@ -118,13 +118,13 @@ abstract class ProductGenerated extends EntityBase
     protected ?int $leadTime = null;
 
     #[Groups(['product:read', 'product:write'])]
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    protected ?bool $active = null;
+
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     #[Assert\Positive]
     protected ?int $minOrderQuantity = null;
-
-    #[Groups(['product:read', 'product:write'])]
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    protected ?bool $active = null;
 
     #[Groups(['product:read', 'product:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -135,7 +135,7 @@ abstract class ProductGenerated extends EntityBase
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $availableQuantity = null;
 
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\OneToMany(targetEntity: ProductBatch::class, mappedBy: 'product', fetch: 'LAZY')]
     protected Collection $batches;
 
@@ -176,7 +176,7 @@ abstract class ProductGenerated extends EntityBase
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $customFields = null;
 
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'products', fetch: 'LAZY')]
     protected Collection $deals;
 
@@ -217,7 +217,7 @@ abstract class ProductGenerated extends EntityBase
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     protected ?string $listPrice = null;
 
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToMany(targetEntity: Company::class, mappedBy: 'manufacturedProducts', fetch: 'LAZY')]
     protected Collection $manufacturer;
 
@@ -254,11 +254,11 @@ abstract class ProductGenerated extends EntityBase
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     protected ?string $recurringFee = null;
 
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'relatedTo', fetch: 'LAZY')]
     protected Collection $relatedFrom;
 
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'relatedFrom', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'product_relatedTo')]
     protected Collection $relatedTo;
@@ -299,16 +299,16 @@ abstract class ProductGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $subscriptionPeriod = null;
 
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'substituteTo', fetch: 'LAZY')]
     protected Collection $substituteFrom;
 
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'substituteFrom', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'product_substituteTo')]
     protected Collection $substituteTo;
 
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToMany(targetEntity: Company::class, mappedBy: 'suppliedProducts', fetch: 'LAZY')]
     protected Collection $supplier;
 
@@ -316,7 +316,7 @@ abstract class ProductGenerated extends EntityBase
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $supportPeriod = null;
 
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:write'])]
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'products', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'product_tags')]
     protected Collection $tags;
@@ -546,16 +546,6 @@ abstract class ProductGenerated extends EntityBase
         return $this;
     }
 
-    public function getMinOrderQuantity(): ?int    {
-        return $this->minOrderQuantity;
-    }
-
-    public function setMinOrderQuantity(?int $minOrderQuantity): self
-    {
-        $this->minOrderQuantity = $minOrderQuantity;
-        return $this;
-    }
-
     public function getActive(): ?bool    {
         return $this->active;
     }
@@ -569,6 +559,16 @@ abstract class ProductGenerated extends EntityBase
     public function isActive(): bool
     {
         return $this->active === true;
+    }
+
+    public function getMinOrderQuantity(): ?int    {
+        return $this->minOrderQuantity;
+    }
+
+    public function setMinOrderQuantity(?int $minOrderQuantity): self
+    {
+        $this->minOrderQuantity = $minOrderQuantity;
+        return $this;
     }
 
     public function getMaxOrderQuantity(): ?int    {

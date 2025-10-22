@@ -7,6 +7,10 @@ resources:
     shortName: Profile
     description: "User profiles with permissions and preferences"
 
+    input: App\Dto\ProfileInputDto
+    output: App\Dto\ProfileOutputDto
+    processor: App\State\ProfileProcessor
+
     normalizationContext:
       groups: ["profile:read"]
 

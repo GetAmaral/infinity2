@@ -7,6 +7,10 @@ resources:
     shortName: TimeZone
     description: "Time zones for global calendar management"
 
+    input: App\Dto\TimeZoneInputDto
+    output: App\Dto\TimeZoneOutputDto
+    processor: App\State\TimeZoneProcessor
+
     normalizationContext:
       groups: ["timezone:read"]
 

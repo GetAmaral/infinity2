@@ -43,8 +43,9 @@ final class TenantGuard implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            // Run after security firewall (priority 8) but before controllers
-            KernelEvents::REQUEST => ['onKernelRequest', 16],
+            // Run after authentication completes (firewall priority 8, auth listeners ~16-32)
+            // Priority 0 ensures we run right before controllers but after all auth
+            KernelEvents::REQUEST => ['onKernelRequest', 0],
         ];
     }
 

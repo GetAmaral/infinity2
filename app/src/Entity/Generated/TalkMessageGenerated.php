@@ -66,7 +66,7 @@ abstract class TalkMessageGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255)]
     protected string $messageType = 'text';
 
-    #[Groups(['talkmessage:read'])]
+    #[Groups(['talkmessage:read', 'talkmessage:write'])]
     #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'talkMessage', fetch: 'LAZY')]
     protected Collection $attachments;
 
@@ -106,7 +106,7 @@ abstract class TalkMessageGenerated extends EntityBase
     #[ORM\Column(type: 'boolean')]
     protected bool $internal = false;
 
-    #[Groups(['talkmessage:read', 'talkmessage:write'])]
+    #[Groups(['talkmessage:read'])]
     #[ORM\Column(name: 'system_prop', type: 'boolean')]
     protected bool $system = false;
 

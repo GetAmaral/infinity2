@@ -7,6 +7,10 @@ resources:
     shortName: Task
     description: "Tasks and to-dos for productivity management"
 
+    input: App\Dto\TaskInputDto
+    output: App\Dto\TaskOutputDto
+    processor: App\State\TaskProcessor
+
     normalizationContext:
       groups: ["task:read"]
 

@@ -113,7 +113,7 @@ abstract class EventResourceGenerated extends EntityBase
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $equipment = null;
 
-    #[Groups(['eventresource:read'])]
+    #[Groups(['eventresource:read', 'eventresource:write'])]
     #[ORM\OneToMany(targetEntity: EventResourceBooking::class, mappedBy: 'resource', fetch: 'LAZY')]
     protected Collection $eventBookings;
 

@@ -7,6 +7,10 @@ resources:
     shortName: SocialMedia
     description: "Social media accounts linked to contacts and companies"
 
+    input: App\Dto\SocialMediaInputDto
+    output: App\Dto\SocialMediaOutputDto
+    processor: App\State\SocialMediaProcessor
+
     normalizationContext:
       groups: ["socialmedia:read"]
 

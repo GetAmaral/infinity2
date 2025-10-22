@@ -7,6 +7,10 @@ resources:
     shortName: LeadSource
     description: "Lead sources for multi-touch attribution tracking and ROI analysis"
 
+    input: App\Dto\LeadSourceInputDto
+    output: App\Dto\LeadSourceOutputDto
+    processor: App\State\LeadSourceProcessor
+
     normalizationContext:
       groups: ["leadsource:read"]
 

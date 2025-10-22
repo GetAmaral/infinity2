@@ -7,6 +7,10 @@ resources:
     shortName: EventResource
     description: "Bookable resources (Rooms, Equipment, etc.)"
 
+    input: App\Dto\EventResourceInputDto
+    output: App\Dto\EventResourceOutputDto
+    processor: App\State\EventResourceProcessor
+
     normalizationContext:
       groups: ["eventresource:read"]
 

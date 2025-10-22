@@ -7,6 +7,10 @@ resources:
     shortName: CalendarType
     description: "Calendar types (Personal, Shared, Public, etc.)"
 
+    input: App\Dto\CalendarTypeInputDto
+    output: App\Dto\CalendarTypeOutputDto
+    processor: App\State\CalendarTypeProcessor
+
     normalizationContext:
       groups: ["calendartype:read"]
 

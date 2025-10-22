@@ -43,7 +43,7 @@ abstract class ProductLineGenerated extends EntityBase
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $active = null;
 
-    #[Groups(['productline:read'])]
+    #[Groups(['productline:read', 'productline:write'])]
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'productLine', fetch: 'LAZY')]
     protected Collection $products;
 

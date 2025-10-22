@@ -7,6 +7,10 @@ resources:
     shortName: User
     description: "System users and authentication"
 
+    input: App\Dto\UserInputDto
+    output: App\Dto\UserOutputDto
+    processor: App\State\UserProcessor
+
     normalizationContext:
       groups: ["user:read"]
 
@@ -71,22 +75,22 @@ resources:
       email:
         description: "Email address"
         example: "user@example.com"
-      grantedRoles:
-        writable: false
-        description: "Granted Roles"
-        example: "/api/roles/01234567-89ab-cdef-0123-456789abcdef"
       ownedDeals:
         writable: false
         description: "Deals"
         example: "/api/deals/01234567-89ab-cdef-0123-456789abcdef"
-      resourceBookings:
-        writable: false
-        description: "EventResourceBookings"
-        example: "/api/eventresourcebookings/01234567-89ab-cdef-0123-456789abcdef"
       calendarExternalLinks:
         writable: false
         description: "CalendarExternalLinks"
         example: "/api/calendarexternallinks/01234567-89ab-cdef-0123-456789abcdef"
+      grantedRoles:
+        writable: false
+        description: "Granted Roles"
+        example: "/api/roles/01234567-89ab-cdef-0123-456789abcdef"
+      resourceBookings:
+        writable: false
+        description: "EventResourceBookings"
+        example: "/api/eventresourcebookings/01234567-89ab-cdef-0123-456789abcdef"
       emailVerifiedAt:
         description: "EmailVerifiedAt (date and time)"
         example: "2025-01-15T10:30:00Z"
@@ -108,15 +112,15 @@ resources:
         writable: false
         description: "Verification Token"
         example: "Sample verification token"
+      failedLoginAttempts:
+        writable: false
+        description: "FailedLoginAttempts (numeric value)"
+        example: "42"
       apiToken:
         readable: false
         writable: false
         description: "API Token"
         example: "Sample api token"
-      failedLoginAttempts:
-        writable: false
-        description: "FailedLoginAttempts (numeric value)"
-        example: "42"
       apiTokenExpiresAt:
         readable: false
         writable: false
@@ -144,12 +148,12 @@ resources:
       listPreferences:
         description: "List Preferences"
         example: "{\"key\": \"value\"}"
-      lastPasswordChange:
-        description: "LastPasswordChange (date and time)"
-        example: "2025-01-15T10:30:00Z"
       twoFactorEnabled:
         description: "Two Factor Enabled"
         example: true
+      lastPasswordChange:
+        description: "LastPasswordChange (date and time)"
+        example: "2025-01-15T10:30:00Z"
       twoFactorSecret:
         readable: false
         writable: false
@@ -275,13 +279,13 @@ resources:
       agentType:
         description: "Agent Type"
         example: "Sample agent type"
-      ownedCourses:
-        description: "OwnedCourses"
-        example: "sample value"
       deletedAt:
         writable: false
         description: "Deleted At"
         example: "2025-01-15T10:30:00Z"
+      ownedCourses:
+        description: "OwnedCourses"
+        example: "sample value"
       avatar:
         description: "Avatar"
         example: "Sample avatar"
@@ -435,21 +439,21 @@ resources:
         writable: false
         description: "Last Activity At"
         example: "2025-01-15T10:30:00Z"
-      talks:
-        description: "Talks"
-        example: "sample value"
       status:
         description: "Status"
         example: "Sample status"
+      talks:
+        description: "Talks"
+        example: "sample value"
       statusMessage:
         description: "Status Message"
         example: "Sample status message"
-      tasks:
-        description: "..."
-        example: "..."
       locked:
         description: "Locked"
         example: true
+      tasks:
+        description: "..."
+        example: "..."
       lockedReason:
         writable: false
         description: "Locked Reason"
