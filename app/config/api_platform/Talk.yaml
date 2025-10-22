@@ -7,9 +7,8 @@ resources:
     shortName: Talk
     description: "Communication threads with customers and prospects"
 
-    input: App\Dto\TalkInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\TalkOutputDto
-    processor: App\State\TalkProcessor
 
     normalizationContext:
       groups: ["talk:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_SUPPORT_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\TalkInputDto
+        processor: App\State\TalkProcessor
         security: "is_granted('ROLE_SUPPORT_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\TalkInputDto
+        processor: App\State\TalkProcessor
         security: "is_granted('ROLE_SUPPORT_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\TalkInputDto
+        processor: App\State\TalkProcessor
         security: "is_granted('ROLE_SUPPORT_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SUPPORT_ADMIN')"

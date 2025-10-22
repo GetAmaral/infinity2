@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\BillingFrequencyInputDto;
 use App\Dto\BrandInputDto;
@@ -26,174 +27,234 @@ abstract class ProductInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['product:write'])]
+    public ?string $organization = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['product:write'])]
     public ?string $sku = null;
 
+    #[Groups(['product:write'])]
     public string $name;
 
+    #[Groups(['product:write'])]
     public ?string $description = null;
 
     #[Assert\Length(max: 14)]
+    #[Groups(['product:write'])]
     public ?string $gtin = null;
 
     #[Assert\Length(max: 12)]
+    #[Groups(['product:write'])]
     public ?string $upc = null;
 
     #[Assert\Length(max: 13)]
+    #[Groups(['product:write'])]
     public ?string $ean = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['product:write'])]
     public ?string $mpn = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['product:write'])]
     public ?string $barcode = null;
 
+    #[Groups(['product:write'])]
     public ?bool $available = null;
 
     #[Assert\PositiveOrZero]
+    #[Groups(['product:write'])]
     public ?string $price = null;
 
     #[Assert\PositiveOrZero]
+    #[Groups(['product:write'])]
     public ?string $compareAtPrice = null;
 
     #[Assert\Choice(choices: ['draft', 'active', 'archived', 'discontinued'])]
+    #[Groups(['product:write'])]
     public ?string $status = null;
 
     #[Assert\PositiveOrZero]
+    #[Groups(['product:write'])]
     public ?int $reorderLevel = null;
 
     #[Assert\PositiveOrZero]
+    #[Groups(['product:write'])]
     public ?int $reorderQuantity = null;
 
     #[Assert\PositiveOrZero]
+    #[Groups(['product:write'])]
     public ?int $leadTime = null;
 
+    #[Groups(['product:write'])]
     public ?bool $active = null;
 
     #[Assert\Positive]
+    #[Groups(['product:write'])]
     public ?int $minOrderQuantity = null;
 
     #[Assert\Positive]
+    #[Groups(['product:write'])]
     public ?int $maxOrderQuantity = null;
 
+    #[Groups(['product:write'])]
     public ?int $availableQuantity = null;
 
     /**
      * billingFrequency reference
-     * Can be: IRI string (e.g., "/api/billingfrequencys/uuid") or nested BillingFrequencyInput object
+     * Must be: IRI string (e.g., "/api/billingfrequencys/uuid")
      */
-    public string|BillingFrequencyInputDto|null $billingFrequency = null;
+    #[Groups(['product:write'])]
+    public ?string $billingFrequency = null;
 
     /**
      * brand reference
-     * Can be: IRI string (e.g., "/api/brands/uuid") or nested BrandInput object
+     * Must be: IRI string (e.g., "/api/brands/uuid")
      */
-    public string|BrandInputDto|null $brand = null;
+    #[Groups(['product:write'])]
+    public ?string $brand = null;
 
+    #[Groups(['product:write'])]
     public ?string $cancellationFee = null;
 
     /**
      * category reference
-     * Can be: IRI string (e.g., "/api/productcategorys/uuid") or nested ProductCategoryInput object
+     * Must be: IRI string (e.g., "/api/productcategorys/uuid")
      */
-    public string|ProductCategoryInputDto|null $category = null;
+    #[Groups(['product:write'])]
+    public ?string $category = null;
 
+    #[Groups(['product:write'])]
     public ?string $commissionAmount = null;
 
     #[Assert\Range(max: 100, min: 0)]
+    #[Groups(['product:write'])]
     public ?string $commissionRate = null;
 
+    #[Groups(['product:write'])]
     public ?string $costPrice = null;
 
+    #[Groups(['product:write'])]
     public ?string $currency = null;
 
+    #[Groups(['product:write'])]
     public ?array $customFields = null;
 
+    #[Groups(['product:write'])]
     public ?string $dimensions = null;
 
+    #[Groups(['product:write'])]
     public ?string $discountAmount = null;
 
     #[Assert\Range(max: 100, min: 0)]
+    #[Groups(['product:write'])]
     public ?string $discountPercentage = null;
 
+    #[Groups(['product:write'])]
     public ?\DateTimeImmutable $endOfLifeDate = null;
 
+    #[Groups(['product:write'])]
     public ?float $exchangeRate = null;
 
+    #[Groups(['product:write'])]
     public ?array $features = null;
 
+    #[Groups(['product:write'])]
     public ?\DateTimeImmutable $launchDate = null;
 
+    #[Groups(['product:write'])]
     public ?string $lifecycleStage = null;
 
+    #[Groups(['product:write'])]
     public ?string $listPrice = null;
 
     #[Assert\Range(max: 100, min: 0)]
+    #[Groups(['product:write'])]
     public ?string $marginPercentage = null;
 
+    #[Groups(['product:write'])]
     public ?string $maximumDiscount = null;
 
+    #[Groups(['product:write'])]
     public ?string $minimumPrice = null;
 
+    #[Groups(['product:write'])]
     public ?string $productCode = null;
 
     /**
      * productLine reference
-     * Can be: IRI string (e.g., "/api/productlines/uuid") or nested ProductLineInput object
+     * Must be: IRI string (e.g., "/api/productlines/uuid")
      */
-    public string|ProductLineInputDto|null $productLine = null;
+    #[Groups(['product:write'])]
+    public ?string $productLine = null;
 
+    #[Groups(['product:write'])]
     public ?int $productType = null;
 
+    #[Groups(['product:write'])]
     public ?bool $purchasable = null;
 
+    #[Groups(['product:write'])]
     public ?string $recurringFee = null;
 
+    #[Groups(['product:write'])]
     public ?bool $requiresApproval = null;
 
+    #[Groups(['product:write'])]
     public ?int $reservedQuantity = null;
 
+    #[Groups(['product:write'])]
     public ?bool $sellable = null;
 
+    #[Groups(['product:write'])]
     public ?string $setupFee = null;
 
+    #[Groups(['product:write'])]
     public ?string $shortDescription = null;
 
+    #[Groups(['product:write'])]
     public ?array $specifications = null;
 
+    #[Groups(['product:write'])]
     public ?int $stockQuantity = null;
 
+    #[Groups(['product:write'])]
     public ?bool $subscription = null;
 
+    #[Groups(['product:write'])]
     public ?string $subscriptionPeriod = null;
 
+    #[Groups(['product:write'])]
     public ?int $supportPeriod = null;
 
     /**
      * taxCategory reference
-     * Can be: IRI string (e.g., "/api/taxcategorys/uuid") or nested TaxCategoryInput object
+     * Must be: IRI string (e.g., "/api/taxcategorys/uuid")
      */
-    public string|TaxCategoryInputDto|null $taxCategory = null;
+    #[Groups(['product:write'])]
+    public ?string $taxCategory = null;
 
+    #[Groups(['product:write'])]
     public ?string $unitOfMeasure = null;
 
+    #[Groups(['product:write'])]
     public ?int $warrantyPeriod = null;
 
+    #[Groups(['product:write'])]
     public ?float $weight = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -409,21 +470,21 @@ abstract class ProductInputDtoGenerated
         return $this;
     }
 
-    public function getBillingfrequency(): string|BillingFrequencyInputDto|null    {
+    public function getBillingfrequency(): ?string    {
         return $this->billingFrequency;
     }
 
-    public function setBillingfrequency(string|BillingFrequencyInputDto|null $billingFrequency): self
+    public function setBillingfrequency(?string $billingFrequency): self
     {
         $this->billingFrequency = $billingFrequency;
         return $this;
     }
 
-    public function getBrand(): string|BrandInputDto|null    {
+    public function getBrand(): ?string    {
         return $this->brand;
     }
 
-    public function setBrand(string|BrandInputDto|null $brand): self
+    public function setBrand(?string $brand): self
     {
         $this->brand = $brand;
         return $this;
@@ -439,11 +500,11 @@ abstract class ProductInputDtoGenerated
         return $this;
     }
 
-    public function getCategory(): string|ProductCategoryInputDto|null    {
+    public function getCategory(): ?string    {
         return $this->category;
     }
 
-    public function setCategory(string|ProductCategoryInputDto|null $category): self
+    public function setCategory(?string $category): self
     {
         $this->category = $category;
         return $this;
@@ -649,11 +710,11 @@ abstract class ProductInputDtoGenerated
         return $this;
     }
 
-    public function getProductline(): string|ProductLineInputDto|null    {
+    public function getProductline(): ?string    {
         return $this->productLine;
     }
 
-    public function setProductline(string|ProductLineInputDto|null $productLine): self
+    public function setProductline(?string $productLine): self
     {
         $this->productLine = $productLine;
         return $this;
@@ -849,11 +910,11 @@ abstract class ProductInputDtoGenerated
         return $this;
     }
 
-    public function getTaxcategory(): string|TaxCategoryInputDto|null    {
+    public function getTaxcategory(): ?string    {
         return $this->taxCategory;
     }
 
-    public function setTaxcategory(string|TaxCategoryInputDto|null $taxCategory): self
+    public function setTaxcategory(?string $taxCategory): self
     {
         $this->taxCategory = $taxCategory;
         return $this;

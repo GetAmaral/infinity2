@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\CalendarInputDto;
 use App\Dto\UserInputDto;
@@ -27,161 +28,219 @@ abstract class EventInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['event:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['event:write'])]
     public string $name;
 
+    #[Groups(['event:write'])]
     public \DateTimeImmutable $startTime;
 
+    #[Groups(['event:write'])]
     public ?string $description = null;
 
+    #[Groups(['event:write'])]
     public \DateTimeImmutable $endTime;
 
+    #[Groups(['event:write'])]
     public bool $allDay = false;
 
+    #[Groups(['event:write'])]
     public ?string $location = null;
 
+    #[Groups(['event:write'])]
     public ?string $meetingUrl = null;
 
     /**
      * calendar reference
-     * Can be: IRI string (e.g., "/api/calendars/uuid") or nested CalendarInput object
+     * Must be: IRI string (e.g., "/api/calendars/uuid")
      */
-    public string|CalendarInputDto|null $calendar = null;
+    #[Groups(['event:write'])]
+    public ?string $calendar = null;
 
     /**
      * organizer reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $organizer = null;
+    #[Groups(['event:write'])]
+    public ?string $organizer = null;
 
     /**
      * parentEvent reference
-     * Can be: IRI string (e.g., "/api/events/uuid") or nested EventInput object
+     * Must be: IRI string (e.g., "/api/events/uuid")
      */
-    public string|EventInputDto|null $parentEvent = null;
+    #[Groups(['event:write'])]
+    public ?string $parentEvent = null;
 
+    #[Groups(['event:write'])]
     public ?\DateTimeImmutable $originalStartTime = null;
 
+    #[Groups(['event:write'])]
     public ?int $sequence = null;
 
+    #[Groups(['event:write'])]
     public ?array $conferenceData = null;
 
+    #[Groups(['event:write'])]
     public ?array $extendedProperties = null;
 
+    #[Groups(['event:write'])]
     public ?array $source = null;
 
+    #[Groups(['event:write'])]
     public ?string $subject = null;
 
+    #[Groups(['event:write'])]
     public string $status = 'Planned';
 
+    #[Groups(['event:write'])]
     public string $showAs = 'Busy';
 
+    #[Groups(['event:write'])]
     public ?string $eventType = null;
 
+    #[Groups(['event:write'])]
     public string $importance = 'Normal';
 
+    #[Groups(['event:write'])]
     public string $sensitivity = 'Normal';
 
+    #[Groups(['event:write'])]
     public ?string $timezone = 'UTC';
 
+    #[Groups(['event:write'])]
     public ?string $startTimezone = null;
 
+    #[Groups(['event:write'])]
     public ?string $endTimezone = null;
 
+    #[Groups(['event:write'])]
     public ?int $duration = null;
 
+    #[Groups(['event:write'])]
     public ?string $locationDisplayName = null;
 
+    #[Groups(['event:write'])]
     public ?string $locationUrl = null;
 
+    #[Groups(['event:write'])]
     public ?array $locationCoordinates = null;
 
+    #[Groups(['event:write'])]
     public bool $onlineMeeting = false;
 
+    #[Groups(['event:write'])]
     public ?string $onlineMeetingProvider = null;
 
+    #[Groups(['event:write'])]
     public ?string $meetingId = null;
 
+    #[Groups(['event:write'])]
     public ?string $meetingPassword = null;
 
+    #[Groups(['event:write'])]
     public bool $recurring = false;
 
+    #[Groups(['event:write'])]
     public ?string $recurrenceRule = null;
 
+    #[Groups(['event:write'])]
     public ?array $recurrenceExceptions = null;
 
+    #[Groups(['event:write'])]
     public bool $cancelled = false;
 
+    #[Groups(['event:write'])]
     public bool $draft = false;
 
+    #[Groups(['event:write'])]
     public ?string $responseStatus = null;
 
+    #[Groups(['event:write'])]
     public bool $responseRequested = true;
 
+    #[Groups(['event:write'])]
     public bool $allowNewTimeProposals = true;
 
+    #[Groups(['event:write'])]
     public bool $hideAttendees = false;
 
+    #[Groups(['event:write'])]
     public bool $guestsCanModify = false;
 
+    #[Groups(['event:write'])]
     public bool $guestsCanInviteOthers = true;
 
+    #[Groups(['event:write'])]
     public bool $guestsCanSeeOtherGuests = true;
 
+    #[Groups(['event:write'])]
     public string $transparency = 'Opaque';
 
+    #[Groups(['event:write'])]
     public ?int $reminderMinutes = 15;
 
+    #[Groups(['event:write'])]
     public ?string $externalCalendarId = null;
 
+    #[Groups(['event:write'])]
     public ?string $externalCalendarProvider = null;
 
+    #[Groups(['event:write'])]
     public ?string $icalUid = null;
 
+    #[Groups(['event:write'])]
     public ?string $webLink = null;
 
+    #[Groups(['event:write'])]
     public ?string $htmlLink = null;
 
+    #[Groups(['event:write'])]
     public ?string $colorId = null;
 
+    #[Groups(['event:write'])]
     public bool $locked = false;
 
     /**
      * assignedTo reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $assignedTo = null;
+    #[Groups(['event:write'])]
+    public ?string $assignedTo = null;
 
     /**
      * contact reference
-     * Can be: IRI string (e.g., "/api/contacts/uuid") or nested ContactInput object
+     * Must be: IRI string (e.g., "/api/contacts/uuid")
      */
-    public string|ContactInputDto|null $contact = null;
+    #[Groups(['event:write'])]
+    public ?string $contact = null;
 
     /**
      * company reference
-     * Can be: IRI string (e.g., "/api/companys/uuid") or nested CompanyInput object
+     * Must be: IRI string (e.g., "/api/companys/uuid")
      */
-    public string|CompanyInputDto|null $company = null;
+    #[Groups(['event:write'])]
+    public ?string $company = null;
 
     /**
      * deal reference
-     * Can be: IRI string (e.g., "/api/deals/uuid") or nested DealInput object
+     * Must be: IRI string (e.g., "/api/deals/uuid")
      */
-    public string|DealInputDto|null $deal = null;
+    #[Groups(['event:write'])]
+    public ?string $deal = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -257,21 +316,21 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getCalendar(): string|CalendarInputDto|null    {
+    public function getCalendar(): ?string    {
         return $this->calendar;
     }
 
-    public function setCalendar(string|CalendarInputDto|null $calendar): self
+    public function setCalendar(?string $calendar): self
     {
         $this->calendar = $calendar;
         return $this;
     }
 
-    public function getOrganizer(): string|UserInputDto|null    {
+    public function getOrganizer(): ?string    {
         return $this->organizer;
     }
 
-    public function setOrganizer(string|UserInputDto|null $organizer): self
+    public function setOrganizer(?string $organizer): self
     {
         $this->organizer = $organizer;
         return $this;
@@ -327,11 +386,11 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getParentevent(): string|EventInputDto|null    {
+    public function getParentevent(): ?string    {
         return $this->parentEvent;
     }
 
-    public function setParentevent(string|EventInputDto|null $parentEvent): self
+    public function setParentevent(?string $parentEvent): self
     {
         $this->parentEvent = $parentEvent;
         return $this;
@@ -817,41 +876,41 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getAssignedto(): string|UserInputDto|null    {
+    public function getAssignedto(): ?string    {
         return $this->assignedTo;
     }
 
-    public function setAssignedto(string|UserInputDto|null $assignedTo): self
+    public function setAssignedto(?string $assignedTo): self
     {
         $this->assignedTo = $assignedTo;
         return $this;
     }
 
-    public function getContact(): string|ContactInputDto|null    {
+    public function getContact(): ?string    {
         return $this->contact;
     }
 
-    public function setContact(string|ContactInputDto|null $contact): self
+    public function setContact(?string $contact): self
     {
         $this->contact = $contact;
         return $this;
     }
 
-    public function getCompany(): string|CompanyInputDto|null    {
+    public function getCompany(): ?string    {
         return $this->company;
     }
 
-    public function setCompany(string|CompanyInputDto|null $company): self
+    public function setCompany(?string $company): self
     {
         $this->company = $company;
         return $this;
     }
 
-    public function getDeal(): string|DealInputDto|null    {
+    public function getDeal(): ?string    {
         return $this->deal;
     }
 
-    public function setDeal(string|DealInputDto|null $deal): self
+    public function setDeal(?string $deal): self
     {
         $this->deal = $deal;
         return $this;

@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\ProductInputDto;
 
@@ -22,78 +23,105 @@ abstract class ProductBatchInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['productbatch:write', 'productbatch:create'])]
+    public ?string $organization = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public string $batchNumber;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public string $name;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?\DateTimeImmutable $manufacturingDate = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $lotNumber = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $serialNumber = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public bool $expired = false;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $supplier = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $qualityStatus = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $notes = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?int $availableQuantity = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public bool $active = true;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $commissionAmount = null;
 
     #[Assert\Range(max: 100, min: 0)]
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $commissionRate = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $costPrice = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $currency = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $discountAmount = null;
 
     #[Assert\Range(max: 100, min: 0)]
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $discountPercentage = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?float $exchangeRate = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?\DateTimeImmutable $expirationDate = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $listPrice = null;
 
     #[Assert\Range(max: 100, min: 0)]
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $marginPercentage = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $maximumDiscount = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?string $minimumPrice = null;
 
     /**
      * product reference
-     * Can be: IRI string (e.g., "/api/products/uuid") or nested ProductInput object
+     * Must be: IRI string (e.g., "/api/products/uuid")
      */
-    public string|ProductInputDto|null $product = null;
+    #[Groups(['productbatch:write', 'productbatch:create'])]
+    public ?string $product = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?int $reservedQuantity = null;
 
+    #[Groups(['productbatch:write', 'productbatch:create'])]
     public ?int $stockQuantity = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -329,11 +357,11 @@ abstract class ProductBatchInputDtoGenerated
         return $this;
     }
 
-    public function getProduct(): string|ProductInputDto|null    {
+    public function getProduct(): ?string    {
         return $this->product;
     }
 
-    public function setProduct(string|ProductInputDto|null $product): self
+    public function setProduct(?string $product): self
     {
         $this->product = $product;
         return $this;

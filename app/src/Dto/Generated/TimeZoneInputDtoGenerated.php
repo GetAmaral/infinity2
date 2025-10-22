@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * TimeZone Input DTO (Generated Base Class)
@@ -18,8 +19,10 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 abstract class TimeZoneInputDtoGenerated
 {
+    #[Groups(['timezone:write'])]
     public string $name;
 
+    #[Groups(['timezone:write'])]
     public ?int $offsetMinutes = null;
 
 

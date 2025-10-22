@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Country Input DTO (Generated Base Class)
@@ -18,74 +19,109 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 abstract class CountryInputDtoGenerated
 {
+    #[Groups(['country:write'])]
     public string $iso2;
 
+    #[Groups(['country:write'])]
     public string $name;
 
+    #[Groups(['country:write'])]
     public string $iso3;
 
+    #[Groups(['country:write'])]
     public string $numericCode;
 
+    #[Groups(['country:write'])]
     public string $currencyCode;
 
+    #[Groups(['country:write'])]
     public string $phoneCode;
 
+    #[Groups(['country:write'])]
     public string $continent;
 
+    #[Groups(['country:write'])]
     public ?string $capital = null;
 
+    #[Groups(['country:write'])]
     public ?string $currencySymbol = null;
 
+    #[Groups(['country:write'])]
     public bool $euMember = false;
 
+    #[Groups(['country:write'])]
     public ?string $region = null;
 
+    #[Groups(['country:write'])]
     public ?string $nativeName = null;
 
+    #[Groups(['country:write'])]
     public ?string $officialName = null;
 
+    #[Groups(['country:write'])]
     public bool $active = true;
 
+    #[Groups(['country:write'])]
     public ?string $subregion = null;
 
+    #[Groups(['country:write'])]
     public ?string $latitude = null;
 
+    #[Groups(['country:write'])]
     public ?string $longitude = null;
 
+    #[Groups(['country:write'])]
     public ?array $timezones = null;
 
+    #[Groups(['country:write'])]
     public ?array $languages = null;
 
+    #[Groups(['country:write'])]
     public ?string $tld = null;
 
+    #[Groups(['country:write'])]
     public ?string $nationalityName = null;
 
+    #[Groups(['country:write'])]
     public bool $availableForShipping = true;
 
+    #[Groups(['country:write'])]
     public bool $availableForBilling = true;
 
+    #[Groups(['country:write'])]
     public bool $schengenMember = false;
 
+    #[Groups(['country:write'])]
     public bool $oecdMember = false;
 
+    #[Groups(['country:write'])]
     public bool $dataResidencyRequired = false;
 
+    #[Groups(['country:write'])]
     public ?string $postalCodeFormat = null;
 
+    #[Groups(['country:write'])]
     public bool $postalCodeRequired = true;
 
+    #[Groups(['country:write'])]
     public ?string $addressFormat = null;
 
+    #[Groups(['country:write'])]
     public bool $taxIdRequired = false;
 
+    #[Groups(['country:write'])]
     public ?int $population = null;
 
+    #[Groups(['country:write'])]
     public ?string $area = null;
 
+    #[Groups(['country:write'])]
     public ?int $unMemberSince = null;
 
+    #[Groups(['country:write'])]
     public ?string $flagEmoji = null;
 
+    #[Groups(['country:write'])]
     public ?string $flagSvgUrl = null;
 
 

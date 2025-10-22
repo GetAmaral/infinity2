@@ -7,9 +7,8 @@ resources:
     shortName: Deal
     description: "Sales opportunities and deals tracking"
 
-    input: App\Dto\DealInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\DealOutputDto
-    processor: App\State\DealProcessor
 
     normalizationContext:
       groups: ["deal:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_SALES_MANAGER')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\DealInputDto
+        processor: App\State\DealProcessor
         security: "is_granted('ROLE_SALES_MANAGER')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\DealInputDto
+        processor: App\State\DealProcessor
         security: "is_granted('ROLE_SALES_MANAGER')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\DealInputDto
+        processor: App\State\DealProcessor
         security: "is_granted('ROLE_SALES_MANAGER')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SALES_MANAGER')"

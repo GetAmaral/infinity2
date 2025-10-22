@@ -7,9 +7,8 @@ resources:
     shortName: EventCategory
     description: "Event categories for calendar organization"
 
-    input: App\Dto\EventCategoryInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\EventCategoryOutputDto
-    processor: App\State\EventCategoryProcessor
 
     normalizationContext:
       groups: ["eventcategory:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_EVENT_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\EventCategoryInputDto
+        processor: App\State\EventCategoryProcessor
         security: "is_granted('ROLE_EVENT_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\EventCategoryInputDto
+        processor: App\State\EventCategoryProcessor
         security: "is_granted('ROLE_EVENT_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\EventCategoryInputDto
+        processor: App\State\EventCategoryProcessor
         security: "is_granted('ROLE_EVENT_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_EVENT_ADMIN')"

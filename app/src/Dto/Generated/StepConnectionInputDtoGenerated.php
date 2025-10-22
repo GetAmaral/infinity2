@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\StepOutputInputDto;
 use App\Dto\StepInputInputDto;
 
@@ -22,36 +23,38 @@ abstract class StepConnectionInputDtoGenerated
 {
     /**
      * sourceOutput reference
-     * Can be: IRI string (e.g., "/api/stepoutputs/uuid") or nested StepOutputInput object
+     * Must be: IRI string (e.g., "/api/stepoutputs/uuid")
      */
     #[Assert\NotNull]
-    public string|StepOutputInputDto $sourceOutput;
+    #[Groups(['step_connection:write'])]
+    public ?string $sourceOutput = null;
 
     /**
      * targetInput reference
-     * Can be: IRI string (e.g., "/api/stepinputs/uuid") or nested StepInputInput object
+     * Must be: IRI string (e.g., "/api/stepinputs/uuid")
      */
     #[Assert\NotNull]
-    public string|StepInputInputDto $targetInput;
+    #[Groups(['step_connection:write'])]
+    public ?string $targetInput = null;
 
 
     // Getters and Setters
 
-    public function getSourceoutput(): string|StepOutputInputDto    {
+    public function getSourceoutput(): ?string    {
         return $this->sourceOutput;
     }
 
-    public function setSourceoutput(string|StepOutputInputDto $sourceOutput): self
+    public function setSourceoutput(?string $sourceOutput): self
     {
         $this->sourceOutput = $sourceOutput;
         return $this;
     }
 
-    public function getTargetinput(): string|StepInputInputDto    {
+    public function getTargetinput(): ?string    {
         return $this->targetInput;
     }
 
-    public function setTargetinput(string|StepInputInputDto $targetInput): self
+    public function setTargetinput(?string $targetInput): self
     {
         $this->targetInput = $targetInput;
         return $this;

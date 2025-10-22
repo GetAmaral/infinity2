@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 
@@ -22,238 +23,345 @@ abstract class UserInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['user:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['user:write'])]
     public string $name;
 
+    #[Groups(['user:write'])]
     public ?bool $active = null;
 
+    #[Groups(['user:write'])]
     public ?string $avatarUrl = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $birthDate = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['user:write'])]
     public ?string $celPhone = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['user:write'])]
     public string $email;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $emailVerifiedAt = null;
 
+    #[Groups(['user:write'])]
     public bool $verified = false;
 
+    #[Groups(['user:write'])]
     public bool $termsSigned = false;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $termsSignedAt = null;
 
+    #[Groups(['user:write'])]
     public ?string $verificationToken = null;
 
+    #[Groups(['user:write'])]
     public int $failedLoginAttempts = 0;
 
+    #[Groups(['user:write'])]
     public ?string $apiToken = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $apiTokenExpiresAt = null;
 
+    #[Groups(['user:write'])]
     public ?string $openAiApiKey = null;
 
+    #[Groups(['user:write'])]
     public ?int $gender = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $lastLoginAt = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $lockedUntil = null;
 
+    #[Groups(['user:write'])]
     public ?array $uiSettings = null;
 
+    #[Groups(['user:write'])]
     public ?array $listPreferences = null;
 
+    #[Groups(['user:write'])]
     public bool $twoFactorEnabled = false;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $lastPasswordChange = null;
 
+    #[Groups(['user:write'])]
     public ?string $twoFactorSecret = null;
 
+    #[Groups(['user:write'])]
     public ?array $twoFactorBackupCodes = null;
 
+    #[Groups(['user:write'])]
     public ?string $passwordResetToken = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $passwordResetExpiry = null;
 
+    #[Groups(['user:write'])]
     public ?string $sessionToken = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $lastPasswordChangeAt = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $passwordExpiresAt = null;
 
+    #[Groups(['user:write'])]
     public bool $mustChangePassword = false;
 
+    #[Groups(['user:write'])]
     public bool $passkeyEnabled = false;
 
+    #[Groups(['user:write'])]
     public ?array $passkeyCredentials = null;
 
+    #[Groups(['user:write'])]
     public ?string $username = null;
 
+    #[Groups(['user:write'])]
     public ?string $phone = null;
 
+    #[Groups(['user:write'])]
     public ?string $mobilePhone = null;
 
+    #[Groups(['user:write'])]
     public ?string $jobTitle = null;
 
+    #[Groups(['user:write'])]
     public ?string $department = null;
 
+    #[Groups(['user:write'])]
     public ?string $timezone = 'UTC';
 
+    #[Groups(['user:write'])]
     public ?string $locale = 'en';
 
+    #[Groups(['user:write'])]
     public ?string $preferredLanguage = null;
 
+    #[Groups(['user:write'])]
     public ?string $emailSignature = null;
 
+    #[Groups(['user:write'])]
     public bool $emailNotificationsEnabled = true;
 
+    #[Groups(['user:write'])]
     public bool $smsNotificationsEnabled = false;
 
+    #[Groups(['user:write'])]
     public bool $calendarSyncEnabled = false;
 
+    #[Groups(['user:write'])]
     public ?array $workingHours = null;
 
+    #[Groups(['user:write'])]
     public ?string $defaultCurrency = 'USD';
 
+    #[Groups(['user:write'])]
     public ?string $dateFormat = 'Y-m-d';
 
     /**
      * manager reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $manager = null;
+    #[Groups(['user:write'])]
+    public ?string $manager = null;
 
+    #[Groups(['user:write'])]
     public ?string $salesTeam = null;
 
+    #[Groups(['user:write'])]
     public ?string $quotaAmount = null;
 
+    #[Groups(['user:write'])]
     public ?string $commissionRate = null;
 
+    #[Groups(['user:write'])]
     public bool $agent = false;
 
+    #[Groups(['user:write'])]
     public ?string $agentType = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $deletedAt = null;
 
+    #[Groups(['user:write'])]
     public ?string $avatar = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['user:write'])]
     public string $password;
 
+    #[Groups(['user:write'])]
     public ?string $title = null;
 
+    #[Groups(['user:write'])]
     public ?string $firstName = null;
 
+    #[Groups(['user:write'])]
     public ?string $lastName = null;
 
+    #[Groups(['user:write'])]
     public ?string $middleName = null;
 
+    #[Groups(['user:write'])]
     public ?string $suffix = null;
 
+    #[Groups(['user:write'])]
     public ?string $nickname = null;
 
+    #[Groups(['user:write'])]
     public ?string $position = null;
 
+    #[Groups(['user:write'])]
     public ?string $secondaryEmail = null;
 
+    #[Groups(['user:write'])]
     public ?string $workPhone = null;
 
+    #[Groups(['user:write'])]
     public ?string $homePhone = null;
 
+    #[Groups(['user:write'])]
     public ?string $phoneExtension = null;
 
+    #[Groups(['user:write'])]
     public ?string $fax = null;
 
+    #[Groups(['user:write'])]
     public ?string $website = null;
 
+    #[Groups(['user:write'])]
     public ?string $linkedinUrl = null;
 
+    #[Groups(['user:write'])]
     public ?string $twitterHandle = null;
 
+    #[Groups(['user:write'])]
     public ?string $address = null;
 
+    #[Groups(['user:write'])]
     public ?string $profilePictureUrl = null;
 
+    #[Groups(['user:write'])]
     public ?string $city = null;
 
+    #[Groups(['user:write'])]
     public ?string $state = null;
 
+    #[Groups(['user:write'])]
     public ?string $postalCode = null;
 
+    #[Groups(['user:write'])]
     public ?string $country = null;
 
+    #[Groups(['user:write'])]
     public ?string $region = null;
 
+    #[Groups(['user:write'])]
     public ?string $officeLocation = null;
 
+    #[Groups(['user:write'])]
     public ?string $employeeId = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $hireDate = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $terminationDate = null;
 
+    #[Groups(['user:write'])]
     public ?string $employmentStatus = null;
 
+    #[Groups(['user:write'])]
     public ?string $costCenter = null;
 
+    #[Groups(['user:write'])]
     public ?string $division = null;
 
+    #[Groups(['user:write'])]
     public ?string $businessUnit = null;
 
+    #[Groups(['user:write'])]
     public ?string $salary = null;
 
+    #[Groups(['user:write'])]
     public ?string $salaryFrequency = null;
 
+    #[Groups(['user:write'])]
     public ?array $skills = null;
 
+    #[Groups(['user:write'])]
     public ?array $certifications = null;
 
+    #[Groups(['user:write'])]
     public ?array $languages = null;
 
+    #[Groups(['user:write'])]
     public ?string $bio = null;
 
+    #[Groups(['user:write'])]
     public ?string $notes = null;
 
+    #[Groups(['user:write'])]
     public ?array $tags = null;
 
+    #[Groups(['user:write'])]
     public int $loginCount = 0;
 
+    #[Groups(['user:write'])]
     public ?string $lastIpAddress = null;
 
+    #[Groups(['user:write'])]
     public ?string $lastUserAgent = null;
 
+    #[Groups(['user:write'])]
     public bool $visible = true;
 
+    #[Groups(['user:write'])]
     public int $profileCompleteness = 0;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $lastActivityAt = null;
 
+    #[Groups(['user:write'])]
     public ?string $status = null;
 
+    #[Groups(['user:write'])]
     public ?string $statusMessage = null;
 
+    #[Groups(['user:write'])]
     public bool $locked = false;
 
+    #[Groups(['user:write'])]
     public ?string $lockedReason = null;
 
+    #[Groups(['user:write'])]
     public ?\DateTimeImmutable $lockedAt = null;
 
+    #[Groups(['user:write'])]
     public ?array $customFields = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -889,11 +997,11 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getManager(): string|UserInputDto|null    {
+    public function getManager(): ?string    {
         return $this->manager;
     }
 
-    public function setManager(string|UserInputDto|null $manager): self
+    public function setManager(?string $manager): self
     {
         $this->manager = $manager;
         return $this;

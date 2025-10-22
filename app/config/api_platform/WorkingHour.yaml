@@ -7,9 +7,8 @@ resources:
     shortName: WorkingHour
     description: "Defines employee\/user working hours and availability schedules for calendar management and appointment booking"
 
-    input: App\Dto\WorkingHourInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\WorkingHourOutputDto
-    processor: App\State\WorkingHourProcessor
 
     normalizationContext:
       groups: ["workinghour:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_EVENT_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\WorkingHourInputDto
+        processor: App\State\WorkingHourProcessor
         security: "is_granted('ROLE_EVENT_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\WorkingHourInputDto
+        processor: App\State\WorkingHourProcessor
         security: "is_granted('ROLE_EVENT_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\WorkingHourInputDto
+        processor: App\State\WorkingHourProcessor
         security: "is_granted('ROLE_EVENT_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_EVENT_ADMIN')"

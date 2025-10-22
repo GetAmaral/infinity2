@@ -7,9 +7,8 @@ resources:
     shortName: Holiday
     description: "Company and regional holidays"
 
-    input: App\Dto\HolidayInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\HolidayOutputDto
-    processor: App\State\HolidayProcessor
 
     normalizationContext:
       groups: ["holiday:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\HolidayInputDto
+        processor: App\State\HolidayProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\HolidayInputDto
+        processor: App\State\HolidayProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\HolidayInputDto
+        processor: App\State\HolidayProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"

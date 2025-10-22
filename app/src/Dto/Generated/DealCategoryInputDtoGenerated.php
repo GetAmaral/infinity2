@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\DealCategoryInputDto;
 
@@ -22,41 +23,51 @@ abstract class DealCategoryInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['dealcategory:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['dealcategory:write'])]
     public string $name;
 
+    #[Groups(['dealcategory:write'])]
     public ?string $color = '#0dcaf0';
 
+    #[Groups(['dealcategory:write'])]
     public ?string $icon = null;
 
+    #[Groups(['dealcategory:write'])]
     public ?string $description = null;
 
+    #[Groups(['dealcategory:write'])]
     public bool $default = false;
 
+    #[Groups(['dealcategory:write'])]
     public ?int $displayOrder = 10;
 
     /**
      * parentCategory reference
-     * Can be: IRI string (e.g., "/api/dealcategorys/uuid") or nested DealCategoryInput object
+     * Must be: IRI string (e.g., "/api/dealcategorys/uuid")
      */
-    public string|DealCategoryInputDto|null $parentCategory = null;
+    #[Groups(['dealcategory:write'])]
+    public ?string $parentCategory = null;
 
+    #[Groups(['dealcategory:write'])]
     public bool $active = true;
 
+    #[Groups(['dealcategory:write'])]
     public ?string $group = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -122,11 +133,11 @@ abstract class DealCategoryInputDtoGenerated
         return $this;
     }
 
-    public function getParentcategory(): string|DealCategoryInputDto|null    {
+    public function getParentcategory(): ?string    {
         return $this->parentCategory;
     }
 
-    public function setParentcategory(string|DealCategoryInputDto|null $parentCategory): self
+    public function setParentcategory(?string $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
         return $this;

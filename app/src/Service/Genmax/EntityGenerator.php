@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Genmax;
 
 use App\Entity\Generator\GeneratorEntity;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Environment;
 use Psr\Log\LoggerInterface;
@@ -28,7 +27,7 @@ class EntityGenerator
         #[Autowire(param: 'genmax.templates')]
         private readonly array $templates,
         private readonly Environment $twig,
-        private readonly Filesystem $filesystem,
+        private readonly SmartFileWriter $fileWriter,
         private readonly LoggerInterface $logger
     ) {}
 
@@ -74,12 +73,6 @@ class EntityGenerator
         );
 
         try {
-            // Create directory if needed
-            $dir = dirname($filePath);
-            if (!is_dir($dir)) {
-                $this->filesystem->mkdir($dir, 0755);
-            }
-
             // Render from template
             $content = $this->twig->render($this->templates['entity_generated'], [
                 'entity' => $entity,
@@ -87,12 +80,13 @@ class EntityGenerator
                 'generated_namespace' => $this->paths['entity_generated_namespace'],
             ]);
 
-            // Write file atomically
-            $this->filesystem->dumpFile($filePath, $content);
+            // Write file with smart comparison
+            $status = $this->fileWriter->writeFile($filePath, $content);
 
             $this->logger->info('[GENMAX] Generated entity base class', [
                 'file' => $filePath,
-                'entity' => $entity->getEntityName()
+                'entity' => $entity->getEntityName(),
+                'status' => $status
             ]);
 
             return $filePath;
@@ -144,12 +138,13 @@ class EntityGenerator
                 'repository_namespace' => $this->paths['repository_namespace'],
             ]);
 
-            // Write file atomically
-            $this->filesystem->dumpFile($filePath, $content);
+            // Write file with smart comparison
+            $status = $this->fileWriter->writeFile($filePath, $content);
 
             $this->logger->info('[GENMAX] Generated entity extension class', [
                 'file' => $filePath,
-                'entity' => $entity->getEntityName()
+                'entity' => $entity->getEntityName(),
+                'status' => $status
             ]);
 
             return $filePath;

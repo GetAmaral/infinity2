@@ -45,7 +45,10 @@ class NotificationTypeProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(NotificationType::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('NotificationType not found');
@@ -56,48 +59,121 @@ class NotificationTypeProcessor implements ProcessorInterface
             $entity = new NotificationType();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setIcon($data->icon);
-        $entity->setActive($data->active);
-        $entity->setDefault($data->default);
-        $entity->setChannels($data->channels);
-        $entity->setPriority($data->priority);
-        $entity->setColor($data->color);
-        $entity->setEmailsubject($data->emailSubject);
-        $entity->setEmailtemplate($data->emailTemplate);
-        $entity->setSmstemplate($data->smsTemplate);
-        $entity->setPushtitle($data->pushTitle);
-        $entity->setPushbody($data->pushBody);
-        $entity->setFrequency($data->frequency);
-        $entity->setRetryenabled($data->retryEnabled);
-        $entity->setMaxretries($data->maxRetries);
-        $entity->setThrottleenabled($data->throttleEnabled);
-        $entity->setThrottlelimit($data->throttleLimit);
-        $entity->setTags($data->tags);
-        $entity->setMetadata($data->metadata);
-        $entity->setUserpreferenceallowed($data->userPreferenceAllowed);
-        $entity->setRequiresaction($data->requiresAction);
-        $entity->setExpiresafterhours($data->expiresAfterHours);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // icon
+        if (!$isPatch || array_key_exists('icon', $requestData)) {
+            $entity->setIcon($data->icon);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // default
+        if (!$isPatch || array_key_exists('default', $requestData)) {
+            $entity->setDefault($data->default);
+        }
+        // channels
+        if (!$isPatch || array_key_exists('channels', $requestData)) {
+            $entity->setChannels($data->channels);
+        }
+        // priority
+        if (!$isPatch || array_key_exists('priority', $requestData)) {
+            $entity->setPriority($data->priority);
+        }
+        // color
+        if (!$isPatch || array_key_exists('color', $requestData)) {
+            $entity->setColor($data->color);
+        }
+        // emailSubject
+        if (!$isPatch || array_key_exists('emailSubject', $requestData)) {
+            $entity->setEmailsubject($data->emailSubject);
+        }
+        // emailTemplate
+        if (!$isPatch || array_key_exists('emailTemplate', $requestData)) {
+            $entity->setEmailtemplate($data->emailTemplate);
+        }
+        // smsTemplate
+        if (!$isPatch || array_key_exists('smsTemplate', $requestData)) {
+            $entity->setSmstemplate($data->smsTemplate);
+        }
+        // pushTitle
+        if (!$isPatch || array_key_exists('pushTitle', $requestData)) {
+            $entity->setPushtitle($data->pushTitle);
+        }
+        // pushBody
+        if (!$isPatch || array_key_exists('pushBody', $requestData)) {
+            $entity->setPushbody($data->pushBody);
+        }
+        // frequency
+        if (!$isPatch || array_key_exists('frequency', $requestData)) {
+            $entity->setFrequency($data->frequency);
+        }
+        // retryEnabled
+        if (!$isPatch || array_key_exists('retryEnabled', $requestData)) {
+            $entity->setRetryenabled($data->retryEnabled);
+        }
+        // maxRetries
+        if (!$isPatch || array_key_exists('maxRetries', $requestData)) {
+            $entity->setMaxretries($data->maxRetries);
+        }
+        // throttleEnabled
+        if (!$isPatch || array_key_exists('throttleEnabled', $requestData)) {
+            $entity->setThrottleenabled($data->throttleEnabled);
+        }
+        // throttleLimit
+        if (!$isPatch || array_key_exists('throttleLimit', $requestData)) {
+            $entity->setThrottlelimit($data->throttleLimit);
+        }
+        // tags
+        if (!$isPatch || array_key_exists('tags', $requestData)) {
+            $entity->setTags($data->tags);
+        }
+        // metadata
+        if (!$isPatch || array_key_exists('metadata', $requestData)) {
+            $entity->setMetadata($data->metadata);
+        }
+        // userPreferenceAllowed
+        if (!$isPatch || array_key_exists('userPreferenceAllowed', $requestData)) {
+            $entity->setUserpreferenceallowed($data->userPreferenceAllowed);
+        }
+        // requiresAction
+        if (!$isPatch || array_key_exists('requiresAction', $requestData)) {
+            $entity->setRequiresaction($data->requiresAction);
+        }
+        // expiresAfterHours
+        if (!$isPatch || array_key_exists('expiresAfterHours', $requestData)) {
+            $entity->setExpiresafterhours($data->expiresAfterHours);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // Persist and flush
@@ -119,4 +195,49 @@ class NotificationTypeProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\UserInputDto;
 
 /**
@@ -20,57 +21,78 @@ use App\Dto\UserInputDto;
 abstract class CalendarExternalLinkInputDtoGenerated
 {
     #[Assert\Length(max: 100)]
+    #[Groups(['calendarexternallink:write'])]
     public string $name;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['calendarexternallink:write'])]
     public string $externalProvider;
 
+    #[Groups(['calendarexternallink:write'])]
     public bool $active = true;
 
+    #[Groups(['calendarexternallink:write'])]
     public ?string $externalId = null;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['calendarexternallink:write'])]
     public ?string $url = null;
 
+    #[Groups(['calendarexternallink:write'])]
     public ?string $accessToken = null;
 
+    #[Groups(['calendarexternallink:write'])]
     public ?string $refreshToken = null;
 
+    #[Groups(['calendarexternallink:write'])]
     public ?\DateTimeImmutable $tokenExpiresAt = null;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['calendarexternallink:write'])]
     public ?string $syncToken = null;
 
+    #[Groups(['calendarexternallink:write'])]
     public ?\DateTimeImmutable $lastSyncedAt = null;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['calendarexternallink:write'])]
     public ?string $webhookUrl = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['calendarexternallink:write'])]
     public ?string $webhookChannelId = null;
 
+    #[Groups(['calendarexternallink:write'])]
     public ?\DateTimeImmutable $webhookExpiresAt = null;
 
+    #[Groups(['calendarexternallink:write'])]
     public string $syncDirection = 'bidirectional';
 
+    #[Groups(['calendarexternallink:write'])]
     public ?string $lastErrorMessage = null;
 
+    #[Groups(['calendarexternallink:write'])]
     public ?\DateTimeImmutable $lastErrorAt = null;
 
+    #[Groups(['calendarexternallink:write'])]
     public int $syncIntervalMinutes = 15;
 
+    #[Groups(['calendarexternallink:write'])]
     public int $retryCount = 0;
 
+    #[Groups(['calendarexternallink:write'])]
     public ?array $scopes = null;
 
+    #[Groups(['calendarexternallink:write'])]
     public ?array $metadata = null;
 
     /**
      * user reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
     #[Assert\NotNull]
-    public string|UserInputDto $user;
+    #[Groups(['calendarexternallink:write'])]
+    public ?string $user = null;
 
 
     // Getters and Setters
@@ -285,11 +307,11 @@ abstract class CalendarExternalLinkInputDtoGenerated
         return $this;
     }
 
-    public function getUser(): string|UserInputDto    {
+    public function getUser(): ?string    {
         return $this->user;
     }
 
-    public function setUser(string|UserInputDto $user): self
+    public function setUser(?string $user): self
     {
         $this->user = $user;
         return $this;

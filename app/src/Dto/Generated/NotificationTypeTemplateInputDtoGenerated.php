@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * NotificationTypeTemplate Input DTO (Generated Base Class)
@@ -18,8 +19,10 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 abstract class NotificationTypeTemplateInputDtoGenerated
 {
+    #[Groups(['notificationtypetemplate:write'])]
     public string $name;
 
+    #[Groups(['notificationtypetemplate:write'])]
     public ?string $description = null;
 
 

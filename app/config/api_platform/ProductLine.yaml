@@ -7,9 +7,8 @@ resources:
     shortName: ProductLine
     description: "Product lines for business organization"
 
-    input: App\Dto\ProductLineInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\ProductLineOutputDto
-    processor: App\State\ProductLineProcessor
 
     normalizationContext:
       groups: ["productline:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\ProductLineInputDto
+        processor: App\State\ProductLineProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\ProductLineInputDto
+        processor: App\State\ProductLineProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\ProductLineInputDto
+        processor: App\State\ProductLineProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"

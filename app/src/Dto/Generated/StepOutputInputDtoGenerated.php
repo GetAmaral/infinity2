@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\StepInputDto;
 use App\Dto\StepConnectionInputDto;
 
@@ -22,35 +23,41 @@ abstract class StepOutputInputDtoGenerated
 {
     /**
      * step reference
-     * Can be: IRI string (e.g., "/api/steps/uuid") or nested StepInput object
+     * Must be: IRI string (e.g., "/api/steps/uuid")
      */
     #[Assert\NotNull]
-    public string|StepInputDto $step;
+    #[Groups(['step_output:write'])]
+    public ?string $step = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['step_output:write'])]
     public string $name;
 
+    #[Groups(['step_output:write'])]
     public ?string $description = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['step_output:write'])]
     public ?string $slug = null;
 
+    #[Groups(['step_output:write'])]
     public ?string $conditional = null;
 
     /**
      * connection reference
-     * Can be: IRI string (e.g., "/api/stepconnections/uuid") or nested StepConnectionInput object
+     * Must be: IRI string (e.g., "/api/stepconnections/uuid")
      */
-    public string|StepConnectionInputDto|null $connection = null;
+    #[Groups(['step_output:write'])]
+    public ?string $connection = null;
 
 
     // Getters and Setters
 
-    public function getStep(): string|StepInputDto    {
+    public function getStep(): ?string    {
         return $this->step;
     }
 
-    public function setStep(string|StepInputDto $step): self
+    public function setStep(?string $step): self
     {
         $this->step = $step;
         return $this;
@@ -96,11 +103,11 @@ abstract class StepOutputInputDtoGenerated
         return $this;
     }
 
-    public function getConnection(): string|StepConnectionInputDto|null    {
+    public function getConnection(): ?string    {
         return $this->connection;
     }
 
-    public function setConnection(string|StepConnectionInputDto|null $connection): self
+    public function setConnection(?string $connection): self
     {
         $this->connection = $connection;
         return $this;

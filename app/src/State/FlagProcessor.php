@@ -44,7 +44,10 @@ class FlagProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Flag::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Flag not found');
@@ -55,37 +58,77 @@ class FlagProcessor implements ProcessorInterface
             $entity = new Flag();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setCategory($data->category);
-        $entity->setDescription($data->description);
-        $entity->setColor($data->color);
-        $entity->setIcon($data->icon);
-        $entity->setEntitytype($data->entityType);
-        $entity->setEntityid($data->entityId);
-        $entity->setPriority($data->priority);
-        $entity->setDisplayorder($data->displayOrder);
-        $entity->setActive($data->active);
-        $entity->setSystem($data->system);
-        $entity->setDuedate($data->dueDate);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // category
+        if (!$isPatch || array_key_exists('category', $requestData)) {
+            $entity->setCategory($data->category);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // color
+        if (!$isPatch || array_key_exists('color', $requestData)) {
+            $entity->setColor($data->color);
+        }
+        // icon
+        if (!$isPatch || array_key_exists('icon', $requestData)) {
+            $entity->setIcon($data->icon);
+        }
+        // entityType
+        if (!$isPatch || array_key_exists('entityType', $requestData)) {
+            $entity->setEntitytype($data->entityType);
+        }
+        // entityId
+        if (!$isPatch || array_key_exists('entityId', $requestData)) {
+            $entity->setEntityid($data->entityId);
+        }
+        // priority
+        if (!$isPatch || array_key_exists('priority', $requestData)) {
+            $entity->setPriority($data->priority);
+        }
+        // displayOrder
+        if (!$isPatch || array_key_exists('displayOrder', $requestData)) {
+            $entity->setDisplayorder($data->displayOrder);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // system
+        if (!$isPatch || array_key_exists('system', $requestData)) {
+            $entity->setSystem($data->system);
+        }
+        // dueDate
+        if (!$isPatch || array_key_exists('dueDate', $requestData)) {
+            $entity->setDuedate($data->dueDate);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // Persist and flush
@@ -107,4 +150,49 @@ class FlagProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

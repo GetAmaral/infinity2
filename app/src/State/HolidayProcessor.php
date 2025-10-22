@@ -46,7 +46,10 @@ class HolidayProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Holiday::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Holiday not found');
@@ -57,73 +60,132 @@ class HolidayProcessor implements ProcessorInterface
             $entity = new Holiday();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setRecurring($data->recurring);
-        $entity->setBlocksscheduling($data->blocksScheduling);
-        $entity->setObserved($data->observed);
-        $entity->setActive($data->active);
-        $entity->setCountry($data->country);
-        $entity->setRegion($data->region);
-        $entity->setYear($data->year);
-        $entity->setHolidaytype($data->holidayType);
-        $entity->setOriginaldate($data->originalDate);
-        $entity->setAffectssla($data->affectsSLA);
-        $entity->setSentat($data->sentAt);
-        $entity->setWorkingday($data->workingDay);
-        $entity->setNotes($data->notes);
-        $entity->setStarttime($data->startTime);
-        $entity->setEndtime($data->endTime);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // recurring
+        if (!$isPatch || array_key_exists('recurring', $requestData)) {
+            $entity->setRecurring($data->recurring);
+        }
+        // blocksScheduling
+        if (!$isPatch || array_key_exists('blocksScheduling', $requestData)) {
+            $entity->setBlocksscheduling($data->blocksScheduling);
+        }
+        // observed
+        if (!$isPatch || array_key_exists('observed', $requestData)) {
+            $entity->setObserved($data->observed);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // country
+        if (!$isPatch || array_key_exists('country', $requestData)) {
+            $entity->setCountry($data->country);
+        }
+        // region
+        if (!$isPatch || array_key_exists('region', $requestData)) {
+            $entity->setRegion($data->region);
+        }
+        // year
+        if (!$isPatch || array_key_exists('year', $requestData)) {
+            $entity->setYear($data->year);
+        }
+        // holidayType
+        if (!$isPatch || array_key_exists('holidayType', $requestData)) {
+            $entity->setHolidaytype($data->holidayType);
+        }
+        // originalDate
+        if (!$isPatch || array_key_exists('originalDate', $requestData)) {
+            $entity->setOriginaldate($data->originalDate);
+        }
+        // affectsSLA
+        if (!$isPatch || array_key_exists('affectsSLA', $requestData)) {
+            $entity->setAffectssla($data->affectsSLA);
+        }
+        // sentAt
+        if (!$isPatch || array_key_exists('sentAt', $requestData)) {
+            $entity->setSentat($data->sentAt);
+        }
+        // workingDay
+        if (!$isPatch || array_key_exists('workingDay', $requestData)) {
+            $entity->setWorkingday($data->workingDay);
+        }
+        // notes
+        if (!$isPatch || array_key_exists('notes', $requestData)) {
+            $entity->setNotes($data->notes);
+        }
+        // startTime
+        if (!$isPatch || array_key_exists('startTime', $requestData)) {
+            $entity->setStarttime($data->startTime);
+        }
+        // endTime
+        if (!$isPatch || array_key_exists('endTime', $requestData)) {
+            $entity->setEndtime($data->endTime);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // calendar: ManyToOne
-        if ($data->calendar !== null) {
-            if (is_string($data->calendar)) {
-                // IRI format: "/api/calendars/{id}"
-                $calendarId = $this->extractIdFromIri($data->calendar);
-                $calendar = $this->entityManager->getRepository(Calendar::class)->find($calendarId);
-                if (!$calendar) {
-                    throw new BadRequestHttpException('Calendar not found: ' . $calendarId);
+        if (!$isPatch || array_key_exists('calendar', $requestData)) {
+            if ($data->calendar !== null) {
+                if (is_string($data->calendar)) {
+                    // IRI format: "/api/calendars/{id}"
+                    $calendarId = $this->extractIdFromIri($data->calendar);
+                    $calendar = $this->entityManager->getRepository(Calendar::class)->find($calendarId);
+                    if (!$calendar) {
+                        throw new BadRequestHttpException('Calendar not found: ' . $calendarId);
+                    }
+                    $entity->setCalendar($calendar);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested calendar creation not supported. Use IRI format.');
                 }
-                $entity->setCalendar($calendar);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested calendar creation not supported. Use IRI format.');
             }
         }
 
         // event: ManyToOne
-        if ($data->event !== null) {
-            if (is_string($data->event)) {
-                // IRI format: "/api/events/{id}"
-                $eventId = $this->extractIdFromIri($data->event);
-                $event = $this->entityManager->getRepository(Event::class)->find($eventId);
-                if (!$event) {
-                    throw new BadRequestHttpException('Event not found: ' . $eventId);
+        if (!$isPatch || array_key_exists('event', $requestData)) {
+            if ($data->event !== null) {
+                if (is_string($data->event)) {
+                    // IRI format: "/api/events/{id}"
+                    $eventId = $this->extractIdFromIri($data->event);
+                    $event = $this->entityManager->getRepository(Event::class)->find($eventId);
+                    if (!$event) {
+                        throw new BadRequestHttpException('Event not found: ' . $eventId);
+                    }
+                    $entity->setEvent($event);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested event creation not supported. Use IRI format.');
                 }
-                $entity->setEvent($event);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested event creation not supported. Use IRI format.');
             }
         }
 
@@ -146,4 +208,49 @@ class HolidayProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

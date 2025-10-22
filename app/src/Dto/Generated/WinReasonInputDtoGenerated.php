@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 
 /**
@@ -21,58 +22,74 @@ abstract class WinReasonInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['winreason:write'])]
+    public ?string $organization = null;
 
     #[Assert\NotBlank(message: 'Win reason name is required')]
     #[Assert\Length(max: 100)]
+    #[Groups(['winreason:write'])]
     public string $name;
 
     #[Assert\Length(max: 1000)]
+    #[Groups(['winreason:write'])]
     public ?string $description = null;
 
     #[Assert\NotBlank(message: 'Category is required')]
+    #[Groups(['winreason:write'])]
     public string $category;
 
+    #[Groups(['winreason:write'])]
     public int $sortOrder = 100;
 
     #[Assert\Range(min: 0, max: 100)]
+    #[Groups(['winreason:write'])]
     public ?string $impactScore = null;
 
+    #[Groups(['winreason:write'])]
     public int $usageCount = 0;
 
+    #[Groups(['winreason:write'])]
     public ?\DateTimeImmutable $lastUsedAt = null;
 
+    #[Groups(['winreason:write'])]
     public bool $competitorRelated = false;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['winreason:write'])]
     public ?string $primaryCompetitor = null;
 
     #[Assert\Choice(choices: ['HIGH', 'MEDIUM', 'LOW', 'NEUTRAL'])]
+    #[Groups(['winreason:write'])]
     public ?string $dealValueImpact = null;
 
     #[Assert\Regex(pattern: '^#[0-9A-Fa-f]{6}$')]
+    #[Groups(['winreason:write'])]
     public string $color = '#0dcaf0';
 
+    #[Groups(['winreason:write'])]
     public ?array $tags = null;
 
+    #[Groups(['winreason:write'])]
     public bool $active = true;
 
     #[Assert\Length(max: 2000)]
+    #[Groups(['winreason:write'])]
     public ?string $notes = null;
 
+    #[Groups(['winreason:write'])]
     public bool $requiresApproval = false;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;

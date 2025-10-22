@@ -46,7 +46,10 @@ class StudentLectureProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(StudentLecture::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('StudentLecture not found');
@@ -57,64 +60,91 @@ class StudentLectureProcessor implements ProcessorInterface
             $entity = new StudentLecture();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setWatchedseconds($data->watchedSeconds);
-        $entity->setLastpositionseconds($data->lastPositionSeconds);
-        $entity->setCompletionpercentage($data->completionPercentage);
-        $entity->setCompleted($data->completed);
-        $entity->setLastwatchedat($data->lastWatchedAt);
-        $entity->setCompletedat($data->completedAt);
+        // watchedSeconds
+        if (!$isPatch || array_key_exists('watchedSeconds', $requestData)) {
+            $entity->setWatchedseconds($data->watchedSeconds);
+        }
+        // lastPositionSeconds
+        if (!$isPatch || array_key_exists('lastPositionSeconds', $requestData)) {
+            $entity->setLastpositionseconds($data->lastPositionSeconds);
+        }
+        // completionPercentage
+        if (!$isPatch || array_key_exists('completionPercentage', $requestData)) {
+            $entity->setCompletionpercentage($data->completionPercentage);
+        }
+        // completed
+        if (!$isPatch || array_key_exists('completed', $requestData)) {
+            $entity->setCompleted($data->completed);
+        }
+        // lastWatchedAt
+        if (!$isPatch || array_key_exists('lastWatchedAt', $requestData)) {
+            $entity->setLastwatchedat($data->lastWatchedAt);
+        }
+        // completedAt
+        if (!$isPatch || array_key_exists('completedAt', $requestData)) {
+            $entity->setCompletedat($data->completedAt);
+        }
 
         // Map relationship properties
         // student: ManyToOne
-        if ($data->student !== null) {
-            if (is_string($data->student)) {
-                // IRI format: "/api/users/{id}"
-                $studentId = $this->extractIdFromIri($data->student);
-                $student = $this->entityManager->getRepository(User::class)->find($studentId);
-                if (!$student) {
-                    throw new BadRequestHttpException('User not found: ' . $studentId);
+        if (!$isPatch || array_key_exists('student', $requestData)) {
+            if ($data->student !== null) {
+                if (is_string($data->student)) {
+                    // IRI format: "/api/users/{id}"
+                    $studentId = $this->extractIdFromIri($data->student);
+                    $student = $this->entityManager->getRepository(User::class)->find($studentId);
+                    if (!$student) {
+                        throw new BadRequestHttpException('User not found: ' . $studentId);
+                    }
+                    $entity->setStudent($student);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested student creation not supported. Use IRI format.');
                 }
-                $entity->setStudent($student);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested student creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('student is required');
             }
-        } else {
-            throw new BadRequestHttpException('student is required');
         }
 
         // lecture: ManyToOne
-        if ($data->lecture !== null) {
-            if (is_string($data->lecture)) {
-                // IRI format: "/api/courselectures/{id}"
-                $lectureId = $this->extractIdFromIri($data->lecture);
-                $lecture = $this->entityManager->getRepository(CourseLecture::class)->find($lectureId);
-                if (!$lecture) {
-                    throw new BadRequestHttpException('CourseLecture not found: ' . $lectureId);
+        if (!$isPatch || array_key_exists('lecture', $requestData)) {
+            if ($data->lecture !== null) {
+                if (is_string($data->lecture)) {
+                    // IRI format: "/api/courselectures/{id}"
+                    $lectureId = $this->extractIdFromIri($data->lecture);
+                    $lecture = $this->entityManager->getRepository(CourseLecture::class)->find($lectureId);
+                    if (!$lecture) {
+                        throw new BadRequestHttpException('CourseLecture not found: ' . $lectureId);
+                    }
+                    $entity->setLecture($lecture);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested lecture creation not supported. Use IRI format.');
                 }
-                $entity->setLecture($lecture);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested lecture creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('lecture is required');
             }
-        } else {
-            throw new BadRequestHttpException('lecture is required');
         }
 
         // studentCourse: ManyToOne
-        if ($data->studentCourse !== null) {
-            if (is_string($data->studentCourse)) {
-                // IRI format: "/api/studentcourses/{id}"
-                $studentCourseId = $this->extractIdFromIri($data->studentCourse);
-                $studentCourse = $this->entityManager->getRepository(StudentCourse::class)->find($studentCourseId);
-                if (!$studentCourse) {
-                    throw new BadRequestHttpException('StudentCourse not found: ' . $studentCourseId);
+        if (!$isPatch || array_key_exists('studentCourse', $requestData)) {
+            if ($data->studentCourse !== null) {
+                if (is_string($data->studentCourse)) {
+                    // IRI format: "/api/studentcourses/{id}"
+                    $studentCourseId = $this->extractIdFromIri($data->studentCourse);
+                    $studentCourse = $this->entityManager->getRepository(StudentCourse::class)->find($studentCourseId);
+                    if (!$studentCourse) {
+                        throw new BadRequestHttpException('StudentCourse not found: ' . $studentCourseId);
+                    }
+                    $entity->setStudentcourse($studentCourse);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested studentCourse creation not supported. Use IRI format.');
                 }
-                $entity->setStudentcourse($studentCourse);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested studentCourse creation not supported. Use IRI format.');
             }
         }
 
@@ -137,4 +167,49 @@ class StudentLectureProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

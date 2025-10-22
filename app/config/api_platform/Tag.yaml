@@ -7,9 +7,8 @@ resources:
     shortName: Tag
     description: "Tags for flexible categorization across all entities"
 
-    input: App\Dto\TagInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\TagOutputDto
-    processor: App\State\TagProcessor
 
     normalizationContext:
       groups: ["tag:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_DATA_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\TagInputDto
+        processor: App\State\TagProcessor
         security: "is_granted('ROLE_DATA_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\TagInputDto
+        processor: App\State\TagProcessor
         security: "is_granted('ROLE_DATA_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\TagInputDto
+        processor: App\State\TagProcessor
         security: "is_granted('ROLE_DATA_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_DATA_ADMIN')"

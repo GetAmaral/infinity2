@@ -7,9 +7,8 @@ resources:
     shortName: WinReason
     description: "Tracks reasons for won deals to analyze success patterns and competitive positioning"
 
-    input: App\Dto\WinReasonInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\WinReasonOutputDto
-    processor: App\State\WinReasonProcessor
 
     normalizationContext:
       groups: ["winreason:read"]
@@ -29,10 +28,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\WinReasonInputDto
+        processor: App\State\WinReasonProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\WinReasonInputDto
+        processor: App\State\WinReasonProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\WinReasonInputDto
+        processor: App\State\WinReasonProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"

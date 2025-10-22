@@ -45,7 +45,10 @@ class ProductBatchProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(ProductBatch::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('ProductBatch not found');
@@ -56,65 +59,146 @@ class ProductBatchProcessor implements ProcessorInterface
             $entity = new ProductBatch();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setBatchnumber($data->batchNumber);
-        $entity->setName($data->name);
-        $entity->setManufacturingdate($data->manufacturingDate);
-        $entity->setLotnumber($data->lotNumber);
-        $entity->setSerialnumber($data->serialNumber);
-        $entity->setExpired($data->expired);
-        $entity->setSupplier($data->supplier);
-        $entity->setQualitystatus($data->qualityStatus);
-        $entity->setNotes($data->notes);
-        $entity->setAvailablequantity($data->availableQuantity);
-        $entity->setActive($data->active);
-        $entity->setCommissionamount($data->commissionAmount);
-        $entity->setCommissionrate($data->commissionRate);
-        $entity->setCostprice($data->costPrice);
-        $entity->setCurrency($data->currency);
-        $entity->setDiscountamount($data->discountAmount);
-        $entity->setDiscountpercentage($data->discountPercentage);
-        $entity->setExchangerate($data->exchangeRate);
-        $entity->setExpirationdate($data->expirationDate);
-        $entity->setListprice($data->listPrice);
-        $entity->setMarginpercentage($data->marginPercentage);
-        $entity->setMaximumdiscount($data->maximumDiscount);
-        $entity->setMinimumprice($data->minimumPrice);
-        $entity->setReservedquantity($data->reservedQuantity);
-        $entity->setStockquantity($data->stockQuantity);
+        // batchNumber
+        if (!$isPatch || array_key_exists('batchNumber', $requestData)) {
+            $entity->setBatchnumber($data->batchNumber);
+        }
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // manufacturingDate
+        if (!$isPatch || array_key_exists('manufacturingDate', $requestData)) {
+            $entity->setManufacturingdate($data->manufacturingDate);
+        }
+        // lotNumber
+        if (!$isPatch || array_key_exists('lotNumber', $requestData)) {
+            $entity->setLotnumber($data->lotNumber);
+        }
+        // serialNumber
+        if (!$isPatch || array_key_exists('serialNumber', $requestData)) {
+            $entity->setSerialnumber($data->serialNumber);
+        }
+        // expired
+        if (!$isPatch || array_key_exists('expired', $requestData)) {
+            $entity->setExpired($data->expired);
+        }
+        // supplier
+        if (!$isPatch || array_key_exists('supplier', $requestData)) {
+            $entity->setSupplier($data->supplier);
+        }
+        // qualityStatus
+        if (!$isPatch || array_key_exists('qualityStatus', $requestData)) {
+            $entity->setQualitystatus($data->qualityStatus);
+        }
+        // notes
+        if (!$isPatch || array_key_exists('notes', $requestData)) {
+            $entity->setNotes($data->notes);
+        }
+        // availableQuantity
+        if (!$isPatch || array_key_exists('availableQuantity', $requestData)) {
+            $entity->setAvailablequantity($data->availableQuantity);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // commissionAmount
+        if (!$isPatch || array_key_exists('commissionAmount', $requestData)) {
+            $entity->setCommissionamount($data->commissionAmount);
+        }
+        // commissionRate
+        if (!$isPatch || array_key_exists('commissionRate', $requestData)) {
+            $entity->setCommissionrate($data->commissionRate);
+        }
+        // costPrice
+        if (!$isPatch || array_key_exists('costPrice', $requestData)) {
+            $entity->setCostprice($data->costPrice);
+        }
+        // currency
+        if (!$isPatch || array_key_exists('currency', $requestData)) {
+            $entity->setCurrency($data->currency);
+        }
+        // discountAmount
+        if (!$isPatch || array_key_exists('discountAmount', $requestData)) {
+            $entity->setDiscountamount($data->discountAmount);
+        }
+        // discountPercentage
+        if (!$isPatch || array_key_exists('discountPercentage', $requestData)) {
+            $entity->setDiscountpercentage($data->discountPercentage);
+        }
+        // exchangeRate
+        if (!$isPatch || array_key_exists('exchangeRate', $requestData)) {
+            $entity->setExchangerate($data->exchangeRate);
+        }
+        // expirationDate
+        if (!$isPatch || array_key_exists('expirationDate', $requestData)) {
+            $entity->setExpirationdate($data->expirationDate);
+        }
+        // listPrice
+        if (!$isPatch || array_key_exists('listPrice', $requestData)) {
+            $entity->setListprice($data->listPrice);
+        }
+        // marginPercentage
+        if (!$isPatch || array_key_exists('marginPercentage', $requestData)) {
+            $entity->setMarginpercentage($data->marginPercentage);
+        }
+        // maximumDiscount
+        if (!$isPatch || array_key_exists('maximumDiscount', $requestData)) {
+            $entity->setMaximumdiscount($data->maximumDiscount);
+        }
+        // minimumPrice
+        if (!$isPatch || array_key_exists('minimumPrice', $requestData)) {
+            $entity->setMinimumprice($data->minimumPrice);
+        }
+        // reservedQuantity
+        if (!$isPatch || array_key_exists('reservedQuantity', $requestData)) {
+            $entity->setReservedquantity($data->reservedQuantity);
+        }
+        // stockQuantity
+        if (!$isPatch || array_key_exists('stockQuantity', $requestData)) {
+            $entity->setStockquantity($data->stockQuantity);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // product: ManyToOne
-        if ($data->product !== null) {
-            if (is_string($data->product)) {
-                // IRI format: "/api/products/{id}"
-                $productId = $this->extractIdFromIri($data->product);
-                $product = $this->entityManager->getRepository(Product::class)->find($productId);
-                if (!$product) {
-                    throw new BadRequestHttpException('Product not found: ' . $productId);
+        if (!$isPatch || array_key_exists('product', $requestData)) {
+            if ($data->product !== null) {
+                if (is_string($data->product)) {
+                    // IRI format: "/api/products/{id}"
+                    $productId = $this->extractIdFromIri($data->product);
+                    $product = $this->entityManager->getRepository(Product::class)->find($productId);
+                    if (!$product) {
+                        throw new BadRequestHttpException('Product not found: ' . $productId);
+                    }
+                    $entity->setProduct($product);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested product creation not supported. Use IRI format.');
                 }
-                $entity->setProduct($product);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested product creation not supported. Use IRI format.');
             }
         }
 
@@ -137,4 +221,49 @@ class ProductBatchProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

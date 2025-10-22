@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 
 /**
@@ -21,63 +22,86 @@ abstract class CompetitorInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['competitor:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['competitor:write'])]
     public string $name;
 
+    #[Groups(['competitor:write'])]
     public ?string $description = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $industry = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $targetMarket = null;
 
+    #[Groups(['competitor:write'])]
     public ?int $foundedYear = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $website = null;
 
+    #[Groups(['competitor:write'])]
     public bool $active = true;
 
+    #[Groups(['competitor:write'])]
     public ?string $marketPosition = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $strengths = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $products = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $weaknesses = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $revenue = null;
 
+    #[Groups(['competitor:write'])]
     public ?int $employeeCount = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $winRate = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $lossRate = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $pricingModel = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $headquarters = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $opportunities = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $threats = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $notes = null;
 
+    #[Groups(['competitor:write'])]
     public ?\DateTimeImmutable $lastAnalyzedAt = null;
 
+    #[Groups(['competitor:write'])]
     public ?string $keyDifferentiators = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;

@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * CommunicationMethod Input DTO (Generated Base Class)
@@ -18,10 +19,13 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 abstract class CommunicationMethodInputDtoGenerated
 {
+    #[Groups(['communicationmethod:write'])]
     public string $name;
 
+    #[Groups(['communicationmethod:write'])]
     public ?string $function = null;
 
+    #[Groups(['communicationmethod:write'])]
     public ?string $property = null;
 
 

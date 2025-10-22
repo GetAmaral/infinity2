@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\PipelineTemplateInputDto;
 
@@ -22,50 +23,64 @@ abstract class PipelineStageTemplateInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['pipelinestagetemplate:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public string $name;
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public ?string $description = null;
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public string $probability = '0';
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public int $order = 0;
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public bool $active;
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public ?string $color = '#0dcaf0';
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public ?int $rottingDays = null;
 
     /**
      * pipelineTemplate reference
-     * Can be: IRI string (e.g., "/api/pipelinetemplates/uuid") or nested PipelineTemplateInput object
+     * Must be: IRI string (e.g., "/api/pipelinetemplates/uuid")
      */
     #[Assert\NotNull]
-    public string|PipelineTemplateInputDto $pipelineTemplate;
+    #[Groups(['pipelinestagetemplate:write'])]
+    public ?string $pipelineTemplate = null;
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public bool $final;
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public string $stageType;
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public ?array $automationRules = null;
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public ?array $requiredFields = null;
 
+    #[Groups(['pipelinestagetemplate:write'])]
     public ?string $icon = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -141,11 +156,11 @@ abstract class PipelineStageTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getPipelinetemplate(): string|PipelineTemplateInputDto    {
+    public function getPipelinetemplate(): ?string    {
         return $this->pipelineTemplate;
     }
 
-    public function setPipelinetemplate(string|PipelineTemplateInputDto $pipelineTemplate): self
+    public function setPipelinetemplate(?string $pipelineTemplate): self
     {
         $this->pipelineTemplate = $pipelineTemplate;
         return $this;

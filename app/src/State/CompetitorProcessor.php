@@ -45,7 +45,10 @@ class CompetitorProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Competitor::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Competitor not found');
@@ -56,47 +59,117 @@ class CompetitorProcessor implements ProcessorInterface
             $entity = new Competitor();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setIndustry($data->industry);
-        $entity->setTargetmarket($data->targetMarket);
-        $entity->setFoundedyear($data->foundedYear);
-        $entity->setWebsite($data->website);
-        $entity->setActive($data->active);
-        $entity->setMarketposition($data->marketPosition);
-        $entity->setStrengths($data->strengths);
-        $entity->setProducts($data->products);
-        $entity->setWeaknesses($data->weaknesses);
-        $entity->setRevenue($data->revenue);
-        $entity->setEmployeecount($data->employeeCount);
-        $entity->setWinrate($data->winRate);
-        $entity->setLossrate($data->lossRate);
-        $entity->setPricingmodel($data->pricingModel);
-        $entity->setHeadquarters($data->headquarters);
-        $entity->setOpportunities($data->opportunities);
-        $entity->setThreats($data->threats);
-        $entity->setNotes($data->notes);
-        $entity->setLastanalyzedat($data->lastAnalyzedAt);
-        $entity->setKeydifferentiators($data->keyDifferentiators);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // industry
+        if (!$isPatch || array_key_exists('industry', $requestData)) {
+            $entity->setIndustry($data->industry);
+        }
+        // targetMarket
+        if (!$isPatch || array_key_exists('targetMarket', $requestData)) {
+            $entity->setTargetmarket($data->targetMarket);
+        }
+        // foundedYear
+        if (!$isPatch || array_key_exists('foundedYear', $requestData)) {
+            $entity->setFoundedyear($data->foundedYear);
+        }
+        // website
+        if (!$isPatch || array_key_exists('website', $requestData)) {
+            $entity->setWebsite($data->website);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // marketPosition
+        if (!$isPatch || array_key_exists('marketPosition', $requestData)) {
+            $entity->setMarketposition($data->marketPosition);
+        }
+        // strengths
+        if (!$isPatch || array_key_exists('strengths', $requestData)) {
+            $entity->setStrengths($data->strengths);
+        }
+        // products
+        if (!$isPatch || array_key_exists('products', $requestData)) {
+            $entity->setProducts($data->products);
+        }
+        // weaknesses
+        if (!$isPatch || array_key_exists('weaknesses', $requestData)) {
+            $entity->setWeaknesses($data->weaknesses);
+        }
+        // revenue
+        if (!$isPatch || array_key_exists('revenue', $requestData)) {
+            $entity->setRevenue($data->revenue);
+        }
+        // employeeCount
+        if (!$isPatch || array_key_exists('employeeCount', $requestData)) {
+            $entity->setEmployeecount($data->employeeCount);
+        }
+        // winRate
+        if (!$isPatch || array_key_exists('winRate', $requestData)) {
+            $entity->setWinrate($data->winRate);
+        }
+        // lossRate
+        if (!$isPatch || array_key_exists('lossRate', $requestData)) {
+            $entity->setLossrate($data->lossRate);
+        }
+        // pricingModel
+        if (!$isPatch || array_key_exists('pricingModel', $requestData)) {
+            $entity->setPricingmodel($data->pricingModel);
+        }
+        // headquarters
+        if (!$isPatch || array_key_exists('headquarters', $requestData)) {
+            $entity->setHeadquarters($data->headquarters);
+        }
+        // opportunities
+        if (!$isPatch || array_key_exists('opportunities', $requestData)) {
+            $entity->setOpportunities($data->opportunities);
+        }
+        // threats
+        if (!$isPatch || array_key_exists('threats', $requestData)) {
+            $entity->setThreats($data->threats);
+        }
+        // notes
+        if (!$isPatch || array_key_exists('notes', $requestData)) {
+            $entity->setNotes($data->notes);
+        }
+        // lastAnalyzedAt
+        if (!$isPatch || array_key_exists('lastAnalyzedAt', $requestData)) {
+            $entity->setLastanalyzedat($data->lastAnalyzedAt);
+        }
+        // keyDifferentiators
+        if (!$isPatch || array_key_exists('keyDifferentiators', $requestData)) {
+            $entity->setKeydifferentiators($data->keyDifferentiators);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // Persist and flush
@@ -118,4 +191,49 @@ class CompetitorProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

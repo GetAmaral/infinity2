@@ -45,7 +45,10 @@ class HolidayTemplateProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(HolidayTemplate::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('HolidayTemplate not found');
@@ -56,43 +59,65 @@ class HolidayTemplateProcessor implements ProcessorInterface
             $entity = new HolidayTemplate();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setBlocksscheduling($data->blocksScheduling);
-        $entity->setRecurrencefrequency($data->recurrenceFrequency);
-        $entity->setRecurrenceinterval($data->recurrenceInterval);
-        $entity->setSentat($data->sentAt);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // blocksScheduling
+        if (!$isPatch || array_key_exists('blocksScheduling', $requestData)) {
+            $entity->setBlocksscheduling($data->blocksScheduling);
+        }
+        // recurrenceFrequency
+        if (!$isPatch || array_key_exists('recurrenceFrequency', $requestData)) {
+            $entity->setRecurrencefrequency($data->recurrenceFrequency);
+        }
+        // recurrenceInterval
+        if (!$isPatch || array_key_exists('recurrenceInterval', $requestData)) {
+            $entity->setRecurrenceinterval($data->recurrenceInterval);
+        }
+        // sentAt
+        if (!$isPatch || array_key_exists('sentAt', $requestData)) {
+            $entity->setSentat($data->sentAt);
+        }
 
         // Map relationship properties
         // city: ManyToOne
-        if ($data->city !== null) {
-            if (is_string($data->city)) {
-                // IRI format: "/api/citys/{id}"
-                $cityId = $this->extractIdFromIri($data->city);
-                $city = $this->entityManager->getRepository(City::class)->find($cityId);
-                if (!$city) {
-                    throw new BadRequestHttpException('City not found: ' . $cityId);
+        if (!$isPatch || array_key_exists('city', $requestData)) {
+            if ($data->city !== null) {
+                if (is_string($data->city)) {
+                    // IRI format: "/api/citys/{id}"
+                    $cityId = $this->extractIdFromIri($data->city);
+                    $city = $this->entityManager->getRepository(City::class)->find($cityId);
+                    if (!$city) {
+                        throw new BadRequestHttpException('City not found: ' . $cityId);
+                    }
+                    $entity->setCity($city);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested city creation not supported. Use IRI format.');
                 }
-                $entity->setCity($city);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested city creation not supported. Use IRI format.');
             }
         }
 
         // country: ManyToOne
-        if ($data->country !== null) {
-            if (is_string($data->country)) {
-                // IRI format: "/api/countrys/{id}"
-                $countryId = $this->extractIdFromIri($data->country);
-                $country = $this->entityManager->getRepository(Country::class)->find($countryId);
-                if (!$country) {
-                    throw new BadRequestHttpException('Country not found: ' . $countryId);
+        if (!$isPatch || array_key_exists('country', $requestData)) {
+            if ($data->country !== null) {
+                if (is_string($data->country)) {
+                    // IRI format: "/api/countrys/{id}"
+                    $countryId = $this->extractIdFromIri($data->country);
+                    $country = $this->entityManager->getRepository(Country::class)->find($countryId);
+                    if (!$country) {
+                        throw new BadRequestHttpException('Country not found: ' . $countryId);
+                    }
+                    $entity->setCountry($country);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested country creation not supported. Use IRI format.');
                 }
-                $entity->setCountry($country);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested country creation not supported. Use IRI format.');
             }
         }
 
@@ -115,4 +140,49 @@ class HolidayTemplateProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

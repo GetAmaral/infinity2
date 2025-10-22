@@ -50,7 +50,10 @@ class CalendarProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Calendar::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Calendar not found');
@@ -61,89 +64,150 @@ class CalendarProcessor implements ProcessorInterface
             $entity = new Calendar();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setTimezone($data->timeZone);
-        $entity->setColor($data->color);
-        $entity->setPrimary($data->primary);
-        $entity->setVisible($data->visible);
-        $entity->setAccessrole($data->accessRole);
-        $entity->setExternalapikey($data->externalApiKey);
-        $entity->setDefault($data->default);
-        $entity->setActive($data->active);
-        $entity->setPublic($data->public);
-        $entity->setIcon($data->icon);
-        $entity->setSortorder($data->sortOrder);
-        $entity->setExternalid($data->externalId);
-        $entity->setLastsyncedat($data->lastSyncedAt);
-        $entity->setPermissions($data->permissions);
-        $entity->setSettings($data->settings);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // timeZone
+        if (!$isPatch || array_key_exists('timeZone', $requestData)) {
+            $entity->setTimezone($data->timeZone);
+        }
+        // color
+        if (!$isPatch || array_key_exists('color', $requestData)) {
+            $entity->setColor($data->color);
+        }
+        // primary
+        if (!$isPatch || array_key_exists('primary', $requestData)) {
+            $entity->setPrimary($data->primary);
+        }
+        // visible
+        if (!$isPatch || array_key_exists('visible', $requestData)) {
+            $entity->setVisible($data->visible);
+        }
+        // accessRole
+        if (!$isPatch || array_key_exists('accessRole', $requestData)) {
+            $entity->setAccessrole($data->accessRole);
+        }
+        // externalApiKey
+        if (!$isPatch || array_key_exists('externalApiKey', $requestData)) {
+            $entity->setExternalapikey($data->externalApiKey);
+        }
+        // default
+        if (!$isPatch || array_key_exists('default', $requestData)) {
+            $entity->setDefault($data->default);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // public
+        if (!$isPatch || array_key_exists('public', $requestData)) {
+            $entity->setPublic($data->public);
+        }
+        // icon
+        if (!$isPatch || array_key_exists('icon', $requestData)) {
+            $entity->setIcon($data->icon);
+        }
+        // sortOrder
+        if (!$isPatch || array_key_exists('sortOrder', $requestData)) {
+            $entity->setSortorder($data->sortOrder);
+        }
+        // externalId
+        if (!$isPatch || array_key_exists('externalId', $requestData)) {
+            $entity->setExternalid($data->externalId);
+        }
+        // lastSyncedAt
+        if (!$isPatch || array_key_exists('lastSyncedAt', $requestData)) {
+            $entity->setLastsyncedat($data->lastSyncedAt);
+        }
+        // permissions
+        if (!$isPatch || array_key_exists('permissions', $requestData)) {
+            $entity->setPermissions($data->permissions);
+        }
+        // settings
+        if (!$isPatch || array_key_exists('settings', $requestData)) {
+            $entity->setSettings($data->settings);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // user: ManyToOne
-        if ($data->user !== null) {
-            if (is_string($data->user)) {
-                // IRI format: "/api/users/{id}"
-                $userId = $this->extractIdFromIri($data->user);
-                $user = $this->entityManager->getRepository(User::class)->find($userId);
-                if (!$user) {
-                    throw new BadRequestHttpException('User not found: ' . $userId);
+        if (!$isPatch || array_key_exists('user', $requestData)) {
+            if ($data->user !== null) {
+                if (is_string($data->user)) {
+                    // IRI format: "/api/users/{id}"
+                    $userId = $this->extractIdFromIri($data->user);
+                    $user = $this->entityManager->getRepository(User::class)->find($userId);
+                    if (!$user) {
+                        throw new BadRequestHttpException('User not found: ' . $userId);
+                    }
+                    $entity->setUser($user);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
                 }
-                $entity->setUser($user);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
             }
         }
 
         // calendarType: ManyToOne
-        if ($data->calendarType !== null) {
-            if (is_string($data->calendarType)) {
-                // IRI format: "/api/calendartypes/{id}"
-                $calendarTypeId = $this->extractIdFromIri($data->calendarType);
-                $calendarType = $this->entityManager->getRepository(CalendarType::class)->find($calendarTypeId);
-                if (!$calendarType) {
-                    throw new BadRequestHttpException('CalendarType not found: ' . $calendarTypeId);
+        if (!$isPatch || array_key_exists('calendarType', $requestData)) {
+            if ($data->calendarType !== null) {
+                if (is_string($data->calendarType)) {
+                    // IRI format: "/api/calendartypes/{id}"
+                    $calendarTypeId = $this->extractIdFromIri($data->calendarType);
+                    $calendarType = $this->entityManager->getRepository(CalendarType::class)->find($calendarTypeId);
+                    if (!$calendarType) {
+                        throw new BadRequestHttpException('CalendarType not found: ' . $calendarTypeId);
+                    }
+                    $entity->setCalendartype($calendarType);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested calendarType creation not supported. Use IRI format.');
                 }
-                $entity->setCalendartype($calendarType);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested calendarType creation not supported. Use IRI format.');
             }
         }
 
         // externalLink: ManyToOne
-        if ($data->externalLink !== null) {
-            if (is_string($data->externalLink)) {
-                // IRI format: "/api/calendarexternallinks/{id}"
-                $externalLinkId = $this->extractIdFromIri($data->externalLink);
-                $externalLink = $this->entityManager->getRepository(CalendarExternalLink::class)->find($externalLinkId);
-                if (!$externalLink) {
-                    throw new BadRequestHttpException('CalendarExternalLink not found: ' . $externalLinkId);
+        if (!$isPatch || array_key_exists('externalLink', $requestData)) {
+            if ($data->externalLink !== null) {
+                if (is_string($data->externalLink)) {
+                    // IRI format: "/api/calendarexternallinks/{id}"
+                    $externalLinkId = $this->extractIdFromIri($data->externalLink);
+                    $externalLink = $this->entityManager->getRepository(CalendarExternalLink::class)->find($externalLinkId);
+                    if (!$externalLink) {
+                        throw new BadRequestHttpException('CalendarExternalLink not found: ' . $externalLinkId);
+                    }
+                    $entity->setExternallink($externalLink);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested externalLink creation not supported. Use IRI format.');
                 }
-                $entity->setExternallink($externalLink);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested externalLink creation not supported. Use IRI format.');
             }
         }
 
@@ -166,4 +230,49 @@ class CalendarProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

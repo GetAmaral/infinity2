@@ -7,9 +7,8 @@ resources:
     shortName: CourseModule
     description: "Course modules for structured learning paths"
 
-    input: App\Dto\CourseModuleInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\CourseModuleOutputDto
-    processor: App\State\CourseModuleProcessor
 
     normalizationContext:
       groups: ["course_module:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_INSTRUCTOR')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\CourseModuleInputDto
+        processor: App\State\CourseModuleProcessor
         security: "is_granted('ROLE_INSTRUCTOR')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\CourseModuleInputDto
+        processor: App\State\CourseModuleProcessor
         security: "is_granted('ROLE_INSTRUCTOR')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\CourseModuleInputDto
+        processor: App\State\CourseModuleProcessor
         security: "is_granted('ROLE_INSTRUCTOR')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_INSTRUCTOR')"

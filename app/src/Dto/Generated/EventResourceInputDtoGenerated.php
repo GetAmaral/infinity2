@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\CityInputDto;
 use App\Dto\EventResourceTypeInputDto;
@@ -23,74 +24,98 @@ abstract class EventResourceInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['eventresource:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['eventresource:write'])]
     public string $name;
 
+    #[Groups(['eventresource:write'])]
     public ?string $description = null;
 
+    #[Groups(['eventresource:write'])]
     public ?array $availabilitySchedule = null;
 
+    #[Groups(['eventresource:write'])]
     public bool $available = true;
 
+    #[Groups(['eventresource:write'])]
     public bool $active = true;
 
+    #[Groups(['eventresource:write'])]
     public bool $bookable = true;
 
+    #[Groups(['eventresource:write'])]
     public ?string $timezone = null;
 
+    #[Groups(['eventresource:write'])]
     public bool $requiresApproval = false;
 
+    #[Groups(['eventresource:write'])]
     public bool $autoConfirm = true;
 
+    #[Groups(['eventresource:write'])]
     public ?int $minimumBookingDuration = 30;
 
+    #[Groups(['eventresource:write'])]
     public ?int $maximumBookingDuration = null;
 
+    #[Groups(['eventresource:write'])]
     public ?string $pricePerHour = null;
 
+    #[Groups(['eventresource:write'])]
     public ?array $bookingRules = null;
 
+    #[Groups(['eventresource:write'])]
     public ?string $pricePerDay = null;
 
+    #[Groups(['eventresource:write'])]
     public ?string $imageUrl = null;
 
+    #[Groups(['eventresource:write'])]
     public ?string $thumbnailUrl = null;
 
+    #[Groups(['eventresource:write'])]
     public ?array $tags = null;
 
+    #[Groups(['eventresource:write'])]
     public ?int $capacity = null;
 
     /**
      * city reference
-     * Can be: IRI string (e.g., "/api/citys/uuid") or nested CityInput object
+     * Must be: IRI string (e.g., "/api/citys/uuid")
      */
-    public string|CityInputDto|null $city = null;
+    #[Groups(['eventresource:write'])]
+    public ?string $city = null;
 
+    #[Groups(['eventresource:write'])]
     public ?array $equipment = null;
 
+    #[Groups(['eventresource:write'])]
     public ?string $geoCoordinates = null;
 
+    #[Groups(['eventresource:write'])]
     public ?string $location = null;
 
     /**
      * type reference
-     * Can be: IRI string (e.g., "/api/eventresourcetypes/uuid") or nested EventResourceTypeInput object
+     * Must be: IRI string (e.g., "/api/eventresourcetypes/uuid")
      */
     #[Assert\NotNull]
-    public string|EventResourceTypeInputDto $type;
+    #[Groups(['eventresource:write'])]
+    public ?string $type = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -276,11 +301,11 @@ abstract class EventResourceInputDtoGenerated
         return $this;
     }
 
-    public function getCity(): string|CityInputDto|null    {
+    public function getCity(): ?string    {
         return $this->city;
     }
 
-    public function setCity(string|CityInputDto|null $city): self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
         return $this;
@@ -326,11 +351,11 @@ abstract class EventResourceInputDtoGenerated
         return $this;
     }
 
-    public function getType(): string|EventResourceTypeInputDto    {
+    public function getType(): ?string    {
         return $this->type;
     }
 
-    public function setType(string|EventResourceTypeInputDto $type): self
+    public function setType(?string $type): self
     {
         $this->type = $type;
         return $this;

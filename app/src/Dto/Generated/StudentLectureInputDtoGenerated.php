@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\UserInputDto;
 use App\Dto\CourseLectureInputDto;
 use App\Dto\StudentCourseInputDto;
@@ -23,65 +24,74 @@ abstract class StudentLectureInputDtoGenerated
 {
     /**
      * student reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
     #[Assert\NotNull]
-    public string|UserInputDto $student;
+    #[Groups(['student_lecture:write'])]
+    public ?string $student = null;
 
     /**
      * lecture reference
-     * Can be: IRI string (e.g., "/api/courselectures/uuid") or nested CourseLectureInput object
+     * Must be: IRI string (e.g., "/api/courselectures/uuid")
      */
     #[Assert\NotNull]
-    public string|CourseLectureInputDto $lecture;
+    #[Groups(['student_lecture:write'])]
+    public ?string $lecture = null;
 
     /**
      * studentCourse reference
-     * Can be: IRI string (e.g., "/api/studentcourses/uuid") or nested StudentCourseInput object
+     * Must be: IRI string (e.g., "/api/studentcourses/uuid")
      */
-    public string|StudentCourseInputDto|null $studentCourse = null;
+    #[Groups(['student_lecture:write'])]
+    public ?string $studentCourse = null;
 
+    #[Groups(['student_lecture:write'])]
     public int $watchedSeconds = 0;
 
+    #[Groups(['student_lecture:write'])]
     public int $lastPositionSeconds = 0;
 
     #[Assert\Range(max: 100, min: 0)]
+    #[Groups(['student_lecture:write'])]
     public string $completionPercentage = '0';
 
+    #[Groups(['student_lecture:write'])]
     public bool $completed = false;
 
+    #[Groups(['student_lecture:write'])]
     public ?\DateTimeImmutable $lastWatchedAt = null;
 
+    #[Groups(['student_lecture:write'])]
     public ?\DateTimeImmutable $completedAt = null;
 
 
     // Getters and Setters
 
-    public function getStudent(): string|UserInputDto    {
+    public function getStudent(): ?string    {
         return $this->student;
     }
 
-    public function setStudent(string|UserInputDto $student): self
+    public function setStudent(?string $student): self
     {
         $this->student = $student;
         return $this;
     }
 
-    public function getLecture(): string|CourseLectureInputDto    {
+    public function getLecture(): ?string    {
         return $this->lecture;
     }
 
-    public function setLecture(string|CourseLectureInputDto $lecture): self
+    public function setLecture(?string $lecture): self
     {
         $this->lecture = $lecture;
         return $this;
     }
 
-    public function getStudentcourse(): string|StudentCourseInputDto|null    {
+    public function getStudentcourse(): ?string    {
         return $this->studentCourse;
     }
 
-    public function setStudentcourse(string|StudentCourseInputDto|null $studentCourse): self
+    public function setStudentcourse(?string $studentCourse): self
     {
         $this->studentCourse = $studentCourse;
         return $this;

@@ -45,7 +45,10 @@ class CalendarExternalLinkProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(CalendarExternalLink::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('CalendarExternalLink not found');
@@ -56,45 +59,110 @@ class CalendarExternalLinkProcessor implements ProcessorInterface
             $entity = new CalendarExternalLink();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setExternalprovider($data->externalProvider);
-        $entity->setActive($data->active);
-        $entity->setExternalid($data->externalId);
-        $entity->setUrl($data->url);
-        $entity->setAccesstoken($data->accessToken);
-        $entity->setRefreshtoken($data->refreshToken);
-        $entity->setTokenexpiresat($data->tokenExpiresAt);
-        $entity->setSynctoken($data->syncToken);
-        $entity->setLastsyncedat($data->lastSyncedAt);
-        $entity->setWebhookurl($data->webhookUrl);
-        $entity->setWebhookchannelid($data->webhookChannelId);
-        $entity->setWebhookexpiresat($data->webhookExpiresAt);
-        $entity->setSyncdirection($data->syncDirection);
-        $entity->setLasterrormessage($data->lastErrorMessage);
-        $entity->setLasterrorat($data->lastErrorAt);
-        $entity->setSyncintervalminutes($data->syncIntervalMinutes);
-        $entity->setRetrycount($data->retryCount);
-        $entity->setScopes($data->scopes);
-        $entity->setMetadata($data->metadata);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // externalProvider
+        if (!$isPatch || array_key_exists('externalProvider', $requestData)) {
+            $entity->setExternalprovider($data->externalProvider);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // externalId
+        if (!$isPatch || array_key_exists('externalId', $requestData)) {
+            $entity->setExternalid($data->externalId);
+        }
+        // url
+        if (!$isPatch || array_key_exists('url', $requestData)) {
+            $entity->setUrl($data->url);
+        }
+        // accessToken
+        if (!$isPatch || array_key_exists('accessToken', $requestData)) {
+            $entity->setAccesstoken($data->accessToken);
+        }
+        // refreshToken
+        if (!$isPatch || array_key_exists('refreshToken', $requestData)) {
+            $entity->setRefreshtoken($data->refreshToken);
+        }
+        // tokenExpiresAt
+        if (!$isPatch || array_key_exists('tokenExpiresAt', $requestData)) {
+            $entity->setTokenexpiresat($data->tokenExpiresAt);
+        }
+        // syncToken
+        if (!$isPatch || array_key_exists('syncToken', $requestData)) {
+            $entity->setSynctoken($data->syncToken);
+        }
+        // lastSyncedAt
+        if (!$isPatch || array_key_exists('lastSyncedAt', $requestData)) {
+            $entity->setLastsyncedat($data->lastSyncedAt);
+        }
+        // webhookUrl
+        if (!$isPatch || array_key_exists('webhookUrl', $requestData)) {
+            $entity->setWebhookurl($data->webhookUrl);
+        }
+        // webhookChannelId
+        if (!$isPatch || array_key_exists('webhookChannelId', $requestData)) {
+            $entity->setWebhookchannelid($data->webhookChannelId);
+        }
+        // webhookExpiresAt
+        if (!$isPatch || array_key_exists('webhookExpiresAt', $requestData)) {
+            $entity->setWebhookexpiresat($data->webhookExpiresAt);
+        }
+        // syncDirection
+        if (!$isPatch || array_key_exists('syncDirection', $requestData)) {
+            $entity->setSyncdirection($data->syncDirection);
+        }
+        // lastErrorMessage
+        if (!$isPatch || array_key_exists('lastErrorMessage', $requestData)) {
+            $entity->setLasterrormessage($data->lastErrorMessage);
+        }
+        // lastErrorAt
+        if (!$isPatch || array_key_exists('lastErrorAt', $requestData)) {
+            $entity->setLasterrorat($data->lastErrorAt);
+        }
+        // syncIntervalMinutes
+        if (!$isPatch || array_key_exists('syncIntervalMinutes', $requestData)) {
+            $entity->setSyncintervalminutes($data->syncIntervalMinutes);
+        }
+        // retryCount
+        if (!$isPatch || array_key_exists('retryCount', $requestData)) {
+            $entity->setRetrycount($data->retryCount);
+        }
+        // scopes
+        if (!$isPatch || array_key_exists('scopes', $requestData)) {
+            $entity->setScopes($data->scopes);
+        }
+        // metadata
+        if (!$isPatch || array_key_exists('metadata', $requestData)) {
+            $entity->setMetadata($data->metadata);
+        }
 
         // Map relationship properties
         // user: ManyToOne
-        if ($data->user !== null) {
-            if (is_string($data->user)) {
-                // IRI format: "/api/users/{id}"
-                $userId = $this->extractIdFromIri($data->user);
-                $user = $this->entityManager->getRepository(User::class)->find($userId);
-                if (!$user) {
-                    throw new BadRequestHttpException('User not found: ' . $userId);
+        if (!$isPatch || array_key_exists('user', $requestData)) {
+            if ($data->user !== null) {
+                if (is_string($data->user)) {
+                    // IRI format: "/api/users/{id}"
+                    $userId = $this->extractIdFromIri($data->user);
+                    $user = $this->entityManager->getRepository(User::class)->find($userId);
+                    if (!$user) {
+                        throw new BadRequestHttpException('User not found: ' . $userId);
+                    }
+                    $entity->setUser($user);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
                 }
-                $entity->setUser($user);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('user is required');
             }
-        } else {
-            throw new BadRequestHttpException('user is required');
         }
 
         // Persist and flush
@@ -116,4 +184,49 @@ class CalendarExternalLinkProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

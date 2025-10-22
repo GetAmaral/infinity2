@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\CourseInputDto;
@@ -24,54 +25,65 @@ abstract class StudentCourseInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['student_course:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['student_course:write'])]
     public \DateTimeImmutable $enrolledAt;
 
+    #[Groups(['student_course:write'])]
     public ?\DateTimeImmutable $startDate = null;
 
+    #[Groups(['student_course:write'])]
     public ?\DateTimeImmutable $lastDate = null;
 
+    #[Groups(['student_course:write'])]
     public float $progressSeconds = 0;
 
     #[Assert\Range(max: 100, min: 0)]
+    #[Groups(['student_course:write'])]
     public string $progressPercentage = '0';
 
+    #[Groups(['student_course:write'])]
     public ?\DateTimeImmutable $completedAt = null;
 
     /**
      * student reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
     #[Assert\NotNull]
-    public string|UserInputDto $student;
+    #[Groups(['student_course:write'])]
+    public ?string $student = null;
 
     /**
      * course reference
-     * Can be: IRI string (e.g., "/api/courses/uuid") or nested CourseInput object
+     * Must be: IRI string (e.g., "/api/courses/uuid")
      */
     #[Assert\NotNull]
-    public string|CourseInputDto $course;
+    #[Groups(['student_course:write'])]
+    public ?string $course = null;
 
     /**
      * currentLecture reference
-     * Can be: IRI string (e.g., "/api/courselectures/uuid") or nested CourseLectureInput object
+     * Must be: IRI string (e.g., "/api/courselectures/uuid")
      */
-    public string|CourseLectureInputDto|null $currentLecture = null;
+    #[Groups(['student_course:write'])]
+    public ?string $currentLecture = null;
 
+    #[Groups(['student_course:write'])]
     public bool $active = true;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -137,31 +149,31 @@ abstract class StudentCourseInputDtoGenerated
         return $this;
     }
 
-    public function getStudent(): string|UserInputDto    {
+    public function getStudent(): ?string    {
         return $this->student;
     }
 
-    public function setStudent(string|UserInputDto $student): self
+    public function setStudent(?string $student): self
     {
         $this->student = $student;
         return $this;
     }
 
-    public function getCourse(): string|CourseInputDto    {
+    public function getCourse(): ?string    {
         return $this->course;
     }
 
-    public function setCourse(string|CourseInputDto $course): self
+    public function setCourse(?string $course): self
     {
         $this->course = $course;
         return $this;
     }
 
-    public function getCurrentlecture(): string|CourseLectureInputDto|null    {
+    public function getCurrentlecture(): ?string    {
         return $this->currentLecture;
     }
 
-    public function setCurrentlecture(string|CourseLectureInputDto|null $currentLecture): self
+    public function setCurrentlecture(?string $currentLecture): self
     {
         $this->currentLecture = $currentLecture;
         return $this;

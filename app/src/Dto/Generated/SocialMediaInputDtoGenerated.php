@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\CompanyInputDto;
 use App\Dto\ContactInputDto;
@@ -25,49 +26,57 @@ abstract class SocialMediaInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['socialmedia:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['socialmedia:write'])]
     public string $name;
 
+    #[Groups(['socialmedia:write'])]
     public ?string $apiKey = null;
 
     /**
      * company reference
-     * Can be: IRI string (e.g., "/api/companys/uuid") or nested CompanyInput object
+     * Must be: IRI string (e.g., "/api/companys/uuid")
      */
-    public string|CompanyInputDto|null $company = null;
+    #[Groups(['socialmedia:write'])]
+    public ?string $company = null;
 
     /**
      * contact reference
-     * Can be: IRI string (e.g., "/api/contacts/uuid") or nested ContactInput object
+     * Must be: IRI string (e.g., "/api/contacts/uuid")
      */
-    public string|ContactInputDto|null $contact = null;
+    #[Groups(['socialmedia:write'])]
+    public ?string $contact = null;
 
     /**
      * socialMediaType reference
-     * Can be: IRI string (e.g., "/api/socialmediatypes/uuid") or nested SocialMediaTypeInput object
+     * Must be: IRI string (e.g., "/api/socialmediatypes/uuid")
      */
-    public string|SocialMediaTypeInputDto|null $socialMediaType = null;
+    #[Groups(['socialmedia:write'])]
+    public ?string $socialMediaType = null;
 
+    #[Groups(['socialmedia:write'])]
     public ?string $url = null;
 
     /**
      * user reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $user = null;
+    #[Groups(['socialmedia:write'])]
+    public ?string $user = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -103,31 +112,31 @@ abstract class SocialMediaInputDtoGenerated
         return $this;
     }
 
-    public function getCompany(): string|CompanyInputDto|null    {
+    public function getCompany(): ?string    {
         return $this->company;
     }
 
-    public function setCompany(string|CompanyInputDto|null $company): self
+    public function setCompany(?string $company): self
     {
         $this->company = $company;
         return $this;
     }
 
-    public function getContact(): string|ContactInputDto|null    {
+    public function getContact(): ?string    {
         return $this->contact;
     }
 
-    public function setContact(string|ContactInputDto|null $contact): self
+    public function setContact(?string $contact): self
     {
         $this->contact = $contact;
         return $this;
     }
 
-    public function getSocialmediatype(): string|SocialMediaTypeInputDto|null    {
+    public function getSocialmediatype(): ?string    {
         return $this->socialMediaType;
     }
 
-    public function setSocialmediatype(string|SocialMediaTypeInputDto|null $socialMediaType): self
+    public function setSocialmediatype(?string $socialMediaType): self
     {
         $this->socialMediaType = $socialMediaType;
         return $this;
@@ -143,11 +152,11 @@ abstract class SocialMediaInputDtoGenerated
         return $this;
     }
 
-    public function getUser(): string|UserInputDto|null    {
+    public function getUser(): ?string    {
         return $this->user;
     }
 
-    public function setUser(string|UserInputDto|null $user): self
+    public function setUser(?string $user): self
     {
         $this->user = $user;
         return $this;

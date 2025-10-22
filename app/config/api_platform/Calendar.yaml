@@ -7,9 +7,8 @@ resources:
     shortName: Calendar
     description: "Calendars for organizing events and meetings"
 
-    input: App\Dto\CalendarInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\CalendarOutputDto
-    processor: App\State\CalendarProcessor
 
     normalizationContext:
       groups: ["calendar:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_EVENT_MANAGER')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\CalendarInputDto
+        processor: App\State\CalendarProcessor
         security: "is_granted('ROLE_EVENT_MANAGER')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\CalendarInputDto
+        processor: App\State\CalendarProcessor
         security: "is_granted('ROLE_EVENT_MANAGER')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\CalendarInputDto
+        processor: App\State\CalendarProcessor
         security: "is_granted('ROLE_EVENT_MANAGER')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_EVENT_MANAGER')"

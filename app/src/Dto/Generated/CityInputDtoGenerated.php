@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\CountryInputDto;
 
@@ -22,43 +23,54 @@ abstract class CityInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['city:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['city:write'])]
     public string $name;
 
+    #[Groups(['city:write'])]
     public ?string $state = null;
 
     /**
      * country reference
-     * Can be: IRI string (e.g., "/api/countrys/uuid") or nested CountryInput object
+     * Must be: IRI string (e.g., "/api/countrys/uuid")
      */
-    public string|CountryInputDto|null $country = null;
+    #[Groups(['city:write'])]
+    public ?string $country = null;
 
+    #[Groups(['city:write'])]
     public ?float $latitude = null;
 
+    #[Groups(['city:write'])]
     public ?float $longitude = null;
 
+    #[Groups(['city:write'])]
     public ?string $timezone = null;
 
+    #[Groups(['city:write'])]
     public ?int $population = null;
 
+    #[Groups(['city:write'])]
     public bool $capital;
 
+    #[Groups(['city:write'])]
     public ?string $ibgeCode = null;
 
+    #[Groups(['city:write'])]
     public bool $active;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -84,11 +96,11 @@ abstract class CityInputDtoGenerated
         return $this;
     }
 
-    public function getCountry(): string|CountryInputDto|null    {
+    public function getCountry(): ?string    {
         return $this->country;
     }
 
-    public function setCountry(string|CountryInputDto|null $country): self
+    public function setCountry(?string $country): self
     {
         $this->country = $country;
         return $this;

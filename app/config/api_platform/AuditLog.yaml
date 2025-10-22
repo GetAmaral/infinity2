@@ -7,9 +7,8 @@ resources:
     shortName: AuditLog
     description: "Audit log for tracking all system changes and user actions"
 
-    input: App\Dto\AuditLogInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\AuditLogOutputDto
-    processor: App\State\AuditLogProcessor
 
     normalizationContext:
       groups: ["audit:read"]

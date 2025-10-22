@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\ProductCategoryInputDto;
 
@@ -22,29 +23,33 @@ abstract class ProductCategoryInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['productcategory:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['productcategory:write'])]
     public string $name;
 
+    #[Groups(['productcategory:write'])]
     public ?string $description = null;
 
     /**
      * parentCategory reference
-     * Can be: IRI string (e.g., "/api/productcategorys/uuid") or nested ProductCategoryInput object
+     * Must be: IRI string (e.g., "/api/productcategorys/uuid")
      */
-    public string|ProductCategoryInputDto|null $parentCategory = null;
+    #[Groups(['productcategory:write'])]
+    public ?string $parentCategory = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -70,11 +75,11 @@ abstract class ProductCategoryInputDtoGenerated
         return $this;
     }
 
-    public function getParentcategory(): string|ProductCategoryInputDto|null    {
+    public function getParentcategory(): ?string    {
         return $this->parentCategory;
     }
 
-    public function setParentcategory(string|ProductCategoryInputDto|null $parentCategory): self
+    public function setParentcategory(?string $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
         return $this;

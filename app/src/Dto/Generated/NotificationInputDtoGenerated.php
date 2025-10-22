@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\EventAttendeeInputDto;
@@ -28,89 +29,107 @@ abstract class NotificationInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['notification:write'])]
+    public ?string $organization = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['notification:write'])]
     public string $title;
 
     /**
      * recipient reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
     #[Assert\NotNull]
-    public string|UserInputDto $recipient;
+    #[Groups(['notification:write'])]
+    public ?string $recipient = null;
 
     /**
      * sender reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $sender = null;
+    #[Groups(['notification:write'])]
+    public ?string $sender = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['notification:write'])]
     public string $priority;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['notification:write'])]
     public ?string $actionUrl = null;
 
     /**
      * attendee reference
-     * Can be: IRI string (e.g., "/api/eventattendees/uuid") or nested EventAttendeeInput object
+     * Must be: IRI string (e.g., "/api/eventattendees/uuid")
      */
-    public string|EventAttendeeInputDto|null $attendee = null;
+    #[Groups(['notification:write'])]
+    public ?string $attendee = null;
 
+    #[Groups(['notification:write'])]
     public bool $read;
 
+    #[Groups(['notification:write'])]
     public bool $archived;
 
+    #[Groups(['notification:write'])]
     public ?\DateTimeImmutable $readAt = null;
 
     /**
      * communicationMethod reference
-     * Can be: IRI string (e.g., "/api/communicationmethods/uuid") or nested CommunicationMethodInput object
+     * Must be: IRI string (e.g., "/api/communicationmethods/uuid")
      */
-    public string|CommunicationMethodInputDto|null $communicationMethod = null;
+    #[Groups(['notification:write'])]
+    public ?string $communicationMethod = null;
 
     /**
      * event reference
-     * Can be: IRI string (e.g., "/api/events/uuid") or nested EventInput object
+     * Must be: IRI string (e.g., "/api/events/uuid")
      */
-    public string|EventInputDto|null $event = null;
+    #[Groups(['notification:write'])]
+    public ?string $event = null;
 
+    #[Groups(['notification:write'])]
     public ?string $message = null;
 
+    #[Groups(['notification:write'])]
     public ?int $notificationStatus = null;
 
     /**
      * reminder reference
-     * Can be: IRI string (e.g., "/api/reminders/uuid") or nested ReminderInput object
+     * Must be: IRI string (e.g., "/api/reminders/uuid")
      */
-    public string|ReminderInputDto|null $reminder = null;
+    #[Groups(['notification:write'])]
+    public ?string $reminder = null;
 
+    #[Groups(['notification:write'])]
     public ?\DateTimeImmutable $sentAt = null;
 
     /**
      * talkMessage reference
-     * Can be: IRI string (e.g., "/api/talkmessages/uuid") or nested TalkMessageInput object
+     * Must be: IRI string (e.g., "/api/talkmessages/uuid")
      */
-    public string|TalkMessageInputDto|null $talkMessage = null;
+    #[Groups(['notification:write'])]
+    public ?string $talkMessage = null;
 
     /**
      * type reference
-     * Can be: IRI string (e.g., "/api/notificationtypes/uuid") or nested NotificationTypeInput object
+     * Must be: IRI string (e.g., "/api/notificationtypes/uuid")
      */
-    public string|NotificationTypeInputDto|null $type = null;
+    #[Groups(['notification:write'])]
+    public ?string $type = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -126,21 +145,21 @@ abstract class NotificationInputDtoGenerated
         return $this;
     }
 
-    public function getRecipient(): string|UserInputDto    {
+    public function getRecipient(): ?string    {
         return $this->recipient;
     }
 
-    public function setRecipient(string|UserInputDto $recipient): self
+    public function setRecipient(?string $recipient): self
     {
         $this->recipient = $recipient;
         return $this;
     }
 
-    public function getSender(): string|UserInputDto|null    {
+    public function getSender(): ?string    {
         return $this->sender;
     }
 
-    public function setSender(string|UserInputDto|null $sender): self
+    public function setSender(?string $sender): self
     {
         $this->sender = $sender;
         return $this;
@@ -166,11 +185,11 @@ abstract class NotificationInputDtoGenerated
         return $this;
     }
 
-    public function getAttendee(): string|EventAttendeeInputDto|null    {
+    public function getAttendee(): ?string    {
         return $this->attendee;
     }
 
-    public function setAttendee(string|EventAttendeeInputDto|null $attendee): self
+    public function setAttendee(?string $attendee): self
     {
         $this->attendee = $attendee;
         return $this;
@@ -206,21 +225,21 @@ abstract class NotificationInputDtoGenerated
         return $this;
     }
 
-    public function getCommunicationmethod(): string|CommunicationMethodInputDto|null    {
+    public function getCommunicationmethod(): ?string    {
         return $this->communicationMethod;
     }
 
-    public function setCommunicationmethod(string|CommunicationMethodInputDto|null $communicationMethod): self
+    public function setCommunicationmethod(?string $communicationMethod): self
     {
         $this->communicationMethod = $communicationMethod;
         return $this;
     }
 
-    public function getEvent(): string|EventInputDto|null    {
+    public function getEvent(): ?string    {
         return $this->event;
     }
 
-    public function setEvent(string|EventInputDto|null $event): self
+    public function setEvent(?string $event): self
     {
         $this->event = $event;
         return $this;
@@ -246,11 +265,11 @@ abstract class NotificationInputDtoGenerated
         return $this;
     }
 
-    public function getReminder(): string|ReminderInputDto|null    {
+    public function getReminder(): ?string    {
         return $this->reminder;
     }
 
-    public function setReminder(string|ReminderInputDto|null $reminder): self
+    public function setReminder(?string $reminder): self
     {
         $this->reminder = $reminder;
         return $this;
@@ -266,21 +285,21 @@ abstract class NotificationInputDtoGenerated
         return $this;
     }
 
-    public function getTalkmessage(): string|TalkMessageInputDto|null    {
+    public function getTalkmessage(): ?string    {
         return $this->talkMessage;
     }
 
-    public function setTalkmessage(string|TalkMessageInputDto|null $talkMessage): self
+    public function setTalkmessage(?string $talkMessage): self
     {
         $this->talkMessage = $talkMessage;
         return $this;
     }
 
-    public function getType(): string|NotificationTypeInputDto|null    {
+    public function getType(): ?string    {
         return $this->type;
     }
 
-    public function setType(string|NotificationTypeInputDto|null $type): self
+    public function setType(?string $type): self
     {
         $this->type = $type;
         return $this;

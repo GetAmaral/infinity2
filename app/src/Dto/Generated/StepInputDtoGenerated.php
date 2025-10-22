@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\TreeFlowInputDto;
 use App\Dto\StepQuestionInputDto;
 use App\Dto\StepOutputInputDto;
@@ -24,27 +25,36 @@ abstract class StepInputDtoGenerated
 {
     /**
      * treeFlow reference
-     * Can be: IRI string (e.g., "/api/treeflows/uuid") or nested TreeFlowInput object
+     * Must be: IRI string (e.g., "/api/treeflows/uuid")
      */
     #[Assert\NotNull]
-    public string|TreeFlowInputDto $treeFlow;
+    #[Groups(['step:write'])]
+    public ?string $treeFlow = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['step:write'])]
     public string $name;
 
+    #[Groups(['step:write'])]
     public bool $first = false;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['step:write'])]
     public string $slug;
 
+    #[Groups(['step:write'])]
     public ?string $objective = null;
 
+    #[Groups(['step:write'])]
     public ?string $prompt = null;
 
+    #[Groups(['step:write'])]
     public int $viewOrder = 1;
 
+    #[Groups(['step:write'])]
     public ?int $positionX = null;
 
+    #[Groups(['step:write'])]
     public ?int $positionY = null;
 
     /**
@@ -53,6 +63,7 @@ abstract class StepInputDtoGenerated
      * Max items: 20     */
     #[Assert\Valid]
     #[Assert\Count(max: 20, maxMessage: 'Cannot have more than 20 questions')]
+    #[Groups(['step:write'])]
     public array $questions = [];
 
     /**
@@ -61,6 +72,7 @@ abstract class StepInputDtoGenerated
      * Max items: 20     */
     #[Assert\Valid]
     #[Assert\Count(max: 20, maxMessage: 'Cannot have more than 20 outputs')]
+    #[Groups(['step:write'])]
     public array $outputs = [];
 
     /**
@@ -69,16 +81,17 @@ abstract class StepInputDtoGenerated
      * Max items: 20     */
     #[Assert\Valid]
     #[Assert\Count(max: 20, maxMessage: 'Cannot have more than 20 inputs')]
+    #[Groups(['step:write'])]
     public array $inputs = [];
 
 
     // Getters and Setters
 
-    public function getTreeflow(): string|TreeFlowInputDto    {
+    public function getTreeflow(): ?string    {
         return $this->treeFlow;
     }
 
-    public function setTreeflow(string|TreeFlowInputDto $treeFlow): self
+    public function setTreeflow(?string $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
         return $this;

@@ -61,7 +61,10 @@ class DealProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Deal::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Deal not found');
@@ -72,245 +75,353 @@ class DealProcessor implements ProcessorInterface
             $entity = new Deal();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setDealstatus($data->dealStatus);
-        $entity->setProbability($data->probability);
-        $entity->setPriority($data->priority);
-        $entity->setDealnumber($data->dealNumber);
-        $entity->setExpectedamount($data->expectedAmount);
-        $entity->setWeightedamount($data->weightedAmount);
-        $entity->setClosureamount($data->closureAmount);
-        $entity->setInitialamount($data->initialAmount);
-        $entity->setCurrency($data->currency);
-        $entity->setExchangerate($data->exchangeRate);
-        $entity->setDiscountpercentage($data->discountPercentage);
-        $entity->setDiscountamount($data->discountAmount);
-        $entity->setCommissionrate($data->commissionRate);
-        $entity->setCommissionamount($data->commissionAmount);
-        $entity->setExpectedclosuredate($data->expectedClosureDate);
-        $entity->setClosuredate($data->closureDate);
-        $entity->setInitialdate($data->initialDate);
-        $entity->setLastactivitydate($data->lastActivityDate);
-        $entity->setNextfollowup($data->nextFollowUp);
-        $entity->setDaysincurrentstage($data->daysInCurrentStage);
-        $entity->setForecastcategory($data->forecastCategory);
-        $entity->setSourcedetails($data->sourceDetails);
-        $entity->setNotes($data->notes);
-        $entity->setCustomfields($data->customFields);
-        $entity->setActualclosuredate($data->actualClosureDate);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // dealStatus
+        if (!$isPatch || array_key_exists('dealStatus', $requestData)) {
+            $entity->setDealstatus($data->dealStatus);
+        }
+        // probability
+        if (!$isPatch || array_key_exists('probability', $requestData)) {
+            $entity->setProbability($data->probability);
+        }
+        // priority
+        if (!$isPatch || array_key_exists('priority', $requestData)) {
+            $entity->setPriority($data->priority);
+        }
+        // dealNumber
+        if (!$isPatch || array_key_exists('dealNumber', $requestData)) {
+            $entity->setDealnumber($data->dealNumber);
+        }
+        // expectedAmount
+        if (!$isPatch || array_key_exists('expectedAmount', $requestData)) {
+            $entity->setExpectedamount($data->expectedAmount);
+        }
+        // weightedAmount
+        if (!$isPatch || array_key_exists('weightedAmount', $requestData)) {
+            $entity->setWeightedamount($data->weightedAmount);
+        }
+        // closureAmount
+        if (!$isPatch || array_key_exists('closureAmount', $requestData)) {
+            $entity->setClosureamount($data->closureAmount);
+        }
+        // initialAmount
+        if (!$isPatch || array_key_exists('initialAmount', $requestData)) {
+            $entity->setInitialamount($data->initialAmount);
+        }
+        // currency
+        if (!$isPatch || array_key_exists('currency', $requestData)) {
+            $entity->setCurrency($data->currency);
+        }
+        // exchangeRate
+        if (!$isPatch || array_key_exists('exchangeRate', $requestData)) {
+            $entity->setExchangerate($data->exchangeRate);
+        }
+        // discountPercentage
+        if (!$isPatch || array_key_exists('discountPercentage', $requestData)) {
+            $entity->setDiscountpercentage($data->discountPercentage);
+        }
+        // discountAmount
+        if (!$isPatch || array_key_exists('discountAmount', $requestData)) {
+            $entity->setDiscountamount($data->discountAmount);
+        }
+        // commissionRate
+        if (!$isPatch || array_key_exists('commissionRate', $requestData)) {
+            $entity->setCommissionrate($data->commissionRate);
+        }
+        // commissionAmount
+        if (!$isPatch || array_key_exists('commissionAmount', $requestData)) {
+            $entity->setCommissionamount($data->commissionAmount);
+        }
+        // expectedClosureDate
+        if (!$isPatch || array_key_exists('expectedClosureDate', $requestData)) {
+            $entity->setExpectedclosuredate($data->expectedClosureDate);
+        }
+        // closureDate
+        if (!$isPatch || array_key_exists('closureDate', $requestData)) {
+            $entity->setClosuredate($data->closureDate);
+        }
+        // initialDate
+        if (!$isPatch || array_key_exists('initialDate', $requestData)) {
+            $entity->setInitialdate($data->initialDate);
+        }
+        // lastActivityDate
+        if (!$isPatch || array_key_exists('lastActivityDate', $requestData)) {
+            $entity->setLastactivitydate($data->lastActivityDate);
+        }
+        // nextFollowUp
+        if (!$isPatch || array_key_exists('nextFollowUp', $requestData)) {
+            $entity->setNextfollowup($data->nextFollowUp);
+        }
+        // daysInCurrentStage
+        if (!$isPatch || array_key_exists('daysInCurrentStage', $requestData)) {
+            $entity->setDaysincurrentstage($data->daysInCurrentStage);
+        }
+        // forecastCategory
+        if (!$isPatch || array_key_exists('forecastCategory', $requestData)) {
+            $entity->setForecastcategory($data->forecastCategory);
+        }
+        // sourceDetails
+        if (!$isPatch || array_key_exists('sourceDetails', $requestData)) {
+            $entity->setSourcedetails($data->sourceDetails);
+        }
+        // notes
+        if (!$isPatch || array_key_exists('notes', $requestData)) {
+            $entity->setNotes($data->notes);
+        }
+        // customFields
+        if (!$isPatch || array_key_exists('customFields', $requestData)) {
+            $entity->setCustomfields($data->customFields);
+        }
+        // actualClosureDate
+        if (!$isPatch || array_key_exists('actualClosureDate', $requestData)) {
+            $entity->setActualclosuredate($data->actualClosureDate);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // company: ManyToOne
-        if ($data->company !== null) {
-            if (is_string($data->company)) {
-                // IRI format: "/api/companys/{id}"
-                $companyId = $this->extractIdFromIri($data->company);
-                $company = $this->entityManager->getRepository(Company::class)->find($companyId);
-                if (!$company) {
-                    throw new BadRequestHttpException('Company not found: ' . $companyId);
+        if (!$isPatch || array_key_exists('company', $requestData)) {
+            if ($data->company !== null) {
+                if (is_string($data->company)) {
+                    // IRI format: "/api/companys/{id}"
+                    $companyId = $this->extractIdFromIri($data->company);
+                    $company = $this->entityManager->getRepository(Company::class)->find($companyId);
+                    if (!$company) {
+                        throw new BadRequestHttpException('Company not found: ' . $companyId);
+                    }
+                    $entity->setCompany($company);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested company creation not supported. Use IRI format.');
                 }
-                $entity->setCompany($company);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested company creation not supported. Use IRI format.');
             }
         }
 
         // currentStage: ManyToOne
-        if ($data->currentStage !== null) {
-            if (is_string($data->currentStage)) {
-                // IRI format: "/api/pipelinestages/{id}"
-                $currentStageId = $this->extractIdFromIri($data->currentStage);
-                $currentStage = $this->entityManager->getRepository(PipelineStage::class)->find($currentStageId);
-                if (!$currentStage) {
-                    throw new BadRequestHttpException('PipelineStage not found: ' . $currentStageId);
+        if (!$isPatch || array_key_exists('currentStage', $requestData)) {
+            if ($data->currentStage !== null) {
+                if (is_string($data->currentStage)) {
+                    // IRI format: "/api/pipelinestages/{id}"
+                    $currentStageId = $this->extractIdFromIri($data->currentStage);
+                    $currentStage = $this->entityManager->getRepository(PipelineStage::class)->find($currentStageId);
+                    if (!$currentStage) {
+                        throw new BadRequestHttpException('PipelineStage not found: ' . $currentStageId);
+                    }
+                    $entity->setCurrentstage($currentStage);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested currentStage creation not supported. Use IRI format.');
                 }
-                $entity->setCurrentstage($currentStage);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested currentStage creation not supported. Use IRI format.');
             }
         }
 
         // pipeline: ManyToOne
-        if ($data->pipeline !== null) {
-            if (is_string($data->pipeline)) {
-                // IRI format: "/api/pipelines/{id}"
-                $pipelineId = $this->extractIdFromIri($data->pipeline);
-                $pipeline = $this->entityManager->getRepository(Pipeline::class)->find($pipelineId);
-                if (!$pipeline) {
-                    throw new BadRequestHttpException('Pipeline not found: ' . $pipelineId);
+        if (!$isPatch || array_key_exists('pipeline', $requestData)) {
+            if ($data->pipeline !== null) {
+                if (is_string($data->pipeline)) {
+                    // IRI format: "/api/pipelines/{id}"
+                    $pipelineId = $this->extractIdFromIri($data->pipeline);
+                    $pipeline = $this->entityManager->getRepository(Pipeline::class)->find($pipelineId);
+                    if (!$pipeline) {
+                        throw new BadRequestHttpException('Pipeline not found: ' . $pipelineId);
+                    }
+                    $entity->setPipeline($pipeline);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested pipeline creation not supported. Use IRI format.');
                 }
-                $entity->setPipeline($pipeline);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested pipeline creation not supported. Use IRI format.');
             }
         }
 
         // dealType: ManyToOne
-        if ($data->dealType !== null) {
-            if (is_string($data->dealType)) {
-                // IRI format: "/api/dealtypes/{id}"
-                $dealTypeId = $this->extractIdFromIri($data->dealType);
-                $dealType = $this->entityManager->getRepository(DealType::class)->find($dealTypeId);
-                if (!$dealType) {
-                    throw new BadRequestHttpException('DealType not found: ' . $dealTypeId);
+        if (!$isPatch || array_key_exists('dealType', $requestData)) {
+            if ($data->dealType !== null) {
+                if (is_string($data->dealType)) {
+                    // IRI format: "/api/dealtypes/{id}"
+                    $dealTypeId = $this->extractIdFromIri($data->dealType);
+                    $dealType = $this->entityManager->getRepository(DealType::class)->find($dealTypeId);
+                    if (!$dealType) {
+                        throw new BadRequestHttpException('DealType not found: ' . $dealTypeId);
+                    }
+                    $entity->setDealtype($dealType);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested dealType creation not supported. Use IRI format.');
                 }
-                $entity->setDealtype($dealType);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested dealType creation not supported. Use IRI format.');
             }
         }
 
         // category: ManyToOne
-        if ($data->category !== null) {
-            if (is_string($data->category)) {
-                // IRI format: "/api/dealcategorys/{id}"
-                $categoryId = $this->extractIdFromIri($data->category);
-                $category = $this->entityManager->getRepository(DealCategory::class)->find($categoryId);
-                if (!$category) {
-                    throw new BadRequestHttpException('DealCategory not found: ' . $categoryId);
+        if (!$isPatch || array_key_exists('category', $requestData)) {
+            if ($data->category !== null) {
+                if (is_string($data->category)) {
+                    // IRI format: "/api/dealcategorys/{id}"
+                    $categoryId = $this->extractIdFromIri($data->category);
+                    $category = $this->entityManager->getRepository(DealCategory::class)->find($categoryId);
+                    if (!$category) {
+                        throw new BadRequestHttpException('DealCategory not found: ' . $categoryId);
+                    }
+                    $entity->setCategory($category);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested category creation not supported. Use IRI format.');
                 }
-                $entity->setCategory($category);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested category creation not supported. Use IRI format.');
             }
         }
 
         // manager: ManyToOne
-        if ($data->manager !== null) {
-            if (is_string($data->manager)) {
-                // IRI format: "/api/users/{id}"
-                $managerId = $this->extractIdFromIri($data->manager);
-                $manager = $this->entityManager->getRepository(User::class)->find($managerId);
-                if (!$manager) {
-                    throw new BadRequestHttpException('User not found: ' . $managerId);
+        if (!$isPatch || array_key_exists('manager', $requestData)) {
+            if ($data->manager !== null) {
+                if (is_string($data->manager)) {
+                    // IRI format: "/api/users/{id}"
+                    $managerId = $this->extractIdFromIri($data->manager);
+                    $manager = $this->entityManager->getRepository(User::class)->find($managerId);
+                    if (!$manager) {
+                        throw new BadRequestHttpException('User not found: ' . $managerId);
+                    }
+                    $entity->setManager($manager);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested manager creation not supported. Use IRI format.');
                 }
-                $entity->setManager($manager);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested manager creation not supported. Use IRI format.');
             }
         }
 
         // owner: ManyToOne
-        if ($data->owner !== null) {
-            if (is_string($data->owner)) {
-                // IRI format: "/api/users/{id}"
-                $ownerId = $this->extractIdFromIri($data->owner);
-                $owner = $this->entityManager->getRepository(User::class)->find($ownerId);
-                if (!$owner) {
-                    throw new BadRequestHttpException('User not found: ' . $ownerId);
+        // owner is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('owner', $requestData)) {
+            if ($data->owner !== null) {
+                if (is_string($data->owner)) {
+                    // IRI format: "/api/users/{id}"
+                    $ownerId = $this->extractIdFromIri($data->owner);
+                    $owner = $this->entityManager->getRepository(User::class)->find($ownerId);
+                    if (!$owner) {
+                        throw new BadRequestHttpException('User not found: ' . $ownerId);
+                    }
+                    $entity->setOwner($owner);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested owner creation not supported. Use IRI format.');
                 }
-                $entity->setOwner($owner);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested owner creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('owner is required');
         }
 
         // primaryContact: ManyToOne
-        if ($data->primaryContact !== null) {
-            if (is_string($data->primaryContact)) {
-                // IRI format: "/api/contacts/{id}"
-                $primaryContactId = $this->extractIdFromIri($data->primaryContact);
-                $primaryContact = $this->entityManager->getRepository(Contact::class)->find($primaryContactId);
-                if (!$primaryContact) {
-                    throw new BadRequestHttpException('Contact not found: ' . $primaryContactId);
+        if (!$isPatch || array_key_exists('primaryContact', $requestData)) {
+            if ($data->primaryContact !== null) {
+                if (is_string($data->primaryContact)) {
+                    // IRI format: "/api/contacts/{id}"
+                    $primaryContactId = $this->extractIdFromIri($data->primaryContact);
+                    $primaryContact = $this->entityManager->getRepository(Contact::class)->find($primaryContactId);
+                    if (!$primaryContact) {
+                        throw new BadRequestHttpException('Contact not found: ' . $primaryContactId);
+                    }
+                    $entity->setPrimarycontact($primaryContact);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested primaryContact creation not supported. Use IRI format.');
                 }
-                $entity->setPrimarycontact($primaryContact);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested primaryContact creation not supported. Use IRI format.');
             }
         }
 
         // leadSource: ManyToOne
-        if ($data->leadSource !== null) {
-            if (is_string($data->leadSource)) {
-                // IRI format: "/api/leadsources/{id}"
-                $leadSourceId = $this->extractIdFromIri($data->leadSource);
-                $leadSource = $this->entityManager->getRepository(LeadSource::class)->find($leadSourceId);
-                if (!$leadSource) {
-                    throw new BadRequestHttpException('LeadSource not found: ' . $leadSourceId);
+        if (!$isPatch || array_key_exists('leadSource', $requestData)) {
+            if ($data->leadSource !== null) {
+                if (is_string($data->leadSource)) {
+                    // IRI format: "/api/leadsources/{id}"
+                    $leadSourceId = $this->extractIdFromIri($data->leadSource);
+                    $leadSource = $this->entityManager->getRepository(LeadSource::class)->find($leadSourceId);
+                    if (!$leadSource) {
+                        throw new BadRequestHttpException('LeadSource not found: ' . $leadSourceId);
+                    }
+                    $entity->setLeadsource($leadSource);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested leadSource creation not supported. Use IRI format.');
                 }
-                $entity->setLeadsource($leadSource);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested leadSource creation not supported. Use IRI format.');
             }
         }
 
         // campaign: ManyToOne
-        if ($data->campaign !== null) {
-            if (is_string($data->campaign)) {
-                // IRI format: "/api/campaigns/{id}"
-                $campaignId = $this->extractIdFromIri($data->campaign);
-                $campaign = $this->entityManager->getRepository(Campaign::class)->find($campaignId);
-                if (!$campaign) {
-                    throw new BadRequestHttpException('Campaign not found: ' . $campaignId);
+        if (!$isPatch || array_key_exists('campaign', $requestData)) {
+            if ($data->campaign !== null) {
+                if (is_string($data->campaign)) {
+                    // IRI format: "/api/campaigns/{id}"
+                    $campaignId = $this->extractIdFromIri($data->campaign);
+                    $campaign = $this->entityManager->getRepository(Campaign::class)->find($campaignId);
+                    if (!$campaign) {
+                        throw new BadRequestHttpException('Campaign not found: ' . $campaignId);
+                    }
+                    $entity->setCampaign($campaign);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested campaign creation not supported. Use IRI format.');
                 }
-                $entity->setCampaign($campaign);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested campaign creation not supported. Use IRI format.');
             }
         }
 
         // lostReason: ManyToOne
-        if ($data->lostReason !== null) {
-            if (is_string($data->lostReason)) {
-                // IRI format: "/api/lostreasons/{id}"
-                $lostReasonId = $this->extractIdFromIri($data->lostReason);
-                $lostReason = $this->entityManager->getRepository(LostReason::class)->find($lostReasonId);
-                if (!$lostReason) {
-                    throw new BadRequestHttpException('LostReason not found: ' . $lostReasonId);
+        if (!$isPatch || array_key_exists('lostReason', $requestData)) {
+            if ($data->lostReason !== null) {
+                if (is_string($data->lostReason)) {
+                    // IRI format: "/api/lostreasons/{id}"
+                    $lostReasonId = $this->extractIdFromIri($data->lostReason);
+                    $lostReason = $this->entityManager->getRepository(LostReason::class)->find($lostReasonId);
+                    if (!$lostReason) {
+                        throw new BadRequestHttpException('LostReason not found: ' . $lostReasonId);
+                    }
+                    $entity->setLostreason($lostReason);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested lostReason creation not supported. Use IRI format.');
                 }
-                $entity->setLostreason($lostReason);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested lostReason creation not supported. Use IRI format.');
             }
         }
 
         // winReason: ManyToOne
-        if ($data->winReason !== null) {
-            if (is_string($data->winReason)) {
-                // IRI format: "/api/winreasons/{id}"
-                $winReasonId = $this->extractIdFromIri($data->winReason);
-                $winReason = $this->entityManager->getRepository(WinReason::class)->find($winReasonId);
-                if (!$winReason) {
-                    throw new BadRequestHttpException('WinReason not found: ' . $winReasonId);
+        if (!$isPatch || array_key_exists('winReason', $requestData)) {
+            if ($data->winReason !== null) {
+                if (is_string($data->winReason)) {
+                    // IRI format: "/api/winreasons/{id}"
+                    $winReasonId = $this->extractIdFromIri($data->winReason);
+                    $winReason = $this->entityManager->getRepository(WinReason::class)->find($winReasonId);
+                    if (!$winReason) {
+                        throw new BadRequestHttpException('WinReason not found: ' . $winReasonId);
+                    }
+                    $entity->setWinreason($winReason);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested winReason creation not supported. Use IRI format.');
                 }
-                $entity->setWinreason($winReason);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested winReason creation not supported. Use IRI format.');
             }
         }
 
@@ -333,4 +444,49 @@ class DealProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

@@ -7,9 +7,8 @@ resources:
     shortName: ProfileTemplate
     description: "Templates for user profiles with predefined permissions"
 
-    input: App\Dto\ProfileTemplateInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\ProfileTemplateOutputDto
-    processor: App\State\ProfileTemplateProcessor
 
     normalizationContext:
       groups: ["profiletemplate:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\ProfileTemplateInputDto
+        processor: App\State\ProfileTemplateProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\ProfileTemplateInputDto
+        processor: App\State\ProfileTemplateProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\ProfileTemplateInputDto
+        processor: App\State\ProfileTemplateProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SUPER_ADMIN')"

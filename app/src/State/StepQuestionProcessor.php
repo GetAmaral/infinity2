@@ -44,7 +44,10 @@ class StepQuestionProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(StepQuestion::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('StepQuestion not found');
@@ -55,33 +58,62 @@ class StepQuestionProcessor implements ProcessorInterface
             $entity = new StepQuestion();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setSlug($data->slug);
-        $entity->setPrompt($data->prompt);
-        $entity->setObjective($data->objective);
-        $entity->setImportance($data->importance);
-        $entity->setVieworder($data->viewOrder);
-        $entity->setFewshotpositive($data->fewShotPositive);
-        $entity->setFewshotnegative($data->fewShotNegative);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // slug
+        if (!$isPatch || array_key_exists('slug', $requestData)) {
+            $entity->setSlug($data->slug);
+        }
+        // prompt
+        if (!$isPatch || array_key_exists('prompt', $requestData)) {
+            $entity->setPrompt($data->prompt);
+        }
+        // objective
+        if (!$isPatch || array_key_exists('objective', $requestData)) {
+            $entity->setObjective($data->objective);
+        }
+        // importance
+        if (!$isPatch || array_key_exists('importance', $requestData)) {
+            $entity->setImportance($data->importance);
+        }
+        // viewOrder
+        if (!$isPatch || array_key_exists('viewOrder', $requestData)) {
+            $entity->setVieworder($data->viewOrder);
+        }
+        // fewShotPositive
+        if (!$isPatch || array_key_exists('fewShotPositive', $requestData)) {
+            $entity->setFewshotpositive($data->fewShotPositive);
+        }
+        // fewShotNegative
+        if (!$isPatch || array_key_exists('fewShotNegative', $requestData)) {
+            $entity->setFewshotnegative($data->fewShotNegative);
+        }
 
         // Map relationship properties
         // step: ManyToOne
-        if ($data->step !== null) {
-            if (is_string($data->step)) {
-                // IRI format: "/api/steps/{id}"
-                $stepId = $this->extractIdFromIri($data->step);
-                $step = $this->entityManager->getRepository(Step::class)->find($stepId);
-                if (!$step) {
-                    throw new BadRequestHttpException('Step not found: ' . $stepId);
+        if (!$isPatch || array_key_exists('step', $requestData)) {
+            if ($data->step !== null) {
+                if (is_string($data->step)) {
+                    // IRI format: "/api/steps/{id}"
+                    $stepId = $this->extractIdFromIri($data->step);
+                    $step = $this->entityManager->getRepository(Step::class)->find($stepId);
+                    if (!$step) {
+                        throw new BadRequestHttpException('Step not found: ' . $stepId);
+                    }
+                    $entity->setStep($step);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested step creation not supported. Use IRI format.');
                 }
-                $entity->setStep($step);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested step creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('step is required');
             }
-        } else {
-            throw new BadRequestHttpException('step is required');
         }
 
         // Persist and flush
@@ -103,4 +135,49 @@ class StepQuestionProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

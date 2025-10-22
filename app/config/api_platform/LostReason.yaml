@@ -7,9 +7,8 @@ resources:
     shortName: LostReason
     description: "Tracks and categorizes reasons for lost deals with advanced analytics capabilities. Supports win-loss analysis, competitor tracking, and actionable insights to improve win rates. Implements CRM best practices for structured data collection and longitudinal analysis."
 
-    input: App\Dto\LostReasonInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\LostReasonOutputDto
-    processor: App\State\LostReasonProcessor
 
     normalizationContext:
       groups: ["lostreason:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\LostReasonInputDto
+        processor: App\State\LostReasonProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\LostReasonInputDto
+        processor: App\State\LostReasonProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\LostReasonInputDto
+        processor: App\State\LostReasonProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"

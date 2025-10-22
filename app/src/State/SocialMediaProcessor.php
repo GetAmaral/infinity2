@@ -49,7 +49,10 @@ class SocialMediaProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(SocialMedia::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('SocialMedia not found');
@@ -60,91 +63,112 @@ class SocialMediaProcessor implements ProcessorInterface
             $entity = new SocialMedia();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setApikey($data->apiKey);
-        $entity->setUrl($data->url);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // apiKey
+        if (!$isPatch || array_key_exists('apiKey', $requestData)) {
+            $entity->setApikey($data->apiKey);
+        }
+        // url
+        if (!$isPatch || array_key_exists('url', $requestData)) {
+            $entity->setUrl($data->url);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // company: ManyToOne
-        if ($data->company !== null) {
-            if (is_string($data->company)) {
-                // IRI format: "/api/companys/{id}"
-                $companyId = $this->extractIdFromIri($data->company);
-                $company = $this->entityManager->getRepository(Company::class)->find($companyId);
-                if (!$company) {
-                    throw new BadRequestHttpException('Company not found: ' . $companyId);
+        if (!$isPatch || array_key_exists('company', $requestData)) {
+            if ($data->company !== null) {
+                if (is_string($data->company)) {
+                    // IRI format: "/api/companys/{id}"
+                    $companyId = $this->extractIdFromIri($data->company);
+                    $company = $this->entityManager->getRepository(Company::class)->find($companyId);
+                    if (!$company) {
+                        throw new BadRequestHttpException('Company not found: ' . $companyId);
+                    }
+                    $entity->setCompany($company);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested company creation not supported. Use IRI format.');
                 }
-                $entity->setCompany($company);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested company creation not supported. Use IRI format.');
             }
         }
 
         // contact: ManyToOne
-        if ($data->contact !== null) {
-            if (is_string($data->contact)) {
-                // IRI format: "/api/contacts/{id}"
-                $contactId = $this->extractIdFromIri($data->contact);
-                $contact = $this->entityManager->getRepository(Contact::class)->find($contactId);
-                if (!$contact) {
-                    throw new BadRequestHttpException('Contact not found: ' . $contactId);
+        if (!$isPatch || array_key_exists('contact', $requestData)) {
+            if ($data->contact !== null) {
+                if (is_string($data->contact)) {
+                    // IRI format: "/api/contacts/{id}"
+                    $contactId = $this->extractIdFromIri($data->contact);
+                    $contact = $this->entityManager->getRepository(Contact::class)->find($contactId);
+                    if (!$contact) {
+                        throw new BadRequestHttpException('Contact not found: ' . $contactId);
+                    }
+                    $entity->setContact($contact);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested contact creation not supported. Use IRI format.');
                 }
-                $entity->setContact($contact);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested contact creation not supported. Use IRI format.');
             }
         }
 
         // socialMediaType: ManyToOne
-        if ($data->socialMediaType !== null) {
-            if (is_string($data->socialMediaType)) {
-                // IRI format: "/api/socialmediatypes/{id}"
-                $socialMediaTypeId = $this->extractIdFromIri($data->socialMediaType);
-                $socialMediaType = $this->entityManager->getRepository(SocialMediaType::class)->find($socialMediaTypeId);
-                if (!$socialMediaType) {
-                    throw new BadRequestHttpException('SocialMediaType not found: ' . $socialMediaTypeId);
+        if (!$isPatch || array_key_exists('socialMediaType', $requestData)) {
+            if ($data->socialMediaType !== null) {
+                if (is_string($data->socialMediaType)) {
+                    // IRI format: "/api/socialmediatypes/{id}"
+                    $socialMediaTypeId = $this->extractIdFromIri($data->socialMediaType);
+                    $socialMediaType = $this->entityManager->getRepository(SocialMediaType::class)->find($socialMediaTypeId);
+                    if (!$socialMediaType) {
+                        throw new BadRequestHttpException('SocialMediaType not found: ' . $socialMediaTypeId);
+                    }
+                    $entity->setSocialmediatype($socialMediaType);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested socialMediaType creation not supported. Use IRI format.');
                 }
-                $entity->setSocialmediatype($socialMediaType);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested socialMediaType creation not supported. Use IRI format.');
             }
         }
 
         // user: ManyToOne
-        if ($data->user !== null) {
-            if (is_string($data->user)) {
-                // IRI format: "/api/users/{id}"
-                $userId = $this->extractIdFromIri($data->user);
-                $user = $this->entityManager->getRepository(User::class)->find($userId);
-                if (!$user) {
-                    throw new BadRequestHttpException('User not found: ' . $userId);
+        if (!$isPatch || array_key_exists('user', $requestData)) {
+            if ($data->user !== null) {
+                if (is_string($data->user)) {
+                    // IRI format: "/api/users/{id}"
+                    $userId = $this->extractIdFromIri($data->user);
+                    $user = $this->entityManager->getRepository(User::class)->find($userId);
+                    if (!$user) {
+                        throw new BadRequestHttpException('User not found: ' . $userId);
+                    }
+                    $entity->setUser($user);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
                 }
-                $entity->setUser($user);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
             }
         }
 
@@ -167,4 +191,49 @@ class SocialMediaProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

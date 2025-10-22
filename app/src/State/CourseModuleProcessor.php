@@ -45,7 +45,10 @@ class CourseModuleProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(CourseModule::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('CourseModule not found');
@@ -56,31 +59,54 @@ class CourseModuleProcessor implements ProcessorInterface
             $entity = new CourseModule();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setReleasedate($data->releaseDate);
-        $entity->setVieworder($data->viewOrder);
-        $entity->setTotallengthseconds($data->totalLengthSeconds);
-        $entity->setActive($data->active);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // releaseDate
+        if (!$isPatch || array_key_exists('releaseDate', $requestData)) {
+            $entity->setReleasedate($data->releaseDate);
+        }
+        // viewOrder
+        if (!$isPatch || array_key_exists('viewOrder', $requestData)) {
+            $entity->setVieworder($data->viewOrder);
+        }
+        // totalLengthSeconds
+        if (!$isPatch || array_key_exists('totalLengthSeconds', $requestData)) {
+            $entity->setTotallengthseconds($data->totalLengthSeconds);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
 
         // Map relationship properties
         // course: ManyToOne
-        if ($data->course !== null) {
-            if (is_string($data->course)) {
-                // IRI format: "/api/courses/{id}"
-                $courseId = $this->extractIdFromIri($data->course);
-                $course = $this->entityManager->getRepository(Course::class)->find($courseId);
-                if (!$course) {
-                    throw new BadRequestHttpException('Course not found: ' . $courseId);
+        if (!$isPatch || array_key_exists('course', $requestData)) {
+            if ($data->course !== null) {
+                if (is_string($data->course)) {
+                    // IRI format: "/api/courses/{id}"
+                    $courseId = $this->extractIdFromIri($data->course);
+                    $course = $this->entityManager->getRepository(Course::class)->find($courseId);
+                    if (!$course) {
+                        throw new BadRequestHttpException('Course not found: ' . $courseId);
+                    }
+                    $entity->setCourse($course);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested course creation not supported. Use IRI format.');
                 }
-                $entity->setCourse($course);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested course creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('course is required');
             }
-        } else {
-            throw new BadRequestHttpException('course is required');
         }
 
         // Persist and flush
@@ -102,4 +128,49 @@ class CourseModuleProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

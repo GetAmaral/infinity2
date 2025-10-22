@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\EventInputDto;
 
@@ -22,99 +23,130 @@ abstract class MeetingDataInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['meetingdata:write'])]
+    public ?string $organization = null;
 
     /**
      * event reference
-     * Can be: IRI string (e.g., "/api/events/uuid") or nested EventInput object
+     * Must be: IRI string (e.g., "/api/events/uuid")
      */
-    public string|EventInputDto|null $event = null;
+    #[Groups(['meetingdata:write'])]
+    public ?string $event = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['meetingdata:write'])]
     public string $title;
 
+    #[Groups(['meetingdata:write'])]
     public string $meetingType;
 
+    #[Groups(['meetingdata:write'])]
     public string $status;
 
+    #[Groups(['meetingdata:write'])]
     public \DateTimeImmutable $startTime;
 
+    #[Groups(['meetingdata:write'])]
     public ?\DateTimeImmutable $endTime = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?int $duration = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['meetingdata:write'])]
     public ?string $location = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?array $agenda = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?string $notes = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?string $minutes = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?array $attendees = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?string $meetingId = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?array $absentees = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?array $decisions = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?array $actionItems = null;
 
+    #[Groups(['meetingdata:write'])]
     public bool $recordingAvailable = false;
 
+    #[Groups(['meetingdata:write'])]
     public ?string $transcript = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?int $recordingDuration = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?string $recordingSize = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?\DateTimeImmutable $nextMeetingDate = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['meetingdata:write'])]
     public ?string $organizer = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?array $tags = null;
 
+    #[Groups(['meetingdata:write'])]
     public ?string $platform = null;
 
+    #[Groups(['meetingdata:write'])]
     public bool $confidential = false;
 
+    #[Groups(['meetingdata:write'])]
     public bool $recurring = false;
 
+    #[Groups(['meetingdata:write'])]
     public ?array $recurrencePattern = null;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['meetingdata:write'])]
     public ?string $recordUrl = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['meetingdata:write'])]
     public ?string $secret = null;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['meetingdata:write'])]
     public ?string $url = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
     }
 
-    public function getEvent(): string|EventInputDto|null    {
+    public function getEvent(): ?string    {
         return $this->event;
     }
 
-    public function setEvent(string|EventInputDto|null $event): self
+    public function setEvent(?string $event): self
     {
         $this->event = $event;
         return $this;

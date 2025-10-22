@@ -45,7 +45,10 @@ class StepConnectionProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(StepConnection::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('StepConnection not found');
@@ -56,43 +59,50 @@ class StepConnectionProcessor implements ProcessorInterface
             $entity = new StepConnection();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
 
         // Map relationship properties
         // sourceOutput: OneToOne
-        if ($data->sourceOutput !== null) {
-            if (is_string($data->sourceOutput)) {
-                // IRI format: "/api/stepoutputs/{id}"
-                $sourceOutputId = $this->extractIdFromIri($data->sourceOutput);
-                $sourceOutput = $this->entityManager->getRepository(StepOutput::class)->find($sourceOutputId);
-                if (!$sourceOutput) {
-                    throw new BadRequestHttpException('StepOutput not found: ' . $sourceOutputId);
+        if (!$isPatch || array_key_exists('sourceOutput', $requestData)) {
+            if ($data->sourceOutput !== null) {
+                if (is_string($data->sourceOutput)) {
+                    // IRI format: "/api/stepoutputs/{id}"
+                    $sourceOutputId = $this->extractIdFromIri($data->sourceOutput);
+                    $sourceOutput = $this->entityManager->getRepository(StepOutput::class)->find($sourceOutputId);
+                    if (!$sourceOutput) {
+                        throw new BadRequestHttpException('StepOutput not found: ' . $sourceOutputId);
+                    }
+                    $entity->setSourceoutput($sourceOutput);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested sourceOutput creation not supported. Use IRI format.');
                 }
-                $entity->setSourceoutput($sourceOutput);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested sourceOutput creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('sourceOutput is required');
             }
-        } else {
-            throw new BadRequestHttpException('sourceOutput is required');
         }
 
         // targetInput: ManyToOne
-        if ($data->targetInput !== null) {
-            if (is_string($data->targetInput)) {
-                // IRI format: "/api/stepinputs/{id}"
-                $targetInputId = $this->extractIdFromIri($data->targetInput);
-                $targetInput = $this->entityManager->getRepository(StepInput::class)->find($targetInputId);
-                if (!$targetInput) {
-                    throw new BadRequestHttpException('StepInput not found: ' . $targetInputId);
+        if (!$isPatch || array_key_exists('targetInput', $requestData)) {
+            if ($data->targetInput !== null) {
+                if (is_string($data->targetInput)) {
+                    // IRI format: "/api/stepinputs/{id}"
+                    $targetInputId = $this->extractIdFromIri($data->targetInput);
+                    $targetInput = $this->entityManager->getRepository(StepInput::class)->find($targetInputId);
+                    if (!$targetInput) {
+                        throw new BadRequestHttpException('StepInput not found: ' . $targetInputId);
+                    }
+                    $entity->setTargetinput($targetInput);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested targetInput creation not supported. Use IRI format.');
                 }
-                $entity->setTargetinput($targetInput);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested targetInput creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('targetInput is required');
             }
-        } else {
-            throw new BadRequestHttpException('targetInput is required');
         }
 
         // Persist and flush
@@ -114,4 +124,49 @@ class StepConnectionProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

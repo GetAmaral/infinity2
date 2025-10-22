@@ -62,7 +62,10 @@ class UserProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(User::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('User not found');
@@ -73,145 +76,466 @@ class UserProcessor implements ProcessorInterface
             $entity = new User();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setActive($data->active);
-        $entity->setAvatarurl($data->avatarUrl);
-        $entity->setBirthdate($data->birthDate);
-        $entity->setCelphone($data->celPhone);
-        $entity->setEmail($data->email);
-        $entity->setEmailverifiedat($data->emailVerifiedAt);
-        $entity->setVerified($data->verified);
-        $entity->setTermssigned($data->termsSigned);
-        $entity->setTermssignedat($data->termsSignedAt);
-        $entity->setVerificationtoken($data->verificationToken);
-        $entity->setFailedloginattempts($data->failedLoginAttempts);
-        $entity->setApitoken($data->apiToken);
-        $entity->setApitokenexpiresat($data->apiTokenExpiresAt);
-        $entity->setOpenaiapikey($data->openAiApiKey);
-        $entity->setGender($data->gender);
-        $entity->setLastloginat($data->lastLoginAt);
-        $entity->setLockeduntil($data->lockedUntil);
-        $entity->setUisettings($data->uiSettings);
-        $entity->setListpreferences($data->listPreferences);
-        $entity->setTwofactorenabled($data->twoFactorEnabled);
-        $entity->setLastpasswordchange($data->lastPasswordChange);
-        $entity->setTwofactorsecret($data->twoFactorSecret);
-        $entity->setTwofactorbackupcodes($data->twoFactorBackupCodes);
-        $entity->setPasswordresettoken($data->passwordResetToken);
-        $entity->setPasswordresetexpiry($data->passwordResetExpiry);
-        $entity->setSessiontoken($data->sessionToken);
-        $entity->setLastpasswordchangeat($data->lastPasswordChangeAt);
-        $entity->setPasswordexpiresat($data->passwordExpiresAt);
-        $entity->setMustchangepassword($data->mustChangePassword);
-        $entity->setPasskeyenabled($data->passkeyEnabled);
-        $entity->setPasskeycredentials($data->passkeyCredentials);
-        $entity->setUsername($data->username);
-        $entity->setPhone($data->phone);
-        $entity->setMobilephone($data->mobilePhone);
-        $entity->setJobtitle($data->jobTitle);
-        $entity->setDepartment($data->department);
-        $entity->setTimezone($data->timezone);
-        $entity->setLocale($data->locale);
-        $entity->setPreferredlanguage($data->preferredLanguage);
-        $entity->setEmailsignature($data->emailSignature);
-        $entity->setEmailnotificationsenabled($data->emailNotificationsEnabled);
-        $entity->setSmsnotificationsenabled($data->smsNotificationsEnabled);
-        $entity->setCalendarsyncenabled($data->calendarSyncEnabled);
-        $entity->setWorkinghours($data->workingHours);
-        $entity->setDefaultcurrency($data->defaultCurrency);
-        $entity->setDateformat($data->dateFormat);
-        $entity->setSalesteam($data->salesTeam);
-        $entity->setQuotaamount($data->quotaAmount);
-        $entity->setCommissionrate($data->commissionRate);
-        $entity->setAgent($data->agent);
-        $entity->setAgenttype($data->agentType);
-        $entity->setDeletedat($data->deletedAt);
-        $entity->setAvatar($data->avatar);
-        $entity->setPassword($data->password);
-        $entity->setTitle($data->title);
-        $entity->setFirstname($data->firstName);
-        $entity->setLastname($data->lastName);
-        $entity->setMiddlename($data->middleName);
-        $entity->setSuffix($data->suffix);
-        $entity->setNickname($data->nickname);
-        $entity->setPosition($data->position);
-        $entity->setSecondaryemail($data->secondaryEmail);
-        $entity->setWorkphone($data->workPhone);
-        $entity->setHomephone($data->homePhone);
-        $entity->setPhoneextension($data->phoneExtension);
-        $entity->setFax($data->fax);
-        $entity->setWebsite($data->website);
-        $entity->setLinkedinurl($data->linkedinUrl);
-        $entity->setTwitterhandle($data->twitterHandle);
-        $entity->setAddress($data->address);
-        $entity->setProfilepictureurl($data->profilePictureUrl);
-        $entity->setCity($data->city);
-        $entity->setState($data->state);
-        $entity->setPostalcode($data->postalCode);
-        $entity->setCountry($data->country);
-        $entity->setRegion($data->region);
-        $entity->setOfficelocation($data->officeLocation);
-        $entity->setEmployeeid($data->employeeId);
-        $entity->setHiredate($data->hireDate);
-        $entity->setTerminationdate($data->terminationDate);
-        $entity->setEmploymentstatus($data->employmentStatus);
-        $entity->setCostcenter($data->costCenter);
-        $entity->setDivision($data->division);
-        $entity->setBusinessunit($data->businessUnit);
-        $entity->setSalary($data->salary);
-        $entity->setSalaryfrequency($data->salaryFrequency);
-        $entity->setSkills($data->skills);
-        $entity->setCertifications($data->certifications);
-        $entity->setLanguages($data->languages);
-        $entity->setBio($data->bio);
-        $entity->setNotes($data->notes);
-        $entity->setTags($data->tags);
-        $entity->setLogincount($data->loginCount);
-        $entity->setLastipaddress($data->lastIpAddress);
-        $entity->setLastuseragent($data->lastUserAgent);
-        $entity->setVisible($data->visible);
-        $entity->setProfilecompleteness($data->profileCompleteness);
-        $entity->setLastactivityat($data->lastActivityAt);
-        $entity->setStatus($data->status);
-        $entity->setStatusmessage($data->statusMessage);
-        $entity->setLocked($data->locked);
-        $entity->setLockedreason($data->lockedReason);
-        $entity->setLockedat($data->lockedAt);
-        $entity->setCustomfields($data->customFields);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // avatarUrl
+        if (!$isPatch || array_key_exists('avatarUrl', $requestData)) {
+            $entity->setAvatarurl($data->avatarUrl);
+        }
+        // birthDate
+        if (!$isPatch || array_key_exists('birthDate', $requestData)) {
+            $entity->setBirthdate($data->birthDate);
+        }
+        // celPhone
+        if (!$isPatch || array_key_exists('celPhone', $requestData)) {
+            $entity->setCelphone($data->celPhone);
+        }
+        // email
+        if (!$isPatch || array_key_exists('email', $requestData)) {
+            $entity->setEmail($data->email);
+        }
+        // emailVerifiedAt
+        if (!$isPatch || array_key_exists('emailVerifiedAt', $requestData)) {
+            $entity->setEmailverifiedat($data->emailVerifiedAt);
+        }
+        // verified
+        if (!$isPatch || array_key_exists('verified', $requestData)) {
+            $entity->setVerified($data->verified);
+        }
+        // termsSigned
+        if (!$isPatch || array_key_exists('termsSigned', $requestData)) {
+            $entity->setTermssigned($data->termsSigned);
+        }
+        // termsSignedAt
+        if (!$isPatch || array_key_exists('termsSignedAt', $requestData)) {
+            $entity->setTermssignedat($data->termsSignedAt);
+        }
+        // verificationToken
+        if (!$isPatch || array_key_exists('verificationToken', $requestData)) {
+            $entity->setVerificationtoken($data->verificationToken);
+        }
+        // failedLoginAttempts
+        if (!$isPatch || array_key_exists('failedLoginAttempts', $requestData)) {
+            $entity->setFailedloginattempts($data->failedLoginAttempts);
+        }
+        // apiToken
+        if (!$isPatch || array_key_exists('apiToken', $requestData)) {
+            $entity->setApitoken($data->apiToken);
+        }
+        // apiTokenExpiresAt
+        if (!$isPatch || array_key_exists('apiTokenExpiresAt', $requestData)) {
+            $entity->setApitokenexpiresat($data->apiTokenExpiresAt);
+        }
+        // openAiApiKey
+        if (!$isPatch || array_key_exists('openAiApiKey', $requestData)) {
+            $entity->setOpenaiapikey($data->openAiApiKey);
+        }
+        // gender
+        if (!$isPatch || array_key_exists('gender', $requestData)) {
+            $entity->setGender($data->gender);
+        }
+        // lastLoginAt
+        if (!$isPatch || array_key_exists('lastLoginAt', $requestData)) {
+            $entity->setLastloginat($data->lastLoginAt);
+        }
+        // lockedUntil
+        if (!$isPatch || array_key_exists('lockedUntil', $requestData)) {
+            $entity->setLockeduntil($data->lockedUntil);
+        }
+        // uiSettings
+        if (!$isPatch || array_key_exists('uiSettings', $requestData)) {
+            $entity->setUisettings($data->uiSettings);
+        }
+        // listPreferences
+        if (!$isPatch || array_key_exists('listPreferences', $requestData)) {
+            $entity->setListpreferences($data->listPreferences);
+        }
+        // twoFactorEnabled
+        if (!$isPatch || array_key_exists('twoFactorEnabled', $requestData)) {
+            $entity->setTwofactorenabled($data->twoFactorEnabled);
+        }
+        // lastPasswordChange
+        if (!$isPatch || array_key_exists('lastPasswordChange', $requestData)) {
+            $entity->setLastpasswordchange($data->lastPasswordChange);
+        }
+        // twoFactorSecret
+        if (!$isPatch || array_key_exists('twoFactorSecret', $requestData)) {
+            $entity->setTwofactorsecret($data->twoFactorSecret);
+        }
+        // twoFactorBackupCodes
+        if (!$isPatch || array_key_exists('twoFactorBackupCodes', $requestData)) {
+            $entity->setTwofactorbackupcodes($data->twoFactorBackupCodes);
+        }
+        // passwordResetToken
+        if (!$isPatch || array_key_exists('passwordResetToken', $requestData)) {
+            $entity->setPasswordresettoken($data->passwordResetToken);
+        }
+        // passwordResetExpiry
+        if (!$isPatch || array_key_exists('passwordResetExpiry', $requestData)) {
+            $entity->setPasswordresetexpiry($data->passwordResetExpiry);
+        }
+        // sessionToken
+        if (!$isPatch || array_key_exists('sessionToken', $requestData)) {
+            $entity->setSessiontoken($data->sessionToken);
+        }
+        // lastPasswordChangeAt
+        if (!$isPatch || array_key_exists('lastPasswordChangeAt', $requestData)) {
+            $entity->setLastpasswordchangeat($data->lastPasswordChangeAt);
+        }
+        // passwordExpiresAt
+        if (!$isPatch || array_key_exists('passwordExpiresAt', $requestData)) {
+            $entity->setPasswordexpiresat($data->passwordExpiresAt);
+        }
+        // mustChangePassword
+        if (!$isPatch || array_key_exists('mustChangePassword', $requestData)) {
+            $entity->setMustchangepassword($data->mustChangePassword);
+        }
+        // passkeyEnabled
+        if (!$isPatch || array_key_exists('passkeyEnabled', $requestData)) {
+            $entity->setPasskeyenabled($data->passkeyEnabled);
+        }
+        // passkeyCredentials
+        if (!$isPatch || array_key_exists('passkeyCredentials', $requestData)) {
+            $entity->setPasskeycredentials($data->passkeyCredentials);
+        }
+        // username
+        if (!$isPatch || array_key_exists('username', $requestData)) {
+            $entity->setUsername($data->username);
+        }
+        // phone
+        if (!$isPatch || array_key_exists('phone', $requestData)) {
+            $entity->setPhone($data->phone);
+        }
+        // mobilePhone
+        if (!$isPatch || array_key_exists('mobilePhone', $requestData)) {
+            $entity->setMobilephone($data->mobilePhone);
+        }
+        // jobTitle
+        if (!$isPatch || array_key_exists('jobTitle', $requestData)) {
+            $entity->setJobtitle($data->jobTitle);
+        }
+        // department
+        if (!$isPatch || array_key_exists('department', $requestData)) {
+            $entity->setDepartment($data->department);
+        }
+        // timezone
+        if (!$isPatch || array_key_exists('timezone', $requestData)) {
+            $entity->setTimezone($data->timezone);
+        }
+        // locale
+        if (!$isPatch || array_key_exists('locale', $requestData)) {
+            $entity->setLocale($data->locale);
+        }
+        // preferredLanguage
+        if (!$isPatch || array_key_exists('preferredLanguage', $requestData)) {
+            $entity->setPreferredlanguage($data->preferredLanguage);
+        }
+        // emailSignature
+        if (!$isPatch || array_key_exists('emailSignature', $requestData)) {
+            $entity->setEmailsignature($data->emailSignature);
+        }
+        // emailNotificationsEnabled
+        if (!$isPatch || array_key_exists('emailNotificationsEnabled', $requestData)) {
+            $entity->setEmailnotificationsenabled($data->emailNotificationsEnabled);
+        }
+        // smsNotificationsEnabled
+        if (!$isPatch || array_key_exists('smsNotificationsEnabled', $requestData)) {
+            $entity->setSmsnotificationsenabled($data->smsNotificationsEnabled);
+        }
+        // calendarSyncEnabled
+        if (!$isPatch || array_key_exists('calendarSyncEnabled', $requestData)) {
+            $entity->setCalendarsyncenabled($data->calendarSyncEnabled);
+        }
+        // workingHours
+        if (!$isPatch || array_key_exists('workingHours', $requestData)) {
+            $entity->setWorkinghours($data->workingHours);
+        }
+        // defaultCurrency
+        if (!$isPatch || array_key_exists('defaultCurrency', $requestData)) {
+            $entity->setDefaultcurrency($data->defaultCurrency);
+        }
+        // dateFormat
+        if (!$isPatch || array_key_exists('dateFormat', $requestData)) {
+            $entity->setDateformat($data->dateFormat);
+        }
+        // salesTeam
+        if (!$isPatch || array_key_exists('salesTeam', $requestData)) {
+            $entity->setSalesteam($data->salesTeam);
+        }
+        // quotaAmount
+        if (!$isPatch || array_key_exists('quotaAmount', $requestData)) {
+            $entity->setQuotaamount($data->quotaAmount);
+        }
+        // commissionRate
+        if (!$isPatch || array_key_exists('commissionRate', $requestData)) {
+            $entity->setCommissionrate($data->commissionRate);
+        }
+        // agent
+        if (!$isPatch || array_key_exists('agent', $requestData)) {
+            $entity->setAgent($data->agent);
+        }
+        // agentType
+        if (!$isPatch || array_key_exists('agentType', $requestData)) {
+            $entity->setAgenttype($data->agentType);
+        }
+        // deletedAt
+        if (!$isPatch || array_key_exists('deletedAt', $requestData)) {
+            $entity->setDeletedat($data->deletedAt);
+        }
+        // avatar
+        if (!$isPatch || array_key_exists('avatar', $requestData)) {
+            $entity->setAvatar($data->avatar);
+        }
+        // password
+        if (!$isPatch || array_key_exists('password', $requestData)) {
+            $entity->setPassword($data->password);
+        }
+        // title
+        if (!$isPatch || array_key_exists('title', $requestData)) {
+            $entity->setTitle($data->title);
+        }
+        // firstName
+        if (!$isPatch || array_key_exists('firstName', $requestData)) {
+            $entity->setFirstname($data->firstName);
+        }
+        // lastName
+        if (!$isPatch || array_key_exists('lastName', $requestData)) {
+            $entity->setLastname($data->lastName);
+        }
+        // middleName
+        if (!$isPatch || array_key_exists('middleName', $requestData)) {
+            $entity->setMiddlename($data->middleName);
+        }
+        // suffix
+        if (!$isPatch || array_key_exists('suffix', $requestData)) {
+            $entity->setSuffix($data->suffix);
+        }
+        // nickname
+        if (!$isPatch || array_key_exists('nickname', $requestData)) {
+            $entity->setNickname($data->nickname);
+        }
+        // position
+        if (!$isPatch || array_key_exists('position', $requestData)) {
+            $entity->setPosition($data->position);
+        }
+        // secondaryEmail
+        if (!$isPatch || array_key_exists('secondaryEmail', $requestData)) {
+            $entity->setSecondaryemail($data->secondaryEmail);
+        }
+        // workPhone
+        if (!$isPatch || array_key_exists('workPhone', $requestData)) {
+            $entity->setWorkphone($data->workPhone);
+        }
+        // homePhone
+        if (!$isPatch || array_key_exists('homePhone', $requestData)) {
+            $entity->setHomephone($data->homePhone);
+        }
+        // phoneExtension
+        if (!$isPatch || array_key_exists('phoneExtension', $requestData)) {
+            $entity->setPhoneextension($data->phoneExtension);
+        }
+        // fax
+        if (!$isPatch || array_key_exists('fax', $requestData)) {
+            $entity->setFax($data->fax);
+        }
+        // website
+        if (!$isPatch || array_key_exists('website', $requestData)) {
+            $entity->setWebsite($data->website);
+        }
+        // linkedinUrl
+        if (!$isPatch || array_key_exists('linkedinUrl', $requestData)) {
+            $entity->setLinkedinurl($data->linkedinUrl);
+        }
+        // twitterHandle
+        if (!$isPatch || array_key_exists('twitterHandle', $requestData)) {
+            $entity->setTwitterhandle($data->twitterHandle);
+        }
+        // address
+        if (!$isPatch || array_key_exists('address', $requestData)) {
+            $entity->setAddress($data->address);
+        }
+        // profilePictureUrl
+        if (!$isPatch || array_key_exists('profilePictureUrl', $requestData)) {
+            $entity->setProfilepictureurl($data->profilePictureUrl);
+        }
+        // city
+        if (!$isPatch || array_key_exists('city', $requestData)) {
+            $entity->setCity($data->city);
+        }
+        // state
+        if (!$isPatch || array_key_exists('state', $requestData)) {
+            $entity->setState($data->state);
+        }
+        // postalCode
+        if (!$isPatch || array_key_exists('postalCode', $requestData)) {
+            $entity->setPostalcode($data->postalCode);
+        }
+        // country
+        if (!$isPatch || array_key_exists('country', $requestData)) {
+            $entity->setCountry($data->country);
+        }
+        // region
+        if (!$isPatch || array_key_exists('region', $requestData)) {
+            $entity->setRegion($data->region);
+        }
+        // officeLocation
+        if (!$isPatch || array_key_exists('officeLocation', $requestData)) {
+            $entity->setOfficelocation($data->officeLocation);
+        }
+        // employeeId
+        if (!$isPatch || array_key_exists('employeeId', $requestData)) {
+            $entity->setEmployeeid($data->employeeId);
+        }
+        // hireDate
+        if (!$isPatch || array_key_exists('hireDate', $requestData)) {
+            $entity->setHiredate($data->hireDate);
+        }
+        // terminationDate
+        if (!$isPatch || array_key_exists('terminationDate', $requestData)) {
+            $entity->setTerminationdate($data->terminationDate);
+        }
+        // employmentStatus
+        if (!$isPatch || array_key_exists('employmentStatus', $requestData)) {
+            $entity->setEmploymentstatus($data->employmentStatus);
+        }
+        // costCenter
+        if (!$isPatch || array_key_exists('costCenter', $requestData)) {
+            $entity->setCostcenter($data->costCenter);
+        }
+        // division
+        if (!$isPatch || array_key_exists('division', $requestData)) {
+            $entity->setDivision($data->division);
+        }
+        // businessUnit
+        if (!$isPatch || array_key_exists('businessUnit', $requestData)) {
+            $entity->setBusinessunit($data->businessUnit);
+        }
+        // salary
+        if (!$isPatch || array_key_exists('salary', $requestData)) {
+            $entity->setSalary($data->salary);
+        }
+        // salaryFrequency
+        if (!$isPatch || array_key_exists('salaryFrequency', $requestData)) {
+            $entity->setSalaryfrequency($data->salaryFrequency);
+        }
+        // skills
+        if (!$isPatch || array_key_exists('skills', $requestData)) {
+            $entity->setSkills($data->skills);
+        }
+        // certifications
+        if (!$isPatch || array_key_exists('certifications', $requestData)) {
+            $entity->setCertifications($data->certifications);
+        }
+        // languages
+        if (!$isPatch || array_key_exists('languages', $requestData)) {
+            $entity->setLanguages($data->languages);
+        }
+        // bio
+        if (!$isPatch || array_key_exists('bio', $requestData)) {
+            $entity->setBio($data->bio);
+        }
+        // notes
+        if (!$isPatch || array_key_exists('notes', $requestData)) {
+            $entity->setNotes($data->notes);
+        }
+        // tags
+        if (!$isPatch || array_key_exists('tags', $requestData)) {
+            $entity->setTags($data->tags);
+        }
+        // loginCount
+        if (!$isPatch || array_key_exists('loginCount', $requestData)) {
+            $entity->setLogincount($data->loginCount);
+        }
+        // lastIpAddress
+        if (!$isPatch || array_key_exists('lastIpAddress', $requestData)) {
+            $entity->setLastipaddress($data->lastIpAddress);
+        }
+        // lastUserAgent
+        if (!$isPatch || array_key_exists('lastUserAgent', $requestData)) {
+            $entity->setLastuseragent($data->lastUserAgent);
+        }
+        // visible
+        if (!$isPatch || array_key_exists('visible', $requestData)) {
+            $entity->setVisible($data->visible);
+        }
+        // profileCompleteness
+        if (!$isPatch || array_key_exists('profileCompleteness', $requestData)) {
+            $entity->setProfilecompleteness($data->profileCompleteness);
+        }
+        // lastActivityAt
+        if (!$isPatch || array_key_exists('lastActivityAt', $requestData)) {
+            $entity->setLastactivityat($data->lastActivityAt);
+        }
+        // status
+        if (!$isPatch || array_key_exists('status', $requestData)) {
+            $entity->setStatus($data->status);
+        }
+        // statusMessage
+        if (!$isPatch || array_key_exists('statusMessage', $requestData)) {
+            $entity->setStatusmessage($data->statusMessage);
+        }
+        // locked
+        if (!$isPatch || array_key_exists('locked', $requestData)) {
+            $entity->setLocked($data->locked);
+        }
+        // lockedReason
+        if (!$isPatch || array_key_exists('lockedReason', $requestData)) {
+            $entity->setLockedreason($data->lockedReason);
+        }
+        // lockedAt
+        if (!$isPatch || array_key_exists('lockedAt', $requestData)) {
+            $entity->setLockedat($data->lockedAt);
+        }
+        // customFields
+        if (!$isPatch || array_key_exists('customFields', $requestData)) {
+            $entity->setCustomfields($data->customFields);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // manager: ManyToOne
-        if ($data->manager !== null) {
-            if (is_string($data->manager)) {
-                // IRI format: "/api/users/{id}"
-                $managerId = $this->extractIdFromIri($data->manager);
-                $manager = $this->entityManager->getRepository(User::class)->find($managerId);
-                if (!$manager) {
-                    throw new BadRequestHttpException('User not found: ' . $managerId);
+        if (!$isPatch || array_key_exists('manager', $requestData)) {
+            if ($data->manager !== null) {
+                if (is_string($data->manager)) {
+                    // IRI format: "/api/users/{id}"
+                    $managerId = $this->extractIdFromIri($data->manager);
+                    $manager = $this->entityManager->getRepository(User::class)->find($managerId);
+                    if (!$manager) {
+                        throw new BadRequestHttpException('User not found: ' . $managerId);
+                    }
+                    $entity->setManager($manager);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested manager creation not supported. Use IRI format.');
                 }
-                $entity->setManager($manager);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested manager creation not supported. Use IRI format.');
             }
         }
 
@@ -234,4 +558,49 @@ class UserProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

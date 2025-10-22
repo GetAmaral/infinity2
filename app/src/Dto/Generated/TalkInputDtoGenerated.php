@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\CompanyInputDto;
 use App\Dto\ContactInputDto;
@@ -26,92 +27,115 @@ abstract class TalkInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['talk:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['talk:write'])]
     public string $subject;
 
+    #[Groups(['talk:write'])]
     public ?string $summary = null;
 
     /**
      * company reference
-     * Can be: IRI string (e.g., "/api/companys/uuid") or nested CompanyInput object
+     * Must be: IRI string (e.g., "/api/companys/uuid")
      */
-    public string|CompanyInputDto|null $company = null;
+    #[Groups(['talk:write'])]
+    public ?string $company = null;
 
     /**
      * contact reference
-     * Can be: IRI string (e.g., "/api/contacts/uuid") or nested ContactInput object
+     * Must be: IRI string (e.g., "/api/contacts/uuid")
      */
-    public string|ContactInputDto|null $contact = null;
+    #[Groups(['talk:write'])]
+    public ?string $contact = null;
 
     /**
      * deal reference
-     * Can be: IRI string (e.g., "/api/deals/uuid") or nested DealInput object
+     * Must be: IRI string (e.g., "/api/deals/uuid")
      */
-    public string|DealInputDto|null $deal = null;
+    #[Groups(['talk:write'])]
+    public ?string $deal = null;
 
     /**
      * talkType reference
-     * Can be: IRI string (e.g., "/api/talktypes/uuid") or nested TalkTypeInput object
+     * Must be: IRI string (e.g., "/api/talktypes/uuid")
      */
     #[Assert\NotNull]
-    public string|TalkTypeInputDto $talkType;
+    #[Groups(['talk:write'])]
+    public ?string $talkType = null;
 
+    #[Groups(['talk:write'])]
     public int $channel = 0;
 
+    #[Groups(['talk:write'])]
     public int $status = 0;
 
     #[Assert\Range(max: 5, min: 1)]
+    #[Groups(['talk:write'])]
     public ?int $priority = null;
 
+    #[Groups(['talk:write'])]
     public ?int $outcome = null;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['talk:write'])]
     public ?string $sentiment = null;
 
+    #[Groups(['talk:write'])]
     public ?\DateTimeImmutable $dateStart = null;
 
+    #[Groups(['talk:write'])]
     public ?\DateTimeImmutable $dateLastMessage = null;
 
+    #[Groups(['talk:write'])]
     public ?\DateTimeImmutable $closedAt = null;
 
+    #[Groups(['talk:write'])]
     public ?int $durationSeconds = null;
 
+    #[Groups(['talk:write'])]
     public ?string $recordingUrl = null;
 
     /**
      * owner reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|UserInputDto $owner;
+    #[Groups(['talk:write'])]
+    public ?string $owner = null;
 
     /**
      * assignedTo reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $assignedTo = null;
+    #[Groups(['talk:write'])]
+    public ?string $assignedTo = null;
 
     #[Assert\Range(max: 150, min: 0)]
+    #[Groups(['talk:write'])]
     public int $messageCount = 0;
 
+    #[Groups(['talk:write'])]
     public bool $archived = false;
 
+    #[Groups(['talk:write'])]
     public bool $internal = false;
 
+    #[Groups(['talk:write'])]
     public ?array $tags = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -137,41 +161,41 @@ abstract class TalkInputDtoGenerated
         return $this;
     }
 
-    public function getCompany(): string|CompanyInputDto|null    {
+    public function getCompany(): ?string    {
         return $this->company;
     }
 
-    public function setCompany(string|CompanyInputDto|null $company): self
+    public function setCompany(?string $company): self
     {
         $this->company = $company;
         return $this;
     }
 
-    public function getContact(): string|ContactInputDto|null    {
+    public function getContact(): ?string    {
         return $this->contact;
     }
 
-    public function setContact(string|ContactInputDto|null $contact): self
+    public function setContact(?string $contact): self
     {
         $this->contact = $contact;
         return $this;
     }
 
-    public function getDeal(): string|DealInputDto|null    {
+    public function getDeal(): ?string    {
         return $this->deal;
     }
 
-    public function setDeal(string|DealInputDto|null $deal): self
+    public function setDeal(?string $deal): self
     {
         $this->deal = $deal;
         return $this;
     }
 
-    public function getTalktype(): string|TalkTypeInputDto    {
+    public function getTalktype(): ?string    {
         return $this->talkType;
     }
 
-    public function setTalktype(string|TalkTypeInputDto $talkType): self
+    public function setTalktype(?string $talkType): self
     {
         $this->talkType = $talkType;
         return $this;
@@ -287,21 +311,21 @@ abstract class TalkInputDtoGenerated
         return $this;
     }
 
-    public function getOwner(): string|UserInputDto    {
+    public function getOwner(): ?string    {
         return $this->owner;
     }
 
-    public function setOwner(string|UserInputDto $owner): self
+    public function setOwner(?string $owner): self
     {
         $this->owner = $owner;
         return $this;
     }
 
-    public function getAssignedto(): string|UserInputDto|null    {
+    public function getAssignedto(): ?string    {
         return $this->assignedTo;
     }
 
-    public function setAssignedto(string|UserInputDto|null $assignedTo): self
+    public function setAssignedto(?string $assignedTo): self
     {
         $this->assignedTo = $assignedTo;
         return $this;

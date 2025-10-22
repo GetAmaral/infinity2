@@ -50,7 +50,10 @@ class CampaignProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Campaign::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Campaign not found');
@@ -61,109 +64,223 @@ class CampaignProcessor implements ProcessorInterface
             $entity = new Campaign();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setActualbudget($data->actualBudget);
-        $entity->setActive($data->active);
-        $entity->setActualcost($data->actualCost);
-        $entity->setActualreturn($data->actualReturn);
-        $entity->setActualrevenue($data->actualRevenue);
-        $entity->setArchived($data->archived);
-        $entity->setBudgetedcost($data->budgetedCost);
-        $entity->setCampaignstatus($data->campaignStatus);
-        $entity->setCampaigntype($data->campaignType);
-        $entity->setCodename($data->codeName);
-        $entity->setDraft($data->draft);
-        $entity->setDuration($data->duration);
-        $entity->setEmailaddress($data->emailAddress);
-        $entity->setEnddate($data->endDate);
-        $entity->setExpectedresponse($data->expectedResponse);
-        $entity->setExpectedrevenue($data->expectedRevenue);
-        $entity->setMessage($data->message);
-        $entity->setNumberofcontacts($data->numberOfContacts);
-        $entity->setNumberofconverted($data->numberOfConverted);
-        $entity->setNumberofleads($data->numberOfLeads);
-        $entity->setNumberofresponses($data->numberOfResponses);
-        $entity->setObjective($data->objective);
-        $entity->setOthercost($data->otherCost);
-        $entity->setPlannedbudget($data->plannedBudget);
-        $entity->setPlannedduration($data->plannedDuration);
-        $entity->setPlannedenddate($data->plannedEndDate);
-        $entity->setPlannedreturn($data->plannedReturn);
-        $entity->setPlannedstartdate($data->plannedStartDate);
-        $entity->setRoi($data->roi);
-        $entity->setStartdate($data->startDate);
-        $entity->setStatus($data->status);
-        $entity->setTargetaudience($data->targetAudience);
-        $entity->setTemplate($data->template);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // actualBudget
+        if (!$isPatch || array_key_exists('actualBudget', $requestData)) {
+            $entity->setActualbudget($data->actualBudget);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // actualCost
+        if (!$isPatch || array_key_exists('actualCost', $requestData)) {
+            $entity->setActualcost($data->actualCost);
+        }
+        // actualReturn
+        if (!$isPatch || array_key_exists('actualReturn', $requestData)) {
+            $entity->setActualreturn($data->actualReturn);
+        }
+        // actualRevenue
+        if (!$isPatch || array_key_exists('actualRevenue', $requestData)) {
+            $entity->setActualrevenue($data->actualRevenue);
+        }
+        // archived
+        if (!$isPatch || array_key_exists('archived', $requestData)) {
+            $entity->setArchived($data->archived);
+        }
+        // budgetedCost
+        if (!$isPatch || array_key_exists('budgetedCost', $requestData)) {
+            $entity->setBudgetedcost($data->budgetedCost);
+        }
+        // campaignStatus
+        if (!$isPatch || array_key_exists('campaignStatus', $requestData)) {
+            $entity->setCampaignstatus($data->campaignStatus);
+        }
+        // campaignType
+        if (!$isPatch || array_key_exists('campaignType', $requestData)) {
+            $entity->setCampaigntype($data->campaignType);
+        }
+        // codeName
+        if (!$isPatch || array_key_exists('codeName', $requestData)) {
+            $entity->setCodename($data->codeName);
+        }
+        // draft
+        if (!$isPatch || array_key_exists('draft', $requestData)) {
+            $entity->setDraft($data->draft);
+        }
+        // duration
+        if (!$isPatch || array_key_exists('duration', $requestData)) {
+            $entity->setDuration($data->duration);
+        }
+        // emailAddress
+        if (!$isPatch || array_key_exists('emailAddress', $requestData)) {
+            $entity->setEmailaddress($data->emailAddress);
+        }
+        // endDate
+        if (!$isPatch || array_key_exists('endDate', $requestData)) {
+            $entity->setEnddate($data->endDate);
+        }
+        // expectedResponse
+        if (!$isPatch || array_key_exists('expectedResponse', $requestData)) {
+            $entity->setExpectedresponse($data->expectedResponse);
+        }
+        // expectedRevenue
+        if (!$isPatch || array_key_exists('expectedRevenue', $requestData)) {
+            $entity->setExpectedrevenue($data->expectedRevenue);
+        }
+        // message
+        if (!$isPatch || array_key_exists('message', $requestData)) {
+            $entity->setMessage($data->message);
+        }
+        // numberOfContacts
+        if (!$isPatch || array_key_exists('numberOfContacts', $requestData)) {
+            $entity->setNumberofcontacts($data->numberOfContacts);
+        }
+        // numberOfConverted
+        if (!$isPatch || array_key_exists('numberOfConverted', $requestData)) {
+            $entity->setNumberofconverted($data->numberOfConverted);
+        }
+        // numberOfLeads
+        if (!$isPatch || array_key_exists('numberOfLeads', $requestData)) {
+            $entity->setNumberofleads($data->numberOfLeads);
+        }
+        // numberOfResponses
+        if (!$isPatch || array_key_exists('numberOfResponses', $requestData)) {
+            $entity->setNumberofresponses($data->numberOfResponses);
+        }
+        // objective
+        if (!$isPatch || array_key_exists('objective', $requestData)) {
+            $entity->setObjective($data->objective);
+        }
+        // otherCost
+        if (!$isPatch || array_key_exists('otherCost', $requestData)) {
+            $entity->setOthercost($data->otherCost);
+        }
+        // plannedBudget
+        if (!$isPatch || array_key_exists('plannedBudget', $requestData)) {
+            $entity->setPlannedbudget($data->plannedBudget);
+        }
+        // plannedDuration
+        if (!$isPatch || array_key_exists('plannedDuration', $requestData)) {
+            $entity->setPlannedduration($data->plannedDuration);
+        }
+        // plannedEndDate
+        if (!$isPatch || array_key_exists('plannedEndDate', $requestData)) {
+            $entity->setPlannedenddate($data->plannedEndDate);
+        }
+        // plannedReturn
+        if (!$isPatch || array_key_exists('plannedReturn', $requestData)) {
+            $entity->setPlannedreturn($data->plannedReturn);
+        }
+        // plannedStartDate
+        if (!$isPatch || array_key_exists('plannedStartDate', $requestData)) {
+            $entity->setPlannedstartdate($data->plannedStartDate);
+        }
+        // roi
+        if (!$isPatch || array_key_exists('roi', $requestData)) {
+            $entity->setRoi($data->roi);
+        }
+        // startDate
+        if (!$isPatch || array_key_exists('startDate', $requestData)) {
+            $entity->setStartdate($data->startDate);
+        }
+        // status
+        if (!$isPatch || array_key_exists('status', $requestData)) {
+            $entity->setStatus($data->status);
+        }
+        // targetAudience
+        if (!$isPatch || array_key_exists('targetAudience', $requestData)) {
+            $entity->setTargetaudience($data->targetAudience);
+        }
+        // template
+        if (!$isPatch || array_key_exists('template', $requestData)) {
+            $entity->setTemplate($data->template);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // manager: ManyToOne
-        if ($data->manager !== null) {
-            if (is_string($data->manager)) {
-                // IRI format: "/api/users/{id}"
-                $managerId = $this->extractIdFromIri($data->manager);
-                $manager = $this->entityManager->getRepository(User::class)->find($managerId);
-                if (!$manager) {
-                    throw new BadRequestHttpException('User not found: ' . $managerId);
+        if (!$isPatch || array_key_exists('manager', $requestData)) {
+            if ($data->manager !== null) {
+                if (is_string($data->manager)) {
+                    // IRI format: "/api/users/{id}"
+                    $managerId = $this->extractIdFromIri($data->manager);
+                    $manager = $this->entityManager->getRepository(User::class)->find($managerId);
+                    if (!$manager) {
+                        throw new BadRequestHttpException('User not found: ' . $managerId);
+                    }
+                    $entity->setManager($manager);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested manager creation not supported. Use IRI format.');
                 }
-                $entity->setManager($manager);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested manager creation not supported. Use IRI format.');
             }
         }
 
         // owner: ManyToOne
-        if ($data->owner !== null) {
-            if (is_string($data->owner)) {
-                // IRI format: "/api/users/{id}"
-                $ownerId = $this->extractIdFromIri($data->owner);
-                $owner = $this->entityManager->getRepository(User::class)->find($ownerId);
-                if (!$owner) {
-                    throw new BadRequestHttpException('User not found: ' . $ownerId);
+        // owner is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('owner', $requestData)) {
+            if ($data->owner !== null) {
+                if (is_string($data->owner)) {
+                    // IRI format: "/api/users/{id}"
+                    $ownerId = $this->extractIdFromIri($data->owner);
+                    $owner = $this->entityManager->getRepository(User::class)->find($ownerId);
+                    if (!$owner) {
+                        throw new BadRequestHttpException('User not found: ' . $ownerId);
+                    }
+                    $entity->setOwner($owner);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested owner creation not supported. Use IRI format.');
                 }
-                $entity->setOwner($owner);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested owner creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('owner is required');
         }
 
         // parentCampaign: ManyToOne
-        if ($data->parentCampaign !== null) {
-            if (is_string($data->parentCampaign)) {
-                // IRI format: "/api/campaigns/{id}"
-                $parentCampaignId = $this->extractIdFromIri($data->parentCampaign);
-                $parentCampaign = $this->entityManager->getRepository(Campaign::class)->find($parentCampaignId);
-                if (!$parentCampaign) {
-                    throw new BadRequestHttpException('Campaign not found: ' . $parentCampaignId);
+        if (!$isPatch || array_key_exists('parentCampaign', $requestData)) {
+            if ($data->parentCampaign !== null) {
+                if (is_string($data->parentCampaign)) {
+                    // IRI format: "/api/campaigns/{id}"
+                    $parentCampaignId = $this->extractIdFromIri($data->parentCampaign);
+                    $parentCampaign = $this->entityManager->getRepository(Campaign::class)->find($parentCampaignId);
+                    if (!$parentCampaign) {
+                        throw new BadRequestHttpException('Campaign not found: ' . $parentCampaignId);
+                    }
+                    $entity->setParentcampaign($parentCampaign);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested parentCampaign creation not supported. Use IRI format.');
                 }
-                $entity->setParentcampaign($parentCampaign);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested parentCampaign creation not supported. Use IRI format.');
             }
         }
 
@@ -186,4 +303,49 @@ class CampaignProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

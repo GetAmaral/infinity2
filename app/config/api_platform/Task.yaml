@@ -7,9 +7,8 @@ resources:
     shortName: Task
     description: "Tasks and to-dos for productivity management"
 
-    input: App\Dto\TaskInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\TaskOutputDto
-    processor: App\State\TaskProcessor
 
     normalizationContext:
       groups: ["task:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_SALES_MANAGER')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\TaskInputDto
+        processor: App\State\TaskProcessor
         security: "is_granted('ROLE_SALES_MANAGER')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\TaskInputDto
+        processor: App\State\TaskProcessor
         security: "is_granted('ROLE_SALES_MANAGER')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\TaskInputDto
+        processor: App\State\TaskProcessor
         security: "is_granted('ROLE_SALES_MANAGER')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SALES_MANAGER')"

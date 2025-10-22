@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\ContactInputDto;
 use App\Dto\EventInputDto;
@@ -24,52 +25,63 @@ abstract class EventAttendeeInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['eventattendee:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['eventattendee:write'])]
     public string $name;
 
+    #[Groups(['eventattendee:write'])]
     public ?int $attendeeStatus = null;
 
+    #[Groups(['eventattendee:write'])]
     public ?string $comment = null;
 
     /**
      * contact reference
-     * Can be: IRI string (e.g., "/api/contacts/uuid") or nested ContactInput object
+     * Must be: IRI string (e.g., "/api/contacts/uuid")
      */
-    public string|ContactInputDto|null $contact = null;
+    #[Groups(['eventattendee:write'])]
+    public ?string $contact = null;
 
+    #[Groups(['eventattendee:write'])]
     public ?string $email = null;
 
     /**
      * event reference
-     * Can be: IRI string (e.g., "/api/events/uuid") or nested EventInput object
+     * Must be: IRI string (e.g., "/api/events/uuid")
      */
     #[Assert\NotNull]
-    public string|EventInputDto $event;
+    #[Groups(['eventattendee:write'])]
+    public ?string $event = null;
 
+    #[Groups(['eventattendee:write'])]
     public bool $optional = false;
 
+    #[Groups(['eventattendee:write'])]
     public bool $organizer = false;
 
+    #[Groups(['eventattendee:write'])]
     public ?string $phone = null;
 
     /**
      * user reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $user = null;
+    #[Groups(['eventattendee:write'])]
+    public ?string $user = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -105,11 +117,11 @@ abstract class EventAttendeeInputDtoGenerated
         return $this;
     }
 
-    public function getContact(): string|ContactInputDto|null    {
+    public function getContact(): ?string    {
         return $this->contact;
     }
 
-    public function setContact(string|ContactInputDto|null $contact): self
+    public function setContact(?string $contact): self
     {
         $this->contact = $contact;
         return $this;
@@ -125,11 +137,11 @@ abstract class EventAttendeeInputDtoGenerated
         return $this;
     }
 
-    public function getEvent(): string|EventInputDto    {
+    public function getEvent(): ?string    {
         return $this->event;
     }
 
-    public function setEvent(string|EventInputDto $event): self
+    public function setEvent(?string $event): self
     {
         $this->event = $event;
         return $this;
@@ -175,11 +187,11 @@ abstract class EventAttendeeInputDtoGenerated
         return $this;
     }
 
-    public function getUser(): string|UserInputDto|null    {
+    public function getUser(): ?string    {
         return $this->user;
     }
 
-    public function setUser(string|UserInputDto|null $user): self
+    public function setUser(?string $user): self
     {
         $this->user = $user;
         return $this;

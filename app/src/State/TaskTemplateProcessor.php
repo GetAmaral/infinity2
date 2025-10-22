@@ -46,7 +46,10 @@ class TaskTemplateProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(TaskTemplate::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('TaskTemplate not found');
@@ -57,65 +60,100 @@ class TaskTemplateProcessor implements ProcessorInterface
             $entity = new TaskTemplate();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setCommand($data->command);
-        $entity->setActive($data->active);
-        $entity->setDurationminutes($data->durationMinutes);
-        $entity->setLocation($data->location);
-        $entity->setPeriodicityinterval($data->periodicityInterval);
-        $entity->setPeriodicitytimeframe($data->periodicityTimeframe);
-        $entity->setPriority($data->priority);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // command
+        if (!$isPatch || array_key_exists('command', $requestData)) {
+            $entity->setCommand($data->command);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // durationMinutes
+        if (!$isPatch || array_key_exists('durationMinutes', $requestData)) {
+            $entity->setDurationminutes($data->durationMinutes);
+        }
+        // location
+        if (!$isPatch || array_key_exists('location', $requestData)) {
+            $entity->setLocation($data->location);
+        }
+        // periodicityInterval
+        if (!$isPatch || array_key_exists('periodicityInterval', $requestData)) {
+            $entity->setPeriodicityinterval($data->periodicityInterval);
+        }
+        // periodicityTimeframe
+        if (!$isPatch || array_key_exists('periodicityTimeframe', $requestData)) {
+            $entity->setPeriodicitytimeframe($data->periodicityTimeframe);
+        }
+        // priority
+        if (!$isPatch || array_key_exists('priority', $requestData)) {
+            $entity->setPriority($data->priority);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // pipelineStageTemplate: ManyToOne
-        if ($data->pipelineStageTemplate !== null) {
-            if (is_string($data->pipelineStageTemplate)) {
-                // IRI format: "/api/pipelinestagetemplates/{id}"
-                $pipelineStageTemplateId = $this->extractIdFromIri($data->pipelineStageTemplate);
-                $pipelineStageTemplate = $this->entityManager->getRepository(PipelineStageTemplate::class)->find($pipelineStageTemplateId);
-                if (!$pipelineStageTemplate) {
-                    throw new BadRequestHttpException('PipelineStageTemplate not found: ' . $pipelineStageTemplateId);
+        if (!$isPatch || array_key_exists('pipelineStageTemplate', $requestData)) {
+            if ($data->pipelineStageTemplate !== null) {
+                if (is_string($data->pipelineStageTemplate)) {
+                    // IRI format: "/api/pipelinestagetemplates/{id}"
+                    $pipelineStageTemplateId = $this->extractIdFromIri($data->pipelineStageTemplate);
+                    $pipelineStageTemplate = $this->entityManager->getRepository(PipelineStageTemplate::class)->find($pipelineStageTemplateId);
+                    if (!$pipelineStageTemplate) {
+                        throw new BadRequestHttpException('PipelineStageTemplate not found: ' . $pipelineStageTemplateId);
+                    }
+                    $entity->setPipelinestagetemplate($pipelineStageTemplate);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested pipelineStageTemplate creation not supported. Use IRI format.');
                 }
-                $entity->setPipelinestagetemplate($pipelineStageTemplate);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested pipelineStageTemplate creation not supported. Use IRI format.');
             }
         }
 
         // type: ManyToOne
-        if ($data->type !== null) {
-            if (is_string($data->type)) {
-                // IRI format: "/api/tasktypes/{id}"
-                $typeId = $this->extractIdFromIri($data->type);
-                $type = $this->entityManager->getRepository(TaskType::class)->find($typeId);
-                if (!$type) {
-                    throw new BadRequestHttpException('TaskType not found: ' . $typeId);
+        if (!$isPatch || array_key_exists('type', $requestData)) {
+            if ($data->type !== null) {
+                if (is_string($data->type)) {
+                    // IRI format: "/api/tasktypes/{id}"
+                    $typeId = $this->extractIdFromIri($data->type);
+                    $type = $this->entityManager->getRepository(TaskType::class)->find($typeId);
+                    if (!$type) {
+                        throw new BadRequestHttpException('TaskType not found: ' . $typeId);
+                    }
+                    $entity->setType($type);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested type creation not supported. Use IRI format.');
                 }
-                $entity->setType($type);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested type creation not supported. Use IRI format.');
             }
         }
 
@@ -138,4 +176,49 @@ class TaskTemplateProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

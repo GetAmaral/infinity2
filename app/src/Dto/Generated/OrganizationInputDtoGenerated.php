@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\CityInputDto;
 
 /**
@@ -20,67 +21,94 @@ use App\Dto\CityInputDto;
 abstract class OrganizationInputDtoGenerated
 {
     #[Assert\Length(max: 255)]
+    #[Groups(['organization:write'])]
     public ?string $logoPath = null;
 
+    #[Groups(['organization:write'])]
     public string $name;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['organization:write'])]
     public ?string $logoPathDark = null;
 
+    #[Groups(['organization:write'])]
     public ?string $description = null;
 
+    #[Groups(['organization:write'])]
     public ?string $logoUrl = null;
 
+    #[Groups(['organization:write'])]
     public ?string $industry = null;
 
+    #[Groups(['organization:write'])]
     public ?string $address = null;
 
+    #[Groups(['organization:write'])]
     public ?string $website = null;
 
+    #[Groups(['organization:write'])]
     public bool $active = true;
 
+    #[Groups(['organization:write'])]
     public ?array $branding = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['organization:write'])]
     public ?string $businessPhone = null;
 
+    #[Groups(['organization:write'])]
     public ?array $businessSettings = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['organization:write'])]
     public ?string $celPhone = null;
 
     /**
      * city reference
-     * Can be: IRI string (e.g., "/api/citys/uuid") or nested CityInput object
+     * Must be: IRI string (e.g., "/api/citys/uuid")
      */
-    public string|CityInputDto|null $city = null;
+    #[Groups(['organization:write'])]
+    public ?string $city = null;
 
+    #[Groups(['organization:write'])]
     public ?int $companySize = null;
 
+    #[Groups(['organization:write'])]
     public ?string $contactName = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['organization:write'])]
     public ?string $currency = null;
 
+    #[Groups(['organization:write'])]
     public ?array $featureFlags = null;
 
+    #[Groups(['organization:write'])]
     public ?string $geo = null;
 
+    #[Groups(['organization:write'])]
     public ?array $integrationConfig = null;
 
+    #[Groups(['organization:write'])]
     public ?array $navConfig = null;
 
+    #[Groups(['organization:write'])]
     public ?string $postalCode = null;
 
+    #[Groups(['organization:write'])]
     public ?array $securityConfig = null;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['organization:write'])]
     public string $slug;
 
+    #[Groups(['organization:write'])]
     public ?int $status = null;
 
+    #[Groups(['organization:write'])]
     public string $timeZone = 'UTC';
 
+    #[Groups(['organization:write'])]
     public ?array $uiPreferences = null;
 
 
@@ -436,11 +464,11 @@ abstract class OrganizationInputDtoGenerated
         return $this;
     }
 
-    public function getCity(): string|CityInputDto|null    {
+    public function getCity(): ?string    {
         return $this->city;
     }
 
-    public function setCity(string|CityInputDto|null $city): self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
         return $this;

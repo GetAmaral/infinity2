@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 
 /**
@@ -21,43 +22,56 @@ abstract class CalendarTypeInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['calendartype:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['calendartype:write'])]
     public string $name;
 
+    #[Groups(['calendartype:write'])]
     public ?string $description = null;
 
+    #[Groups(['calendartype:write'])]
     public string $color = '#0dcaf0';
 
+    #[Groups(['calendartype:write'])]
     public string $icon = 'bi-calendar3';
 
+    #[Groups(['calendartype:write'])]
     public bool $active = true;
 
+    #[Groups(['calendartype:write'])]
     public bool $default = false;
 
+    #[Groups(['calendartype:write'])]
     public string $visibility = 'personal';
 
+    #[Groups(['calendartype:write'])]
     public string $access_level = 'owner_only';
 
+    #[Groups(['calendartype:write'])]
     public int $sort_order = 100;
 
+    #[Groups(['calendartype:write'])]
     public bool $allow_sharing = true;
 
+    #[Groups(['calendartype:write'])]
     public bool $require_approval = false;
 
+    #[Groups(['calendartype:write'])]
     public ?int $max_calendars_per_user = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;

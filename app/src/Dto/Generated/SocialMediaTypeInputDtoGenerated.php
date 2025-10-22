@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * SocialMediaType Input DTO (Generated Base Class)
@@ -18,10 +19,13 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 abstract class SocialMediaTypeInputDtoGenerated
 {
+    #[Groups(['socialmediatype:write'])]
     public string $name;
 
+    #[Groups(['socialmediatype:write'])]
     public ?string $iconUrl = null;
 
+    #[Groups(['socialmediatype:write'])]
     public ?string $url = null;
 
 

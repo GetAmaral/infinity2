@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\UserInputDto;
 
 /**
@@ -19,26 +20,33 @@ use App\Dto\UserInputDto;
  */
 abstract class AuditLogInputDtoGenerated
 {
+    #[Groups(['audit:write'])]
     public array $changes;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['audit:write'])]
     public string $action;
 
     #[Assert\Length(max: 64)]
+    #[Groups(['audit:write'])]
     public ?string $checksum = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['audit:write'])]
     public string $entityClass;
 
+    #[Groups(['audit:write'])]
     public string $entityId;
 
+    #[Groups(['audit:write'])]
     public ?array $metadata = null;
 
     /**
      * user reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $user = null;
+    #[Groups(['audit:write'])]
+    public ?string $user = null;
 
 
     // Getters and Setters
@@ -103,11 +111,11 @@ abstract class AuditLogInputDtoGenerated
         return $this;
     }
 
-    public function getUser(): string|UserInputDto|null    {
+    public function getUser(): ?string    {
         return $this->user;
     }
 
-    public function setUser(string|UserInputDto|null $user): self
+    public function setUser(?string $user): self
     {
         $this->user = $user;
         return $this;

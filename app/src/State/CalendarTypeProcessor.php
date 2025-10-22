@@ -45,7 +45,10 @@ class CalendarTypeProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(CalendarType::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('CalendarType not found');
@@ -56,37 +59,77 @@ class CalendarTypeProcessor implements ProcessorInterface
             $entity = new CalendarType();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setColor($data->color);
-        $entity->setIcon($data->icon);
-        $entity->setActive($data->active);
-        $entity->setDefault($data->default);
-        $entity->setVisibility($data->visibility);
-        $entity->setAccess_level($data->access_level);
-        $entity->setSort_order($data->sort_order);
-        $entity->setAllow_sharing($data->allow_sharing);
-        $entity->setRequire_approval($data->require_approval);
-        $entity->setMax_calendars_per_user($data->max_calendars_per_user);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // color
+        if (!$isPatch || array_key_exists('color', $requestData)) {
+            $entity->setColor($data->color);
+        }
+        // icon
+        if (!$isPatch || array_key_exists('icon', $requestData)) {
+            $entity->setIcon($data->icon);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // default
+        if (!$isPatch || array_key_exists('default', $requestData)) {
+            $entity->setDefault($data->default);
+        }
+        // visibility
+        if (!$isPatch || array_key_exists('visibility', $requestData)) {
+            $entity->setVisibility($data->visibility);
+        }
+        // access_level
+        if (!$isPatch || array_key_exists('access_level', $requestData)) {
+            $entity->setAccess_level($data->access_level);
+        }
+        // sort_order
+        if (!$isPatch || array_key_exists('sort_order', $requestData)) {
+            $entity->setSort_order($data->sort_order);
+        }
+        // allow_sharing
+        if (!$isPatch || array_key_exists('allow_sharing', $requestData)) {
+            $entity->setAllow_sharing($data->allow_sharing);
+        }
+        // require_approval
+        if (!$isPatch || array_key_exists('require_approval', $requestData)) {
+            $entity->setRequire_approval($data->require_approval);
+        }
+        // max_calendars_per_user
+        if (!$isPatch || array_key_exists('max_calendars_per_user', $requestData)) {
+            $entity->setMax_calendars_per_user($data->max_calendars_per_user);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // Persist and flush
@@ -108,4 +151,49 @@ class CalendarTypeProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

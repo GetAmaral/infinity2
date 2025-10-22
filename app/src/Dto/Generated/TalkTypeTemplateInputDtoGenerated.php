@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * TalkTypeTemplate Input DTO (Generated Base Class)
@@ -18,10 +19,13 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 abstract class TalkTypeTemplateInputDtoGenerated
 {
+    #[Groups(['talktypetemplate:write'])]
     public string $name;
 
+    #[Groups(['talktypetemplate:write'])]
     public string $description;
 
+    #[Groups(['talktypetemplate:write'])]
     public ?string $iconUrl = null;
 
 

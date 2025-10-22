@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Genmax;
 
 use App\Entity\Generator\GeneratorEntity;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Environment;
 use Psr\Log\LoggerInterface;
@@ -40,7 +39,7 @@ class ApiGenerator
         #[Autowire(param: 'genmax.templates')]
         private readonly array $templates,
         private readonly Environment $twig,
-        private readonly Filesystem $filesystem,
+        private readonly SmartFileWriter $fileWriter,
         private readonly LoggerInterface $logger
     ) {}
 
@@ -67,23 +66,18 @@ class ApiGenerator
         );
 
         try {
-            // Create directory if needed
-            $dir = dirname($filePath);
-            if (!is_dir($dir)) {
-                $this->filesystem->mkdir($dir, 0755);
-            }
-
             // Render from template
             $content = $this->twig->render($this->templates['api_platform_config'], [
                 'entity' => $entity,
             ]);
 
-            // Write file atomically
-            $this->filesystem->dumpFile($filePath, $content);
+            // Write file with smart comparison
+            $status = $this->fileWriter->writeFile($filePath, $content);
 
             $this->logger->info('[GENMAX] Generated API Platform configuration', [
                 'file' => $filePath,
-                'entity' => $entity->getEntityName()
+                'entity' => $entity->getEntityName(),
+                'status' => $status
             ]);
 
             return $filePath;

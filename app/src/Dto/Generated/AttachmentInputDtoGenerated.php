@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\EventInputDto;
 use App\Dto\ProductInputDto;
@@ -24,55 +25,63 @@ abstract class AttachmentInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['attachment:write'])]
+    public ?string $organization = null;
 
     /**
      * event reference
-     * Can be: IRI string (e.g., "/api/events/uuid") or nested EventInput object
+     * Must be: IRI string (e.g., "/api/events/uuid")
      */
-    public string|EventInputDto|null $event = null;
+    #[Groups(['attachment:write'])]
+    public ?string $event = null;
 
+    #[Groups(['attachment:write'])]
     public ?int $fileSize = null;
 
+    #[Groups(['attachment:write'])]
     public ?string $fileType = null;
 
+    #[Groups(['attachment:write'])]
     public string $filename;
 
     /**
      * product reference
-     * Can be: IRI string (e.g., "/api/products/uuid") or nested ProductInput object
+     * Must be: IRI string (e.g., "/api/products/uuid")
      */
-    public string|ProductInputDto|null $product = null;
+    #[Groups(['attachment:write'])]
+    public ?string $product = null;
 
     /**
      * talkMessage reference
-     * Can be: IRI string (e.g., "/api/talkmessages/uuid") or nested TalkMessageInput object
+     * Must be: IRI string (e.g., "/api/talkmessages/uuid")
      */
-    public string|TalkMessageInputDto|null $talkMessage = null;
+    #[Groups(['attachment:write'])]
+    public ?string $talkMessage = null;
 
+    #[Groups(['attachment:write'])]
     public ?string $url = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
     }
 
-    public function getEvent(): string|EventInputDto|null    {
+    public function getEvent(): ?string    {
         return $this->event;
     }
 
-    public function setEvent(string|EventInputDto|null $event): self
+    public function setEvent(?string $event): self
     {
         $this->event = $event;
         return $this;
@@ -108,21 +117,21 @@ abstract class AttachmentInputDtoGenerated
         return $this;
     }
 
-    public function getProduct(): string|ProductInputDto|null    {
+    public function getProduct(): ?string    {
         return $this->product;
     }
 
-    public function setProduct(string|ProductInputDto|null $product): self
+    public function setProduct(?string $product): self
     {
         $this->product = $product;
         return $this;
     }
 
-    public function getTalkmessage(): string|TalkMessageInputDto|null    {
+    public function getTalkmessage(): ?string    {
         return $this->talkMessage;
     }
 
-    public function setTalkmessage(string|TalkMessageInputDto|null $talkMessage): self
+    public function setTalkmessage(?string $talkMessage): self
     {
         $this->talkMessage = $talkMessage;
         return $this;

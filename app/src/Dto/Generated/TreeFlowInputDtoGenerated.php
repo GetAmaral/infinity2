@@ -24,10 +24,10 @@ abstract class TreeFlowInputDtoGenerated
     /**
      * organization reference
      * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
     #[Groups(['treeflow:write'])]
-    public string $organization;
+    public ?string $organization = null;
 
     #[Assert\Length(max: 255)]
     #[Groups(['treeflow:write'])]
@@ -64,11 +64,11 @@ abstract class TreeFlowInputDtoGenerated
 
     // Getters and Setters
 
-    public function getOrganization(): string    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;

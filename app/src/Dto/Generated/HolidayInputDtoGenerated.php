@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\CalendarInputDto;
 use App\Dto\EventInputDto;
@@ -23,65 +24,85 @@ abstract class HolidayInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['holiday:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['holiday:write'])]
     public string $name;
 
+    #[Groups(['holiday:write'])]
     public ?string $description = null;
 
+    #[Groups(['holiday:write'])]
     public bool $recurring;
 
+    #[Groups(['holiday:write'])]
     public ?bool $blocksScheduling = null;
 
+    #[Groups(['holiday:write'])]
     public bool $observed;
 
+    #[Groups(['holiday:write'])]
     public bool $active = true;
 
+    #[Groups(['holiday:write'])]
     public ?string $country = null;
 
     /**
      * calendar reference
-     * Can be: IRI string (e.g., "/api/calendars/uuid") or nested CalendarInput object
+     * Must be: IRI string (e.g., "/api/calendars/uuid")
      */
-    public string|CalendarInputDto|null $calendar = null;
+    #[Groups(['holiday:write'])]
+    public ?string $calendar = null;
 
+    #[Groups(['holiday:write'])]
     public ?string $region = null;
 
+    #[Groups(['holiday:write'])]
     public ?int $year = null;
 
     /**
      * event reference
-     * Can be: IRI string (e.g., "/api/events/uuid") or nested EventInput object
+     * Must be: IRI string (e.g., "/api/events/uuid")
      */
-    public string|EventInputDto|null $event = null;
+    #[Groups(['holiday:write'])]
+    public ?string $event = null;
 
+    #[Groups(['holiday:write'])]
     public ?string $holidayType = null;
 
+    #[Groups(['holiday:write'])]
     public ?\DateTimeImmutable $originalDate = null;
 
+    #[Groups(['holiday:write'])]
     public bool $affectsSLA = true;
 
+    #[Groups(['holiday:write'])]
     public \DateTimeImmutable $sentAt;
 
+    #[Groups(['holiday:write'])]
     public bool $workingDay = false;
 
+    #[Groups(['holiday:write'])]
     public ?string $notes = null;
 
+    #[Groups(['holiday:write'])]
     public ?string $startTime = null;
 
+    #[Groups(['holiday:write'])]
     public ?string $endTime = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -157,11 +178,11 @@ abstract class HolidayInputDtoGenerated
         return $this;
     }
 
-    public function getCalendar(): string|CalendarInputDto|null    {
+    public function getCalendar(): ?string    {
         return $this->calendar;
     }
 
-    public function setCalendar(string|CalendarInputDto|null $calendar): self
+    public function setCalendar(?string $calendar): self
     {
         $this->calendar = $calendar;
         return $this;
@@ -187,11 +208,11 @@ abstract class HolidayInputDtoGenerated
         return $this;
     }
 
-    public function getEvent(): string|EventInputDto|null    {
+    public function getEvent(): ?string    {
         return $this->event;
     }
 
-    public function setEvent(string|EventInputDto|null $event): self
+    public function setEvent(?string $event): self
     {
         $this->event = $event;
         return $this;

@@ -44,7 +44,10 @@ class CountryProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Country::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Country not found');
@@ -55,42 +58,150 @@ class CountryProcessor implements ProcessorInterface
             $entity = new Country();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setIso2($data->iso2);
-        $entity->setName($data->name);
-        $entity->setIso3($data->iso3);
-        $entity->setNumericcode($data->numericCode);
-        $entity->setCurrencycode($data->currencyCode);
-        $entity->setPhonecode($data->phoneCode);
-        $entity->setContinent($data->continent);
-        $entity->setCapital($data->capital);
-        $entity->setCurrencysymbol($data->currencySymbol);
-        $entity->setEumember($data->euMember);
-        $entity->setRegion($data->region);
-        $entity->setNativename($data->nativeName);
-        $entity->setOfficialname($data->officialName);
-        $entity->setActive($data->active);
-        $entity->setSubregion($data->subregion);
-        $entity->setLatitude($data->latitude);
-        $entity->setLongitude($data->longitude);
-        $entity->setTimezones($data->timezones);
-        $entity->setLanguages($data->languages);
-        $entity->setTld($data->tld);
-        $entity->setNationalityname($data->nationalityName);
-        $entity->setAvailableforshipping($data->availableForShipping);
-        $entity->setAvailableforbilling($data->availableForBilling);
-        $entity->setSchengenmember($data->schengenMember);
-        $entity->setOecdmember($data->oecdMember);
-        $entity->setDataresidencyrequired($data->dataResidencyRequired);
-        $entity->setPostalcodeformat($data->postalCodeFormat);
-        $entity->setPostalcoderequired($data->postalCodeRequired);
-        $entity->setAddressformat($data->addressFormat);
-        $entity->setTaxidrequired($data->taxIdRequired);
-        $entity->setPopulation($data->population);
-        $entity->setArea($data->area);
-        $entity->setUnmembersince($data->unMemberSince);
-        $entity->setFlagemoji($data->flagEmoji);
-        $entity->setFlagsvgurl($data->flagSvgUrl);
+        // iso2
+        if (!$isPatch || array_key_exists('iso2', $requestData)) {
+            $entity->setIso2($data->iso2);
+        }
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // iso3
+        if (!$isPatch || array_key_exists('iso3', $requestData)) {
+            $entity->setIso3($data->iso3);
+        }
+        // numericCode
+        if (!$isPatch || array_key_exists('numericCode', $requestData)) {
+            $entity->setNumericcode($data->numericCode);
+        }
+        // currencyCode
+        if (!$isPatch || array_key_exists('currencyCode', $requestData)) {
+            $entity->setCurrencycode($data->currencyCode);
+        }
+        // phoneCode
+        if (!$isPatch || array_key_exists('phoneCode', $requestData)) {
+            $entity->setPhonecode($data->phoneCode);
+        }
+        // continent
+        if (!$isPatch || array_key_exists('continent', $requestData)) {
+            $entity->setContinent($data->continent);
+        }
+        // capital
+        if (!$isPatch || array_key_exists('capital', $requestData)) {
+            $entity->setCapital($data->capital);
+        }
+        // currencySymbol
+        if (!$isPatch || array_key_exists('currencySymbol', $requestData)) {
+            $entity->setCurrencysymbol($data->currencySymbol);
+        }
+        // euMember
+        if (!$isPatch || array_key_exists('euMember', $requestData)) {
+            $entity->setEumember($data->euMember);
+        }
+        // region
+        if (!$isPatch || array_key_exists('region', $requestData)) {
+            $entity->setRegion($data->region);
+        }
+        // nativeName
+        if (!$isPatch || array_key_exists('nativeName', $requestData)) {
+            $entity->setNativename($data->nativeName);
+        }
+        // officialName
+        if (!$isPatch || array_key_exists('officialName', $requestData)) {
+            $entity->setOfficialname($data->officialName);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // subregion
+        if (!$isPatch || array_key_exists('subregion', $requestData)) {
+            $entity->setSubregion($data->subregion);
+        }
+        // latitude
+        if (!$isPatch || array_key_exists('latitude', $requestData)) {
+            $entity->setLatitude($data->latitude);
+        }
+        // longitude
+        if (!$isPatch || array_key_exists('longitude', $requestData)) {
+            $entity->setLongitude($data->longitude);
+        }
+        // timezones
+        if (!$isPatch || array_key_exists('timezones', $requestData)) {
+            $entity->setTimezones($data->timezones);
+        }
+        // languages
+        if (!$isPatch || array_key_exists('languages', $requestData)) {
+            $entity->setLanguages($data->languages);
+        }
+        // tld
+        if (!$isPatch || array_key_exists('tld', $requestData)) {
+            $entity->setTld($data->tld);
+        }
+        // nationalityName
+        if (!$isPatch || array_key_exists('nationalityName', $requestData)) {
+            $entity->setNationalityname($data->nationalityName);
+        }
+        // availableForShipping
+        if (!$isPatch || array_key_exists('availableForShipping', $requestData)) {
+            $entity->setAvailableforshipping($data->availableForShipping);
+        }
+        // availableForBilling
+        if (!$isPatch || array_key_exists('availableForBilling', $requestData)) {
+            $entity->setAvailableforbilling($data->availableForBilling);
+        }
+        // schengenMember
+        if (!$isPatch || array_key_exists('schengenMember', $requestData)) {
+            $entity->setSchengenmember($data->schengenMember);
+        }
+        // oecdMember
+        if (!$isPatch || array_key_exists('oecdMember', $requestData)) {
+            $entity->setOecdmember($data->oecdMember);
+        }
+        // dataResidencyRequired
+        if (!$isPatch || array_key_exists('dataResidencyRequired', $requestData)) {
+            $entity->setDataresidencyrequired($data->dataResidencyRequired);
+        }
+        // postalCodeFormat
+        if (!$isPatch || array_key_exists('postalCodeFormat', $requestData)) {
+            $entity->setPostalcodeformat($data->postalCodeFormat);
+        }
+        // postalCodeRequired
+        if (!$isPatch || array_key_exists('postalCodeRequired', $requestData)) {
+            $entity->setPostalcoderequired($data->postalCodeRequired);
+        }
+        // addressFormat
+        if (!$isPatch || array_key_exists('addressFormat', $requestData)) {
+            $entity->setAddressformat($data->addressFormat);
+        }
+        // taxIdRequired
+        if (!$isPatch || array_key_exists('taxIdRequired', $requestData)) {
+            $entity->setTaxidrequired($data->taxIdRequired);
+        }
+        // population
+        if (!$isPatch || array_key_exists('population', $requestData)) {
+            $entity->setPopulation($data->population);
+        }
+        // area
+        if (!$isPatch || array_key_exists('area', $requestData)) {
+            $entity->setArea($data->area);
+        }
+        // unMemberSince
+        if (!$isPatch || array_key_exists('unMemberSince', $requestData)) {
+            $entity->setUnmembersince($data->unMemberSince);
+        }
+        // flagEmoji
+        if (!$isPatch || array_key_exists('flagEmoji', $requestData)) {
+            $entity->setFlagemoji($data->flagEmoji);
+        }
+        // flagSvgUrl
+        if (!$isPatch || array_key_exists('flagSvgUrl', $requestData)) {
+            $entity->setFlagsvgurl($data->flagSvgUrl);
+        }
 
         // Map relationship properties
         // Persist and flush
@@ -112,4 +223,49 @@ class CountryProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

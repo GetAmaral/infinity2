@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 
 /**
@@ -19,15 +20,19 @@ use App\Dto\OrganizationInputDto;
  */
 abstract class EventResourceTypeInputDtoGenerated
 {
+    #[Groups(['eventresourcetype:write'])]
     public string $name;
 
+    #[Groups(['eventresourcetype:write'])]
     public ?string $description = null;
 
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    public string|OrganizationInputDto|null $organization = null;
+    #[Groups(['eventresourcetype:write'])]
+    public ?string $organization = null;
 
 
     // Getters and Setters
@@ -52,11 +57,11 @@ abstract class EventResourceTypeInputDtoGenerated
         return $this;
     }
 
-    public function getOrganization(): string|OrganizationInputDto|null    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto|null $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;

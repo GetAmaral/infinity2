@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Role Input DTO (Generated Base Class)
@@ -19,16 +20,21 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 abstract class RoleInputDtoGenerated
 {
     #[Assert\Length(max: 50)]
+    #[Groups(['role:write'])]
     public string $name;
 
+    #[Groups(['role:write'])]
     public array $permissions;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['role:write'])]
     public string $description;
 
     #[Assert\Range(max: 5, min: 1)]
+    #[Groups(['role:write'])]
     public ?int $priority = null;
 
+    #[Groups(['role:write'])]
     public bool $systemRole = false;
 
 

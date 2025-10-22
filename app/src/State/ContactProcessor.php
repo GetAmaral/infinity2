@@ -53,7 +53,10 @@ class ContactProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Contact::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Contact not found');
@@ -64,123 +67,231 @@ class ContactProcessor implements ProcessorInterface
             $entity = new Contact();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setFirstname($data->firstName);
-        $entity->setName($data->name);
-        $entity->setLastname($data->lastName);
-        $entity->setWebsite($data->website);
-        $entity->setAddress($data->address);
-        $entity->setBillingaddress($data->billingAddress);
-        $entity->setBirthdate($data->birthDate);
-        $entity->setMobilephone($data->mobilePhone);
-        $entity->setLinkedinurl($data->linkedinUrl);
-        $entity->setTitle($data->title);
-        $entity->setDepartment($data->department);
-        $entity->setEmailoptout($data->emailOptOut);
-        $entity->setLeadsource($data->leadSource);
-        $entity->setDonotcall($data->doNotCall);
-        $entity->setPreferredcontactmethod($data->preferredContactMethod);
-        $entity->setLastcontactdate($data->lastContactDate);
-        $entity->setDocument($data->document);
-        $entity->setEmail($data->email);
-        $entity->setFirsttalkdate($data->firstTalkDate);
-        $entity->setGender($data->gender);
-        $entity->setGeo($data->geo);
-        $entity->setLasttalkdate($data->lastTalkDate);
-        $entity->setNeighborhood($data->neighborhood);
-        $entity->setNickname($data->nickname);
-        $entity->setNotes($data->notes);
-        $entity->setOrigin($data->origin);
-        $entity->setPhone($data->phone);
-        $entity->setPostalcode($data->postalCode);
-        $entity->setProfilepictureurl($data->profilePictureUrl);
-        $entity->setRanking($data->ranking);
-        $entity->setScore($data->score);
-        $entity->setStatus($data->status);
+        // firstName
+        if (!$isPatch || array_key_exists('firstName', $requestData)) {
+            $entity->setFirstname($data->firstName);
+        }
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // lastName
+        if (!$isPatch || array_key_exists('lastName', $requestData)) {
+            $entity->setLastname($data->lastName);
+        }
+        // website
+        if (!$isPatch || array_key_exists('website', $requestData)) {
+            $entity->setWebsite($data->website);
+        }
+        // address
+        if (!$isPatch || array_key_exists('address', $requestData)) {
+            $entity->setAddress($data->address);
+        }
+        // billingAddress
+        if (!$isPatch || array_key_exists('billingAddress', $requestData)) {
+            $entity->setBillingaddress($data->billingAddress);
+        }
+        // birthDate
+        if (!$isPatch || array_key_exists('birthDate', $requestData)) {
+            $entity->setBirthdate($data->birthDate);
+        }
+        // mobilePhone
+        if (!$isPatch || array_key_exists('mobilePhone', $requestData)) {
+            $entity->setMobilephone($data->mobilePhone);
+        }
+        // linkedinUrl
+        if (!$isPatch || array_key_exists('linkedinUrl', $requestData)) {
+            $entity->setLinkedinurl($data->linkedinUrl);
+        }
+        // title
+        if (!$isPatch || array_key_exists('title', $requestData)) {
+            $entity->setTitle($data->title);
+        }
+        // department
+        if (!$isPatch || array_key_exists('department', $requestData)) {
+            $entity->setDepartment($data->department);
+        }
+        // emailOptOut
+        if (!$isPatch || array_key_exists('emailOptOut', $requestData)) {
+            $entity->setEmailoptout($data->emailOptOut);
+        }
+        // leadSource
+        if (!$isPatch || array_key_exists('leadSource', $requestData)) {
+            $entity->setLeadsource($data->leadSource);
+        }
+        // doNotCall
+        if (!$isPatch || array_key_exists('doNotCall', $requestData)) {
+            $entity->setDonotcall($data->doNotCall);
+        }
+        // preferredContactMethod
+        if (!$isPatch || array_key_exists('preferredContactMethod', $requestData)) {
+            $entity->setPreferredcontactmethod($data->preferredContactMethod);
+        }
+        // lastContactDate
+        if (!$isPatch || array_key_exists('lastContactDate', $requestData)) {
+            $entity->setLastcontactdate($data->lastContactDate);
+        }
+        // document
+        if (!$isPatch || array_key_exists('document', $requestData)) {
+            $entity->setDocument($data->document);
+        }
+        // email
+        if (!$isPatch || array_key_exists('email', $requestData)) {
+            $entity->setEmail($data->email);
+        }
+        // firstTalkDate
+        if (!$isPatch || array_key_exists('firstTalkDate', $requestData)) {
+            $entity->setFirsttalkdate($data->firstTalkDate);
+        }
+        // gender
+        if (!$isPatch || array_key_exists('gender', $requestData)) {
+            $entity->setGender($data->gender);
+        }
+        // geo
+        if (!$isPatch || array_key_exists('geo', $requestData)) {
+            $entity->setGeo($data->geo);
+        }
+        // lastTalkDate
+        if (!$isPatch || array_key_exists('lastTalkDate', $requestData)) {
+            $entity->setLasttalkdate($data->lastTalkDate);
+        }
+        // neighborhood
+        if (!$isPatch || array_key_exists('neighborhood', $requestData)) {
+            $entity->setNeighborhood($data->neighborhood);
+        }
+        // nickname
+        if (!$isPatch || array_key_exists('nickname', $requestData)) {
+            $entity->setNickname($data->nickname);
+        }
+        // notes
+        if (!$isPatch || array_key_exists('notes', $requestData)) {
+            $entity->setNotes($data->notes);
+        }
+        // origin
+        if (!$isPatch || array_key_exists('origin', $requestData)) {
+            $entity->setOrigin($data->origin);
+        }
+        // phone
+        if (!$isPatch || array_key_exists('phone', $requestData)) {
+            $entity->setPhone($data->phone);
+        }
+        // postalCode
+        if (!$isPatch || array_key_exists('postalCode', $requestData)) {
+            $entity->setPostalcode($data->postalCode);
+        }
+        // profilePictureUrl
+        if (!$isPatch || array_key_exists('profilePictureUrl', $requestData)) {
+            $entity->setProfilepictureurl($data->profilePictureUrl);
+        }
+        // ranking
+        if (!$isPatch || array_key_exists('ranking', $requestData)) {
+            $entity->setRanking($data->ranking);
+        }
+        // score
+        if (!$isPatch || array_key_exists('score', $requestData)) {
+            $entity->setScore($data->score);
+        }
+        // status
+        if (!$isPatch || array_key_exists('status', $requestData)) {
+            $entity->setStatus($data->status);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // accountManager: ManyToOne
-        if ($data->accountManager !== null) {
-            if (is_string($data->accountManager)) {
-                // IRI format: "/api/users/{id}"
-                $accountManagerId = $this->extractIdFromIri($data->accountManager);
-                $accountManager = $this->entityManager->getRepository(User::class)->find($accountManagerId);
-                if (!$accountManager) {
-                    throw new BadRequestHttpException('User not found: ' . $accountManagerId);
+        if (!$isPatch || array_key_exists('accountManager', $requestData)) {
+            if ($data->accountManager !== null) {
+                if (is_string($data->accountManager)) {
+                    // IRI format: "/api/users/{id}"
+                    $accountManagerId = $this->extractIdFromIri($data->accountManager);
+                    $accountManager = $this->entityManager->getRepository(User::class)->find($accountManagerId);
+                    if (!$accountManager) {
+                        throw new BadRequestHttpException('User not found: ' . $accountManagerId);
+                    }
+                    $entity->setAccountmanager($accountManager);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested accountManager creation not supported. Use IRI format.');
                 }
-                $entity->setAccountmanager($accountManager);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested accountManager creation not supported. Use IRI format.');
             }
         }
 
         // billingCity: ManyToOne
-        if ($data->billingCity !== null) {
-            if (is_string($data->billingCity)) {
-                // IRI format: "/api/citys/{id}"
-                $billingCityId = $this->extractIdFromIri($data->billingCity);
-                $billingCity = $this->entityManager->getRepository(City::class)->find($billingCityId);
-                if (!$billingCity) {
-                    throw new BadRequestHttpException('City not found: ' . $billingCityId);
+        if (!$isPatch || array_key_exists('billingCity', $requestData)) {
+            if ($data->billingCity !== null) {
+                if (is_string($data->billingCity)) {
+                    // IRI format: "/api/citys/{id}"
+                    $billingCityId = $this->extractIdFromIri($data->billingCity);
+                    $billingCity = $this->entityManager->getRepository(City::class)->find($billingCityId);
+                    if (!$billingCity) {
+                        throw new BadRequestHttpException('City not found: ' . $billingCityId);
+                    }
+                    $entity->setBillingcity($billingCity);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested billingCity creation not supported. Use IRI format.');
                 }
-                $entity->setBillingcity($billingCity);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested billingCity creation not supported. Use IRI format.');
             }
         }
 
         // city: ManyToOne
-        if ($data->city !== null) {
-            if (is_string($data->city)) {
-                // IRI format: "/api/citys/{id}"
-                $cityId = $this->extractIdFromIri($data->city);
-                $city = $this->entityManager->getRepository(City::class)->find($cityId);
-                if (!$city) {
-                    throw new BadRequestHttpException('City not found: ' . $cityId);
+        if (!$isPatch || array_key_exists('city', $requestData)) {
+            if ($data->city !== null) {
+                if (is_string($data->city)) {
+                    // IRI format: "/api/citys/{id}"
+                    $cityId = $this->extractIdFromIri($data->city);
+                    $city = $this->entityManager->getRepository(City::class)->find($cityId);
+                    if (!$city) {
+                        throw new BadRequestHttpException('City not found: ' . $cityId);
+                    }
+                    $entity->setCity($city);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested city creation not supported. Use IRI format.');
                 }
-                $entity->setCity($city);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested city creation not supported. Use IRI format.');
             }
         }
 
         // company: ManyToOne
-        if ($data->company !== null) {
-            if (is_string($data->company)) {
-                // IRI format: "/api/companys/{id}"
-                $companyId = $this->extractIdFromIri($data->company);
-                $company = $this->entityManager->getRepository(Company::class)->find($companyId);
-                if (!$company) {
-                    throw new BadRequestHttpException('Company not found: ' . $companyId);
+        if (!$isPatch || array_key_exists('company', $requestData)) {
+            if ($data->company !== null) {
+                if (is_string($data->company)) {
+                    // IRI format: "/api/companys/{id}"
+                    $companyId = $this->extractIdFromIri($data->company);
+                    $company = $this->entityManager->getRepository(Company::class)->find($companyId);
+                    if (!$company) {
+                        throw new BadRequestHttpException('Company not found: ' . $companyId);
+                    }
+                    $entity->setCompany($company);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested company creation not supported. Use IRI format.');
                 }
-                $entity->setCompany($company);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested company creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('company is required');
             }
-        } else {
-            throw new BadRequestHttpException('company is required');
         }
 
         // Persist and flush
@@ -202,4 +313,49 @@ class ContactProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 
 /**
@@ -21,41 +22,53 @@ abstract class BillingFrequencyInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['billingfrequency:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['billingfrequency:write'])]
     public string $name;
 
+    #[Groups(['billingfrequency:write'])]
     public string $value;
 
+    #[Groups(['billingfrequency:write'])]
     public ?string $description = null;
 
+    #[Groups(['billingfrequency:write'])]
     public ?string $displayName = null;
 
+    #[Groups(['billingfrequency:write'])]
     public string $intervalType;
 
+    #[Groups(['billingfrequency:write'])]
     public int $intervalCount = 1;
 
+    #[Groups(['billingfrequency:write'])]
     public ?int $daysInCycle = null;
 
+    #[Groups(['billingfrequency:write'])]
     public ?string $discountPercentage = '0';
 
+    #[Groups(['billingfrequency:write'])]
     public bool $default = false;
 
+    #[Groups(['billingfrequency:write'])]
     public int $sortOrder = 0;
 
+    #[Groups(['billingfrequency:write'])]
     public bool $active = true;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;

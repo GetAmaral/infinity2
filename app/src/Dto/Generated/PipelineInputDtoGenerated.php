@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 
@@ -22,65 +23,88 @@ abstract class PipelineInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['pipeline:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['pipeline:write'])]
     public string $name;
 
+    #[Groups(['pipeline:write'])]
     public ?string $description = null;
 
+    #[Groups(['pipeline:write'])]
     public bool $active = true;
 
+    #[Groups(['pipeline:write'])]
     public string $pipelineType = 'Sales';
 
+    #[Groups(['pipeline:write'])]
     public bool $default = false;
 
     /**
      * owner reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
+     * Auto-assigned by system if not provided
      */
-    public string|UserInputDto|null $owner = null;
+    #[Groups(['pipeline:write'])]
+    public ?string $owner = null;
 
+    #[Groups(['pipeline:write'])]
     public int $displayOrder = 0;
 
+    #[Groups(['pipeline:write'])]
     public string $color = '#0dcaf0';
 
+    #[Groups(['pipeline:write'])]
     public string $icon = 'bi-diagram-3';
 
+    #[Groups(['pipeline:write'])]
     public bool $forecastEnabled = true;
 
+    #[Groups(['pipeline:write'])]
     public bool $autoAdvanceStages = false;
 
+    #[Groups(['pipeline:write'])]
     public int $rottenDealThreshold = 30;
 
+    #[Groups(['pipeline:write'])]
     public string $currency = 'USD';
 
+    #[Groups(['pipeline:write'])]
     public ?string $avgDealSize = '0';
 
+    #[Groups(['pipeline:write'])]
     public ?int $avgCycleTime = null;
 
+    #[Groups(['pipeline:write'])]
     public ?string $winRate = null;
 
+    #[Groups(['pipeline:write'])]
     public ?string $conversionRate = null;
 
+    #[Groups(['pipeline:write'])]
     public int $totalDealsCount = 0;
 
+    #[Groups(['pipeline:write'])]
     public int $activeDealsCount = 0;
 
+    #[Groups(['pipeline:write'])]
     public string $totalPipelineValue = '0';
 
+    #[Groups(['pipeline:write'])]
     public ?\DateTimeImmutable $archivedAt = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -136,11 +160,11 @@ abstract class PipelineInputDtoGenerated
         return $this;
     }
 
-    public function getOwner(): string|UserInputDto|null    {
+    public function getOwner(): ?string    {
         return $this->owner;
     }
 
-    public function setOwner(string|UserInputDto|null $owner): self
+    public function setOwner(?string $owner): self
     {
         $this->owner = $owner;
         return $this;

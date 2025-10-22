@@ -7,9 +7,8 @@ resources:
     shortName: ProductBatch
     description: "Tracks product batches with manufacturing dates, expiry dates, lot numbers, and inventory quantities for complete supply chain traceability"
 
-    input: App\Dto\ProductBatchInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\ProductBatchOutputDto
-    processor: App\State\ProductBatchProcessor
 
     normalizationContext:
       groups: ["productbatch:read","productbatch:list"]
@@ -32,14 +31,20 @@ resources:
         validationContext:
           groups: ["Default","create","update","strict"]
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\ProductBatchInputDto
+        processor: App\State\ProductBatchProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
         validationContext:
           groups: ["Default","create"]
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\ProductBatchInputDto
+        processor: App\State\ProductBatchProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
         validationContext:
           groups: ["Default","update"]
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\ProductBatchInputDto
+        processor: App\State\ProductBatchProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
         validationContext:
           groups: ["Default","create","update","strict"]

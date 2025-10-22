@@ -7,9 +7,8 @@ resources:
     shortName: Organization
     description: "Multi-tenant organization entity that isolates data by organization"
 
-    input: App\Dto\OrganizationInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\OrganizationOutputDto
-    processor: App\State\OrganizationProcessor
 
     normalizationContext:
       groups: ["organization:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\OrganizationInputDto
+        processor: App\State\OrganizationProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\OrganizationInputDto
+        processor: App\State\OrganizationProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\OrganizationInputDto
+        processor: App\State\OrganizationProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SUPER_ADMIN')"

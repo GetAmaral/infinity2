@@ -7,9 +7,8 @@ resources:
     shortName: Reminder
     description: "Automated reminders and notifications for events, tasks, meetings, and follow-ups with multi-channel delivery support"
 
-    input: App\Dto\ReminderInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\ReminderOutputDto
-    processor: App\State\ReminderProcessor
 
     normalizationContext:
       groups: ["reminder:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_USER')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\ReminderInputDto
+        processor: App\State\ReminderProcessor
         security: "is_granted('ROLE_USER')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\ReminderInputDto
+        processor: App\State\ReminderProcessor
         security: "is_granted('ROLE_USER')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\ReminderInputDto
+        processor: App\State\ReminderProcessor
         security: "is_granted('ROLE_USER')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_USER')"

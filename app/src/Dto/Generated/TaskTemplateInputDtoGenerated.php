@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\PipelineStageTemplateInputDto;
 use App\Dto\TaskTypeInputDto;
@@ -23,50 +24,62 @@ abstract class TaskTemplateInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['tasktemplate:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['tasktemplate:write'])]
     public string $name;
 
+    #[Groups(['tasktemplate:write'])]
     public ?string $description = null;
 
+    #[Groups(['tasktemplate:write'])]
     public ?string $command = null;
 
+    #[Groups(['tasktemplate:write'])]
     public ?bool $active = null;
 
+    #[Groups(['tasktemplate:write'])]
     public ?int $durationMinutes = null;
 
+    #[Groups(['tasktemplate:write'])]
     public ?string $location = null;
 
+    #[Groups(['tasktemplate:write'])]
     public ?float $periodicityInterval = null;
 
+    #[Groups(['tasktemplate:write'])]
     public ?int $periodicityTimeframe = null;
 
     /**
      * pipelineStageTemplate reference
-     * Can be: IRI string (e.g., "/api/pipelinestagetemplates/uuid") or nested PipelineStageTemplateInput object
+     * Must be: IRI string (e.g., "/api/pipelinestagetemplates/uuid")
      */
-    public string|PipelineStageTemplateInputDto|null $pipelineStageTemplate = null;
+    #[Groups(['tasktemplate:write'])]
+    public ?string $pipelineStageTemplate = null;
 
     #[Assert\Range(max: 5, min: 1)]
+    #[Groups(['tasktemplate:write'])]
     public ?int $priority = null;
 
     /**
      * type reference
-     * Can be: IRI string (e.g., "/api/tasktypes/uuid") or nested TaskTypeInput object
+     * Must be: IRI string (e.g., "/api/tasktypes/uuid")
      */
-    public string|TaskTypeInputDto|null $type = null;
+    #[Groups(['tasktemplate:write'])]
+    public ?string $type = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -152,11 +165,11 @@ abstract class TaskTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getPipelinestagetemplate(): string|PipelineStageTemplateInputDto|null    {
+    public function getPipelinestagetemplate(): ?string    {
         return $this->pipelineStageTemplate;
     }
 
-    public function setPipelinestagetemplate(string|PipelineStageTemplateInputDto|null $pipelineStageTemplate): self
+    public function setPipelinestagetemplate(?string $pipelineStageTemplate): self
     {
         $this->pipelineStageTemplate = $pipelineStageTemplate;
         return $this;
@@ -172,11 +185,11 @@ abstract class TaskTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getType(): string|TaskTypeInputDto|null    {
+    public function getType(): ?string    {
         return $this->type;
     }
 
-    public function setType(string|TaskTypeInputDto|null $type): self
+    public function setType(?string $type): self
     {
         $this->type = $type;
         return $this;

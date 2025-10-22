@@ -7,9 +7,8 @@ resources:
     shortName: DealType
     description: "Deal types for categorizing opportunities"
 
-    input: App\Dto\DealTypeInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\DealTypeOutputDto
-    processor: App\State\DealTypeProcessor
 
     normalizationContext:
       groups: ["dealtype:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_CRM_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\DealTypeInputDto
+        processor: App\State\DealTypeProcessor
         security: "is_granted('ROLE_CRM_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\DealTypeInputDto
+        processor: App\State\DealTypeProcessor
         security: "is_granted('ROLE_CRM_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\DealTypeInputDto
+        processor: App\State\DealTypeProcessor
         security: "is_granted('ROLE_CRM_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_CRM_ADMIN')"

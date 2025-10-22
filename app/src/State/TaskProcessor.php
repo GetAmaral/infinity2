@@ -50,7 +50,10 @@ class TaskProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Task::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Task not found');
@@ -61,146 +64,240 @@ class TaskProcessor implements ProcessorInterface
             $entity = new Task();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setStartdate($data->startDate);
-        $entity->setCompletionpercentage($data->completionPercentage);
-        $entity->setCategory($data->category);
-        $entity->setNotificationsent($data->notificationSent);
-        $entity->setArchived($data->archived);
-        $entity->setCommand($data->command);
-        $entity->setCompleteddate($data->completedDate);
-        $entity->setDurationminutes($data->durationMinutes);
-        $entity->setLocation($data->location);
-        $entity->setPriority($data->priority);
-        $entity->setScheduleddate($data->scheduledDate);
-        $entity->setCompleted($data->completed);
-        $entity->setReminderdate($data->reminderDate);
-        $entity->setReminder($data->reminder);
-        $entity->setRecurring($data->recurring);
-        $entity->setRecurrencerule($data->recurrenceRule);
-        $entity->setOverdue($data->overdue);
-        $entity->setQueue($data->queue);
-        $entity->setEmailsubject($data->emailSubject);
-        $entity->setTaskstatus($data->taskStatus);
-        $entity->setPhonenumber($data->phoneNumber);
-        $entity->setMeetingurl($data->meetingUrl);
-        $entity->setOutcome($data->outcome);
-        $entity->setNotes($data->notes);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // startDate
+        if (!$isPatch || array_key_exists('startDate', $requestData)) {
+            $entity->setStartdate($data->startDate);
+        }
+        // completionPercentage
+        if (!$isPatch || array_key_exists('completionPercentage', $requestData)) {
+            $entity->setCompletionpercentage($data->completionPercentage);
+        }
+        // category
+        if (!$isPatch || array_key_exists('category', $requestData)) {
+            $entity->setCategory($data->category);
+        }
+        // notificationSent
+        if (!$isPatch || array_key_exists('notificationSent', $requestData)) {
+            $entity->setNotificationsent($data->notificationSent);
+        }
+        // archived
+        if (!$isPatch || array_key_exists('archived', $requestData)) {
+            $entity->setArchived($data->archived);
+        }
+        // command
+        if (!$isPatch || array_key_exists('command', $requestData)) {
+            $entity->setCommand($data->command);
+        }
+        // completedDate
+        if (!$isPatch || array_key_exists('completedDate', $requestData)) {
+            $entity->setCompleteddate($data->completedDate);
+        }
+        // durationMinutes
+        if (!$isPatch || array_key_exists('durationMinutes', $requestData)) {
+            $entity->setDurationminutes($data->durationMinutes);
+        }
+        // location
+        if (!$isPatch || array_key_exists('location', $requestData)) {
+            $entity->setLocation($data->location);
+        }
+        // priority
+        if (!$isPatch || array_key_exists('priority', $requestData)) {
+            $entity->setPriority($data->priority);
+        }
+        // scheduledDate
+        if (!$isPatch || array_key_exists('scheduledDate', $requestData)) {
+            $entity->setScheduleddate($data->scheduledDate);
+        }
+        // completed
+        if (!$isPatch || array_key_exists('completed', $requestData)) {
+            $entity->setCompleted($data->completed);
+        }
+        // reminderDate
+        if (!$isPatch || array_key_exists('reminderDate', $requestData)) {
+            $entity->setReminderdate($data->reminderDate);
+        }
+        // reminder
+        if (!$isPatch || array_key_exists('reminder', $requestData)) {
+            $entity->setReminder($data->reminder);
+        }
+        // recurring
+        if (!$isPatch || array_key_exists('recurring', $requestData)) {
+            $entity->setRecurring($data->recurring);
+        }
+        // recurrenceRule
+        if (!$isPatch || array_key_exists('recurrenceRule', $requestData)) {
+            $entity->setRecurrencerule($data->recurrenceRule);
+        }
+        // overdue
+        if (!$isPatch || array_key_exists('overdue', $requestData)) {
+            $entity->setOverdue($data->overdue);
+        }
+        // queue
+        if (!$isPatch || array_key_exists('queue', $requestData)) {
+            $entity->setQueue($data->queue);
+        }
+        // emailSubject
+        if (!$isPatch || array_key_exists('emailSubject', $requestData)) {
+            $entity->setEmailsubject($data->emailSubject);
+        }
+        // taskStatus
+        if (!$isPatch || array_key_exists('taskStatus', $requestData)) {
+            $entity->setTaskstatus($data->taskStatus);
+        }
+        // phoneNumber
+        if (!$isPatch || array_key_exists('phoneNumber', $requestData)) {
+            $entity->setPhonenumber($data->phoneNumber);
+        }
+        // meetingUrl
+        if (!$isPatch || array_key_exists('meetingUrl', $requestData)) {
+            $entity->setMeetingurl($data->meetingUrl);
+        }
+        // outcome
+        if (!$isPatch || array_key_exists('outcome', $requestData)) {
+            $entity->setOutcome($data->outcome);
+        }
+        // notes
+        if (!$isPatch || array_key_exists('notes', $requestData)) {
+            $entity->setNotes($data->notes);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // contact: ManyToOne
-        if ($data->contact !== null) {
-            if (is_string($data->contact)) {
-                // IRI format: "/api/contacts/{id}"
-                $contactId = $this->extractIdFromIri($data->contact);
-                $contact = $this->entityManager->getRepository(Contact::class)->find($contactId);
-                if (!$contact) {
-                    throw new BadRequestHttpException('Contact not found: ' . $contactId);
+        if (!$isPatch || array_key_exists('contact', $requestData)) {
+            if ($data->contact !== null) {
+                if (is_string($data->contact)) {
+                    // IRI format: "/api/contacts/{id}"
+                    $contactId = $this->extractIdFromIri($data->contact);
+                    $contact = $this->entityManager->getRepository(Contact::class)->find($contactId);
+                    if (!$contact) {
+                        throw new BadRequestHttpException('Contact not found: ' . $contactId);
+                    }
+                    $entity->setContact($contact);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested contact creation not supported. Use IRI format.');
                 }
-                $entity->setContact($contact);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested contact creation not supported. Use IRI format.');
             }
         }
 
         // deal: ManyToOne
-        if ($data->deal !== null) {
-            if (is_string($data->deal)) {
-                // IRI format: "/api/deals/{id}"
-                $dealId = $this->extractIdFromIri($data->deal);
-                $deal = $this->entityManager->getRepository(Deal::class)->find($dealId);
-                if (!$deal) {
-                    throw new BadRequestHttpException('Deal not found: ' . $dealId);
+        if (!$isPatch || array_key_exists('deal', $requestData)) {
+            if ($data->deal !== null) {
+                if (is_string($data->deal)) {
+                    // IRI format: "/api/deals/{id}"
+                    $dealId = $this->extractIdFromIri($data->deal);
+                    $deal = $this->entityManager->getRepository(Deal::class)->find($dealId);
+                    if (!$deal) {
+                        throw new BadRequestHttpException('Deal not found: ' . $dealId);
+                    }
+                    $entity->setDeal($deal);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested deal creation not supported. Use IRI format.');
                 }
-                $entity->setDeal($deal);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested deal creation not supported. Use IRI format.');
             }
         }
 
         // pipelineStage: ManyToOne
-        if ($data->pipelineStage !== null) {
-            if (is_string($data->pipelineStage)) {
-                // IRI format: "/api/pipelinestages/{id}"
-                $pipelineStageId = $this->extractIdFromIri($data->pipelineStage);
-                $pipelineStage = $this->entityManager->getRepository(PipelineStage::class)->find($pipelineStageId);
-                if (!$pipelineStage) {
-                    throw new BadRequestHttpException('PipelineStage not found: ' . $pipelineStageId);
+        if (!$isPatch || array_key_exists('pipelineStage', $requestData)) {
+            if ($data->pipelineStage !== null) {
+                if (is_string($data->pipelineStage)) {
+                    // IRI format: "/api/pipelinestages/{id}"
+                    $pipelineStageId = $this->extractIdFromIri($data->pipelineStage);
+                    $pipelineStage = $this->entityManager->getRepository(PipelineStage::class)->find($pipelineStageId);
+                    if (!$pipelineStage) {
+                        throw new BadRequestHttpException('PipelineStage not found: ' . $pipelineStageId);
+                    }
+                    $entity->setPipelinestage($pipelineStage);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested pipelineStage creation not supported. Use IRI format.');
                 }
-                $entity->setPipelinestage($pipelineStage);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested pipelineStage creation not supported. Use IRI format.');
             }
         }
 
         // company: ManyToOne
-        if ($data->company !== null) {
-            if (is_string($data->company)) {
-                // IRI format: "/api/companys/{id}"
-                $companyId = $this->extractIdFromIri($data->company);
-                $company = $this->entityManager->getRepository(Company::class)->find($companyId);
-                if (!$company) {
-                    throw new BadRequestHttpException('Company not found: ' . $companyId);
+        if (!$isPatch || array_key_exists('company', $requestData)) {
+            if ($data->company !== null) {
+                if (is_string($data->company)) {
+                    // IRI format: "/api/companys/{id}"
+                    $companyId = $this->extractIdFromIri($data->company);
+                    $company = $this->entityManager->getRepository(Company::class)->find($companyId);
+                    if (!$company) {
+                        throw new BadRequestHttpException('Company not found: ' . $companyId);
+                    }
+                    $entity->setCompany($company);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested company creation not supported. Use IRI format.');
                 }
-                $entity->setCompany($company);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested company creation not supported. Use IRI format.');
             }
         }
 
         // type: ManyToOne
-        if ($data->type !== null) {
-            if (is_string($data->type)) {
-                // IRI format: "/api/tasktypes/{id}"
-                $typeId = $this->extractIdFromIri($data->type);
-                $type = $this->entityManager->getRepository(TaskType::class)->find($typeId);
-                if (!$type) {
-                    throw new BadRequestHttpException('TaskType not found: ' . $typeId);
+        if (!$isPatch || array_key_exists('type', $requestData)) {
+            if ($data->type !== null) {
+                if (is_string($data->type)) {
+                    // IRI format: "/api/tasktypes/{id}"
+                    $typeId = $this->extractIdFromIri($data->type);
+                    $type = $this->entityManager->getRepository(TaskType::class)->find($typeId);
+                    if (!$type) {
+                        throw new BadRequestHttpException('TaskType not found: ' . $typeId);
+                    }
+                    $entity->setType($type);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested type creation not supported. Use IRI format.');
                 }
-                $entity->setType($type);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested type creation not supported. Use IRI format.');
             }
         }
 
         // user: ManyToOne
-        if ($data->user !== null) {
-            if (is_string($data->user)) {
-                // IRI format: "/api/users/{id}"
-                $userId = $this->extractIdFromIri($data->user);
-                $user = $this->entityManager->getRepository(User::class)->find($userId);
-                if (!$user) {
-                    throw new BadRequestHttpException('User not found: ' . $userId);
+        if (!$isPatch || array_key_exists('user', $requestData)) {
+            if ($data->user !== null) {
+                if (is_string($data->user)) {
+                    // IRI format: "/api/users/{id}"
+                    $userId = $this->extractIdFromIri($data->user);
+                    $user = $this->entityManager->getRepository(User::class)->find($userId);
+                    if (!$user) {
+                        throw new BadRequestHttpException('User not found: ' . $userId);
+                    }
+                    $entity->setUser($user);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
                 }
-                $entity->setUser($user);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
             }
         }
 
@@ -223,4 +320,49 @@ class TaskProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

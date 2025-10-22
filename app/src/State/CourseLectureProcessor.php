@@ -47,7 +47,10 @@ class CourseLectureProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(CourseLecture::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('CourseLecture not found');
@@ -58,80 +61,197 @@ class CourseLectureProcessor implements ProcessorInterface
             $entity = new CourseLecture();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setVideofilename($data->videoFileName);
-        $entity->setVideopath($data->videoPath);
-        $entity->setProcessingstatus($data->processingStatus);
-        $entity->setProcessingstep($data->processingStep);
-        $entity->setProcessingpercentage($data->processingPercentage);
-        $entity->setProcessingerror($data->processingError);
-        $entity->setProcessedat($data->processedAt);
-        $entity->setVieworder($data->viewOrder);
-        $entity->setLengthseconds($data->lengthSeconds);
-        $entity->setActive($data->active);
-        $entity->setPublished($data->published);
-        $entity->setFree($data->free);
-        $entity->setPublishedat($data->publishedAt);
-        $entity->setVideourl($data->videoUrl);
-        $entity->setVideotype($data->videoType);
-        $entity->setVideoresolution($data->videoResolution);
-        $entity->setVideosizebytes($data->videoSizeBytes);
-        $entity->setTranscript($data->transcript);
-        $entity->setSubtitleurl($data->subtitleUrl);
-        $entity->setSubtitlelanguage($data->subtitleLanguage);
-        $entity->setAttachments($data->attachments);
-        $entity->setExternallinks($data->externalLinks);
-        $entity->setLearningobjectives($data->learningObjectives);
-        $entity->setPrerequisites($data->prerequisites);
-        $entity->setViewcount($data->viewCount);
-        $entity->setCompletioncount($data->completionCount);
-        $entity->setAveragewatchpercentage($data->averageWatchPercentage);
-        $entity->setRating($data->rating);
-        $entity->setRatingcount($data->ratingCount);
-        $entity->setDurationseconds($data->durationSeconds);
-        $entity->setDifficultylevel($data->difficultyLevel);
-        $entity->setTags($data->tags);
-        $entity->setSkillscovered($data->skillsCovered);
-        $entity->setPointsvalue($data->pointsValue);
-        $entity->setBadges($data->badges);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // videoFileName
+        if (!$isPatch || array_key_exists('videoFileName', $requestData)) {
+            $entity->setVideofilename($data->videoFileName);
+        }
+        // videoPath
+        if (!$isPatch || array_key_exists('videoPath', $requestData)) {
+            $entity->setVideopath($data->videoPath);
+        }
+        // processingStatus
+        if (!$isPatch || array_key_exists('processingStatus', $requestData)) {
+            $entity->setProcessingstatus($data->processingStatus);
+        }
+        // processingStep
+        if (!$isPatch || array_key_exists('processingStep', $requestData)) {
+            $entity->setProcessingstep($data->processingStep);
+        }
+        // processingPercentage
+        if (!$isPatch || array_key_exists('processingPercentage', $requestData)) {
+            $entity->setProcessingpercentage($data->processingPercentage);
+        }
+        // processingError
+        if (!$isPatch || array_key_exists('processingError', $requestData)) {
+            $entity->setProcessingerror($data->processingError);
+        }
+        // processedAt
+        if (!$isPatch || array_key_exists('processedAt', $requestData)) {
+            $entity->setProcessedat($data->processedAt);
+        }
+        // viewOrder
+        if (!$isPatch || array_key_exists('viewOrder', $requestData)) {
+            $entity->setVieworder($data->viewOrder);
+        }
+        // lengthSeconds
+        if (!$isPatch || array_key_exists('lengthSeconds', $requestData)) {
+            $entity->setLengthseconds($data->lengthSeconds);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // published
+        if (!$isPatch || array_key_exists('published', $requestData)) {
+            $entity->setPublished($data->published);
+        }
+        // free
+        if (!$isPatch || array_key_exists('free', $requestData)) {
+            $entity->setFree($data->free);
+        }
+        // publishedAt
+        if (!$isPatch || array_key_exists('publishedAt', $requestData)) {
+            $entity->setPublishedat($data->publishedAt);
+        }
+        // videoUrl
+        if (!$isPatch || array_key_exists('videoUrl', $requestData)) {
+            $entity->setVideourl($data->videoUrl);
+        }
+        // videoType
+        if (!$isPatch || array_key_exists('videoType', $requestData)) {
+            $entity->setVideotype($data->videoType);
+        }
+        // videoResolution
+        if (!$isPatch || array_key_exists('videoResolution', $requestData)) {
+            $entity->setVideoresolution($data->videoResolution);
+        }
+        // videoSizeBytes
+        if (!$isPatch || array_key_exists('videoSizeBytes', $requestData)) {
+            $entity->setVideosizebytes($data->videoSizeBytes);
+        }
+        // transcript
+        if (!$isPatch || array_key_exists('transcript', $requestData)) {
+            $entity->setTranscript($data->transcript);
+        }
+        // subtitleUrl
+        if (!$isPatch || array_key_exists('subtitleUrl', $requestData)) {
+            $entity->setSubtitleurl($data->subtitleUrl);
+        }
+        // subtitleLanguage
+        if (!$isPatch || array_key_exists('subtitleLanguage', $requestData)) {
+            $entity->setSubtitlelanguage($data->subtitleLanguage);
+        }
+        // attachments
+        if (!$isPatch || array_key_exists('attachments', $requestData)) {
+            $entity->setAttachments($data->attachments);
+        }
+        // externalLinks
+        if (!$isPatch || array_key_exists('externalLinks', $requestData)) {
+            $entity->setExternallinks($data->externalLinks);
+        }
+        // learningObjectives
+        if (!$isPatch || array_key_exists('learningObjectives', $requestData)) {
+            $entity->setLearningobjectives($data->learningObjectives);
+        }
+        // prerequisites
+        if (!$isPatch || array_key_exists('prerequisites', $requestData)) {
+            $entity->setPrerequisites($data->prerequisites);
+        }
+        // viewCount
+        if (!$isPatch || array_key_exists('viewCount', $requestData)) {
+            $entity->setViewcount($data->viewCount);
+        }
+        // completionCount
+        if (!$isPatch || array_key_exists('completionCount', $requestData)) {
+            $entity->setCompletioncount($data->completionCount);
+        }
+        // averageWatchPercentage
+        if (!$isPatch || array_key_exists('averageWatchPercentage', $requestData)) {
+            $entity->setAveragewatchpercentage($data->averageWatchPercentage);
+        }
+        // rating
+        if (!$isPatch || array_key_exists('rating', $requestData)) {
+            $entity->setRating($data->rating);
+        }
+        // ratingCount
+        if (!$isPatch || array_key_exists('ratingCount', $requestData)) {
+            $entity->setRatingcount($data->ratingCount);
+        }
+        // durationSeconds
+        if (!$isPatch || array_key_exists('durationSeconds', $requestData)) {
+            $entity->setDurationseconds($data->durationSeconds);
+        }
+        // difficultyLevel
+        if (!$isPatch || array_key_exists('difficultyLevel', $requestData)) {
+            $entity->setDifficultylevel($data->difficultyLevel);
+        }
+        // tags
+        if (!$isPatch || array_key_exists('tags', $requestData)) {
+            $entity->setTags($data->tags);
+        }
+        // skillsCovered
+        if (!$isPatch || array_key_exists('skillsCovered', $requestData)) {
+            $entity->setSkillscovered($data->skillsCovered);
+        }
+        // pointsValue
+        if (!$isPatch || array_key_exists('pointsValue', $requestData)) {
+            $entity->setPointsvalue($data->pointsValue);
+        }
+        // badges
+        if (!$isPatch || array_key_exists('badges', $requestData)) {
+            $entity->setBadges($data->badges);
+        }
 
         // Map relationship properties
         // courseModule: ManyToOne
-        if ($data->courseModule !== null) {
-            if (is_string($data->courseModule)) {
-                // IRI format: "/api/coursemodules/{id}"
-                $courseModuleId = $this->extractIdFromIri($data->courseModule);
-                $courseModule = $this->entityManager->getRepository(CourseModule::class)->find($courseModuleId);
-                if (!$courseModule) {
-                    throw new BadRequestHttpException('CourseModule not found: ' . $courseModuleId);
+        if (!$isPatch || array_key_exists('courseModule', $requestData)) {
+            if ($data->courseModule !== null) {
+                if (is_string($data->courseModule)) {
+                    // IRI format: "/api/coursemodules/{id}"
+                    $courseModuleId = $this->extractIdFromIri($data->courseModule);
+                    $courseModule = $this->entityManager->getRepository(CourseModule::class)->find($courseModuleId);
+                    if (!$courseModule) {
+                        throw new BadRequestHttpException('CourseModule not found: ' . $courseModuleId);
+                    }
+                    $entity->setCoursemodule($courseModule);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested courseModule creation not supported. Use IRI format.');
                 }
-                $entity->setCoursemodule($courseModule);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested courseModule creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('courseModule is required');
             }
-        } else {
-            throw new BadRequestHttpException('courseModule is required');
         }
 
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // Persist and flush
@@ -153,4 +273,49 @@ class CourseLectureProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

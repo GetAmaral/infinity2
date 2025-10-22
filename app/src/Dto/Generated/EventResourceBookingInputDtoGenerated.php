@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\EventInputDto;
@@ -24,65 +25,83 @@ abstract class EventResourceBookingInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['eventresourcebooking:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['eventresourcebooking:write'])]
     public \DateTimeImmutable $startTime;
 
     /**
      * bookedBy reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $bookedBy = null;
+    #[Groups(['eventresourcebooking:write'])]
+    public ?string $bookedBy = null;
 
+    #[Groups(['eventresourcebooking:write'])]
     public \DateTimeImmutable $endTime;
 
+    #[Groups(['eventresourcebooking:write'])]
     public bool $confirmed = false;
 
+    #[Groups(['eventresourcebooking:write'])]
     public bool $cancelled = false;
 
+    #[Groups(['eventresourcebooking:write'])]
     public bool $paid = false;
 
+    #[Groups(['eventresourcebooking:write'])]
     public ?string $depositAmount = '0';
 
+    #[Groups(['eventresourcebooking:write'])]
     public ?string $totalAmount = '0';
 
+    #[Groups(['eventresourcebooking:write'])]
     public ?\DateTimeImmutable $confirmedAt = null;
 
+    #[Groups(['eventresourcebooking:write'])]
     public ?\DateTimeImmutable $cancelledAt = null;
 
+    #[Groups(['eventresourcebooking:write'])]
     public ?string $cancellationReason = null;
 
     /**
      * event reference
-     * Can be: IRI string (e.g., "/api/events/uuid") or nested EventInput object
+     * Must be: IRI string (e.g., "/api/events/uuid")
      */
-    public string|EventInputDto|null $event = null;
+    #[Groups(['eventresourcebooking:write'])]
+    public ?string $event = null;
 
+    #[Groups(['eventresourcebooking:write'])]
     public bool $reminderSent = false;
 
+    #[Groups(['eventresourcebooking:write'])]
     public ?string $notes = null;
 
+    #[Groups(['eventresourcebooking:write'])]
     public int $quantity = 1;
 
     /**
      * resource reference
-     * Can be: IRI string (e.g., "/api/eventresources/uuid") or nested EventResourceInput object
+     * Must be: IRI string (e.g., "/api/eventresources/uuid")
      */
-    public string|EventResourceInputDto|null $resource = null;
+    #[Groups(['eventresourcebooking:write'])]
+    public ?string $resource = null;
 
+    #[Groups(['eventresourcebooking:write'])]
     public string $status = 'pending';
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -98,11 +117,11 @@ abstract class EventResourceBookingInputDtoGenerated
         return $this;
     }
 
-    public function getBookedby(): string|UserInputDto|null    {
+    public function getBookedby(): ?string    {
         return $this->bookedBy;
     }
 
-    public function setBookedby(string|UserInputDto|null $bookedBy): self
+    public function setBookedby(?string $bookedBy): self
     {
         $this->bookedBy = $bookedBy;
         return $this;
@@ -198,11 +217,11 @@ abstract class EventResourceBookingInputDtoGenerated
         return $this;
     }
 
-    public function getEvent(): string|EventInputDto|null    {
+    public function getEvent(): ?string    {
         return $this->event;
     }
 
-    public function setEvent(string|EventInputDto|null $event): self
+    public function setEvent(?string $event): self
     {
         $this->event = $event;
         return $this;
@@ -238,11 +257,11 @@ abstract class EventResourceBookingInputDtoGenerated
         return $this;
     }
 
-    public function getResource(): string|EventResourceInputDto|null    {
+    public function getResource(): ?string    {
         return $this->resource;
     }
 
-    public function setResource(string|EventResourceInputDto|null $resource): self
+    public function setResource(?string $resource): self
     {
         $this->resource = $resource;
         return $this;

@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\DealInputDto;
@@ -24,69 +25,87 @@ abstract class DealStageInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['dealstage:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['dealstage:write'])]
     public ?string $stageName = null;
 
+    #[Groups(['dealstage:write'])]
     public ?string $probability = '0';
 
+    #[Groups(['dealstage:write'])]
     public ?int $rottenDays = null;
 
+    #[Groups(['dealstage:write'])]
     public bool $rotten = false;
 
     /**
      * enteredBy reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $enteredBy = null;
+    #[Groups(['dealstage:write'])]
+    public ?string $enteredBy = null;
 
     /**
      * exitedBy reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $exitedBy = null;
+    #[Groups(['dealstage:write'])]
+    public ?string $exitedBy = null;
 
+    #[Groups(['dealstage:write'])]
     public ?\DateTimeImmutable $expectedCloseDate = null;
 
+    #[Groups(['dealstage:write'])]
     public ?string $stageValue = null;
 
+    #[Groups(['dealstage:write'])]
     public ?float $daysInStage = null;
 
+    #[Groups(['dealstage:write'])]
     public ?string $weightedValue = null;
 
+    #[Groups(['dealstage:write'])]
     public bool $active = true;
 
     /**
      * deal reference
-     * Can be: IRI string (e.g., "/api/deals/uuid") or nested DealInput object
+     * Must be: IRI string (e.g., "/api/deals/uuid")
      */
-    public string|DealInputDto|null $deal = null;
+    #[Groups(['dealstage:write'])]
+    public ?string $deal = null;
 
+    #[Groups(['dealstage:write'])]
     public ?\DateTimeImmutable $endedAt = null;
 
+    #[Groups(['dealstage:write'])]
     public ?\DateTimeImmutable $lastUpdatedAt = null;
 
+    #[Groups(['dealstage:write'])]
     public ?string $notes = null;
 
     /**
      * pipelineStage reference
-     * Can be: IRI string (e.g., "/api/pipelinestages/uuid") or nested PipelineStageInput object
+     * Must be: IRI string (e.g., "/api/pipelinestages/uuid")
      */
-    public string|PipelineStageInputDto|null $pipelineStage = null;
+    #[Groups(['dealstage:write'])]
+    public ?string $pipelineStage = null;
 
+    #[Groups(['dealstage:write'])]
     public ?\DateTimeImmutable $startedAt = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -132,21 +151,21 @@ abstract class DealStageInputDtoGenerated
         return $this;
     }
 
-    public function getEnteredby(): string|UserInputDto|null    {
+    public function getEnteredby(): ?string    {
         return $this->enteredBy;
     }
 
-    public function setEnteredby(string|UserInputDto|null $enteredBy): self
+    public function setEnteredby(?string $enteredBy): self
     {
         $this->enteredBy = $enteredBy;
         return $this;
     }
 
-    public function getExitedby(): string|UserInputDto|null    {
+    public function getExitedby(): ?string    {
         return $this->exitedBy;
     }
 
-    public function setExitedby(string|UserInputDto|null $exitedBy): self
+    public function setExitedby(?string $exitedBy): self
     {
         $this->exitedBy = $exitedBy;
         return $this;
@@ -202,11 +221,11 @@ abstract class DealStageInputDtoGenerated
         return $this;
     }
 
-    public function getDeal(): string|DealInputDto|null    {
+    public function getDeal(): ?string    {
         return $this->deal;
     }
 
-    public function setDeal(string|DealInputDto|null $deal): self
+    public function setDeal(?string $deal): self
     {
         $this->deal = $deal;
         return $this;
@@ -242,11 +261,11 @@ abstract class DealStageInputDtoGenerated
         return $this;
     }
 
-    public function getPipelinestage(): string|PipelineStageInputDto|null    {
+    public function getPipelinestage(): ?string    {
         return $this->pipelineStage;
     }
 
-    public function setPipelinestage(string|PipelineStageInputDto|null $pipelineStage): self
+    public function setPipelinestage(?string $pipelineStage): self
     {
         $this->pipelineStage = $pipelineStage;
         return $this;

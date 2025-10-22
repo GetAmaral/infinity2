@@ -47,7 +47,10 @@ class CityProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(City::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('City not found');
@@ -58,49 +61,82 @@ class CityProcessor implements ProcessorInterface
             $entity = new City();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setState($data->state);
-        $entity->setLatitude($data->latitude);
-        $entity->setLongitude($data->longitude);
-        $entity->setTimezone($data->timezone);
-        $entity->setPopulation($data->population);
-        $entity->setCapital($data->capital);
-        $entity->setIbgecode($data->ibgeCode);
-        $entity->setActive($data->active);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // state
+        if (!$isPatch || array_key_exists('state', $requestData)) {
+            $entity->setState($data->state);
+        }
+        // latitude
+        if (!$isPatch || array_key_exists('latitude', $requestData)) {
+            $entity->setLatitude($data->latitude);
+        }
+        // longitude
+        if (!$isPatch || array_key_exists('longitude', $requestData)) {
+            $entity->setLongitude($data->longitude);
+        }
+        // timezone
+        if (!$isPatch || array_key_exists('timezone', $requestData)) {
+            $entity->setTimezone($data->timezone);
+        }
+        // population
+        if (!$isPatch || array_key_exists('population', $requestData)) {
+            $entity->setPopulation($data->population);
+        }
+        // capital
+        if (!$isPatch || array_key_exists('capital', $requestData)) {
+            $entity->setCapital($data->capital);
+        }
+        // ibgeCode
+        if (!$isPatch || array_key_exists('ibgeCode', $requestData)) {
+            $entity->setIbgecode($data->ibgeCode);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // country: ManyToOne
-        if ($data->country !== null) {
-            if (is_string($data->country)) {
-                // IRI format: "/api/countrys/{id}"
-                $countryId = $this->extractIdFromIri($data->country);
-                $country = $this->entityManager->getRepository(Country::class)->find($countryId);
-                if (!$country) {
-                    throw new BadRequestHttpException('Country not found: ' . $countryId);
+        if (!$isPatch || array_key_exists('country', $requestData)) {
+            if ($data->country !== null) {
+                if (is_string($data->country)) {
+                    // IRI format: "/api/countrys/{id}"
+                    $countryId = $this->extractIdFromIri($data->country);
+                    $country = $this->entityManager->getRepository(Country::class)->find($countryId);
+                    if (!$country) {
+                        throw new BadRequestHttpException('Country not found: ' . $countryId);
+                    }
+                    $entity->setCountry($country);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested country creation not supported. Use IRI format.');
                 }
-                $entity->setCountry($country);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested country creation not supported. Use IRI format.');
             }
         }
 
@@ -123,4 +159,49 @@ class CityProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

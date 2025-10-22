@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * AgentType Input DTO (Generated Base Class)
@@ -18,22 +19,31 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 abstract class AgentTypeInputDtoGenerated
 {
+    #[Groups(['agenttype:write'])]
     public string $name;
 
+    #[Groups(['agenttype:write'])]
     public ?string $description = null;
 
+    #[Groups(['agenttype:write'])]
     public ?bool $active = null;
 
+    #[Groups(['agenttype:write'])]
     public ?string $code = null;
 
+    #[Groups(['agenttype:write'])]
     public ?string $color = '#0dcaf0';
 
+    #[Groups(['agenttype:write'])]
     public ?bool $default = null;
 
+    #[Groups(['agenttype:write'])]
     public ?string $defaultPrompt = null;
 
+    #[Groups(['agenttype:write'])]
     public ?string $icon = null;
 
+    #[Groups(['agenttype:write'])]
     public ?int $sortOrder = null;
 
 

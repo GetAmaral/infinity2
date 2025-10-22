@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\CampaignInputDto;
@@ -23,110 +24,149 @@ abstract class CampaignInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['campaign:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['campaign:write'])]
     public string $name;
 
+    #[Groups(['campaign:write'])]
     public ?string $description = null;
 
+    #[Groups(['campaign:write'])]
     public ?string $actualBudget = null;
 
+    #[Groups(['campaign:write'])]
     public bool $active;
 
+    #[Groups(['campaign:write'])]
     public ?string $actualCost = null;
 
+    #[Groups(['campaign:write'])]
     public ?string $actualReturn = null;
 
+    #[Groups(['campaign:write'])]
     public ?string $actualRevenue = null;
 
+    #[Groups(['campaign:write'])]
     public bool $archived;
 
+    #[Groups(['campaign:write'])]
     public ?string $budgetedCost = null;
 
+    #[Groups(['campaign:write'])]
     public ?int $campaignStatus = null;
 
+    #[Groups(['campaign:write'])]
     public string $campaignType;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['campaign:write'])]
     public ?string $codeName = null;
 
+    #[Groups(['campaign:write'])]
     public bool $draft;
 
+    #[Groups(['campaign:write'])]
     public ?int $duration = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['campaign:write'])]
     public ?string $emailAddress = null;
 
+    #[Groups(['campaign:write'])]
     public ?\DateTimeImmutable $endDate = null;
 
+    #[Groups(['campaign:write'])]
     public ?int $expectedResponse = null;
 
+    #[Groups(['campaign:write'])]
     public ?string $expectedRevenue = null;
 
     /**
      * manager reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $manager = null;
+    #[Groups(['campaign:write'])]
+    public ?string $manager = null;
 
+    #[Groups(['campaign:write'])]
     public ?string $message = null;
 
+    #[Groups(['campaign:write'])]
     public ?int $numberOfContacts = null;
 
+    #[Groups(['campaign:write'])]
     public ?int $numberOfConverted = null;
 
+    #[Groups(['campaign:write'])]
     public ?int $numberOfLeads = null;
 
+    #[Groups(['campaign:write'])]
     public ?int $numberOfResponses = null;
 
+    #[Groups(['campaign:write'])]
     public ?string $objective = null;
 
+    #[Groups(['campaign:write'])]
     public ?string $otherCost = null;
 
     /**
      * owner reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|UserInputDto $owner;
+    #[Groups(['campaign:write'])]
+    public ?string $owner = null;
 
     /**
      * parentCampaign reference
-     * Can be: IRI string (e.g., "/api/campaigns/uuid") or nested CampaignInput object
+     * Must be: IRI string (e.g., "/api/campaigns/uuid")
      */
-    public string|CampaignInputDto|null $parentCampaign = null;
+    #[Groups(['campaign:write'])]
+    public ?string $parentCampaign = null;
 
+    #[Groups(['campaign:write'])]
     public ?string $plannedBudget = null;
 
+    #[Groups(['campaign:write'])]
     public ?int $plannedDuration = null;
 
+    #[Groups(['campaign:write'])]
     public ?\DateTimeImmutable $plannedEndDate = null;
 
+    #[Groups(['campaign:write'])]
     public ?string $plannedReturn = null;
 
+    #[Groups(['campaign:write'])]
     public ?\DateTimeImmutable $plannedStartDate = null;
 
+    #[Groups(['campaign:write'])]
     public ?string $roi = null;
 
+    #[Groups(['campaign:write'])]
     public ?\DateTimeImmutable $startDate = null;
 
+    #[Groups(['campaign:write'])]
     public string $status;
 
+    #[Groups(['campaign:write'])]
     public ?string $targetAudience = null;
 
+    #[Groups(['campaign:write'])]
     public bool $template;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -342,11 +382,11 @@ abstract class CampaignInputDtoGenerated
         return $this;
     }
 
-    public function getManager(): string|UserInputDto|null    {
+    public function getManager(): ?string    {
         return $this->manager;
     }
 
-    public function setManager(string|UserInputDto|null $manager): self
+    public function setManager(?string $manager): self
     {
         $this->manager = $manager;
         return $this;
@@ -432,21 +472,21 @@ abstract class CampaignInputDtoGenerated
         return $this;
     }
 
-    public function getOwner(): string|UserInputDto    {
+    public function getOwner(): ?string    {
         return $this->owner;
     }
 
-    public function setOwner(string|UserInputDto $owner): self
+    public function setOwner(?string $owner): self
     {
         $this->owner = $owner;
         return $this;
     }
 
-    public function getParentcampaign(): string|CampaignInputDto|null    {
+    public function getParentcampaign(): ?string    {
         return $this->parentCampaign;
     }
 
-    public function setParentcampaign(string|CampaignInputDto|null $parentCampaign): self
+    public function setParentcampaign(?string $parentCampaign): self
     {
         $this->parentCampaign = $parentCampaign;
         return $this;

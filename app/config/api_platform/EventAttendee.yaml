@@ -7,9 +7,8 @@ resources:
     shortName: EventAttendee
     description: "Comprehensive event attendee tracking with RSVP status, check-in management, and attendance confirmation"
 
-    input: App\Dto\EventAttendeeInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\EventAttendeeOutputDto
-    processor: App\State\EventAttendeeProcessor
 
     normalizationContext:
       groups: ["eventattendee:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_EVENT_MANAGER')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\EventAttendeeInputDto
+        processor: App\State\EventAttendeeProcessor
         security: "is_granted('ROLE_EVENT_MANAGER')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\EventAttendeeInputDto
+        processor: App\State\EventAttendeeProcessor
         security: "is_granted('ROLE_EVENT_MANAGER')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\EventAttendeeInputDto
+        processor: App\State\EventAttendeeProcessor
         security: "is_granted('ROLE_EVENT_MANAGER')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_EVENT_MANAGER')"

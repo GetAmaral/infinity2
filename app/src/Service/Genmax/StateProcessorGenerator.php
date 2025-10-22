@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Genmax;
 
 use App\Entity\Generator\GeneratorEntity;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Environment;
 use Psr\Log\LoggerInterface;
@@ -29,7 +28,7 @@ class StateProcessorGenerator
         #[Autowire(param: 'genmax.templates')]
         private readonly array $templates,
         private readonly Environment $twig,
-        private readonly Filesystem $filesystem,
+        private readonly SmartFileWriter $fileWriter,
         private readonly LoggerInterface $logger
     ) {}
 
@@ -74,11 +73,6 @@ class StateProcessorGenerator
         );
 
         try {
-            $dir = dirname($filePath);
-            if (!is_dir($dir)) {
-                $this->filesystem->mkdir($dir, 0755);
-            }
-
             $content = $this->twig->render($this->templates['state_processor'], [
                 'entity' => $entity,
                 'namespace' => $this->paths['processor_namespace'],
@@ -86,11 +80,12 @@ class StateProcessorGenerator
                 'entity_namespace' => $this->paths['entity_namespace'],
             ]);
 
-            $this->filesystem->dumpFile($filePath, $content);
+            $status = $this->fileWriter->writeFile($filePath, $content);
 
             $this->logger->info('[GENMAX] Generated State Processor', [
                 'file' => $filePath,
-                'entity' => $entity->getEntityName()
+                'entity' => $entity->getEntityName(),
+                'status' => $status
             ]);
 
             return $filePath;

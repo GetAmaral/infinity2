@@ -65,13 +65,13 @@ class CourseProcessor implements ProcessorInterface
         $requestData = $context['request']->toArray() ?? [];
 
         // Map scalar properties from DTO to Entity
-        // name
-        if (!$isPatch || array_key_exists('name', $requestData)) {
-            $entity->setName($data->name);
-        }
         // releaseDate
         if (!$isPatch || array_key_exists('releaseDate', $requestData)) {
             $entity->setReleasedate($data->releaseDate);
+        }
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
         }
         // description
         if (!$isPatch || array_key_exists('description', $requestData)) {

@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\CalendarTypeInputDto;
@@ -24,75 +25,96 @@ abstract class CalendarInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['calendar:write'])]
+    public ?string $organization = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['calendar:write'])]
     public string $name;
 
+    #[Groups(['calendar:write'])]
     public ?string $description = null;
 
     /**
      * user reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $user = null;
+    #[Groups(['calendar:write'])]
+    public ?string $user = null;
 
+    #[Groups(['calendar:write'])]
     public string $timeZone = 'UTC';
 
     #[Assert\Length(max: 7)]
+    #[Groups(['calendar:write'])]
     public ?string $color = '#0dcaf0';
 
+    #[Groups(['calendar:write'])]
     public ?bool $primary = false;
 
+    #[Groups(['calendar:write'])]
     public ?bool $visible = true;
 
+    #[Groups(['calendar:write'])]
     public ?string $accessRole = null;
 
     /**
      * calendarType reference
-     * Can be: IRI string (e.g., "/api/calendartypes/uuid") or nested CalendarTypeInput object
+     * Must be: IRI string (e.g., "/api/calendartypes/uuid")
      */
-    public string|CalendarTypeInputDto|null $calendarType = null;
+    #[Groups(['calendar:write'])]
+    public ?string $calendarType = null;
 
     /**
      * externalLink reference
-     * Can be: IRI string (e.g., "/api/calendarexternallinks/uuid") or nested CalendarExternalLinkInput object
+     * Must be: IRI string (e.g., "/api/calendarexternallinks/uuid")
      */
-    public string|CalendarExternalLinkInputDto|null $externalLink = null;
+    #[Groups(['calendar:write'])]
+    public ?string $externalLink = null;
 
+    #[Groups(['calendar:write'])]
     public ?string $externalApiKey = null;
 
+    #[Groups(['calendar:write'])]
     public bool $default = false;
 
+    #[Groups(['calendar:write'])]
     public bool $active = true;
 
+    #[Groups(['calendar:write'])]
     public bool $public = false;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['calendar:write'])]
     public ?string $icon = null;
 
+    #[Groups(['calendar:write'])]
     public ?int $sortOrder = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['calendar:write'])]
     public ?string $externalId = null;
 
+    #[Groups(['calendar:write'])]
     public ?\DateTimeImmutable $lastSyncedAt = null;
 
+    #[Groups(['calendar:write'])]
     public ?array $permissions = null;
 
+    #[Groups(['calendar:write'])]
     public ?array $settings = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -118,11 +140,11 @@ abstract class CalendarInputDtoGenerated
         return $this;
     }
 
-    public function getUser(): string|UserInputDto|null    {
+    public function getUser(): ?string    {
         return $this->user;
     }
 
-    public function setUser(string|UserInputDto|null $user): self
+    public function setUser(?string $user): self
     {
         $this->user = $user;
         return $this;
@@ -178,11 +200,11 @@ abstract class CalendarInputDtoGenerated
         return $this;
     }
 
-    public function getCalendartype(): string|CalendarTypeInputDto|null    {
+    public function getCalendartype(): ?string    {
         return $this->calendarType;
     }
 
-    public function setCalendartype(string|CalendarTypeInputDto|null $calendarType): self
+    public function setCalendartype(?string $calendarType): self
     {
         $this->calendarType = $calendarType;
         return $this;
@@ -198,11 +220,11 @@ abstract class CalendarInputDtoGenerated
         return $this;
     }
 
-    public function getExternallink(): string|CalendarExternalLinkInputDto|null    {
+    public function getExternallink(): ?string    {
         return $this->externalLink;
     }
 
-    public function setExternallink(string|CalendarExternalLinkInputDto|null $externalLink): self
+    public function setExternallink(?string $externalLink): self
     {
         $this->externalLink = $externalLink;
         return $this;

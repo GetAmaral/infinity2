@@ -47,7 +47,10 @@ class StepProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Step::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Step not found');
@@ -58,33 +61,62 @@ class StepProcessor implements ProcessorInterface
             $entity = new Step();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setFirst($data->first);
-        $entity->setSlug($data->slug);
-        $entity->setObjective($data->objective);
-        $entity->setPrompt($data->prompt);
-        $entity->setVieworder($data->viewOrder);
-        $entity->setPositionx($data->positionX);
-        $entity->setPositiony($data->positionY);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // first
+        if (!$isPatch || array_key_exists('first', $requestData)) {
+            $entity->setFirst($data->first);
+        }
+        // slug
+        if (!$isPatch || array_key_exists('slug', $requestData)) {
+            $entity->setSlug($data->slug);
+        }
+        // objective
+        if (!$isPatch || array_key_exists('objective', $requestData)) {
+            $entity->setObjective($data->objective);
+        }
+        // prompt
+        if (!$isPatch || array_key_exists('prompt', $requestData)) {
+            $entity->setPrompt($data->prompt);
+        }
+        // viewOrder
+        if (!$isPatch || array_key_exists('viewOrder', $requestData)) {
+            $entity->setVieworder($data->viewOrder);
+        }
+        // positionX
+        if (!$isPatch || array_key_exists('positionX', $requestData)) {
+            $entity->setPositionx($data->positionX);
+        }
+        // positionY
+        if (!$isPatch || array_key_exists('positionY', $requestData)) {
+            $entity->setPositiony($data->positionY);
+        }
 
         // Map relationship properties
         // treeFlow: ManyToOne
-        if ($data->treeFlow !== null) {
-            if (is_string($data->treeFlow)) {
-                // IRI format: "/api/treeflows/{id}"
-                $treeFlowId = $this->extractIdFromIri($data->treeFlow);
-                $treeFlow = $this->entityManager->getRepository(TreeFlow::class)->find($treeFlowId);
-                if (!$treeFlow) {
-                    throw new BadRequestHttpException('TreeFlow not found: ' . $treeFlowId);
+        if (!$isPatch || array_key_exists('treeFlow', $requestData)) {
+            if ($data->treeFlow !== null) {
+                if (is_string($data->treeFlow)) {
+                    // IRI format: "/api/treeflows/{id}"
+                    $treeFlowId = $this->extractIdFromIri($data->treeFlow);
+                    $treeFlow = $this->entityManager->getRepository(TreeFlow::class)->find($treeFlowId);
+                    if (!$treeFlow) {
+                        throw new BadRequestHttpException('TreeFlow not found: ' . $treeFlowId);
+                    }
+                    $entity->setTreeflow($treeFlow);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested treeFlow creation not supported. Use IRI format.');
                 }
-                $entity->setTreeflow($treeFlow);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested treeFlow creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('treeFlow is required');
             }
-        } else {
-            throw new BadRequestHttpException('treeFlow is required');
         }
 
         // questions: OneToMany with nested DTO support
@@ -169,8 +201,8 @@ class StepProcessor implements ProcessorInterface
                     throw new BadRequestHttpException('StepQuestion not found: ' . $itemId);
                 }
 
-                // Update item properties from DTO
-                // TODO: Map properties from $itemData to $item
+                // Update item properties from DTO array
+                $this->mapArrayToEntity($itemData, $item);
 
                 $processedIds[] = $item->getId()->toString();
             } else {
@@ -181,8 +213,11 @@ class StepProcessor implements ProcessorInterface
 
                 $item = new StepQuestion();
 
-                // Set properties from DTO
-                // TODO: Map properties from $itemData to $item
+                // Set properties from DTO array
+                $this->mapArrayToEntity($itemData, $item);
+
+                // Set parent relationship (step)
+                $item->setStep($entity);
 
                 $entity->addQuestion($item);
                 $this->entityManager->persist($item);
@@ -236,8 +271,8 @@ class StepProcessor implements ProcessorInterface
                     throw new BadRequestHttpException('StepOutput not found: ' . $itemId);
                 }
 
-                // Update item properties from DTO
-                // TODO: Map properties from $itemData to $item
+                // Update item properties from DTO array
+                $this->mapArrayToEntity($itemData, $item);
 
                 $processedIds[] = $item->getId()->toString();
             } else {
@@ -248,8 +283,11 @@ class StepProcessor implements ProcessorInterface
 
                 $item = new StepOutput();
 
-                // Set properties from DTO
-                // TODO: Map properties from $itemData to $item
+                // Set properties from DTO array
+                $this->mapArrayToEntity($itemData, $item);
+
+                // Set parent relationship (step)
+                $item->setStep($entity);
 
                 $entity->addOutput($item);
                 $this->entityManager->persist($item);
@@ -303,8 +341,8 @@ class StepProcessor implements ProcessorInterface
                     throw new BadRequestHttpException('StepInput not found: ' . $itemId);
                 }
 
-                // Update item properties from DTO
-                // TODO: Map properties from $itemData to $item
+                // Update item properties from DTO array
+                $this->mapArrayToEntity($itemData, $item);
 
                 $processedIds[] = $item->getId()->toString();
             } else {
@@ -315,8 +353,11 @@ class StepProcessor implements ProcessorInterface
 
                 $item = new StepInput();
 
-                // Set properties from DTO
-                // TODO: Map properties from $itemData to $item
+                // Set properties from DTO array
+                $this->mapArrayToEntity($itemData, $item);
+
+                // Set parent relationship (step)
+                $item->setStep($entity);
 
                 $entity->addInput($item);
                 $this->entityManager->persist($item);
@@ -334,4 +375,49 @@ class StepProcessor implements ProcessorInterface
         }
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

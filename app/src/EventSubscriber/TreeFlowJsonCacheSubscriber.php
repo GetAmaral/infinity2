@@ -167,8 +167,15 @@ class TreeFlowJsonCacheSubscriber
 
         // Add to affected list (using UUID as key to avoid duplicates)
         if ($treeFlow !== null) {
-            $uuid = $treeFlow->getId()->toRfc4122();
-            $this->affectedTreeFlows[$uuid] = $treeFlow;
+            // Check if ID exists (during prePersist, ID is null)
+            $id = $treeFlow->getId();
+            if ($id !== null) {
+                $uuid = $id->toRfc4122();
+                $this->affectedTreeFlows[$uuid] = $treeFlow;
+            } else {
+                // Use object hash for entities without ID yet (during prePersist)
+                $this->affectedTreeFlows[spl_object_hash($treeFlow)] = $treeFlow;
+            }
         }
     }
 }

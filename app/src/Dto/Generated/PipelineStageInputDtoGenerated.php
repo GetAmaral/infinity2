@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\PipelineStageInputDto;
 use App\Dto\PipelineInputDto;
@@ -23,57 +24,71 @@ abstract class PipelineStageInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['pipelinestage:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['pipelinestage:write'])]
     public ?string $description = null;
 
+    #[Groups(['pipelinestage:write'])]
     public int $probability;
 
+    #[Groups(['pipelinestage:write'])]
     public bool $final = false;
 
+    #[Groups(['pipelinestage:write'])]
     public bool $won = false;
 
+    #[Groups(['pipelinestage:write'])]
     public bool $active = true;
 
+    #[Groups(['pipelinestage:write'])]
     public bool $lost = false;
 
+    #[Groups(['pipelinestage:write'])]
     public string $color = '#0dcaf0';
 
+    #[Groups(['pipelinestage:write'])]
     public ?int $displayOrder = null;
 
+    #[Groups(['pipelinestage:write'])]
     public ?string $migrationCriteria = null;
 
     /**
      * next reference
-     * Can be: IRI string (e.g., "/api/pipelinestages/uuid") or nested PipelineStageInput object
+     * Must be: IRI string (e.g., "/api/pipelinestages/uuid")
      */
-    public string|PipelineStageInputDto|null $next = null;
+    #[Groups(['pipelinestage:write'])]
+    public ?string $next = null;
 
     /**
      * pipeline reference
-     * Can be: IRI string (e.g., "/api/pipelines/uuid") or nested PipelineInput object
+     * Must be: IRI string (e.g., "/api/pipelines/uuid")
      */
-    public string|PipelineInputDto|null $pipeline = null;
+    #[Groups(['pipelinestage:write'])]
+    public ?string $pipeline = null;
 
     /**
      * previous reference
-     * Can be: IRI string (e.g., "/api/pipelinestages/uuid") or nested PipelineStageInput object
+     * Must be: IRI string (e.g., "/api/pipelinestages/uuid")
      */
-    public string|PipelineStageInputDto|null $previous = null;
+    #[Groups(['pipelinestage:write'])]
+    public ?string $previous = null;
 
+    #[Groups(['pipelinestage:write'])]
     public string $stageName;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -189,31 +204,31 @@ abstract class PipelineStageInputDtoGenerated
         return $this;
     }
 
-    public function getNext(): string|PipelineStageInputDto|null    {
+    public function getNext(): ?string    {
         return $this->next;
     }
 
-    public function setNext(string|PipelineStageInputDto|null $next): self
+    public function setNext(?string $next): self
     {
         $this->next = $next;
         return $this;
     }
 
-    public function getPipeline(): string|PipelineInputDto|null    {
+    public function getPipeline(): ?string    {
         return $this->pipeline;
     }
 
-    public function setPipeline(string|PipelineInputDto|null $pipeline): self
+    public function setPipeline(?string $pipeline): self
     {
         $this->pipeline = $pipeline;
         return $this;
     }
 
-    public function getPrevious(): string|PipelineStageInputDto|null    {
+    public function getPrevious(): ?string    {
         return $this->previous;
     }
 
-    public function setPrevious(string|PipelineStageInputDto|null $previous): self
+    public function setPrevious(?string $previous): self
     {
         $this->previous = $previous;
         return $this;

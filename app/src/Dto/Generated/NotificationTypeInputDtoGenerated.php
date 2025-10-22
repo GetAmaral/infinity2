@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 
 /**
@@ -21,65 +22,89 @@ abstract class NotificationTypeInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['notificationtype:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['notificationtype:write'])]
     public string $name;
 
+    #[Groups(['notificationtype:write'])]
     public ?string $description = null;
 
+    #[Groups(['notificationtype:write'])]
     public string $icon = 'bi-bell-fill';
 
+    #[Groups(['notificationtype:write'])]
     public bool $active = true;
 
+    #[Groups(['notificationtype:write'])]
     public bool $default = false;
 
+    #[Groups(['notificationtype:write'])]
     public array $channels;
 
+    #[Groups(['notificationtype:write'])]
     public string $priority = 'normal';
 
+    #[Groups(['notificationtype:write'])]
     public string $color = '#0dcaf0';
 
+    #[Groups(['notificationtype:write'])]
     public ?string $emailSubject = null;
 
+    #[Groups(['notificationtype:write'])]
     public ?string $emailTemplate = null;
 
+    #[Groups(['notificationtype:write'])]
     public ?string $smsTemplate = null;
 
+    #[Groups(['notificationtype:write'])]
     public ?string $pushTitle = null;
 
+    #[Groups(['notificationtype:write'])]
     public ?string $pushBody = null;
 
+    #[Groups(['notificationtype:write'])]
     public string $frequency = 'immediate';
 
+    #[Groups(['notificationtype:write'])]
     public bool $retryEnabled = true;
 
+    #[Groups(['notificationtype:write'])]
     public ?int $maxRetries = 3;
 
+    #[Groups(['notificationtype:write'])]
     public bool $throttleEnabled = false;
 
+    #[Groups(['notificationtype:write'])]
     public ?int $throttleLimit = 10;
 
+    #[Groups(['notificationtype:write'])]
     public ?array $tags = null;
 
+    #[Groups(['notificationtype:write'])]
     public ?array $metadata = null;
 
+    #[Groups(['notificationtype:write'])]
     public bool $userPreferenceAllowed = true;
 
+    #[Groups(['notificationtype:write'])]
     public bool $requiresAction = false;
 
+    #[Groups(['notificationtype:write'])]
     public ?int $expiresAfterHours = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;

@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\AgentTypeInputDto;
@@ -23,75 +24,100 @@ abstract class AgentInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['agent:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['agent:write'])]
     public string $name;
 
+    #[Groups(['agent:write'])]
     public ?string $phone = null;
 
+    #[Groups(['agent:write'])]
     public ?string $title = null;
 
+    #[Groups(['agent:write'])]
     public bool $active = true;
 
+    #[Groups(['agent:write'])]
     public bool $available = true;
 
+    #[Groups(['agent:write'])]
     public ?string $territory = null;
 
+    #[Groups(['agent:write'])]
     public ?string $quota = null;
 
     /**
      * user reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $user = null;
+    #[Groups(['agent:write'])]
+    public ?string $user = null;
 
     /**
      * agentType reference
-     * Can be: IRI string (e.g., "/api/agenttypes/uuid") or nested AgentTypeInput object
+     * Must be: IRI string (e.g., "/api/agenttypes/uuid")
      */
-    public string|AgentTypeInputDto|null $agentType = null;
+    #[Groups(['agent:write'])]
+    public ?string $agentType = null;
 
+    #[Groups(['agent:write'])]
     public ?string $commissionRate = '0';
 
+    #[Groups(['agent:write'])]
     public ?\DateTimeImmutable $startDate = null;
 
+    #[Groups(['agent:write'])]
     public ?\DateTimeImmutable $endDate = null;
 
+    #[Groups(['agent:write'])]
     public ?string $specialization = null;
 
+    #[Groups(['agent:write'])]
     public ?string $languages = null;
 
+    #[Groups(['agent:write'])]
     public ?string $certifications = null;
 
+    #[Groups(['agent:write'])]
     public ?string $totalSales = '0';
 
+    #[Groups(['agent:write'])]
     public ?string $currentMonthSales = '0';
 
+    #[Groups(['agent:write'])]
     public ?string $conversionRate = '0';
 
+    #[Groups(['agent:write'])]
     public ?string $customerSatisfactionScore = null;
 
+    #[Groups(['agent:write'])]
     public int $maxConcurrentCustomers = 10;
 
+    #[Groups(['agent:write'])]
     public int $currentCustomerCount = 0;
 
+    #[Groups(['agent:write'])]
     public ?int $averageResponseTime = null;
 
+    #[Groups(['agent:write'])]
     public ?string $skills = null;
 
+    #[Groups(['agent:write'])]
     public ?string $prompt = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -167,21 +193,21 @@ abstract class AgentInputDtoGenerated
         return $this;
     }
 
-    public function getUser(): string|UserInputDto|null    {
+    public function getUser(): ?string    {
         return $this->user;
     }
 
-    public function setUser(string|UserInputDto|null $user): self
+    public function setUser(?string $user): self
     {
         $this->user = $user;
         return $this;
     }
 
-    public function getAgenttype(): string|AgentTypeInputDto|null    {
+    public function getAgenttype(): ?string    {
         return $this->agentType;
     }
 
-    public function setAgenttype(string|AgentTypeInputDto|null $agentType): self
+    public function setAgenttype(?string $agentType): self
     {
         $this->agentType = $agentType;
         return $this;

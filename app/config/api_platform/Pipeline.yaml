@@ -7,9 +7,8 @@ resources:
     shortName: Pipeline
     description: "Sales pipelines for managing deal flow"
 
-    input: App\Dto\PipelineInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\PipelineOutputDto
-    processor: App\State\PipelineProcessor
 
     normalizationContext:
       groups: ["pipeline:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_CRM_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\PipelineInputDto
+        processor: App\State\PipelineProcessor
         security: "is_granted('ROLE_CRM_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\PipelineInputDto
+        processor: App\State\PipelineProcessor
         security: "is_granted('ROLE_CRM_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\PipelineInputDto
+        processor: App\State\PipelineProcessor
         security: "is_granted('ROLE_CRM_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_CRM_ADMIN')"

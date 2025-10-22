@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\CityInputDto;
 use App\Dto\CountryInputDto;
 
@@ -20,26 +21,33 @@ use App\Dto\CountryInputDto;
  */
 abstract class HolidayTemplateInputDtoGenerated
 {
+    #[Groups(['holidaytemplate:write'])]
     public string $name;
 
+    #[Groups(['holidaytemplate:write'])]
     public ?bool $blocksScheduling = null;
 
     /**
      * city reference
-     * Can be: IRI string (e.g., "/api/citys/uuid") or nested CityInput object
+     * Must be: IRI string (e.g., "/api/citys/uuid")
      */
-    public string|CityInputDto|null $city = null;
+    #[Groups(['holidaytemplate:write'])]
+    public ?string $city = null;
 
     /**
      * country reference
-     * Can be: IRI string (e.g., "/api/countrys/uuid") or nested CountryInput object
+     * Must be: IRI string (e.g., "/api/countrys/uuid")
      */
-    public string|CountryInputDto|null $country = null;
+    #[Groups(['holidaytemplate:write'])]
+    public ?string $country = null;
 
+    #[Groups(['holidaytemplate:write'])]
     public ?int $recurrenceFrequency = null;
 
+    #[Groups(['holidaytemplate:write'])]
     public ?int $recurrenceInterval = null;
 
+    #[Groups(['holidaytemplate:write'])]
     public ?\DateTimeImmutable $sentAt = null;
 
 
@@ -65,21 +73,21 @@ abstract class HolidayTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getCity(): string|CityInputDto|null    {
+    public function getCity(): ?string    {
         return $this->city;
     }
 
-    public function setCity(string|CityInputDto|null $city): self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
         return $this;
     }
 
-    public function getCountry(): string|CountryInputDto|null    {
+    public function getCountry(): ?string    {
         return $this->country;
     }
 
-    public function setCountry(string|CountryInputDto|null $country): self
+    public function setCountry(?string $country): self
     {
         $this->country = $country;
         return $this;

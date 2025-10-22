@@ -7,9 +7,8 @@ resources:
     shortName: Module
     description: "System modules for role-based access control"
 
-    input: App\Dto\ModuleInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\ModuleOutputDto
-    processor: App\State\ModuleProcessor
 
     normalizationContext:
       groups: ["module:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\ModuleInputDto
+        processor: App\State\ModuleProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\ModuleInputDto
+        processor: App\State\ModuleProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\ModuleInputDto
+        processor: App\State\ModuleProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SUPER_ADMIN')"

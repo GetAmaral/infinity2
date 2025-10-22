@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Genmax;
 
 use App\Entity\Generator\GeneratorEntity;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Environment;
 use Psr\Log\LoggerInterface;
@@ -30,7 +29,7 @@ class DtoGenerator
         #[Autowire(param: 'genmax.templates')]
         private readonly array $templates,
         private readonly Environment $twig,
-        private readonly Filesystem $filesystem,
+        private readonly SmartFileWriter $fileWriter,
         private readonly LoggerInterface $logger
     ) {}
 
@@ -87,11 +86,6 @@ class DtoGenerator
         );
 
         try {
-            $dir = dirname($filePath);
-            if (!is_dir($dir)) {
-                $this->filesystem->mkdir($dir, 0755);
-            }
-
             $content = $this->twig->render($this->templates['dto_input_generated'], [
                 'entity' => $entity,
                 'generated_namespace' => $this->paths['dto_generated_namespace'],
@@ -99,12 +93,12 @@ class DtoGenerator
                 'entity_namespace' => $this->paths['entity_namespace'],
             ]);
 
-            $this->filesystem->dumpFile($filePath, $content);
-            chmod($filePath, 0666);
+            $status = $this->fileWriter->writeFile($filePath, $content, 0666);
 
             $this->logger->info('[GENMAX] Generated Input DTO base class', [
                 'file' => $filePath,
-                'entity' => $entity->getEntityName()
+                'entity' => $entity->getEntityName(),
+                'status' => $status
             ]);
 
             return $filePath;
@@ -150,12 +144,12 @@ class DtoGenerator
                 'generated_namespace' => $this->paths['dto_generated_namespace'],
             ]);
 
-            $this->filesystem->dumpFile($filePath, $content);
-            chmod($filePath, 0666);
+            $status = $this->fileWriter->writeFile($filePath, $content, 0666);
 
             $this->logger->info('[GENMAX] Generated Input DTO extension class', [
                 'file' => $filePath,
-                'entity' => $entity->getEntityName()
+                'entity' => $entity->getEntityName(),
+                'status' => $status
             ]);
 
             return $filePath;
@@ -187,11 +181,6 @@ class DtoGenerator
         );
 
         try {
-            $dir = dirname($filePath);
-            if (!is_dir($dir)) {
-                $this->filesystem->mkdir($dir, 0755);
-            }
-
             $content = $this->twig->render($this->templates['dto_output_generated'], [
                 'entity' => $entity,
                 'generated_namespace' => $this->paths['dto_generated_namespace'],
@@ -199,12 +188,12 @@ class DtoGenerator
                 'entity_namespace' => $this->paths['entity_namespace'],
             ]);
 
-            $this->filesystem->dumpFile($filePath, $content);
-            chmod($filePath, 0666);
+            $status = $this->fileWriter->writeFile($filePath, $content, 0666);
 
             $this->logger->info('[GENMAX] Generated Output DTO base class', [
                 'file' => $filePath,
-                'entity' => $entity->getEntityName()
+                'entity' => $entity->getEntityName(),
+                'status' => $status
             ]);
 
             return $filePath;
@@ -250,12 +239,12 @@ class DtoGenerator
                 'generated_namespace' => $this->paths['dto_generated_namespace'],
             ]);
 
-            $this->filesystem->dumpFile($filePath, $content);
-            chmod($filePath, 0666);
+            $status = $this->fileWriter->writeFile($filePath, $content, 0666);
 
             $this->logger->info('[GENMAX] Generated Output DTO extension class', [
                 'file' => $filePath,
-                'entity' => $entity->getEntityName()
+                'entity' => $entity->getEntityName(),
+                'status' => $status
             ]);
 
             return $filePath;

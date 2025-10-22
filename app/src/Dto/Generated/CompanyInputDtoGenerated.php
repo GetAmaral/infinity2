@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\CityInputDto;
@@ -24,175 +25,229 @@ abstract class CompanyInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['company:write'])]
+    public ?string $organization = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['company:write'])]
     public string $name;
 
+    #[Groups(['company:write'])]
     public ?string $description = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['company:write'])]
     public ?string $industry = null;
 
     /**
      * accountManager reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $accountManager = null;
+    #[Groups(['company:write'])]
+    public ?string $accountManager = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['company:write'])]
     public ?string $website = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['company:write'])]
     public ?string $billingAddress = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['company:write'])]
     public ?string $legalName = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['company:write'])]
     public ?string $shippingAddress = null;
 
     /**
      * shippingCity reference
-     * Can be: IRI string (e.g., "/api/citys/uuid") or nested CityInput object
+     * Must be: IRI string (e.g., "/api/citys/uuid")
      */
-    public string|CityInputDto|null $shippingCity = null;
+    #[Groups(['company:write'])]
+    public ?string $shippingCity = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['company:write'])]
     public ?string $shippingPostalCode = null;
 
+    #[Groups(['company:write'])]
     public ?string $annualRevenue = null;
 
     #[Assert\Length(max: 3)]
+    #[Groups(['company:write'])]
     public ?string $currency = null;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
     public ?string $companyType = null;
 
     /**
      * parentCompany reference
-     * Can be: IRI string (e.g., "/api/companys/uuid") or nested CompanyInput object
+     * Must be: IRI string (e.g., "/api/companys/uuid")
      */
-    public string|CompanyInputDto|null $parentCompany = null;
+    #[Groups(['company:write'])]
+    public ?string $parentCompany = null;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
     public ?string $accountSource = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['company:write'])]
     public ?string $rating = null;
 
+    #[Groups(['company:write'])]
     public ?\DateTimeImmutable $customerSince = null;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
     public ?string $paymentTerms = null;
 
+    #[Groups(['company:write'])]
     public ?string $creditLimit = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['company:write'])]
     public ?string $fiscalYearEnd = null;
 
     /**
      * city reference
-     * Can be: IRI string (e.g., "/api/citys/uuid") or nested CityInput object
+     * Must be: IRI string (e.g., "/api/citys/uuid")
      */
-    public string|CityInputDto|null $city = null;
+    #[Groups(['company:write'])]
+    public ?string $city = null;
 
     #[Assert\Length(max: 10)]
+    #[Groups(['company:write'])]
     public ?string $sicCode = null;
 
     #[Assert\Length(max: 10)]
+    #[Groups(['company:write'])]
     public ?string $naicsCode = null;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
     public ?string $ownership = null;
 
     #[Assert\Length(max: 10)]
+    #[Groups(['company:write'])]
     public ?string $tickerSymbol = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['company:write'])]
     public ?string $linkedInUrl = null;
 
+    #[Groups(['company:write'])]
     public ?bool $doNotContact = null;
 
+    #[Groups(['company:write'])]
     public ?bool $gdprConsent = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['company:write'])]
     public ?string $country = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['company:write'])]
     public ?string $shippingCountry = null;
 
+    #[Groups(['company:write'])]
     public ?int $companySize = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['company:write'])]
     public ?string $fax = null;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
     public ?string $coordinates = null;
 
     #[Assert\Length(max: 180)]
+    #[Groups(['company:write'])]
     public ?string $email = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['company:write'])]
     public ?string $mobilePhone = null;
 
+    #[Groups(['company:write'])]
     public ?string $notes = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['company:write'])]
     public ?string $phone = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['company:write'])]
     public ?string $postalCode = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['company:write'])]
     public ?string $primaryContactName = null;
 
+    #[Groups(['company:write'])]
     public ?int $status = null;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
     public ?string $taxId = null;
 
+    #[Groups(['company:write'])]
     public ?\DateTimeImmutable $nextActivityDate = null;
 
+    #[Groups(['company:write'])]
     public ?\DateTimeImmutable $lastActivityDate = null;
 
+    #[Groups(['company:write'])]
     public string $timeZone = 'UTC';
 
     #[Assert\Length(max: 100)]
+    #[Groups(['company:write'])]
     public ?string $stateProvince = null;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['company:write'])]
     public ?string $tags = null;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
     public ?string $lifecycleStage = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['company:write'])]
     public ?string $companyDomain = null;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
     public ?string $leadStatus = null;
 
+    #[Groups(['company:write'])]
     public ?int $numberOfAssociatedDeals = null;
 
+    #[Groups(['company:write'])]
     public ?int $numberOfAssociatedContacts = null;
 
+    #[Groups(['company:write'])]
     public ?bool $public = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['company:write'])]
     public ?string $shippingStateProvince = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -228,11 +283,11 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getAccountmanager(): string|UserInputDto|null    {
+    public function getAccountmanager(): ?string    {
         return $this->accountManager;
     }
 
-    public function setAccountmanager(string|UserInputDto|null $accountManager): self
+    public function setAccountmanager(?string $accountManager): self
     {
         $this->accountManager = $accountManager;
         return $this;
@@ -278,11 +333,11 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getShippingcity(): string|CityInputDto|null    {
+    public function getShippingcity(): ?string    {
         return $this->shippingCity;
     }
 
-    public function setShippingcity(string|CityInputDto|null $shippingCity): self
+    public function setShippingcity(?string $shippingCity): self
     {
         $this->shippingCity = $shippingCity;
         return $this;
@@ -338,11 +393,11 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getParentcompany(): string|CompanyInputDto|null    {
+    public function getParentcompany(): ?string    {
         return $this->parentCompany;
     }
 
-    public function setParentcompany(string|CompanyInputDto|null $parentCompany): self
+    public function setParentcompany(?string $parentCompany): self
     {
         $this->parentCompany = $parentCompany;
         return $this;
@@ -408,11 +463,11 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getCity(): string|CityInputDto|null    {
+    public function getCity(): ?string    {
         return $this->city;
     }
 
-    public function setCity(string|CityInputDto|null $city): self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
         return $this;

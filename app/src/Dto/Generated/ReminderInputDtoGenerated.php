@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\CommunicationMethodInputDto;
 use App\Dto\EventInputDto;
@@ -23,37 +24,43 @@ abstract class ReminderInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['reminder:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['reminder:write'])]
     public string $name;
 
+    #[Groups(['reminder:write'])]
     public ?bool $active = true;
 
     /**
      * communicationMethod reference
-     * Can be: IRI string (e.g., "/api/communicationmethods/uuid") or nested CommunicationMethodInput object
+     * Must be: IRI string (e.g., "/api/communicationmethods/uuid")
      */
-    public string|CommunicationMethodInputDto|null $communicationMethod = null;
+    #[Groups(['reminder:write'])]
+    public ?string $communicationMethod = null;
 
     /**
      * event reference
-     * Can be: IRI string (e.g., "/api/events/uuid") or nested EventInput object
+     * Must be: IRI string (e.g., "/api/events/uuid")
      */
-    public string|EventInputDto|null $event = null;
+    #[Groups(['reminder:write'])]
+    public ?string $event = null;
 
+    #[Groups(['reminder:write'])]
     public int $minutesBeforeStart = 15;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -79,21 +86,21 @@ abstract class ReminderInputDtoGenerated
         return $this;
     }
 
-    public function getCommunicationmethod(): string|CommunicationMethodInputDto|null    {
+    public function getCommunicationmethod(): ?string    {
         return $this->communicationMethod;
     }
 
-    public function setCommunicationmethod(string|CommunicationMethodInputDto|null $communicationMethod): self
+    public function setCommunicationmethod(?string $communicationMethod): self
     {
         $this->communicationMethod = $communicationMethod;
         return $this;
     }
 
-    public function getEvent(): string|EventInputDto|null    {
+    public function getEvent(): ?string    {
         return $this->event;
     }
 
-    public function setEvent(string|EventInputDto|null $event): self
+    public function setEvent(?string $event): self
     {
         $this->event = $event;
         return $this;

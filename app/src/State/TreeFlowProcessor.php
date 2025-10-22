@@ -14,6 +14,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\Organization;
 use App\Entity\Step;
+use App\Entity\StepQuestion;
+use App\Entity\StepInput;
+use App\Entity\StepOutput;
 
 /**
  * TreeFlow State Processor
@@ -45,7 +48,10 @@ class TreeFlowProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(TreeFlow::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('TreeFlow not found');
@@ -56,32 +62,57 @@ class TreeFlowProcessor implements ProcessorInterface
             $entity = new TreeFlow();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setSlug($data->slug);
-        $entity->setVersion($data->version);
-        $entity->setCanvasviewstate($data->canvasViewState);
-        $entity->setJsonstructure($data->jsonStructure);
-        $entity->setTalkflow($data->talkFlow);
-        $entity->setActive($data->active);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // slug
+        if (!$isPatch || array_key_exists('slug', $requestData)) {
+            $entity->setSlug($data->slug);
+        }
+        // version
+        if (!$isPatch || array_key_exists('version', $requestData)) {
+            $entity->setVersion($data->version);
+        }
+        // canvasViewState
+        if (!$isPatch || array_key_exists('canvasViewState', $requestData)) {
+            $entity->setCanvasviewstate($data->canvasViewState);
+        }
+        // jsonStructure
+        if (!$isPatch || array_key_exists('jsonStructure', $requestData)) {
+            $entity->setJsonstructure($data->jsonStructure);
+        }
+        // talkFlow
+        if (!$isPatch || array_key_exists('talkFlow', $requestData)) {
+            $entity->setTalkflow($data->talkFlow);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // steps: OneToMany with nested DTO support
@@ -196,12 +227,47 @@ class TreeFlowProcessor implements ProcessorInterface
                 continue;
             }
 
+            // Handle nested collections for Step entity
+            if ($entity instanceof Step && is_array($value) && !empty($value)) {
+                if ($property === 'questions') {
+                    foreach ($value as $questionData) {
+                        $question = new StepQuestion();
+                        $this->mapArrayToEntity($questionData, $question);
+                        $question->setStep($entity);
+                        $entity->addQuestion($question);
+                        $this->entityManager->persist($question);
+                    }
+                    continue;
+                } elseif ($property === 'inputs') {
+                    foreach ($value as $inputData) {
+                        $input = new StepInput();
+                        $this->mapArrayToEntity($inputData, $input);
+                        $input->setStep($entity);
+                        $entity->addInput($input);
+                        $this->entityManager->persist($input);
+                    }
+                    continue;
+                } elseif ($property === 'outputs') {
+                    foreach ($value as $outputData) {
+                        $output = new StepOutput();
+                        $this->mapArrayToEntity($outputData, $output);
+                        $output->setStep($entity);
+                        $entity->addOutput($output);
+                        $this->entityManager->persist($output);
+                    }
+                    continue;
+                }
+            }
+
             // Convert snake_case to camelCase for setter
             $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
 
             if (method_exists($entity, $setter)) {
                 // Handle different value types
-                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value)) {
+                    $entity->$setter($value);
+                } elseif (is_array($value) && !empty($value)) {
+                    // Handle JSON arrays (like metadata, tags)
                     $entity->$setter($value);
                 } elseif (is_string($value) && str_starts_with($value, '/api/')) {
                     // Handle IRI references - resolve to actual entity

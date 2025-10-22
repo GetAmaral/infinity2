@@ -44,7 +44,10 @@ class AuditLogProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(AuditLog::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('AuditLog not found');
@@ -55,28 +58,51 @@ class AuditLogProcessor implements ProcessorInterface
             $entity = new AuditLog();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setChanges($data->changes);
-        $entity->setAction($data->action);
-        $entity->setChecksum($data->checksum);
-        $entity->setEntityclass($data->entityClass);
-        $entity->setEntityid($data->entityId);
-        $entity->setMetadata($data->metadata);
+        // changes
+        if (!$isPatch || array_key_exists('changes', $requestData)) {
+            $entity->setChanges($data->changes);
+        }
+        // action
+        if (!$isPatch || array_key_exists('action', $requestData)) {
+            $entity->setAction($data->action);
+        }
+        // checksum
+        if (!$isPatch || array_key_exists('checksum', $requestData)) {
+            $entity->setChecksum($data->checksum);
+        }
+        // entityClass
+        if (!$isPatch || array_key_exists('entityClass', $requestData)) {
+            $entity->setEntityclass($data->entityClass);
+        }
+        // entityId
+        if (!$isPatch || array_key_exists('entityId', $requestData)) {
+            $entity->setEntityid($data->entityId);
+        }
+        // metadata
+        if (!$isPatch || array_key_exists('metadata', $requestData)) {
+            $entity->setMetadata($data->metadata);
+        }
 
         // Map relationship properties
         // user: ManyToOne
-        if ($data->user !== null) {
-            if (is_string($data->user)) {
-                // IRI format: "/api/users/{id}"
-                $userId = $this->extractIdFromIri($data->user);
-                $user = $this->entityManager->getRepository(User::class)->find($userId);
-                if (!$user) {
-                    throw new BadRequestHttpException('User not found: ' . $userId);
+        if (!$isPatch || array_key_exists('user', $requestData)) {
+            if ($data->user !== null) {
+                if (is_string($data->user)) {
+                    // IRI format: "/api/users/{id}"
+                    $userId = $this->extractIdFromIri($data->user);
+                    $user = $this->entityManager->getRepository(User::class)->find($userId);
+                    if (!$user) {
+                        throw new BadRequestHttpException('User not found: ' . $userId);
+                    }
+                    $entity->setUser($user);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
                 }
-                $entity->setUser($user);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
             }
         }
 
@@ -99,4 +125,49 @@ class AuditLogProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

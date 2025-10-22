@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\CourseModuleInputDto;
 use App\Dto\OrganizationInputDto;
 
@@ -21,97 +22,136 @@ use App\Dto\OrganizationInputDto;
 abstract class CourseLectureInputDtoGenerated
 {
     #[Assert\Length(max: 255)]
+    #[Groups(['course_lecture:write'])]
     public string $name;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $description = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['course_lecture:write'])]
     public ?string $videoFileName = null;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['course_lecture:write'])]
     public ?string $videoPath = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['course_lecture:write'])]
     public ?string $processingStatus = 'pending';
 
     #[Assert\Length(max: 255)]
+    #[Groups(['course_lecture:write'])]
     public ?string $processingStep = null;
 
     #[Assert\Range(max: 150, min: 0)]
+    #[Groups(['course_lecture:write'])]
     public ?int $processingPercentage = 0;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $processingError = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?\DateTimeImmutable $processedAt = null;
 
+    #[Groups(['course_lecture:write'])]
     public int $viewOrder = 0;
 
+    #[Groups(['course_lecture:write'])]
     public int $lengthSeconds = 0;
 
     /**
      * courseModule reference
-     * Can be: IRI string (e.g., "/api/coursemodules/uuid") or nested CourseModuleInput object
+     * Must be: IRI string (e.g., "/api/coursemodules/uuid")
      */
     #[Assert\NotNull]
-    public string|CourseModuleInputDto $courseModule;
+    #[Groups(['course_lecture:write'])]
+    public ?string $courseModule = null;
 
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['course_lecture:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['course_lecture:write'])]
     public bool $active;
 
+    #[Groups(['course_lecture:write'])]
     public bool $published;
 
+    #[Groups(['course_lecture:write'])]
     public bool $free;
 
+    #[Groups(['course_lecture:write'])]
     public ?\DateTimeImmutable $publishedAt = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $videoUrl = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $videoType = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $videoResolution = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $videoSizeBytes = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $transcript = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $subtitleUrl = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $subtitleLanguage = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?array $attachments = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?array $externalLinks = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?array $learningObjectives = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $prerequisites = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?int $viewCount = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?int $completionCount = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?float $averageWatchPercentage = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?float $rating = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?int $ratingCount = null;
 
+    #[Groups(['course_lecture:write'])]
     public int $durationSeconds;
 
+    #[Groups(['course_lecture:write'])]
     public ?string $difficultyLevel = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?array $tags = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?array $skillsCovered = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?int $pointsValue = null;
 
+    #[Groups(['course_lecture:write'])]
     public ?array $badges = null;
 
 
@@ -227,11 +267,11 @@ abstract class CourseLectureInputDtoGenerated
         return $this;
     }
 
-    public function getCoursemodule(): string|CourseModuleInputDto    {
+    public function getCoursemodule(): ?string    {
         return $this->courseModule;
     }
 
-    public function setCoursemodule(string|CourseModuleInputDto $courseModule): self
+    public function setCoursemodule(?string $courseModule): self
     {
         $this->courseModule = $courseModule;
         return $this;
@@ -257,11 +297,11 @@ abstract class CourseLectureInputDtoGenerated
         return $this;
     }
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;

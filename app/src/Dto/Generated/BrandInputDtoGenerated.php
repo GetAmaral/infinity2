@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 
 /**
@@ -21,47 +22,62 @@ abstract class BrandInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['brand:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['brand:write'])]
     public string $name;
 
+    #[Groups(['brand:write'])]
     public ?string $description = null;
 
+    #[Groups(['brand:write'])]
     public ?string $tagline = null;
 
+    #[Groups(['brand:write'])]
     public ?string $logoUrl = null;
 
+    #[Groups(['brand:write'])]
     public ?string $primaryColor = null;
 
+    #[Groups(['brand:write'])]
     public ?string $industry = null;
 
+    #[Groups(['brand:write'])]
     public ?string $positioning = null;
 
+    #[Groups(['brand:write'])]
     public ?string $targetMarket = null;
 
+    #[Groups(['brand:write'])]
     public ?string $marketShare = null;
 
+    #[Groups(['brand:write'])]
     public ?string $brandValue = null;
 
+    #[Groups(['brand:write'])]
     public ?string $countryOfOrigin = null;
 
+    #[Groups(['brand:write'])]
     public ?int $foundedYear = null;
 
+    #[Groups(['brand:write'])]
     public ?string $website = null;
 
+    #[Groups(['brand:write'])]
     public bool $active = true;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;

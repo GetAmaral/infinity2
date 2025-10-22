@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\CompanyInputDto;
 use App\Dto\PipelineStageInputDto;
@@ -32,148 +33,188 @@ abstract class DealInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['deal:write'])]
+    public ?string $organization = null;
 
+    #[Groups(['deal:write'])]
     public string $name;
 
+    #[Groups(['deal:write'])]
     public ?string $description = null;
 
     /**
      * company reference
-     * Can be: IRI string (e.g., "/api/companys/uuid") or nested CompanyInput object
+     * Must be: IRI string (e.g., "/api/companys/uuid")
      */
-    public string|CompanyInputDto|null $company = null;
+    #[Groups(['deal:write'])]
+    public ?string $company = null;
 
+    #[Groups(['deal:write'])]
     public string $dealStatus;
 
     /**
      * currentStage reference
-     * Can be: IRI string (e.g., "/api/pipelinestages/uuid") or nested PipelineStageInput object
+     * Must be: IRI string (e.g., "/api/pipelinestages/uuid")
      */
-    public string|PipelineStageInputDto|null $currentStage = null;
+    #[Groups(['deal:write'])]
+    public ?string $currentStage = null;
 
+    #[Groups(['deal:write'])]
     public ?string $probability = null;
 
     /**
      * pipeline reference
-     * Can be: IRI string (e.g., "/api/pipelines/uuid") or nested PipelineInput object
+     * Must be: IRI string (e.g., "/api/pipelines/uuid")
      */
-    public string|PipelineInputDto|null $pipeline = null;
+    #[Groups(['deal:write'])]
+    public ?string $pipeline = null;
 
     /**
      * dealType reference
-     * Can be: IRI string (e.g., "/api/dealtypes/uuid") or nested DealTypeInput object
+     * Must be: IRI string (e.g., "/api/dealtypes/uuid")
      */
-    public string|DealTypeInputDto|null $dealType = null;
+    #[Groups(['deal:write'])]
+    public ?string $dealType = null;
 
+    #[Groups(['deal:write'])]
     public ?string $priority = null;
 
     /**
      * category reference
-     * Can be: IRI string (e.g., "/api/dealcategorys/uuid") or nested DealCategoryInput object
+     * Must be: IRI string (e.g., "/api/dealcategorys/uuid")
      */
-    public string|DealCategoryInputDto|null $category = null;
+    #[Groups(['deal:write'])]
+    public ?string $category = null;
 
+    #[Groups(['deal:write'])]
     public ?string $dealNumber = null;
 
+    #[Groups(['deal:write'])]
     public ?string $expectedAmount = null;
 
+    #[Groups(['deal:write'])]
     public ?string $weightedAmount = null;
 
+    #[Groups(['deal:write'])]
     public ?string $closureAmount = null;
 
+    #[Groups(['deal:write'])]
     public ?string $initialAmount = null;
 
+    #[Groups(['deal:write'])]
     public ?string $currency = null;
 
+    #[Groups(['deal:write'])]
     public ?float $exchangeRate = null;
 
     #[Assert\Range(max: 100, min: 0)]
+    #[Groups(['deal:write'])]
     public ?string $discountPercentage = null;
 
+    #[Groups(['deal:write'])]
     public ?string $discountAmount = null;
 
     #[Assert\Range(max: 100, min: 0)]
+    #[Groups(['deal:write'])]
     public ?string $commissionRate = null;
 
+    #[Groups(['deal:write'])]
     public ?string $commissionAmount = null;
 
+    #[Groups(['deal:write'])]
     public ?\DateTimeImmutable $expectedClosureDate = null;
 
+    #[Groups(['deal:write'])]
     public ?\DateTimeImmutable $closureDate = null;
 
+    #[Groups(['deal:write'])]
     public ?\DateTimeImmutable $initialDate = null;
 
+    #[Groups(['deal:write'])]
     public ?\DateTimeImmutable $lastActivityDate = null;
 
+    #[Groups(['deal:write'])]
     public ?\DateTimeImmutable $nextFollowUp = null;
 
+    #[Groups(['deal:write'])]
     public ?float $daysInCurrentStage = null;
 
+    #[Groups(['deal:write'])]
     public ?int $forecastCategory = null;
 
     /**
      * manager reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $manager = null;
+    #[Groups(['deal:write'])]
+    public ?string $manager = null;
 
     /**
      * owner reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|UserInputDto $owner;
+    #[Groups(['deal:write'])]
+    public ?string $owner = null;
 
     /**
      * primaryContact reference
-     * Can be: IRI string (e.g., "/api/contacts/uuid") or nested ContactInput object
+     * Must be: IRI string (e.g., "/api/contacts/uuid")
      */
-    public string|ContactInputDto|null $primaryContact = null;
+    #[Groups(['deal:write'])]
+    public ?string $primaryContact = null;
 
     /**
      * leadSource reference
-     * Can be: IRI string (e.g., "/api/leadsources/uuid") or nested LeadSourceInput object
+     * Must be: IRI string (e.g., "/api/leadsources/uuid")
      */
-    public string|LeadSourceInputDto|null $leadSource = null;
+    #[Groups(['deal:write'])]
+    public ?string $leadSource = null;
 
     /**
      * campaign reference
-     * Can be: IRI string (e.g., "/api/campaigns/uuid") or nested CampaignInput object
+     * Must be: IRI string (e.g., "/api/campaigns/uuid")
      */
-    public string|CampaignInputDto|null $campaign = null;
+    #[Groups(['deal:write'])]
+    public ?string $campaign = null;
 
+    #[Groups(['deal:write'])]
     public ?string $sourceDetails = null;
 
+    #[Groups(['deal:write'])]
     public ?string $notes = null;
 
+    #[Groups(['deal:write'])]
     public ?array $customFields = null;
 
     /**
      * lostReason reference
-     * Can be: IRI string (e.g., "/api/lostreasons/uuid") or nested LostReasonInput object
+     * Must be: IRI string (e.g., "/api/lostreasons/uuid")
      */
-    public string|LostReasonInputDto|null $lostReason = null;
+    #[Groups(['deal:write'])]
+    public ?string $lostReason = null;
 
     /**
      * winReason reference
-     * Can be: IRI string (e.g., "/api/winreasons/uuid") or nested WinReasonInput object
+     * Must be: IRI string (e.g., "/api/winreasons/uuid")
      */
-    public string|WinReasonInputDto|null $winReason = null;
+    #[Groups(['deal:write'])]
+    public ?string $winReason = null;
 
+    #[Groups(['deal:write'])]
     public ?\DateTimeImmutable $actualClosureDate = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -199,11 +240,11 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getCompany(): string|CompanyInputDto|null    {
+    public function getCompany(): ?string    {
         return $this->company;
     }
 
-    public function setCompany(string|CompanyInputDto|null $company): self
+    public function setCompany(?string $company): self
     {
         $this->company = $company;
         return $this;
@@ -219,11 +260,11 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getCurrentstage(): string|PipelineStageInputDto|null    {
+    public function getCurrentstage(): ?string    {
         return $this->currentStage;
     }
 
-    public function setCurrentstage(string|PipelineStageInputDto|null $currentStage): self
+    public function setCurrentstage(?string $currentStage): self
     {
         $this->currentStage = $currentStage;
         return $this;
@@ -239,21 +280,21 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getPipeline(): string|PipelineInputDto|null    {
+    public function getPipeline(): ?string    {
         return $this->pipeline;
     }
 
-    public function setPipeline(string|PipelineInputDto|null $pipeline): self
+    public function setPipeline(?string $pipeline): self
     {
         $this->pipeline = $pipeline;
         return $this;
     }
 
-    public function getDealtype(): string|DealTypeInputDto|null    {
+    public function getDealtype(): ?string    {
         return $this->dealType;
     }
 
-    public function setDealtype(string|DealTypeInputDto|null $dealType): self
+    public function setDealtype(?string $dealType): self
     {
         $this->dealType = $dealType;
         return $this;
@@ -269,11 +310,11 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getCategory(): string|DealCategoryInputDto|null    {
+    public function getCategory(): ?string    {
         return $this->category;
     }
 
-    public function setCategory(string|DealCategoryInputDto|null $category): self
+    public function setCategory(?string $category): self
     {
         $this->category = $category;
         return $this;
@@ -469,11 +510,11 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getManager(): string|UserInputDto|null    {
+    public function getManager(): ?string    {
         return $this->manager;
     }
 
-    public function setManager(string|UserInputDto|null $manager): self
+    public function setManager(?string $manager): self
     {
         $this->manager = $manager;
         return $this;
@@ -489,21 +530,21 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getOwner(): string|UserInputDto    {
+    public function getOwner(): ?string    {
         return $this->owner;
     }
 
-    public function setOwner(string|UserInputDto $owner): self
+    public function setOwner(?string $owner): self
     {
         $this->owner = $owner;
         return $this;
     }
 
-    public function getPrimarycontact(): string|ContactInputDto|null    {
+    public function getPrimarycontact(): ?string    {
         return $this->primaryContact;
     }
 
-    public function setPrimarycontact(string|ContactInputDto|null $primaryContact): self
+    public function setPrimarycontact(?string $primaryContact): self
     {
         $this->primaryContact = $primaryContact;
         return $this;
@@ -519,21 +560,21 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getLeadsource(): string|LeadSourceInputDto|null    {
+    public function getLeadsource(): ?string    {
         return $this->leadSource;
     }
 
-    public function setLeadsource(string|LeadSourceInputDto|null $leadSource): self
+    public function setLeadsource(?string $leadSource): self
     {
         $this->leadSource = $leadSource;
         return $this;
     }
 
-    public function getCampaign(): string|CampaignInputDto|null    {
+    public function getCampaign(): ?string    {
         return $this->campaign;
     }
 
-    public function setCampaign(string|CampaignInputDto|null $campaign): self
+    public function setCampaign(?string $campaign): self
     {
         $this->campaign = $campaign;
         return $this;
@@ -619,21 +660,21 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getLostreason(): string|LostReasonInputDto|null    {
+    public function getLostreason(): ?string    {
         return $this->lostReason;
     }
 
-    public function setLostreason(string|LostReasonInputDto|null $lostReason): self
+    public function setLostreason(?string $lostReason): self
     {
         $this->lostReason = $lostReason;
         return $this;
     }
 
-    public function getWinreason(): string|WinReasonInputDto|null    {
+    public function getWinreason(): ?string    {
         return $this->winReason;
     }
 
-    public function setWinreason(string|WinReasonInputDto|null $winReason): self
+    public function setWinreason(?string $winReason): self
     {
         $this->winReason = $winReason;
         return $this;

@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * ProfileTemplate Input DTO (Generated Base Class)
@@ -18,6 +19,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 abstract class ProfileTemplateInputDtoGenerated
 {
+    #[Groups(['profiletemplate:write'])]
     public string $name;
 
 

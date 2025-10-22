@@ -47,7 +47,10 @@ class AttachmentProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Attachment::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Attachment not found');
@@ -58,76 +61,98 @@ class AttachmentProcessor implements ProcessorInterface
             $entity = new Attachment();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setFilesize($data->fileSize);
-        $entity->setFiletype($data->fileType);
-        $entity->setFilename($data->filename);
-        $entity->setUrl($data->url);
+        // fileSize
+        if (!$isPatch || array_key_exists('fileSize', $requestData)) {
+            $entity->setFilesize($data->fileSize);
+        }
+        // fileType
+        if (!$isPatch || array_key_exists('fileType', $requestData)) {
+            $entity->setFiletype($data->fileType);
+        }
+        // filename
+        if (!$isPatch || array_key_exists('filename', $requestData)) {
+            $entity->setFilename($data->filename);
+        }
+        // url
+        if (!$isPatch || array_key_exists('url', $requestData)) {
+            $entity->setUrl($data->url);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // event: ManyToOne
-        if ($data->event !== null) {
-            if (is_string($data->event)) {
-                // IRI format: "/api/events/{id}"
-                $eventId = $this->extractIdFromIri($data->event);
-                $event = $this->entityManager->getRepository(Event::class)->find($eventId);
-                if (!$event) {
-                    throw new BadRequestHttpException('Event not found: ' . $eventId);
+        if (!$isPatch || array_key_exists('event', $requestData)) {
+            if ($data->event !== null) {
+                if (is_string($data->event)) {
+                    // IRI format: "/api/events/{id}"
+                    $eventId = $this->extractIdFromIri($data->event);
+                    $event = $this->entityManager->getRepository(Event::class)->find($eventId);
+                    if (!$event) {
+                        throw new BadRequestHttpException('Event not found: ' . $eventId);
+                    }
+                    $entity->setEvent($event);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested event creation not supported. Use IRI format.');
                 }
-                $entity->setEvent($event);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested event creation not supported. Use IRI format.');
             }
         }
 
         // product: ManyToOne
-        if ($data->product !== null) {
-            if (is_string($data->product)) {
-                // IRI format: "/api/products/{id}"
-                $productId = $this->extractIdFromIri($data->product);
-                $product = $this->entityManager->getRepository(Product::class)->find($productId);
-                if (!$product) {
-                    throw new BadRequestHttpException('Product not found: ' . $productId);
+        if (!$isPatch || array_key_exists('product', $requestData)) {
+            if ($data->product !== null) {
+                if (is_string($data->product)) {
+                    // IRI format: "/api/products/{id}"
+                    $productId = $this->extractIdFromIri($data->product);
+                    $product = $this->entityManager->getRepository(Product::class)->find($productId);
+                    if (!$product) {
+                        throw new BadRequestHttpException('Product not found: ' . $productId);
+                    }
+                    $entity->setProduct($product);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested product creation not supported. Use IRI format.');
                 }
-                $entity->setProduct($product);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested product creation not supported. Use IRI format.');
             }
         }
 
         // talkMessage: ManyToOne
-        if ($data->talkMessage !== null) {
-            if (is_string($data->talkMessage)) {
-                // IRI format: "/api/talkmessages/{id}"
-                $talkMessageId = $this->extractIdFromIri($data->talkMessage);
-                $talkMessage = $this->entityManager->getRepository(TalkMessage::class)->find($talkMessageId);
-                if (!$talkMessage) {
-                    throw new BadRequestHttpException('TalkMessage not found: ' . $talkMessageId);
+        if (!$isPatch || array_key_exists('talkMessage', $requestData)) {
+            if ($data->talkMessage !== null) {
+                if (is_string($data->talkMessage)) {
+                    // IRI format: "/api/talkmessages/{id}"
+                    $talkMessageId = $this->extractIdFromIri($data->talkMessage);
+                    $talkMessage = $this->entityManager->getRepository(TalkMessage::class)->find($talkMessageId);
+                    if (!$talkMessage) {
+                        throw new BadRequestHttpException('TalkMessage not found: ' . $talkMessageId);
+                    }
+                    $entity->setTalkmessage($talkMessage);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested talkMessage creation not supported. Use IRI format.');
                 }
-                $entity->setTalkmessage($talkMessage);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested talkMessage creation not supported. Use IRI format.');
             }
         }
 
@@ -150,4 +175,49 @@ class AttachmentProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

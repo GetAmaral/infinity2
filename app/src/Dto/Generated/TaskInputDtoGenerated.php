@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\ContactInputDto;
 use App\Dto\DealInputDto;
@@ -27,118 +28,151 @@ abstract class TaskInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['task:write'])]
+    public ?string $organization = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['task:write'])]
     public string $name;
 
+    #[Groups(['task:write'])]
     public ?string $description = null;
 
+    #[Groups(['task:write'])]
     public ?\DateTimeImmutable $startDate = null;
 
     #[Assert\Range(max: 150, min: 0)]
+    #[Groups(['task:write'])]
     public ?int $completionPercentage = 0;
 
+    #[Groups(['task:write'])]
     public ?string $category = null;
 
+    #[Groups(['task:write'])]
     public bool $notificationSent = false;
 
+    #[Groups(['task:write'])]
     public ?bool $archived = null;
 
+    #[Groups(['task:write'])]
     public ?string $command = null;
 
+    #[Groups(['task:write'])]
     public ?\DateTimeImmutable $completedDate = null;
 
     /**
      * contact reference
-     * Can be: IRI string (e.g., "/api/contacts/uuid") or nested ContactInput object
+     * Must be: IRI string (e.g., "/api/contacts/uuid")
      */
-    public string|ContactInputDto|null $contact = null;
+    #[Groups(['task:write'])]
+    public ?string $contact = null;
 
     /**
      * deal reference
-     * Can be: IRI string (e.g., "/api/deals/uuid") or nested DealInput object
+     * Must be: IRI string (e.g., "/api/deals/uuid")
      */
-    public string|DealInputDto|null $deal = null;
+    #[Groups(['task:write'])]
+    public ?string $deal = null;
 
+    #[Groups(['task:write'])]
     public ?int $durationMinutes = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['task:write'])]
     public ?string $location = null;
 
     /**
      * pipelineStage reference
-     * Can be: IRI string (e.g., "/api/pipelinestages/uuid") or nested PipelineStageInput object
+     * Must be: IRI string (e.g., "/api/pipelinestages/uuid")
      */
-    public string|PipelineStageInputDto|null $pipelineStage = null;
+    #[Groups(['task:write'])]
+    public ?string $pipelineStage = null;
 
     #[Assert\Range(max: 5, min: 1)]
+    #[Groups(['task:write'])]
     public ?int $priority = null;
 
+    #[Groups(['task:write'])]
     public ?\DateTimeImmutable $scheduledDate = null;
 
+    #[Groups(['task:write'])]
     public bool $completed = false;
 
     /**
      * company reference
-     * Can be: IRI string (e.g., "/api/companys/uuid") or nested CompanyInput object
+     * Must be: IRI string (e.g., "/api/companys/uuid")
      */
-    public string|CompanyInputDto|null $company = null;
+    #[Groups(['task:write'])]
+    public ?string $company = null;
 
+    #[Groups(['task:write'])]
     public ?\DateTimeImmutable $reminderDate = null;
 
+    #[Groups(['task:write'])]
     public bool $reminder = false;
 
+    #[Groups(['task:write'])]
     public bool $recurring = false;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['task:write'])]
     public ?string $recurrenceRule = null;
 
+    #[Groups(['task:write'])]
     public bool $overdue = false;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['task:write'])]
     public ?string $queue = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['task:write'])]
     public ?string $emailSubject = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['task:write'])]
     public string $taskStatus;
 
     #[Assert\Length(max: 50)]
+    #[Groups(['task:write'])]
     public ?string $phoneNumber = null;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['task:write'])]
     public ?string $meetingUrl = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['task:write'])]
     public ?string $outcome = null;
 
+    #[Groups(['task:write'])]
     public ?string $notes = null;
 
     /**
      * type reference
-     * Can be: IRI string (e.g., "/api/tasktypes/uuid") or nested TaskTypeInput object
+     * Must be: IRI string (e.g., "/api/tasktypes/uuid")
      */
-    public string|TaskTypeInputDto|null $type = null;
+    #[Groups(['task:write'])]
+    public ?string $type = null;
 
     /**
      * user reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $user = null;
+    #[Groups(['task:write'])]
+    public ?string $user = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -234,21 +268,21 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getContact(): string|ContactInputDto|null    {
+    public function getContact(): ?string    {
         return $this->contact;
     }
 
-    public function setContact(string|ContactInputDto|null $contact): self
+    public function setContact(?string $contact): self
     {
         $this->contact = $contact;
         return $this;
     }
 
-    public function getDeal(): string|DealInputDto|null    {
+    public function getDeal(): ?string    {
         return $this->deal;
     }
 
-    public function setDeal(string|DealInputDto|null $deal): self
+    public function setDeal(?string $deal): self
     {
         $this->deal = $deal;
         return $this;
@@ -274,11 +308,11 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getPipelinestage(): string|PipelineStageInputDto|null    {
+    public function getPipelinestage(): ?string    {
         return $this->pipelineStage;
     }
 
-    public function setPipelinestage(string|PipelineStageInputDto|null $pipelineStage): self
+    public function setPipelinestage(?string $pipelineStage): self
     {
         $this->pipelineStage = $pipelineStage;
         return $this;
@@ -314,11 +348,11 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getCompany(): string|CompanyInputDto|null    {
+    public function getCompany(): ?string    {
         return $this->company;
     }
 
-    public function setCompany(string|CompanyInputDto|null $company): self
+    public function setCompany(?string $company): self
     {
         $this->company = $company;
         return $this;
@@ -444,21 +478,21 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getType(): string|TaskTypeInputDto|null    {
+    public function getType(): ?string    {
         return $this->type;
     }
 
-    public function setType(string|TaskTypeInputDto|null $type): self
+    public function setType(?string $type): self
     {
         $this->type = $type;
         return $this;
     }
 
-    public function getUser(): string|UserInputDto|null    {
+    public function getUser(): ?string    {
         return $this->user;
     }
 
-    public function setUser(string|UserInputDto|null $user): self
+    public function setUser(?string $user): self
     {
         $this->user = $user;
         return $this;

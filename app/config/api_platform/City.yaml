@@ -7,9 +7,8 @@ resources:
     shortName: City
     description: "Cities with geographic coordinates, timezone and location data for CRM operations"
 
-    input: App\Dto\CityInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\CityOutputDto
-    processor: App\State\CityProcessor
 
     normalizationContext:
       groups: ["city:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\CityInputDto
+        processor: App\State\CityProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\CityInputDto
+        processor: App\State\CityProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\CityInputDto
+        processor: App\State\CityProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SUPER_ADMIN')"

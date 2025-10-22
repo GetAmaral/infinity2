@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\CityInputDto;
@@ -24,115 +25,152 @@ abstract class ContactInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['contact:write'])]
+    public ?string $organization = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['contact:write'])]
     public string $firstName;
 
+    #[Groups(['contact:write'])]
     public string $name;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['contact:write'])]
     public string $lastName;
 
     /**
      * accountManager reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $accountManager = null;
+    #[Groups(['contact:write'])]
+    public ?string $accountManager = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['contact:write'])]
     public ?string $website = null;
 
+    #[Groups(['contact:write'])]
     public ?string $address = null;
 
+    #[Groups(['contact:write'])]
     public ?string $billingAddress = null;
 
     /**
      * billingCity reference
-     * Can be: IRI string (e.g., "/api/citys/uuid") or nested CityInput object
+     * Must be: IRI string (e.g., "/api/citys/uuid")
      */
-    public string|CityInputDto|null $billingCity = null;
+    #[Groups(['contact:write'])]
+    public ?string $billingCity = null;
 
+    #[Groups(['contact:write'])]
     public ?\DateTimeImmutable $birthDate = null;
 
     /**
      * city reference
-     * Can be: IRI string (e.g., "/api/citys/uuid") or nested CityInput object
+     * Must be: IRI string (e.g., "/api/citys/uuid")
      */
-    public string|CityInputDto|null $city = null;
+    #[Groups(['contact:write'])]
+    public ?string $city = null;
 
     /**
      * company reference
-     * Can be: IRI string (e.g., "/api/companys/uuid") or nested CompanyInput object
+     * Must be: IRI string (e.g., "/api/companys/uuid")
      */
     #[Assert\NotNull]
-    public string|CompanyInputDto $company;
+    #[Groups(['contact:write'])]
+    public ?string $company = null;
 
+    #[Groups(['contact:write'])]
     public ?string $mobilePhone = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['contact:write'])]
     public ?string $linkedinUrl = null;
 
+    #[Groups(['contact:write'])]
     public ?string $title = null;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['contact:write'])]
     public ?string $department = null;
 
+    #[Groups(['contact:write'])]
     public bool $emailOptOut;
 
     #[Assert\Length(max: 100)]
+    #[Groups(['contact:write'])]
     public ?string $leadSource = null;
 
+    #[Groups(['contact:write'])]
     public bool $doNotCall;
 
+    #[Groups(['contact:write'])]
     public ?string $preferredContactMethod = null;
 
+    #[Groups(['contact:write'])]
     public ?\DateTimeImmutable $lastContactDate = null;
 
     #[Assert\Length(max: 20)]
+    #[Groups(['contact:write'])]
     public ?string $document = null;
 
+    #[Groups(['contact:write'])]
     public string $email;
 
+    #[Groups(['contact:write'])]
     public ?\DateTimeImmutable $firstTalkDate = null;
 
+    #[Groups(['contact:write'])]
     public ?int $gender = null;
 
+    #[Groups(['contact:write'])]
     public ?string $geo = null;
 
+    #[Groups(['contact:write'])]
     public ?\DateTimeImmutable $lastTalkDate = null;
 
+    #[Groups(['contact:write'])]
     public ?string $neighborhood = null;
 
+    #[Groups(['contact:write'])]
     public ?string $nickname = null;
 
+    #[Groups(['contact:write'])]
     public ?string $notes = null;
 
+    #[Groups(['contact:write'])]
     public ?string $origin = null;
 
+    #[Groups(['contact:write'])]
     public ?string $phone = null;
 
+    #[Groups(['contact:write'])]
     public ?string $postalCode = null;
 
+    #[Groups(['contact:write'])]
     public ?string $profilePictureUrl = null;
 
+    #[Groups(['contact:write'])]
     public ?int $ranking = null;
 
+    #[Groups(['contact:write'])]
     public ?int $score = null;
 
+    #[Groups(['contact:write'])]
     public ?int $status = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -168,11 +206,11 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getAccountmanager(): string|UserInputDto|null    {
+    public function getAccountmanager(): ?string    {
         return $this->accountManager;
     }
 
-    public function setAccountmanager(string|UserInputDto|null $accountManager): self
+    public function setAccountmanager(?string $accountManager): self
     {
         $this->accountManager = $accountManager;
         return $this;
@@ -218,11 +256,11 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getBillingcity(): string|CityInputDto|null    {
+    public function getBillingcity(): ?string    {
         return $this->billingCity;
     }
 
-    public function setBillingcity(string|CityInputDto|null $billingCity): self
+    public function setBillingcity(?string $billingCity): self
     {
         $this->billingCity = $billingCity;
         return $this;
@@ -248,21 +286,21 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getCity(): string|CityInputDto|null    {
+    public function getCity(): ?string    {
         return $this->city;
     }
 
-    public function setCity(string|CityInputDto|null $city): self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
         return $this;
     }
 
-    public function getCompany(): string|CompanyInputDto    {
+    public function getCompany(): ?string    {
         return $this->company;
     }
 
-    public function setCompany(string|CompanyInputDto $company): self
+    public function setCompany(?string $company): self
     {
         $this->company = $company;
         return $this;

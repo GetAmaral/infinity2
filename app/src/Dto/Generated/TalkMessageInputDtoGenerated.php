@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\TalkInputDto;
 use App\Dto\ContactInputDto;
@@ -27,127 +28,149 @@ abstract class TalkMessageInputDtoGenerated
 {
     /**
      * organization reference
-     * Can be: IRI string (e.g., "/api/organizations/uuid") or nested OrganizationInput object
+     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
-    public string|OrganizationInputDto $organization;
+    #[Groups(['talkmessage:write'])]
+    public ?string $organization = null;
 
     /**
      * talk reference
-     * Can be: IRI string (e.g., "/api/talks/uuid") or nested TalkInput object
+     * Must be: IRI string (e.g., "/api/talks/uuid")
      */
     #[Assert\NotNull]
-    public string|TalkInputDto $talk;
+    #[Groups(['talkmessage:write'])]
+    public ?string $talk = null;
 
     /**
      * fromContact reference
-     * Can be: IRI string (e.g., "/api/contacts/uuid") or nested ContactInput object
+     * Must be: IRI string (e.g., "/api/contacts/uuid")
      */
-    public string|ContactInputDto|null $fromContact = null;
+    #[Groups(['talkmessage:write'])]
+    public ?string $fromContact = null;
 
     /**
      * fromUser reference
-     * Can be: IRI string (e.g., "/api/users/uuid") or nested UserInput object
+     * Must be: IRI string (e.g., "/api/users/uuid")
      */
-    public string|UserInputDto|null $fromUser = null;
+    #[Groups(['talkmessage:write'])]
+    public ?string $fromUser = null;
 
     /**
      * fromAgent reference
-     * Can be: IRI string (e.g., "/api/agents/uuid") or nested AgentInput object
+     * Must be: IRI string (e.g., "/api/agents/uuid")
      */
-    public string|AgentInputDto|null $fromAgent = null;
+    #[Groups(['talkmessage:write'])]
+    public ?string $fromAgent = null;
 
+    #[Groups(['talkmessage:write'])]
     public \DateTimeImmutable $sentAt;
 
+    #[Groups(['talkmessage:write'])]
     public string $body;
 
+    #[Groups(['talkmessage:write'])]
     public string $messageType = 'text';
 
+    #[Groups(['talkmessage:write'])]
     public bool $read = false;
 
+    #[Groups(['talkmessage:write'])]
     public ?\DateTimeImmutable $readAt = null;
 
+    #[Groups(['talkmessage:write'])]
     public ?string $sentiment = null;
 
     /**
      * parentMessage reference
-     * Can be: IRI string (e.g., "/api/talkmessages/uuid") or nested TalkMessageInput object
+     * Must be: IRI string (e.g., "/api/talkmessages/uuid")
      */
-    public string|TalkMessageInputDto|null $parentMessage = null;
+    #[Groups(['talkmessage:write'])]
+    public ?string $parentMessage = null;
 
+    #[Groups(['talkmessage:write'])]
     public ?bool $edited = null;
 
     /**
      * notification reference
-     * Can be: IRI string (e.g., "/api/notifications/uuid") or nested NotificationInput object
+     * Must be: IRI string (e.g., "/api/notifications/uuid")
      */
-    public string|NotificationInputDto|null $notification = null;
+    #[Groups(['talkmessage:write'])]
+    public ?string $notification = null;
 
+    #[Groups(['talkmessage:write'])]
     public string $direction = 'inbound';
 
+    #[Groups(['talkmessage:write'])]
     public ?\DateTimeImmutable $deliveredAt = null;
 
+    #[Groups(['talkmessage:write'])]
     public bool $internal = false;
 
+    #[Groups(['talkmessage:write'])]
     public bool $system = false;
 
+    #[Groups(['talkmessage:write'])]
     public ?\DateTimeImmutable $editedAt = null;
 
+    #[Groups(['talkmessage:write'])]
     public ?string $channel = null;
 
     #[Assert\Length(max: 500)]
+    #[Groups(['talkmessage:write'])]
     public ?string $subject = null;
 
+    #[Groups(['talkmessage:write'])]
     public ?array $metadata = null;
 
 
     // Getters and Setters
 
-    public function getOrganization(): string|OrganizationInputDto    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string|OrganizationInputDto $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
     }
 
-    public function getTalk(): string|TalkInputDto    {
+    public function getTalk(): ?string    {
         return $this->talk;
     }
 
-    public function setTalk(string|TalkInputDto $talk): self
+    public function setTalk(?string $talk): self
     {
         $this->talk = $talk;
         return $this;
     }
 
-    public function getFromcontact(): string|ContactInputDto|null    {
+    public function getFromcontact(): ?string    {
         return $this->fromContact;
     }
 
-    public function setFromcontact(string|ContactInputDto|null $fromContact): self
+    public function setFromcontact(?string $fromContact): self
     {
         $this->fromContact = $fromContact;
         return $this;
     }
 
-    public function getFromuser(): string|UserInputDto|null    {
+    public function getFromuser(): ?string    {
         return $this->fromUser;
     }
 
-    public function setFromuser(string|UserInputDto|null $fromUser): self
+    public function setFromuser(?string $fromUser): self
     {
         $this->fromUser = $fromUser;
         return $this;
     }
 
-    public function getFromagent(): string|AgentInputDto|null    {
+    public function getFromagent(): ?string    {
         return $this->fromAgent;
     }
 
-    public function setFromagent(string|AgentInputDto|null $fromAgent): self
+    public function setFromagent(?string $fromAgent): self
     {
         $this->fromAgent = $fromAgent;
         return $this;
@@ -223,11 +246,11 @@ abstract class TalkMessageInputDtoGenerated
         return $this;
     }
 
-    public function getParentmessage(): string|TalkMessageInputDto|null    {
+    public function getParentmessage(): ?string    {
         return $this->parentMessage;
     }
 
-    public function setParentmessage(string|TalkMessageInputDto|null $parentMessage): self
+    public function setParentmessage(?string $parentMessage): self
     {
         $this->parentMessage = $parentMessage;
         return $this;
@@ -243,11 +266,11 @@ abstract class TalkMessageInputDtoGenerated
         return $this;
     }
 
-    public function getNotification(): string|NotificationInputDto|null    {
+    public function getNotification(): ?string    {
         return $this->notification;
     }
 
-    public function setNotification(string|NotificationInputDto|null $notification): self
+    public function setNotification(?string $notification): self
     {
         $this->notification = $notification;
         return $this;

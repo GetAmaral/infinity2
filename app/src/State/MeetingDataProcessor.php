@@ -45,7 +45,10 @@ class MeetingDataProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(MeetingData::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('MeetingData not found');
@@ -56,69 +59,162 @@ class MeetingDataProcessor implements ProcessorInterface
             $entity = new MeetingData();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setTitle($data->title);
-        $entity->setMeetingtype($data->meetingType);
-        $entity->setStatus($data->status);
-        $entity->setStarttime($data->startTime);
-        $entity->setEndtime($data->endTime);
-        $entity->setDuration($data->duration);
-        $entity->setLocation($data->location);
-        $entity->setAgenda($data->agenda);
-        $entity->setNotes($data->notes);
-        $entity->setMinutes($data->minutes);
-        $entity->setAttendees($data->attendees);
-        $entity->setMeetingid($data->meetingId);
-        $entity->setAbsentees($data->absentees);
-        $entity->setDecisions($data->decisions);
-        $entity->setActionitems($data->actionItems);
-        $entity->setRecordingavailable($data->recordingAvailable);
-        $entity->setTranscript($data->transcript);
-        $entity->setRecordingduration($data->recordingDuration);
-        $entity->setRecordingsize($data->recordingSize);
-        $entity->setNextmeetingdate($data->nextMeetingDate);
-        $entity->setOrganizer($data->organizer);
-        $entity->setTags($data->tags);
-        $entity->setPlatform($data->platform);
-        $entity->setConfidential($data->confidential);
-        $entity->setRecurring($data->recurring);
-        $entity->setRecurrencepattern($data->recurrencePattern);
-        $entity->setRecordurl($data->recordUrl);
-        $entity->setSecret($data->secret);
-        $entity->setUrl($data->url);
+        // title
+        if (!$isPatch || array_key_exists('title', $requestData)) {
+            $entity->setTitle($data->title);
+        }
+        // meetingType
+        if (!$isPatch || array_key_exists('meetingType', $requestData)) {
+            $entity->setMeetingtype($data->meetingType);
+        }
+        // status
+        if (!$isPatch || array_key_exists('status', $requestData)) {
+            $entity->setStatus($data->status);
+        }
+        // startTime
+        if (!$isPatch || array_key_exists('startTime', $requestData)) {
+            $entity->setStarttime($data->startTime);
+        }
+        // endTime
+        if (!$isPatch || array_key_exists('endTime', $requestData)) {
+            $entity->setEndtime($data->endTime);
+        }
+        // duration
+        if (!$isPatch || array_key_exists('duration', $requestData)) {
+            $entity->setDuration($data->duration);
+        }
+        // location
+        if (!$isPatch || array_key_exists('location', $requestData)) {
+            $entity->setLocation($data->location);
+        }
+        // agenda
+        if (!$isPatch || array_key_exists('agenda', $requestData)) {
+            $entity->setAgenda($data->agenda);
+        }
+        // notes
+        if (!$isPatch || array_key_exists('notes', $requestData)) {
+            $entity->setNotes($data->notes);
+        }
+        // minutes
+        if (!$isPatch || array_key_exists('minutes', $requestData)) {
+            $entity->setMinutes($data->minutes);
+        }
+        // attendees
+        if (!$isPatch || array_key_exists('attendees', $requestData)) {
+            $entity->setAttendees($data->attendees);
+        }
+        // meetingId
+        if (!$isPatch || array_key_exists('meetingId', $requestData)) {
+            $entity->setMeetingid($data->meetingId);
+        }
+        // absentees
+        if (!$isPatch || array_key_exists('absentees', $requestData)) {
+            $entity->setAbsentees($data->absentees);
+        }
+        // decisions
+        if (!$isPatch || array_key_exists('decisions', $requestData)) {
+            $entity->setDecisions($data->decisions);
+        }
+        // actionItems
+        if (!$isPatch || array_key_exists('actionItems', $requestData)) {
+            $entity->setActionitems($data->actionItems);
+        }
+        // recordingAvailable
+        if (!$isPatch || array_key_exists('recordingAvailable', $requestData)) {
+            $entity->setRecordingavailable($data->recordingAvailable);
+        }
+        // transcript
+        if (!$isPatch || array_key_exists('transcript', $requestData)) {
+            $entity->setTranscript($data->transcript);
+        }
+        // recordingDuration
+        if (!$isPatch || array_key_exists('recordingDuration', $requestData)) {
+            $entity->setRecordingduration($data->recordingDuration);
+        }
+        // recordingSize
+        if (!$isPatch || array_key_exists('recordingSize', $requestData)) {
+            $entity->setRecordingsize($data->recordingSize);
+        }
+        // nextMeetingDate
+        if (!$isPatch || array_key_exists('nextMeetingDate', $requestData)) {
+            $entity->setNextmeetingdate($data->nextMeetingDate);
+        }
+        // organizer
+        if (!$isPatch || array_key_exists('organizer', $requestData)) {
+            $entity->setOrganizer($data->organizer);
+        }
+        // tags
+        if (!$isPatch || array_key_exists('tags', $requestData)) {
+            $entity->setTags($data->tags);
+        }
+        // platform
+        if (!$isPatch || array_key_exists('platform', $requestData)) {
+            $entity->setPlatform($data->platform);
+        }
+        // confidential
+        if (!$isPatch || array_key_exists('confidential', $requestData)) {
+            $entity->setConfidential($data->confidential);
+        }
+        // recurring
+        if (!$isPatch || array_key_exists('recurring', $requestData)) {
+            $entity->setRecurring($data->recurring);
+        }
+        // recurrencePattern
+        if (!$isPatch || array_key_exists('recurrencePattern', $requestData)) {
+            $entity->setRecurrencepattern($data->recurrencePattern);
+        }
+        // recordUrl
+        if (!$isPatch || array_key_exists('recordUrl', $requestData)) {
+            $entity->setRecordurl($data->recordUrl);
+        }
+        // secret
+        if (!$isPatch || array_key_exists('secret', $requestData)) {
+            $entity->setSecret($data->secret);
+        }
+        // url
+        if (!$isPatch || array_key_exists('url', $requestData)) {
+            $entity->setUrl($data->url);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // event: ManyToOne
-        if ($data->event !== null) {
-            if (is_string($data->event)) {
-                // IRI format: "/api/events/{id}"
-                $eventId = $this->extractIdFromIri($data->event);
-                $event = $this->entityManager->getRepository(Event::class)->find($eventId);
-                if (!$event) {
-                    throw new BadRequestHttpException('Event not found: ' . $eventId);
+        if (!$isPatch || array_key_exists('event', $requestData)) {
+            if ($data->event !== null) {
+                if (is_string($data->event)) {
+                    // IRI format: "/api/events/{id}"
+                    $eventId = $this->extractIdFromIri($data->event);
+                    $event = $this->entityManager->getRepository(Event::class)->find($eventId);
+                    if (!$event) {
+                        throw new BadRequestHttpException('Event not found: ' . $eventId);
+                    }
+                    $entity->setEvent($event);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested event creation not supported. Use IRI format.');
                 }
-                $entity->setEvent($event);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested event creation not supported. Use IRI format.');
             }
         }
 
@@ -141,4 +237,49 @@ class MeetingDataProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Module Input DTO (Generated Base Class)
@@ -18,12 +19,16 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 abstract class ModuleInputDtoGenerated
 {
+    #[Groups(['module:write'])]
     public string $name;
 
+    #[Groups(['module:write'])]
     public ?string $description = null;
 
+    #[Groups(['module:write'])]
     public ?bool $enabled = null;
 
+    #[Groups(['module:write'])]
     public ?string $version = null;
 
 

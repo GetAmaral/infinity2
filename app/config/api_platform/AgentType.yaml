@@ -7,9 +7,8 @@ resources:
     shortName: AgentType
     description: "Agent types for customer support and sales teams"
 
-    input: App\Dto\AgentTypeInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\AgentTypeOutputDto
-    processor: App\State\AgentTypeProcessor
 
     normalizationContext:
       groups: ["agenttype:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\AgentTypeInputDto
+        processor: App\State\AgentTypeProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\AgentTypeInputDto
+        processor: App\State\AgentTypeProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\AgentTypeInputDto
+        processor: App\State\AgentTypeProcessor
         security: "is_granted('ROLE_SUPER_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_SUPER_ADMIN')"

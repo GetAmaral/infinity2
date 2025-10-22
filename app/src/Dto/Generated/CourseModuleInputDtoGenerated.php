@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\CourseInputDto;
 
 /**
@@ -20,23 +21,30 @@ use App\Dto\CourseInputDto;
 abstract class CourseModuleInputDtoGenerated
 {
     #[Assert\Length(max: 255)]
+    #[Groups(['course_module:write'])]
     public string $name;
 
+    #[Groups(['course_module:write'])]
     public ?string $description = null;
 
+    #[Groups(['course_module:write'])]
     public ?\DateTimeImmutable $releaseDate = null;
 
+    #[Groups(['course_module:write'])]
     public int $viewOrder = 0;
 
+    #[Groups(['course_module:write'])]
     public int $totalLengthSeconds = 0;
 
     /**
      * course reference
-     * Can be: IRI string (e.g., "/api/courses/uuid") or nested CourseInput object
+     * Must be: IRI string (e.g., "/api/courses/uuid")
      */
     #[Assert\NotNull]
-    public string|CourseInputDto $course;
+    #[Groups(['course_module:write'])]
+    public ?string $course = null;
 
+    #[Groups(['course_module:write'])]
     public bool $active = true;
 
 
@@ -92,11 +100,11 @@ abstract class CourseModuleInputDtoGenerated
         return $this;
     }
 
-    public function getCourse(): string|CourseInputDto    {
+    public function getCourse(): ?string    {
         return $this->course;
     }
 
-    public function setCourse(string|CourseInputDto $course): self
+    public function setCourse(?string $course): self
     {
         $this->course = $course;
         return $this;

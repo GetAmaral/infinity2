@@ -6,6 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\StepInputDto;
 
 /**
@@ -21,37 +22,46 @@ abstract class StepQuestionInputDtoGenerated
 {
     /**
      * step reference
-     * Can be: IRI string (e.g., "/api/steps/uuid") or nested StepInput object
+     * Must be: IRI string (e.g., "/api/steps/uuid")
      */
     #[Assert\NotNull]
-    public string|StepInputDto $step;
+    #[Groups(['step_question:write'])]
+    public ?string $step = null;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['step_question:write'])]
     public string $name;
 
     #[Assert\Length(max: 255)]
+    #[Groups(['step_question:write'])]
     public string $slug;
 
+    #[Groups(['step_question:write'])]
     public ?string $prompt = null;
 
+    #[Groups(['step_question:write'])]
     public ?string $objective = null;
 
+    #[Groups(['step_question:write'])]
     public ?int $importance = 1;
 
+    #[Groups(['step_question:write'])]
     public int $viewOrder = 1;
 
+    #[Groups(['step_question:write'])]
     public ?array $fewShotPositive = null;
 
+    #[Groups(['step_question:write'])]
     public ?array $fewShotNegative = null;
 
 
     // Getters and Setters
 
-    public function getStep(): string|StepInputDto    {
+    public function getStep(): ?string    {
         return $this->step;
     }
 
-    public function setStep(string|StepInputDto $step): self
+    public function setStep(?string $step): self
     {
         $this->step = $step;
         return $this;

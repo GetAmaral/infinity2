@@ -46,7 +46,10 @@ class PipelineStageTemplateProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(PipelineStageTemplate::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('PipelineStageTemplate not found');
@@ -57,55 +60,97 @@ class PipelineStageTemplateProcessor implements ProcessorInterface
             $entity = new PipelineStageTemplate();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setDescription($data->description);
-        $entity->setProbability($data->probability);
-        $entity->setOrder($data->order);
-        $entity->setActive($data->active);
-        $entity->setColor($data->color);
-        $entity->setRottingdays($data->rottingDays);
-        $entity->setFinal($data->final);
-        $entity->setStagetype($data->stageType);
-        $entity->setAutomationrules($data->automationRules);
-        $entity->setRequiredfields($data->requiredFields);
-        $entity->setIcon($data->icon);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // probability
+        if (!$isPatch || array_key_exists('probability', $requestData)) {
+            $entity->setProbability($data->probability);
+        }
+        // order
+        if (!$isPatch || array_key_exists('order', $requestData)) {
+            $entity->setOrder($data->order);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // color
+        if (!$isPatch || array_key_exists('color', $requestData)) {
+            $entity->setColor($data->color);
+        }
+        // rottingDays
+        if (!$isPatch || array_key_exists('rottingDays', $requestData)) {
+            $entity->setRottingdays($data->rottingDays);
+        }
+        // final
+        if (!$isPatch || array_key_exists('final', $requestData)) {
+            $entity->setFinal($data->final);
+        }
+        // stageType
+        if (!$isPatch || array_key_exists('stageType', $requestData)) {
+            $entity->setStagetype($data->stageType);
+        }
+        // automationRules
+        if (!$isPatch || array_key_exists('automationRules', $requestData)) {
+            $entity->setAutomationrules($data->automationRules);
+        }
+        // requiredFields
+        if (!$isPatch || array_key_exists('requiredFields', $requestData)) {
+            $entity->setRequiredfields($data->requiredFields);
+        }
+        // icon
+        if (!$isPatch || array_key_exists('icon', $requestData)) {
+            $entity->setIcon($data->icon);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // pipelineTemplate: ManyToOne
-        if ($data->pipelineTemplate !== null) {
-            if (is_string($data->pipelineTemplate)) {
-                // IRI format: "/api/pipelinetemplates/{id}"
-                $pipelineTemplateId = $this->extractIdFromIri($data->pipelineTemplate);
-                $pipelineTemplate = $this->entityManager->getRepository(PipelineTemplate::class)->find($pipelineTemplateId);
-                if (!$pipelineTemplate) {
-                    throw new BadRequestHttpException('PipelineTemplate not found: ' . $pipelineTemplateId);
+        if (!$isPatch || array_key_exists('pipelineTemplate', $requestData)) {
+            if ($data->pipelineTemplate !== null) {
+                if (is_string($data->pipelineTemplate)) {
+                    // IRI format: "/api/pipelinetemplates/{id}"
+                    $pipelineTemplateId = $this->extractIdFromIri($data->pipelineTemplate);
+                    $pipelineTemplate = $this->entityManager->getRepository(PipelineTemplate::class)->find($pipelineTemplateId);
+                    if (!$pipelineTemplate) {
+                        throw new BadRequestHttpException('PipelineTemplate not found: ' . $pipelineTemplateId);
+                    }
+                    $entity->setPipelinetemplate($pipelineTemplate);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested pipelineTemplate creation not supported. Use IRI format.');
                 }
-                $entity->setPipelinetemplate($pipelineTemplate);
             } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested pipelineTemplate creation not supported. Use IRI format.');
+                throw new BadRequestHttpException('pipelineTemplate is required');
             }
-        } else {
-            throw new BadRequestHttpException('pipelineTemplate is required');
         }
 
         // Persist and flush
@@ -127,4 +172,49 @@ class PipelineStageTemplateProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

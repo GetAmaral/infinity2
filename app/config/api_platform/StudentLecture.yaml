@@ -7,9 +7,8 @@ resources:
     shortName: StudentLecture
     description: "Student lecture progress and completion tracking"
 
-    input: App\Dto\StudentLectureInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\StudentLectureOutputDto
-    processor: App\State\StudentLectureProcessor
 
     normalizationContext:
       groups: ["student_lecture:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\StudentLectureInputDto
+        processor: App\State\StudentLectureProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\StudentLectureInputDto
+        processor: App\State\StudentLectureProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\StudentLectureInputDto
+        processor: App\State\StudentLectureProcessor
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_ORGANIZATION_ADMIN')"

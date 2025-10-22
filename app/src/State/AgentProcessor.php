@@ -47,7 +47,10 @@ class AgentProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Agent::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Agent not found');
@@ -58,78 +61,152 @@ class AgentProcessor implements ProcessorInterface
             $entity = new Agent();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setPhone($data->phone);
-        $entity->setTitle($data->title);
-        $entity->setActive($data->active);
-        $entity->setAvailable($data->available);
-        $entity->setTerritory($data->territory);
-        $entity->setQuota($data->quota);
-        $entity->setCommissionrate($data->commissionRate);
-        $entity->setStartdate($data->startDate);
-        $entity->setEnddate($data->endDate);
-        $entity->setSpecialization($data->specialization);
-        $entity->setLanguages($data->languages);
-        $entity->setCertifications($data->certifications);
-        $entity->setTotalsales($data->totalSales);
-        $entity->setCurrentmonthsales($data->currentMonthSales);
-        $entity->setConversionrate($data->conversionRate);
-        $entity->setCustomersatisfactionscore($data->customerSatisfactionScore);
-        $entity->setMaxconcurrentcustomers($data->maxConcurrentCustomers);
-        $entity->setCurrentcustomercount($data->currentCustomerCount);
-        $entity->setAverageresponsetime($data->averageResponseTime);
-        $entity->setSkills($data->skills);
-        $entity->setPrompt($data->prompt);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // phone
+        if (!$isPatch || array_key_exists('phone', $requestData)) {
+            $entity->setPhone($data->phone);
+        }
+        // title
+        if (!$isPatch || array_key_exists('title', $requestData)) {
+            $entity->setTitle($data->title);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // available
+        if (!$isPatch || array_key_exists('available', $requestData)) {
+            $entity->setAvailable($data->available);
+        }
+        // territory
+        if (!$isPatch || array_key_exists('territory', $requestData)) {
+            $entity->setTerritory($data->territory);
+        }
+        // quota
+        if (!$isPatch || array_key_exists('quota', $requestData)) {
+            $entity->setQuota($data->quota);
+        }
+        // commissionRate
+        if (!$isPatch || array_key_exists('commissionRate', $requestData)) {
+            $entity->setCommissionrate($data->commissionRate);
+        }
+        // startDate
+        if (!$isPatch || array_key_exists('startDate', $requestData)) {
+            $entity->setStartdate($data->startDate);
+        }
+        // endDate
+        if (!$isPatch || array_key_exists('endDate', $requestData)) {
+            $entity->setEnddate($data->endDate);
+        }
+        // specialization
+        if (!$isPatch || array_key_exists('specialization', $requestData)) {
+            $entity->setSpecialization($data->specialization);
+        }
+        // languages
+        if (!$isPatch || array_key_exists('languages', $requestData)) {
+            $entity->setLanguages($data->languages);
+        }
+        // certifications
+        if (!$isPatch || array_key_exists('certifications', $requestData)) {
+            $entity->setCertifications($data->certifications);
+        }
+        // totalSales
+        if (!$isPatch || array_key_exists('totalSales', $requestData)) {
+            $entity->setTotalsales($data->totalSales);
+        }
+        // currentMonthSales
+        if (!$isPatch || array_key_exists('currentMonthSales', $requestData)) {
+            $entity->setCurrentmonthsales($data->currentMonthSales);
+        }
+        // conversionRate
+        if (!$isPatch || array_key_exists('conversionRate', $requestData)) {
+            $entity->setConversionrate($data->conversionRate);
+        }
+        // customerSatisfactionScore
+        if (!$isPatch || array_key_exists('customerSatisfactionScore', $requestData)) {
+            $entity->setCustomersatisfactionscore($data->customerSatisfactionScore);
+        }
+        // maxConcurrentCustomers
+        if (!$isPatch || array_key_exists('maxConcurrentCustomers', $requestData)) {
+            $entity->setMaxconcurrentcustomers($data->maxConcurrentCustomers);
+        }
+        // currentCustomerCount
+        if (!$isPatch || array_key_exists('currentCustomerCount', $requestData)) {
+            $entity->setCurrentcustomercount($data->currentCustomerCount);
+        }
+        // averageResponseTime
+        if (!$isPatch || array_key_exists('averageResponseTime', $requestData)) {
+            $entity->setAverageresponsetime($data->averageResponseTime);
+        }
+        // skills
+        if (!$isPatch || array_key_exists('skills', $requestData)) {
+            $entity->setSkills($data->skills);
+        }
+        // prompt
+        if (!$isPatch || array_key_exists('prompt', $requestData)) {
+            $entity->setPrompt($data->prompt);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // user: ManyToOne
-        if ($data->user !== null) {
-            if (is_string($data->user)) {
-                // IRI format: "/api/users/{id}"
-                $userId = $this->extractIdFromIri($data->user);
-                $user = $this->entityManager->getRepository(User::class)->find($userId);
-                if (!$user) {
-                    throw new BadRequestHttpException('User not found: ' . $userId);
+        if (!$isPatch || array_key_exists('user', $requestData)) {
+            if ($data->user !== null) {
+                if (is_string($data->user)) {
+                    // IRI format: "/api/users/{id}"
+                    $userId = $this->extractIdFromIri($data->user);
+                    $user = $this->entityManager->getRepository(User::class)->find($userId);
+                    if (!$user) {
+                        throw new BadRequestHttpException('User not found: ' . $userId);
+                    }
+                    $entity->setUser($user);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
                 }
-                $entity->setUser($user);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested user creation not supported. Use IRI format.');
             }
         }
 
         // agentType: ManyToOne
-        if ($data->agentType !== null) {
-            if (is_string($data->agentType)) {
-                // IRI format: "/api/agenttypes/{id}"
-                $agentTypeId = $this->extractIdFromIri($data->agentType);
-                $agentType = $this->entityManager->getRepository(AgentType::class)->find($agentTypeId);
-                if (!$agentType) {
-                    throw new BadRequestHttpException('AgentType not found: ' . $agentTypeId);
+        if (!$isPatch || array_key_exists('agentType', $requestData)) {
+            if ($data->agentType !== null) {
+                if (is_string($data->agentType)) {
+                    // IRI format: "/api/agenttypes/{id}"
+                    $agentTypeId = $this->extractIdFromIri($data->agentType);
+                    $agentType = $this->entityManager->getRepository(AgentType::class)->find($agentTypeId);
+                    if (!$agentType) {
+                        throw new BadRequestHttpException('AgentType not found: ' . $agentTypeId);
+                    }
+                    $entity->setAgenttype($agentType);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested agentType creation not supported. Use IRI format.');
                 }
-                $entity->setAgenttype($agentType);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested agentType creation not supported. Use IRI format.');
             }
         }
 
@@ -152,4 +229,49 @@ class AgentProcessor implements ProcessorInterface
         return Uuid::fromString($id);
     }
 
+    /**
+     * Map array data to entity properties using setters
+     *
+     * @param array $data Associative array of property => value
+     * @param object $entity Target entity instance
+     */
+    private function mapArrayToEntity(array $data, object $entity): void
+    {
+        foreach ($data as $property => $value) {
+            // Skip special keys like @id, @type, @context
+            if (str_starts_with($property, '@')) {
+                continue;
+            }
+
+            // Convert snake_case to camelCase for setter
+            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+            if (method_exists($entity, $setter)) {
+                // Handle different value types
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
+                    // Handle IRI references - resolve to actual entity
+                    try {
+                        $refId = $this->extractIdFromIri($value);
+                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
+                        $parts = explode('/', trim($value, '/'));
+                        if (count($parts) >= 3) {
+                            $resourceName = $parts[1]; // e.g., "users"
+                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
+                            if (class_exists($className)) {
+                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                if ($refEntity) {
+                                    $entity->$setter($refEntity);
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Skip if IRI resolution fails
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }
