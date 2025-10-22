@@ -47,7 +47,10 @@ class CourseProcessor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository(Course::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('Course not found');
@@ -58,30 +61,49 @@ class CourseProcessor implements ProcessorInterface
             $entity = new Course();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
-        $entity->setName($data->name);
-        $entity->setReleasedate($data->releaseDate);
-        $entity->setDescription($data->description);
-        $entity->setActive($data->active);
-        $entity->setTotallengthseconds($data->totalLengthSeconds);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
+        // releaseDate
+        if (!$isPatch || array_key_exists('releaseDate', $requestData)) {
+            $entity->setReleasedate($data->releaseDate);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
+        }
+        // totalLengthSeconds
+        if (!$isPatch || array_key_exists('totalLengthSeconds', $requestData)) {
+            $entity->setTotallengthseconds($data->totalLengthSeconds);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
-        if ($data->organization !== null) {
-            if (is_string($data->organization)) {
-                // IRI format: "/api/organizations/{id}"
-                $organizationId = $this->extractIdFromIri($data->organization);
-                $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-                if (!$organization) {
-                    throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+        // organization is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('organization', $requestData)) {
+            if ($data->organization !== null) {
+                if (is_string($data->organization)) {
+                    // IRI format: "/api/organizations/{id}"
+                    $organizationId = $this->extractIdFromIri($data->organization);
+                    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+                    if (!$organization) {
+                        throw new BadRequestHttpException('Organization not found: ' . $organizationId);
+                    }
+                    $entity->setOrganization($organization);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
                 }
-                $entity->setOrganization($organization);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('organization is required');
         }
 
         // modules: OneToMany with nested DTO support
@@ -94,21 +116,22 @@ class CourseProcessor implements ProcessorInterface
         }
 
         // owner: ManyToOne
-        if ($data->owner !== null) {
-            if (is_string($data->owner)) {
-                // IRI format: "/api/users/{id}"
-                $ownerId = $this->extractIdFromIri($data->owner);
-                $owner = $this->entityManager->getRepository(User::class)->find($ownerId);
-                if (!$owner) {
-                    throw new BadRequestHttpException('User not found: ' . $ownerId);
+        // owner is auto-assigned by TenantEntityProcessor if not provided
+        if (!$isPatch || array_key_exists('owner', $requestData)) {
+            if ($data->owner !== null) {
+                if (is_string($data->owner)) {
+                    // IRI format: "/api/users/{id}"
+                    $ownerId = $this->extractIdFromIri($data->owner);
+                    $owner = $this->entityManager->getRepository(User::class)->find($ownerId);
+                    if (!$owner) {
+                        throw new BadRequestHttpException('User not found: ' . $ownerId);
+                    }
+                    $entity->setOwner($owner);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested owner creation not supported. Use IRI format.');
                 }
-                $entity->setOwner($owner);
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested owner creation not supported. Use IRI format.');
             }
-        } else {
-            throw new BadRequestHttpException('owner is required');
         }
 
         // Persist and flush

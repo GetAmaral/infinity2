@@ -10,9 +10,8 @@ resources:
 {% endif %}
 
 {% if entity.isDtoEnabled() %}
-    input: App\Dto\{{ entity.getEntityName() }}InputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\{{ entity.getEntityName() }}OutputDto
-    processor: App\State\{{ entity.getEntityName() }}Processor
 {% endif %}
 
 {% if entity.getApiNormalizationContext() %}
@@ -40,6 +39,10 @@ resources:
 {% if entity.getApiOperations() %}
 {% for operation in entity.getApiOperations() %}
       - class: ApiPlatform\Metadata\{{ operation }}
+{% if entity.isDtoEnabled() and operation in ['Post', 'Put', 'Patch'] %}
+        input: App\Dto\{{ entity.getEntityName() }}InputDto
+        processor: App\State\{{ entity.getEntityName() }}Processor
+{% endif %}
 {% if entity.getOperationSecurity() and entity.getOperationSecurity()[operation] is defined %}
         security: {{ entity.getOperationSecurity()[operation]|json_encode|raw }}
 {% elseif entity.getApiSecurity() %}
@@ -54,7 +57,7 @@ resources:
 {% endif %}
 {% endfor %}
 {% else %}
-      # Default operations - GetCollection, Get, Post, Put, Delete
+      # Default operations - GetCollection, Get, Post, Put, Patch, Delete
       - class: ApiPlatform\Metadata\GetCollection
 {% if entity.getApiSecurity() %}
         security: {{ entity.getApiSecurity()|json_encode|raw }}
@@ -64,10 +67,26 @@ resources:
         security: {{ entity.getApiSecurity()|json_encode|raw }}
 {% endif %}
       - class: ApiPlatform\Metadata\Post
+{% if entity.isDtoEnabled() %}
+        input: App\Dto\{{ entity.getEntityName() }}InputDto
+        processor: App\State\{{ entity.getEntityName() }}Processor
+{% endif %}
 {% if entity.getApiSecurity() %}
         security: {{ entity.getApiSecurity()|json_encode|raw }}
 {% endif %}
       - class: ApiPlatform\Metadata\Put
+{% if entity.isDtoEnabled() %}
+        input: App\Dto\{{ entity.getEntityName() }}InputDto
+        processor: App\State\{{ entity.getEntityName() }}Processor
+{% endif %}
+{% if entity.getApiSecurity() %}
+        security: {{ entity.getApiSecurity()|json_encode|raw }}
+{% endif %}
+      - class: ApiPlatform\Metadata\Patch
+{% if entity.isDtoEnabled() %}
+        input: App\Dto\{{ entity.getEntityName() }}InputDto
+        processor: App\State\{{ entity.getEntityName() }}Processor
+{% endif %}
 {% if entity.getApiSecurity() %}
         security: {{ entity.getApiSecurity()|json_encode|raw }}
 {% endif %}

@@ -25,10 +25,10 @@ abstract class CourseInputDtoGenerated
     /**
      * organization reference
      * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
     #[Groups(['course:write'])]
-    public string $organization;
+    public ?string $organization = null;
 
     #[Assert\Length(max: 255)]
     #[Groups(['course:write'])]
@@ -55,10 +55,10 @@ abstract class CourseInputDtoGenerated
     /**
      * owner reference
      * Must be: IRI string (e.g., "/api/users/uuid")
+     * Auto-assigned by system if not provided
      */
-    #[Assert\NotNull]
     #[Groups(['course:write'])]
-    public string $owner;
+    public ?string $owner = null;
 
     #[Groups(['course:write'])]
     public int $totalLengthSeconds = 0;
@@ -66,11 +66,11 @@ abstract class CourseInputDtoGenerated
 
     // Getters and Setters
 
-    public function getOrganization(): string    {
+    public function getOrganization(): ?string    {
         return $this->organization;
     }
 
-    public function setOrganization(string $organization): self
+    public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
         return $this;
@@ -126,11 +126,11 @@ abstract class CourseInputDtoGenerated
         return $this;
     }
 
-    public function getOwner(): string    {
+    public function getOwner(): ?string    {
         return $this->owner;
     }
 
-    public function setOwner(string $owner): self
+    public function setOwner(?string $owner): self
     {
         $this->owner = $owner;
         return $this;

@@ -52,7 +52,10 @@ class {{ entity.getEntityName() }}Processor implements ProcessorInterface
 
         // Determine if this is a create or update operation
         $entity = null;
-        if (isset($uriVariables['id'])) {
+        $isUpdate = isset($uriVariables['id']);
+        $isPatch = $operation->getMethod() === 'PATCH';
+
+        if ($isUpdate) {
             $entity = $this->entityManager->getRepository({{ entity.getEntityName() }}::class)->find($uriVariables['id']);
             if (!$entity) {
                 throw new BadRequestHttpException('{{ entity.getEntityName() }} not found');
@@ -63,11 +66,17 @@ class {{ entity.getEntityName() }}Processor implements ProcessorInterface
             $entity = new {{ entity.getEntityName() }}();
         }
 
+        // Get original request data to check which fields were actually sent (for PATCH)
+        $requestData = $context['request']->toArray() ?? [];
+
         // Map scalar properties from DTO to Entity
 {% set excludedProperties = entity.getDtoExcludedProperties() ?? [] %}
 {% for property in entity.getProperties() %}
 {% if property.getPropertyName() not in excludedProperties and not property.getRelationshipType() %}
-        $entity->set{{ property.getPropertyName()|capitalize }}($data->{{ property.getPropertyName() }});
+        // {{ property.getPropertyName() }}
+        if (!$isPatch || array_key_exists('{{ property.getPropertyName() }}', $requestData)) {
+            $entity->set{{ property.getPropertyName()|capitalize }}($data->{{ property.getPropertyName() }});
+        }
 {% endif %}
 {% endfor %}
 
@@ -76,23 +85,28 @@ class {{ entity.getEntityName() }}Processor implements ProcessorInterface
 {% if property.getPropertyName() not in excludedProperties and property.getRelationshipType() %}
 {% if property.getRelationshipType() in ['ManyToOne', 'OneToOne'] %}
         // {{ property.getPropertyName() }}: {{ property.getRelationshipType() }}
-        if ($data->{{ property.getPropertyName() }} !== null) {
-            if (is_string($data->{{ property.getPropertyName() }})) {
-                // IRI format: "/api/{{ property.getTargetEntity()|lower }}s/{id}"
-                ${{ property.getPropertyName() }}Id = $this->extractIdFromIri($data->{{ property.getPropertyName() }});
-                ${{ property.getPropertyName() }} = $this->entityManager->getRepository({{ getClassName(property.getTargetEntity()) }}::class)->find(${{ property.getPropertyName() }}Id);
-                if (!${{ property.getPropertyName() }}) {
-                    throw new BadRequestHttpException('{{ property.getTargetEntity() }} not found: ' . ${{ property.getPropertyName() }}Id);
-                }
-                $entity->set{{ property.getPropertyName()|capitalize }}(${{ property.getPropertyName() }});
-            } else {
-                // Nested object creation (if supported)
-                throw new BadRequestHttpException('Nested {{ property.getPropertyName() }} creation not supported. Use IRI format.');
-            }
-{% if not property.isNullable() %}
-        } else {
-            throw new BadRequestHttpException('{{ property.getPropertyName() }} is required');
+{% if property.getPropertyName() == 'organization' or property.getPropertyName() == 'owner' %}
+        // {{ property.getPropertyName() }} is auto-assigned by TenantEntityProcessor if not provided
 {% endif %}
+        if (!$isPatch || array_key_exists('{{ property.getPropertyName() }}', $requestData)) {
+            if ($data->{{ property.getPropertyName() }} !== null) {
+                if (is_string($data->{{ property.getPropertyName() }})) {
+                    // IRI format: "/api/{{ property.getTargetEntity()|lower }}s/{id}"
+                    ${{ property.getPropertyName() }}Id = $this->extractIdFromIri($data->{{ property.getPropertyName() }});
+                    ${{ property.getPropertyName() }} = $this->entityManager->getRepository({{ getClassName(property.getTargetEntity()) }}::class)->find(${{ property.getPropertyName() }}Id);
+                    if (!${{ property.getPropertyName() }}) {
+                        throw new BadRequestHttpException('{{ property.getTargetEntity() }} not found: ' . ${{ property.getPropertyName() }}Id);
+                    }
+                    $entity->set{{ property.getPropertyName()|capitalize }}(${{ property.getPropertyName() }});
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested {{ property.getPropertyName() }} creation not supported. Use IRI format.');
+                }
+{% if not property.isNullable() and property.getPropertyName() != 'organization' and property.getPropertyName() != 'owner' %}
+            } else {
+                throw new BadRequestHttpException('{{ property.getPropertyName() }} is required');
+{% endif %}
+            }
         }
 
 {% elseif property.getRelationshipType() in ['OneToMany', 'ManyToMany'] %}

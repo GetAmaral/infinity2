@@ -7,9 +7,8 @@ resources:
     shortName: Course
     description: "Educational courses and training programs"
 
-    input: App\Dto\CourseInputDto
+    # DTO configuration - processor is set per-operation to avoid affecting DELETE
     output: App\Dto\CourseOutputDto
-    processor: App\State\CourseProcessor
 
     normalizationContext:
       groups: ["course:read"]
@@ -28,10 +27,16 @@ resources:
       - class: ApiPlatform\Metadata\Get
         security: "is_granted('ROLE_EDUCATION_ADMIN')"
       - class: ApiPlatform\Metadata\Post
+        input: App\Dto\CourseInputDto
+        processor: App\State\CourseProcessor
         security: "is_granted('ROLE_EDUCATION_ADMIN')"
       - class: ApiPlatform\Metadata\Put
+        input: App\Dto\CourseInputDto
+        processor: App\State\CourseProcessor
         security: "is_granted('ROLE_EDUCATION_ADMIN')"
       - class: ApiPlatform\Metadata\Patch
+        input: App\Dto\CourseInputDto
+        processor: App\State\CourseProcessor
         security: "is_granted('ROLE_EDUCATION_ADMIN')"
       - class: ApiPlatform\Metadata\Delete
         security: "is_granted('ROLE_EDUCATION_ADMIN')"
