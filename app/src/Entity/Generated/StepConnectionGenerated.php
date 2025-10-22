@@ -24,12 +24,12 @@ use App\Entity\StepInput;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepConnectionGenerated extends EntityBase
 {
-    #[Groups(['stepconnection:read', 'stepconnection:write'])]
+    #[Groups(['connection:read', 'connection:write'])]
     #[ORM\OneToOne(targetEntity: StepOutput::class, inversedBy: 'connection')]
     #[ORM\JoinColumn(nullable: false)]
     protected StepOutput $sourceOutput;
 
-    #[Groups(['stepconnection:read', 'stepconnection:write'])]
+    #[Groups(['connection:read', 'connection:write'])]
     #[ORM\ManyToOne(targetEntity: StepInput::class, inversedBy: 'connections')]
     #[ORM\JoinColumn(nullable: false)]
     protected StepInput $targetInput;

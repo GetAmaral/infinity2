@@ -23,42 +23,42 @@ use App\Entity\Step;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepQuestionGenerated extends EntityBase
 {
-    #[Groups(['stepquestion:read', 'stepquestion:write'])]
+    #[Groups(['question:read', 'question:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $name;
 
-    #[Groups(['stepquestion:read', 'stepquestion:write'])]
+    #[Groups(['question:read'])]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'questions')]
     #[ORM\JoinColumn(nullable: false)]
     protected Step $step;
 
-    #[Groups(['stepquestion:read', 'stepquestion:write'])]
+    #[Groups(['question:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $slug;
 
-    #[Groups(['stepquestion:read', 'stepquestion:write'])]
+    #[Groups(['question:read', 'question:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $prompt = null;
 
-    #[Groups(['stepquestion:read', 'stepquestion:write'])]
+    #[Groups(['question:read', 'question:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $objective = null;
 
-    #[Groups(['stepquestion:read', 'stepquestion:write'])]
+    #[Groups(['question:read', 'question:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $importance = 1;
 
-    #[Groups(['stepquestion:read', 'stepquestion:write'])]
+    #[Groups(['question:read', 'question:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $viewOrder = 1;
 
-    #[Groups(['stepquestion:read', 'stepquestion:write'])]
+    #[Groups(['question:read', 'question:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $fewShotPositive = null;
 
-    #[Groups(['stepquestion:read', 'stepquestion:write'])]
+    #[Groups(['question:read', 'question:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $fewShotNegative = null;
 

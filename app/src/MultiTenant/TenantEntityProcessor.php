@@ -1,0 +1,180 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\MultiTenant;
+
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
+use App\Entity\Organization;
+use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Events;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+
+/**
+ * Unified processor for automatic tenant/organization assignment
+ *
+ * Handles BOTH:
+ * 1. API Platform requests (via ProcessorInterface)
+ * 2. Doctrine entity persists (via Doctrine event listener)
+ *
+ * Logic:
+ * - Get organization from TenantContext (single source of truth!)
+ * - Auto-assign to entities with organization field
+ * - Allow explicit override if org already set
+ *
+ * Works for:
+ * - API Platform POST/PUT operations
+ * - Form-based entity creation
+ * - CLI commands and fixtures
+ * - Any Doctrine persist operation
+ */
+#[AsDoctrineListener(event: Events::prePersist)]
+final class TenantEntityProcessor implements ProcessorInterface
+{
+    public function __construct(
+        private readonly ProcessorInterface $persistProcessor, // Decorated processor for API Platform
+        private readonly TenantContext $tenantContext,
+        private readonly Security $security,
+        private readonly LoggerInterface $logger
+    ) {
+    }
+
+    // ========================================
+    // API PLATFORM PROCESSING
+    // ========================================
+
+    /**
+     * Process API Platform operations (POST, PUT)
+     *
+     * @param mixed $data
+     * @param Operation $operation
+     * @param array<string, mixed> $uriVariables
+     * @param array<string, mixed> $context
+     * @return mixed
+     */
+    public function process(
+        mixed $data,
+        Operation $operation,
+        array $uriVariables = [],
+        array $context = []
+    ): mixed {
+        // Only process POST (create) and PUT (replace)
+        $method = $operation->getMethod();
+        if ($method === 'POST' || $method === 'PUT') {
+            $this->assignTenantToEntity($data, 'api_platform');
+
+            // Also set owner from authenticated user (API-specific)
+            $this->assignOwnerToEntity($data);
+        }
+
+        return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+    }
+
+    // ========================================
+    // DOCTRINE LIFECYCLE PROCESSING
+    // ========================================
+
+    /**
+     * Handle Doctrine prePersist event
+     * Works for ALL entity creations (forms, CLI, fixtures, etc.)
+     */
+    public function prePersist(PrePersistEventArgs $args): void
+    {
+        $entity = $args->getObject();
+        $this->assignTenantToEntity($entity, 'doctrine');
+    }
+
+    // ========================================
+    // SHARED LOGIC
+    // ========================================
+
+    /**
+     * Auto-assign tenant/organization to entity
+     */
+    private function assignTenantToEntity(object $entity, string $source): void
+    {
+        // Check if entity has organization field
+        if (!method_exists($entity, 'setOrganization') || !method_exists($entity, 'getOrganization')) {
+            return;
+        }
+
+        // Check if organization already set (allow explicit override)
+        try {
+            $existingOrg = $entity->getOrganization();
+            if ($existingOrg instanceof Organization && $existingOrg->getId()) {
+                $this->logger->debug('Tenant already set on entity, skipping auto-assignment', [
+                    'entity_class' => get_class($entity),
+                    'existing_tenant_id' => $existingOrg->getId()->toRfc4122(),
+                    'source' => $source,
+                ]);
+                return; // Already set, don't override
+            }
+        } catch (\Throwable $e) {
+            // getOrganization() might throw if uninitialized - continue
+        }
+
+        // Get tenant from TenantContext (single source of truth!)
+        $tenant = $this->tenantContext->getTenant();
+
+        if (!$tenant) {
+            // No tenant in context - this might be:
+            // - Root domain admin access
+            // - Public page access
+            // - CLI command without tenant context
+            $this->logger->warning('Entity created without tenant context', [
+                'entity_class' => get_class($entity),
+                'source' => $source,
+            ]);
+            return;
+        }
+
+        // Auto-assign tenant
+        $entity->setOrganization($tenant);
+
+        $this->logger->info('Tenant auto-assigned to entity', [
+            'entity_class' => get_class($entity),
+            'tenant_id' => $tenant->getId()->toRfc4122(),
+            'tenant_slug' => $tenant->getSlug(),
+            'source' => $source,
+        ]);
+    }
+
+    /**
+     * Auto-assign owner to entity (for entities with owner field)
+     */
+    private function assignOwnerToEntity(object $entity): void
+    {
+        if (!method_exists($entity, 'setOwner') || !method_exists($entity, 'getOwner')) {
+            return;
+        }
+
+        // Check if owner already set
+        try {
+            $existingOwner = $entity->getOwner();
+            if ($existingOwner instanceof User && $existingOwner->getId()) {
+                return; // Already set, don't override
+            }
+        } catch (\Throwable $e) {
+            // getOwner() might throw if uninitialized - continue
+        }
+
+        // Get authenticated user
+        $user = $this->security->getUser();
+
+        if (!$user instanceof User) {
+            return; // No user or not a User instance
+        }
+
+        // Auto-assign owner
+        $entity->setOwner($user);
+
+        $this->logger->debug('Owner auto-assigned to entity', [
+            'entity_class' => get_class($entity),
+            'owner_id' => $user->getId()->toRfc4122(),
+        ]);
+    }
+}

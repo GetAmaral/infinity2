@@ -65,8 +65,7 @@ abstract class DealGenerated extends EntityBase
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: PipelineStage::class, inversedBy: 'deals')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected PipelineStage $currentStage;
+    protected ?PipelineStage $currentStage = null;
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
@@ -142,7 +141,7 @@ abstract class DealGenerated extends EntityBase
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTimeImmutable $closureDate = null;
 
-    #[Groups(['deal:read'])]
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'deals', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'deal_products')]
     protected Collection $products;
@@ -171,7 +170,7 @@ abstract class DealGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'managedDeals')]
     protected ?User $manager = null;
 
-    #[Groups(['deal:read'])]
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'deals', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'deal_team')]
     protected Collection $team;
@@ -185,7 +184,7 @@ abstract class DealGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'primaryDeals')]
     protected ?Contact $primaryContact = null;
 
-    #[Groups(['deal:read'])]
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'deals', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'deal_contacts')]
     protected Collection $contacts;
@@ -206,24 +205,24 @@ abstract class DealGenerated extends EntityBase
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $notes = null;
 
-    #[Groups(['deal:read'])]
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\OneToMany(targetEntity: DealStage::class, mappedBy: 'deal', fetch: 'LAZY')]
     protected Collection $dealStages;
 
-    #[Groups(['deal:read'])]
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\OneToMany(targetEntity: Talk::class, mappedBy: 'deal', fetch: 'LAZY')]
     protected Collection $talks;
 
-    #[Groups(['deal:read'])]
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'deal', fetch: 'LAZY')]
     protected Collection $tasks;
 
-    #[Groups(['deal:read'])]
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToMany(targetEntity: Competitor::class, inversedBy: 'deals', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'deal_competitors')]
     protected Collection $competitors;
 
-    #[Groups(['deal:read'])]
+    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'deals', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'deal_tags')]
     protected Collection $tags;
@@ -310,12 +309,12 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getCurrentStage(): PipelineStage
+    public function getCurrentStage(): ?PipelineStage
     {
         return $this->currentStage;
     }
 
-    public function setCurrentStage(PipelineStage $currentStage): self
+    public function setCurrentStage(?PipelineStage $currentStage): self
     {
         $this->currentStage = $currentStage;
         return $this;

@@ -96,11 +96,13 @@ services:
         arguments:
             $projectDir: '%kernel.project_dir%'
 
-    # API Platform OrganizationAware Processor
-    # Automatically sets organization and owner from authenticated user for API create operations
-    App\State\OrganizationAwareProcessor:
+    # Tenant Entity Processor
+    # Unified processor for automatic tenant/organization assignment
+    # Handles both API Platform operations and Doctrine persist events
+    App\MultiTenant\TenantEntityProcessor:
         decorates: 'api_platform.doctrine.orm.state.persist_processor'
         arguments:
             $persistProcessor: '@.inner'
+            $tenantContext: '@App\MultiTenant\TenantContext'
             $security: '@security.helper'
             $logger: '@logger'

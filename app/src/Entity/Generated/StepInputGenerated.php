@@ -26,30 +26,30 @@ use App\Entity\StepConnection;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepInputGenerated extends EntityBase
 {
-    #[Groups(['stepinput:read', 'stepinput:write'])]
+    #[Groups(['input:read'])]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'inputs')]
     #[ORM\JoinColumn(nullable: false)]
     protected Step $step;
 
-    #[Groups(['stepinput:read', 'stepinput:write'])]
+    #[Groups(['input:read', 'input:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $name;
 
-    #[Groups(['stepinput:read', 'stepinput:write'])]
+    #[Groups(['input:read', 'input:write'])]
     #[ORM\Column(name: 'type_prop', type: 'string')]
     protected string $type = 'ANY';
 
-    #[Groups(['stepinput:read', 'stepinput:write'])]
+    #[Groups(['input:read', 'input:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
     protected ?string $slug = null;
 
-    #[Groups(['stepinput:read', 'stepinput:write'])]
+    #[Groups(['input:read', 'input:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $prompt = null;
 
-    #[Groups(['stepinput:read'])]
+    #[Groups(['input:read'])]
     #[ORM\OneToMany(targetEntity: StepConnection::class, mappedBy: 'targetInput', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $connections;
 

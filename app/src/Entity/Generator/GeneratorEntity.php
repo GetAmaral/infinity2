@@ -167,6 +167,47 @@ class GeneratorEntity
     private ?array $validationGroups = null;  // ['create', 'update', 'admin'] - context-aware validation
 
     // ====================================
+    // INPUT DTO CONFIGURATION (9 fields)
+    // ====================================
+
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private bool $dtoEnabled = true;  // Enable DTO generation
+
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private bool $dtoIncludeNestedCreate = true;  // Allow creating nested objects
+
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private bool $dtoIncludeNestedUpdate = true;  // Allow updating nested objects via @id
+
+    #[ORM\Column(type: 'integer', options: ['default' => 2])]
+    #[Assert\Range(min: 1, max: 5)]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private int $dtoMaxNestingDepth = 2;  // Max levels of nesting (prevent circular refs)
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private ?array $dtoExcludedProperties = null;  // Properties to exclude from DTO: ['id', 'createdAt']
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private ?array $crossFieldValidationRules = null;  // [{"rule": "startDate < endDate", "message": "..."}]
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private ?array $uniqueConstraints = null;  // [{"fields": ["userId", "courseId"], "message": "..."}]
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private ?array $businessRules = null;  // [{"type": "expression", "rule": "...", "message": "..."}]
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private ?array $validationMessages = null;  // Default messages for common validations
+
+    // ====================================
     // NAVIGATION (2 fields)
     // ====================================
 
@@ -801,6 +842,109 @@ class GeneratorEntity
     public function setValidationGroups(?array $validationGroups): self
     {
         $this->validationGroups = $validationGroups;
+        return $this;
+    }
+
+    // ====================================
+    // DTO CONFIGURATION GETTERS/SETTERS
+    // ====================================
+
+    public function isDtoEnabled(): bool
+    {
+        return $this->dtoEnabled;
+    }
+
+    public function setDtoEnabled(bool $dtoEnabled): self
+    {
+        $this->dtoEnabled = $dtoEnabled;
+        return $this;
+    }
+
+    public function isDtoIncludeNestedCreate(): bool
+    {
+        return $this->dtoIncludeNestedCreate;
+    }
+
+    public function setDtoIncludeNestedCreate(bool $dtoIncludeNestedCreate): self
+    {
+        $this->dtoIncludeNestedCreate = $dtoIncludeNestedCreate;
+        return $this;
+    }
+
+    public function isDtoIncludeNestedUpdate(): bool
+    {
+        return $this->dtoIncludeNestedUpdate;
+    }
+
+    public function setDtoIncludeNestedUpdate(bool $dtoIncludeNestedUpdate): self
+    {
+        $this->dtoIncludeNestedUpdate = $dtoIncludeNestedUpdate;
+        return $this;
+    }
+
+    public function getDtoMaxNestingDepth(): int
+    {
+        return $this->dtoMaxNestingDepth;
+    }
+
+    public function setDtoMaxNestingDepth(int $dtoMaxNestingDepth): self
+    {
+        $this->dtoMaxNestingDepth = $dtoMaxNestingDepth;
+        return $this;
+    }
+
+    public function getDtoExcludedProperties(): ?array
+    {
+        return $this->dtoExcludedProperties;
+    }
+
+    public function setDtoExcludedProperties(?array $dtoExcludedProperties): self
+    {
+        $this->dtoExcludedProperties = $dtoExcludedProperties;
+        return $this;
+    }
+
+    public function getCrossFieldValidationRules(): ?array
+    {
+        return $this->crossFieldValidationRules;
+    }
+
+    public function setCrossFieldValidationRules(?array $crossFieldValidationRules): self
+    {
+        $this->crossFieldValidationRules = $crossFieldValidationRules;
+        return $this;
+    }
+
+    public function getUniqueConstraints(): ?array
+    {
+        return $this->uniqueConstraints;
+    }
+
+    public function setUniqueConstraints(?array $uniqueConstraints): self
+    {
+        $this->uniqueConstraints = $uniqueConstraints;
+        return $this;
+    }
+
+    public function getBusinessRules(): ?array
+    {
+        return $this->businessRules;
+    }
+
+    public function setBusinessRules(?array $businessRules): self
+    {
+        $this->businessRules = $businessRules;
+        return $this;
+    }
+
+    public function getValidationMessages(): ?array
+    {
+        return $this->validationMessages;
+    }
+
+    public function setValidationMessages(?array $validationMessages): self
+    {
+        $this->validationMessages = $validationMessages;
         return $this;
     }
 }

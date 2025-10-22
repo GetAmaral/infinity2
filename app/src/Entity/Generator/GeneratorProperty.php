@@ -199,6 +199,22 @@ class GeneratorProperty
     private ?string $validationCondition = null;  // Conditional validation, e.g., "entity.status == 'active'"
 
     // ====================================
+    // NESTED DTO CONFIGURATION (4 fields)
+    // ====================================
+
+    #[ORM\Column(options: ['default' => false])]
+    private bool $dtoNestedEnabled = false;  // Enable nested DTO for this collection
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $dtoNestedStrategy = 'create_and_update';  // 'create_only', 'update_only', 'create_and_update'
+
+    #[ORM\Column(options: ['default' => false])]
+    private bool $dtoNestedOrphanRemoval = false;  // Remove items not in DTO array
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $dtoNestedMaxItems = null;  // Max items in collection (e.g., 100)
+
+    // ====================================
     // FORM CONFIGURATION
     // ====================================
 
@@ -524,4 +540,14 @@ class GeneratorProperty
     public function setFilterNumericRange(bool $filterNumericRange): self { $this->filterNumericRange = $filterNumericRange; return $this; }
     public function isFilterExists(): bool { return $this->filterExists; }
     public function setFilterExists(bool $filterExists): self { $this->filterExists = $filterExists; return $this; }
+
+    // Nested DTO configuration getters and setters
+    public function isDtoNestedEnabled(): bool { return $this->dtoNestedEnabled; }
+    public function setDtoNestedEnabled(bool $dtoNestedEnabled): self { $this->dtoNestedEnabled = $dtoNestedEnabled; return $this; }
+    public function getDtoNestedStrategy(): ?string { return $this->dtoNestedStrategy; }
+    public function setDtoNestedStrategy(?string $dtoNestedStrategy): self { $this->dtoNestedStrategy = $dtoNestedStrategy; return $this; }
+    public function isDtoNestedOrphanRemoval(): bool { return $this->dtoNestedOrphanRemoval; }
+    public function setDtoNestedOrphanRemoval(bool $dtoNestedOrphanRemoval): self { $this->dtoNestedOrphanRemoval = $dtoNestedOrphanRemoval; return $this; }
+    public function getDtoNestedMaxItems(): ?int { return $this->dtoNestedMaxItems; }
+    public function setDtoNestedMaxItems(?int $dtoNestedMaxItems): self { $this->dtoNestedMaxItems = $dtoNestedMaxItems; return $this; }
 }

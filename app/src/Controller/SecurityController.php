@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\OrganizationRepository;
 use App\Repository\UserRepository;
-use App\Service\OrganizationContext;
+use App\MultiTenant\TenantContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +28,7 @@ class SecurityController extends AbstractController
     // #[RateLimit('auth_login', limit: 5, interval: '15 minutes')] // TODO: Install symfony/lock
     public function login(
         AuthenticationUtils $authenticationUtils,
-        OrganizationContext $organizationContext,
+        TenantContext $organizationContext,
         OrganizationRepository $organizationRepository
     ): Response {
         // If user is already logged in, redirect to home
@@ -44,7 +44,7 @@ class SecurityController extends AbstractController
 
         // Get the current organization from context (if any)
         $organization = null;
-        $organizationId = $organizationContext->getOrganizationId();
+        $organizationId = $organizationContext->getTenantId();
         if ($organizationId !== null) {
             $organization = $organizationRepository->find($organizationId);
         }

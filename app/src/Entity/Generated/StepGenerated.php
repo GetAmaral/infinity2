@@ -42,7 +42,7 @@ abstract class StepGenerated extends EntityBase
     #[ORM\Column(name: 'first_prop', type: 'boolean')]
     protected bool $first = false;
 
-    #[Groups(['step:read', 'step:write'])]
+    #[Groups(['step:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $slug;

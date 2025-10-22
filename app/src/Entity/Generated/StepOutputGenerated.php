@@ -24,30 +24,30 @@ use App\Entity\StepConnection;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepOutputGenerated extends EntityBase
 {
-    #[Groups(['stepoutput:read', 'stepoutput:write'])]
+    #[Groups(['output:read', 'output:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $name;
 
-    #[Groups(['stepoutput:read', 'stepoutput:write'])]
+    #[Groups(['output:read'])]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'outputs')]
     #[ORM\JoinColumn(nullable: false)]
     protected Step $step;
 
-    #[Groups(['stepoutput:read', 'stepoutput:write'])]
+    #[Groups(['output:read', 'output:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[Groups(['stepoutput:read', 'stepoutput:write'])]
+    #[Groups(['output:read', 'output:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
     protected ?string $slug = null;
 
-    #[Groups(['stepoutput:read', 'stepoutput:write'])]
+    #[Groups(['output:read', 'output:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $conditional = null;
 
-    #[Groups(['stepoutput:read', 'stepoutput:write'])]
+    #[Groups(['output:read'])]
     #[ORM\OneToOne(targetEntity: StepConnection::class, mappedBy: 'sourceOutput')]
     protected ?StepConnection $connection = null;
 

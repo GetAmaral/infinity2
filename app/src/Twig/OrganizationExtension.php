@@ -6,7 +6,7 @@ namespace App\Twig;
 
 use App\Entity\Organization;
 use App\Repository\OrganizationRepository;
-use App\Service\OrganizationContext;
+use App\MultiTenant\TenantContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
@@ -18,7 +18,7 @@ use Twig\TwigFunction;
 final class OrganizationExtension extends AbstractExtension
 {
     public function __construct(
-        private readonly OrganizationContext $organizationContext,
+        private readonly TenantContext $tenantContext,
         private readonly OrganizationRepository $organizationRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly Security $security
@@ -41,26 +41,26 @@ final class OrganizationExtension extends AbstractExtension
      */
     public function getCurrentOrganization(): ?Organization
     {
-        $organizationId = $this->organizationContext->getOrganizationId();
+        $tenantId = $this->tenantContext->getTenantId();
 
-        if ($organizationId === null) {
+        if ($tenantId === null) {
             return null;
         }
 
-        // Temporarily disable organization filter to fetch the current organization itself
+        // Temporarily disable tenant filter to fetch the current organization itself
         $filters = $this->entityManager->getFilters();
-        $filterWasEnabled = $filters->isEnabled('organization_filter');
+        $filterWasEnabled = $filters->isEnabled('tenant_filter');
 
         if ($filterWasEnabled) {
-            $filters->disable('organization_filter');
+            $filters->disable('tenant_filter');
         }
 
-        $organization = $this->organizationRepository->find($organizationId);
+        $organization = $this->organizationRepository->find($tenantId);
 
         if ($filterWasEnabled) {
-            $filter = $filters->enable('organization_filter');
+            $filter = $filters->enable('tenant_filter');
             // Re-set the parameter after re-enabling
-            $filter->setParameter('organization_id', $organizationId, 'string');
+            $filter->setParameter('tenant_id', $tenantId, 'string');
         }
 
         return $organization;
@@ -71,7 +71,7 @@ final class OrganizationExtension extends AbstractExtension
      */
     public function getCurrentOrganizationSlug(): ?string
     {
-        return $this->organizationContext->getOrganizationSlug();
+        return $this->tenantContext->getTenantSlug();
     }
 
     /**
@@ -79,7 +79,7 @@ final class OrganizationExtension extends AbstractExtension
      */
     public function hasActiveOrganization(): bool
     {
-        return $this->organizationContext->hasActiveOrganization();
+        return $this->tenantContext->hasTenant();
     }
 
     /**
@@ -91,23 +91,23 @@ final class OrganizationExtension extends AbstractExtension
             return [];
         }
 
-        // Temporarily disable organization filter to fetch all organizations
+        // Temporarily disable tenant filter to fetch all organizations
         $filters = $this->entityManager->getFilters();
-        $filterWasEnabled = $filters->isEnabled('organization_filter');
-        $organizationId = null;
+        $filterWasEnabled = $filters->isEnabled('tenant_filter');
+        $tenantId = null;
 
         if ($filterWasEnabled) {
-            // Save the organization ID before disabling
-            $organizationId = $this->organizationContext->getOrganizationId();
-            $filters->disable('organization_filter');
+            // Save the tenant ID before disabling
+            $tenantId = $this->tenantContext->getTenantId();
+            $filters->disable('tenant_filter');
         }
 
         $organizations = $this->organizationRepository->findBy([], ['name' => 'ASC', 'id' => 'ASC']);
 
-        if ($filterWasEnabled && $organizationId !== null) {
-            $filter = $filters->enable('organization_filter');
+        if ($filterWasEnabled && $tenantId !== null) {
+            $filter = $filters->enable('tenant_filter');
             // Re-set the parameter after re-enabling
-            $filter->setParameter('organization_id', $organizationId, 'string');
+            $filter->setParameter('tenant_id', $tenantId, 'string');
         }
 
         return $organizations;

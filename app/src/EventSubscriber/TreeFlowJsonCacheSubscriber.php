@@ -143,20 +143,26 @@ class TreeFlowJsonCacheSubscriber
 
         $treeFlow = null;
 
-        // Determine which TreeFlow is affected
-        if ($entity instanceof TreeFlow) {
-            $treeFlow = $entity;
-        } elseif ($entity instanceof Step) {
-            $treeFlow = $entity->getTreeFlow();
-        } elseif ($entity instanceof StepQuestion) {
-            $treeFlow = $entity->getStep()->getTreeFlow();
-        } elseif ($entity instanceof StepInput) {
-            $treeFlow = $entity->getStep()->getTreeFlow();
-        } elseif ($entity instanceof StepOutput) {
-            $treeFlow = $entity->getStep()->getTreeFlow();
-        } elseif ($entity instanceof StepConnection) {
-            // Connection affects the source output's TreeFlow
-            $treeFlow = $entity->getSourceOutput()->getStep()->getTreeFlow();
+        try {
+            // Determine which TreeFlow is affected
+            if ($entity instanceof TreeFlow) {
+                $treeFlow = $entity;
+            } elseif ($entity instanceof Step) {
+                $treeFlow = $entity->getTreeFlow();
+            } elseif ($entity instanceof StepQuestion) {
+                $treeFlow = $entity->getStep()->getTreeFlow();
+            } elseif ($entity instanceof StepInput) {
+                $treeFlow = $entity->getStep()->getTreeFlow();
+            } elseif ($entity instanceof StepOutput) {
+                $treeFlow = $entity->getStep()->getTreeFlow();
+            } elseif ($entity instanceof StepConnection) {
+                // Connection affects the source output's TreeFlow
+                $treeFlow = $entity->getSourceOutput()->getStep()->getTreeFlow();
+            }
+        } catch (\Error $e) {
+            // Property not initialized yet (happens during API POST before relationships are set)
+            // This is normal - the JSON will be regenerated on postFlush after the entity is fully persisted
+            return;
         }
 
         // Add to affected list (using UUID as key to avoid duplicates)

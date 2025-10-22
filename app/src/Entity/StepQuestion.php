@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Generated\StepQuestionGenerated;
 use App\Repository\StepQuestionRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * StepQuestion - A question for the AI to answer within a Step
@@ -17,153 +16,48 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * - An objective explaining the purpose
  * - Importance weighting (1-3 stars)
  * - Few-shot examples stored as JSONB arrays (positive and negative)
+ *
+ * Extends generated base class - only add custom business logic here
  */
 #[ORM\Entity(repositoryClass: StepQuestionRepository::class)]
-class StepQuestion extends EntityBase
+class StepQuestion extends StepQuestionGenerated
 {
-    #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'questions')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[Groups(['question:read'])]
-    protected Step $step;
-
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Groups(['question:read', 'question:write'])]
-    protected string $name = '';
-
-    #[ORM\Column(length: 255)]
-    #[Groups(['question:read'])]
-    protected string $slug = '';
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['question:read', 'question:write'])]
-    protected ?string $prompt = null;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['question:read', 'question:write'])]
-    protected ?string $objective = null;
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    #[Assert\Range(min: 1, max: 10)]
-    #[Groups(['question:read', 'question:write'])]
-    protected ?int $importance = 1;
-
-    #[ORM\Column(type: 'integer')]
-    #[Groups(['question:read', 'question:write'])]
-    protected int $viewOrder = 1;
-
-    #[ORM\Column(type: 'json', nullable: true)]
-    #[Groups(['question:read', 'question:write'])]
-    protected ?array $fewShotPositive = [];
-
-    #[ORM\Column(type: 'json', nullable: true)]
-    #[Groups(['question:read', 'question:write'])]
-    protected ?array $fewShotNegative = [];
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    public function getStep(): Step
-    {
-        return $this->step;
-    }
-
-    public function setStep(?Step $step): self
-    {
-        $this->step = $step;
-        return $this;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
-        return $this;
-    }
-
-    public function getPrompt(): ?string
-    {
-        return $this->prompt;
-    }
-
-    public function setPrompt(?string $prompt): self
-    {
-        $this->prompt = $prompt;
-        return $this;
-    }
-
-    public function getObjective(): ?string
-    {
-        return $this->objective;
-    }
-
-    public function setObjective(?string $objective): self
-    {
-        $this->objective = $objective;
-        return $this;
-    }
-
+    /**
+     * Override getImportance to ensure default value
+     */
     public function getImportance(): int
     {
         return $this->importance ?? 1;
     }
 
+    /**
+     * Override setImportance to ensure default value
+     */
     public function setImportance(?int $importance): self
     {
         $this->importance = $importance ?? 1;
         return $this;
     }
 
-    public function getViewOrder(): int
-    {
-        return $this->viewOrder;
-    }
-
-    public function setViewOrder(int $viewOrder): self
-    {
-        $this->viewOrder = $viewOrder;
-        return $this;
-    }
-
+    /**
+     * Override getFewShotPositive to ensure array return
+     */
     public function getFewShotPositive(): ?array
     {
         return $this->fewShotPositive ?? [];
     }
 
-    public function setFewShotPositive(?array $fewShotPositive): self
-    {
-        $this->fewShotPositive = $fewShotPositive;
-        return $this;
-    }
-
+    /**
+     * Override getFewShotNegative to ensure array return
+     */
     public function getFewShotNegative(): ?array
     {
         return $this->fewShotNegative ?? [];
     }
 
-    public function setFewShotNegative(?array $fewShotNegative): self
-    {
-        $this->fewShotNegative = $fewShotNegative;
-        return $this;
-    }
-
+    /**
+     * Custom __toString implementation
+     */
     public function __toString(): string
     {
         return $this->name;

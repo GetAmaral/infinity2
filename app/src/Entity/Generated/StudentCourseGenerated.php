@@ -34,50 +34,50 @@ abstract class StudentCourseGenerated extends EntityBase
     #[ORM\JoinColumn(nullable: false)]
     protected Organization $organization;
 
-    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[Groups(['student_course:read', 'student_course:write'])]
     #[ORM\Column(type: 'datetime_immutable')]
     protected \DateTimeImmutable $enrolledAt;
 
-    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[Groups(['student_course:read', 'student_course:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $startDate = null;
 
-    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[Groups(['student_course:read', 'student_course:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastDate = null;
 
-    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[Groups(['student_course:read', 'student_course:write'])]
     #[ORM\Column(type: 'float', precision: 10, scale: 2)]
     protected float $progressSeconds = 0;
 
-    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[Groups(['student_course:read', 'student_course:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
     #[Assert\Range(max: 100, min: 0)]
     protected string $progressPercentage = '0';
 
-    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[Groups(['student_course:read', 'student_course:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $completedAt = null;
 
-    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[Groups(['student_course:read', 'student_course:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'studentCourses')]
     #[ORM\JoinColumn(nullable: false)]
     protected User $student;
 
-    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[Groups(['student_course:read', 'student_course:write'])]
     #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'studentCourses')]
     #[ORM\JoinColumn(nullable: false)]
     protected Course $course;
 
-    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[Groups(['student_course:read'])]
     #[ORM\ManyToOne(targetEntity: CourseLecture::class, inversedBy: 'studentCoursesOnThisLecture')]
     protected ?CourseLecture $currentLecture = null;
 
-    #[Groups(['studentcourse:read'])]
+    #[Groups(['student_course:read'])]
     #[ORM\OneToMany(targetEntity: StudentLecture::class, mappedBy: 'studentCourse', fetch: 'LAZY')]
     protected Collection $studentLectures;
 
-    #[Groups(['studentcourse:read', 'studentcourse:write'])]
+    #[Groups(['student_course:read', 'student_course:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
 

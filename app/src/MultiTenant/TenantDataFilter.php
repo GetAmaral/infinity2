@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Doctrine\Filter;
+namespace App\MultiTenant;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 
 /**
- * Doctrine filter that automatically adds organization filtering to queries
+ * Doctrine filter that automatically adds tenant filtering to queries
  * for entities that have an organization relationship
+ *
+ * This filter is enabled/disabled by TenantGuard based on current tenant context
  */
-final class OrganizationFilter extends SQLFilter
+final class TenantDataFilter extends SQLFilter
 {
     /**
-     * Add WHERE clause to filter by organization
+     * Add WHERE clause to filter by tenant/organization
      */
     public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias): string
     {
@@ -23,17 +25,17 @@ final class OrganizationFilter extends SQLFilter
             return '';
         }
 
-        // Try to get the organization ID from filter parameter
+        // Try to get the tenant ID from filter parameter
         try {
-            $organizationId = $this->getParameter('organization_id');
+            $tenantId = $this->getParameter('tenant_id');
         } catch (\InvalidArgumentException $e) {
             // Parameter not set - filter was enabled but parameter wasn't provided
             // This shouldn't happen, but if it does, don't filter
             return '';
         }
 
-        // If no organization ID is set, don't filter (admins at root domain)
-        if ($organizationId === null || $organizationId === 'null' || $organizationId === '') {
+        // If no tenant ID is set, don't filter (admins at root domain)
+        if ($tenantId === null || $tenantId === 'null' || $tenantId === '') {
             return '';
         }
 
@@ -41,6 +43,6 @@ final class OrganizationFilter extends SQLFilter
         $organizationColumn = $targetEntity->getAssociationMapping('organization')['joinColumns'][0]['name'] ?? 'organization_id';
 
         // Return the WHERE clause
-        return sprintf('%s.%s = %s', $targetTableAlias, $organizationColumn, $organizationId);
+        return sprintf('%s.%s = %s', $targetTableAlias, $organizationColumn, $tenantId);
     }
 }

@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\OrganizationRepository;
-use App\Service\OrganizationContext;
+use App\MultiTenant\TenantContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class OrganizationSwitcherController extends AbstractController
 {
     public function __construct(
-        private readonly OrganizationContext $organizationContext,
+        private readonly TenantContext $tenantContext,
         private readonly OrganizationRepository $organizationRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator
@@ -67,7 +67,7 @@ final class OrganizationSwitcherController extends AbstractController
         $this->entityManager->flush();
 
         // Set organization in context/session
-        $this->organizationContext->setOrganization($organization);
+        $this->tenantContext->setOrganization($organization);
 
         $this->addFlash('success', $this->translator->trans('organization_switcher.success.switched', [
             '%name%' => $organization->getName()
@@ -95,7 +95,7 @@ final class OrganizationSwitcherController extends AbstractController
         }
 
         // Clear organization context
-        $this->organizationContext->clearOrganization();
+        $this->tenantContext->clearTenant();
 
         $this->addFlash('success', $this->translator->trans('organization_switcher.success.cleared', [], 'organization'));
 

@@ -8,10 +8,10 @@ resources:
     description: "Student lecture progress and completion tracking"
 
     normalizationContext:
-      groups: ["studentlecture:read"]
+      groups: ["student_lecture:read"]
 
     denormalizationContext:
-      groups: ["studentlecture:write"]
+      groups: ["student_lecture:write"]
 
     order:
       createdAt: DESC

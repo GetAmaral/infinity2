@@ -25,42 +25,42 @@ use App\Entity\StudentCourse;
 #[ORM\HasLifecycleCallbacks]
 abstract class StudentLectureGenerated extends EntityBase
 {
-    #[Groups(['studentlecture:read', 'studentlecture:write'])]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     protected User $student;
 
-    #[Groups(['studentlecture:read', 'studentlecture:write'])]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
     #[ORM\ManyToOne(targetEntity: CourseLecture::class, inversedBy: 'studentLectures')]
     #[ORM\JoinColumn(nullable: false)]
     protected CourseLecture $lecture;
 
-    #[Groups(['studentlecture:read', 'studentlecture:write'])]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
     #[ORM\ManyToOne(targetEntity: StudentCourse::class, inversedBy: 'studentLectures')]
     protected ?StudentCourse $studentCourse = null;
 
-    #[Groups(['studentlecture:read', 'studentlecture:write'])]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $watchedSeconds = 0;
 
-    #[Groups(['studentlecture:read', 'studentlecture:write'])]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $lastPositionSeconds = 0;
 
-    #[Groups(['studentlecture:read', 'studentlecture:write'])]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
     #[Assert\Range(max: 100, min: 0)]
     protected string $completionPercentage = '0';
 
-    #[Groups(['studentlecture:read', 'studentlecture:write'])]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $completed = false;
 
-    #[Groups(['studentlecture:read', 'studentlecture:write'])]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastWatchedAt = null;
 
-    #[Groups(['studentlecture:read', 'studentlecture:write'])]
+    #[Groups(['student_lecture:read', 'student_lecture:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $completedAt = null;
 

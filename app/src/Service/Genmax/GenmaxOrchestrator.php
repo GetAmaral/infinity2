@@ -19,7 +19,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  *
  * Key differences from old Generator:
  * - NO CSV files
- * - NO DTO conversion
  * - Direct use of Doctrine entities
  * - Simplified architecture
  */
@@ -31,6 +30,8 @@ class GenmaxOrchestrator
 
     private const ENTITY_ACTIVE = true;           // ✅ Phase 1 - ACTIVE
     private const API_ACTIVE = true;              // ✅ Phase 2 - ACTIVE
+    private const DTO_ACTIVE = true;              // ✅ Phase 2.5 - ACTIVE
+    private const STATE_PROCESSOR_ACTIVE = true;  // ✅ Phase 2.5 - ACTIVE
     private const REPOSITORY_ACTIVE = false;      // ⏸️ Phase 2 - Future
     private const CONTROLLER_ACTIVE = false;      // ⏸️ Phase 3 - Future
     private const VOTER_ACTIVE = false;           // ⏸️ Phase 3 - Future
@@ -49,6 +50,8 @@ class GenmaxOrchestrator
         private readonly BackupService $backupService,
         private readonly EntityGenerator $entityGenerator,
         private readonly ApiGenerator $apiGenerator,
+        private readonly DtoGenerator $dtoGenerator,
+        private readonly StateProcessorGenerator $stateProcessorGenerator,
         // Future generators will be injected here:
         // private readonly RepositoryGenerator $repositoryGenerator,
         // private readonly ControllerGenerator $controllerGenerator,
@@ -140,6 +143,36 @@ class GenmaxOrchestrator
                             $currentStep++;
                         } catch (\Throwable $e) {
                             $this->logger->error("[GENMAX] API Platform generation failed", [
+                                'entity' => $entity->getEntityName(),
+                                'error' => $e->getMessage()
+                            ]);
+                            throw $e;
+                        }
+                    }
+
+                    // DTOs
+                    if (self::DTO_ACTIVE && $entity->isDtoEnabled()) {
+                        try {
+                            $files = $this->dtoGenerator->generate($entity);
+                            $generatedFiles = array_merge($generatedFiles, $files);
+                            $currentStep++;
+                        } catch (\Throwable $e) {
+                            $this->logger->error("[GENMAX] DTO generation failed", [
+                                'entity' => $entity->getEntityName(),
+                                'error' => $e->getMessage()
+                            ]);
+                            throw $e;
+                        }
+                    }
+
+                    // State Processors
+                    if (self::STATE_PROCESSOR_ACTIVE && $entity->isDtoEnabled()) {
+                        try {
+                            $files = $this->stateProcessorGenerator->generate($entity);
+                            $generatedFiles = array_merge($generatedFiles, $files);
+                            $currentStep++;
+                        } catch (\Throwable $e) {
+                            $this->logger->error("[GENMAX] State Processor generation failed", [
                                 'entity' => $entity->getEntityName(),
                                 'error' => $e->getMessage()
                             ]);
@@ -348,6 +381,8 @@ class GenmaxOrchestrator
         $count = 0;
         $count += self::ENTITY_ACTIVE ? 1 : 0;
         $count += self::API_ACTIVE ? 1 : 0;
+        $count += self::DTO_ACTIVE ? 1 : 0;
+        $count += self::STATE_PROCESSOR_ACTIVE ? 1 : 0;
         $count += self::REPOSITORY_ACTIVE ? 1 : 0;
         $count += self::CONTROLLER_ACTIVE ? 1 : 0;
         $count += self::VOTER_ACTIVE ? 1 : 0;
@@ -367,6 +402,8 @@ class GenmaxOrchestrator
         $active = [];
         if (self::ENTITY_ACTIVE) $active[] = 'entity';
         if (self::API_ACTIVE) $active[] = 'api';
+        if (self::DTO_ACTIVE) $active[] = 'dto';
+        if (self::STATE_PROCESSOR_ACTIVE) $active[] = 'state_processor';
         if (self::REPOSITORY_ACTIVE) $active[] = 'repository';
         if (self::CONTROLLER_ACTIVE) $active[] = 'controller';
         if (self::VOTER_ACTIVE) $active[] = 'voter';

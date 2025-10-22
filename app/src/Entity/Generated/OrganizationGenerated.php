@@ -529,7 +529,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->studentCourses->removeElement($studentCours)) {
             if ($studentCours->getOrganization() === $this) {
-                $studentCours->setOrganization(null);
+                $studentCours->setTenant(null);
             }
         }
         return $this;
@@ -611,7 +611,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->agents->removeElement($agent)) {
             if ($agent->getOrganization() === $this) {
-                $agent->setOrganization(null);
+                $agent->setTenant(null);
             }
         }
         return $this;
@@ -638,7 +638,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->products->removeElement($product)) {
             if ($product->getOrganization() === $this) {
-                $product->setOrganization(null);
+                $product->setTenant(null);
             }
         }
         return $this;
@@ -665,7 +665,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->billingFrequencies->removeElement($billingFrequency)) {
             if ($billingFrequency->getOrganization() === $this) {
-                $billingFrequency->setOrganization(null);
+                $billingFrequency->setTenant(null);
             }
         }
         return $this;
@@ -702,7 +702,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->brands->removeElement($brand)) {
             if ($brand->getOrganization() === $this) {
-                $brand->setOrganization(null);
+                $brand->setTenant(null);
             }
         }
         return $this;
@@ -749,7 +749,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->calendars->removeElement($calendar)) {
             if ($calendar->getOrganization() === $this) {
-                $calendar->setOrganization(null);
+                $calendar->setTenant(null);
             }
         }
         return $this;
@@ -776,7 +776,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->campaigns->removeElement($campaign)) {
             if ($campaign->getOrganization() === $this) {
-                $campaign->setOrganization(null);
+                $campaign->setTenant(null);
             }
         }
         return $this;
@@ -803,7 +803,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->pipelineStageTemplates->removeElement($pipelineStageTemplate)) {
             if ($pipelineStageTemplate->getOrganization() === $this) {
-                $pipelineStageTemplate->setOrganization(null);
+                $pipelineStageTemplate->setTenant(null);
             }
         }
         return $this;
@@ -840,7 +840,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->attachments->removeElement($attachment)) {
             if ($attachment->getOrganization() === $this) {
-                $attachment->setOrganization(null);
+                $attachment->setTenant(null);
             }
         }
         return $this;
@@ -867,7 +867,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->calendarTypes->removeElement($calendarType)) {
             if ($calendarType->getOrganization() === $this) {
-                $calendarType->setOrganization(null);
+                $calendarType->setTenant(null);
             }
         }
         return $this;
@@ -894,7 +894,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->cities->removeElement($city)) {
             if ($city->getOrganization() === $this) {
-                $city->setOrganization(null);
+                $city->setTenant(null);
             }
         }
         return $this;
@@ -921,7 +921,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->treeFlows->removeElement($treeFlow)) {
             if ($treeFlow->getOrganization() === $this) {
-                $treeFlow->setOrganization(null);
+                $treeFlow->setTenant(null);
             }
         }
         return $this;
@@ -948,7 +948,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->winReasons->removeElement($winReason)) {
             if ($winReason->getOrganization() === $this) {
-                $winReason->setOrganization(null);
+                $winReason->setTenant(null);
             }
         }
         return $this;
@@ -975,7 +975,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->pipelineTemplates->removeElement($pipelineTemplate)) {
             if ($pipelineTemplate->getOrganization() === $this) {
-                $pipelineTemplate->setOrganization(null);
+                $pipelineTemplate->setTenant(null);
             }
         }
         return $this;
@@ -1002,7 +1002,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->reminders->removeElement($reminder)) {
             if ($reminder->getOrganization() === $this) {
-                $reminder->setOrganization(null);
+                $reminder->setTenant(null);
             }
         }
         return $this;
@@ -1029,7 +1029,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->taskTemplates->removeElement($taskTemplate)) {
             if ($taskTemplate->getOrganization() === $this) {
-                $taskTemplate->setOrganization(null);
+                $taskTemplate->setTenant(null);
             }
         }
         return $this;
@@ -1056,7 +1056,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->dealCategories->removeElement($dealCategory)) {
             if ($dealCategory->getOrganization() === $this) {
-                $dealCategory->setOrganization(null);
+                $dealCategory->setTenant(null);
             }
         }
         return $this;
@@ -1083,7 +1083,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->dealTypes->removeElement($dealType)) {
             if ($dealType->getOrganization() === $this) {
-                $dealType->setOrganization(null);
+                $dealType->setTenant(null);
             }
         }
         return $this;
@@ -1110,7 +1110,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->eventAttendees->removeElement($eventAttendee)) {
             if ($eventAttendee->getOrganization() === $this) {
-                $eventAttendee->setOrganization(null);
+                $eventAttendee->setTenant(null);
             }
         }
         return $this;
@@ -1137,7 +1137,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->lostReasons->removeElement($lostReason)) {
             if ($lostReason->getOrganization() === $this) {
-                $lostReason->setOrganization(null);
+                $lostReason->setTenant(null);
             }
         }
         return $this;
@@ -1164,7 +1164,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->meetingDatas->removeElement($meetingData)) {
             if ($meetingData->getOrganization() === $this) {
-                $meetingData->setOrganization(null);
+                $meetingData->setTenant(null);
             }
         }
         return $this;
@@ -1191,7 +1191,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->notifications->removeElement($notification)) {
             if ($notification->getOrganization() === $this) {
-                $notification->setOrganization(null);
+                $notification->setTenant(null);
             }
         }
         return $this;
@@ -1229,7 +1229,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->companies->removeElement($company)) {
             if ($company->getOrganization() === $this) {
-                $company->setOrganization(null);
+                $company->setTenant(null);
             }
         }
         return $this;
@@ -1266,7 +1266,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->competitors->removeElement($competitor)) {
             if ($competitor->getOrganization() === $this) {
-                $competitor->setOrganization(null);
+                $competitor->setTenant(null);
             }
         }
         return $this;
@@ -1303,7 +1303,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->contacts->removeElement($contact)) {
             if ($contact->getOrganization() === $this) {
-                $contact->setOrganization(null);
+                $contact->setTenant(null);
             }
         }
         return $this;
@@ -1330,7 +1330,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->courses->removeElement($cours)) {
             if ($cours->getOrganization() === $this) {
-                $cours->setOrganization(null);
+                $cours->setTenant(null);
             }
         }
         return $this;
@@ -1367,7 +1367,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->dealStages->removeElement($dealStage)) {
             if ($dealStage->getOrganization() === $this) {
-                $dealStage->setOrganization(null);
+                $dealStage->setTenant(null);
             }
         }
         return $this;
@@ -1394,7 +1394,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->deals->removeElement($deal)) {
             if ($deal->getOrganization() === $this) {
-                $deal->setOrganization(null);
+                $deal->setTenant(null);
             }
         }
         return $this;
@@ -1421,7 +1421,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->eventCategories->removeElement($eventCategory)) {
             if ($eventCategory->getOrganization() === $this) {
-                $eventCategory->setOrganization(null);
+                $eventCategory->setTenant(null);
             }
         }
         return $this;
@@ -1448,7 +1448,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->eventResourceBookings->removeElement($eventResourceBooking)) {
             if ($eventResourceBooking->getOrganization() === $this) {
-                $eventResourceBooking->setOrganization(null);
+                $eventResourceBooking->setTenant(null);
             }
         }
         return $this;
@@ -1475,7 +1475,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->eventResourceTypes->removeElement($eventResourceType)) {
             if ($eventResourceType->getOrganization() === $this) {
-                $eventResourceType->setOrganization(null);
+                $eventResourceType->setTenant(null);
             }
         }
         return $this;
@@ -1502,7 +1502,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->eventResources->removeElement($eventResource)) {
             if ($eventResource->getOrganization() === $this) {
-                $eventResource->setOrganization(null);
+                $eventResource->setTenant(null);
             }
         }
         return $this;
@@ -1529,7 +1529,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->events->removeElement($event)) {
             if ($event->getOrganization() === $this) {
-                $event->setOrganization(null);
+                $event->setTenant(null);
             }
         }
         return $this;
@@ -1566,7 +1566,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->flags->removeElement($flag)) {
             if ($flag->getOrganization() === $this) {
-                $flag->setOrganization(null);
+                $flag->setTenant(null);
             }
         }
         return $this;
@@ -1603,7 +1603,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->holidays->removeElement($holiday)) {
             if ($holiday->getOrganization() === $this) {
-                $holiday->setOrganization(null);
+                $holiday->setTenant(null);
             }
         }
         return $this;
@@ -1640,7 +1640,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->leadSources->removeElement($leadSource)) {
             if ($leadSource->getOrganization() === $this) {
-                $leadSource->setOrganization(null);
+                $leadSource->setTenant(null);
             }
         }
         return $this;
@@ -1700,7 +1700,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->notificationTypes->removeElement($notificationType)) {
             if ($notificationType->getOrganization() === $this) {
-                $notificationType->setOrganization(null);
+                $notificationType->setTenant(null);
             }
         }
         return $this;
@@ -1727,7 +1727,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->pipelineStages->removeElement($pipelineStage)) {
             if ($pipelineStage->getOrganization() === $this) {
-                $pipelineStage->setOrganization(null);
+                $pipelineStage->setTenant(null);
             }
         }
         return $this;
@@ -1754,7 +1754,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->pipelines->removeElement($pipeline)) {
             if ($pipeline->getOrganization() === $this) {
-                $pipeline->setOrganization(null);
+                $pipeline->setTenant(null);
             }
         }
         return $this;
@@ -1791,7 +1791,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->productBatches->removeElement($productBatch)) {
             if ($productBatch->getOrganization() === $this) {
-                $productBatch->setOrganization(null);
+                $productBatch->setTenant(null);
             }
         }
         return $this;
@@ -1818,7 +1818,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->productCategories->removeElement($productCategory)) {
             if ($productCategory->getOrganization() === $this) {
-                $productCategory->setOrganization(null);
+                $productCategory->setTenant(null);
             }
         }
         return $this;
@@ -1845,7 +1845,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->productLines->removeElement($productLine)) {
             if ($productLine->getOrganization() === $this) {
-                $productLine->setOrganization(null);
+                $productLine->setTenant(null);
             }
         }
         return $this;
@@ -1872,7 +1872,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->profiles->removeElement($profile)) {
             if ($profile->getOrganization() === $this) {
-                $profile->setOrganization(null);
+                $profile->setTenant(null);
             }
         }
         return $this;
@@ -1919,7 +1919,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->socialMedias->removeElement($socialMedia)) {
             if ($socialMedia->getOrganization() === $this) {
-                $socialMedia->setOrganization(null);
+                $socialMedia->setTenant(null);
             }
         }
         return $this;
@@ -1956,7 +1956,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->tags->removeElement($tag)) {
             if ($tag->getOrganization() === $this) {
-                $tag->setOrganization(null);
+                $tag->setTenant(null);
             }
         }
         return $this;
@@ -1983,7 +1983,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->talkMessages->removeElement($talkMessage)) {
             if ($talkMessage->getOrganization() === $this) {
-                $talkMessage->setOrganization(null);
+                $talkMessage->setTenant(null);
             }
         }
         return $this;
@@ -2010,7 +2010,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->talkTypes->removeElement($talkType)) {
             if ($talkType->getOrganization() === $this) {
-                $talkType->setOrganization(null);
+                $talkType->setTenant(null);
             }
         }
         return $this;
@@ -2037,7 +2037,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->talks->removeElement($talk)) {
             if ($talk->getOrganization() === $this) {
-                $talk->setOrganization(null);
+                $talk->setTenant(null);
             }
         }
         return $this;
@@ -2064,7 +2064,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->taskTypes->removeElement($taskType)) {
             if ($taskType->getOrganization() === $this) {
-                $taskType->setOrganization(null);
+                $taskType->setTenant(null);
             }
         }
         return $this;
@@ -2091,7 +2091,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->tasks->removeElement($task)) {
             if ($task->getOrganization() === $this) {
-                $task->setOrganization(null);
+                $task->setTenant(null);
             }
         }
         return $this;
@@ -2118,7 +2118,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->taxCategories->removeElement($taxCategory)) {
             if ($taxCategory->getOrganization() === $this) {
-                $taxCategory->setOrganization(null);
+                $taxCategory->setTenant(null);
             }
         }
         return $this;
@@ -2192,7 +2192,7 @@ abstract class OrganizationGenerated extends EntityBase
     {
         if ($this->workingHours->removeElement($workingHour)) {
             if ($workingHour->getOrganization() === $this) {
-                $workingHour->setOrganization(null);
+                $workingHour->setTenant(null);
             }
         }
         return $this;

@@ -8,10 +8,10 @@ resources:
     description: "Student course enrollments and participation"
 
     normalizationContext:
-      groups: ["studentcourse:read"]
+      groups: ["student_course:read"]
 
     denormalizationContext:
-      groups: ["studentcourse:write"]
+      groups: ["student_course:write"]
 
     order:
       createdAt: DESC

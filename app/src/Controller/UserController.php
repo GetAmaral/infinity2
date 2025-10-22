@@ -12,7 +12,7 @@ use App\Repository\OrganizationRepository;
 use App\Repository\CourseRepository;
 use App\Repository\StudentCourseRepository;
 use App\Service\ListPreferencesService;
-use App\Service\OrganizationContext;
+use App\MultiTenant\TenantContext;
 use App\Security\Voter\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +36,7 @@ final class UserController extends BaseApiController
         private readonly ListPreferencesService $listPreferencesService,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
-        private readonly OrganizationContext $organizationContext
+        private readonly TenantContext $tenantContext
     ) {}
 
     #[Route('', name: 'user_index', methods: ['GET'])]
@@ -73,13 +73,13 @@ final class UserController extends BaseApiController
 
         // Check if there's an active organization context
         // Only show organization field if no context (root access without active organization)
-        $hasActiveOrganization = $this->organizationContext->hasActiveOrganization();
+        $hasActiveOrganization = $this->tenantContext->hasTenant();
         $showOrganizationField = !$hasActiveOrganization;
 
         // Get active organization if available
         $activeOrganization = null;
         if ($hasActiveOrganization) {
-            $orgId = $this->organizationContext->getOrganizationId();
+            $orgId = $this->tenantContext->getTenantId();
             if ($orgId) {
                 $activeOrganization = $this->organizationRepository->find($orgId);
             }
@@ -165,13 +165,13 @@ final class UserController extends BaseApiController
 
         // Check if there's an active organization context
         // Only show organization field if no context (root access without active organization)
-        $hasActiveOrganization = $this->organizationContext->hasActiveOrganization();
+        $hasActiveOrganization = $this->tenantContext->hasTenant();
         $showOrganizationField = !$hasActiveOrganization;
 
         // Get active organization if available
         $activeOrganization = null;
         if ($hasActiveOrganization) {
-            $orgId = $this->organizationContext->getOrganizationId();
+            $orgId = $this->tenantContext->getTenantId();
             if ($orgId) {
                 $activeOrganization = $this->organizationRepository->find($orgId);
             }

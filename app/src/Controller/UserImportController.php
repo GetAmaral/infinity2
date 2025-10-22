@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Repository\OrganizationRepository;
 use App\Security\Voter\UserVoter;
-use App\Service\OrganizationContext;
+use App\MultiTenant\TenantContext;
 use App\Service\UserImportService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -21,7 +21,7 @@ final class UserImportController extends AbstractController
 {
     public function __construct(
         private readonly UserImportService $userImportService,
-        private readonly OrganizationContext $organizationContext,
+        private readonly TenantContext $organizationContext,
         private readonly OrganizationRepository $organizationRepository,
         private readonly RequestStack $requestStack,
         private readonly TranslatorInterface $translator
@@ -44,8 +44,8 @@ final class UserImportController extends AbstractController
 
         // Get active organization
         $organization = null;
-        if ($this->organizationContext->hasActiveOrganization()) {
-            $orgId = $this->organizationContext->getOrganizationId();
+        if ($this->tenantContext->hasTenant()) {
+            $orgId = $this->tenantContext->getTenantId();
             if ($orgId) {
                 $organization = $this->organizationRepository->find($orgId);
             }

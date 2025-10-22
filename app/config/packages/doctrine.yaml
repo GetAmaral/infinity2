@@ -33,8 +33,8 @@ doctrine:
             numeric_functions:
                 extract: App\Doctrine\DQL\ExtractFunction
         filters:
-            organization_filter:
-                class: App\Doctrine\Filter\OrganizationFilter
+            tenant_filter:
+                class: App\MultiTenant\TenantDataFilter
                 enabled: false
 
 when@test:

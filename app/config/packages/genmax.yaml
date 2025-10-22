@@ -39,6 +39,16 @@ parameters:
         form_generated_namespace: 'App\Form\Generated'
         form_namespace: 'App\Form'
 
+        # DTO paths
+        dto_generated_dir: 'src/Dto/Generated'
+        dto_dir: 'src/Dto'
+        dto_generated_namespace: 'App\Dto\Generated'
+        dto_namespace: 'App\Dto'
+
+        # State Processor paths
+        processor_dir: 'src/State'
+        processor_namespace: 'App\State'
+
         # Template paths
         template_dir: 'templates'
 
@@ -100,6 +110,15 @@ parameters:
         form_generated: 'genmax/php/form_generated.php.twig'
         form_extension: 'genmax/php/form_extension.php.twig'
         api_platform_config: 'genmax/yaml/api_platform.yaml.twig'
+
+        # DTO templates
+        dto_input_generated: 'genmax/php/dto_input_generated.php.twig'
+        dto_input_extension: 'genmax/php/dto_input_extension.php.twig'
+        dto_output_generated: 'genmax/php/dto_output_generated.php.twig'
+        dto_output_extension: 'genmax/php/dto_output_extension.php.twig'
+
+        # State Processor template
+        state_processor: 'genmax/php/state_processor.php.twig'
 
     # ====================================
     # GENMAX GENERATION OPTIONS
