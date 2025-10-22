@@ -210,11 +210,11 @@ abstract class CampaignOutputDtoGenerated
         return $this;
     }
 
-    public function getActualbudget(): ?string    {
+    public function getActualBudget(): ?string    {
         return $this->actualBudget;
     }
 
-    public function setActualbudget(?string $actualBudget): self
+    public function setActualBudget(?string $actualBudget): self
     {
         $this->actualBudget = $actualBudget;
         return $this;
@@ -230,31 +230,31 @@ abstract class CampaignOutputDtoGenerated
         return $this;
     }
 
-    public function getActualcost(): ?string    {
+    public function getActualCost(): ?string    {
         return $this->actualCost;
     }
 
-    public function setActualcost(?string $actualCost): self
+    public function setActualCost(?string $actualCost): self
     {
         $this->actualCost = $actualCost;
         return $this;
     }
 
-    public function getActualreturn(): ?string    {
+    public function getActualReturn(): ?string    {
         return $this->actualReturn;
     }
 
-    public function setActualreturn(?string $actualReturn): self
+    public function setActualReturn(?string $actualReturn): self
     {
         $this->actualReturn = $actualReturn;
         return $this;
     }
 
-    public function getActualrevenue(): ?string    {
+    public function getActualRevenue(): ?string    {
         return $this->actualRevenue;
     }
 
-    public function setActualrevenue(?string $actualRevenue): self
+    public function setActualRevenue(?string $actualRevenue): self
     {
         $this->actualRevenue = $actualRevenue;
         return $this;
@@ -270,41 +270,41 @@ abstract class CampaignOutputDtoGenerated
         return $this;
     }
 
-    public function getBudgetedcost(): ?string    {
+    public function getBudgetedCost(): ?string    {
         return $this->budgetedCost;
     }
 
-    public function setBudgetedcost(?string $budgetedCost): self
+    public function setBudgetedCost(?string $budgetedCost): self
     {
         $this->budgetedCost = $budgetedCost;
         return $this;
     }
 
-    public function getCampaignstatus(): ?int    {
+    public function getCampaignStatus(): ?int    {
         return $this->campaignStatus;
     }
 
-    public function setCampaignstatus(?int $campaignStatus): self
+    public function setCampaignStatus(?int $campaignStatus): self
     {
         $this->campaignStatus = $campaignStatus;
         return $this;
     }
 
-    public function getCampaigntype(): string    {
+    public function getCampaignType(): string    {
         return $this->campaignType;
     }
 
-    public function setCampaigntype(string $campaignType): self
+    public function setCampaignType(string $campaignType): self
     {
         $this->campaignType = $campaignType;
         return $this;
     }
 
-    public function getCodename(): ?string    {
+    public function getCodeName(): ?string    {
         return $this->codeName;
     }
 
-    public function setCodename(?string $codeName): self
+    public function setCodeName(?string $codeName): self
     {
         $this->codeName = $codeName;
         return $this;
@@ -360,41 +360,41 @@ abstract class CampaignOutputDtoGenerated
         return $this;
     }
 
-    public function getEmailaddress(): ?string    {
+    public function getEmailAddress(): ?string    {
         return $this->emailAddress;
     }
 
-    public function setEmailaddress(?string $emailAddress): self
+    public function setEmailAddress(?string $emailAddress): self
     {
         $this->emailAddress = $emailAddress;
         return $this;
     }
 
-    public function getEnddate(): ?\DateTimeImmutable    {
+    public function getEndDate(): ?\DateTimeImmutable    {
         return $this->endDate;
     }
 
-    public function setEnddate(?\DateTimeImmutable $endDate): self
+    public function setEndDate(?\DateTimeImmutable $endDate): self
     {
         $this->endDate = $endDate;
         return $this;
     }
 
-    public function getExpectedresponse(): ?int    {
+    public function getExpectedResponse(): ?int    {
         return $this->expectedResponse;
     }
 
-    public function setExpectedresponse(?int $expectedResponse): self
+    public function setExpectedResponse(?int $expectedResponse): self
     {
         $this->expectedResponse = $expectedResponse;
         return $this;
     }
 
-    public function getExpectedrevenue(): ?string    {
+    public function getExpectedRevenue(): ?string    {
         return $this->expectedRevenue;
     }
 
-    public function setExpectedrevenue(?string $expectedRevenue): self
+    public function setExpectedRevenue(?string $expectedRevenue): self
     {
         $this->expectedRevenue = $expectedRevenue;
         return $this;
@@ -420,51 +420,51 @@ abstract class CampaignOutputDtoGenerated
         return $this;
     }
 
-    public function getChildcampaigns(): array    {
+    public function getChildCampaigns(): array    {
         return $this->childCampaigns;
     }
 
-    public function setChildcampaigns(array $childCampaigns): self
+    public function setChildCampaigns(array $childCampaigns): self
     {
         $this->childCampaigns = $childCampaigns;
         return $this;
     }
 
-    public function getNumberofcontacts(): ?int    {
+    public function getNumberOfContacts(): ?int    {
         return $this->numberOfContacts;
     }
 
-    public function setNumberofcontacts(?int $numberOfContacts): self
+    public function setNumberOfContacts(?int $numberOfContacts): self
     {
         $this->numberOfContacts = $numberOfContacts;
         return $this;
     }
 
-    public function getNumberofconverted(): ?int    {
+    public function getNumberOfConverted(): ?int    {
         return $this->numberOfConverted;
     }
 
-    public function setNumberofconverted(?int $numberOfConverted): self
+    public function setNumberOfConverted(?int $numberOfConverted): self
     {
         $this->numberOfConverted = $numberOfConverted;
         return $this;
     }
 
-    public function getNumberofleads(): ?int    {
+    public function getNumberOfLeads(): ?int    {
         return $this->numberOfLeads;
     }
 
-    public function setNumberofleads(?int $numberOfLeads): self
+    public function setNumberOfLeads(?int $numberOfLeads): self
     {
         $this->numberOfLeads = $numberOfLeads;
         return $this;
     }
 
-    public function getNumberofresponses(): ?int    {
+    public function getNumberOfResponses(): ?int    {
         return $this->numberOfResponses;
     }
 
-    public function setNumberofresponses(?int $numberOfResponses): self
+    public function setNumberOfResponses(?int $numberOfResponses): self
     {
         $this->numberOfResponses = $numberOfResponses;
         return $this;
@@ -480,11 +480,11 @@ abstract class CampaignOutputDtoGenerated
         return $this;
     }
 
-    public function getOthercost(): ?string    {
+    public function getOtherCost(): ?string    {
         return $this->otherCost;
     }
 
-    public function setOthercost(?string $otherCost): self
+    public function setOtherCost(?string $otherCost): self
     {
         $this->otherCost = $otherCost;
         return $this;
@@ -500,61 +500,61 @@ abstract class CampaignOutputDtoGenerated
         return $this;
     }
 
-    public function getParentcampaign(): string|CampaignOutputDto|null    {
+    public function getParentCampaign(): string|CampaignOutputDto|null    {
         return $this->parentCampaign;
     }
 
-    public function setParentcampaign(string|CampaignOutputDto|null $parentCampaign): self
+    public function setParentCampaign(string|CampaignOutputDto|null $parentCampaign): self
     {
         $this->parentCampaign = $parentCampaign;
         return $this;
     }
 
-    public function getPlannedbudget(): ?string    {
+    public function getPlannedBudget(): ?string    {
         return $this->plannedBudget;
     }
 
-    public function setPlannedbudget(?string $plannedBudget): self
+    public function setPlannedBudget(?string $plannedBudget): self
     {
         $this->plannedBudget = $plannedBudget;
         return $this;
     }
 
-    public function getPlannedduration(): ?int    {
+    public function getPlannedDuration(): ?int    {
         return $this->plannedDuration;
     }
 
-    public function setPlannedduration(?int $plannedDuration): self
+    public function setPlannedDuration(?int $plannedDuration): self
     {
         $this->plannedDuration = $plannedDuration;
         return $this;
     }
 
-    public function getPlannedenddate(): ?\DateTimeImmutable    {
+    public function getPlannedEndDate(): ?\DateTimeImmutable    {
         return $this->plannedEndDate;
     }
 
-    public function setPlannedenddate(?\DateTimeImmutable $plannedEndDate): self
+    public function setPlannedEndDate(?\DateTimeImmutable $plannedEndDate): self
     {
         $this->plannedEndDate = $plannedEndDate;
         return $this;
     }
 
-    public function getPlannedreturn(): ?string    {
+    public function getPlannedReturn(): ?string    {
         return $this->plannedReturn;
     }
 
-    public function setPlannedreturn(?string $plannedReturn): self
+    public function setPlannedReturn(?string $plannedReturn): self
     {
         $this->plannedReturn = $plannedReturn;
         return $this;
     }
 
-    public function getPlannedstartdate(): ?\DateTimeImmutable    {
+    public function getPlannedStartDate(): ?\DateTimeImmutable    {
         return $this->plannedStartDate;
     }
 
-    public function setPlannedstartdate(?\DateTimeImmutable $plannedStartDate): self
+    public function setPlannedStartDate(?\DateTimeImmutable $plannedStartDate): self
     {
         $this->plannedStartDate = $plannedStartDate;
         return $this;
@@ -570,21 +570,21 @@ abstract class CampaignOutputDtoGenerated
         return $this;
     }
 
-    public function getSocialmedias(): array    {
+    public function getSocialMedias(): array    {
         return $this->socialMedias;
     }
 
-    public function setSocialmedias(array $socialMedias): self
+    public function setSocialMedias(array $socialMedias): self
     {
         $this->socialMedias = $socialMedias;
         return $this;
     }
 
-    public function getStartdate(): ?\DateTimeImmutable    {
+    public function getStartDate(): ?\DateTimeImmutable    {
         return $this->startDate;
     }
 
-    public function setStartdate(?\DateTimeImmutable $startDate): self
+    public function setStartDate(?\DateTimeImmutable $startDate): self
     {
         $this->startDate = $startDate;
         return $this;
@@ -610,11 +610,11 @@ abstract class CampaignOutputDtoGenerated
         return $this;
     }
 
-    public function getTargetaudience(): ?string    {
+    public function getTargetAudience(): ?string    {
         return $this->targetAudience;
     }
 
-    public function setTargetaudience(?string $targetAudience): self
+    public function setTargetAudience(?string $targetAudience): self
     {
         $this->targetAudience = $targetAudience;
         return $this;

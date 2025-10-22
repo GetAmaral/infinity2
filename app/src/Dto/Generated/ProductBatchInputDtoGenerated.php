@@ -23,7 +23,7 @@ abstract class ProductBatchInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['productbatch:write', 'productbatch:create'])]
@@ -127,11 +127,11 @@ abstract class ProductBatchInputDtoGenerated
         return $this;
     }
 
-    public function getBatchnumber(): string    {
+    public function getBatchNumber(): string    {
         return $this->batchNumber;
     }
 
-    public function setBatchnumber(string $batchNumber): self
+    public function setBatchNumber(string $batchNumber): self
     {
         $this->batchNumber = $batchNumber;
         return $this;
@@ -147,31 +147,31 @@ abstract class ProductBatchInputDtoGenerated
         return $this;
     }
 
-    public function getManufacturingdate(): ?\DateTimeImmutable    {
+    public function getManufacturingDate(): ?\DateTimeImmutable    {
         return $this->manufacturingDate;
     }
 
-    public function setManufacturingdate(?\DateTimeImmutable $manufacturingDate): self
+    public function setManufacturingDate(?\DateTimeImmutable $manufacturingDate): self
     {
         $this->manufacturingDate = $manufacturingDate;
         return $this;
     }
 
-    public function getLotnumber(): ?string    {
+    public function getLotNumber(): ?string    {
         return $this->lotNumber;
     }
 
-    public function setLotnumber(?string $lotNumber): self
+    public function setLotNumber(?string $lotNumber): self
     {
         $this->lotNumber = $lotNumber;
         return $this;
     }
 
-    public function getSerialnumber(): ?string    {
+    public function getSerialNumber(): ?string    {
         return $this->serialNumber;
     }
 
-    public function setSerialnumber(?string $serialNumber): self
+    public function setSerialNumber(?string $serialNumber): self
     {
         $this->serialNumber = $serialNumber;
         return $this;
@@ -197,11 +197,11 @@ abstract class ProductBatchInputDtoGenerated
         return $this;
     }
 
-    public function getQualitystatus(): ?string    {
+    public function getQualityStatus(): ?string    {
         return $this->qualityStatus;
     }
 
-    public function setQualitystatus(?string $qualityStatus): self
+    public function setQualityStatus(?string $qualityStatus): self
     {
         $this->qualityStatus = $qualityStatus;
         return $this;
@@ -217,11 +217,11 @@ abstract class ProductBatchInputDtoGenerated
         return $this;
     }
 
-    public function getAvailablequantity(): ?int    {
+    public function getAvailableQuantity(): ?int    {
         return $this->availableQuantity;
     }
 
-    public function setAvailablequantity(?int $availableQuantity): self
+    public function setAvailableQuantity(?int $availableQuantity): self
     {
         $this->availableQuantity = $availableQuantity;
         return $this;
@@ -237,31 +237,31 @@ abstract class ProductBatchInputDtoGenerated
         return $this;
     }
 
-    public function getCommissionamount(): ?string    {
+    public function getCommissionAmount(): ?string    {
         return $this->commissionAmount;
     }
 
-    public function setCommissionamount(?string $commissionAmount): self
+    public function setCommissionAmount(?string $commissionAmount): self
     {
         $this->commissionAmount = $commissionAmount;
         return $this;
     }
 
-    public function getCommissionrate(): ?string    {
+    public function getCommissionRate(): ?string    {
         return $this->commissionRate;
     }
 
-    public function setCommissionrate(?string $commissionRate): self
+    public function setCommissionRate(?string $commissionRate): self
     {
         $this->commissionRate = $commissionRate;
         return $this;
     }
 
-    public function getCostprice(): ?string    {
+    public function getCostPrice(): ?string    {
         return $this->costPrice;
     }
 
-    public function setCostprice(?string $costPrice): self
+    public function setCostPrice(?string $costPrice): self
     {
         $this->costPrice = $costPrice;
         return $this;
@@ -277,81 +277,81 @@ abstract class ProductBatchInputDtoGenerated
         return $this;
     }
 
-    public function getDiscountamount(): ?string    {
+    public function getDiscountAmount(): ?string    {
         return $this->discountAmount;
     }
 
-    public function setDiscountamount(?string $discountAmount): self
+    public function setDiscountAmount(?string $discountAmount): self
     {
         $this->discountAmount = $discountAmount;
         return $this;
     }
 
-    public function getDiscountpercentage(): ?string    {
+    public function getDiscountPercentage(): ?string    {
         return $this->discountPercentage;
     }
 
-    public function setDiscountpercentage(?string $discountPercentage): self
+    public function setDiscountPercentage(?string $discountPercentage): self
     {
         $this->discountPercentage = $discountPercentage;
         return $this;
     }
 
-    public function getExchangerate(): ?float    {
+    public function getExchangeRate(): ?float    {
         return $this->exchangeRate;
     }
 
-    public function setExchangerate(?float $exchangeRate): self
+    public function setExchangeRate(?float $exchangeRate): self
     {
         $this->exchangeRate = $exchangeRate;
         return $this;
     }
 
-    public function getExpirationdate(): ?\DateTimeImmutable    {
+    public function getExpirationDate(): ?\DateTimeImmutable    {
         return $this->expirationDate;
     }
 
-    public function setExpirationdate(?\DateTimeImmutable $expirationDate): self
+    public function setExpirationDate(?\DateTimeImmutable $expirationDate): self
     {
         $this->expirationDate = $expirationDate;
         return $this;
     }
 
-    public function getListprice(): ?string    {
+    public function getListPrice(): ?string    {
         return $this->listPrice;
     }
 
-    public function setListprice(?string $listPrice): self
+    public function setListPrice(?string $listPrice): self
     {
         $this->listPrice = $listPrice;
         return $this;
     }
 
-    public function getMarginpercentage(): ?string    {
+    public function getMarginPercentage(): ?string    {
         return $this->marginPercentage;
     }
 
-    public function setMarginpercentage(?string $marginPercentage): self
+    public function setMarginPercentage(?string $marginPercentage): self
     {
         $this->marginPercentage = $marginPercentage;
         return $this;
     }
 
-    public function getMaximumdiscount(): ?string    {
+    public function getMaximumDiscount(): ?string    {
         return $this->maximumDiscount;
     }
 
-    public function setMaximumdiscount(?string $maximumDiscount): self
+    public function setMaximumDiscount(?string $maximumDiscount): self
     {
         $this->maximumDiscount = $maximumDiscount;
         return $this;
     }
 
-    public function getMinimumprice(): ?string    {
+    public function getMinimumPrice(): ?string    {
         return $this->minimumPrice;
     }
 
-    public function setMinimumprice(?string $minimumPrice): self
+    public function setMinimumPrice(?string $minimumPrice): self
     {
         $this->minimumPrice = $minimumPrice;
         return $this;
@@ -367,21 +367,21 @@ abstract class ProductBatchInputDtoGenerated
         return $this;
     }
 
-    public function getReservedquantity(): ?int    {
+    public function getReservedQuantity(): ?int    {
         return $this->reservedQuantity;
     }
 
-    public function setReservedquantity(?int $reservedQuantity): self
+    public function setReservedQuantity(?int $reservedQuantity): self
     {
         $this->reservedQuantity = $reservedQuantity;
         return $this;
     }
 
-    public function getStockquantity(): ?int    {
+    public function getStockQuantity(): ?int    {
         return $this->stockQuantity;
     }
 
-    public function setStockquantity(?int $stockQuantity): self
+    public function setStockQuantity(?int $stockQuantity): self
     {
         $this->stockQuantity = $stockQuantity;
         return $this;

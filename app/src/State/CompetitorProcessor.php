@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Competitor;
 use App\Dto\CompetitorInputDto;
+use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -33,6 +34,25 @@ class CompetitorProcessor implements ProcessorInterface
         #[Autowire(service: 'App\MultiTenant\TenantEntityProcessor')]
         private readonly ProcessorInterface $persistProcessor
     ) {}
+
+    /**
+     * Normalize property name for matching (removes underscores, lowercase)
+     * Uses centralized Utils methods instead of manual string manipulation
+     */
+    private function normalizePropertyName(string $property): string
+    {
+        // Convert to camelCase (handles snake_case, etc.) then lowercase
+        return strtolower(Utils::toCamelCase($property));
+    }
+
+    /**
+     * Extract property name from method name (e.g., 'addItem' -> 'item')
+     */
+    private function extractPropertyFromMethod(string $methodName, string $prefix): string
+    {
+        // Remove prefix (e.g., 'add', 'set') and convert to lowercase
+        return strtolower(substr($methodName, strlen($prefix)));
+    }
 
     /**
      * @param CompetitorInputDto $data
@@ -77,11 +97,11 @@ class CompetitorProcessor implements ProcessorInterface
         }
         // targetMarket
         if (!$isPatch || array_key_exists('targetMarket', $requestData)) {
-            $entity->setTargetmarket($data->targetMarket);
+            $entity->setTargetMarket($data->targetMarket);
         }
         // foundedYear
         if (!$isPatch || array_key_exists('foundedYear', $requestData)) {
-            $entity->setFoundedyear($data->foundedYear);
+            $entity->setFoundedYear($data->foundedYear);
         }
         // website
         if (!$isPatch || array_key_exists('website', $requestData)) {
@@ -93,7 +113,7 @@ class CompetitorProcessor implements ProcessorInterface
         }
         // marketPosition
         if (!$isPatch || array_key_exists('marketPosition', $requestData)) {
-            $entity->setMarketposition($data->marketPosition);
+            $entity->setMarketPosition($data->marketPosition);
         }
         // strengths
         if (!$isPatch || array_key_exists('strengths', $requestData)) {
@@ -113,19 +133,19 @@ class CompetitorProcessor implements ProcessorInterface
         }
         // employeeCount
         if (!$isPatch || array_key_exists('employeeCount', $requestData)) {
-            $entity->setEmployeecount($data->employeeCount);
+            $entity->setEmployeeCount($data->employeeCount);
         }
         // winRate
         if (!$isPatch || array_key_exists('winRate', $requestData)) {
-            $entity->setWinrate($data->winRate);
+            $entity->setWinRate($data->winRate);
         }
         // lossRate
         if (!$isPatch || array_key_exists('lossRate', $requestData)) {
-            $entity->setLossrate($data->lossRate);
+            $entity->setLossRate($data->lossRate);
         }
         // pricingModel
         if (!$isPatch || array_key_exists('pricingModel', $requestData)) {
-            $entity->setPricingmodel($data->pricingModel);
+            $entity->setPricingModel($data->pricingModel);
         }
         // headquarters
         if (!$isPatch || array_key_exists('headquarters', $requestData)) {
@@ -145,11 +165,11 @@ class CompetitorProcessor implements ProcessorInterface
         }
         // lastAnalyzedAt
         if (!$isPatch || array_key_exists('lastAnalyzedAt', $requestData)) {
-            $entity->setLastanalyzedat($data->lastAnalyzedAt);
+            $entity->setLastAnalyzedAt($data->lastAnalyzedAt);
         }
         // keyDifferentiators
         if (!$isPatch || array_key_exists('keyDifferentiators', $requestData)) {
-            $entity->setKeydifferentiators($data->keyDifferentiators);
+            $entity->setKeyDifferentiators($data->keyDifferentiators);
         }
 
         // Map relationship properties
@@ -158,7 +178,7 @@ class CompetitorProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organization', $requestData)) {
             if ($data->organization !== null) {
                 if (is_string($data->organization)) {
-                    // IRI format: "/api/organizations/{id}"
+                    // IRI format: "/api/organizatia/{id}"
                     $organizationId = $this->extractIdFromIri($data->organization);
                     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
                     if (!$organization) {
@@ -193,6 +213,7 @@ class CompetitorProcessor implements ProcessorInterface
 
     /**
      * Map array data to entity properties using setters
+     * Handles nested collections recursively
      *
      * @param array $data Associative array of property => value
      * @param object $entity Target entity instance
@@ -205,26 +226,111 @@ class CompetitorProcessor implements ProcessorInterface
                 continue;
             }
 
-            // Convert snake_case to camelCase for setter
-            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+            // Handle nested collections using reflection to find adder methods
+            if (is_array($value) && !empty($value) && isset($value[0]) && is_array($value[0])) {
+                // Find adder method using reflection - scan all methods starting with 'add'
+                $reflectionClass = new \ReflectionClass($entity);
+                foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                    if (!str_starts_with($method->getName(), 'add')) {
+                        continue;
+                    }
+
+                    // Check if this might be the right adder based on property name similarity
+                    $normalizedProperty = $this->normalizePropertyName($property);
+                    $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'add');
+
+                    // Try to match: property name should be similar to method's entity name
+                    // e.g., 'items' matches 'addItem', 'user_items' matches 'addUserItem'
+                    if (!str_contains($normalizedProperty, $extractedFromMethod) &&
+                        !str_contains($extractedFromMethod, $normalizedProperty)) {
+                        continue;
+                    }
+
+                    $parameters = $method->getParameters();
+                    if (count($parameters) > 0) {
+                        $paramType = $parameters[0]->getType();
+                        if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                            $className = $paramType->getName();
+                            if (class_exists($className)) {
+                                $addMethod = $method->getName();
+                                $setParentMethods = array_filter(
+                                    $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC),
+                                    fn($m) => str_starts_with($m->getName(), 'set')
+                                );
+
+                                foreach ($value as $itemData) {
+                                    $item = new $className();
+                                    $this->mapArrayToEntity($itemData, $item);
+
+                                    // Try to set parent relationship using reflection
+                                    $itemReflection = new \ReflectionClass($item);
+                                    foreach ($itemReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $itemMethod) {
+                                        if (str_starts_with($itemMethod->getName(), 'set')) {
+                                            $params = $itemMethod->getParameters();
+                                            if (count($params) > 0) {
+                                                $paramType = $params[0]->getType();
+                                                if ($paramType instanceof \ReflectionNamedType &&
+                                                    $paramType->getName() === get_class($entity)) {
+                                                    $item->{$itemMethod->getName()}($entity);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    $entity->$addMethod($item);
+                                    $this->entityManager->persist($item);
+                                }
+                                continue 2; // Skip to next property
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Find setter method using reflection - no string manipulation guessing
+            $reflectionClass = new \ReflectionClass($entity);
+            $setter = null;
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                if (!str_starts_with($method->getName(), 'set')) {
+                    continue;
+                }
+
+                // Check if method name matches property (case-insensitive, normalized matching)
+                $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'set');
+                $normalizedProperty = $this->normalizePropertyName($property);
+
+                if ($extractedFromMethod === $normalizedProperty) {
+                    $setter = $method->getName();
+                    break;
+                }
+            }
 
             if (method_exists($entity, $setter)) {
                 // Handle different value types
-                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value)) {
                     $entity->$setter($value);
-                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
-                    // Handle IRI references - resolve to actual entity
+                } elseif (is_array($value) && !empty($value)) {
+                    // Handle JSON arrays (like metadata, tags) - not entity collections
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/') && $setter) {
+                    // Handle IRI references - use reflection to determine expected type
                     try {
                         $refId = $this->extractIdFromIri($value);
-                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
-                        $parts = explode('/', trim($value, '/'));
-                        if (count($parts) >= 3) {
-                            $resourceName = $parts[1]; // e.g., "users"
-                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
-                            if (class_exists($className)) {
-                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
-                                if ($refEntity) {
-                                    $entity->$setter($refEntity);
+
+                        // Use reflection to get the expected parameter type for the setter
+                        $reflectionMethod = new \ReflectionMethod($entity, $setter);
+                        $parameters = $reflectionMethod->getParameters();
+
+                        if (count($parameters) > 0) {
+                            $paramType = $parameters[0]->getType();
+                            if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                                $className = $paramType->getName();
+                                if (class_exists($className)) {
+                                    $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                    if ($refEntity) {
+                                        $entity->$setter($refEntity);
+                                    }
                                 }
                             }
                         }

@@ -100,11 +100,11 @@ abstract class ReminderOutputDtoGenerated
         return $this;
     }
 
-    public function getCommunicationmethod(): string|CommunicationMethodOutputDto|null    {
+    public function getCommunicationMethod(): string|CommunicationMethodOutputDto|null    {
         return $this->communicationMethod;
     }
 
-    public function setCommunicationmethod(string|CommunicationMethodOutputDto|null $communicationMethod): self
+    public function setCommunicationMethod(string|CommunicationMethodOutputDto|null $communicationMethod): self
     {
         $this->communicationMethod = $communicationMethod;
         return $this;
@@ -120,11 +120,11 @@ abstract class ReminderOutputDtoGenerated
         return $this;
     }
 
-    public function getMinutesbeforestart(): int    {
+    public function getMinutesBeforeStart(): int    {
         return $this->minutesBeforeStart;
     }
 
-    public function setMinutesbeforestart(int $minutesBeforeStart): self
+    public function setMinutesBeforeStart(int $minutesBeforeStart): self
     {
         $this->minutesBeforeStart = $minutesBeforeStart;
         return $this;

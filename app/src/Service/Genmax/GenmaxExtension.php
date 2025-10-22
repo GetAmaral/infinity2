@@ -2,22 +2,29 @@
 
 declare(strict_types=1);
 
-namespace App\Twig;
+namespace App\Service\Genmax;
 
 use App\Service\Utils;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * Twig Extension for Reserved Keyword Detection
+ * Genmax Twig Extension
  *
- * Provides functions to detect SQL/PostgreSQL reserved keywords
- * and generate safe column names with _prop suffix.
+ * Centralized naming convention handler for all Genmax code generation templates.
+ * Provides functions for:
+ * - Reserved keyword detection and safe naming
+ * - Entity/class name transformations
+ * - Method name generation (getters, setters, adders, removers)
+ * - API resource naming
+ * - Pluralization/singularization
  *
+ * All string transformations delegate to Utils service for consistency.
+ *
+ * @see App\Service\Utils
  * @see https://www.postgresql.org/docs/current/sql-keywords-appendix.html
- * @see https://en.wikipedia.org/wiki/List_of_SQL_reserved_words
  */
-class ReservedKeywordExtension extends AbstractExtension
+class GenmaxExtension extends AbstractExtension
 {
     /**
      * Complete list of SQL/PostgreSQL reserved keywords
@@ -30,7 +37,7 @@ class ReservedKeywordExtension extends AbstractExtension
      * All keywords are in UPPERCASE for case-insensitive comparison.
      * Update this list when PostgreSQL or SQL standards change.
      *
-     * Last updated: 2025-10-20 for PostgreSQL 18 and SQL:2023
+     * Last updated: 2025-10-22 for PostgreSQL 18 and SQL:2023
      */
     private const RESERVED_KEYWORDS = [
         // PostgreSQL Core Reserved
@@ -126,16 +133,34 @@ class ReservedKeywordExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
+            // Reserved keyword handling
             new TwigFunction('isReservedKeyword', [$this, 'isReservedKeyword']),
             new TwigFunction('getSafeColumnName', [$this, 'getSafeColumnName']),
             new TwigFunction('getSafeTableName', [$this, 'getSafeTableName']),
+
+            // Class/Entity naming
             new TwigFunction('getClassName', [$this, 'getClassName']),
             new TwigFunction('toPascalCase', [$this, 'toPascalCase']),
             new TwigFunction('toCamelCase', [$this, 'toCamelCase']),
+            new TwigFunction('toSnakeCase', [$this, 'toSnakeCase']),
+
+            // Pluralization/Singularization
             new TwigFunction('toSingular', [$this, 'toSingular']),
             new TwigFunction('toPlural', [$this, 'toPlural']),
+
+            // API resource naming
+            new TwigFunction('toApiResourceName', [$this, 'toApiResourceName']),
+
+            // Method naming
+            new TwigFunction('getGetterName', [$this, 'getGetterName']),
+            new TwigFunction('getSetterName', [$this, 'getSetterName']),
+            new TwigFunction('getAdderName', [$this, 'getAdderName']),
+            new TwigFunction('getRemoverName', [$this, 'getRemoverName']),
+            new TwigFunction('getIsserName', [$this, 'getIsserName']),
         ];
     }
+
+    // ==================== Reserved Keyword Detection ====================
 
     /**
      * Check if a property name is a reserved keyword
@@ -159,7 +184,6 @@ class ReservedKeywordExtension extends AbstractExtension
      */
     public function getSafeColumnName(string $propertyName): string
     {
-        // Only add suffix if it's a reserved keyword
         return $this->isReservedKeyword($propertyName)
             ? $propertyName . '_prop'
             : $propertyName;
@@ -170,7 +194,6 @@ class ReservedKeywordExtension extends AbstractExtension
      *
      * Uses Utils::camelToSnakeCase() to convert entity name, then
      * ONLY adds _table suffix if the snake_case name is a reserved keyword.
-     * Otherwise returns just the snake_case name.
      *
      * Examples:
      * - User → user (reserved) → user_table ✅
@@ -183,34 +206,14 @@ class ReservedKeywordExtension extends AbstractExtension
      */
     public function getSafeTableName(string $entityName): string
     {
-        // Use existing Utils function instead of reinventing the wheel
         $snakeCase = Utils::camelToSnakeCase($entityName, false);
 
-        // Only add _table suffix if it's a reserved keyword
         return $this->isReservedKeyword($snakeCase)
             ? $snakeCase . '_table'
             : $snakeCase;
     }
 
-    /**
-     * Get all reserved keywords (for debugging/reference)
-     *
-     * @return array<string>
-     */
-    public static function getReservedKeywords(): array
-    {
-        return self::RESERVED_KEYWORDS;
-    }
-
-    /**
-     * Get count of reserved keywords
-     *
-     * @return int
-     */
-    public static function getReservedKeywordsCount(): int
-    {
-        return count(self::RESERVED_KEYWORDS);
-    }
+    // ==================== Class/Entity Naming ====================
 
     /**
      * Extract class name from fully qualified class name
@@ -254,6 +257,21 @@ class ReservedKeywordExtension extends AbstractExtension
     }
 
     /**
+     * Convert string to snake_case
+     * Uses Utils::camelToSnakeCase()
+     *
+     * @param string $input The input string
+     * @param bool $ucFirst Whether to capitalize first letter of each word
+     * @return string snake_case string
+     */
+    public function toSnakeCase(string $input, bool $ucFirst = false): string
+    {
+        return Utils::camelToSnakeCase($input, $ucFirst);
+    }
+
+    // ==================== Pluralization/Singularization ====================
+
+    /**
      * Convert plural English word to singular
      * Uses Utils::toSingular() for comprehensive English singularization
      *
@@ -275,5 +293,144 @@ class ReservedKeywordExtension extends AbstractExtension
     public function toPlural(string $word): string
     {
         return Utils::toPlural($word);
+    }
+
+    // ==================== API Resource Naming ====================
+
+    /**
+     * Convert entity name to API resource name (lowercase plural)
+     *
+     * This is used for generating API IRI paths like "/api/deals/..." or "/api/people/..."
+     *
+     * Examples:
+     * - Deal → deals
+     * - Person → people
+     * - Category → categories
+     * - TreeFlow → tree_flows
+     *
+     * @param string $entityName The entity name (PascalCase)
+     * @return string The API resource name (lowercase plural)
+     */
+    public function toApiResourceName(string $entityName): string
+    {
+        // For multi-word entity names (e.g., TreeFlow), convert to snake_case first
+        $snakeCase = Utils::camelToSnakeCase($entityName, false);
+
+        // Get the last word for pluralization
+        $parts = explode('_', $snakeCase);
+        $lastWord = array_pop($parts);
+
+        // Pluralize the last word
+        $pluralLastWord = Utils::toPlural($lastWord);
+
+        // Reconstruct and return
+        if (empty($parts)) {
+            return strtolower($pluralLastWord);
+        }
+
+        return strtolower(implode('_', $parts) . '_' . $pluralLastWord);
+    }
+
+    // ==================== Method Naming ====================
+
+    /**
+     * Generate getter method name
+     *
+     * Examples:
+     * - name → getName
+     * - isActive → getIsActive
+     *
+     * @param string $propertyName The property name
+     * @return string The getter method name
+     */
+    public function getGetterName(string $propertyName): string
+    {
+        return 'get' . Utils::toPascalCase($propertyName);
+    }
+
+    /**
+     * Generate setter method name
+     *
+     * Examples:
+     * - name → setName
+     * - isActive → setIsActive
+     *
+     * @param string $propertyName The property name
+     * @return string The setter method name
+     */
+    public function getSetterName(string $propertyName): string
+    {
+        return 'set' . Utils::toPascalCase($propertyName);
+    }
+
+    /**
+     * Generate adder method name for collection properties
+     *
+     * Examples:
+     * - items → addItem
+     * - categories → addCategory
+     * - people → addPerson
+     *
+     * @param string $propertyName The collection property name (plural)
+     * @return string The adder method name
+     */
+    public function getAdderName(string $propertyName): string
+    {
+        $singular = Utils::toSingular($propertyName);
+        return 'add' . Utils::toPascalCase($singular);
+    }
+
+    /**
+     * Generate remover method name for collection properties
+     *
+     * Examples:
+     * - items → removeItem
+     * - categories → removeCategory
+     * - people → removePerson
+     *
+     * @param string $propertyName The collection property name (plural)
+     * @return string The remover method name
+     */
+    public function getRemoverName(string $propertyName): string
+    {
+        $singular = Utils::toSingular($propertyName);
+        return 'remove' . Utils::toPascalCase($singular);
+    }
+
+    /**
+     * Generate isser method name for boolean properties
+     *
+     * Examples:
+     * - active → isActive
+     * - enabled → isEnabled
+     *
+     * @param string $propertyName The boolean property name
+     * @return string The isser method name
+     */
+    public function getIsserName(string $propertyName): string
+    {
+        return 'is' . Utils::toPascalCase($propertyName);
+    }
+
+    // ==================== Static Utility Methods ====================
+
+    /**
+     * Get all reserved keywords (for debugging/reference)
+     *
+     * @return array<string>
+     */
+    public static function getReservedKeywords(): array
+    {
+        return self::RESERVED_KEYWORDS;
+    }
+
+    /**
+     * Get count of reserved keywords
+     *
+     * @return int
+     */
+    public static function getReservedKeywordsCount(): int
+    {
+        return count(self::RESERVED_KEYWORDS);
     }
 }

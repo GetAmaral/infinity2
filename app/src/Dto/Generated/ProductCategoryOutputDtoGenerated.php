@@ -97,11 +97,11 @@ abstract class ProductCategoryOutputDtoGenerated
         return $this;
     }
 
-    public function getParentcategory(): string|ProductCategoryOutputDto|null    {
+    public function getParentCategory(): string|ProductCategoryOutputDto|null    {
         return $this->parentCategory;
     }
 
-    public function setParentcategory(string|ProductCategoryOutputDto|null $parentCategory): self
+    public function setParentCategory(string|ProductCategoryOutputDto|null $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
         return $this;

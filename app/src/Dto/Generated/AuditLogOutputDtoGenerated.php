@@ -85,21 +85,21 @@ abstract class AuditLogOutputDtoGenerated
         return $this;
     }
 
-    public function getEntityclass(): string    {
+    public function getEntityClass(): string    {
         return $this->entityClass;
     }
 
-    public function setEntityclass(string $entityClass): self
+    public function setEntityClass(string $entityClass): self
     {
         $this->entityClass = $entityClass;
         return $this;
     }
 
-    public function getEntityid(): string    {
+    public function getEntityId(): string    {
         return $this->entityId;
     }
 
-    public function setEntityid(string $entityId): self
+    public function setEntityId(string $entityId): self
     {
         $this->entityId = $entityId;
         return $this;

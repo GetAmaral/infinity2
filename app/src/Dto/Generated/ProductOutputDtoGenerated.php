@@ -362,11 +362,11 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getCompareatprice(): ?string    {
+    public function getCompareAtPrice(): ?string    {
         return $this->compareAtPrice;
     }
 
-    public function setCompareatprice(?string $compareAtPrice): self
+    public function setCompareAtPrice(?string $compareAtPrice): self
     {
         $this->compareAtPrice = $compareAtPrice;
         return $this;
@@ -392,31 +392,31 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getReorderlevel(): ?int    {
+    public function getReorderLevel(): ?int    {
         return $this->reorderLevel;
     }
 
-    public function setReorderlevel(?int $reorderLevel): self
+    public function setReorderLevel(?int $reorderLevel): self
     {
         $this->reorderLevel = $reorderLevel;
         return $this;
     }
 
-    public function getReorderquantity(): ?int    {
+    public function getReorderQuantity(): ?int    {
         return $this->reorderQuantity;
     }
 
-    public function setReorderquantity(?int $reorderQuantity): self
+    public function setReorderQuantity(?int $reorderQuantity): self
     {
         $this->reorderQuantity = $reorderQuantity;
         return $this;
     }
 
-    public function getLeadtime(): ?int    {
+    public function getLeadTime(): ?int    {
         return $this->leadTime;
     }
 
-    public function setLeadtime(?int $leadTime): self
+    public function setLeadTime(?int $leadTime): self
     {
         $this->leadTime = $leadTime;
         return $this;
@@ -432,31 +432,31 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getMinorderquantity(): ?int    {
+    public function getMinOrderQuantity(): ?int    {
         return $this->minOrderQuantity;
     }
 
-    public function setMinorderquantity(?int $minOrderQuantity): self
+    public function setMinOrderQuantity(?int $minOrderQuantity): self
     {
         $this->minOrderQuantity = $minOrderQuantity;
         return $this;
     }
 
-    public function getMaxorderquantity(): ?int    {
+    public function getMaxOrderQuantity(): ?int    {
         return $this->maxOrderQuantity;
     }
 
-    public function setMaxorderquantity(?int $maxOrderQuantity): self
+    public function setMaxOrderQuantity(?int $maxOrderQuantity): self
     {
         $this->maxOrderQuantity = $maxOrderQuantity;
         return $this;
     }
 
-    public function getAvailablequantity(): ?int    {
+    public function getAvailableQuantity(): ?int    {
         return $this->availableQuantity;
     }
 
-    public function setAvailablequantity(?int $availableQuantity): self
+    public function setAvailableQuantity(?int $availableQuantity): self
     {
         $this->availableQuantity = $availableQuantity;
         return $this;
@@ -472,11 +472,11 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getBillingfrequency(): string|BillingFrequencyOutputDto|null    {
+    public function getBillingFrequency(): string|BillingFrequencyOutputDto|null    {
         return $this->billingFrequency;
     }
 
-    public function setBillingfrequency(string|BillingFrequencyOutputDto|null $billingFrequency): self
+    public function setBillingFrequency(string|BillingFrequencyOutputDto|null $billingFrequency): self
     {
         $this->billingFrequency = $billingFrequency;
         return $this;
@@ -492,11 +492,11 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getCancellationfee(): ?string    {
+    public function getCancellationFee(): ?string    {
         return $this->cancellationFee;
     }
 
-    public function setCancellationfee(?string $cancellationFee): self
+    public function setCancellationFee(?string $cancellationFee): self
     {
         $this->cancellationFee = $cancellationFee;
         return $this;
@@ -512,31 +512,31 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getCommissionamount(): ?string    {
+    public function getCommissionAmount(): ?string    {
         return $this->commissionAmount;
     }
 
-    public function setCommissionamount(?string $commissionAmount): self
+    public function setCommissionAmount(?string $commissionAmount): self
     {
         $this->commissionAmount = $commissionAmount;
         return $this;
     }
 
-    public function getCommissionrate(): ?string    {
+    public function getCommissionRate(): ?string    {
         return $this->commissionRate;
     }
 
-    public function setCommissionrate(?string $commissionRate): self
+    public function setCommissionRate(?string $commissionRate): self
     {
         $this->commissionRate = $commissionRate;
         return $this;
     }
 
-    public function getCostprice(): ?string    {
+    public function getCostPrice(): ?string    {
         return $this->costPrice;
     }
 
-    public function setCostprice(?string $costPrice): self
+    public function setCostPrice(?string $costPrice): self
     {
         $this->costPrice = $costPrice;
         return $this;
@@ -552,11 +552,11 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getCustomfields(): ?array    {
+    public function getCustomFields(): ?array    {
         return $this->customFields;
     }
 
-    public function setCustomfields(?array $customFields): self
+    public function setCustomFields(?array $customFields): self
     {
         $this->customFields = $customFields;
         return $this;
@@ -582,41 +582,41 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getDiscountamount(): ?string    {
+    public function getDiscountAmount(): ?string    {
         return $this->discountAmount;
     }
 
-    public function setDiscountamount(?string $discountAmount): self
+    public function setDiscountAmount(?string $discountAmount): self
     {
         $this->discountAmount = $discountAmount;
         return $this;
     }
 
-    public function getDiscountpercentage(): ?string    {
+    public function getDiscountPercentage(): ?string    {
         return $this->discountPercentage;
     }
 
-    public function setDiscountpercentage(?string $discountPercentage): self
+    public function setDiscountPercentage(?string $discountPercentage): self
     {
         $this->discountPercentage = $discountPercentage;
         return $this;
     }
 
-    public function getEndoflifedate(): ?\DateTimeImmutable    {
+    public function getEndOfLifeDate(): ?\DateTimeImmutable    {
         return $this->endOfLifeDate;
     }
 
-    public function setEndoflifedate(?\DateTimeImmutable $endOfLifeDate): self
+    public function setEndOfLifeDate(?\DateTimeImmutable $endOfLifeDate): self
     {
         $this->endOfLifeDate = $endOfLifeDate;
         return $this;
     }
 
-    public function getExchangerate(): ?float    {
+    public function getExchangeRate(): ?float    {
         return $this->exchangeRate;
     }
 
-    public function setExchangerate(?float $exchangeRate): self
+    public function setExchangeRate(?float $exchangeRate): self
     {
         $this->exchangeRate = $exchangeRate;
         return $this;
@@ -632,31 +632,31 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getLaunchdate(): ?\DateTimeImmutable    {
+    public function getLaunchDate(): ?\DateTimeImmutable    {
         return $this->launchDate;
     }
 
-    public function setLaunchdate(?\DateTimeImmutable $launchDate): self
+    public function setLaunchDate(?\DateTimeImmutable $launchDate): self
     {
         $this->launchDate = $launchDate;
         return $this;
     }
 
-    public function getLifecyclestage(): ?string    {
+    public function getLifecycleStage(): ?string    {
         return $this->lifecycleStage;
     }
 
-    public function setLifecyclestage(?string $lifecycleStage): self
+    public function setLifecycleStage(?string $lifecycleStage): self
     {
         $this->lifecycleStage = $lifecycleStage;
         return $this;
     }
 
-    public function getListprice(): ?string    {
+    public function getListPrice(): ?string    {
         return $this->listPrice;
     }
 
-    public function setListprice(?string $listPrice): self
+    public function setListPrice(?string $listPrice): self
     {
         $this->listPrice = $listPrice;
         return $this;
@@ -672,61 +672,61 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getMarginpercentage(): ?string    {
+    public function getMarginPercentage(): ?string    {
         return $this->marginPercentage;
     }
 
-    public function setMarginpercentage(?string $marginPercentage): self
+    public function setMarginPercentage(?string $marginPercentage): self
     {
         $this->marginPercentage = $marginPercentage;
         return $this;
     }
 
-    public function getMaximumdiscount(): ?string    {
+    public function getMaximumDiscount(): ?string    {
         return $this->maximumDiscount;
     }
 
-    public function setMaximumdiscount(?string $maximumDiscount): self
+    public function setMaximumDiscount(?string $maximumDiscount): self
     {
         $this->maximumDiscount = $maximumDiscount;
         return $this;
     }
 
-    public function getMinimumprice(): ?string    {
+    public function getMinimumPrice(): ?string    {
         return $this->minimumPrice;
     }
 
-    public function setMinimumprice(?string $minimumPrice): self
+    public function setMinimumPrice(?string $minimumPrice): self
     {
         $this->minimumPrice = $minimumPrice;
         return $this;
     }
 
-    public function getProductcode(): ?string    {
+    public function getProductCode(): ?string    {
         return $this->productCode;
     }
 
-    public function setProductcode(?string $productCode): self
+    public function setProductCode(?string $productCode): self
     {
         $this->productCode = $productCode;
         return $this;
     }
 
-    public function getProductline(): string|ProductLineOutputDto|null    {
+    public function getProductLine(): string|ProductLineOutputDto|null    {
         return $this->productLine;
     }
 
-    public function setProductline(string|ProductLineOutputDto|null $productLine): self
+    public function setProductLine(string|ProductLineOutputDto|null $productLine): self
     {
         $this->productLine = $productLine;
         return $this;
     }
 
-    public function getProducttype(): ?int    {
+    public function getProductType(): ?int    {
         return $this->productType;
     }
 
-    public function setProducttype(?int $productType): self
+    public function setProductType(?int $productType): self
     {
         $this->productType = $productType;
         return $this;
@@ -742,51 +742,51 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getRecurringfee(): ?string    {
+    public function getRecurringFee(): ?string    {
         return $this->recurringFee;
     }
 
-    public function setRecurringfee(?string $recurringFee): self
+    public function setRecurringFee(?string $recurringFee): self
     {
         $this->recurringFee = $recurringFee;
         return $this;
     }
 
-    public function getRelatedfrom(): array    {
+    public function getRelatedFrom(): array    {
         return $this->relatedFrom;
     }
 
-    public function setRelatedfrom(array $relatedFrom): self
+    public function setRelatedFrom(array $relatedFrom): self
     {
         $this->relatedFrom = $relatedFrom;
         return $this;
     }
 
-    public function getRelatedto(): array    {
+    public function getRelatedTo(): array    {
         return $this->relatedTo;
     }
 
-    public function setRelatedto(array $relatedTo): self
+    public function setRelatedTo(array $relatedTo): self
     {
         $this->relatedTo = $relatedTo;
         return $this;
     }
 
-    public function getRequiresapproval(): ?bool    {
+    public function getRequiresApproval(): ?bool    {
         return $this->requiresApproval;
     }
 
-    public function setRequiresapproval(?bool $requiresApproval): self
+    public function setRequiresApproval(?bool $requiresApproval): self
     {
         $this->requiresApproval = $requiresApproval;
         return $this;
     }
 
-    public function getReservedquantity(): ?int    {
+    public function getReservedQuantity(): ?int    {
         return $this->reservedQuantity;
     }
 
-    public function setReservedquantity(?int $reservedQuantity): self
+    public function setReservedQuantity(?int $reservedQuantity): self
     {
         $this->reservedQuantity = $reservedQuantity;
         return $this;
@@ -802,21 +802,21 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getSetupfee(): ?string    {
+    public function getSetupFee(): ?string    {
         return $this->setupFee;
     }
 
-    public function setSetupfee(?string $setupFee): self
+    public function setSetupFee(?string $setupFee): self
     {
         $this->setupFee = $setupFee;
         return $this;
     }
 
-    public function getShortdescription(): ?string    {
+    public function getShortDescription(): ?string    {
         return $this->shortDescription;
     }
 
-    public function setShortdescription(?string $shortDescription): self
+    public function setShortDescription(?string $shortDescription): self
     {
         $this->shortDescription = $shortDescription;
         return $this;
@@ -832,11 +832,11 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getStockquantity(): ?int    {
+    public function getStockQuantity(): ?int    {
         return $this->stockQuantity;
     }
 
-    public function setStockquantity(?int $stockQuantity): self
+    public function setStockQuantity(?int $stockQuantity): self
     {
         $this->stockQuantity = $stockQuantity;
         return $this;
@@ -852,31 +852,31 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getSubscriptionperiod(): ?string    {
+    public function getSubscriptionPeriod(): ?string    {
         return $this->subscriptionPeriod;
     }
 
-    public function setSubscriptionperiod(?string $subscriptionPeriod): self
+    public function setSubscriptionPeriod(?string $subscriptionPeriod): self
     {
         $this->subscriptionPeriod = $subscriptionPeriod;
         return $this;
     }
 
-    public function getSubstitutefrom(): array    {
+    public function getSubstituteFrom(): array    {
         return $this->substituteFrom;
     }
 
-    public function setSubstitutefrom(array $substituteFrom): self
+    public function setSubstituteFrom(array $substituteFrom): self
     {
         $this->substituteFrom = $substituteFrom;
         return $this;
     }
 
-    public function getSubstituteto(): array    {
+    public function getSubstituteTo(): array    {
         return $this->substituteTo;
     }
 
-    public function setSubstituteto(array $substituteTo): self
+    public function setSubstituteTo(array $substituteTo): self
     {
         $this->substituteTo = $substituteTo;
         return $this;
@@ -892,11 +892,11 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getSupportperiod(): ?int    {
+    public function getSupportPeriod(): ?int    {
         return $this->supportPeriod;
     }
 
-    public function setSupportperiod(?int $supportPeriod): self
+    public function setSupportPeriod(?int $supportPeriod): self
     {
         $this->supportPeriod = $supportPeriod;
         return $this;
@@ -912,31 +912,31 @@ abstract class ProductOutputDtoGenerated
         return $this;
     }
 
-    public function getTaxcategory(): string|TaxCategoryOutputDto|null    {
+    public function getTaxCategory(): string|TaxCategoryOutputDto|null    {
         return $this->taxCategory;
     }
 
-    public function setTaxcategory(string|TaxCategoryOutputDto|null $taxCategory): self
+    public function setTaxCategory(string|TaxCategoryOutputDto|null $taxCategory): self
     {
         $this->taxCategory = $taxCategory;
         return $this;
     }
 
-    public function getUnitofmeasure(): ?string    {
+    public function getUnitOfMeasure(): ?string    {
         return $this->unitOfMeasure;
     }
 
-    public function setUnitofmeasure(?string $unitOfMeasure): self
+    public function setUnitOfMeasure(?string $unitOfMeasure): self
     {
         $this->unitOfMeasure = $unitOfMeasure;
         return $this;
     }
 
-    public function getWarrantyperiod(): ?int    {
+    public function getWarrantyPeriod(): ?int    {
         return $this->warrantyPeriod;
     }
 
-    public function setWarrantyperiod(?int $warrantyPeriod): self
+    public function setWarrantyPeriod(?int $warrantyPeriod): self
     {
         $this->warrantyPeriod = $warrantyPeriod;
         return $this;

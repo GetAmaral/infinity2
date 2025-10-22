@@ -46,7 +46,7 @@ resources:
     properties:
       organization:
         description: "Organization"
-        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
+        example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
       stageName:
         writable: false
         description: "Denormalized stage name from PipelineStage for quick reference and reporting"

@@ -25,7 +25,7 @@ abstract class EventAttendeeInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['eventattendee:write'])]
@@ -97,11 +97,11 @@ abstract class EventAttendeeInputDtoGenerated
         return $this;
     }
 
-    public function getAttendeestatus(): ?int    {
+    public function getAttendeeStatus(): ?int    {
         return $this->attendeeStatus;
     }
 
-    public function setAttendeestatus(?int $attendeeStatus): self
+    public function setAttendeeStatus(?int $attendeeStatus): self
     {
         $this->attendeeStatus = $attendeeStatus;
         return $this;

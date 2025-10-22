@@ -124,11 +124,11 @@ abstract class PipelineStageOutputDtoGenerated
         return $this;
     }
 
-    public function getDealstages(): array    {
+    public function getDealStages(): array    {
         return $this->dealStages;
     }
 
-    public function setDealstages(array $dealStages): self
+    public function setDealStages(array $dealStages): self
     {
         $this->dealStages = $dealStages;
         return $this;
@@ -204,21 +204,21 @@ abstract class PipelineStageOutputDtoGenerated
         return $this;
     }
 
-    public function getDisplayorder(): ?int    {
+    public function getDisplayOrder(): ?int    {
         return $this->displayOrder;
     }
 
-    public function setDisplayorder(?int $displayOrder): self
+    public function setDisplayOrder(?int $displayOrder): self
     {
         $this->displayOrder = $displayOrder;
         return $this;
     }
 
-    public function getMigrationcriteria(): ?string    {
+    public function getMigrationCriteria(): ?string    {
         return $this->migrationCriteria;
     }
 
-    public function setMigrationcriteria(?string $migrationCriteria): self
+    public function setMigrationCriteria(?string $migrationCriteria): self
     {
         $this->migrationCriteria = $migrationCriteria;
         return $this;
@@ -254,11 +254,11 @@ abstract class PipelineStageOutputDtoGenerated
         return $this;
     }
 
-    public function getStagename(): string    {
+    public function getStageName(): string    {
         return $this->stageName;
     }
 
-    public function setStagename(string $stageName): self
+    public function setStageName(string $stageName): self
     {
         $this->stageName = $stageName;
         return $this;

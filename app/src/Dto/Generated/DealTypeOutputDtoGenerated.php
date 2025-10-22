@@ -150,11 +150,11 @@ abstract class DealTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getSortorder(): int    {
+    public function getSortOrder(): int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(int $sortOrder): self
+    public function setSortOrder(int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;
@@ -170,21 +170,21 @@ abstract class DealTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getExpectedduration(): ?int    {
+    public function getExpectedDuration(): ?int    {
         return $this->expectedDuration;
     }
 
-    public function setExpectedduration(?int $expectedDuration): self
+    public function setExpectedDuration(?int $expectedDuration): self
     {
         $this->expectedDuration = $expectedDuration;
         return $this;
     }
 
-    public function getWinprobability(): ?string    {
+    public function getWinProbability(): ?string    {
         return $this->winProbability;
     }
 
-    public function setWinprobability(?string $winProbability): self
+    public function setWinProbability(?string $winProbability): self
     {
         $this->winProbability = $winProbability;
         return $this;

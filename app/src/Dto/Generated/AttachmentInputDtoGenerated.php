@@ -25,7 +25,7 @@ abstract class AttachmentInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['attachment:write'])]
@@ -56,7 +56,7 @@ abstract class AttachmentInputDtoGenerated
 
     /**
      * talkMessage reference
-     * Must be: IRI string (e.g., "/api/talkmessages/uuid")
+     * Must be: IRI string (e.g., "/api/talk_messages/uuid")
      */
     #[Groups(['attachment:write'])]
     public ?string $talkMessage = null;
@@ -87,21 +87,21 @@ abstract class AttachmentInputDtoGenerated
         return $this;
     }
 
-    public function getFilesize(): ?int    {
+    public function getFileSize(): ?int    {
         return $this->fileSize;
     }
 
-    public function setFilesize(?int $fileSize): self
+    public function setFileSize(?int $fileSize): self
     {
         $this->fileSize = $fileSize;
         return $this;
     }
 
-    public function getFiletype(): ?string    {
+    public function getFileType(): ?string    {
         return $this->fileType;
     }
 
-    public function setFiletype(?string $fileType): self
+    public function setFileType(?string $fileType): self
     {
         $this->fileType = $fileType;
         return $this;
@@ -127,11 +127,11 @@ abstract class AttachmentInputDtoGenerated
         return $this;
     }
 
-    public function getTalkmessage(): ?string    {
+    public function getTalkMessage(): ?string    {
         return $this->talkMessage;
     }
 
-    public function setTalkmessage(?string $talkMessage): self
+    public function setTalkMessage(?string $talkMessage): self
     {
         $this->talkMessage = $talkMessage;
         return $this;

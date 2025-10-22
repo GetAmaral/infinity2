@@ -106,21 +106,21 @@ abstract class WorkingHourOutputDtoGenerated
         return $this;
     }
 
-    public function getDayofweek(): ?int    {
+    public function getDayOfWeek(): ?int    {
         return $this->dayOfWeek;
     }
 
-    public function setDayofweek(?int $dayOfWeek): self
+    public function setDayOfWeek(?int $dayOfWeek): self
     {
         $this->dayOfWeek = $dayOfWeek;
         return $this;
     }
 
-    public function getEndtime(): ?string    {
+    public function getEndTime(): ?string    {
         return $this->endTime;
     }
 
-    public function setEndtime(?string $endTime): self
+    public function setEndTime(?string $endTime): self
     {
         $this->endTime = $endTime;
         return $this;
@@ -136,11 +136,11 @@ abstract class WorkingHourOutputDtoGenerated
         return $this;
     }
 
-    public function getMinimalminuteseventduration(): ?int    {
+    public function getMinimalMinutesEventDuration(): ?int    {
         return $this->minimalMinutesEventDuration;
     }
 
-    public function setMinimalminuteseventduration(?int $minimalMinutesEventDuration): self
+    public function setMinimalMinutesEventDuration(?int $minimalMinutesEventDuration): self
     {
         $this->minimalMinutesEventDuration = $minimalMinutesEventDuration;
         return $this;
@@ -156,21 +156,21 @@ abstract class WorkingHourOutputDtoGenerated
         return $this;
     }
 
-    public function getStarttime(): ?string    {
+    public function getStartTime(): ?string    {
         return $this->startTime;
     }
 
-    public function setStarttime(?string $startTime): self
+    public function setStartTime(?string $startTime): self
     {
         $this->startTime = $startTime;
         return $this;
     }
 
-    public function getTimezone(): string|TimeZoneOutputDto    {
+    public function getTimeZone(): string|TimeZoneOutputDto    {
         return $this->timeZone;
     }
 
-    public function setTimezone(string|TimeZoneOutputDto $timeZone): self
+    public function setTimeZone(string|TimeZoneOutputDto $timeZone): self
     {
         $this->timeZone = $timeZone;
         return $this;

@@ -8,15 +8,13 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\TreeFlow;
 use App\Dto\TreeFlowInputDto;
+use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\Organization;
 use App\Entity\Step;
-use App\Entity\StepQuestion;
-use App\Entity\StepInput;
-use App\Entity\StepOutput;
 
 /**
  * TreeFlow State Processor
@@ -36,6 +34,25 @@ class TreeFlowProcessor implements ProcessorInterface
         #[Autowire(service: 'App\MultiTenant\TenantEntityProcessor')]
         private readonly ProcessorInterface $persistProcessor
     ) {}
+
+    /**
+     * Normalize property name for matching (removes underscores, lowercase)
+     * Uses centralized Utils methods instead of manual string manipulation
+     */
+    private function normalizePropertyName(string $property): string
+    {
+        // Convert to camelCase (handles snake_case, etc.) then lowercase
+        return strtolower(Utils::toCamelCase($property));
+    }
+
+    /**
+     * Extract property name from method name (e.g., 'addItem' -> 'item')
+     */
+    private function extractPropertyFromMethod(string $methodName, string $prefix): string
+    {
+        // Remove prefix (e.g., 'add', 'set') and convert to lowercase
+        return strtolower(substr($methodName, strlen($prefix)));
+    }
 
     /**
      * @param TreeFlowInputDto $data
@@ -80,15 +97,15 @@ class TreeFlowProcessor implements ProcessorInterface
         }
         // canvasViewState
         if (!$isPatch || array_key_exists('canvasViewState', $requestData)) {
-            $entity->setCanvasviewstate($data->canvasViewState);
+            $entity->setCanvasViewState($data->canvasViewState);
         }
         // jsonStructure
         if (!$isPatch || array_key_exists('jsonStructure', $requestData)) {
-            $entity->setJsonstructure($data->jsonStructure);
+            $entity->setJsonStructure($data->jsonStructure);
         }
         // talkFlow
         if (!$isPatch || array_key_exists('talkFlow', $requestData)) {
-            $entity->setTalkflow($data->talkFlow);
+            $entity->setTalkFlow($data->talkFlow);
         }
         // active
         if (!$isPatch || array_key_exists('active', $requestData)) {
@@ -101,7 +118,7 @@ class TreeFlowProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organization', $requestData)) {
             if ($data->organization !== null) {
                 if (is_string($data->organization)) {
-                    // IRI format: "/api/organizations/{id}"
+                    // IRI format: "/api/organizatia/{id}"
                     $organizationId = $this->extractIdFromIri($data->organization);
                     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
                     if (!$organization) {
@@ -194,8 +211,8 @@ class TreeFlowProcessor implements ProcessorInterface
                 // Set properties from DTO array
                 $this->mapArrayToEntity($itemData, $item);
 
-                // Set parent relationship (treeflow)
-                $item->setTreeflow($entity);
+                // Set parent relationship (tree_flow)
+                $item->setTreeFlow($entity);
 
                 $entity->addStep($item);
                 $this->entityManager->persist($item);
@@ -215,6 +232,7 @@ class TreeFlowProcessor implements ProcessorInterface
 
     /**
      * Map array data to entity properties using setters
+     * Handles nested collections recursively
      *
      * @param array $data Associative array of property => value
      * @param object $entity Target entity instance
@@ -227,61 +245,111 @@ class TreeFlowProcessor implements ProcessorInterface
                 continue;
             }
 
-            // Handle nested collections for Step entity
-            if ($entity instanceof Step && is_array($value) && !empty($value)) {
-                if ($property === 'questions') {
-                    foreach ($value as $questionData) {
-                        $question = new StepQuestion();
-                        $this->mapArrayToEntity($questionData, $question);
-                        $question->setStep($entity);
-                        $entity->addQuestion($question);
-                        $this->entityManager->persist($question);
+            // Handle nested collections using reflection to find adder methods
+            if (is_array($value) && !empty($value) && isset($value[0]) && is_array($value[0])) {
+                // Find adder method using reflection - scan all methods starting with 'add'
+                $reflectionClass = new \ReflectionClass($entity);
+                foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                    if (!str_starts_with($method->getName(), 'add')) {
+                        continue;
                     }
-                    continue;
-                } elseif ($property === 'inputs') {
-                    foreach ($value as $inputData) {
-                        $input = new StepInput();
-                        $this->mapArrayToEntity($inputData, $input);
-                        $input->setStep($entity);
-                        $entity->addInput($input);
-                        $this->entityManager->persist($input);
+
+                    // Check if this might be the right adder based on property name similarity
+                    $normalizedProperty = $this->normalizePropertyName($property);
+                    $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'add');
+
+                    // Try to match: property name should be similar to method's entity name
+                    // e.g., 'items' matches 'addItem', 'user_items' matches 'addUserItem'
+                    if (!str_contains($normalizedProperty, $extractedFromMethod) &&
+                        !str_contains($extractedFromMethod, $normalizedProperty)) {
+                        continue;
                     }
-                    continue;
-                } elseif ($property === 'outputs') {
-                    foreach ($value as $outputData) {
-                        $output = new StepOutput();
-                        $this->mapArrayToEntity($outputData, $output);
-                        $output->setStep($entity);
-                        $entity->addOutput($output);
-                        $this->entityManager->persist($output);
+
+                    $parameters = $method->getParameters();
+                    if (count($parameters) > 0) {
+                        $paramType = $parameters[0]->getType();
+                        if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                            $className = $paramType->getName();
+                            if (class_exists($className)) {
+                                $addMethod = $method->getName();
+                                $setParentMethods = array_filter(
+                                    $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC),
+                                    fn($m) => str_starts_with($m->getName(), 'set')
+                                );
+
+                                foreach ($value as $itemData) {
+                                    $item = new $className();
+                                    $this->mapArrayToEntity($itemData, $item);
+
+                                    // Try to set parent relationship using reflection
+                                    $itemReflection = new \ReflectionClass($item);
+                                    foreach ($itemReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $itemMethod) {
+                                        if (str_starts_with($itemMethod->getName(), 'set')) {
+                                            $params = $itemMethod->getParameters();
+                                            if (count($params) > 0) {
+                                                $paramType = $params[0]->getType();
+                                                if ($paramType instanceof \ReflectionNamedType &&
+                                                    $paramType->getName() === get_class($entity)) {
+                                                    $item->{$itemMethod->getName()}($entity);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    $entity->$addMethod($item);
+                                    $this->entityManager->persist($item);
+                                }
+                                continue 2; // Skip to next property
+                            }
+                        }
                     }
-                    continue;
                 }
             }
 
-            // Convert snake_case to camelCase for setter
-            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+            // Find setter method using reflection - no string manipulation guessing
+            $reflectionClass = new \ReflectionClass($entity);
+            $setter = null;
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                if (!str_starts_with($method->getName(), 'set')) {
+                    continue;
+                }
+
+                // Check if method name matches property (case-insensitive, normalized matching)
+                $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'set');
+                $normalizedProperty = $this->normalizePropertyName($property);
+
+                if ($extractedFromMethod === $normalizedProperty) {
+                    $setter = $method->getName();
+                    break;
+                }
+            }
 
             if (method_exists($entity, $setter)) {
                 // Handle different value types
                 if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value)) {
                     $entity->$setter($value);
                 } elseif (is_array($value) && !empty($value)) {
-                    // Handle JSON arrays (like metadata, tags)
+                    // Handle JSON arrays (like metadata, tags) - not entity collections
                     $entity->$setter($value);
-                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
-                    // Handle IRI references - resolve to actual entity
+                } elseif (is_string($value) && str_starts_with($value, '/api/') && $setter) {
+                    // Handle IRI references - use reflection to determine expected type
                     try {
                         $refId = $this->extractIdFromIri($value);
-                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
-                        $parts = explode('/', trim($value, '/'));
-                        if (count($parts) >= 3) {
-                            $resourceName = $parts[1]; // e.g., "users"
-                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
-                            if (class_exists($className)) {
-                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
-                                if ($refEntity) {
-                                    $entity->$setter($refEntity);
+
+                        // Use reflection to get the expected parameter type for the setter
+                        $reflectionMethod = new \ReflectionMethod($entity, $setter);
+                        $parameters = $reflectionMethod->getParameters();
+
+                        if (count($parameters) > 0) {
+                            $paramType = $parameters[0]->getType();
+                            if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                                $className = $paramType->getName();
+                                if (class_exists($className)) {
+                                    $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                    if ($refEntity) {
+                                        $entity->$setter($refEntity);
+                                    }
                                 }
                             }
                         }

@@ -80,11 +80,11 @@ abstract class StepOutputDtoGenerated
     }
 
 
-    public function getTreeflow(): string|TreeFlowOutputDto    {
+    public function getTreeFlow(): string|TreeFlowOutputDto    {
         return $this->treeFlow;
     }
 
-    public function setTreeflow(string|TreeFlowOutputDto $treeFlow): self
+    public function setTreeFlow(string|TreeFlowOutputDto $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
         return $this;
@@ -140,31 +140,31 @@ abstract class StepOutputDtoGenerated
         return $this;
     }
 
-    public function getVieworder(): int    {
+    public function getViewOrder(): int    {
         return $this->viewOrder;
     }
 
-    public function setVieworder(int $viewOrder): self
+    public function setViewOrder(int $viewOrder): self
     {
         $this->viewOrder = $viewOrder;
         return $this;
     }
 
-    public function getPositionx(): ?int    {
+    public function getPositionX(): ?int    {
         return $this->positionX;
     }
 
-    public function setPositionx(?int $positionX): self
+    public function setPositionX(?int $positionX): self
     {
         $this->positionX = $positionX;
         return $this;
     }
 
-    public function getPositiony(): ?int    {
+    public function getPositionY(): ?int    {
         return $this->positionY;
     }
 
-    public function setPositiony(?int $positionY): self
+    public function setPositionY(?int $positionY): self
     {
         $this->positionY = $positionY;
         return $this;

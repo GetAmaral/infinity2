@@ -22,7 +22,7 @@ abstract class PipelineTemplateInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['pipelinetemplate:write'])]
@@ -123,21 +123,21 @@ abstract class PipelineTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getTemplatecategory(): ?string    {
+    public function getTemplateCategory(): ?string    {
         return $this->templateCategory;
     }
 
-    public function setTemplatecategory(?string $templateCategory): self
+    public function setTemplateCategory(?string $templateCategory): self
     {
         $this->templateCategory = $templateCategory;
         return $this;
     }
 
-    public function getEstimatedduration(): ?int    {
+    public function getEstimatedDuration(): ?int    {
         return $this->estimatedDuration;
     }
 
-    public function setEstimatedduration(?int $estimatedDuration): self
+    public function setEstimatedDuration(?int $estimatedDuration): self
     {
         $this->estimatedDuration = $estimatedDuration;
         return $this;
@@ -153,21 +153,21 @@ abstract class PipelineTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getStagecount(): int    {
+    public function getStageCount(): int    {
         return $this->stageCount;
     }
 
-    public function setStagecount(int $stageCount): self
+    public function setStageCount(int $stageCount): self
     {
         $this->stageCount = $stageCount;
         return $this;
     }
 
-    public function getTargetdealsize(): ?string    {
+    public function getTargetDealSize(): ?string    {
         return $this->targetDealSize;
     }
 
-    public function setTargetdealsize(?string $targetDealSize): self
+    public function setTargetDealSize(?string $targetDealSize): self
     {
         $this->targetDealSize = $targetDealSize;
         return $this;
@@ -193,11 +193,11 @@ abstract class PipelineTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getUsagecount(): int    {
+    public function getUsageCount(): int    {
         return $this->usageCount;
     }
 
-    public function setUsagecount(int $usageCount): self
+    public function setUsageCount(int $usageCount): self
     {
         $this->usageCount = $usageCount;
         return $this;

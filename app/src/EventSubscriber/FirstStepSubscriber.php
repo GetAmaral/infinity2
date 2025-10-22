@@ -63,17 +63,41 @@ class FirstStepSubscriber
             return;
         }
 
-        // Find all other steps in this TreeFlow that are marked as first
+        // If TreeFlow doesn't have an ID yet (being created), no other steps can exist yet
+        if (!$treeFlow->getId()) {
+            return;
+        }
+
+        // If current step doesn't have an ID yet (being created), we can't use it in WHERE clause
+        // So we need to find all first steps and check them in PHP
         $repository = $entityManager->getRepository(Step::class);
-        $otherFirstSteps = $repository->createQueryBuilder('s')
-            ->where('s.treeFlow = :treeFlow')
-            ->andWhere('s.first = :first')
-            ->andWhere('s.id != :currentId')
-            ->setParameter('treeFlow', $treeFlow)
-            ->setParameter('first', true)
-            ->setParameter('currentId', $currentStep->getId())
-            ->getQuery()
-            ->getResult();
+
+        if ($currentStep->getId()) {
+            // Current step has ID - use query with exclusion
+            $otherFirstSteps = $repository->createQueryBuilder('s')
+                ->where('s.treeFlow = :treeFlow')
+                ->andWhere('s.first = :first')
+                ->andWhere('s.id != :currentId')
+                ->setParameter('treeFlow', $treeFlow)
+                ->setParameter('first', true)
+                ->setParameter('currentId', $currentStep->getId())
+                ->getQuery()
+                ->getResult();
+        } else {
+            // Current step has no ID yet - get all first steps and filter in PHP
+            $allFirstSteps = $repository->createQueryBuilder('s')
+                ->where('s.treeFlow = :treeFlow')
+                ->andWhere('s.first = :first')
+                ->setParameter('treeFlow', $treeFlow)
+                ->setParameter('first', true)
+                ->getQuery()
+                ->getResult();
+
+            // Filter out current step (by object identity)
+            $otherFirstSteps = array_filter($allFirstSteps, function($step) use ($currentStep) {
+                return $step !== $currentStep;
+            });
+        }
 
         // Set them all to first=false
         foreach ($otherFirstSteps as $step) {

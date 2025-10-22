@@ -274,21 +274,21 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getDealstatus(): string    {
+    public function getDealStatus(): string    {
         return $this->dealStatus;
     }
 
-    public function setDealstatus(string $dealStatus): self
+    public function setDealStatus(string $dealStatus): self
     {
         $this->dealStatus = $dealStatus;
         return $this;
     }
 
-    public function getCurrentstage(): string|PipelineStageOutputDto|null    {
+    public function getCurrentStage(): string|PipelineStageOutputDto|null    {
         return $this->currentStage;
     }
 
-    public function setCurrentstage(string|PipelineStageOutputDto|null $currentStage): self
+    public function setCurrentStage(string|PipelineStageOutputDto|null $currentStage): self
     {
         $this->currentStage = $currentStage;
         return $this;
@@ -314,11 +314,11 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getDealtype(): string|DealTypeOutputDto|null    {
+    public function getDealType(): string|DealTypeOutputDto|null    {
         return $this->dealType;
     }
 
-    public function setDealtype(string|DealTypeOutputDto|null $dealType): self
+    public function setDealType(string|DealTypeOutputDto|null $dealType): self
     {
         $this->dealType = $dealType;
         return $this;
@@ -344,51 +344,51 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getDealnumber(): ?string    {
+    public function getDealNumber(): ?string    {
         return $this->dealNumber;
     }
 
-    public function setDealnumber(?string $dealNumber): self
+    public function setDealNumber(?string $dealNumber): self
     {
         $this->dealNumber = $dealNumber;
         return $this;
     }
 
-    public function getExpectedamount(): ?string    {
+    public function getExpectedAmount(): ?string    {
         return $this->expectedAmount;
     }
 
-    public function setExpectedamount(?string $expectedAmount): self
+    public function setExpectedAmount(?string $expectedAmount): self
     {
         $this->expectedAmount = $expectedAmount;
         return $this;
     }
 
-    public function getWeightedamount(): ?string    {
+    public function getWeightedAmount(): ?string    {
         return $this->weightedAmount;
     }
 
-    public function setWeightedamount(?string $weightedAmount): self
+    public function setWeightedAmount(?string $weightedAmount): self
     {
         $this->weightedAmount = $weightedAmount;
         return $this;
     }
 
-    public function getClosureamount(): ?string    {
+    public function getClosureAmount(): ?string    {
         return $this->closureAmount;
     }
 
-    public function setClosureamount(?string $closureAmount): self
+    public function setClosureAmount(?string $closureAmount): self
     {
         $this->closureAmount = $closureAmount;
         return $this;
     }
 
-    public function getInitialamount(): ?string    {
+    public function getInitialAmount(): ?string    {
         return $this->initialAmount;
     }
 
-    public function setInitialamount(?string $initialAmount): self
+    public function setInitialAmount(?string $initialAmount): self
     {
         $this->initialAmount = $initialAmount;
         return $this;
@@ -404,71 +404,71 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getExchangerate(): ?float    {
+    public function getExchangeRate(): ?float    {
         return $this->exchangeRate;
     }
 
-    public function setExchangerate(?float $exchangeRate): self
+    public function setExchangeRate(?float $exchangeRate): self
     {
         $this->exchangeRate = $exchangeRate;
         return $this;
     }
 
-    public function getDiscountpercentage(): ?string    {
+    public function getDiscountPercentage(): ?string    {
         return $this->discountPercentage;
     }
 
-    public function setDiscountpercentage(?string $discountPercentage): self
+    public function setDiscountPercentage(?string $discountPercentage): self
     {
         $this->discountPercentage = $discountPercentage;
         return $this;
     }
 
-    public function getDiscountamount(): ?string    {
+    public function getDiscountAmount(): ?string    {
         return $this->discountAmount;
     }
 
-    public function setDiscountamount(?string $discountAmount): self
+    public function setDiscountAmount(?string $discountAmount): self
     {
         $this->discountAmount = $discountAmount;
         return $this;
     }
 
-    public function getCommissionrate(): ?string    {
+    public function getCommissionRate(): ?string    {
         return $this->commissionRate;
     }
 
-    public function setCommissionrate(?string $commissionRate): self
+    public function setCommissionRate(?string $commissionRate): self
     {
         $this->commissionRate = $commissionRate;
         return $this;
     }
 
-    public function getCommissionamount(): ?string    {
+    public function getCommissionAmount(): ?string    {
         return $this->commissionAmount;
     }
 
-    public function setCommissionamount(?string $commissionAmount): self
+    public function setCommissionAmount(?string $commissionAmount): self
     {
         $this->commissionAmount = $commissionAmount;
         return $this;
     }
 
-    public function getExpectedclosuredate(): ?\DateTimeImmutable    {
+    public function getExpectedClosureDate(): ?\DateTimeImmutable    {
         return $this->expectedClosureDate;
     }
 
-    public function setExpectedclosuredate(?\DateTimeImmutable $expectedClosureDate): self
+    public function setExpectedClosureDate(?\DateTimeImmutable $expectedClosureDate): self
     {
         $this->expectedClosureDate = $expectedClosureDate;
         return $this;
     }
 
-    public function getClosuredate(): ?\DateTimeImmutable    {
+    public function getClosureDate(): ?\DateTimeImmutable    {
         return $this->closureDate;
     }
 
-    public function setClosuredate(?\DateTimeImmutable $closureDate): self
+    public function setClosureDate(?\DateTimeImmutable $closureDate): self
     {
         $this->closureDate = $closureDate;
         return $this;
@@ -484,51 +484,51 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getInitialdate(): ?\DateTimeImmutable    {
+    public function getInitialDate(): ?\DateTimeImmutable    {
         return $this->initialDate;
     }
 
-    public function setInitialdate(?\DateTimeImmutable $initialDate): self
+    public function setInitialDate(?\DateTimeImmutable $initialDate): self
     {
         $this->initialDate = $initialDate;
         return $this;
     }
 
-    public function getLastactivitydate(): ?\DateTimeImmutable    {
+    public function getLastActivityDate(): ?\DateTimeImmutable    {
         return $this->lastActivityDate;
     }
 
-    public function setLastactivitydate(?\DateTimeImmutable $lastActivityDate): self
+    public function setLastActivityDate(?\DateTimeImmutable $lastActivityDate): self
     {
         $this->lastActivityDate = $lastActivityDate;
         return $this;
     }
 
-    public function getNextfollowup(): ?\DateTimeImmutable    {
+    public function getNextFollowUp(): ?\DateTimeImmutable    {
         return $this->nextFollowUp;
     }
 
-    public function setNextfollowup(?\DateTimeImmutable $nextFollowUp): self
+    public function setNextFollowUp(?\DateTimeImmutable $nextFollowUp): self
     {
         $this->nextFollowUp = $nextFollowUp;
         return $this;
     }
 
-    public function getDaysincurrentstage(): ?float    {
+    public function getDaysInCurrentStage(): ?float    {
         return $this->daysInCurrentStage;
     }
 
-    public function setDaysincurrentstage(?float $daysInCurrentStage): self
+    public function setDaysInCurrentStage(?float $daysInCurrentStage): self
     {
         $this->daysInCurrentStage = $daysInCurrentStage;
         return $this;
     }
 
-    public function getForecastcategory(): ?int    {
+    public function getForecastCategory(): ?int    {
         return $this->forecastCategory;
     }
 
-    public function setForecastcategory(?int $forecastCategory): self
+    public function setForecastCategory(?int $forecastCategory): self
     {
         $this->forecastCategory = $forecastCategory;
         return $this;
@@ -564,11 +564,11 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getPrimarycontact(): string|ContactOutputDto|null    {
+    public function getPrimaryContact(): string|ContactOutputDto|null    {
         return $this->primaryContact;
     }
 
-    public function setPrimarycontact(string|ContactOutputDto|null $primaryContact): self
+    public function setPrimaryContact(string|ContactOutputDto|null $primaryContact): self
     {
         $this->primaryContact = $primaryContact;
         return $this;
@@ -584,11 +584,11 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getLeadsource(): string|LeadSourceOutputDto|null    {
+    public function getLeadSource(): string|LeadSourceOutputDto|null    {
         return $this->leadSource;
     }
 
-    public function setLeadsource(string|LeadSourceOutputDto|null $leadSource): self
+    public function setLeadSource(string|LeadSourceOutputDto|null $leadSource): self
     {
         $this->leadSource = $leadSource;
         return $this;
@@ -604,11 +604,11 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getSourcedetails(): ?string    {
+    public function getSourceDetails(): ?string    {
         return $this->sourceDetails;
     }
 
-    public function setSourcedetails(?string $sourceDetails): self
+    public function setSourceDetails(?string $sourceDetails): self
     {
         $this->sourceDetails = $sourceDetails;
         return $this;
@@ -624,11 +624,11 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getDealstages(): array    {
+    public function getDealStages(): array    {
         return $this->dealStages;
     }
 
-    public function setDealstages(array $dealStages): self
+    public function setDealStages(array $dealStages): self
     {
         $this->dealStages = $dealStages;
         return $this;
@@ -674,41 +674,41 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getCustomfields(): ?array    {
+    public function getCustomFields(): ?array    {
         return $this->customFields;
     }
 
-    public function setCustomfields(?array $customFields): self
+    public function setCustomFields(?array $customFields): self
     {
         $this->customFields = $customFields;
         return $this;
     }
 
-    public function getLostreason(): string|LostReasonOutputDto|null    {
+    public function getLostReason(): string|LostReasonOutputDto|null    {
         return $this->lostReason;
     }
 
-    public function setLostreason(string|LostReasonOutputDto|null $lostReason): self
+    public function setLostReason(string|LostReasonOutputDto|null $lostReason): self
     {
         $this->lostReason = $lostReason;
         return $this;
     }
 
-    public function getWinreason(): string|WinReasonOutputDto|null    {
+    public function getWinReason(): string|WinReasonOutputDto|null    {
         return $this->winReason;
     }
 
-    public function setWinreason(string|WinReasonOutputDto|null $winReason): self
+    public function setWinReason(string|WinReasonOutputDto|null $winReason): self
     {
         $this->winReason = $winReason;
         return $this;
     }
 
-    public function getActualclosuredate(): ?\DateTimeImmutable    {
+    public function getActualClosureDate(): ?\DateTimeImmutable    {
         return $this->actualClosureDate;
     }
 
-    public function setActualclosuredate(?\DateTimeImmutable $actualClosureDate): self
+    public function setActualClosureDate(?\DateTimeImmutable $actualClosureDate): self
     {
         $this->actualClosureDate = $actualClosureDate;
         return $this;

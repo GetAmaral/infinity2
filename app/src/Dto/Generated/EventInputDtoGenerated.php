@@ -28,7 +28,7 @@ abstract class EventInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['event:write'])]
@@ -221,7 +221,7 @@ abstract class EventInputDtoGenerated
 
     /**
      * company reference
-     * Must be: IRI string (e.g., "/api/companys/uuid")
+     * Must be: IRI string (e.g., "/api/nies/uuid")
      */
     #[Groups(['event:write'])]
     public ?string $company = null;
@@ -256,11 +256,11 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getStarttime(): \DateTimeImmutable    {
+    public function getStartTime(): \DateTimeImmutable    {
         return $this->startTime;
     }
 
-    public function setStarttime(\DateTimeImmutable $startTime): self
+    public function setStartTime(\DateTimeImmutable $startTime): self
     {
         $this->startTime = $startTime;
         return $this;
@@ -276,21 +276,21 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getEndtime(): \DateTimeImmutable    {
+    public function getEndTime(): \DateTimeImmutable    {
         return $this->endTime;
     }
 
-    public function setEndtime(\DateTimeImmutable $endTime): self
+    public function setEndTime(\DateTimeImmutable $endTime): self
     {
         $this->endTime = $endTime;
         return $this;
     }
 
-    public function getAllday(): bool    {
+    public function getAllDay(): bool    {
         return $this->allDay;
     }
 
-    public function setAllday(bool $allDay): self
+    public function setAllDay(bool $allDay): self
     {
         $this->allDay = $allDay;
         return $this;
@@ -306,11 +306,11 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getMeetingurl(): ?string    {
+    public function getMeetingUrl(): ?string    {
         return $this->meetingUrl;
     }
 
-    public function setMeetingurl(?string $meetingUrl): self
+    public function setMeetingUrl(?string $meetingUrl): self
     {
         $this->meetingUrl = $meetingUrl;
         return $this;
@@ -376,41 +376,41 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getResourcebookings(): ?string    {
+    public function getResourceBookings(): ?string    {
         return $this->resourceBookings;
     }
 
-    public function setResourcebookings(?string $resourceBookings): self
+    public function setResourceBookings(?string $resourceBookings): self
     {
         $this->resourceBookings = $resourceBookings;
         return $this;
     }
 
-    public function getParentevent(): ?string    {
+    public function getParentEvent(): ?string    {
         return $this->parentEvent;
     }
 
-    public function setParentevent(?string $parentEvent): self
+    public function setParentEvent(?string $parentEvent): self
     {
         $this->parentEvent = $parentEvent;
         return $this;
     }
 
-    public function getChildrenevents(): ?string    {
+    public function getChildrenEvents(): ?string    {
         return $this->childrenEvents;
     }
 
-    public function setChildrenevents(?string $childrenEvents): self
+    public function setChildrenEvents(?string $childrenEvents): self
     {
         $this->childrenEvents = $childrenEvents;
         return $this;
     }
 
-    public function getOriginalstarttime(): ?\DateTimeImmutable    {
+    public function getOriginalStartTime(): ?\DateTimeImmutable    {
         return $this->originalStartTime;
     }
 
-    public function setOriginalstarttime(?\DateTimeImmutable $originalStartTime): self
+    public function setOriginalStartTime(?\DateTimeImmutable $originalStartTime): self
     {
         $this->originalStartTime = $originalStartTime;
         return $this;
@@ -426,21 +426,21 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getConferencedata(): ?array    {
+    public function getConferenceData(): ?array    {
         return $this->conferenceData;
     }
 
-    public function setConferencedata(?array $conferenceData): self
+    public function setConferenceData(?array $conferenceData): self
     {
         $this->conferenceData = $conferenceData;
         return $this;
     }
 
-    public function getExtendedproperties(): ?array    {
+    public function getExtendedProperties(): ?array    {
         return $this->extendedProperties;
     }
 
-    public function setExtendedproperties(?array $extendedProperties): self
+    public function setExtendedProperties(?array $extendedProperties): self
     {
         $this->extendedProperties = $extendedProperties;
         return $this;
@@ -456,11 +456,11 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getWorkinghours(): ?string    {
+    public function getWorkingHours(): ?string    {
         return $this->workingHours;
     }
 
-    public function setWorkinghours(?string $workingHours): self
+    public function setWorkingHours(?string $workingHours): self
     {
         $this->workingHours = $workingHours;
         return $this;
@@ -486,11 +486,11 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getMeetingdatas(): ?string    {
+    public function getMeetingDatas(): ?string    {
         return $this->meetingDatas;
     }
 
-    public function setMeetingdatas(?string $meetingDatas): self
+    public function setMeetingDatas(?string $meetingDatas): self
     {
         $this->meetingDatas = $meetingDatas;
         return $this;
@@ -516,21 +516,21 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getShowas(): string    {
+    public function getShowAs(): string    {
         return $this->showAs;
     }
 
-    public function setShowas(string $showAs): self
+    public function setShowAs(string $showAs): self
     {
         $this->showAs = $showAs;
         return $this;
     }
 
-    public function getEventtype(): ?string    {
+    public function getEventType(): ?string    {
         return $this->eventType;
     }
 
-    public function setEventtype(?string $eventType): self
+    public function setEventType(?string $eventType): self
     {
         $this->eventType = $eventType;
         return $this;
@@ -566,21 +566,21 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getStarttimezone(): ?string    {
+    public function getStartTimezone(): ?string    {
         return $this->startTimezone;
     }
 
-    public function setStarttimezone(?string $startTimezone): self
+    public function setStartTimezone(?string $startTimezone): self
     {
         $this->startTimezone = $startTimezone;
         return $this;
     }
 
-    public function getEndtimezone(): ?string    {
+    public function getEndTimezone(): ?string    {
         return $this->endTimezone;
     }
 
-    public function setEndtimezone(?string $endTimezone): self
+    public function setEndTimezone(?string $endTimezone): self
     {
         $this->endTimezone = $endTimezone;
         return $this;
@@ -596,71 +596,71 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getLocationdisplayname(): ?string    {
+    public function getLocationDisplayName(): ?string    {
         return $this->locationDisplayName;
     }
 
-    public function setLocationdisplayname(?string $locationDisplayName): self
+    public function setLocationDisplayName(?string $locationDisplayName): self
     {
         $this->locationDisplayName = $locationDisplayName;
         return $this;
     }
 
-    public function getLocationurl(): ?string    {
+    public function getLocationUrl(): ?string    {
         return $this->locationUrl;
     }
 
-    public function setLocationurl(?string $locationUrl): self
+    public function setLocationUrl(?string $locationUrl): self
     {
         $this->locationUrl = $locationUrl;
         return $this;
     }
 
-    public function getLocationcoordinates(): ?array    {
+    public function getLocationCoordinates(): ?array    {
         return $this->locationCoordinates;
     }
 
-    public function setLocationcoordinates(?array $locationCoordinates): self
+    public function setLocationCoordinates(?array $locationCoordinates): self
     {
         $this->locationCoordinates = $locationCoordinates;
         return $this;
     }
 
-    public function getOnlinemeeting(): bool    {
+    public function getOnlineMeeting(): bool    {
         return $this->onlineMeeting;
     }
 
-    public function setOnlinemeeting(bool $onlineMeeting): self
+    public function setOnlineMeeting(bool $onlineMeeting): self
     {
         $this->onlineMeeting = $onlineMeeting;
         return $this;
     }
 
-    public function getOnlinemeetingprovider(): ?string    {
+    public function getOnlineMeetingProvider(): ?string    {
         return $this->onlineMeetingProvider;
     }
 
-    public function setOnlinemeetingprovider(?string $onlineMeetingProvider): self
+    public function setOnlineMeetingProvider(?string $onlineMeetingProvider): self
     {
         $this->onlineMeetingProvider = $onlineMeetingProvider;
         return $this;
     }
 
-    public function getMeetingid(): ?string    {
+    public function getMeetingId(): ?string    {
         return $this->meetingId;
     }
 
-    public function setMeetingid(?string $meetingId): self
+    public function setMeetingId(?string $meetingId): self
     {
         $this->meetingId = $meetingId;
         return $this;
     }
 
-    public function getMeetingpassword(): ?string    {
+    public function getMeetingPassword(): ?string    {
         return $this->meetingPassword;
     }
 
-    public function setMeetingpassword(?string $meetingPassword): self
+    public function setMeetingPassword(?string $meetingPassword): self
     {
         $this->meetingPassword = $meetingPassword;
         return $this;
@@ -676,21 +676,21 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getRecurrencerule(): ?string    {
+    public function getRecurrenceRule(): ?string    {
         return $this->recurrenceRule;
     }
 
-    public function setRecurrencerule(?string $recurrenceRule): self
+    public function setRecurrenceRule(?string $recurrenceRule): self
     {
         $this->recurrenceRule = $recurrenceRule;
         return $this;
     }
 
-    public function getRecurrenceexceptions(): ?array    {
+    public function getRecurrenceExceptions(): ?array    {
         return $this->recurrenceExceptions;
     }
 
-    public function setRecurrenceexceptions(?array $recurrenceExceptions): self
+    public function setRecurrenceExceptions(?array $recurrenceExceptions): self
     {
         $this->recurrenceExceptions = $recurrenceExceptions;
         return $this;
@@ -716,71 +716,71 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getResponsestatus(): ?string    {
+    public function getResponseStatus(): ?string    {
         return $this->responseStatus;
     }
 
-    public function setResponsestatus(?string $responseStatus): self
+    public function setResponseStatus(?string $responseStatus): self
     {
         $this->responseStatus = $responseStatus;
         return $this;
     }
 
-    public function getResponserequested(): bool    {
+    public function getResponseRequested(): bool    {
         return $this->responseRequested;
     }
 
-    public function setResponserequested(bool $responseRequested): self
+    public function setResponseRequested(bool $responseRequested): self
     {
         $this->responseRequested = $responseRequested;
         return $this;
     }
 
-    public function getAllownewtimeproposals(): bool    {
+    public function getAllowNewTimeProposals(): bool    {
         return $this->allowNewTimeProposals;
     }
 
-    public function setAllownewtimeproposals(bool $allowNewTimeProposals): self
+    public function setAllowNewTimeProposals(bool $allowNewTimeProposals): self
     {
         $this->allowNewTimeProposals = $allowNewTimeProposals;
         return $this;
     }
 
-    public function getHideattendees(): bool    {
+    public function getHideAttendees(): bool    {
         return $this->hideAttendees;
     }
 
-    public function setHideattendees(bool $hideAttendees): self
+    public function setHideAttendees(bool $hideAttendees): self
     {
         $this->hideAttendees = $hideAttendees;
         return $this;
     }
 
-    public function getGuestscanmodify(): bool    {
+    public function getGuestsCanModify(): bool    {
         return $this->guestsCanModify;
     }
 
-    public function setGuestscanmodify(bool $guestsCanModify): self
+    public function setGuestsCanModify(bool $guestsCanModify): self
     {
         $this->guestsCanModify = $guestsCanModify;
         return $this;
     }
 
-    public function getGuestscaninviteothers(): bool    {
+    public function getGuestsCanInviteOthers(): bool    {
         return $this->guestsCanInviteOthers;
     }
 
-    public function setGuestscaninviteothers(bool $guestsCanInviteOthers): self
+    public function setGuestsCanInviteOthers(bool $guestsCanInviteOthers): self
     {
         $this->guestsCanInviteOthers = $guestsCanInviteOthers;
         return $this;
     }
 
-    public function getGuestscanseeotherguests(): bool    {
+    public function getGuestsCanSeeOtherGuests(): bool    {
         return $this->guestsCanSeeOtherGuests;
     }
 
-    public function setGuestscanseeotherguests(bool $guestsCanSeeOtherGuests): self
+    public function setGuestsCanSeeOtherGuests(bool $guestsCanSeeOtherGuests): self
     {
         $this->guestsCanSeeOtherGuests = $guestsCanSeeOtherGuests;
         return $this;
@@ -796,71 +796,71 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getReminderminutes(): ?int    {
+    public function getReminderMinutes(): ?int    {
         return $this->reminderMinutes;
     }
 
-    public function setReminderminutes(?int $reminderMinutes): self
+    public function setReminderMinutes(?int $reminderMinutes): self
     {
         $this->reminderMinutes = $reminderMinutes;
         return $this;
     }
 
-    public function getExternalcalendarid(): ?string    {
+    public function getExternalCalendarId(): ?string    {
         return $this->externalCalendarId;
     }
 
-    public function setExternalcalendarid(?string $externalCalendarId): self
+    public function setExternalCalendarId(?string $externalCalendarId): self
     {
         $this->externalCalendarId = $externalCalendarId;
         return $this;
     }
 
-    public function getExternalcalendarprovider(): ?string    {
+    public function getExternalCalendarProvider(): ?string    {
         return $this->externalCalendarProvider;
     }
 
-    public function setExternalcalendarprovider(?string $externalCalendarProvider): self
+    public function setExternalCalendarProvider(?string $externalCalendarProvider): self
     {
         $this->externalCalendarProvider = $externalCalendarProvider;
         return $this;
     }
 
-    public function getIcaluid(): ?string    {
+    public function getIcalUid(): ?string    {
         return $this->icalUid;
     }
 
-    public function setIcaluid(?string $icalUid): self
+    public function setIcalUid(?string $icalUid): self
     {
         $this->icalUid = $icalUid;
         return $this;
     }
 
-    public function getWeblink(): ?string    {
+    public function getWebLink(): ?string    {
         return $this->webLink;
     }
 
-    public function setWeblink(?string $webLink): self
+    public function setWebLink(?string $webLink): self
     {
         $this->webLink = $webLink;
         return $this;
     }
 
-    public function getHtmllink(): ?string    {
+    public function getHtmlLink(): ?string    {
         return $this->htmlLink;
     }
 
-    public function setHtmllink(?string $htmlLink): self
+    public function setHtmlLink(?string $htmlLink): self
     {
         $this->htmlLink = $htmlLink;
         return $this;
     }
 
-    public function getColorid(): ?string    {
+    public function getColorId(): ?string    {
         return $this->colorId;
     }
 
-    public function setColorid(?string $colorId): self
+    public function setColorId(?string $colorId): self
     {
         $this->colorId = $colorId;
         return $this;
@@ -876,11 +876,11 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getAssignedto(): ?string    {
+    public function getAssignedTo(): ?string    {
         return $this->assignedTo;
     }
 
-    public function setAssignedto(?string $assignedTo): self
+    public function setAssignedTo(?string $assignedTo): self
     {
         $this->assignedTo = $assignedTo;
         return $this;

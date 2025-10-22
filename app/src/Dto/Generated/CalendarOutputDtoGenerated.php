@@ -159,11 +159,11 @@ abstract class CalendarOutputDtoGenerated
         return $this;
     }
 
-    public function getTimezone(): string    {
+    public function getTimeZone(): string    {
         return $this->timeZone;
     }
 
-    public function setTimezone(string $timeZone): self
+    public function setTimeZone(string $timeZone): self
     {
         $this->timeZone = $timeZone;
         return $this;
@@ -199,21 +199,21 @@ abstract class CalendarOutputDtoGenerated
         return $this;
     }
 
-    public function getAccessrole(): ?string    {
+    public function getAccessRole(): ?string    {
         return $this->accessRole;
     }
 
-    public function setAccessrole(?string $accessRole): self
+    public function setAccessRole(?string $accessRole): self
     {
         $this->accessRole = $accessRole;
         return $this;
     }
 
-    public function getCalendartype(): string|CalendarTypeOutputDto|null    {
+    public function getCalendarType(): string|CalendarTypeOutputDto|null    {
         return $this->calendarType;
     }
 
-    public function setCalendartype(string|CalendarTypeOutputDto|null $calendarType): self
+    public function setCalendarType(string|CalendarTypeOutputDto|null $calendarType): self
     {
         $this->calendarType = $calendarType;
         return $this;
@@ -229,31 +229,31 @@ abstract class CalendarOutputDtoGenerated
         return $this;
     }
 
-    public function getExternallink(): string|CalendarExternalLinkOutputDto|null    {
+    public function getExternalLink(): string|CalendarExternalLinkOutputDto|null    {
         return $this->externalLink;
     }
 
-    public function setExternallink(string|CalendarExternalLinkOutputDto|null $externalLink): self
+    public function setExternalLink(string|CalendarExternalLinkOutputDto|null $externalLink): self
     {
         $this->externalLink = $externalLink;
         return $this;
     }
 
-    public function getExternalapikey(): ?string    {
+    public function getExternalApiKey(): ?string    {
         return $this->externalApiKey;
     }
 
-    public function setExternalapikey(?string $externalApiKey): self
+    public function setExternalApiKey(?string $externalApiKey): self
     {
         $this->externalApiKey = $externalApiKey;
         return $this;
     }
 
-    public function getWorkinghours(): array    {
+    public function getWorkingHours(): array    {
         return $this->workingHours;
     }
 
-    public function setWorkinghours(array $workingHours): self
+    public function setWorkingHours(array $workingHours): self
     {
         $this->workingHours = $workingHours;
         return $this;
@@ -309,31 +309,31 @@ abstract class CalendarOutputDtoGenerated
         return $this;
     }
 
-    public function getSortorder(): ?int    {
+    public function getSortOrder(): ?int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(?int $sortOrder): self
+    public function setSortOrder(?int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;
     }
 
-    public function getExternalid(): ?string    {
+    public function getExternalId(): ?string    {
         return $this->externalId;
     }
 
-    public function setExternalid(?string $externalId): self
+    public function setExternalId(?string $externalId): self
     {
         $this->externalId = $externalId;
         return $this;
     }
 
-    public function getLastsyncedat(): ?\DateTimeImmutable    {
+    public function getLastSyncedAt(): ?\DateTimeImmutable    {
         return $this->lastSyncedAt;
     }
 
-    public function setLastsyncedat(?\DateTimeImmutable $lastSyncedAt): self
+    public function setLastSyncedAt(?\DateTimeImmutable $lastSyncedAt): self
     {
         $this->lastSyncedAt = $lastSyncedAt;
         return $this;

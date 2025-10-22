@@ -104,11 +104,11 @@ abstract class SocialMediaOutputDtoGenerated
         return $this;
     }
 
-    public function getApikey(): ?string    {
+    public function getApiKey(): ?string    {
         return $this->apiKey;
     }
 
-    public function setApikey(?string $apiKey): self
+    public function setApiKey(?string $apiKey): self
     {
         $this->apiKey = $apiKey;
         return $this;
@@ -144,11 +144,11 @@ abstract class SocialMediaOutputDtoGenerated
         return $this;
     }
 
-    public function getSocialmediatype(): string|SocialMediaTypeOutputDto|null    {
+    public function getSocialMediaType(): string|SocialMediaTypeOutputDto|null    {
         return $this->socialMediaType;
     }
 
-    public function setSocialmediatype(string|SocialMediaTypeOutputDto|null $socialMediaType): self
+    public function setSocialMediaType(string|SocialMediaTypeOutputDto|null $socialMediaType): self
     {
         $this->socialMediaType = $socialMediaType;
         return $this;

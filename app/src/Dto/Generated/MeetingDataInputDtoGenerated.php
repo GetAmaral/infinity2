@@ -23,7 +23,7 @@ abstract class MeetingDataInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['meetingdata:write'])]
@@ -162,11 +162,11 @@ abstract class MeetingDataInputDtoGenerated
         return $this;
     }
 
-    public function getMeetingtype(): string    {
+    public function getMeetingType(): string    {
         return $this->meetingType;
     }
 
-    public function setMeetingtype(string $meetingType): self
+    public function setMeetingType(string $meetingType): self
     {
         $this->meetingType = $meetingType;
         return $this;
@@ -182,21 +182,21 @@ abstract class MeetingDataInputDtoGenerated
         return $this;
     }
 
-    public function getStarttime(): \DateTimeImmutable    {
+    public function getStartTime(): \DateTimeImmutable    {
         return $this->startTime;
     }
 
-    public function setStarttime(\DateTimeImmutable $startTime): self
+    public function setStartTime(\DateTimeImmutable $startTime): self
     {
         $this->startTime = $startTime;
         return $this;
     }
 
-    public function getEndtime(): ?\DateTimeImmutable    {
+    public function getEndTime(): ?\DateTimeImmutable    {
         return $this->endTime;
     }
 
-    public function setEndtime(?\DateTimeImmutable $endTime): self
+    public function setEndTime(?\DateTimeImmutable $endTime): self
     {
         $this->endTime = $endTime;
         return $this;
@@ -262,11 +262,11 @@ abstract class MeetingDataInputDtoGenerated
         return $this;
     }
 
-    public function getMeetingid(): ?string    {
+    public function getMeetingId(): ?string    {
         return $this->meetingId;
     }
 
-    public function setMeetingid(?string $meetingId): self
+    public function setMeetingId(?string $meetingId): self
     {
         $this->meetingId = $meetingId;
         return $this;
@@ -292,21 +292,21 @@ abstract class MeetingDataInputDtoGenerated
         return $this;
     }
 
-    public function getActionitems(): ?array    {
+    public function getActionItems(): ?array    {
         return $this->actionItems;
     }
 
-    public function setActionitems(?array $actionItems): self
+    public function setActionItems(?array $actionItems): self
     {
         $this->actionItems = $actionItems;
         return $this;
     }
 
-    public function getRecordingavailable(): bool    {
+    public function getRecordingAvailable(): bool    {
         return $this->recordingAvailable;
     }
 
-    public function setRecordingavailable(bool $recordingAvailable): self
+    public function setRecordingAvailable(bool $recordingAvailable): self
     {
         $this->recordingAvailable = $recordingAvailable;
         return $this;
@@ -322,31 +322,31 @@ abstract class MeetingDataInputDtoGenerated
         return $this;
     }
 
-    public function getRecordingduration(): ?int    {
+    public function getRecordingDuration(): ?int    {
         return $this->recordingDuration;
     }
 
-    public function setRecordingduration(?int $recordingDuration): self
+    public function setRecordingDuration(?int $recordingDuration): self
     {
         $this->recordingDuration = $recordingDuration;
         return $this;
     }
 
-    public function getRecordingsize(): ?string    {
+    public function getRecordingSize(): ?string    {
         return $this->recordingSize;
     }
 
-    public function setRecordingsize(?string $recordingSize): self
+    public function setRecordingSize(?string $recordingSize): self
     {
         $this->recordingSize = $recordingSize;
         return $this;
     }
 
-    public function getNextmeetingdate(): ?\DateTimeImmutable    {
+    public function getNextMeetingDate(): ?\DateTimeImmutable    {
         return $this->nextMeetingDate;
     }
 
-    public function setNextmeetingdate(?\DateTimeImmutable $nextMeetingDate): self
+    public function setNextMeetingDate(?\DateTimeImmutable $nextMeetingDate): self
     {
         $this->nextMeetingDate = $nextMeetingDate;
         return $this;
@@ -402,21 +402,21 @@ abstract class MeetingDataInputDtoGenerated
         return $this;
     }
 
-    public function getRecurrencepattern(): ?array    {
+    public function getRecurrencePattern(): ?array    {
         return $this->recurrencePattern;
     }
 
-    public function setRecurrencepattern(?array $recurrencePattern): self
+    public function setRecurrencePattern(?array $recurrencePattern): self
     {
         $this->recurrencePattern = $recurrencePattern;
         return $this;
     }
 
-    public function getRecordurl(): ?string    {
+    public function getRecordUrl(): ?string    {
         return $this->recordUrl;
     }
 
-    public function setRecordurl(?string $recordUrl): self
+    public function setRecordUrl(?string $recordUrl): self
     {
         $this->recordUrl = $recordUrl;
         return $this;

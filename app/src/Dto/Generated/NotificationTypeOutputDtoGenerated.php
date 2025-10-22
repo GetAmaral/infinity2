@@ -196,51 +196,51 @@ abstract class NotificationTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getEmailsubject(): ?string    {
+    public function getEmailSubject(): ?string    {
         return $this->emailSubject;
     }
 
-    public function setEmailsubject(?string $emailSubject): self
+    public function setEmailSubject(?string $emailSubject): self
     {
         $this->emailSubject = $emailSubject;
         return $this;
     }
 
-    public function getEmailtemplate(): ?string    {
+    public function getEmailTemplate(): ?string    {
         return $this->emailTemplate;
     }
 
-    public function setEmailtemplate(?string $emailTemplate): self
+    public function setEmailTemplate(?string $emailTemplate): self
     {
         $this->emailTemplate = $emailTemplate;
         return $this;
     }
 
-    public function getSmstemplate(): ?string    {
+    public function getSmsTemplate(): ?string    {
         return $this->smsTemplate;
     }
 
-    public function setSmstemplate(?string $smsTemplate): self
+    public function setSmsTemplate(?string $smsTemplate): self
     {
         $this->smsTemplate = $smsTemplate;
         return $this;
     }
 
-    public function getPushtitle(): ?string    {
+    public function getPushTitle(): ?string    {
         return $this->pushTitle;
     }
 
-    public function setPushtitle(?string $pushTitle): self
+    public function setPushTitle(?string $pushTitle): self
     {
         $this->pushTitle = $pushTitle;
         return $this;
     }
 
-    public function getPushbody(): ?string    {
+    public function getPushBody(): ?string    {
         return $this->pushBody;
     }
 
-    public function setPushbody(?string $pushBody): self
+    public function setPushBody(?string $pushBody): self
     {
         $this->pushBody = $pushBody;
         return $this;
@@ -256,41 +256,41 @@ abstract class NotificationTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getRetryenabled(): bool    {
+    public function getRetryEnabled(): bool    {
         return $this->retryEnabled;
     }
 
-    public function setRetryenabled(bool $retryEnabled): self
+    public function setRetryEnabled(bool $retryEnabled): self
     {
         $this->retryEnabled = $retryEnabled;
         return $this;
     }
 
-    public function getMaxretries(): ?int    {
+    public function getMaxRetries(): ?int    {
         return $this->maxRetries;
     }
 
-    public function setMaxretries(?int $maxRetries): self
+    public function setMaxRetries(?int $maxRetries): self
     {
         $this->maxRetries = $maxRetries;
         return $this;
     }
 
-    public function getThrottleenabled(): bool    {
+    public function getThrottleEnabled(): bool    {
         return $this->throttleEnabled;
     }
 
-    public function setThrottleenabled(bool $throttleEnabled): self
+    public function setThrottleEnabled(bool $throttleEnabled): self
     {
         $this->throttleEnabled = $throttleEnabled;
         return $this;
     }
 
-    public function getThrottlelimit(): ?int    {
+    public function getThrottleLimit(): ?int    {
         return $this->throttleLimit;
     }
 
-    public function setThrottlelimit(?int $throttleLimit): self
+    public function setThrottleLimit(?int $throttleLimit): self
     {
         $this->throttleLimit = $throttleLimit;
         return $this;
@@ -316,31 +316,31 @@ abstract class NotificationTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getUserpreferenceallowed(): bool    {
+    public function getUserPreferenceAllowed(): bool    {
         return $this->userPreferenceAllowed;
     }
 
-    public function setUserpreferenceallowed(bool $userPreferenceAllowed): self
+    public function setUserPreferenceAllowed(bool $userPreferenceAllowed): self
     {
         $this->userPreferenceAllowed = $userPreferenceAllowed;
         return $this;
     }
 
-    public function getRequiresaction(): bool    {
+    public function getRequiresAction(): bool    {
         return $this->requiresAction;
     }
 
-    public function setRequiresaction(bool $requiresAction): self
+    public function setRequiresAction(bool $requiresAction): self
     {
         $this->requiresAction = $requiresAction;
         return $this;
     }
 
-    public function getExpiresafterhours(): ?int    {
+    public function getExpiresAfterHours(): ?int    {
         return $this->expiresAfterHours;
     }
 
-    public function setExpiresafterhours(?int $expiresAfterHours): self
+    public function setExpiresAfterHours(?int $expiresAfterHours): self
     {
         $this->expiresAfterHours = $expiresAfterHours;
         return $this;

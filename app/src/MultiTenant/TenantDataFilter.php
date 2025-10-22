@@ -40,7 +40,8 @@ final class TenantDataFilter extends SQLFilter
         }
 
         // Get the column name for organization_id
-        $organizationColumn = $targetEntity->getAssociationMapping('organization')['joinColumns'][0]['name'] ?? 'organization_id';
+        $associationMapping = $targetEntity->getAssociationMapping('organization');
+        $organizationColumn = $associationMapping->joinColumns[0]->name ?? 'organization_id';
 
         // Return the WHERE clause
         return sprintf('%s.%s = %s', $targetTableAlias, $organizationColumn, $tenantId);

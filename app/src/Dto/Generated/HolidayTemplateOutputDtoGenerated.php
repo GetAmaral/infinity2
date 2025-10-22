@@ -70,11 +70,11 @@ abstract class HolidayTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getBlocksscheduling(): ?bool    {
+    public function getBlocksScheduling(): ?bool    {
         return $this->blocksScheduling;
     }
 
-    public function setBlocksscheduling(?bool $blocksScheduling): self
+    public function setBlocksScheduling(?bool $blocksScheduling): self
     {
         $this->blocksScheduling = $blocksScheduling;
         return $this;
@@ -100,31 +100,31 @@ abstract class HolidayTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getRecurrencefrequency(): ?int    {
+    public function getRecurrenceFrequency(): ?int    {
         return $this->recurrenceFrequency;
     }
 
-    public function setRecurrencefrequency(?int $recurrenceFrequency): self
+    public function setRecurrenceFrequency(?int $recurrenceFrequency): self
     {
         $this->recurrenceFrequency = $recurrenceFrequency;
         return $this;
     }
 
-    public function getRecurrenceinterval(): ?int    {
+    public function getRecurrenceInterval(): ?int    {
         return $this->recurrenceInterval;
     }
 
-    public function setRecurrenceinterval(?int $recurrenceInterval): self
+    public function setRecurrenceInterval(?int $recurrenceInterval): self
     {
         $this->recurrenceInterval = $recurrenceInterval;
         return $this;
     }
 
-    public function getSentat(): ?\DateTimeImmutable    {
+    public function getSentAt(): ?\DateTimeImmutable    {
         return $this->sentAt;
     }
 
-    public function setSentat(?\DateTimeImmutable $sentAt): self
+    public function setSentAt(?\DateTimeImmutable $sentAt): self
     {
         $this->sentAt = $sentAt;
         return $this;

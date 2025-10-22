@@ -50,21 +50,21 @@ abstract class StepConnectionOutputDtoGenerated
     }
 
 
-    public function getSourceoutput(): string|StepOutputOutputDto    {
+    public function getSourceOutput(): string|StepOutputOutputDto    {
         return $this->sourceOutput;
     }
 
-    public function setSourceoutput(string|StepOutputOutputDto $sourceOutput): self
+    public function setSourceOutput(string|StepOutputOutputDto $sourceOutput): self
     {
         $this->sourceOutput = $sourceOutput;
         return $this;
     }
 
-    public function getTargetinput(): string|StepInputOutputDto    {
+    public function getTargetInput(): string|StepInputOutputDto    {
         return $this->targetInput;
     }
 
-    public function setTargetinput(string|StepInputOutputDto $targetInput): self
+    public function setTargetInput(string|StepInputOutputDto $targetInput): self
     {
         $this->targetInput = $targetInput;
         return $this;

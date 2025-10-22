@@ -24,7 +24,7 @@ abstract class ReminderInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['reminder:write'])]
@@ -38,7 +38,7 @@ abstract class ReminderInputDtoGenerated
 
     /**
      * communicationMethod reference
-     * Must be: IRI string (e.g., "/api/communicationmethods/uuid")
+     * Must be: IRI string (e.g., "/api/communication_methods/uuid")
      */
     #[Groups(['reminder:write'])]
     public ?string $communicationMethod = null;
@@ -86,11 +86,11 @@ abstract class ReminderInputDtoGenerated
         return $this;
     }
 
-    public function getCommunicationmethod(): ?string    {
+    public function getCommunicationMethod(): ?string    {
         return $this->communicationMethod;
     }
 
-    public function setCommunicationmethod(?string $communicationMethod): self
+    public function setCommunicationMethod(?string $communicationMethod): self
     {
         $this->communicationMethod = $communicationMethod;
         return $this;
@@ -106,11 +106,11 @@ abstract class ReminderInputDtoGenerated
         return $this;
     }
 
-    public function getMinutesbeforestart(): int    {
+    public function getMinutesBeforeStart(): int    {
         return $this->minutesBeforeStart;
     }
 
-    public function setMinutesbeforestart(int $minutesBeforeStart): self
+    public function setMinutesBeforeStart(int $minutesBeforeStart): self
     {
         $this->minutesBeforeStart = $minutesBeforeStart;
         return $this;

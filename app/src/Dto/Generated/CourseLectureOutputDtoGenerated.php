@@ -158,121 +158,121 @@ abstract class CourseLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getVideofilename(): ?string    {
+    public function getVideoFileName(): ?string    {
         return $this->videoFileName;
     }
 
-    public function setVideofilename(?string $videoFileName): self
+    public function setVideoFileName(?string $videoFileName): self
     {
         $this->videoFileName = $videoFileName;
         return $this;
     }
 
-    public function getVideopath(): ?string    {
+    public function getVideoPath(): ?string    {
         return $this->videoPath;
     }
 
-    public function setVideopath(?string $videoPath): self
+    public function setVideoPath(?string $videoPath): self
     {
         $this->videoPath = $videoPath;
         return $this;
     }
 
-    public function getProcessingstatus(): ?string    {
+    public function getProcessingStatus(): ?string    {
         return $this->processingStatus;
     }
 
-    public function setProcessingstatus(?string $processingStatus): self
+    public function setProcessingStatus(?string $processingStatus): self
     {
         $this->processingStatus = $processingStatus;
         return $this;
     }
 
-    public function getProcessingstep(): ?string    {
+    public function getProcessingStep(): ?string    {
         return $this->processingStep;
     }
 
-    public function setProcessingstep(?string $processingStep): self
+    public function setProcessingStep(?string $processingStep): self
     {
         $this->processingStep = $processingStep;
         return $this;
     }
 
-    public function getProcessingpercentage(): ?int    {
+    public function getProcessingPercentage(): ?int    {
         return $this->processingPercentage;
     }
 
-    public function setProcessingpercentage(?int $processingPercentage): self
+    public function setProcessingPercentage(?int $processingPercentage): self
     {
         $this->processingPercentage = $processingPercentage;
         return $this;
     }
 
-    public function getProcessingerror(): ?string    {
+    public function getProcessingError(): ?string    {
         return $this->processingError;
     }
 
-    public function setProcessingerror(?string $processingError): self
+    public function setProcessingError(?string $processingError): self
     {
         $this->processingError = $processingError;
         return $this;
     }
 
-    public function getProcessedat(): ?\DateTimeImmutable    {
+    public function getProcessedAt(): ?\DateTimeImmutable    {
         return $this->processedAt;
     }
 
-    public function setProcessedat(?\DateTimeImmutable $processedAt): self
+    public function setProcessedAt(?\DateTimeImmutable $processedAt): self
     {
         $this->processedAt = $processedAt;
         return $this;
     }
 
-    public function getVieworder(): int    {
+    public function getViewOrder(): int    {
         return $this->viewOrder;
     }
 
-    public function setVieworder(int $viewOrder): self
+    public function setViewOrder(int $viewOrder): self
     {
         $this->viewOrder = $viewOrder;
         return $this;
     }
 
-    public function getLengthseconds(): int    {
+    public function getLengthSeconds(): int    {
         return $this->lengthSeconds;
     }
 
-    public function setLengthseconds(int $lengthSeconds): self
+    public function setLengthSeconds(int $lengthSeconds): self
     {
         $this->lengthSeconds = $lengthSeconds;
         return $this;
     }
 
-    public function getCoursemodule(): string|CourseModuleOutputDto    {
+    public function getCourseModule(): string|CourseModuleOutputDto    {
         return $this->courseModule;
     }
 
-    public function setCoursemodule(string|CourseModuleOutputDto $courseModule): self
+    public function setCourseModule(string|CourseModuleOutputDto $courseModule): self
     {
         $this->courseModule = $courseModule;
         return $this;
     }
 
-    public function getStudentlectures(): array    {
+    public function getStudentLectures(): array    {
         return $this->studentLectures;
     }
 
-    public function setStudentlectures(array $studentLectures): self
+    public function setStudentLectures(array $studentLectures): self
     {
         $this->studentLectures = $studentLectures;
         return $this;
     }
 
-    public function getStudentcoursesonthislecture(): array    {
+    public function getStudentCoursesOnThisLecture(): array    {
         return $this->studentCoursesOnThisLecture;
     }
 
-    public function setStudentcoursesonthislecture(array $studentCoursesOnThisLecture): self
+    public function setStudentCoursesOnThisLecture(array $studentCoursesOnThisLecture): self
     {
         $this->studentCoursesOnThisLecture = $studentCoursesOnThisLecture;
         return $this;
@@ -318,51 +318,51 @@ abstract class CourseLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getPublishedat(): ?\DateTimeImmutable    {
+    public function getPublishedAt(): ?\DateTimeImmutable    {
         return $this->publishedAt;
     }
 
-    public function setPublishedat(?\DateTimeImmutable $publishedAt): self
+    public function setPublishedAt(?\DateTimeImmutable $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
         return $this;
     }
 
-    public function getVideourl(): ?string    {
+    public function getVideoUrl(): ?string    {
         return $this->videoUrl;
     }
 
-    public function setVideourl(?string $videoUrl): self
+    public function setVideoUrl(?string $videoUrl): self
     {
         $this->videoUrl = $videoUrl;
         return $this;
     }
 
-    public function getVideotype(): ?string    {
+    public function getVideoType(): ?string    {
         return $this->videoType;
     }
 
-    public function setVideotype(?string $videoType): self
+    public function setVideoType(?string $videoType): self
     {
         $this->videoType = $videoType;
         return $this;
     }
 
-    public function getVideoresolution(): ?string    {
+    public function getVideoResolution(): ?string    {
         return $this->videoResolution;
     }
 
-    public function setVideoresolution(?string $videoResolution): self
+    public function setVideoResolution(?string $videoResolution): self
     {
         $this->videoResolution = $videoResolution;
         return $this;
     }
 
-    public function getVideosizebytes(): ?string    {
+    public function getVideoSizeBytes(): ?string    {
         return $this->videoSizeBytes;
     }
 
-    public function setVideosizebytes(?string $videoSizeBytes): self
+    public function setVideoSizeBytes(?string $videoSizeBytes): self
     {
         $this->videoSizeBytes = $videoSizeBytes;
         return $this;
@@ -378,21 +378,21 @@ abstract class CourseLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getSubtitleurl(): ?string    {
+    public function getSubtitleUrl(): ?string    {
         return $this->subtitleUrl;
     }
 
-    public function setSubtitleurl(?string $subtitleUrl): self
+    public function setSubtitleUrl(?string $subtitleUrl): self
     {
         $this->subtitleUrl = $subtitleUrl;
         return $this;
     }
 
-    public function getSubtitlelanguage(): ?string    {
+    public function getSubtitleLanguage(): ?string    {
         return $this->subtitleLanguage;
     }
 
-    public function setSubtitlelanguage(?string $subtitleLanguage): self
+    public function setSubtitleLanguage(?string $subtitleLanguage): self
     {
         $this->subtitleLanguage = $subtitleLanguage;
         return $this;
@@ -408,21 +408,21 @@ abstract class CourseLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getExternallinks(): ?array    {
+    public function getExternalLinks(): ?array    {
         return $this->externalLinks;
     }
 
-    public function setExternallinks(?array $externalLinks): self
+    public function setExternalLinks(?array $externalLinks): self
     {
         $this->externalLinks = $externalLinks;
         return $this;
     }
 
-    public function getLearningobjectives(): ?array    {
+    public function getLearningObjectives(): ?array    {
         return $this->learningObjectives;
     }
 
-    public function setLearningobjectives(?array $learningObjectives): self
+    public function setLearningObjectives(?array $learningObjectives): self
     {
         $this->learningObjectives = $learningObjectives;
         return $this;
@@ -438,31 +438,31 @@ abstract class CourseLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getViewcount(): ?int    {
+    public function getViewCount(): ?int    {
         return $this->viewCount;
     }
 
-    public function setViewcount(?int $viewCount): self
+    public function setViewCount(?int $viewCount): self
     {
         $this->viewCount = $viewCount;
         return $this;
     }
 
-    public function getCompletioncount(): ?int    {
+    public function getCompletionCount(): ?int    {
         return $this->completionCount;
     }
 
-    public function setCompletioncount(?int $completionCount): self
+    public function setCompletionCount(?int $completionCount): self
     {
         $this->completionCount = $completionCount;
         return $this;
     }
 
-    public function getAveragewatchpercentage(): ?float    {
+    public function getAverageWatchPercentage(): ?float    {
         return $this->averageWatchPercentage;
     }
 
-    public function setAveragewatchpercentage(?float $averageWatchPercentage): self
+    public function setAverageWatchPercentage(?float $averageWatchPercentage): self
     {
         $this->averageWatchPercentage = $averageWatchPercentage;
         return $this;
@@ -478,31 +478,31 @@ abstract class CourseLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getRatingcount(): ?int    {
+    public function getRatingCount(): ?int    {
         return $this->ratingCount;
     }
 
-    public function setRatingcount(?int $ratingCount): self
+    public function setRatingCount(?int $ratingCount): self
     {
         $this->ratingCount = $ratingCount;
         return $this;
     }
 
-    public function getDurationseconds(): int    {
+    public function getDurationSeconds(): int    {
         return $this->durationSeconds;
     }
 
-    public function setDurationseconds(int $durationSeconds): self
+    public function setDurationSeconds(int $durationSeconds): self
     {
         $this->durationSeconds = $durationSeconds;
         return $this;
     }
 
-    public function getDifficultylevel(): ?string    {
+    public function getDifficultyLevel(): ?string    {
         return $this->difficultyLevel;
     }
 
-    public function setDifficultylevel(?string $difficultyLevel): self
+    public function setDifficultyLevel(?string $difficultyLevel): self
     {
         $this->difficultyLevel = $difficultyLevel;
         return $this;
@@ -518,21 +518,21 @@ abstract class CourseLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getSkillscovered(): ?array    {
+    public function getSkillsCovered(): ?array    {
         return $this->skillsCovered;
     }
 
-    public function setSkillscovered(?array $skillsCovered): self
+    public function setSkillsCovered(?array $skillsCovered): self
     {
         $this->skillsCovered = $skillsCovered;
         return $this;
     }
 
-    public function getPointsvalue(): ?int    {
+    public function getPointsValue(): ?int    {
         return $this->pointsValue;
     }
 
-    public function setPointsvalue(?int $pointsValue): self
+    public function setPointsValue(?int $pointsValue): self
     {
         $this->pointsValue = $pointsValue;
         return $this;

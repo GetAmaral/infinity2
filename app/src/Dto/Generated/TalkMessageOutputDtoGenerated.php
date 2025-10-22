@@ -142,41 +142,41 @@ abstract class TalkMessageOutputDtoGenerated
         return $this;
     }
 
-    public function getFromcontact(): string|ContactOutputDto|null    {
+    public function getFromContact(): string|ContactOutputDto|null    {
         return $this->fromContact;
     }
 
-    public function setFromcontact(string|ContactOutputDto|null $fromContact): self
+    public function setFromContact(string|ContactOutputDto|null $fromContact): self
     {
         $this->fromContact = $fromContact;
         return $this;
     }
 
-    public function getFromuser(): string|UserOutputDto|null    {
+    public function getFromUser(): string|UserOutputDto|null    {
         return $this->fromUser;
     }
 
-    public function setFromuser(string|UserOutputDto|null $fromUser): self
+    public function setFromUser(string|UserOutputDto|null $fromUser): self
     {
         $this->fromUser = $fromUser;
         return $this;
     }
 
-    public function getFromagent(): string|AgentOutputDto|null    {
+    public function getFromAgent(): string|AgentOutputDto|null    {
         return $this->fromAgent;
     }
 
-    public function setFromagent(string|AgentOutputDto|null $fromAgent): self
+    public function setFromAgent(string|AgentOutputDto|null $fromAgent): self
     {
         $this->fromAgent = $fromAgent;
         return $this;
     }
 
-    public function getSentat(): \DateTimeImmutable    {
+    public function getSentAt(): \DateTimeImmutable    {
         return $this->sentAt;
     }
 
-    public function setSentat(\DateTimeImmutable $sentAt): self
+    public function setSentAt(\DateTimeImmutable $sentAt): self
     {
         $this->sentAt = $sentAt;
         return $this;
@@ -192,11 +192,11 @@ abstract class TalkMessageOutputDtoGenerated
         return $this;
     }
 
-    public function getMessagetype(): string    {
+    public function getMessageType(): string    {
         return $this->messageType;
     }
 
-    public function setMessagetype(string $messageType): self
+    public function setMessageType(string $messageType): self
     {
         $this->messageType = $messageType;
         return $this;
@@ -222,11 +222,11 @@ abstract class TalkMessageOutputDtoGenerated
         return $this;
     }
 
-    public function getReadat(): ?\DateTimeImmutable    {
+    public function getReadAt(): ?\DateTimeImmutable    {
         return $this->readAt;
     }
 
-    public function setReadat(?\DateTimeImmutable $readAt): self
+    public function setReadAt(?\DateTimeImmutable $readAt): self
     {
         $this->readAt = $readAt;
         return $this;
@@ -242,11 +242,11 @@ abstract class TalkMessageOutputDtoGenerated
         return $this;
     }
 
-    public function getParentmessage(): string|TalkMessageOutputDto|null    {
+    public function getParentMessage(): string|TalkMessageOutputDto|null    {
         return $this->parentMessage;
     }
 
-    public function setParentmessage(string|TalkMessageOutputDto|null $parentMessage): self
+    public function setParentMessage(string|TalkMessageOutputDto|null $parentMessage): self
     {
         $this->parentMessage = $parentMessage;
         return $this;
@@ -282,11 +282,11 @@ abstract class TalkMessageOutputDtoGenerated
         return $this;
     }
 
-    public function getDeliveredat(): ?\DateTimeImmutable    {
+    public function getDeliveredAt(): ?\DateTimeImmutable    {
         return $this->deliveredAt;
     }
 
-    public function setDeliveredat(?\DateTimeImmutable $deliveredAt): self
+    public function setDeliveredAt(?\DateTimeImmutable $deliveredAt): self
     {
         $this->deliveredAt = $deliveredAt;
         return $this;
@@ -312,11 +312,11 @@ abstract class TalkMessageOutputDtoGenerated
         return $this;
     }
 
-    public function getEditedat(): ?\DateTimeImmutable    {
+    public function getEditedAt(): ?\DateTimeImmutable    {
         return $this->editedAt;
     }
 
-    public function setEditedat(?\DateTimeImmutable $editedAt): self
+    public function setEditedAt(?\DateTimeImmutable $editedAt): self
     {
         $this->editedAt = $editedAt;
         return $this;

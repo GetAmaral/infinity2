@@ -25,7 +25,7 @@ abstract class CalendarInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['calendar:write'])]
@@ -63,14 +63,14 @@ abstract class CalendarInputDtoGenerated
 
     /**
      * calendarType reference
-     * Must be: IRI string (e.g., "/api/calendartypes/uuid")
+     * Must be: IRI string (e.g., "/api/calendar_types/uuid")
      */
     #[Groups(['calendar:write'])]
     public ?string $calendarType = null;
 
     /**
      * externalLink reference
-     * Must be: IRI string (e.g., "/api/calendarexternallinks/uuid")
+     * Must be: IRI string (e.g., "/api/calendar_external_links/uuid")
      */
     #[Groups(['calendar:write'])]
     public ?string $externalLink = null;
@@ -150,11 +150,11 @@ abstract class CalendarInputDtoGenerated
         return $this;
     }
 
-    public function getTimezone(): string    {
+    public function getTimeZone(): string    {
         return $this->timeZone;
     }
 
-    public function setTimezone(string $timeZone): self
+    public function setTimeZone(string $timeZone): self
     {
         $this->timeZone = $timeZone;
         return $this;
@@ -190,21 +190,21 @@ abstract class CalendarInputDtoGenerated
         return $this;
     }
 
-    public function getAccessrole(): ?string    {
+    public function getAccessRole(): ?string    {
         return $this->accessRole;
     }
 
-    public function setAccessrole(?string $accessRole): self
+    public function setAccessRole(?string $accessRole): self
     {
         $this->accessRole = $accessRole;
         return $this;
     }
 
-    public function getCalendartype(): ?string    {
+    public function getCalendarType(): ?string    {
         return $this->calendarType;
     }
 
-    public function setCalendartype(?string $calendarType): self
+    public function setCalendarType(?string $calendarType): self
     {
         $this->calendarType = $calendarType;
         return $this;
@@ -220,31 +220,31 @@ abstract class CalendarInputDtoGenerated
         return $this;
     }
 
-    public function getExternallink(): ?string    {
+    public function getExternalLink(): ?string    {
         return $this->externalLink;
     }
 
-    public function setExternallink(?string $externalLink): self
+    public function setExternalLink(?string $externalLink): self
     {
         $this->externalLink = $externalLink;
         return $this;
     }
 
-    public function getExternalapikey(): ?string    {
+    public function getExternalApiKey(): ?string    {
         return $this->externalApiKey;
     }
 
-    public function setExternalapikey(?string $externalApiKey): self
+    public function setExternalApiKey(?string $externalApiKey): self
     {
         $this->externalApiKey = $externalApiKey;
         return $this;
     }
 
-    public function getWorkinghours(): ?string    {
+    public function getWorkingHours(): ?string    {
         return $this->workingHours;
     }
 
-    public function setWorkinghours(?string $workingHours): self
+    public function setWorkingHours(?string $workingHours): self
     {
         $this->workingHours = $workingHours;
         return $this;
@@ -300,31 +300,31 @@ abstract class CalendarInputDtoGenerated
         return $this;
     }
 
-    public function getSortorder(): ?int    {
+    public function getSortOrder(): ?int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(?int $sortOrder): self
+    public function setSortOrder(?int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;
     }
 
-    public function getExternalid(): ?string    {
+    public function getExternalId(): ?string    {
         return $this->externalId;
     }
 
-    public function setExternalid(?string $externalId): self
+    public function setExternalId(?string $externalId): self
     {
         $this->externalId = $externalId;
         return $this;
     }
 
-    public function getLastsyncedat(): ?\DateTimeImmutable    {
+    public function getLastSyncedAt(): ?\DateTimeImmutable    {
         return $this->lastSyncedAt;
     }
 
-    public function setLastsyncedat(?\DateTimeImmutable $lastSyncedAt): self
+    public function setLastSyncedAt(?\DateTimeImmutable $lastSyncedAt): self
     {
         $this->lastSyncedAt = $lastSyncedAt;
         return $this;

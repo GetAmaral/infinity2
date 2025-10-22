@@ -79,7 +79,7 @@ abstract class {{ entity.getEntityName() }}InputDtoGenerated
 {# ManyToOne or OneToOne - use IRI string only (no union type to prevent API Platform auto-deserialization) #}
     /**
      * {{ property.getPropertyName() }} reference
-     * Must be: IRI string (e.g., "/api/{{ property.getTargetEntity()|lower }}s/uuid")
+     * Must be: IRI string (e.g., "/api/{{ toApiResourceName(property.getTargetEntity()) }}/uuid")
 {% if property.getPropertyName() == 'organization' or property.getPropertyName() == 'owner' %}
      * Auto-assigned by system if not provided
 {% endif %}
@@ -140,12 +140,12 @@ abstract class {{ entity.getEntityName() }}InputDtoGenerated
 {% for property in entity.getProperties() %}
 {% if property.getPropertyName() not in excludedProperties %}
 
-    public function get{{ property.getPropertyName()|capitalize }}(): {% if property.getRelationshipType() in ['OneToMany', 'ManyToMany'] and property.isDtoNestedEnabled() %}array{% elseif property.getRelationshipType() in ['ManyToOne', 'OneToOne'] %}?string{% else %}{% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' %}float{% elseif property.getPropertyType() == 'decimal' %}string{% elseif property.getPropertyType() in ['datetime', 'datetime_immutable', 'date', 'date_immutable'] %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %}{% endif %}
+    public function {{ getGetterName(property.getPropertyName()) }}(): {% if property.getRelationshipType() in ['OneToMany', 'ManyToMany'] and property.isDtoNestedEnabled() %}array{% elseif property.getRelationshipType() in ['ManyToOne', 'OneToOne'] %}?string{% else %}{% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' %}float{% elseif property.getPropertyType() == 'decimal' %}string{% elseif property.getPropertyType() in ['datetime', 'datetime_immutable', 'date', 'date_immutable'] %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %}{% endif %}
     {
         return $this->{{ property.getPropertyName() }};
     }
 
-    public function set{{ property.getPropertyName()|capitalize }}({% if property.getRelationshipType() in ['OneToMany', 'ManyToMany'] and property.isDtoNestedEnabled() %}array{% elseif property.getRelationshipType() in ['ManyToOne', 'OneToOne'] %}?string{% else %}{% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' %}float{% elseif property.getPropertyType() == 'decimal' %}string{% elseif property.getPropertyType() in ['datetime', 'datetime_immutable', 'date', 'date_immutable'] %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %}{% endif %} ${{ property.getPropertyName() }}): self
+    public function {{ getSetterName(property.getPropertyName()) }}({% if property.getRelationshipType() in ['OneToMany', 'ManyToMany'] and property.isDtoNestedEnabled() %}array{% elseif property.getRelationshipType() in ['ManyToOne', 'OneToOne'] %}?string{% else %}{% if property.isNullable() %}?{% endif %}{% if property.getPropertyType() == 'boolean' %}bool{% elseif property.getPropertyType() == 'integer' %}int{% elseif property.getPropertyType() == 'float' %}float{% elseif property.getPropertyType() == 'decimal' %}string{% elseif property.getPropertyType() in ['datetime', 'datetime_immutable', 'date', 'date_immutable'] %}\DateTimeImmutable{% elseif property.getPropertyType() == 'json' %}array{% else %}string{% endif %}{% endif %} ${{ property.getPropertyName() }}): self
     {
         $this->{{ property.getPropertyName() }} = ${{ property.getPropertyName() }};
         return $this;

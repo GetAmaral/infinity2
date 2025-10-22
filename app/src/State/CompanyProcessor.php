@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Company;
 use App\Dto\CompanyInputDto;
+use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -41,6 +42,25 @@ class CompanyProcessor implements ProcessorInterface
         #[Autowire(service: 'App\MultiTenant\TenantEntityProcessor')]
         private readonly ProcessorInterface $persistProcessor
     ) {}
+
+    /**
+     * Normalize property name for matching (removes underscores, lowercase)
+     * Uses centralized Utils methods instead of manual string manipulation
+     */
+    private function normalizePropertyName(string $property): string
+    {
+        // Convert to camelCase (handles snake_case, etc.) then lowercase
+        return strtolower(Utils::toCamelCase($property));
+    }
+
+    /**
+     * Extract property name from method name (e.g., 'addItem' -> 'item')
+     */
+    private function extractPropertyFromMethod(string $methodName, string $prefix): string
+    {
+        // Remove prefix (e.g., 'add', 'set') and convert to lowercase
+        return strtolower(substr($methodName, strlen($prefix)));
+    }
 
     /**
      * @param CompanyInputDto $data
@@ -89,23 +109,23 @@ class CompanyProcessor implements ProcessorInterface
         }
         // billingAddress
         if (!$isPatch || array_key_exists('billingAddress', $requestData)) {
-            $entity->setBillingaddress($data->billingAddress);
+            $entity->setBillingAddress($data->billingAddress);
         }
         // legalName
         if (!$isPatch || array_key_exists('legalName', $requestData)) {
-            $entity->setLegalname($data->legalName);
+            $entity->setLegalName($data->legalName);
         }
         // shippingAddress
         if (!$isPatch || array_key_exists('shippingAddress', $requestData)) {
-            $entity->setShippingaddress($data->shippingAddress);
+            $entity->setShippingAddress($data->shippingAddress);
         }
         // shippingPostalCode
         if (!$isPatch || array_key_exists('shippingPostalCode', $requestData)) {
-            $entity->setShippingpostalcode($data->shippingPostalCode);
+            $entity->setShippingPostalCode($data->shippingPostalCode);
         }
         // annualRevenue
         if (!$isPatch || array_key_exists('annualRevenue', $requestData)) {
-            $entity->setAnnualrevenue($data->annualRevenue);
+            $entity->setAnnualRevenue($data->annualRevenue);
         }
         // currency
         if (!$isPatch || array_key_exists('currency', $requestData)) {
@@ -113,11 +133,11 @@ class CompanyProcessor implements ProcessorInterface
         }
         // companyType
         if (!$isPatch || array_key_exists('companyType', $requestData)) {
-            $entity->setCompanytype($data->companyType);
+            $entity->setCompanyType($data->companyType);
         }
         // accountSource
         if (!$isPatch || array_key_exists('accountSource', $requestData)) {
-            $entity->setAccountsource($data->accountSource);
+            $entity->setAccountSource($data->accountSource);
         }
         // rating
         if (!$isPatch || array_key_exists('rating', $requestData)) {
@@ -125,27 +145,27 @@ class CompanyProcessor implements ProcessorInterface
         }
         // customerSince
         if (!$isPatch || array_key_exists('customerSince', $requestData)) {
-            $entity->setCustomersince($data->customerSince);
+            $entity->setCustomerSince($data->customerSince);
         }
         // paymentTerms
         if (!$isPatch || array_key_exists('paymentTerms', $requestData)) {
-            $entity->setPaymentterms($data->paymentTerms);
+            $entity->setPaymentTerms($data->paymentTerms);
         }
         // creditLimit
         if (!$isPatch || array_key_exists('creditLimit', $requestData)) {
-            $entity->setCreditlimit($data->creditLimit);
+            $entity->setCreditLimit($data->creditLimit);
         }
         // fiscalYearEnd
         if (!$isPatch || array_key_exists('fiscalYearEnd', $requestData)) {
-            $entity->setFiscalyearend($data->fiscalYearEnd);
+            $entity->setFiscalYearEnd($data->fiscalYearEnd);
         }
         // sicCode
         if (!$isPatch || array_key_exists('sicCode', $requestData)) {
-            $entity->setSiccode($data->sicCode);
+            $entity->setSicCode($data->sicCode);
         }
         // naicsCode
         if (!$isPatch || array_key_exists('naicsCode', $requestData)) {
-            $entity->setNaicscode($data->naicsCode);
+            $entity->setNaicsCode($data->naicsCode);
         }
         // ownership
         if (!$isPatch || array_key_exists('ownership', $requestData)) {
@@ -153,19 +173,19 @@ class CompanyProcessor implements ProcessorInterface
         }
         // tickerSymbol
         if (!$isPatch || array_key_exists('tickerSymbol', $requestData)) {
-            $entity->setTickersymbol($data->tickerSymbol);
+            $entity->setTickerSymbol($data->tickerSymbol);
         }
         // linkedInUrl
         if (!$isPatch || array_key_exists('linkedInUrl', $requestData)) {
-            $entity->setLinkedinurl($data->linkedInUrl);
+            $entity->setLinkedInUrl($data->linkedInUrl);
         }
         // doNotContact
         if (!$isPatch || array_key_exists('doNotContact', $requestData)) {
-            $entity->setDonotcontact($data->doNotContact);
+            $entity->setDoNotContact($data->doNotContact);
         }
         // gdprConsent
         if (!$isPatch || array_key_exists('gdprConsent', $requestData)) {
-            $entity->setGdprconsent($data->gdprConsent);
+            $entity->setGdprConsent($data->gdprConsent);
         }
         // country
         if (!$isPatch || array_key_exists('country', $requestData)) {
@@ -173,11 +193,11 @@ class CompanyProcessor implements ProcessorInterface
         }
         // shippingCountry
         if (!$isPatch || array_key_exists('shippingCountry', $requestData)) {
-            $entity->setShippingcountry($data->shippingCountry);
+            $entity->setShippingCountry($data->shippingCountry);
         }
         // companySize
         if (!$isPatch || array_key_exists('companySize', $requestData)) {
-            $entity->setCompanysize($data->companySize);
+            $entity->setCompanySize($data->companySize);
         }
         // fax
         if (!$isPatch || array_key_exists('fax', $requestData)) {
@@ -193,7 +213,7 @@ class CompanyProcessor implements ProcessorInterface
         }
         // mobilePhone
         if (!$isPatch || array_key_exists('mobilePhone', $requestData)) {
-            $entity->setMobilephone($data->mobilePhone);
+            $entity->setMobilePhone($data->mobilePhone);
         }
         // notes
         if (!$isPatch || array_key_exists('notes', $requestData)) {
@@ -205,11 +225,11 @@ class CompanyProcessor implements ProcessorInterface
         }
         // postalCode
         if (!$isPatch || array_key_exists('postalCode', $requestData)) {
-            $entity->setPostalcode($data->postalCode);
+            $entity->setPostalCode($data->postalCode);
         }
         // primaryContactName
         if (!$isPatch || array_key_exists('primaryContactName', $requestData)) {
-            $entity->setPrimarycontactname($data->primaryContactName);
+            $entity->setPrimaryContactName($data->primaryContactName);
         }
         // status
         if (!$isPatch || array_key_exists('status', $requestData)) {
@@ -217,23 +237,23 @@ class CompanyProcessor implements ProcessorInterface
         }
         // taxId
         if (!$isPatch || array_key_exists('taxId', $requestData)) {
-            $entity->setTaxid($data->taxId);
+            $entity->setTaxId($data->taxId);
         }
         // nextActivityDate
         if (!$isPatch || array_key_exists('nextActivityDate', $requestData)) {
-            $entity->setNextactivitydate($data->nextActivityDate);
+            $entity->setNextActivityDate($data->nextActivityDate);
         }
         // lastActivityDate
         if (!$isPatch || array_key_exists('lastActivityDate', $requestData)) {
-            $entity->setLastactivitydate($data->lastActivityDate);
+            $entity->setLastActivityDate($data->lastActivityDate);
         }
         // timeZone
         if (!$isPatch || array_key_exists('timeZone', $requestData)) {
-            $entity->setTimezone($data->timeZone);
+            $entity->setTimeZone($data->timeZone);
         }
         // stateProvince
         if (!$isPatch || array_key_exists('stateProvince', $requestData)) {
-            $entity->setStateprovince($data->stateProvince);
+            $entity->setStateProvince($data->stateProvince);
         }
         // tags
         if (!$isPatch || array_key_exists('tags', $requestData)) {
@@ -241,23 +261,23 @@ class CompanyProcessor implements ProcessorInterface
         }
         // lifecycleStage
         if (!$isPatch || array_key_exists('lifecycleStage', $requestData)) {
-            $entity->setLifecyclestage($data->lifecycleStage);
+            $entity->setLifecycleStage($data->lifecycleStage);
         }
         // companyDomain
         if (!$isPatch || array_key_exists('companyDomain', $requestData)) {
-            $entity->setCompanydomain($data->companyDomain);
+            $entity->setCompanyDomain($data->companyDomain);
         }
         // leadStatus
         if (!$isPatch || array_key_exists('leadStatus', $requestData)) {
-            $entity->setLeadstatus($data->leadStatus);
+            $entity->setLeadStatus($data->leadStatus);
         }
         // numberOfAssociatedDeals
         if (!$isPatch || array_key_exists('numberOfAssociatedDeals', $requestData)) {
-            $entity->setNumberofassociateddeals($data->numberOfAssociatedDeals);
+            $entity->setNumberOfAssociatedDeals($data->numberOfAssociatedDeals);
         }
         // numberOfAssociatedContacts
         if (!$isPatch || array_key_exists('numberOfAssociatedContacts', $requestData)) {
-            $entity->setNumberofassociatedcontacts($data->numberOfAssociatedContacts);
+            $entity->setNumberOfAssociatedContacts($data->numberOfAssociatedContacts);
         }
         // public
         if (!$isPatch || array_key_exists('public', $requestData)) {
@@ -265,7 +285,7 @@ class CompanyProcessor implements ProcessorInterface
         }
         // shippingStateProvince
         if (!$isPatch || array_key_exists('shippingStateProvince', $requestData)) {
-            $entity->setShippingstateprovince($data->shippingStateProvince);
+            $entity->setShippingStateProvince($data->shippingStateProvince);
         }
 
         // Map relationship properties
@@ -274,7 +294,7 @@ class CompanyProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organization', $requestData)) {
             if ($data->organization !== null) {
                 if (is_string($data->organization)) {
-                    // IRI format: "/api/organizations/{id}"
+                    // IRI format: "/api/organizatia/{id}"
                     $organizationId = $this->extractIdFromIri($data->organization);
                     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
                     if (!$organization) {
@@ -298,7 +318,7 @@ class CompanyProcessor implements ProcessorInterface
                     if (!$accountManager) {
                         throw new BadRequestHttpException('User not found: ' . $accountManagerId);
                     }
-                    $entity->setAccountmanager($accountManager);
+                    $entity->setAccountManager($accountManager);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested accountManager creation not supported. Use IRI format.');
@@ -310,13 +330,13 @@ class CompanyProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('shippingCity', $requestData)) {
             if ($data->shippingCity !== null) {
                 if (is_string($data->shippingCity)) {
-                    // IRI format: "/api/citys/{id}"
+                    // IRI format: "/api/ties/{id}"
                     $shippingCityId = $this->extractIdFromIri($data->shippingCity);
                     $shippingCity = $this->entityManager->getRepository(City::class)->find($shippingCityId);
                     if (!$shippingCity) {
                         throw new BadRequestHttpException('City not found: ' . $shippingCityId);
                     }
-                    $entity->setShippingcity($shippingCity);
+                    $entity->setShippingCity($shippingCity);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested shippingCity creation not supported. Use IRI format.');
@@ -328,13 +348,13 @@ class CompanyProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('parentCompany', $requestData)) {
             if ($data->parentCompany !== null) {
                 if (is_string($data->parentCompany)) {
-                    // IRI format: "/api/companys/{id}"
+                    // IRI format: "/api/nies/{id}"
                     $parentCompanyId = $this->extractIdFromIri($data->parentCompany);
                     $parentCompany = $this->entityManager->getRepository(Company::class)->find($parentCompanyId);
                     if (!$parentCompany) {
                         throw new BadRequestHttpException('Company not found: ' . $parentCompanyId);
                     }
-                    $entity->setParentcompany($parentCompany);
+                    $entity->setParentCompany($parentCompany);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested parentCompany creation not supported. Use IRI format.');
@@ -346,7 +366,7 @@ class CompanyProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('city', $requestData)) {
             if ($data->city !== null) {
                 if (is_string($data->city)) {
-                    // IRI format: "/api/citys/{id}"
+                    // IRI format: "/api/ties/{id}"
                     $cityId = $this->extractIdFromIri($data->city);
                     $city = $this->entityManager->getRepository(City::class)->find($cityId);
                     if (!$city) {
@@ -381,6 +401,7 @@ class CompanyProcessor implements ProcessorInterface
 
     /**
      * Map array data to entity properties using setters
+     * Handles nested collections recursively
      *
      * @param array $data Associative array of property => value
      * @param object $entity Target entity instance
@@ -393,26 +414,111 @@ class CompanyProcessor implements ProcessorInterface
                 continue;
             }
 
-            // Convert snake_case to camelCase for setter
-            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+            // Handle nested collections using reflection to find adder methods
+            if (is_array($value) && !empty($value) && isset($value[0]) && is_array($value[0])) {
+                // Find adder method using reflection - scan all methods starting with 'add'
+                $reflectionClass = new \ReflectionClass($entity);
+                foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                    if (!str_starts_with($method->getName(), 'add')) {
+                        continue;
+                    }
+
+                    // Check if this might be the right adder based on property name similarity
+                    $normalizedProperty = $this->normalizePropertyName($property);
+                    $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'add');
+
+                    // Try to match: property name should be similar to method's entity name
+                    // e.g., 'items' matches 'addItem', 'user_items' matches 'addUserItem'
+                    if (!str_contains($normalizedProperty, $extractedFromMethod) &&
+                        !str_contains($extractedFromMethod, $normalizedProperty)) {
+                        continue;
+                    }
+
+                    $parameters = $method->getParameters();
+                    if (count($parameters) > 0) {
+                        $paramType = $parameters[0]->getType();
+                        if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                            $className = $paramType->getName();
+                            if (class_exists($className)) {
+                                $addMethod = $method->getName();
+                                $setParentMethods = array_filter(
+                                    $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC),
+                                    fn($m) => str_starts_with($m->getName(), 'set')
+                                );
+
+                                foreach ($value as $itemData) {
+                                    $item = new $className();
+                                    $this->mapArrayToEntity($itemData, $item);
+
+                                    // Try to set parent relationship using reflection
+                                    $itemReflection = new \ReflectionClass($item);
+                                    foreach ($itemReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $itemMethod) {
+                                        if (str_starts_with($itemMethod->getName(), 'set')) {
+                                            $params = $itemMethod->getParameters();
+                                            if (count($params) > 0) {
+                                                $paramType = $params[0]->getType();
+                                                if ($paramType instanceof \ReflectionNamedType &&
+                                                    $paramType->getName() === get_class($entity)) {
+                                                    $item->{$itemMethod->getName()}($entity);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    $entity->$addMethod($item);
+                                    $this->entityManager->persist($item);
+                                }
+                                continue 2; // Skip to next property
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Find setter method using reflection - no string manipulation guessing
+            $reflectionClass = new \ReflectionClass($entity);
+            $setter = null;
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                if (!str_starts_with($method->getName(), 'set')) {
+                    continue;
+                }
+
+                // Check if method name matches property (case-insensitive, normalized matching)
+                $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'set');
+                $normalizedProperty = $this->normalizePropertyName($property);
+
+                if ($extractedFromMethod === $normalizedProperty) {
+                    $setter = $method->getName();
+                    break;
+                }
+            }
 
             if (method_exists($entity, $setter)) {
                 // Handle different value types
-                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value)) {
                     $entity->$setter($value);
-                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
-                    // Handle IRI references - resolve to actual entity
+                } elseif (is_array($value) && !empty($value)) {
+                    // Handle JSON arrays (like metadata, tags) - not entity collections
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/') && $setter) {
+                    // Handle IRI references - use reflection to determine expected type
                     try {
                         $refId = $this->extractIdFromIri($value);
-                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
-                        $parts = explode('/', trim($value, '/'));
-                        if (count($parts) >= 3) {
-                            $resourceName = $parts[1]; // e.g., "users"
-                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
-                            if (class_exists($className)) {
-                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
-                                if ($refEntity) {
-                                    $entity->$setter($refEntity);
+
+                        // Use reflection to get the expected parameter type for the setter
+                        $reflectionMethod = new \ReflectionMethod($entity, $setter);
+                        $parameters = $reflectionMethod->getParameters();
+
+                        if (count($parameters) > 0) {
+                            $paramType = $parameters[0]->getType();
+                            if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                                $className = $paramType->getName();
+                                if (class_exists($className)) {
+                                    $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                    if ($refEntity) {
+                                        $entity->$setter($refEntity);
+                                    }
                                 }
                             }
                         }

@@ -23,7 +23,7 @@ abstract class PipelineInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['pipeline:write'])]
@@ -140,11 +140,11 @@ abstract class PipelineInputDtoGenerated
         return $this;
     }
 
-    public function getPipelinetype(): string    {
+    public function getPipelineType(): string    {
         return $this->pipelineType;
     }
 
-    public function setPipelinetype(string $pipelineType): self
+    public function setPipelineType(string $pipelineType): self
     {
         $this->pipelineType = $pipelineType;
         return $this;
@@ -180,11 +180,11 @@ abstract class PipelineInputDtoGenerated
         return $this;
     }
 
-    public function getDisplayorder(): int    {
+    public function getDisplayOrder(): int    {
         return $this->displayOrder;
     }
 
-    public function setDisplayorder(int $displayOrder): self
+    public function setDisplayOrder(int $displayOrder): self
     {
         $this->displayOrder = $displayOrder;
         return $this;
@@ -210,31 +210,31 @@ abstract class PipelineInputDtoGenerated
         return $this;
     }
 
-    public function getForecastenabled(): bool    {
+    public function getForecastEnabled(): bool    {
         return $this->forecastEnabled;
     }
 
-    public function setForecastenabled(bool $forecastEnabled): self
+    public function setForecastEnabled(bool $forecastEnabled): self
     {
         $this->forecastEnabled = $forecastEnabled;
         return $this;
     }
 
-    public function getAutoadvancestages(): bool    {
+    public function getAutoAdvanceStages(): bool    {
         return $this->autoAdvanceStages;
     }
 
-    public function setAutoadvancestages(bool $autoAdvanceStages): self
+    public function setAutoAdvanceStages(bool $autoAdvanceStages): self
     {
         $this->autoAdvanceStages = $autoAdvanceStages;
         return $this;
     }
 
-    public function getRottendealthreshold(): int    {
+    public function getRottenDealThreshold(): int    {
         return $this->rottenDealThreshold;
     }
 
-    public function setRottendealthreshold(int $rottenDealThreshold): self
+    public function setRottenDealThreshold(int $rottenDealThreshold): self
     {
         $this->rottenDealThreshold = $rottenDealThreshold;
         return $this;
@@ -250,71 +250,71 @@ abstract class PipelineInputDtoGenerated
         return $this;
     }
 
-    public function getAvgdealsize(): ?string    {
+    public function getAvgDealSize(): ?string    {
         return $this->avgDealSize;
     }
 
-    public function setAvgdealsize(?string $avgDealSize): self
+    public function setAvgDealSize(?string $avgDealSize): self
     {
         $this->avgDealSize = $avgDealSize;
         return $this;
     }
 
-    public function getAvgcycletime(): ?int    {
+    public function getAvgCycleTime(): ?int    {
         return $this->avgCycleTime;
     }
 
-    public function setAvgcycletime(?int $avgCycleTime): self
+    public function setAvgCycleTime(?int $avgCycleTime): self
     {
         $this->avgCycleTime = $avgCycleTime;
         return $this;
     }
 
-    public function getWinrate(): ?string    {
+    public function getWinRate(): ?string    {
         return $this->winRate;
     }
 
-    public function setWinrate(?string $winRate): self
+    public function setWinRate(?string $winRate): self
     {
         $this->winRate = $winRate;
         return $this;
     }
 
-    public function getConversionrate(): ?string    {
+    public function getConversionRate(): ?string    {
         return $this->conversionRate;
     }
 
-    public function setConversionrate(?string $conversionRate): self
+    public function setConversionRate(?string $conversionRate): self
     {
         $this->conversionRate = $conversionRate;
         return $this;
     }
 
-    public function getTotaldealscount(): int    {
+    public function getTotalDealsCount(): int    {
         return $this->totalDealsCount;
     }
 
-    public function setTotaldealscount(int $totalDealsCount): self
+    public function setTotalDealsCount(int $totalDealsCount): self
     {
         $this->totalDealsCount = $totalDealsCount;
         return $this;
     }
 
-    public function getActivedealscount(): int    {
+    public function getActiveDealsCount(): int    {
         return $this->activeDealsCount;
     }
 
-    public function setActivedealscount(int $activeDealsCount): self
+    public function setActiveDealsCount(int $activeDealsCount): self
     {
         $this->activeDealsCount = $activeDealsCount;
         return $this;
     }
 
-    public function getTotalpipelinevalue(): string    {
+    public function getTotalPipelineValue(): string    {
         return $this->totalPipelineValue;
     }
 
-    public function setTotalpipelinevalue(string $totalPipelineValue): self
+    public function setTotalPipelineValue(string $totalPipelineValue): self
     {
         $this->totalPipelineValue = $totalPipelineValue;
         return $this;
@@ -330,11 +330,11 @@ abstract class PipelineInputDtoGenerated
         return $this;
     }
 
-    public function getArchivedat(): ?\DateTimeImmutable    {
+    public function getArchivedAt(): ?\DateTimeImmutable    {
         return $this->archivedAt;
     }
 
-    public function setArchivedat(?\DateTimeImmutable $archivedAt): self
+    public function setArchivedAt(?\DateTimeImmutable $archivedAt): self
     {
         $this->archivedAt = $archivedAt;
         return $this;

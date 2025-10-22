@@ -388,9 +388,9 @@ class GeneratorEntity
      *
      * Uses Utils::camelToSnakeCase() to convert entity name.
      * ONLY adds _table suffix if the snake_case name is a reserved SQL keyword.
-     * This matches the logic in ReservedKeywordExtension for consistency.
+     * This matches the logic in GenmaxExtension for consistency.
      *
-     * Note: For reserved keyword checking, use ReservedKeywordExtension::isReservedKeyword()
+     * Note: For reserved keyword checking, use GenmaxExtension::isReservedKeyword()
      * This method provides a simplified version for basic usage.
      */
     public function getTableName(): string
@@ -398,7 +398,7 @@ class GeneratorEntity
         // Reuse Utils function instead of reinventing wheel
         return \App\Service\Utils::camelToSnakeCase($this->entityName, false);
 
-        // Note: Suffix logic is in ReservedKeywordExtension for template generation
+        // Note: Suffix logic is in GenmaxExtension for template generation
         // This simplified version returns just snake_case for database queries
     }
 

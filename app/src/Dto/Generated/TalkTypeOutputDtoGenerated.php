@@ -86,11 +86,11 @@ abstract class TalkTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getIconurl(): ?string    {
+    public function getIconUrl(): ?string    {
         return $this->iconUrl;
     }
 
-    public function setIconurl(?string $iconUrl): self
+    public function setIconUrl(?string $iconUrl): self
     {
         $this->iconUrl = $iconUrl;
         return $this;

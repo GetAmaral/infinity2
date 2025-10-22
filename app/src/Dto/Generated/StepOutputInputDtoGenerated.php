@@ -45,7 +45,7 @@ abstract class StepOutputInputDtoGenerated
 
     /**
      * connection reference
-     * Must be: IRI string (e.g., "/api/stepconnections/uuid")
+     * Must be: IRI string (e.g., "/api/step_connectia/uuid")
      */
     #[Groups(['step_output:write'])]
     public ?string $connection = null;

@@ -23,7 +23,7 @@ abstract class TreeFlowInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['treeflow:write'])]
@@ -104,31 +104,31 @@ abstract class TreeFlowInputDtoGenerated
         return $this;
     }
 
-    public function getCanvasviewstate(): ?array    {
+    public function getCanvasViewState(): ?array    {
         return $this->canvasViewState;
     }
 
-    public function setCanvasviewstate(?array $canvasViewState): self
+    public function setCanvasViewState(?array $canvasViewState): self
     {
         $this->canvasViewState = $canvasViewState;
         return $this;
     }
 
-    public function getJsonstructure(): ?array    {
+    public function getJsonStructure(): ?array    {
         return $this->jsonStructure;
     }
 
-    public function setJsonstructure(?array $jsonStructure): self
+    public function setJsonStructure(?array $jsonStructure): self
     {
         $this->jsonStructure = $jsonStructure;
         return $this;
     }
 
-    public function getTalkflow(): ?array    {
+    public function getTalkFlow(): ?array    {
         return $this->talkFlow;
     }
 
-    public function setTalkflow(?array $talkFlow): self
+    public function setTalkFlow(?array $talkFlow): self
     {
         $this->talkFlow = $talkFlow;
         return $this;

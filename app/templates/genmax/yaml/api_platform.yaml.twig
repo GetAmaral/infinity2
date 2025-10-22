@@ -130,7 +130,7 @@ resources:
 {% elseif property.getPropertyType() == 'json' %}
         example: "{\"key\": \"value\"}"
 {% elseif property.getRelationshipType() %}
-        example: "/api/{{ getClassName(property.getTargetEntity())|lower }}s/01234567-89ab-cdef-0123-456789abcdef"
+        example: "/api/{{ toApiResourceName(property.getTargetEntity()) }}/01234567-89ab-cdef-0123-456789abcdef"
 {% endif %}
 {% if property.isSubresource() and property.getSubresourcePath() %}
         # Subresource configuration

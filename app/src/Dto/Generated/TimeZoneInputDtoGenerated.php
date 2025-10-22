@@ -38,21 +38,21 @@ abstract class TimeZoneInputDtoGenerated
         return $this;
     }
 
-    public function getOffsetminutes(): ?int    {
+    public function getOffsetMinutes(): ?int    {
         return $this->offsetMinutes;
     }
 
-    public function setOffsetminutes(?int $offsetMinutes): self
+    public function setOffsetMinutes(?int $offsetMinutes): self
     {
         $this->offsetMinutes = $offsetMinutes;
         return $this;
     }
 
-    public function getWorkinghours(): ?string    {
+    public function getWorkingHours(): ?string    {
         return $this->workingHours;
     }
 
-    public function setWorkinghours(?string $workingHours): self
+    public function setWorkingHours(?string $workingHours): self
     {
         $this->workingHours = $workingHours;
         return $this;

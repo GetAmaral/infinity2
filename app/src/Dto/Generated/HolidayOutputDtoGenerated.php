@@ -131,11 +131,11 @@ abstract class HolidayOutputDtoGenerated
         return $this;
     }
 
-    public function getBlocksscheduling(): ?bool    {
+    public function getBlocksScheduling(): ?bool    {
         return $this->blocksScheduling;
     }
 
-    public function setBlocksscheduling(?bool $blocksScheduling): self
+    public function setBlocksScheduling(?bool $blocksScheduling): self
     {
         $this->blocksScheduling = $blocksScheduling;
         return $this;
@@ -211,51 +211,51 @@ abstract class HolidayOutputDtoGenerated
         return $this;
     }
 
-    public function getHolidaytype(): ?string    {
+    public function getHolidayType(): ?string    {
         return $this->holidayType;
     }
 
-    public function setHolidaytype(?string $holidayType): self
+    public function setHolidayType(?string $holidayType): self
     {
         $this->holidayType = $holidayType;
         return $this;
     }
 
-    public function getOriginaldate(): ?\DateTimeImmutable    {
+    public function getOriginalDate(): ?\DateTimeImmutable    {
         return $this->originalDate;
     }
 
-    public function setOriginaldate(?\DateTimeImmutable $originalDate): self
+    public function setOriginalDate(?\DateTimeImmutable $originalDate): self
     {
         $this->originalDate = $originalDate;
         return $this;
     }
 
-    public function getAffectssla(): bool    {
+    public function getAffectsSLA(): bool    {
         return $this->affectsSLA;
     }
 
-    public function setAffectssla(bool $affectsSLA): self
+    public function setAffectsSLA(bool $affectsSLA): self
     {
         $this->affectsSLA = $affectsSLA;
         return $this;
     }
 
-    public function getSentat(): \DateTimeImmutable    {
+    public function getSentAt(): \DateTimeImmutable    {
         return $this->sentAt;
     }
 
-    public function setSentat(\DateTimeImmutable $sentAt): self
+    public function setSentAt(\DateTimeImmutable $sentAt): self
     {
         $this->sentAt = $sentAt;
         return $this;
     }
 
-    public function getWorkingday(): bool    {
+    public function getWorkingDay(): bool    {
         return $this->workingDay;
     }
 
-    public function setWorkingday(bool $workingDay): self
+    public function setWorkingDay(bool $workingDay): self
     {
         $this->workingDay = $workingDay;
         return $this;
@@ -271,21 +271,21 @@ abstract class HolidayOutputDtoGenerated
         return $this;
     }
 
-    public function getStarttime(): ?string    {
+    public function getStartTime(): ?string    {
         return $this->startTime;
     }
 
-    public function setStarttime(?string $startTime): self
+    public function setStartTime(?string $startTime): self
     {
         $this->startTime = $startTime;
         return $this;
     }
 
-    public function getEndtime(): ?string    {
+    public function getEndTime(): ?string    {
         return $this->endTime;
     }
 
-    public function setEndtime(?string $endTime): self
+    public function setEndTime(?string $endTime): self
     {
         $this->endTime = $endTime;
         return $this;

@@ -46,7 +46,7 @@ resources:
     properties:
       organization:
         description: "Organization"
-        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
+        example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"
@@ -87,7 +87,7 @@ resources:
       calendarExternalLinks:
         writable: false
         description: "CalendarExternalLinks"
-        example: "/api/calendarexternallinks/01234567-89ab-cdef-0123-456789abcdef"
+        example: "/api/calendar_external_links/01234567-89ab-cdef-0123-456789abcdef"
       grantedRoles:
         writable: false
         description: "Granted Roles"
@@ -95,7 +95,7 @@ resources:
       resourceBookings:
         writable: false
         description: "EventResourceBookings"
-        example: "/api/eventresourcebookings/01234567-89ab-cdef-0123-456789abcdef"
+        example: "/api/event_resource_bookings/01234567-89ab-cdef-0123-456789abcdef"
       emailVerifiedAt:
         description: "EmailVerifiedAt (date and time)"
         example: "2025-01-15T10:30:00Z"

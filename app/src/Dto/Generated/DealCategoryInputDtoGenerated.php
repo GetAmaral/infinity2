@@ -23,7 +23,7 @@ abstract class DealCategoryInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['dealcategory:write'])]
@@ -49,7 +49,7 @@ abstract class DealCategoryInputDtoGenerated
 
     /**
      * parentCategory reference
-     * Must be: IRI string (e.g., "/api/dealcategorys/uuid")
+     * Must be: IRI string (e.g., "/api/deal_ries/uuid")
      */
     #[Groups(['dealcategory:write'])]
     public ?string $parentCategory = null;
@@ -123,21 +123,21 @@ abstract class DealCategoryInputDtoGenerated
         return $this;
     }
 
-    public function getDisplayorder(): ?int    {
+    public function getDisplayOrder(): ?int    {
         return $this->displayOrder;
     }
 
-    public function setDisplayorder(?int $displayOrder): self
+    public function setDisplayOrder(?int $displayOrder): self
     {
         $this->displayOrder = $displayOrder;
         return $this;
     }
 
-    public function getParentcategory(): ?string    {
+    public function getParentCategory(): ?string    {
         return $this->parentCategory;
     }
 
-    public function setParentcategory(?string $parentCategory): self
+    public function setParentCategory(?string $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
         return $this;

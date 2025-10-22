@@ -81,21 +81,21 @@ abstract class TaskTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getTaskfunction(): ?int    {
+    public function getTaskFunction(): ?int    {
         return $this->taskFunction;
     }
 
-    public function setTaskfunction(?int $taskFunction): self
+    public function setTaskFunction(?int $taskFunction): self
     {
         $this->taskFunction = $taskFunction;
         return $this;
     }
 
-    public function getTasktemplates(): array    {
+    public function getTaskTemplates(): array    {
         return $this->taskTemplates;
     }
 
-    public function setTasktemplates(array $taskTemplates): self
+    public function setTaskTemplates(array $taskTemplates): self
     {
         $this->taskTemplates = $taskTemplates;
         return $this;

@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\CourseLecture;
 use App\Dto\CourseLectureInputDto;
+use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -35,6 +36,25 @@ class CourseLectureProcessor implements ProcessorInterface
         #[Autowire(service: 'App\MultiTenant\TenantEntityProcessor')]
         private readonly ProcessorInterface $persistProcessor
     ) {}
+
+    /**
+     * Normalize property name for matching (removes underscores, lowercase)
+     * Uses centralized Utils methods instead of manual string manipulation
+     */
+    private function normalizePropertyName(string $property): string
+    {
+        // Convert to camelCase (handles snake_case, etc.) then lowercase
+        return strtolower(Utils::toCamelCase($property));
+    }
+
+    /**
+     * Extract property name from method name (e.g., 'addItem' -> 'item')
+     */
+    private function extractPropertyFromMethod(string $methodName, string $prefix): string
+    {
+        // Remove prefix (e.g., 'add', 'set') and convert to lowercase
+        return strtolower(substr($methodName, strlen($prefix)));
+    }
 
     /**
      * @param CourseLectureInputDto $data
@@ -75,39 +95,39 @@ class CourseLectureProcessor implements ProcessorInterface
         }
         // videoFileName
         if (!$isPatch || array_key_exists('videoFileName', $requestData)) {
-            $entity->setVideofilename($data->videoFileName);
+            $entity->setVideoFileName($data->videoFileName);
         }
         // videoPath
         if (!$isPatch || array_key_exists('videoPath', $requestData)) {
-            $entity->setVideopath($data->videoPath);
+            $entity->setVideoPath($data->videoPath);
         }
         // processingStatus
         if (!$isPatch || array_key_exists('processingStatus', $requestData)) {
-            $entity->setProcessingstatus($data->processingStatus);
+            $entity->setProcessingStatus($data->processingStatus);
         }
         // processingStep
         if (!$isPatch || array_key_exists('processingStep', $requestData)) {
-            $entity->setProcessingstep($data->processingStep);
+            $entity->setProcessingStep($data->processingStep);
         }
         // processingPercentage
         if (!$isPatch || array_key_exists('processingPercentage', $requestData)) {
-            $entity->setProcessingpercentage($data->processingPercentage);
+            $entity->setProcessingPercentage($data->processingPercentage);
         }
         // processingError
         if (!$isPatch || array_key_exists('processingError', $requestData)) {
-            $entity->setProcessingerror($data->processingError);
+            $entity->setProcessingError($data->processingError);
         }
         // processedAt
         if (!$isPatch || array_key_exists('processedAt', $requestData)) {
-            $entity->setProcessedat($data->processedAt);
+            $entity->setProcessedAt($data->processedAt);
         }
         // viewOrder
         if (!$isPatch || array_key_exists('viewOrder', $requestData)) {
-            $entity->setVieworder($data->viewOrder);
+            $entity->setViewOrder($data->viewOrder);
         }
         // lengthSeconds
         if (!$isPatch || array_key_exists('lengthSeconds', $requestData)) {
-            $entity->setLengthseconds($data->lengthSeconds);
+            $entity->setLengthSeconds($data->lengthSeconds);
         }
         // active
         if (!$isPatch || array_key_exists('active', $requestData)) {
@@ -123,23 +143,23 @@ class CourseLectureProcessor implements ProcessorInterface
         }
         // publishedAt
         if (!$isPatch || array_key_exists('publishedAt', $requestData)) {
-            $entity->setPublishedat($data->publishedAt);
+            $entity->setPublishedAt($data->publishedAt);
         }
         // videoUrl
         if (!$isPatch || array_key_exists('videoUrl', $requestData)) {
-            $entity->setVideourl($data->videoUrl);
+            $entity->setVideoUrl($data->videoUrl);
         }
         // videoType
         if (!$isPatch || array_key_exists('videoType', $requestData)) {
-            $entity->setVideotype($data->videoType);
+            $entity->setVideoType($data->videoType);
         }
         // videoResolution
         if (!$isPatch || array_key_exists('videoResolution', $requestData)) {
-            $entity->setVideoresolution($data->videoResolution);
+            $entity->setVideoResolution($data->videoResolution);
         }
         // videoSizeBytes
         if (!$isPatch || array_key_exists('videoSizeBytes', $requestData)) {
-            $entity->setVideosizebytes($data->videoSizeBytes);
+            $entity->setVideoSizeBytes($data->videoSizeBytes);
         }
         // transcript
         if (!$isPatch || array_key_exists('transcript', $requestData)) {
@@ -147,11 +167,11 @@ class CourseLectureProcessor implements ProcessorInterface
         }
         // subtitleUrl
         if (!$isPatch || array_key_exists('subtitleUrl', $requestData)) {
-            $entity->setSubtitleurl($data->subtitleUrl);
+            $entity->setSubtitleUrl($data->subtitleUrl);
         }
         // subtitleLanguage
         if (!$isPatch || array_key_exists('subtitleLanguage', $requestData)) {
-            $entity->setSubtitlelanguage($data->subtitleLanguage);
+            $entity->setSubtitleLanguage($data->subtitleLanguage);
         }
         // attachments
         if (!$isPatch || array_key_exists('attachments', $requestData)) {
@@ -159,11 +179,11 @@ class CourseLectureProcessor implements ProcessorInterface
         }
         // externalLinks
         if (!$isPatch || array_key_exists('externalLinks', $requestData)) {
-            $entity->setExternallinks($data->externalLinks);
+            $entity->setExternalLinks($data->externalLinks);
         }
         // learningObjectives
         if (!$isPatch || array_key_exists('learningObjectives', $requestData)) {
-            $entity->setLearningobjectives($data->learningObjectives);
+            $entity->setLearningObjectives($data->learningObjectives);
         }
         // prerequisites
         if (!$isPatch || array_key_exists('prerequisites', $requestData)) {
@@ -171,15 +191,15 @@ class CourseLectureProcessor implements ProcessorInterface
         }
         // viewCount
         if (!$isPatch || array_key_exists('viewCount', $requestData)) {
-            $entity->setViewcount($data->viewCount);
+            $entity->setViewCount($data->viewCount);
         }
         // completionCount
         if (!$isPatch || array_key_exists('completionCount', $requestData)) {
-            $entity->setCompletioncount($data->completionCount);
+            $entity->setCompletionCount($data->completionCount);
         }
         // averageWatchPercentage
         if (!$isPatch || array_key_exists('averageWatchPercentage', $requestData)) {
-            $entity->setAveragewatchpercentage($data->averageWatchPercentage);
+            $entity->setAverageWatchPercentage($data->averageWatchPercentage);
         }
         // rating
         if (!$isPatch || array_key_exists('rating', $requestData)) {
@@ -187,15 +207,15 @@ class CourseLectureProcessor implements ProcessorInterface
         }
         // ratingCount
         if (!$isPatch || array_key_exists('ratingCount', $requestData)) {
-            $entity->setRatingcount($data->ratingCount);
+            $entity->setRatingCount($data->ratingCount);
         }
         // durationSeconds
         if (!$isPatch || array_key_exists('durationSeconds', $requestData)) {
-            $entity->setDurationseconds($data->durationSeconds);
+            $entity->setDurationSeconds($data->durationSeconds);
         }
         // difficultyLevel
         if (!$isPatch || array_key_exists('difficultyLevel', $requestData)) {
-            $entity->setDifficultylevel($data->difficultyLevel);
+            $entity->setDifficultyLevel($data->difficultyLevel);
         }
         // tags
         if (!$isPatch || array_key_exists('tags', $requestData)) {
@@ -203,11 +223,11 @@ class CourseLectureProcessor implements ProcessorInterface
         }
         // skillsCovered
         if (!$isPatch || array_key_exists('skillsCovered', $requestData)) {
-            $entity->setSkillscovered($data->skillsCovered);
+            $entity->setSkillsCovered($data->skillsCovered);
         }
         // pointsValue
         if (!$isPatch || array_key_exists('pointsValue', $requestData)) {
-            $entity->setPointsvalue($data->pointsValue);
+            $entity->setPointsValue($data->pointsValue);
         }
         // badges
         if (!$isPatch || array_key_exists('badges', $requestData)) {
@@ -219,13 +239,13 @@ class CourseLectureProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('courseModule', $requestData)) {
             if ($data->courseModule !== null) {
                 if (is_string($data->courseModule)) {
-                    // IRI format: "/api/coursemodules/{id}"
+                    // IRI format: "/api/course_modules/{id}"
                     $courseModuleId = $this->extractIdFromIri($data->courseModule);
                     $courseModule = $this->entityManager->getRepository(CourseModule::class)->find($courseModuleId);
                     if (!$courseModule) {
                         throw new BadRequestHttpException('CourseModule not found: ' . $courseModuleId);
                     }
-                    $entity->setCoursemodule($courseModule);
+                    $entity->setCourseModule($courseModule);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested courseModule creation not supported. Use IRI format.');
@@ -240,7 +260,7 @@ class CourseLectureProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organization', $requestData)) {
             if ($data->organization !== null) {
                 if (is_string($data->organization)) {
-                    // IRI format: "/api/organizations/{id}"
+                    // IRI format: "/api/organizatia/{id}"
                     $organizationId = $this->extractIdFromIri($data->organization);
                     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
                     if (!$organization) {
@@ -275,6 +295,7 @@ class CourseLectureProcessor implements ProcessorInterface
 
     /**
      * Map array data to entity properties using setters
+     * Handles nested collections recursively
      *
      * @param array $data Associative array of property => value
      * @param object $entity Target entity instance
@@ -287,26 +308,111 @@ class CourseLectureProcessor implements ProcessorInterface
                 continue;
             }
 
-            // Convert snake_case to camelCase for setter
-            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+            // Handle nested collections using reflection to find adder methods
+            if (is_array($value) && !empty($value) && isset($value[0]) && is_array($value[0])) {
+                // Find adder method using reflection - scan all methods starting with 'add'
+                $reflectionClass = new \ReflectionClass($entity);
+                foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                    if (!str_starts_with($method->getName(), 'add')) {
+                        continue;
+                    }
+
+                    // Check if this might be the right adder based on property name similarity
+                    $normalizedProperty = $this->normalizePropertyName($property);
+                    $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'add');
+
+                    // Try to match: property name should be similar to method's entity name
+                    // e.g., 'items' matches 'addItem', 'user_items' matches 'addUserItem'
+                    if (!str_contains($normalizedProperty, $extractedFromMethod) &&
+                        !str_contains($extractedFromMethod, $normalizedProperty)) {
+                        continue;
+                    }
+
+                    $parameters = $method->getParameters();
+                    if (count($parameters) > 0) {
+                        $paramType = $parameters[0]->getType();
+                        if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                            $className = $paramType->getName();
+                            if (class_exists($className)) {
+                                $addMethod = $method->getName();
+                                $setParentMethods = array_filter(
+                                    $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC),
+                                    fn($m) => str_starts_with($m->getName(), 'set')
+                                );
+
+                                foreach ($value as $itemData) {
+                                    $item = new $className();
+                                    $this->mapArrayToEntity($itemData, $item);
+
+                                    // Try to set parent relationship using reflection
+                                    $itemReflection = new \ReflectionClass($item);
+                                    foreach ($itemReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $itemMethod) {
+                                        if (str_starts_with($itemMethod->getName(), 'set')) {
+                                            $params = $itemMethod->getParameters();
+                                            if (count($params) > 0) {
+                                                $paramType = $params[0]->getType();
+                                                if ($paramType instanceof \ReflectionNamedType &&
+                                                    $paramType->getName() === get_class($entity)) {
+                                                    $item->{$itemMethod->getName()}($entity);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    $entity->$addMethod($item);
+                                    $this->entityManager->persist($item);
+                                }
+                                continue 2; // Skip to next property
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Find setter method using reflection - no string manipulation guessing
+            $reflectionClass = new \ReflectionClass($entity);
+            $setter = null;
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                if (!str_starts_with($method->getName(), 'set')) {
+                    continue;
+                }
+
+                // Check if method name matches property (case-insensitive, normalized matching)
+                $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'set');
+                $normalizedProperty = $this->normalizePropertyName($property);
+
+                if ($extractedFromMethod === $normalizedProperty) {
+                    $setter = $method->getName();
+                    break;
+                }
+            }
 
             if (method_exists($entity, $setter)) {
                 // Handle different value types
-                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value)) {
                     $entity->$setter($value);
-                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
-                    // Handle IRI references - resolve to actual entity
+                } elseif (is_array($value) && !empty($value)) {
+                    // Handle JSON arrays (like metadata, tags) - not entity collections
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/') && $setter) {
+                    // Handle IRI references - use reflection to determine expected type
                     try {
                         $refId = $this->extractIdFromIri($value);
-                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
-                        $parts = explode('/', trim($value, '/'));
-                        if (count($parts) >= 3) {
-                            $resourceName = $parts[1]; // e.g., "users"
-                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
-                            if (class_exists($className)) {
-                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
-                                if ($refEntity) {
-                                    $entity->$setter($refEntity);
+
+                        // Use reflection to get the expected parameter type for the setter
+                        $reflectionMethod = new \ReflectionMethod($entity, $setter);
+                        $parameters = $reflectionMethod->getParameters();
+
+                        if (count($parameters) > 0) {
+                            $paramType = $parameters[0]->getType();
+                            if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                                $className = $paramType->getName();
+                                if (class_exists($className)) {
+                                    $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                    if ($refEntity) {
+                                        $entity->$setter($refEntity);
+                                    }
                                 }
                             }
                         }

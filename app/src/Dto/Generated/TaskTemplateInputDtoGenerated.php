@@ -24,7 +24,7 @@ abstract class TaskTemplateInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['tasktemplate:write'])]
@@ -56,7 +56,7 @@ abstract class TaskTemplateInputDtoGenerated
 
     /**
      * pipelineStageTemplate reference
-     * Must be: IRI string (e.g., "/api/pipelinestagetemplates/uuid")
+     * Must be: IRI string (e.g., "/api/pipeline_stage_templates/uuid")
      */
     #[Groups(['tasktemplate:write'])]
     public ?string $pipelineStageTemplate = null;
@@ -67,7 +67,7 @@ abstract class TaskTemplateInputDtoGenerated
 
     /**
      * type reference
-     * Must be: IRI string (e.g., "/api/tasktypes/uuid")
+     * Must be: IRI string (e.g., "/api/task_types/uuid")
      */
     #[Groups(['tasktemplate:write'])]
     public ?string $type = null;
@@ -125,11 +125,11 @@ abstract class TaskTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getDurationminutes(): ?int    {
+    public function getDurationMinutes(): ?int    {
         return $this->durationMinutes;
     }
 
-    public function setDurationminutes(?int $durationMinutes): self
+    public function setDurationMinutes(?int $durationMinutes): self
     {
         $this->durationMinutes = $durationMinutes;
         return $this;
@@ -145,31 +145,31 @@ abstract class TaskTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getPeriodicityinterval(): ?float    {
+    public function getPeriodicityInterval(): ?float    {
         return $this->periodicityInterval;
     }
 
-    public function setPeriodicityinterval(?float $periodicityInterval): self
+    public function setPeriodicityInterval(?float $periodicityInterval): self
     {
         $this->periodicityInterval = $periodicityInterval;
         return $this;
     }
 
-    public function getPeriodicitytimeframe(): ?int    {
+    public function getPeriodicityTimeframe(): ?int    {
         return $this->periodicityTimeframe;
     }
 
-    public function setPeriodicitytimeframe(?int $periodicityTimeframe): self
+    public function setPeriodicityTimeframe(?int $periodicityTimeframe): self
     {
         $this->periodicityTimeframe = $periodicityTimeframe;
         return $this;
     }
 
-    public function getPipelinestagetemplate(): ?string    {
+    public function getPipelineStageTemplate(): ?string    {
         return $this->pipelineStageTemplate;
     }
 
-    public function setPipelinestagetemplate(?string $pipelineStageTemplate): self
+    public function setPipelineStageTemplate(?string $pipelineStageTemplate): self
     {
         $this->pipelineStageTemplate = $pipelineStageTemplate;
         return $this;

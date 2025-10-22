@@ -22,7 +22,7 @@ abstract class ProfileInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['profile:write'])]
@@ -67,11 +67,11 @@ abstract class ProfileInputDtoGenerated
         return $this;
     }
 
-    public function getGrantedroles(): ?string    {
+    public function getGrantedRoles(): ?string    {
         return $this->grantedRoles;
     }
 
-    public function setGrantedroles(?string $grantedRoles): self
+    public function setGrantedRoles(?string $grantedRoles): self
     {
         $this->grantedRoles = $grantedRoles;
         return $this;

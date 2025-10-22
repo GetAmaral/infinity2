@@ -131,11 +131,11 @@ abstract class AgentTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getDefaultprompt(): ?string    {
+    public function getDefaultPrompt(): ?string    {
         return $this->defaultPrompt;
     }
 
-    public function setDefaultprompt(?string $defaultPrompt): self
+    public function setDefaultPrompt(?string $defaultPrompt): self
     {
         $this->defaultPrompt = $defaultPrompt;
         return $this;
@@ -151,11 +151,11 @@ abstract class AgentTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getSortorder(): ?int    {
+    public function getSortOrder(): ?int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(?int $sortOrder): self
+    public function setSortOrder(?int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;

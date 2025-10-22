@@ -172,11 +172,11 @@ abstract class CityOutputDtoGenerated
         return $this;
     }
 
-    public function getIbgecode(): ?string    {
+    public function getIbgeCode(): ?string    {
         return $this->ibgeCode;
     }
 
-    public function setIbgecode(?string $ibgeCode): self
+    public function setIbgeCode(?string $ibgeCode): self
     {
         $this->ibgeCode = $ibgeCode;
         return $this;
@@ -192,21 +192,21 @@ abstract class CityOutputDtoGenerated
         return $this;
     }
 
-    public function getEventresources(): array    {
+    public function getEventResources(): array    {
         return $this->eventResources;
     }
 
-    public function setEventresources(array $eventResources): self
+    public function setEventResources(array $eventResources): self
     {
         $this->eventResources = $eventResources;
         return $this;
     }
 
-    public function getHolidaytemplates(): array    {
+    public function getHolidayTemplates(): array    {
         return $this->holidayTemplates;
     }
 
-    public function setHolidaytemplates(array $holidayTemplates): self
+    public function setHolidayTemplates(array $holidayTemplates): self
     {
         $this->holidayTemplates = $holidayTemplates;
         return $this;

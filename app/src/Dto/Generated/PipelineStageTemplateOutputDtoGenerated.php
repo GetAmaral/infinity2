@@ -151,21 +151,21 @@ abstract class PipelineStageTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getRottingdays(): ?int    {
+    public function getRottingDays(): ?int    {
         return $this->rottingDays;
     }
 
-    public function setRottingdays(?int $rottingDays): self
+    public function setRottingDays(?int $rottingDays): self
     {
         $this->rottingDays = $rottingDays;
         return $this;
     }
 
-    public function getPipelinetemplate(): string|PipelineTemplateOutputDto    {
+    public function getPipelineTemplate(): string|PipelineTemplateOutputDto    {
         return $this->pipelineTemplate;
     }
 
-    public function setPipelinetemplate(string|PipelineTemplateOutputDto $pipelineTemplate): self
+    public function setPipelineTemplate(string|PipelineTemplateOutputDto $pipelineTemplate): self
     {
         $this->pipelineTemplate = $pipelineTemplate;
         return $this;
@@ -191,31 +191,31 @@ abstract class PipelineStageTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getStagetype(): string    {
+    public function getStageType(): string    {
         return $this->stageType;
     }
 
-    public function setStagetype(string $stageType): self
+    public function setStageType(string $stageType): self
     {
         $this->stageType = $stageType;
         return $this;
     }
 
-    public function getAutomationrules(): ?array    {
+    public function getAutomationRules(): ?array    {
         return $this->automationRules;
     }
 
-    public function setAutomationrules(?array $automationRules): self
+    public function setAutomationRules(?array $automationRules): self
     {
         $this->automationRules = $automationRules;
         return $this;
     }
 
-    public function getRequiredfields(): ?array    {
+    public function getRequiredFields(): ?array    {
         return $this->requiredFields;
     }
 
-    public function setRequiredfields(?array $requiredFields): self
+    public function setRequiredFields(?array $requiredFields): self
     {
         $this->requiredFields = $requiredFields;
         return $this;

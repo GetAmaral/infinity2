@@ -23,7 +23,7 @@ abstract class UserInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['user:write'])]
@@ -397,21 +397,21 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getAvatarurl(): ?string    {
+    public function getAvatarUrl(): ?string    {
         return $this->avatarUrl;
     }
 
-    public function setAvatarurl(?string $avatarUrl): self
+    public function setAvatarUrl(?string $avatarUrl): self
     {
         $this->avatarUrl = $avatarUrl;
         return $this;
     }
 
-    public function getBirthdate(): ?\DateTimeImmutable    {
+    public function getBirthDate(): ?\DateTimeImmutable    {
         return $this->birthDate;
     }
 
-    public function setBirthdate(?\DateTimeImmutable $birthDate): self
+    public function setBirthDate(?\DateTimeImmutable $birthDate): self
     {
         $this->birthDate = $birthDate;
         return $this;
@@ -437,11 +437,11 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getCelphone(): ?string    {
+    public function getCelPhone(): ?string    {
         return $this->celPhone;
     }
 
-    public function setCelphone(?string $celPhone): self
+    public function setCelPhone(?string $celPhone): self
     {
         $this->celPhone = $celPhone;
         return $this;
@@ -477,61 +477,61 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getOwneddeals(): ?string    {
+    public function getOwnedDeals(): ?string    {
         return $this->ownedDeals;
     }
 
-    public function setOwneddeals(?string $ownedDeals): self
+    public function setOwnedDeals(?string $ownedDeals): self
     {
         $this->ownedDeals = $ownedDeals;
         return $this;
     }
 
-    public function getCalendarexternallinks(): ?string    {
+    public function getCalendarExternalLinks(): ?string    {
         return $this->calendarExternalLinks;
     }
 
-    public function setCalendarexternallinks(?string $calendarExternalLinks): self
+    public function setCalendarExternalLinks(?string $calendarExternalLinks): self
     {
         $this->calendarExternalLinks = $calendarExternalLinks;
         return $this;
     }
 
-    public function getGrantedroles(): string    {
+    public function getGrantedRoles(): string    {
         return $this->grantedRoles;
     }
 
-    public function setGrantedroles(string $grantedRoles): self
+    public function setGrantedRoles(string $grantedRoles): self
     {
         $this->grantedRoles = $grantedRoles;
         return $this;
     }
 
-    public function getResourcebookings(): ?string    {
+    public function getResourceBookings(): ?string    {
         return $this->resourceBookings;
     }
 
-    public function setResourcebookings(?string $resourceBookings): self
+    public function setResourceBookings(?string $resourceBookings): self
     {
         $this->resourceBookings = $resourceBookings;
         return $this;
     }
 
-    public function getEmailverifiedat(): ?\DateTimeImmutable    {
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
         return $this->emailVerifiedAt;
     }
 
-    public function setEmailverifiedat(?\DateTimeImmutable $emailVerifiedAt): self
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
     {
         $this->emailVerifiedAt = $emailVerifiedAt;
         return $this;
     }
 
-    public function getEventattendances(): ?string    {
+    public function getEventAttendances(): ?string    {
         return $this->eventAttendances;
     }
 
-    public function setEventattendances(?string $eventAttendances): self
+    public function setEventAttendances(?string $eventAttendances): self
     {
         $this->eventAttendances = $eventAttendances;
         return $this;
@@ -547,71 +547,71 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getTermssigned(): bool    {
+    public function getTermsSigned(): bool    {
         return $this->termsSigned;
     }
 
-    public function setTermssigned(bool $termsSigned): self
+    public function setTermsSigned(bool $termsSigned): self
     {
         $this->termsSigned = $termsSigned;
         return $this;
     }
 
-    public function getTermssignedat(): ?\DateTimeImmutable    {
+    public function getTermsSignedAt(): ?\DateTimeImmutable    {
         return $this->termsSignedAt;
     }
 
-    public function setTermssignedat(?\DateTimeImmutable $termsSignedAt): self
+    public function setTermsSignedAt(?\DateTimeImmutable $termsSignedAt): self
     {
         $this->termsSignedAt = $termsSignedAt;
         return $this;
     }
 
-    public function getVerificationtoken(): ?string    {
+    public function getVerificationToken(): ?string    {
         return $this->verificationToken;
     }
 
-    public function setVerificationtoken(?string $verificationToken): self
+    public function setVerificationToken(?string $verificationToken): self
     {
         $this->verificationToken = $verificationToken;
         return $this;
     }
 
-    public function getFailedloginattempts(): int    {
+    public function getFailedLoginAttempts(): int    {
         return $this->failedLoginAttempts;
     }
 
-    public function setFailedloginattempts(int $failedLoginAttempts): self
+    public function setFailedLoginAttempts(int $failedLoginAttempts): self
     {
         $this->failedLoginAttempts = $failedLoginAttempts;
         return $this;
     }
 
-    public function getApitoken(): ?string    {
+    public function getApiToken(): ?string    {
         return $this->apiToken;
     }
 
-    public function setApitoken(?string $apiToken): self
+    public function setApiToken(?string $apiToken): self
     {
         $this->apiToken = $apiToken;
         return $this;
     }
 
-    public function getApitokenexpiresat(): ?\DateTimeImmutable    {
+    public function getApiTokenExpiresAt(): ?\DateTimeImmutable    {
         return $this->apiTokenExpiresAt;
     }
 
-    public function setApitokenexpiresat(?\DateTimeImmutable $apiTokenExpiresAt): self
+    public function setApiTokenExpiresAt(?\DateTimeImmutable $apiTokenExpiresAt): self
     {
         $this->apiTokenExpiresAt = $apiTokenExpiresAt;
         return $this;
     }
 
-    public function getOpenaiapikey(): ?string    {
+    public function getOpenAiApiKey(): ?string    {
         return $this->openAiApiKey;
     }
 
-    public function setOpenaiapikey(?string $openAiApiKey): self
+    public function setOpenAiApiKey(?string $openAiApiKey): self
     {
         $this->openAiApiKey = $openAiApiKey;
         return $this;
@@ -627,201 +627,201 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getLastloginat(): ?\DateTimeImmutable    {
+    public function getLastLoginAt(): ?\DateTimeImmutable    {
         return $this->lastLoginAt;
     }
 
-    public function setLastloginat(?\DateTimeImmutable $lastLoginAt): self
+    public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
     {
         $this->lastLoginAt = $lastLoginAt;
         return $this;
     }
 
-    public function getLockeduntil(): ?\DateTimeImmutable    {
+    public function getLockedUntil(): ?\DateTimeImmutable    {
         return $this->lockedUntil;
     }
 
-    public function setLockeduntil(?\DateTimeImmutable $lockedUntil): self
+    public function setLockedUntil(?\DateTimeImmutable $lockedUntil): self
     {
         $this->lockedUntil = $lockedUntil;
         return $this;
     }
 
-    public function getUisettings(): ?array    {
+    public function getUiSettings(): ?array    {
         return $this->uiSettings;
     }
 
-    public function setUisettings(?array $uiSettings): self
+    public function setUiSettings(?array $uiSettings): self
     {
         $this->uiSettings = $uiSettings;
         return $this;
     }
 
-    public function getListpreferences(): ?array    {
+    public function getListPreferences(): ?array    {
         return $this->listPreferences;
     }
 
-    public function setListpreferences(?array $listPreferences): self
+    public function setListPreferences(?array $listPreferences): self
     {
         $this->listPreferences = $listPreferences;
         return $this;
     }
 
-    public function getTwofactorenabled(): bool    {
+    public function getTwoFactorEnabled(): bool    {
         return $this->twoFactorEnabled;
     }
 
-    public function setTwofactorenabled(bool $twoFactorEnabled): self
+    public function setTwoFactorEnabled(bool $twoFactorEnabled): self
     {
         $this->twoFactorEnabled = $twoFactorEnabled;
         return $this;
     }
 
-    public function getLastpasswordchange(): ?\DateTimeImmutable    {
+    public function getLastPasswordChange(): ?\DateTimeImmutable    {
         return $this->lastPasswordChange;
     }
 
-    public function setLastpasswordchange(?\DateTimeImmutable $lastPasswordChange): self
+    public function setLastPasswordChange(?\DateTimeImmutable $lastPasswordChange): self
     {
         $this->lastPasswordChange = $lastPasswordChange;
         return $this;
     }
 
-    public function getTwofactorsecret(): ?string    {
+    public function getTwoFactorSecret(): ?string    {
         return $this->twoFactorSecret;
     }
 
-    public function setTwofactorsecret(?string $twoFactorSecret): self
+    public function setTwoFactorSecret(?string $twoFactorSecret): self
     {
         $this->twoFactorSecret = $twoFactorSecret;
         return $this;
     }
 
-    public function getTwofactorbackupcodes(): ?array    {
+    public function getTwoFactorBackupCodes(): ?array    {
         return $this->twoFactorBackupCodes;
     }
 
-    public function setTwofactorbackupcodes(?array $twoFactorBackupCodes): self
+    public function setTwoFactorBackupCodes(?array $twoFactorBackupCodes): self
     {
         $this->twoFactorBackupCodes = $twoFactorBackupCodes;
         return $this;
     }
 
-    public function getPasswordresettoken(): ?string    {
+    public function getPasswordResetToken(): ?string    {
         return $this->passwordResetToken;
     }
 
-    public function setPasswordresettoken(?string $passwordResetToken): self
+    public function setPasswordResetToken(?string $passwordResetToken): self
     {
         $this->passwordResetToken = $passwordResetToken;
         return $this;
     }
 
-    public function getPasswordresetexpiry(): ?\DateTimeImmutable    {
+    public function getPasswordResetExpiry(): ?\DateTimeImmutable    {
         return $this->passwordResetExpiry;
     }
 
-    public function setPasswordresetexpiry(?\DateTimeImmutable $passwordResetExpiry): self
+    public function setPasswordResetExpiry(?\DateTimeImmutable $passwordResetExpiry): self
     {
         $this->passwordResetExpiry = $passwordResetExpiry;
         return $this;
     }
 
-    public function getSessiontoken(): ?string    {
+    public function getSessionToken(): ?string    {
         return $this->sessionToken;
     }
 
-    public function setSessiontoken(?string $sessionToken): self
+    public function setSessionToken(?string $sessionToken): self
     {
         $this->sessionToken = $sessionToken;
         return $this;
     }
 
-    public function getLastpasswordchangeat(): ?\DateTimeImmutable    {
+    public function getLastPasswordChangeAt(): ?\DateTimeImmutable    {
         return $this->lastPasswordChangeAt;
     }
 
-    public function setLastpasswordchangeat(?\DateTimeImmutable $lastPasswordChangeAt): self
+    public function setLastPasswordChangeAt(?\DateTimeImmutable $lastPasswordChangeAt): self
     {
         $this->lastPasswordChangeAt = $lastPasswordChangeAt;
         return $this;
     }
 
-    public function getPasswordexpiresat(): ?\DateTimeImmutable    {
+    public function getPasswordExpiresAt(): ?\DateTimeImmutable    {
         return $this->passwordExpiresAt;
     }
 
-    public function setPasswordexpiresat(?\DateTimeImmutable $passwordExpiresAt): self
+    public function setPasswordExpiresAt(?\DateTimeImmutable $passwordExpiresAt): self
     {
         $this->passwordExpiresAt = $passwordExpiresAt;
         return $this;
     }
 
-    public function getMustchangepassword(): bool    {
+    public function getMustChangePassword(): bool    {
         return $this->mustChangePassword;
     }
 
-    public function setMustchangepassword(bool $mustChangePassword): self
+    public function setMustChangePassword(bool $mustChangePassword): self
     {
         $this->mustChangePassword = $mustChangePassword;
         return $this;
     }
 
-    public function getPasskeyenabled(): bool    {
+    public function getPasskeyEnabled(): bool    {
         return $this->passkeyEnabled;
     }
 
-    public function setPasskeyenabled(bool $passkeyEnabled): self
+    public function setPasskeyEnabled(bool $passkeyEnabled): self
     {
         $this->passkeyEnabled = $passkeyEnabled;
         return $this;
     }
 
-    public function getManagedcampaigns(): ?string    {
+    public function getManagedCampaigns(): ?string    {
         return $this->managedCampaigns;
     }
 
-    public function setManagedcampaigns(?string $managedCampaigns): self
+    public function setManagedCampaigns(?string $managedCampaigns): self
     {
         $this->managedCampaigns = $managedCampaigns;
         return $this;
     }
 
-    public function getPasskeycredentials(): ?array    {
+    public function getPasskeyCredentials(): ?array    {
         return $this->passkeyCredentials;
     }
 
-    public function setPasskeycredentials(?array $passkeyCredentials): self
+    public function setPasskeyCredentials(?array $passkeyCredentials): self
     {
         $this->passkeyCredentials = $passkeyCredentials;
         return $this;
     }
 
-    public function getOwnedcampaigns(): ?string    {
+    public function getOwnedCampaigns(): ?string    {
         return $this->ownedCampaigns;
     }
 
-    public function setOwnedcampaigns(?string $ownedCampaigns): self
+    public function setOwnedCampaigns(?string $ownedCampaigns): self
     {
         $this->ownedCampaigns = $ownedCampaigns;
         return $this;
     }
 
-    public function getManagedcompanies(): ?string    {
+    public function getManagedCompanies(): ?string    {
         return $this->managedCompanies;
     }
 
-    public function setManagedcompanies(?string $managedCompanies): self
+    public function setManagedCompanies(?string $managedCompanies): self
     {
         $this->managedCompanies = $managedCompanies;
         return $this;
     }
 
-    public function getManagedcontacts(): ?string    {
+    public function getManagedContacts(): ?string    {
         return $this->managedContacts;
     }
 
-    public function setManagedcontacts(?string $managedContacts): self
+    public function setManagedContacts(?string $managedContacts): self
     {
         $this->managedContacts = $managedContacts;
         return $this;
@@ -837,11 +837,11 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getManageddeals(): ?string    {
+    public function getManagedDeals(): ?string    {
         return $this->managedDeals;
     }
 
-    public function setManageddeals(?string $managedDeals): self
+    public function setManagedDeals(?string $managedDeals): self
     {
         $this->managedDeals = $managedDeals;
         return $this;
@@ -857,21 +857,21 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getMobilephone(): ?string    {
+    public function getMobilePhone(): ?string    {
         return $this->mobilePhone;
     }
 
-    public function setMobilephone(?string $mobilePhone): self
+    public function setMobilePhone(?string $mobilePhone): self
     {
         $this->mobilePhone = $mobilePhone;
         return $this;
     }
 
-    public function getJobtitle(): ?string    {
+    public function getJobTitle(): ?string    {
         return $this->jobTitle;
     }
 
-    public function setJobtitle(?string $jobTitle): self
+    public function setJobTitle(?string $jobTitle): self
     {
         $this->jobTitle = $jobTitle;
         return $this;
@@ -907,91 +907,91 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getPreferredlanguage(): ?string    {
+    public function getPreferredLanguage(): ?string    {
         return $this->preferredLanguage;
     }
 
-    public function setPreferredlanguage(?string $preferredLanguage): self
+    public function setPreferredLanguage(?string $preferredLanguage): self
     {
         $this->preferredLanguage = $preferredLanguage;
         return $this;
     }
 
-    public function getEmailsignature(): ?string    {
+    public function getEmailSignature(): ?string    {
         return $this->emailSignature;
     }
 
-    public function setEmailsignature(?string $emailSignature): self
+    public function setEmailSignature(?string $emailSignature): self
     {
         $this->emailSignature = $emailSignature;
         return $this;
     }
 
-    public function getEmailnotificationsenabled(): bool    {
+    public function getEmailNotificationsEnabled(): bool    {
         return $this->emailNotificationsEnabled;
     }
 
-    public function setEmailnotificationsenabled(bool $emailNotificationsEnabled): self
+    public function setEmailNotificationsEnabled(bool $emailNotificationsEnabled): self
     {
         $this->emailNotificationsEnabled = $emailNotificationsEnabled;
         return $this;
     }
 
-    public function getSmsnotificationsenabled(): bool    {
+    public function getSmsNotificationsEnabled(): bool    {
         return $this->smsNotificationsEnabled;
     }
 
-    public function setSmsnotificationsenabled(bool $smsNotificationsEnabled): self
+    public function setSmsNotificationsEnabled(bool $smsNotificationsEnabled): self
     {
         $this->smsNotificationsEnabled = $smsNotificationsEnabled;
         return $this;
     }
 
-    public function getCalendarsyncenabled(): bool    {
+    public function getCalendarSyncEnabled(): bool    {
         return $this->calendarSyncEnabled;
     }
 
-    public function setCalendarsyncenabled(bool $calendarSyncEnabled): self
+    public function setCalendarSyncEnabled(bool $calendarSyncEnabled): self
     {
         $this->calendarSyncEnabled = $calendarSyncEnabled;
         return $this;
     }
 
-    public function getWorkinghours(): ?array    {
+    public function getWorkingHours(): ?array    {
         return $this->workingHours;
     }
 
-    public function setWorkinghours(?array $workingHours): self
+    public function setWorkingHours(?array $workingHours): self
     {
         $this->workingHours = $workingHours;
         return $this;
     }
 
-    public function getDefaultcurrency(): ?string    {
+    public function getDefaultCurrency(): ?string    {
         return $this->defaultCurrency;
     }
 
-    public function setDefaultcurrency(?string $defaultCurrency): self
+    public function setDefaultCurrency(?string $defaultCurrency): self
     {
         $this->defaultCurrency = $defaultCurrency;
         return $this;
     }
 
-    public function getDateformat(): ?string    {
+    public function getDateFormat(): ?string    {
         return $this->dateFormat;
     }
 
-    public function setDateformat(?string $dateFormat): self
+    public function setDateFormat(?string $dateFormat): self
     {
         $this->dateFormat = $dateFormat;
         return $this;
     }
 
-    public function getOrganizedevents(): ?string    {
+    public function getOrganizedEvents(): ?string    {
         return $this->organizedEvents;
     }
 
-    public function setOrganizedevents(?string $organizedEvents): self
+    public function setOrganizedEvents(?string $organizedEvents): self
     {
         $this->organizedEvents = $organizedEvents;
         return $this;
@@ -1007,31 +1007,31 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getSalesteam(): ?string    {
+    public function getSalesTeam(): ?string    {
         return $this->salesTeam;
     }
 
-    public function setSalesteam(?string $salesTeam): self
+    public function setSalesTeam(?string $salesTeam): self
     {
         $this->salesTeam = $salesTeam;
         return $this;
     }
 
-    public function getQuotaamount(): ?string    {
+    public function getQuotaAmount(): ?string    {
         return $this->quotaAmount;
     }
 
-    public function setQuotaamount(?string $quotaAmount): self
+    public function setQuotaAmount(?string $quotaAmount): self
     {
         $this->quotaAmount = $quotaAmount;
         return $this;
     }
 
-    public function getCommissionrate(): ?string    {
+    public function getCommissionRate(): ?string    {
         return $this->commissionRate;
     }
 
-    public function setCommissionrate(?string $commissionRate): self
+    public function setCommissionRate(?string $commissionRate): self
     {
         $this->commissionRate = $commissionRate;
         return $this;
@@ -1047,31 +1047,31 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getAgenttype(): ?string    {
+    public function getAgentType(): ?string    {
         return $this->agentType;
     }
 
-    public function setAgenttype(?string $agentType): self
+    public function setAgentType(?string $agentType): self
     {
         $this->agentType = $agentType;
         return $this;
     }
 
-    public function getDeletedat(): ?\DateTimeImmutable    {
+    public function getDeletedAt(): ?\DateTimeImmutable    {
         return $this->deletedAt;
     }
 
-    public function setDeletedat(?\DateTimeImmutable $deletedAt): self
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
         return $this;
     }
 
-    public function getOwnedcourses(): ?string    {
+    public function getOwnedCourses(): ?string    {
         return $this->ownedCourses;
     }
 
-    public function setOwnedcourses(?string $ownedCourses): self
+    public function setOwnedCourses(?string $ownedCourses): self
     {
         $this->ownedCourses = $ownedCourses;
         return $this;
@@ -1107,31 +1107,31 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getFirstname(): ?string    {
+    public function getFirstName(): ?string    {
         return $this->firstName;
     }
 
-    public function setFirstname(?string $firstName): self
+    public function setFirstName(?string $firstName): self
     {
         $this->firstName = $firstName;
         return $this;
     }
 
-    public function getLastname(): ?string    {
+    public function getLastName(): ?string    {
         return $this->lastName;
     }
 
-    public function setLastname(?string $lastName): self
+    public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
         return $this;
     }
 
-    public function getMiddlename(): ?string    {
+    public function getMiddleName(): ?string    {
         return $this->middleName;
     }
 
-    public function setMiddlename(?string $middleName): self
+    public function setMiddleName(?string $middleName): self
     {
         $this->middleName = $middleName;
         return $this;
@@ -1167,41 +1167,41 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getSecondaryemail(): ?string    {
+    public function getSecondaryEmail(): ?string    {
         return $this->secondaryEmail;
     }
 
-    public function setSecondaryemail(?string $secondaryEmail): self
+    public function setSecondaryEmail(?string $secondaryEmail): self
     {
         $this->secondaryEmail = $secondaryEmail;
         return $this;
     }
 
-    public function getWorkphone(): ?string    {
+    public function getWorkPhone(): ?string    {
         return $this->workPhone;
     }
 
-    public function setWorkphone(?string $workPhone): self
+    public function setWorkPhone(?string $workPhone): self
     {
         $this->workPhone = $workPhone;
         return $this;
     }
 
-    public function getHomephone(): ?string    {
+    public function getHomePhone(): ?string    {
         return $this->homePhone;
     }
 
-    public function setHomephone(?string $homePhone): self
+    public function setHomePhone(?string $homePhone): self
     {
         $this->homePhone = $homePhone;
         return $this;
     }
 
-    public function getPhoneextension(): ?string    {
+    public function getPhoneExtension(): ?string    {
         return $this->phoneExtension;
     }
 
-    public function setPhoneextension(?string $phoneExtension): self
+    public function setPhoneExtension(?string $phoneExtension): self
     {
         $this->phoneExtension = $phoneExtension;
         return $this;
@@ -1227,21 +1227,21 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getLinkedinurl(): ?string    {
+    public function getLinkedinUrl(): ?string    {
         return $this->linkedinUrl;
     }
 
-    public function setLinkedinurl(?string $linkedinUrl): self
+    public function setLinkedinUrl(?string $linkedinUrl): self
     {
         $this->linkedinUrl = $linkedinUrl;
         return $this;
     }
 
-    public function getTwitterhandle(): ?string    {
+    public function getTwitterHandle(): ?string    {
         return $this->twitterHandle;
     }
 
-    public function setTwitterhandle(?string $twitterHandle): self
+    public function setTwitterHandle(?string $twitterHandle): self
     {
         $this->twitterHandle = $twitterHandle;
         return $this;
@@ -1257,11 +1257,11 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getProfilepictureurl(): ?string    {
+    public function getProfilePictureUrl(): ?string    {
         return $this->profilePictureUrl;
     }
 
-    public function setProfilepictureurl(?string $profilePictureUrl): self
+    public function setProfilePictureUrl(?string $profilePictureUrl): self
     {
         $this->profilePictureUrl = $profilePictureUrl;
         return $this;
@@ -1287,11 +1287,11 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getPostalcode(): ?string    {
+    public function getPostalCode(): ?string    {
         return $this->postalCode;
     }
 
-    public function setPostalcode(?string $postalCode): self
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
         return $this;
@@ -1317,11 +1317,11 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getOfficelocation(): ?string    {
+    public function getOfficeLocation(): ?string    {
         return $this->officeLocation;
     }
 
-    public function setOfficelocation(?string $officeLocation): self
+    public function setOfficeLocation(?string $officeLocation): self
     {
         $this->officeLocation = $officeLocation;
         return $this;
@@ -1337,51 +1337,51 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getEmployeeid(): ?string    {
+    public function getEmployeeId(): ?string    {
         return $this->employeeId;
     }
 
-    public function setEmployeeid(?string $employeeId): self
+    public function setEmployeeId(?string $employeeId): self
     {
         $this->employeeId = $employeeId;
         return $this;
     }
 
-    public function getHiredate(): ?\DateTimeImmutable    {
+    public function getHireDate(): ?\DateTimeImmutable    {
         return $this->hireDate;
     }
 
-    public function setHiredate(?\DateTimeImmutable $hireDate): self
+    public function setHireDate(?\DateTimeImmutable $hireDate): self
     {
         $this->hireDate = $hireDate;
         return $this;
     }
 
-    public function getTerminationdate(): ?\DateTimeImmutable    {
+    public function getTerminationDate(): ?\DateTimeImmutable    {
         return $this->terminationDate;
     }
 
-    public function setTerminationdate(?\DateTimeImmutable $terminationDate): self
+    public function setTerminationDate(?\DateTimeImmutable $terminationDate): self
     {
         $this->terminationDate = $terminationDate;
         return $this;
     }
 
-    public function getEmploymentstatus(): ?string    {
+    public function getEmploymentStatus(): ?string    {
         return $this->employmentStatus;
     }
 
-    public function setEmploymentstatus(?string $employmentStatus): self
+    public function setEmploymentStatus(?string $employmentStatus): self
     {
         $this->employmentStatus = $employmentStatus;
         return $this;
     }
 
-    public function getCostcenter(): ?string    {
+    public function getCostCenter(): ?string    {
         return $this->costCenter;
     }
 
-    public function setCostcenter(?string $costCenter): self
+    public function setCostCenter(?string $costCenter): self
     {
         $this->costCenter = $costCenter;
         return $this;
@@ -1397,11 +1397,11 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getBusinessunit(): ?string    {
+    public function getBusinessUnit(): ?string    {
         return $this->businessUnit;
     }
 
-    public function setBusinessunit(?string $businessUnit): self
+    public function setBusinessUnit(?string $businessUnit): self
     {
         $this->businessUnit = $businessUnit;
         return $this;
@@ -1417,21 +1417,21 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getSalaryfrequency(): ?string    {
+    public function getSalaryFrequency(): ?string    {
         return $this->salaryFrequency;
     }
 
-    public function setSalaryfrequency(?string $salaryFrequency): self
+    public function setSalaryFrequency(?string $salaryFrequency): self
     {
         $this->salaryFrequency = $salaryFrequency;
         return $this;
     }
 
-    public function getSocialmedias(): ?string    {
+    public function getSocialMedias(): ?string    {
         return $this->socialMedias;
     }
 
-    public function setSocialmedias(?string $socialMedias): self
+    public function setSocialMedias(?string $socialMedias): self
     {
         $this->socialMedias = $socialMedias;
         return $this;
@@ -1497,41 +1497,41 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getStudentcourses(): ?string    {
+    public function getStudentCourses(): ?string    {
         return $this->studentCourses;
     }
 
-    public function setStudentcourses(?string $studentCourses): self
+    public function setStudentCourses(?string $studentCourses): self
     {
         $this->studentCourses = $studentCourses;
         return $this;
     }
 
-    public function getLogincount(): int    {
+    public function getLoginCount(): int    {
         return $this->loginCount;
     }
 
-    public function setLogincount(int $loginCount): self
+    public function setLoginCount(int $loginCount): self
     {
         $this->loginCount = $loginCount;
         return $this;
     }
 
-    public function getLastipaddress(): ?string    {
+    public function getLastIpAddress(): ?string    {
         return $this->lastIpAddress;
     }
 
-    public function setLastipaddress(?string $lastIpAddress): self
+    public function setLastIpAddress(?string $lastIpAddress): self
     {
         $this->lastIpAddress = $lastIpAddress;
         return $this;
     }
 
-    public function getLastuseragent(): ?string    {
+    public function getLastUserAgent(): ?string    {
         return $this->lastUserAgent;
     }
 
-    public function setLastuseragent(?string $lastUserAgent): self
+    public function setLastUserAgent(?string $lastUserAgent): self
     {
         $this->lastUserAgent = $lastUserAgent;
         return $this;
@@ -1547,21 +1547,21 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getProfilecompleteness(): int    {
+    public function getProfileCompleteness(): int    {
         return $this->profileCompleteness;
     }
 
-    public function setProfilecompleteness(int $profileCompleteness): self
+    public function setProfileCompleteness(int $profileCompleteness): self
     {
         $this->profileCompleteness = $profileCompleteness;
         return $this;
     }
 
-    public function getLastactivityat(): ?\DateTimeImmutable    {
+    public function getLastActivityAt(): ?\DateTimeImmutable    {
         return $this->lastActivityAt;
     }
 
-    public function setLastactivityat(?\DateTimeImmutable $lastActivityAt): self
+    public function setLastActivityAt(?\DateTimeImmutable $lastActivityAt): self
     {
         $this->lastActivityAt = $lastActivityAt;
         return $this;
@@ -1587,11 +1587,11 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getStatusmessage(): ?string    {
+    public function getStatusMessage(): ?string    {
         return $this->statusMessage;
     }
 
-    public function setStatusmessage(?string $statusMessage): self
+    public function setStatusMessage(?string $statusMessage): self
     {
         $this->statusMessage = $statusMessage;
         return $this;
@@ -1617,41 +1617,41 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getLockedreason(): ?string    {
+    public function getLockedReason(): ?string    {
         return $this->lockedReason;
     }
 
-    public function setLockedreason(?string $lockedReason): self
+    public function setLockedReason(?string $lockedReason): self
     {
         $this->lockedReason = $lockedReason;
         return $this;
     }
 
-    public function getLockedat(): ?\DateTimeImmutable    {
+    public function getLockedAt(): ?\DateTimeImmutable    {
         return $this->lockedAt;
     }
 
-    public function setLockedat(?\DateTimeImmutable $lockedAt): self
+    public function setLockedAt(?\DateTimeImmutable $lockedAt): self
     {
         $this->lockedAt = $lockedAt;
         return $this;
     }
 
-    public function getCustomfields(): ?array    {
+    public function getCustomFields(): ?array    {
         return $this->customFields;
     }
 
-    public function setCustomfields(?array $customFields): self
+    public function setCustomFields(?array $customFields): self
     {
         $this->customFields = $customFields;
         return $this;
     }
 
-    public function getManagedpipelines(): ?string    {
+    public function getManagedPipelines(): ?string    {
         return $this->managedPipelines;
     }
 
-    public function setManagedpipelines(?string $managedPipelines): self
+    public function setManagedPipelines(?string $managedPipelines): self
     {
         $this->managedPipelines = $managedPipelines;
         return $this;

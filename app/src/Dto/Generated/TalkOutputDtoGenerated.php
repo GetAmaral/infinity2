@@ -203,11 +203,11 @@ abstract class TalkOutputDtoGenerated
         return $this;
     }
 
-    public function getTalktype(): string|TalkTypeOutputDto    {
+    public function getTalkType(): string|TalkTypeOutputDto    {
         return $this->talkType;
     }
 
-    public function setTalktype(string|TalkTypeOutputDto $talkType): self
+    public function setTalkType(string|TalkTypeOutputDto $talkType): self
     {
         $this->talkType = $talkType;
         return $this;
@@ -263,51 +263,51 @@ abstract class TalkOutputDtoGenerated
         return $this;
     }
 
-    public function getDatestart(): ?\DateTimeImmutable    {
+    public function getDateStart(): ?\DateTimeImmutable    {
         return $this->dateStart;
     }
 
-    public function setDatestart(?\DateTimeImmutable $dateStart): self
+    public function setDateStart(?\DateTimeImmutable $dateStart): self
     {
         $this->dateStart = $dateStart;
         return $this;
     }
 
-    public function getDatelastmessage(): ?\DateTimeImmutable    {
+    public function getDateLastMessage(): ?\DateTimeImmutable    {
         return $this->dateLastMessage;
     }
 
-    public function setDatelastmessage(?\DateTimeImmutable $dateLastMessage): self
+    public function setDateLastMessage(?\DateTimeImmutable $dateLastMessage): self
     {
         $this->dateLastMessage = $dateLastMessage;
         return $this;
     }
 
-    public function getClosedat(): ?\DateTimeImmutable    {
+    public function getClosedAt(): ?\DateTimeImmutable    {
         return $this->closedAt;
     }
 
-    public function setClosedat(?\DateTimeImmutable $closedAt): self
+    public function setClosedAt(?\DateTimeImmutable $closedAt): self
     {
         $this->closedAt = $closedAt;
         return $this;
     }
 
-    public function getDurationseconds(): ?int    {
+    public function getDurationSeconds(): ?int    {
         return $this->durationSeconds;
     }
 
-    public function setDurationseconds(?int $durationSeconds): self
+    public function setDurationSeconds(?int $durationSeconds): self
     {
         $this->durationSeconds = $durationSeconds;
         return $this;
     }
 
-    public function getRecordingurl(): ?string    {
+    public function getRecordingUrl(): ?string    {
         return $this->recordingUrl;
     }
 
-    public function setRecordingurl(?string $recordingUrl): self
+    public function setRecordingUrl(?string $recordingUrl): self
     {
         $this->recordingUrl = $recordingUrl;
         return $this;
@@ -333,11 +333,11 @@ abstract class TalkOutputDtoGenerated
         return $this;
     }
 
-    public function getAssignedto(): string|UserOutputDto|null    {
+    public function getAssignedTo(): string|UserOutputDto|null    {
         return $this->assignedTo;
     }
 
-    public function setAssignedto(string|UserOutputDto|null $assignedTo): self
+    public function setAssignedTo(string|UserOutputDto|null $assignedTo): self
     {
         $this->assignedTo = $assignedTo;
         return $this;
@@ -373,11 +373,11 @@ abstract class TalkOutputDtoGenerated
         return $this;
     }
 
-    public function getMessagecount(): int    {
+    public function getMessageCount(): int    {
         return $this->messageCount;
     }
 
-    public function setMessagecount(int $messageCount): self
+    public function setMessageCount(int $messageCount): self
     {
         $this->messageCount = $messageCount;
         return $this;

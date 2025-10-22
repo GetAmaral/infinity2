@@ -134,11 +134,11 @@ abstract class CompetitorOutputDtoGenerated
         return $this;
     }
 
-    public function getTargetmarket(): ?string    {
+    public function getTargetMarket(): ?string    {
         return $this->targetMarket;
     }
 
-    public function setTargetmarket(?string $targetMarket): self
+    public function setTargetMarket(?string $targetMarket): self
     {
         $this->targetMarket = $targetMarket;
         return $this;
@@ -154,11 +154,11 @@ abstract class CompetitorOutputDtoGenerated
         return $this;
     }
 
-    public function getFoundedyear(): ?int    {
+    public function getFoundedYear(): ?int    {
         return $this->foundedYear;
     }
 
-    public function setFoundedyear(?int $foundedYear): self
+    public function setFoundedYear(?int $foundedYear): self
     {
         $this->foundedYear = $foundedYear;
         return $this;
@@ -184,11 +184,11 @@ abstract class CompetitorOutputDtoGenerated
         return $this;
     }
 
-    public function getMarketposition(): ?string    {
+    public function getMarketPosition(): ?string    {
         return $this->marketPosition;
     }
 
-    public function setMarketposition(?string $marketPosition): self
+    public function setMarketPosition(?string $marketPosition): self
     {
         $this->marketPosition = $marketPosition;
         return $this;
@@ -234,41 +234,41 @@ abstract class CompetitorOutputDtoGenerated
         return $this;
     }
 
-    public function getEmployeecount(): ?int    {
+    public function getEmployeeCount(): ?int    {
         return $this->employeeCount;
     }
 
-    public function setEmployeecount(?int $employeeCount): self
+    public function setEmployeeCount(?int $employeeCount): self
     {
         $this->employeeCount = $employeeCount;
         return $this;
     }
 
-    public function getWinrate(): ?string    {
+    public function getWinRate(): ?string    {
         return $this->winRate;
     }
 
-    public function setWinrate(?string $winRate): self
+    public function setWinRate(?string $winRate): self
     {
         $this->winRate = $winRate;
         return $this;
     }
 
-    public function getLossrate(): ?string    {
+    public function getLossRate(): ?string    {
         return $this->lossRate;
     }
 
-    public function setLossrate(?string $lossRate): self
+    public function setLossRate(?string $lossRate): self
     {
         $this->lossRate = $lossRate;
         return $this;
     }
 
-    public function getPricingmodel(): ?string    {
+    public function getPricingModel(): ?string    {
         return $this->pricingModel;
     }
 
-    public function setPricingmodel(?string $pricingModel): self
+    public function setPricingModel(?string $pricingModel): self
     {
         $this->pricingModel = $pricingModel;
         return $this;
@@ -314,21 +314,21 @@ abstract class CompetitorOutputDtoGenerated
         return $this;
     }
 
-    public function getLastanalyzedat(): ?\DateTimeImmutable    {
+    public function getLastAnalyzedAt(): ?\DateTimeImmutable    {
         return $this->lastAnalyzedAt;
     }
 
-    public function setLastanalyzedat(?\DateTimeImmutable $lastAnalyzedAt): self
+    public function setLastAnalyzedAt(?\DateTimeImmutable $lastAnalyzedAt): self
     {
         $this->lastAnalyzedAt = $lastAnalyzedAt;
         return $this;
     }
 
-    public function getKeydifferentiators(): ?string    {
+    public function getKeyDifferentiators(): ?string    {
         return $this->keyDifferentiators;
     }
 
-    public function setKeydifferentiators(?string $keyDifferentiators): self
+    public function setKeyDifferentiators(?string $keyDifferentiators): self
     {
         $this->keyDifferentiators = $keyDifferentiators;
         return $this;

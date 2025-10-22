@@ -23,7 +23,7 @@ abstract class CityInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['city:write'])]
@@ -37,7 +37,7 @@ abstract class CityInputDtoGenerated
 
     /**
      * country reference
-     * Must be: IRI string (e.g., "/api/countrys/uuid")
+     * Must be: IRI string (e.g., "/api/ries/uuid")
      */
     #[Groups(['city:write'])]
     public ?string $country = null;
@@ -156,11 +156,11 @@ abstract class CityInputDtoGenerated
         return $this;
     }
 
-    public function getIbgecode(): ?string    {
+    public function getIbgeCode(): ?string    {
         return $this->ibgeCode;
     }
 
-    public function setIbgecode(?string $ibgeCode): self
+    public function setIbgeCode(?string $ibgeCode): self
     {
         $this->ibgeCode = $ibgeCode;
         return $this;
@@ -176,21 +176,21 @@ abstract class CityInputDtoGenerated
         return $this;
     }
 
-    public function getEventresources(): ?string    {
+    public function getEventResources(): ?string    {
         return $this->eventResources;
     }
 
-    public function setEventresources(?string $eventResources): self
+    public function setEventResources(?string $eventResources): self
     {
         $this->eventResources = $eventResources;
         return $this;
     }
 
-    public function getHolidaytemplates(): ?string    {
+    public function getHolidayTemplates(): ?string    {
         return $this->holidayTemplates;
     }
 
-    public function setHolidaytemplates(?string $holidayTemplates): self
+    public function setHolidayTemplates(?string $holidayTemplates): self
     {
         $this->holidayTemplates = $holidayTemplates;
         return $this;

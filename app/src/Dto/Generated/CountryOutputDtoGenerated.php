@@ -143,31 +143,31 @@ abstract class CountryOutputDtoGenerated
         return $this;
     }
 
-    public function getNumericcode(): string    {
+    public function getNumericCode(): string    {
         return $this->numericCode;
     }
 
-    public function setNumericcode(string $numericCode): self
+    public function setNumericCode(string $numericCode): self
     {
         $this->numericCode = $numericCode;
         return $this;
     }
 
-    public function getCurrencycode(): string    {
+    public function getCurrencyCode(): string    {
         return $this->currencyCode;
     }
 
-    public function setCurrencycode(string $currencyCode): self
+    public function setCurrencyCode(string $currencyCode): self
     {
         $this->currencyCode = $currencyCode;
         return $this;
     }
 
-    public function getPhonecode(): string    {
+    public function getPhoneCode(): string    {
         return $this->phoneCode;
     }
 
-    public function setPhonecode(string $phoneCode): self
+    public function setPhoneCode(string $phoneCode): self
     {
         $this->phoneCode = $phoneCode;
         return $this;
@@ -193,21 +193,21 @@ abstract class CountryOutputDtoGenerated
         return $this;
     }
 
-    public function getCurrencysymbol(): ?string    {
+    public function getCurrencySymbol(): ?string    {
         return $this->currencySymbol;
     }
 
-    public function setCurrencysymbol(?string $currencySymbol): self
+    public function setCurrencySymbol(?string $currencySymbol): self
     {
         $this->currencySymbol = $currencySymbol;
         return $this;
     }
 
-    public function getEumember(): bool    {
+    public function getEuMember(): bool    {
         return $this->euMember;
     }
 
-    public function setEumember(bool $euMember): self
+    public function setEuMember(bool $euMember): self
     {
         $this->euMember = $euMember;
         return $this;
@@ -223,21 +223,21 @@ abstract class CountryOutputDtoGenerated
         return $this;
     }
 
-    public function getNativename(): ?string    {
+    public function getNativeName(): ?string    {
         return $this->nativeName;
     }
 
-    public function setNativename(?string $nativeName): self
+    public function setNativeName(?string $nativeName): self
     {
         $this->nativeName = $nativeName;
         return $this;
     }
 
-    public function getOfficialname(): ?string    {
+    public function getOfficialName(): ?string    {
         return $this->officialName;
     }
 
-    public function setOfficialname(?string $officialName): self
+    public function setOfficialName(?string $officialName): self
     {
         $this->officialName = $officialName;
         return $this;
@@ -313,101 +313,101 @@ abstract class CountryOutputDtoGenerated
         return $this;
     }
 
-    public function getNationalityname(): ?string    {
+    public function getNationalityName(): ?string    {
         return $this->nationalityName;
     }
 
-    public function setNationalityname(?string $nationalityName): self
+    public function setNationalityName(?string $nationalityName): self
     {
         $this->nationalityName = $nationalityName;
         return $this;
     }
 
-    public function getAvailableforshipping(): bool    {
+    public function getAvailableForShipping(): bool    {
         return $this->availableForShipping;
     }
 
-    public function setAvailableforshipping(bool $availableForShipping): self
+    public function setAvailableForShipping(bool $availableForShipping): self
     {
         $this->availableForShipping = $availableForShipping;
         return $this;
     }
 
-    public function getAvailableforbilling(): bool    {
+    public function getAvailableForBilling(): bool    {
         return $this->availableForBilling;
     }
 
-    public function setAvailableforbilling(bool $availableForBilling): self
+    public function setAvailableForBilling(bool $availableForBilling): self
     {
         $this->availableForBilling = $availableForBilling;
         return $this;
     }
 
-    public function getSchengenmember(): bool    {
+    public function getSchengenMember(): bool    {
         return $this->schengenMember;
     }
 
-    public function setSchengenmember(bool $schengenMember): self
+    public function setSchengenMember(bool $schengenMember): self
     {
         $this->schengenMember = $schengenMember;
         return $this;
     }
 
-    public function getOecdmember(): bool    {
+    public function getOecdMember(): bool    {
         return $this->oecdMember;
     }
 
-    public function setOecdmember(bool $oecdMember): self
+    public function setOecdMember(bool $oecdMember): self
     {
         $this->oecdMember = $oecdMember;
         return $this;
     }
 
-    public function getDataresidencyrequired(): bool    {
+    public function getDataResidencyRequired(): bool    {
         return $this->dataResidencyRequired;
     }
 
-    public function setDataresidencyrequired(bool $dataResidencyRequired): self
+    public function setDataResidencyRequired(bool $dataResidencyRequired): self
     {
         $this->dataResidencyRequired = $dataResidencyRequired;
         return $this;
     }
 
-    public function getPostalcodeformat(): ?string    {
+    public function getPostalCodeFormat(): ?string    {
         return $this->postalCodeFormat;
     }
 
-    public function setPostalcodeformat(?string $postalCodeFormat): self
+    public function setPostalCodeFormat(?string $postalCodeFormat): self
     {
         $this->postalCodeFormat = $postalCodeFormat;
         return $this;
     }
 
-    public function getPostalcoderequired(): bool    {
+    public function getPostalCodeRequired(): bool    {
         return $this->postalCodeRequired;
     }
 
-    public function setPostalcoderequired(bool $postalCodeRequired): self
+    public function setPostalCodeRequired(bool $postalCodeRequired): self
     {
         $this->postalCodeRequired = $postalCodeRequired;
         return $this;
     }
 
-    public function getAddressformat(): ?string    {
+    public function getAddressFormat(): ?string    {
         return $this->addressFormat;
     }
 
-    public function setAddressformat(?string $addressFormat): self
+    public function setAddressFormat(?string $addressFormat): self
     {
         $this->addressFormat = $addressFormat;
         return $this;
     }
 
-    public function getTaxidrequired(): bool    {
+    public function getTaxIdRequired(): bool    {
         return $this->taxIdRequired;
     }
 
-    public function setTaxidrequired(bool $taxIdRequired): self
+    public function setTaxIdRequired(bool $taxIdRequired): self
     {
         $this->taxIdRequired = $taxIdRequired;
         return $this;
@@ -433,41 +433,41 @@ abstract class CountryOutputDtoGenerated
         return $this;
     }
 
-    public function getUnmembersince(): ?int    {
+    public function getUnMemberSince(): ?int    {
         return $this->unMemberSince;
     }
 
-    public function setUnmembersince(?int $unMemberSince): self
+    public function setUnMemberSince(?int $unMemberSince): self
     {
         $this->unMemberSince = $unMemberSince;
         return $this;
     }
 
-    public function getFlagemoji(): ?string    {
+    public function getFlagEmoji(): ?string    {
         return $this->flagEmoji;
     }
 
-    public function setFlagemoji(?string $flagEmoji): self
+    public function setFlagEmoji(?string $flagEmoji): self
     {
         $this->flagEmoji = $flagEmoji;
         return $this;
     }
 
-    public function getFlagsvgurl(): ?string    {
+    public function getFlagSvgUrl(): ?string    {
         return $this->flagSvgUrl;
     }
 
-    public function setFlagsvgurl(?string $flagSvgUrl): self
+    public function setFlagSvgUrl(?string $flagSvgUrl): self
     {
         $this->flagSvgUrl = $flagSvgUrl;
         return $this;
     }
 
-    public function getHolidaytemplates(): array    {
+    public function getHolidayTemplates(): array    {
         return $this->holidayTemplates;
     }
 
-    public function setHolidaytemplates(array $holidayTemplates): self
+    public function setHolidayTemplates(array $holidayTemplates): self
     {
         $this->holidayTemplates = $holidayTemplates;
         return $this;

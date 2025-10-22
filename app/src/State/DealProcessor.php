@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Deal;
 use App\Dto\DealInputDto;
+use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -51,6 +52,25 @@ class DealProcessor implements ProcessorInterface
     ) {}
 
     /**
+     * Normalize property name for matching (removes underscores, lowercase)
+     * Uses centralized Utils methods instead of manual string manipulation
+     */
+    private function normalizePropertyName(string $property): string
+    {
+        // Convert to camelCase (handles snake_case, etc.) then lowercase
+        return strtolower(Utils::toCamelCase($property));
+    }
+
+    /**
+     * Extract property name from method name (e.g., 'addItem' -> 'item')
+     */
+    private function extractPropertyFromMethod(string $methodName, string $prefix): string
+    {
+        // Remove prefix (e.g., 'add', 'set') and convert to lowercase
+        return strtolower(substr($methodName, strlen($prefix)));
+    }
+
+    /**
      * @param DealInputDto $data
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Deal
@@ -89,7 +109,7 @@ class DealProcessor implements ProcessorInterface
         }
         // dealStatus
         if (!$isPatch || array_key_exists('dealStatus', $requestData)) {
-            $entity->setDealstatus($data->dealStatus);
+            $entity->setDealStatus($data->dealStatus);
         }
         // probability
         if (!$isPatch || array_key_exists('probability', $requestData)) {
@@ -101,23 +121,23 @@ class DealProcessor implements ProcessorInterface
         }
         // dealNumber
         if (!$isPatch || array_key_exists('dealNumber', $requestData)) {
-            $entity->setDealnumber($data->dealNumber);
+            $entity->setDealNumber($data->dealNumber);
         }
         // expectedAmount
         if (!$isPatch || array_key_exists('expectedAmount', $requestData)) {
-            $entity->setExpectedamount($data->expectedAmount);
+            $entity->setExpectedAmount($data->expectedAmount);
         }
         // weightedAmount
         if (!$isPatch || array_key_exists('weightedAmount', $requestData)) {
-            $entity->setWeightedamount($data->weightedAmount);
+            $entity->setWeightedAmount($data->weightedAmount);
         }
         // closureAmount
         if (!$isPatch || array_key_exists('closureAmount', $requestData)) {
-            $entity->setClosureamount($data->closureAmount);
+            $entity->setClosureAmount($data->closureAmount);
         }
         // initialAmount
         if (!$isPatch || array_key_exists('initialAmount', $requestData)) {
-            $entity->setInitialamount($data->initialAmount);
+            $entity->setInitialAmount($data->initialAmount);
         }
         // currency
         if (!$isPatch || array_key_exists('currency', $requestData)) {
@@ -125,55 +145,55 @@ class DealProcessor implements ProcessorInterface
         }
         // exchangeRate
         if (!$isPatch || array_key_exists('exchangeRate', $requestData)) {
-            $entity->setExchangerate($data->exchangeRate);
+            $entity->setExchangeRate($data->exchangeRate);
         }
         // discountPercentage
         if (!$isPatch || array_key_exists('discountPercentage', $requestData)) {
-            $entity->setDiscountpercentage($data->discountPercentage);
+            $entity->setDiscountPercentage($data->discountPercentage);
         }
         // discountAmount
         if (!$isPatch || array_key_exists('discountAmount', $requestData)) {
-            $entity->setDiscountamount($data->discountAmount);
+            $entity->setDiscountAmount($data->discountAmount);
         }
         // commissionRate
         if (!$isPatch || array_key_exists('commissionRate', $requestData)) {
-            $entity->setCommissionrate($data->commissionRate);
+            $entity->setCommissionRate($data->commissionRate);
         }
         // commissionAmount
         if (!$isPatch || array_key_exists('commissionAmount', $requestData)) {
-            $entity->setCommissionamount($data->commissionAmount);
+            $entity->setCommissionAmount($data->commissionAmount);
         }
         // expectedClosureDate
         if (!$isPatch || array_key_exists('expectedClosureDate', $requestData)) {
-            $entity->setExpectedclosuredate($data->expectedClosureDate);
+            $entity->setExpectedClosureDate($data->expectedClosureDate);
         }
         // closureDate
         if (!$isPatch || array_key_exists('closureDate', $requestData)) {
-            $entity->setClosuredate($data->closureDate);
+            $entity->setClosureDate($data->closureDate);
         }
         // initialDate
         if (!$isPatch || array_key_exists('initialDate', $requestData)) {
-            $entity->setInitialdate($data->initialDate);
+            $entity->setInitialDate($data->initialDate);
         }
         // lastActivityDate
         if (!$isPatch || array_key_exists('lastActivityDate', $requestData)) {
-            $entity->setLastactivitydate($data->lastActivityDate);
+            $entity->setLastActivityDate($data->lastActivityDate);
         }
         // nextFollowUp
         if (!$isPatch || array_key_exists('nextFollowUp', $requestData)) {
-            $entity->setNextfollowup($data->nextFollowUp);
+            $entity->setNextFollowUp($data->nextFollowUp);
         }
         // daysInCurrentStage
         if (!$isPatch || array_key_exists('daysInCurrentStage', $requestData)) {
-            $entity->setDaysincurrentstage($data->daysInCurrentStage);
+            $entity->setDaysInCurrentStage($data->daysInCurrentStage);
         }
         // forecastCategory
         if (!$isPatch || array_key_exists('forecastCategory', $requestData)) {
-            $entity->setForecastcategory($data->forecastCategory);
+            $entity->setForecastCategory($data->forecastCategory);
         }
         // sourceDetails
         if (!$isPatch || array_key_exists('sourceDetails', $requestData)) {
-            $entity->setSourcedetails($data->sourceDetails);
+            $entity->setSourceDetails($data->sourceDetails);
         }
         // notes
         if (!$isPatch || array_key_exists('notes', $requestData)) {
@@ -181,11 +201,11 @@ class DealProcessor implements ProcessorInterface
         }
         // customFields
         if (!$isPatch || array_key_exists('customFields', $requestData)) {
-            $entity->setCustomfields($data->customFields);
+            $entity->setCustomFields($data->customFields);
         }
         // actualClosureDate
         if (!$isPatch || array_key_exists('actualClosureDate', $requestData)) {
-            $entity->setActualclosuredate($data->actualClosureDate);
+            $entity->setActualClosureDate($data->actualClosureDate);
         }
 
         // Map relationship properties
@@ -194,7 +214,7 @@ class DealProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organization', $requestData)) {
             if ($data->organization !== null) {
                 if (is_string($data->organization)) {
-                    // IRI format: "/api/organizations/{id}"
+                    // IRI format: "/api/organizatia/{id}"
                     $organizationId = $this->extractIdFromIri($data->organization);
                     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
                     if (!$organization) {
@@ -212,7 +232,7 @@ class DealProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('company', $requestData)) {
             if ($data->company !== null) {
                 if (is_string($data->company)) {
-                    // IRI format: "/api/companys/{id}"
+                    // IRI format: "/api/nies/{id}"
                     $companyId = $this->extractIdFromIri($data->company);
                     $company = $this->entityManager->getRepository(Company::class)->find($companyId);
                     if (!$company) {
@@ -230,13 +250,13 @@ class DealProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('currentStage', $requestData)) {
             if ($data->currentStage !== null) {
                 if (is_string($data->currentStage)) {
-                    // IRI format: "/api/pipelinestages/{id}"
+                    // IRI format: "/api/pipeline_stages/{id}"
                     $currentStageId = $this->extractIdFromIri($data->currentStage);
                     $currentStage = $this->entityManager->getRepository(PipelineStage::class)->find($currentStageId);
                     if (!$currentStage) {
                         throw new BadRequestHttpException('PipelineStage not found: ' . $currentStageId);
                     }
-                    $entity->setCurrentstage($currentStage);
+                    $entity->setCurrentStage($currentStage);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested currentStage creation not supported. Use IRI format.');
@@ -266,13 +286,13 @@ class DealProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('dealType', $requestData)) {
             if ($data->dealType !== null) {
                 if (is_string($data->dealType)) {
-                    // IRI format: "/api/dealtypes/{id}"
+                    // IRI format: "/api/deal_types/{id}"
                     $dealTypeId = $this->extractIdFromIri($data->dealType);
                     $dealType = $this->entityManager->getRepository(DealType::class)->find($dealTypeId);
                     if (!$dealType) {
                         throw new BadRequestHttpException('DealType not found: ' . $dealTypeId);
                     }
-                    $entity->setDealtype($dealType);
+                    $entity->setDealType($dealType);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested dealType creation not supported. Use IRI format.');
@@ -284,7 +304,7 @@ class DealProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('category', $requestData)) {
             if ($data->category !== null) {
                 if (is_string($data->category)) {
-                    // IRI format: "/api/dealcategorys/{id}"
+                    // IRI format: "/api/deal_ries/{id}"
                     $categoryId = $this->extractIdFromIri($data->category);
                     $category = $this->entityManager->getRepository(DealCategory::class)->find($categoryId);
                     if (!$category) {
@@ -345,7 +365,7 @@ class DealProcessor implements ProcessorInterface
                     if (!$primaryContact) {
                         throw new BadRequestHttpException('Contact not found: ' . $primaryContactId);
                     }
-                    $entity->setPrimarycontact($primaryContact);
+                    $entity->setPrimaryContact($primaryContact);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested primaryContact creation not supported. Use IRI format.');
@@ -357,13 +377,13 @@ class DealProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('leadSource', $requestData)) {
             if ($data->leadSource !== null) {
                 if (is_string($data->leadSource)) {
-                    // IRI format: "/api/leadsources/{id}"
+                    // IRI format: "/api/lead_sources/{id}"
                     $leadSourceId = $this->extractIdFromIri($data->leadSource);
                     $leadSource = $this->entityManager->getRepository(LeadSource::class)->find($leadSourceId);
                     if (!$leadSource) {
                         throw new BadRequestHttpException('LeadSource not found: ' . $leadSourceId);
                     }
-                    $entity->setLeadsource($leadSource);
+                    $entity->setLeadSource($leadSource);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested leadSource creation not supported. Use IRI format.');
@@ -393,13 +413,13 @@ class DealProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('lostReason', $requestData)) {
             if ($data->lostReason !== null) {
                 if (is_string($data->lostReason)) {
-                    // IRI format: "/api/lostreasons/{id}"
+                    // IRI format: "/api/lost_reasa/{id}"
                     $lostReasonId = $this->extractIdFromIri($data->lostReason);
                     $lostReason = $this->entityManager->getRepository(LostReason::class)->find($lostReasonId);
                     if (!$lostReason) {
                         throw new BadRequestHttpException('LostReason not found: ' . $lostReasonId);
                     }
-                    $entity->setLostreason($lostReason);
+                    $entity->setLostReason($lostReason);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested lostReason creation not supported. Use IRI format.');
@@ -411,13 +431,13 @@ class DealProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('winReason', $requestData)) {
             if ($data->winReason !== null) {
                 if (is_string($data->winReason)) {
-                    // IRI format: "/api/winreasons/{id}"
+                    // IRI format: "/api/win_reasa/{id}"
                     $winReasonId = $this->extractIdFromIri($data->winReason);
                     $winReason = $this->entityManager->getRepository(WinReason::class)->find($winReasonId);
                     if (!$winReason) {
                         throw new BadRequestHttpException('WinReason not found: ' . $winReasonId);
                     }
-                    $entity->setWinreason($winReason);
+                    $entity->setWinReason($winReason);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested winReason creation not supported. Use IRI format.');
@@ -446,6 +466,7 @@ class DealProcessor implements ProcessorInterface
 
     /**
      * Map array data to entity properties using setters
+     * Handles nested collections recursively
      *
      * @param array $data Associative array of property => value
      * @param object $entity Target entity instance
@@ -458,26 +479,111 @@ class DealProcessor implements ProcessorInterface
                 continue;
             }
 
-            // Convert snake_case to camelCase for setter
-            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+            // Handle nested collections using reflection to find adder methods
+            if (is_array($value) && !empty($value) && isset($value[0]) && is_array($value[0])) {
+                // Find adder method using reflection - scan all methods starting with 'add'
+                $reflectionClass = new \ReflectionClass($entity);
+                foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                    if (!str_starts_with($method->getName(), 'add')) {
+                        continue;
+                    }
+
+                    // Check if this might be the right adder based on property name similarity
+                    $normalizedProperty = $this->normalizePropertyName($property);
+                    $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'add');
+
+                    // Try to match: property name should be similar to method's entity name
+                    // e.g., 'items' matches 'addItem', 'user_items' matches 'addUserItem'
+                    if (!str_contains($normalizedProperty, $extractedFromMethod) &&
+                        !str_contains($extractedFromMethod, $normalizedProperty)) {
+                        continue;
+                    }
+
+                    $parameters = $method->getParameters();
+                    if (count($parameters) > 0) {
+                        $paramType = $parameters[0]->getType();
+                        if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                            $className = $paramType->getName();
+                            if (class_exists($className)) {
+                                $addMethod = $method->getName();
+                                $setParentMethods = array_filter(
+                                    $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC),
+                                    fn($m) => str_starts_with($m->getName(), 'set')
+                                );
+
+                                foreach ($value as $itemData) {
+                                    $item = new $className();
+                                    $this->mapArrayToEntity($itemData, $item);
+
+                                    // Try to set parent relationship using reflection
+                                    $itemReflection = new \ReflectionClass($item);
+                                    foreach ($itemReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $itemMethod) {
+                                        if (str_starts_with($itemMethod->getName(), 'set')) {
+                                            $params = $itemMethod->getParameters();
+                                            if (count($params) > 0) {
+                                                $paramType = $params[0]->getType();
+                                                if ($paramType instanceof \ReflectionNamedType &&
+                                                    $paramType->getName() === get_class($entity)) {
+                                                    $item->{$itemMethod->getName()}($entity);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    $entity->$addMethod($item);
+                                    $this->entityManager->persist($item);
+                                }
+                                continue 2; // Skip to next property
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Find setter method using reflection - no string manipulation guessing
+            $reflectionClass = new \ReflectionClass($entity);
+            $setter = null;
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                if (!str_starts_with($method->getName(), 'set')) {
+                    continue;
+                }
+
+                // Check if method name matches property (case-insensitive, normalized matching)
+                $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'set');
+                $normalizedProperty = $this->normalizePropertyName($property);
+
+                if ($extractedFromMethod === $normalizedProperty) {
+                    $setter = $method->getName();
+                    break;
+                }
+            }
 
             if (method_exists($entity, $setter)) {
                 // Handle different value types
-                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value)) {
                     $entity->$setter($value);
-                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
-                    // Handle IRI references - resolve to actual entity
+                } elseif (is_array($value) && !empty($value)) {
+                    // Handle JSON arrays (like metadata, tags) - not entity collections
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/') && $setter) {
+                    // Handle IRI references - use reflection to determine expected type
                     try {
                         $refId = $this->extractIdFromIri($value);
-                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
-                        $parts = explode('/', trim($value, '/'));
-                        if (count($parts) >= 3) {
-                            $resourceName = $parts[1]; // e.g., "users"
-                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
-                            if (class_exists($className)) {
-                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
-                                if ($refEntity) {
-                                    $entity->$setter($refEntity);
+
+                        // Use reflection to get the expected parameter type for the setter
+                        $reflectionMethod = new \ReflectionMethod($entity, $setter);
+                        $parameters = $reflectionMethod->getParameters();
+
+                        if (count($parameters) > 0) {
+                            $paramType = $parameters[0]->getType();
+                            if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                                $className = $paramType->getName();
+                                if (class_exists($className)) {
+                                    $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                    if ($refEntity) {
+                                        $entity->$setter($refEntity);
+                                    }
                                 }
                             }
                         }

@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
 use App\Dto\UserInputDto;
+use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -52,6 +53,25 @@ class UserProcessor implements ProcessorInterface
     ) {}
 
     /**
+     * Normalize property name for matching (removes underscores, lowercase)
+     * Uses centralized Utils methods instead of manual string manipulation
+     */
+    private function normalizePropertyName(string $property): string
+    {
+        // Convert to camelCase (handles snake_case, etc.) then lowercase
+        return strtolower(Utils::toCamelCase($property));
+    }
+
+    /**
+     * Extract property name from method name (e.g., 'addItem' -> 'item')
+     */
+    private function extractPropertyFromMethod(string $methodName, string $prefix): string
+    {
+        // Remove prefix (e.g., 'add', 'set') and convert to lowercase
+        return strtolower(substr($methodName, strlen($prefix)));
+    }
+
+    /**
      * @param UserInputDto $data
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User
@@ -90,15 +110,15 @@ class UserProcessor implements ProcessorInterface
         }
         // avatarUrl
         if (!$isPatch || array_key_exists('avatarUrl', $requestData)) {
-            $entity->setAvatarurl($data->avatarUrl);
+            $entity->setAvatarUrl($data->avatarUrl);
         }
         // birthDate
         if (!$isPatch || array_key_exists('birthDate', $requestData)) {
-            $entity->setBirthdate($data->birthDate);
+            $entity->setBirthDate($data->birthDate);
         }
         // celPhone
         if (!$isPatch || array_key_exists('celPhone', $requestData)) {
-            $entity->setCelphone($data->celPhone);
+            $entity->setCelPhone($data->celPhone);
         }
         // email
         if (!$isPatch || array_key_exists('email', $requestData)) {
@@ -106,7 +126,7 @@ class UserProcessor implements ProcessorInterface
         }
         // emailVerifiedAt
         if (!$isPatch || array_key_exists('emailVerifiedAt', $requestData)) {
-            $entity->setEmailverifiedat($data->emailVerifiedAt);
+            $entity->setEmailVerifiedAt($data->emailVerifiedAt);
         }
         // verified
         if (!$isPatch || array_key_exists('verified', $requestData)) {
@@ -114,31 +134,31 @@ class UserProcessor implements ProcessorInterface
         }
         // termsSigned
         if (!$isPatch || array_key_exists('termsSigned', $requestData)) {
-            $entity->setTermssigned($data->termsSigned);
+            $entity->setTermsSigned($data->termsSigned);
         }
         // termsSignedAt
         if (!$isPatch || array_key_exists('termsSignedAt', $requestData)) {
-            $entity->setTermssignedat($data->termsSignedAt);
+            $entity->setTermsSignedAt($data->termsSignedAt);
         }
         // verificationToken
         if (!$isPatch || array_key_exists('verificationToken', $requestData)) {
-            $entity->setVerificationtoken($data->verificationToken);
+            $entity->setVerificationToken($data->verificationToken);
         }
         // failedLoginAttempts
         if (!$isPatch || array_key_exists('failedLoginAttempts', $requestData)) {
-            $entity->setFailedloginattempts($data->failedLoginAttempts);
+            $entity->setFailedLoginAttempts($data->failedLoginAttempts);
         }
         // apiToken
         if (!$isPatch || array_key_exists('apiToken', $requestData)) {
-            $entity->setApitoken($data->apiToken);
+            $entity->setApiToken($data->apiToken);
         }
         // apiTokenExpiresAt
         if (!$isPatch || array_key_exists('apiTokenExpiresAt', $requestData)) {
-            $entity->setApitokenexpiresat($data->apiTokenExpiresAt);
+            $entity->setApiTokenExpiresAt($data->apiTokenExpiresAt);
         }
         // openAiApiKey
         if (!$isPatch || array_key_exists('openAiApiKey', $requestData)) {
-            $entity->setOpenaiapikey($data->openAiApiKey);
+            $entity->setOpenAiApiKey($data->openAiApiKey);
         }
         // gender
         if (!$isPatch || array_key_exists('gender', $requestData)) {
@@ -146,67 +166,67 @@ class UserProcessor implements ProcessorInterface
         }
         // lastLoginAt
         if (!$isPatch || array_key_exists('lastLoginAt', $requestData)) {
-            $entity->setLastloginat($data->lastLoginAt);
+            $entity->setLastLoginAt($data->lastLoginAt);
         }
         // lockedUntil
         if (!$isPatch || array_key_exists('lockedUntil', $requestData)) {
-            $entity->setLockeduntil($data->lockedUntil);
+            $entity->setLockedUntil($data->lockedUntil);
         }
         // uiSettings
         if (!$isPatch || array_key_exists('uiSettings', $requestData)) {
-            $entity->setUisettings($data->uiSettings);
+            $entity->setUiSettings($data->uiSettings);
         }
         // listPreferences
         if (!$isPatch || array_key_exists('listPreferences', $requestData)) {
-            $entity->setListpreferences($data->listPreferences);
+            $entity->setListPreferences($data->listPreferences);
         }
         // twoFactorEnabled
         if (!$isPatch || array_key_exists('twoFactorEnabled', $requestData)) {
-            $entity->setTwofactorenabled($data->twoFactorEnabled);
+            $entity->setTwoFactorEnabled($data->twoFactorEnabled);
         }
         // lastPasswordChange
         if (!$isPatch || array_key_exists('lastPasswordChange', $requestData)) {
-            $entity->setLastpasswordchange($data->lastPasswordChange);
+            $entity->setLastPasswordChange($data->lastPasswordChange);
         }
         // twoFactorSecret
         if (!$isPatch || array_key_exists('twoFactorSecret', $requestData)) {
-            $entity->setTwofactorsecret($data->twoFactorSecret);
+            $entity->setTwoFactorSecret($data->twoFactorSecret);
         }
         // twoFactorBackupCodes
         if (!$isPatch || array_key_exists('twoFactorBackupCodes', $requestData)) {
-            $entity->setTwofactorbackupcodes($data->twoFactorBackupCodes);
+            $entity->setTwoFactorBackupCodes($data->twoFactorBackupCodes);
         }
         // passwordResetToken
         if (!$isPatch || array_key_exists('passwordResetToken', $requestData)) {
-            $entity->setPasswordresettoken($data->passwordResetToken);
+            $entity->setPasswordResetToken($data->passwordResetToken);
         }
         // passwordResetExpiry
         if (!$isPatch || array_key_exists('passwordResetExpiry', $requestData)) {
-            $entity->setPasswordresetexpiry($data->passwordResetExpiry);
+            $entity->setPasswordResetExpiry($data->passwordResetExpiry);
         }
         // sessionToken
         if (!$isPatch || array_key_exists('sessionToken', $requestData)) {
-            $entity->setSessiontoken($data->sessionToken);
+            $entity->setSessionToken($data->sessionToken);
         }
         // lastPasswordChangeAt
         if (!$isPatch || array_key_exists('lastPasswordChangeAt', $requestData)) {
-            $entity->setLastpasswordchangeat($data->lastPasswordChangeAt);
+            $entity->setLastPasswordChangeAt($data->lastPasswordChangeAt);
         }
         // passwordExpiresAt
         if (!$isPatch || array_key_exists('passwordExpiresAt', $requestData)) {
-            $entity->setPasswordexpiresat($data->passwordExpiresAt);
+            $entity->setPasswordExpiresAt($data->passwordExpiresAt);
         }
         // mustChangePassword
         if (!$isPatch || array_key_exists('mustChangePassword', $requestData)) {
-            $entity->setMustchangepassword($data->mustChangePassword);
+            $entity->setMustChangePassword($data->mustChangePassword);
         }
         // passkeyEnabled
         if (!$isPatch || array_key_exists('passkeyEnabled', $requestData)) {
-            $entity->setPasskeyenabled($data->passkeyEnabled);
+            $entity->setPasskeyEnabled($data->passkeyEnabled);
         }
         // passkeyCredentials
         if (!$isPatch || array_key_exists('passkeyCredentials', $requestData)) {
-            $entity->setPasskeycredentials($data->passkeyCredentials);
+            $entity->setPasskeyCredentials($data->passkeyCredentials);
         }
         // username
         if (!$isPatch || array_key_exists('username', $requestData)) {
@@ -218,11 +238,11 @@ class UserProcessor implements ProcessorInterface
         }
         // mobilePhone
         if (!$isPatch || array_key_exists('mobilePhone', $requestData)) {
-            $entity->setMobilephone($data->mobilePhone);
+            $entity->setMobilePhone($data->mobilePhone);
         }
         // jobTitle
         if (!$isPatch || array_key_exists('jobTitle', $requestData)) {
-            $entity->setJobtitle($data->jobTitle);
+            $entity->setJobTitle($data->jobTitle);
         }
         // department
         if (!$isPatch || array_key_exists('department', $requestData)) {
@@ -238,47 +258,47 @@ class UserProcessor implements ProcessorInterface
         }
         // preferredLanguage
         if (!$isPatch || array_key_exists('preferredLanguage', $requestData)) {
-            $entity->setPreferredlanguage($data->preferredLanguage);
+            $entity->setPreferredLanguage($data->preferredLanguage);
         }
         // emailSignature
         if (!$isPatch || array_key_exists('emailSignature', $requestData)) {
-            $entity->setEmailsignature($data->emailSignature);
+            $entity->setEmailSignature($data->emailSignature);
         }
         // emailNotificationsEnabled
         if (!$isPatch || array_key_exists('emailNotificationsEnabled', $requestData)) {
-            $entity->setEmailnotificationsenabled($data->emailNotificationsEnabled);
+            $entity->setEmailNotificationsEnabled($data->emailNotificationsEnabled);
         }
         // smsNotificationsEnabled
         if (!$isPatch || array_key_exists('smsNotificationsEnabled', $requestData)) {
-            $entity->setSmsnotificationsenabled($data->smsNotificationsEnabled);
+            $entity->setSmsNotificationsEnabled($data->smsNotificationsEnabled);
         }
         // calendarSyncEnabled
         if (!$isPatch || array_key_exists('calendarSyncEnabled', $requestData)) {
-            $entity->setCalendarsyncenabled($data->calendarSyncEnabled);
+            $entity->setCalendarSyncEnabled($data->calendarSyncEnabled);
         }
         // workingHours
         if (!$isPatch || array_key_exists('workingHours', $requestData)) {
-            $entity->setWorkinghours($data->workingHours);
+            $entity->setWorkingHours($data->workingHours);
         }
         // defaultCurrency
         if (!$isPatch || array_key_exists('defaultCurrency', $requestData)) {
-            $entity->setDefaultcurrency($data->defaultCurrency);
+            $entity->setDefaultCurrency($data->defaultCurrency);
         }
         // dateFormat
         if (!$isPatch || array_key_exists('dateFormat', $requestData)) {
-            $entity->setDateformat($data->dateFormat);
+            $entity->setDateFormat($data->dateFormat);
         }
         // salesTeam
         if (!$isPatch || array_key_exists('salesTeam', $requestData)) {
-            $entity->setSalesteam($data->salesTeam);
+            $entity->setSalesTeam($data->salesTeam);
         }
         // quotaAmount
         if (!$isPatch || array_key_exists('quotaAmount', $requestData)) {
-            $entity->setQuotaamount($data->quotaAmount);
+            $entity->setQuotaAmount($data->quotaAmount);
         }
         // commissionRate
         if (!$isPatch || array_key_exists('commissionRate', $requestData)) {
-            $entity->setCommissionrate($data->commissionRate);
+            $entity->setCommissionRate($data->commissionRate);
         }
         // agent
         if (!$isPatch || array_key_exists('agent', $requestData)) {
@@ -286,11 +306,11 @@ class UserProcessor implements ProcessorInterface
         }
         // agentType
         if (!$isPatch || array_key_exists('agentType', $requestData)) {
-            $entity->setAgenttype($data->agentType);
+            $entity->setAgentType($data->agentType);
         }
         // deletedAt
         if (!$isPatch || array_key_exists('deletedAt', $requestData)) {
-            $entity->setDeletedat($data->deletedAt);
+            $entity->setDeletedAt($data->deletedAt);
         }
         // avatar
         if (!$isPatch || array_key_exists('avatar', $requestData)) {
@@ -306,15 +326,15 @@ class UserProcessor implements ProcessorInterface
         }
         // firstName
         if (!$isPatch || array_key_exists('firstName', $requestData)) {
-            $entity->setFirstname($data->firstName);
+            $entity->setFirstName($data->firstName);
         }
         // lastName
         if (!$isPatch || array_key_exists('lastName', $requestData)) {
-            $entity->setLastname($data->lastName);
+            $entity->setLastName($data->lastName);
         }
         // middleName
         if (!$isPatch || array_key_exists('middleName', $requestData)) {
-            $entity->setMiddlename($data->middleName);
+            $entity->setMiddleName($data->middleName);
         }
         // suffix
         if (!$isPatch || array_key_exists('suffix', $requestData)) {
@@ -330,19 +350,19 @@ class UserProcessor implements ProcessorInterface
         }
         // secondaryEmail
         if (!$isPatch || array_key_exists('secondaryEmail', $requestData)) {
-            $entity->setSecondaryemail($data->secondaryEmail);
+            $entity->setSecondaryEmail($data->secondaryEmail);
         }
         // workPhone
         if (!$isPatch || array_key_exists('workPhone', $requestData)) {
-            $entity->setWorkphone($data->workPhone);
+            $entity->setWorkPhone($data->workPhone);
         }
         // homePhone
         if (!$isPatch || array_key_exists('homePhone', $requestData)) {
-            $entity->setHomephone($data->homePhone);
+            $entity->setHomePhone($data->homePhone);
         }
         // phoneExtension
         if (!$isPatch || array_key_exists('phoneExtension', $requestData)) {
-            $entity->setPhoneextension($data->phoneExtension);
+            $entity->setPhoneExtension($data->phoneExtension);
         }
         // fax
         if (!$isPatch || array_key_exists('fax', $requestData)) {
@@ -354,11 +374,11 @@ class UserProcessor implements ProcessorInterface
         }
         // linkedinUrl
         if (!$isPatch || array_key_exists('linkedinUrl', $requestData)) {
-            $entity->setLinkedinurl($data->linkedinUrl);
+            $entity->setLinkedinUrl($data->linkedinUrl);
         }
         // twitterHandle
         if (!$isPatch || array_key_exists('twitterHandle', $requestData)) {
-            $entity->setTwitterhandle($data->twitterHandle);
+            $entity->setTwitterHandle($data->twitterHandle);
         }
         // address
         if (!$isPatch || array_key_exists('address', $requestData)) {
@@ -366,7 +386,7 @@ class UserProcessor implements ProcessorInterface
         }
         // profilePictureUrl
         if (!$isPatch || array_key_exists('profilePictureUrl', $requestData)) {
-            $entity->setProfilepictureurl($data->profilePictureUrl);
+            $entity->setProfilePictureUrl($data->profilePictureUrl);
         }
         // city
         if (!$isPatch || array_key_exists('city', $requestData)) {
@@ -378,7 +398,7 @@ class UserProcessor implements ProcessorInterface
         }
         // postalCode
         if (!$isPatch || array_key_exists('postalCode', $requestData)) {
-            $entity->setPostalcode($data->postalCode);
+            $entity->setPostalCode($data->postalCode);
         }
         // country
         if (!$isPatch || array_key_exists('country', $requestData)) {
@@ -390,27 +410,27 @@ class UserProcessor implements ProcessorInterface
         }
         // officeLocation
         if (!$isPatch || array_key_exists('officeLocation', $requestData)) {
-            $entity->setOfficelocation($data->officeLocation);
+            $entity->setOfficeLocation($data->officeLocation);
         }
         // employeeId
         if (!$isPatch || array_key_exists('employeeId', $requestData)) {
-            $entity->setEmployeeid($data->employeeId);
+            $entity->setEmployeeId($data->employeeId);
         }
         // hireDate
         if (!$isPatch || array_key_exists('hireDate', $requestData)) {
-            $entity->setHiredate($data->hireDate);
+            $entity->setHireDate($data->hireDate);
         }
         // terminationDate
         if (!$isPatch || array_key_exists('terminationDate', $requestData)) {
-            $entity->setTerminationdate($data->terminationDate);
+            $entity->setTerminationDate($data->terminationDate);
         }
         // employmentStatus
         if (!$isPatch || array_key_exists('employmentStatus', $requestData)) {
-            $entity->setEmploymentstatus($data->employmentStatus);
+            $entity->setEmploymentStatus($data->employmentStatus);
         }
         // costCenter
         if (!$isPatch || array_key_exists('costCenter', $requestData)) {
-            $entity->setCostcenter($data->costCenter);
+            $entity->setCostCenter($data->costCenter);
         }
         // division
         if (!$isPatch || array_key_exists('division', $requestData)) {
@@ -418,7 +438,7 @@ class UserProcessor implements ProcessorInterface
         }
         // businessUnit
         if (!$isPatch || array_key_exists('businessUnit', $requestData)) {
-            $entity->setBusinessunit($data->businessUnit);
+            $entity->setBusinessUnit($data->businessUnit);
         }
         // salary
         if (!$isPatch || array_key_exists('salary', $requestData)) {
@@ -426,7 +446,7 @@ class UserProcessor implements ProcessorInterface
         }
         // salaryFrequency
         if (!$isPatch || array_key_exists('salaryFrequency', $requestData)) {
-            $entity->setSalaryfrequency($data->salaryFrequency);
+            $entity->setSalaryFrequency($data->salaryFrequency);
         }
         // skills
         if (!$isPatch || array_key_exists('skills', $requestData)) {
@@ -454,15 +474,15 @@ class UserProcessor implements ProcessorInterface
         }
         // loginCount
         if (!$isPatch || array_key_exists('loginCount', $requestData)) {
-            $entity->setLogincount($data->loginCount);
+            $entity->setLoginCount($data->loginCount);
         }
         // lastIpAddress
         if (!$isPatch || array_key_exists('lastIpAddress', $requestData)) {
-            $entity->setLastipaddress($data->lastIpAddress);
+            $entity->setLastIpAddress($data->lastIpAddress);
         }
         // lastUserAgent
         if (!$isPatch || array_key_exists('lastUserAgent', $requestData)) {
-            $entity->setLastuseragent($data->lastUserAgent);
+            $entity->setLastUserAgent($data->lastUserAgent);
         }
         // visible
         if (!$isPatch || array_key_exists('visible', $requestData)) {
@@ -470,11 +490,11 @@ class UserProcessor implements ProcessorInterface
         }
         // profileCompleteness
         if (!$isPatch || array_key_exists('profileCompleteness', $requestData)) {
-            $entity->setProfilecompleteness($data->profileCompleteness);
+            $entity->setProfileCompleteness($data->profileCompleteness);
         }
         // lastActivityAt
         if (!$isPatch || array_key_exists('lastActivityAt', $requestData)) {
-            $entity->setLastactivityat($data->lastActivityAt);
+            $entity->setLastActivityAt($data->lastActivityAt);
         }
         // status
         if (!$isPatch || array_key_exists('status', $requestData)) {
@@ -482,7 +502,7 @@ class UserProcessor implements ProcessorInterface
         }
         // statusMessage
         if (!$isPatch || array_key_exists('statusMessage', $requestData)) {
-            $entity->setStatusmessage($data->statusMessage);
+            $entity->setStatusMessage($data->statusMessage);
         }
         // locked
         if (!$isPatch || array_key_exists('locked', $requestData)) {
@@ -490,15 +510,15 @@ class UserProcessor implements ProcessorInterface
         }
         // lockedReason
         if (!$isPatch || array_key_exists('lockedReason', $requestData)) {
-            $entity->setLockedreason($data->lockedReason);
+            $entity->setLockedReason($data->lockedReason);
         }
         // lockedAt
         if (!$isPatch || array_key_exists('lockedAt', $requestData)) {
-            $entity->setLockedat($data->lockedAt);
+            $entity->setLockedAt($data->lockedAt);
         }
         // customFields
         if (!$isPatch || array_key_exists('customFields', $requestData)) {
-            $entity->setCustomfields($data->customFields);
+            $entity->setCustomFields($data->customFields);
         }
 
         // Map relationship properties
@@ -507,7 +527,7 @@ class UserProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organization', $requestData)) {
             if ($data->organization !== null) {
                 if (is_string($data->organization)) {
-                    // IRI format: "/api/organizations/{id}"
+                    // IRI format: "/api/organizatia/{id}"
                     $organizationId = $this->extractIdFromIri($data->organization);
                     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
                     if (!$organization) {
@@ -560,6 +580,7 @@ class UserProcessor implements ProcessorInterface
 
     /**
      * Map array data to entity properties using setters
+     * Handles nested collections recursively
      *
      * @param array $data Associative array of property => value
      * @param object $entity Target entity instance
@@ -572,26 +593,111 @@ class UserProcessor implements ProcessorInterface
                 continue;
             }
 
-            // Convert snake_case to camelCase for setter
-            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+            // Handle nested collections using reflection to find adder methods
+            if (is_array($value) && !empty($value) && isset($value[0]) && is_array($value[0])) {
+                // Find adder method using reflection - scan all methods starting with 'add'
+                $reflectionClass = new \ReflectionClass($entity);
+                foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                    if (!str_starts_with($method->getName(), 'add')) {
+                        continue;
+                    }
+
+                    // Check if this might be the right adder based on property name similarity
+                    $normalizedProperty = $this->normalizePropertyName($property);
+                    $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'add');
+
+                    // Try to match: property name should be similar to method's entity name
+                    // e.g., 'items' matches 'addItem', 'user_items' matches 'addUserItem'
+                    if (!str_contains($normalizedProperty, $extractedFromMethod) &&
+                        !str_contains($extractedFromMethod, $normalizedProperty)) {
+                        continue;
+                    }
+
+                    $parameters = $method->getParameters();
+                    if (count($parameters) > 0) {
+                        $paramType = $parameters[0]->getType();
+                        if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                            $className = $paramType->getName();
+                            if (class_exists($className)) {
+                                $addMethod = $method->getName();
+                                $setParentMethods = array_filter(
+                                    $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC),
+                                    fn($m) => str_starts_with($m->getName(), 'set')
+                                );
+
+                                foreach ($value as $itemData) {
+                                    $item = new $className();
+                                    $this->mapArrayToEntity($itemData, $item);
+
+                                    // Try to set parent relationship using reflection
+                                    $itemReflection = new \ReflectionClass($item);
+                                    foreach ($itemReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $itemMethod) {
+                                        if (str_starts_with($itemMethod->getName(), 'set')) {
+                                            $params = $itemMethod->getParameters();
+                                            if (count($params) > 0) {
+                                                $paramType = $params[0]->getType();
+                                                if ($paramType instanceof \ReflectionNamedType &&
+                                                    $paramType->getName() === get_class($entity)) {
+                                                    $item->{$itemMethod->getName()}($entity);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    $entity->$addMethod($item);
+                                    $this->entityManager->persist($item);
+                                }
+                                continue 2; // Skip to next property
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Find setter method using reflection - no string manipulation guessing
+            $reflectionClass = new \ReflectionClass($entity);
+            $setter = null;
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                if (!str_starts_with($method->getName(), 'set')) {
+                    continue;
+                }
+
+                // Check if method name matches property (case-insensitive, normalized matching)
+                $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'set');
+                $normalizedProperty = $this->normalizePropertyName($property);
+
+                if ($extractedFromMethod === $normalizedProperty) {
+                    $setter = $method->getName();
+                    break;
+                }
+            }
 
             if (method_exists($entity, $setter)) {
                 // Handle different value types
-                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value)) {
                     $entity->$setter($value);
-                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
-                    // Handle IRI references - resolve to actual entity
+                } elseif (is_array($value) && !empty($value)) {
+                    // Handle JSON arrays (like metadata, tags) - not entity collections
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/') && $setter) {
+                    // Handle IRI references - use reflection to determine expected type
                     try {
                         $refId = $this->extractIdFromIri($value);
-                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
-                        $parts = explode('/', trim($value, '/'));
-                        if (count($parts) >= 3) {
-                            $resourceName = $parts[1]; // e.g., "users"
-                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
-                            if (class_exists($className)) {
-                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
-                                if ($refEntity) {
-                                    $entity->$setter($refEntity);
+
+                        // Use reflection to get the expected parameter type for the setter
+                        $reflectionMethod = new \ReflectionMethod($entity, $setter);
+                        $parameters = $reflectionMethod->getParameters();
+
+                        if (count($parameters) > 0) {
+                            $paramType = $parameters[0]->getType();
+                            if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                                $className = $paramType->getName();
+                                if (class_exists($className)) {
+                                    $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                    if ($refEntity) {
+                                        $entity->$setter($refEntity);
+                                    }
                                 }
                             }
                         }

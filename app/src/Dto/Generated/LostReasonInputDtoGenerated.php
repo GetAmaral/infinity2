@@ -22,7 +22,7 @@ abstract class LostReasonInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['lostreason:write'])]
@@ -146,21 +146,21 @@ abstract class LostReasonInputDtoGenerated
         return $this;
     }
 
-    public function getSortorder(): int    {
+    public function getSortOrder(): int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(int $sortOrder): self
+    public function setSortOrder(int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;
     }
 
-    public function getRequiresnotes(): bool    {
+    public function getRequiresNotes(): bool    {
         return $this->requiresNotes;
     }
 
-    public function setRequiresnotes(bool $requiresNotes): self
+    public function setRequiresNotes(bool $requiresNotes): self
     {
         $this->requiresNotes = $requiresNotes;
         return $this;
@@ -196,11 +196,11 @@ abstract class LostReasonInputDtoGenerated
         return $this;
     }
 
-    public function getWinbackpotential(): ?string    {
+    public function getWinBackPotential(): ?string    {
         return $this->winBackPotential;
     }
 
-    public function setWinbackpotential(?string $winBackPotential): self
+    public function setWinBackPotential(?string $winBackPotential): self
     {
         $this->winBackPotential = $winBackPotential;
         return $this;
@@ -226,21 +226,21 @@ abstract class LostReasonInputDtoGenerated
         return $this;
     }
 
-    public function getCompetitorname(): ?string    {
+    public function getCompetitorName(): ?string    {
         return $this->competitorName;
     }
 
-    public function setCompetitorname(?string $competitorName): self
+    public function setCompetitorName(?string $competitorName): self
     {
         $this->competitorName = $competitorName;
         return $this;
     }
 
-    public function getAutomationrule(): ?string    {
+    public function getAutomationRule(): ?string    {
         return $this->automationRule;
     }
 
-    public function setAutomationrule(?string $automationRule): self
+    public function setAutomationRule(?string $automationRule): self
     {
         $this->automationRule = $automationRule;
         return $this;

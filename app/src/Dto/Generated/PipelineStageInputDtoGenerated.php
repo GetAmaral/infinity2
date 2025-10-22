@@ -24,7 +24,7 @@ abstract class PipelineStageInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['pipelinestage:write'])]
@@ -59,7 +59,7 @@ abstract class PipelineStageInputDtoGenerated
 
     /**
      * next reference
-     * Must be: IRI string (e.g., "/api/pipelinestages/uuid")
+     * Must be: IRI string (e.g., "/api/pipeline_stages/uuid")
      */
     #[Groups(['pipelinestage:write'])]
     public ?string $next = null;
@@ -73,7 +73,7 @@ abstract class PipelineStageInputDtoGenerated
 
     /**
      * previous reference
-     * Must be: IRI string (e.g., "/api/pipelinestages/uuid")
+     * Must be: IRI string (e.g., "/api/pipeline_stages/uuid")
      */
     #[Groups(['pipelinestage:write'])]
     public ?string $previous = null;
@@ -104,11 +104,11 @@ abstract class PipelineStageInputDtoGenerated
         return $this;
     }
 
-    public function getDealstages(): ?string    {
+    public function getDealStages(): ?string    {
         return $this->dealStages;
     }
 
-    public function setDealstages(?string $dealStages): self
+    public function setDealStages(?string $dealStages): self
     {
         $this->dealStages = $dealStages;
         return $this;
@@ -184,21 +184,21 @@ abstract class PipelineStageInputDtoGenerated
         return $this;
     }
 
-    public function getDisplayorder(): ?int    {
+    public function getDisplayOrder(): ?int    {
         return $this->displayOrder;
     }
 
-    public function setDisplayorder(?int $displayOrder): self
+    public function setDisplayOrder(?int $displayOrder): self
     {
         $this->displayOrder = $displayOrder;
         return $this;
     }
 
-    public function getMigrationcriteria(): ?string    {
+    public function getMigrationCriteria(): ?string    {
         return $this->migrationCriteria;
     }
 
-    public function setMigrationcriteria(?string $migrationCriteria): self
+    public function setMigrationCriteria(?string $migrationCriteria): self
     {
         $this->migrationCriteria = $migrationCriteria;
         return $this;
@@ -234,11 +234,11 @@ abstract class PipelineStageInputDtoGenerated
         return $this;
     }
 
-    public function getStagename(): string    {
+    public function getStageName(): string    {
         return $this->stageName;
     }
 
-    public function setStagename(string $stageName): self
+    public function setStageName(string $stageName): self
     {
         $this->stageName = $stageName;
         return $this;

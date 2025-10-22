@@ -125,11 +125,11 @@ abstract class TaskTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getDurationminutes(): ?int    {
+    public function getDurationMinutes(): ?int    {
         return $this->durationMinutes;
     }
 
-    public function setDurationminutes(?int $durationMinutes): self
+    public function setDurationMinutes(?int $durationMinutes): self
     {
         $this->durationMinutes = $durationMinutes;
         return $this;
@@ -145,31 +145,31 @@ abstract class TaskTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getPeriodicityinterval(): ?float    {
+    public function getPeriodicityInterval(): ?float    {
         return $this->periodicityInterval;
     }
 
-    public function setPeriodicityinterval(?float $periodicityInterval): self
+    public function setPeriodicityInterval(?float $periodicityInterval): self
     {
         $this->periodicityInterval = $periodicityInterval;
         return $this;
     }
 
-    public function getPeriodicitytimeframe(): ?int    {
+    public function getPeriodicityTimeframe(): ?int    {
         return $this->periodicityTimeframe;
     }
 
-    public function setPeriodicitytimeframe(?int $periodicityTimeframe): self
+    public function setPeriodicityTimeframe(?int $periodicityTimeframe): self
     {
         $this->periodicityTimeframe = $periodicityTimeframe;
         return $this;
     }
 
-    public function getPipelinestagetemplate(): string|PipelineStageTemplateOutputDto|null    {
+    public function getPipelineStageTemplate(): string|PipelineStageTemplateOutputDto|null    {
         return $this->pipelineStageTemplate;
     }
 
-    public function setPipelinestagetemplate(string|PipelineStageTemplateOutputDto|null $pipelineStageTemplate): self
+    public function setPipelineStageTemplate(string|PipelineStageTemplateOutputDto|null $pipelineStageTemplate): self
     {
         $this->pipelineStageTemplate = $pipelineStageTemplate;
         return $this;

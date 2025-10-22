@@ -22,7 +22,7 @@ abstract class BrandInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['brand:write'])]
@@ -113,21 +113,21 @@ abstract class BrandInputDtoGenerated
         return $this;
     }
 
-    public function getLogourl(): ?string    {
+    public function getLogoUrl(): ?string    {
         return $this->logoUrl;
     }
 
-    public function setLogourl(?string $logoUrl): self
+    public function setLogoUrl(?string $logoUrl): self
     {
         $this->logoUrl = $logoUrl;
         return $this;
     }
 
-    public function getPrimarycolor(): ?string    {
+    public function getPrimaryColor(): ?string    {
         return $this->primaryColor;
     }
 
-    public function setPrimarycolor(?string $primaryColor): self
+    public function setPrimaryColor(?string $primaryColor): self
     {
         $this->primaryColor = $primaryColor;
         return $this;
@@ -153,51 +153,51 @@ abstract class BrandInputDtoGenerated
         return $this;
     }
 
-    public function getTargetmarket(): ?string    {
+    public function getTargetMarket(): ?string    {
         return $this->targetMarket;
     }
 
-    public function setTargetmarket(?string $targetMarket): self
+    public function setTargetMarket(?string $targetMarket): self
     {
         $this->targetMarket = $targetMarket;
         return $this;
     }
 
-    public function getMarketshare(): ?string    {
+    public function getMarketShare(): ?string    {
         return $this->marketShare;
     }
 
-    public function setMarketshare(?string $marketShare): self
+    public function setMarketShare(?string $marketShare): self
     {
         $this->marketShare = $marketShare;
         return $this;
     }
 
-    public function getBrandvalue(): ?string    {
+    public function getBrandValue(): ?string    {
         return $this->brandValue;
     }
 
-    public function setBrandvalue(?string $brandValue): self
+    public function setBrandValue(?string $brandValue): self
     {
         $this->brandValue = $brandValue;
         return $this;
     }
 
-    public function getCountryoforigin(): ?string    {
+    public function getCountryOfOrigin(): ?string    {
         return $this->countryOfOrigin;
     }
 
-    public function setCountryoforigin(?string $countryOfOrigin): self
+    public function setCountryOfOrigin(?string $countryOfOrigin): self
     {
         $this->countryOfOrigin = $countryOfOrigin;
         return $this;
     }
 
-    public function getFoundedyear(): ?int    {
+    public function getFoundedYear(): ?int    {
         return $this->foundedYear;
     }
 
-    public function setFoundedyear(?int $foundedYear): self
+    public function setFoundedYear(?int $foundedYear): self
     {
         $this->foundedYear = $foundedYear;
         return $this;

@@ -84,11 +84,11 @@ abstract class CourseOutputDtoGenerated
         return $this;
     }
 
-    public function getReleasedate(): ?\DateTimeImmutable    {
+    public function getReleaseDate(): ?\DateTimeImmutable    {
         return $this->releaseDate;
     }
 
-    public function setReleasedate(?\DateTimeImmutable $releaseDate): self
+    public function setReleaseDate(?\DateTimeImmutable $releaseDate): self
     {
         $this->releaseDate = $releaseDate;
         return $this;
@@ -144,21 +144,21 @@ abstract class CourseOutputDtoGenerated
         return $this;
     }
 
-    public function getStudentcourses(): array    {
+    public function getStudentCourses(): array    {
         return $this->studentCourses;
     }
 
-    public function setStudentcourses(array $studentCourses): self
+    public function setStudentCourses(array $studentCourses): self
     {
         $this->studentCourses = $studentCourses;
         return $this;
     }
 
-    public function getTotallengthseconds(): int    {
+    public function getTotalLengthSeconds(): int    {
         return $this->totalLengthSeconds;
     }
 
-    public function setTotallengthseconds(int $totalLengthSeconds): self
+    public function setTotalLengthSeconds(int $totalLengthSeconds): self
     {
         $this->totalLengthSeconds = $totalLengthSeconds;
         return $this;

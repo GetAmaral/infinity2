@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Campaign;
 use App\Dto\CampaignInputDto;
+use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -38,6 +39,25 @@ class CampaignProcessor implements ProcessorInterface
         #[Autowire(service: 'App\MultiTenant\TenantEntityProcessor')]
         private readonly ProcessorInterface $persistProcessor
     ) {}
+
+    /**
+     * Normalize property name for matching (removes underscores, lowercase)
+     * Uses centralized Utils methods instead of manual string manipulation
+     */
+    private function normalizePropertyName(string $property): string
+    {
+        // Convert to camelCase (handles snake_case, etc.) then lowercase
+        return strtolower(Utils::toCamelCase($property));
+    }
+
+    /**
+     * Extract property name from method name (e.g., 'addItem' -> 'item')
+     */
+    private function extractPropertyFromMethod(string $methodName, string $prefix): string
+    {
+        // Remove prefix (e.g., 'add', 'set') and convert to lowercase
+        return strtolower(substr($methodName, strlen($prefix)));
+    }
 
     /**
      * @param CampaignInputDto $data
@@ -78,7 +98,7 @@ class CampaignProcessor implements ProcessorInterface
         }
         // actualBudget
         if (!$isPatch || array_key_exists('actualBudget', $requestData)) {
-            $entity->setActualbudget($data->actualBudget);
+            $entity->setActualBudget($data->actualBudget);
         }
         // active
         if (!$isPatch || array_key_exists('active', $requestData)) {
@@ -86,15 +106,15 @@ class CampaignProcessor implements ProcessorInterface
         }
         // actualCost
         if (!$isPatch || array_key_exists('actualCost', $requestData)) {
-            $entity->setActualcost($data->actualCost);
+            $entity->setActualCost($data->actualCost);
         }
         // actualReturn
         if (!$isPatch || array_key_exists('actualReturn', $requestData)) {
-            $entity->setActualreturn($data->actualReturn);
+            $entity->setActualReturn($data->actualReturn);
         }
         // actualRevenue
         if (!$isPatch || array_key_exists('actualRevenue', $requestData)) {
-            $entity->setActualrevenue($data->actualRevenue);
+            $entity->setActualRevenue($data->actualRevenue);
         }
         // archived
         if (!$isPatch || array_key_exists('archived', $requestData)) {
@@ -102,19 +122,19 @@ class CampaignProcessor implements ProcessorInterface
         }
         // budgetedCost
         if (!$isPatch || array_key_exists('budgetedCost', $requestData)) {
-            $entity->setBudgetedcost($data->budgetedCost);
+            $entity->setBudgetedCost($data->budgetedCost);
         }
         // campaignStatus
         if (!$isPatch || array_key_exists('campaignStatus', $requestData)) {
-            $entity->setCampaignstatus($data->campaignStatus);
+            $entity->setCampaignStatus($data->campaignStatus);
         }
         // campaignType
         if (!$isPatch || array_key_exists('campaignType', $requestData)) {
-            $entity->setCampaigntype($data->campaignType);
+            $entity->setCampaignType($data->campaignType);
         }
         // codeName
         if (!$isPatch || array_key_exists('codeName', $requestData)) {
-            $entity->setCodename($data->codeName);
+            $entity->setCodeName($data->codeName);
         }
         // draft
         if (!$isPatch || array_key_exists('draft', $requestData)) {
@@ -126,19 +146,19 @@ class CampaignProcessor implements ProcessorInterface
         }
         // emailAddress
         if (!$isPatch || array_key_exists('emailAddress', $requestData)) {
-            $entity->setEmailaddress($data->emailAddress);
+            $entity->setEmailAddress($data->emailAddress);
         }
         // endDate
         if (!$isPatch || array_key_exists('endDate', $requestData)) {
-            $entity->setEnddate($data->endDate);
+            $entity->setEndDate($data->endDate);
         }
         // expectedResponse
         if (!$isPatch || array_key_exists('expectedResponse', $requestData)) {
-            $entity->setExpectedresponse($data->expectedResponse);
+            $entity->setExpectedResponse($data->expectedResponse);
         }
         // expectedRevenue
         if (!$isPatch || array_key_exists('expectedRevenue', $requestData)) {
-            $entity->setExpectedrevenue($data->expectedRevenue);
+            $entity->setExpectedRevenue($data->expectedRevenue);
         }
         // message
         if (!$isPatch || array_key_exists('message', $requestData)) {
@@ -146,19 +166,19 @@ class CampaignProcessor implements ProcessorInterface
         }
         // numberOfContacts
         if (!$isPatch || array_key_exists('numberOfContacts', $requestData)) {
-            $entity->setNumberofcontacts($data->numberOfContacts);
+            $entity->setNumberOfContacts($data->numberOfContacts);
         }
         // numberOfConverted
         if (!$isPatch || array_key_exists('numberOfConverted', $requestData)) {
-            $entity->setNumberofconverted($data->numberOfConverted);
+            $entity->setNumberOfConverted($data->numberOfConverted);
         }
         // numberOfLeads
         if (!$isPatch || array_key_exists('numberOfLeads', $requestData)) {
-            $entity->setNumberofleads($data->numberOfLeads);
+            $entity->setNumberOfLeads($data->numberOfLeads);
         }
         // numberOfResponses
         if (!$isPatch || array_key_exists('numberOfResponses', $requestData)) {
-            $entity->setNumberofresponses($data->numberOfResponses);
+            $entity->setNumberOfResponses($data->numberOfResponses);
         }
         // objective
         if (!$isPatch || array_key_exists('objective', $requestData)) {
@@ -166,27 +186,27 @@ class CampaignProcessor implements ProcessorInterface
         }
         // otherCost
         if (!$isPatch || array_key_exists('otherCost', $requestData)) {
-            $entity->setOthercost($data->otherCost);
+            $entity->setOtherCost($data->otherCost);
         }
         // plannedBudget
         if (!$isPatch || array_key_exists('plannedBudget', $requestData)) {
-            $entity->setPlannedbudget($data->plannedBudget);
+            $entity->setPlannedBudget($data->plannedBudget);
         }
         // plannedDuration
         if (!$isPatch || array_key_exists('plannedDuration', $requestData)) {
-            $entity->setPlannedduration($data->plannedDuration);
+            $entity->setPlannedDuration($data->plannedDuration);
         }
         // plannedEndDate
         if (!$isPatch || array_key_exists('plannedEndDate', $requestData)) {
-            $entity->setPlannedenddate($data->plannedEndDate);
+            $entity->setPlannedEndDate($data->plannedEndDate);
         }
         // plannedReturn
         if (!$isPatch || array_key_exists('plannedReturn', $requestData)) {
-            $entity->setPlannedreturn($data->plannedReturn);
+            $entity->setPlannedReturn($data->plannedReturn);
         }
         // plannedStartDate
         if (!$isPatch || array_key_exists('plannedStartDate', $requestData)) {
-            $entity->setPlannedstartdate($data->plannedStartDate);
+            $entity->setPlannedStartDate($data->plannedStartDate);
         }
         // roi
         if (!$isPatch || array_key_exists('roi', $requestData)) {
@@ -194,7 +214,7 @@ class CampaignProcessor implements ProcessorInterface
         }
         // startDate
         if (!$isPatch || array_key_exists('startDate', $requestData)) {
-            $entity->setStartdate($data->startDate);
+            $entity->setStartDate($data->startDate);
         }
         // status
         if (!$isPatch || array_key_exists('status', $requestData)) {
@@ -202,7 +222,7 @@ class CampaignProcessor implements ProcessorInterface
         }
         // targetAudience
         if (!$isPatch || array_key_exists('targetAudience', $requestData)) {
-            $entity->setTargetaudience($data->targetAudience);
+            $entity->setTargetAudience($data->targetAudience);
         }
         // template
         if (!$isPatch || array_key_exists('template', $requestData)) {
@@ -215,7 +235,7 @@ class CampaignProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organization', $requestData)) {
             if ($data->organization !== null) {
                 if (is_string($data->organization)) {
-                    // IRI format: "/api/organizations/{id}"
+                    // IRI format: "/api/organizatia/{id}"
                     $organizationId = $this->extractIdFromIri($data->organization);
                     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
                     if (!$organization) {
@@ -276,7 +296,7 @@ class CampaignProcessor implements ProcessorInterface
                     if (!$parentCampaign) {
                         throw new BadRequestHttpException('Campaign not found: ' . $parentCampaignId);
                     }
-                    $entity->setParentcampaign($parentCampaign);
+                    $entity->setParentCampaign($parentCampaign);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested parentCampaign creation not supported. Use IRI format.');
@@ -305,6 +325,7 @@ class CampaignProcessor implements ProcessorInterface
 
     /**
      * Map array data to entity properties using setters
+     * Handles nested collections recursively
      *
      * @param array $data Associative array of property => value
      * @param object $entity Target entity instance
@@ -317,26 +338,111 @@ class CampaignProcessor implements ProcessorInterface
                 continue;
             }
 
-            // Convert snake_case to camelCase for setter
-            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+            // Handle nested collections using reflection to find adder methods
+            if (is_array($value) && !empty($value) && isset($value[0]) && is_array($value[0])) {
+                // Find adder method using reflection - scan all methods starting with 'add'
+                $reflectionClass = new \ReflectionClass($entity);
+                foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                    if (!str_starts_with($method->getName(), 'add')) {
+                        continue;
+                    }
+
+                    // Check if this might be the right adder based on property name similarity
+                    $normalizedProperty = $this->normalizePropertyName($property);
+                    $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'add');
+
+                    // Try to match: property name should be similar to method's entity name
+                    // e.g., 'items' matches 'addItem', 'user_items' matches 'addUserItem'
+                    if (!str_contains($normalizedProperty, $extractedFromMethod) &&
+                        !str_contains($extractedFromMethod, $normalizedProperty)) {
+                        continue;
+                    }
+
+                    $parameters = $method->getParameters();
+                    if (count($parameters) > 0) {
+                        $paramType = $parameters[0]->getType();
+                        if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                            $className = $paramType->getName();
+                            if (class_exists($className)) {
+                                $addMethod = $method->getName();
+                                $setParentMethods = array_filter(
+                                    $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC),
+                                    fn($m) => str_starts_with($m->getName(), 'set')
+                                );
+
+                                foreach ($value as $itemData) {
+                                    $item = new $className();
+                                    $this->mapArrayToEntity($itemData, $item);
+
+                                    // Try to set parent relationship using reflection
+                                    $itemReflection = new \ReflectionClass($item);
+                                    foreach ($itemReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $itemMethod) {
+                                        if (str_starts_with($itemMethod->getName(), 'set')) {
+                                            $params = $itemMethod->getParameters();
+                                            if (count($params) > 0) {
+                                                $paramType = $params[0]->getType();
+                                                if ($paramType instanceof \ReflectionNamedType &&
+                                                    $paramType->getName() === get_class($entity)) {
+                                                    $item->{$itemMethod->getName()}($entity);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    $entity->$addMethod($item);
+                                    $this->entityManager->persist($item);
+                                }
+                                continue 2; // Skip to next property
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Find setter method using reflection - no string manipulation guessing
+            $reflectionClass = new \ReflectionClass($entity);
+            $setter = null;
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                if (!str_starts_with($method->getName(), 'set')) {
+                    continue;
+                }
+
+                // Check if method name matches property (case-insensitive, normalized matching)
+                $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'set');
+                $normalizedProperty = $this->normalizePropertyName($property);
+
+                if ($extractedFromMethod === $normalizedProperty) {
+                    $setter = $method->getName();
+                    break;
+                }
+            }
 
             if (method_exists($entity, $setter)) {
                 // Handle different value types
-                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value)) {
                     $entity->$setter($value);
-                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
-                    // Handle IRI references - resolve to actual entity
+                } elseif (is_array($value) && !empty($value)) {
+                    // Handle JSON arrays (like metadata, tags) - not entity collections
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/') && $setter) {
+                    // Handle IRI references - use reflection to determine expected type
                     try {
                         $refId = $this->extractIdFromIri($value);
-                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
-                        $parts = explode('/', trim($value, '/'));
-                        if (count($parts) >= 3) {
-                            $resourceName = $parts[1]; // e.g., "users"
-                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
-                            if (class_exists($className)) {
-                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
-                                if ($refEntity) {
-                                    $entity->$setter($refEntity);
+
+                        // Use reflection to get the expected parameter type for the setter
+                        $reflectionMethod = new \ReflectionMethod($entity, $setter);
+                        $parameters = $reflectionMethod->getParameters();
+
+                        if (count($parameters) > 0) {
+                            $paramType = $parameters[0]->getType();
+                            if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                                $className = $paramType->getName();
+                                if (class_exists($className)) {
+                                    $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                    if ($refEntity) {
+                                        $entity->$setter($refEntity);
+                                    }
                                 }
                             }
                         }

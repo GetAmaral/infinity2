@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\TalkMessage;
 use App\Dto\TalkMessageInputDto;
+use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -40,6 +41,25 @@ class TalkMessageProcessor implements ProcessorInterface
     ) {}
 
     /**
+     * Normalize property name for matching (removes underscores, lowercase)
+     * Uses centralized Utils methods instead of manual string manipulation
+     */
+    private function normalizePropertyName(string $property): string
+    {
+        // Convert to camelCase (handles snake_case, etc.) then lowercase
+        return strtolower(Utils::toCamelCase($property));
+    }
+
+    /**
+     * Extract property name from method name (e.g., 'addItem' -> 'item')
+     */
+    private function extractPropertyFromMethod(string $methodName, string $prefix): string
+    {
+        // Remove prefix (e.g., 'add', 'set') and convert to lowercase
+        return strtolower(substr($methodName, strlen($prefix)));
+    }
+
+    /**
      * @param TalkMessageInputDto $data
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): TalkMessage
@@ -70,7 +90,7 @@ class TalkMessageProcessor implements ProcessorInterface
         // Map scalar properties from DTO to Entity
         // sentAt
         if (!$isPatch || array_key_exists('sentAt', $requestData)) {
-            $entity->setSentat($data->sentAt);
+            $entity->setSentAt($data->sentAt);
         }
         // body
         if (!$isPatch || array_key_exists('body', $requestData)) {
@@ -78,7 +98,7 @@ class TalkMessageProcessor implements ProcessorInterface
         }
         // messageType
         if (!$isPatch || array_key_exists('messageType', $requestData)) {
-            $entity->setMessagetype($data->messageType);
+            $entity->setMessageType($data->messageType);
         }
         // read
         if (!$isPatch || array_key_exists('read', $requestData)) {
@@ -86,7 +106,7 @@ class TalkMessageProcessor implements ProcessorInterface
         }
         // readAt
         if (!$isPatch || array_key_exists('readAt', $requestData)) {
-            $entity->setReadat($data->readAt);
+            $entity->setReadAt($data->readAt);
         }
         // sentiment
         if (!$isPatch || array_key_exists('sentiment', $requestData)) {
@@ -102,7 +122,7 @@ class TalkMessageProcessor implements ProcessorInterface
         }
         // deliveredAt
         if (!$isPatch || array_key_exists('deliveredAt', $requestData)) {
-            $entity->setDeliveredat($data->deliveredAt);
+            $entity->setDeliveredAt($data->deliveredAt);
         }
         // internal
         if (!$isPatch || array_key_exists('internal', $requestData)) {
@@ -114,7 +134,7 @@ class TalkMessageProcessor implements ProcessorInterface
         }
         // editedAt
         if (!$isPatch || array_key_exists('editedAt', $requestData)) {
-            $entity->setEditedat($data->editedAt);
+            $entity->setEditedAt($data->editedAt);
         }
         // channel
         if (!$isPatch || array_key_exists('channel', $requestData)) {
@@ -135,7 +155,7 @@ class TalkMessageProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organization', $requestData)) {
             if ($data->organization !== null) {
                 if (is_string($data->organization)) {
-                    // IRI format: "/api/organizations/{id}"
+                    // IRI format: "/api/organizatia/{id}"
                     $organizationId = $this->extractIdFromIri($data->organization);
                     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
                     if (!$organization) {
@@ -179,7 +199,7 @@ class TalkMessageProcessor implements ProcessorInterface
                     if (!$fromContact) {
                         throw new BadRequestHttpException('Contact not found: ' . $fromContactId);
                     }
-                    $entity->setFromcontact($fromContact);
+                    $entity->setFromContact($fromContact);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested fromContact creation not supported. Use IRI format.');
@@ -197,7 +217,7 @@ class TalkMessageProcessor implements ProcessorInterface
                     if (!$fromUser) {
                         throw new BadRequestHttpException('User not found: ' . $fromUserId);
                     }
-                    $entity->setFromuser($fromUser);
+                    $entity->setFromUser($fromUser);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested fromUser creation not supported. Use IRI format.');
@@ -215,7 +235,7 @@ class TalkMessageProcessor implements ProcessorInterface
                     if (!$fromAgent) {
                         throw new BadRequestHttpException('Agent not found: ' . $fromAgentId);
                     }
-                    $entity->setFromagent($fromAgent);
+                    $entity->setFromAgent($fromAgent);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested fromAgent creation not supported. Use IRI format.');
@@ -227,13 +247,13 @@ class TalkMessageProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('parentMessage', $requestData)) {
             if ($data->parentMessage !== null) {
                 if (is_string($data->parentMessage)) {
-                    // IRI format: "/api/talkmessages/{id}"
+                    // IRI format: "/api/talk_messages/{id}"
                     $parentMessageId = $this->extractIdFromIri($data->parentMessage);
                     $parentMessage = $this->entityManager->getRepository(TalkMessage::class)->find($parentMessageId);
                     if (!$parentMessage) {
                         throw new BadRequestHttpException('TalkMessage not found: ' . $parentMessageId);
                     }
-                    $entity->setParentmessage($parentMessage);
+                    $entity->setParentMessage($parentMessage);
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested parentMessage creation not supported. Use IRI format.');
@@ -245,7 +265,7 @@ class TalkMessageProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('notification', $requestData)) {
             if ($data->notification !== null) {
                 if (is_string($data->notification)) {
-                    // IRI format: "/api/notifications/{id}"
+                    // IRI format: "/api/notificatia/{id}"
                     $notificationId = $this->extractIdFromIri($data->notification);
                     $notification = $this->entityManager->getRepository(Notification::class)->find($notificationId);
                     if (!$notification) {
@@ -280,6 +300,7 @@ class TalkMessageProcessor implements ProcessorInterface
 
     /**
      * Map array data to entity properties using setters
+     * Handles nested collections recursively
      *
      * @param array $data Associative array of property => value
      * @param object $entity Target entity instance
@@ -292,26 +313,111 @@ class TalkMessageProcessor implements ProcessorInterface
                 continue;
             }
 
-            // Convert snake_case to camelCase for setter
-            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+            // Handle nested collections using reflection to find adder methods
+            if (is_array($value) && !empty($value) && isset($value[0]) && is_array($value[0])) {
+                // Find adder method using reflection - scan all methods starting with 'add'
+                $reflectionClass = new \ReflectionClass($entity);
+                foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                    if (!str_starts_with($method->getName(), 'add')) {
+                        continue;
+                    }
+
+                    // Check if this might be the right adder based on property name similarity
+                    $normalizedProperty = $this->normalizePropertyName($property);
+                    $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'add');
+
+                    // Try to match: property name should be similar to method's entity name
+                    // e.g., 'items' matches 'addItem', 'user_items' matches 'addUserItem'
+                    if (!str_contains($normalizedProperty, $extractedFromMethod) &&
+                        !str_contains($extractedFromMethod, $normalizedProperty)) {
+                        continue;
+                    }
+
+                    $parameters = $method->getParameters();
+                    if (count($parameters) > 0) {
+                        $paramType = $parameters[0]->getType();
+                        if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                            $className = $paramType->getName();
+                            if (class_exists($className)) {
+                                $addMethod = $method->getName();
+                                $setParentMethods = array_filter(
+                                    $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC),
+                                    fn($m) => str_starts_with($m->getName(), 'set')
+                                );
+
+                                foreach ($value as $itemData) {
+                                    $item = new $className();
+                                    $this->mapArrayToEntity($itemData, $item);
+
+                                    // Try to set parent relationship using reflection
+                                    $itemReflection = new \ReflectionClass($item);
+                                    foreach ($itemReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $itemMethod) {
+                                        if (str_starts_with($itemMethod->getName(), 'set')) {
+                                            $params = $itemMethod->getParameters();
+                                            if (count($params) > 0) {
+                                                $paramType = $params[0]->getType();
+                                                if ($paramType instanceof \ReflectionNamedType &&
+                                                    $paramType->getName() === get_class($entity)) {
+                                                    $item->{$itemMethod->getName()}($entity);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    $entity->$addMethod($item);
+                                    $this->entityManager->persist($item);
+                                }
+                                continue 2; // Skip to next property
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Find setter method using reflection - no string manipulation guessing
+            $reflectionClass = new \ReflectionClass($entity);
+            $setter = null;
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                if (!str_starts_with($method->getName(), 'set')) {
+                    continue;
+                }
+
+                // Check if method name matches property (case-insensitive, normalized matching)
+                $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'set');
+                $normalizedProperty = $this->normalizePropertyName($property);
+
+                if ($extractedFromMethod === $normalizedProperty) {
+                    $setter = $method->getName();
+                    break;
+                }
+            }
 
             if (method_exists($entity, $setter)) {
                 // Handle different value types
-                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value)) {
                     $entity->$setter($value);
-                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
-                    // Handle IRI references - resolve to actual entity
+                } elseif (is_array($value) && !empty($value)) {
+                    // Handle JSON arrays (like metadata, tags) - not entity collections
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/') && $setter) {
+                    // Handle IRI references - use reflection to determine expected type
                     try {
                         $refId = $this->extractIdFromIri($value);
-                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
-                        $parts = explode('/', trim($value, '/'));
-                        if (count($parts) >= 3) {
-                            $resourceName = $parts[1]; // e.g., "users"
-                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
-                            if (class_exists($className)) {
-                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
-                                if ($refEntity) {
-                                    $entity->$setter($refEntity);
+
+                        // Use reflection to get the expected parameter type for the setter
+                        $reflectionMethod = new \ReflectionMethod($entity, $setter);
+                        $parameters = $reflectionMethod->getParameters();
+
+                        if (count($parameters) > 0) {
+                            $paramType = $parameters[0]->getType();
+                            if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                                $className = $paramType->getName();
+                                if (class_exists($className)) {
+                                    $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                    if ($refEntity) {
+                                        $entity->$setter($refEntity);
+                                    }
                                 }
                             }
                         }

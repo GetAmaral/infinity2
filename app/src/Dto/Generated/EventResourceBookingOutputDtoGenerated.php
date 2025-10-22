@@ -102,31 +102,31 @@ abstract class EventResourceBookingOutputDtoGenerated
         return $this;
     }
 
-    public function getStarttime(): \DateTimeImmutable    {
+    public function getStartTime(): \DateTimeImmutable    {
         return $this->startTime;
     }
 
-    public function setStarttime(\DateTimeImmutable $startTime): self
+    public function setStartTime(\DateTimeImmutable $startTime): self
     {
         $this->startTime = $startTime;
         return $this;
     }
 
-    public function getBookedby(): string|UserOutputDto|null    {
+    public function getBookedBy(): string|UserOutputDto|null    {
         return $this->bookedBy;
     }
 
-    public function setBookedby(string|UserOutputDto|null $bookedBy): self
+    public function setBookedBy(string|UserOutputDto|null $bookedBy): self
     {
         $this->bookedBy = $bookedBy;
         return $this;
     }
 
-    public function getEndtime(): \DateTimeImmutable    {
+    public function getEndTime(): \DateTimeImmutable    {
         return $this->endTime;
     }
 
-    public function setEndtime(\DateTimeImmutable $endTime): self
+    public function setEndTime(\DateTimeImmutable $endTime): self
     {
         $this->endTime = $endTime;
         return $this;
@@ -162,51 +162,51 @@ abstract class EventResourceBookingOutputDtoGenerated
         return $this;
     }
 
-    public function getDepositamount(): ?string    {
+    public function getDepositAmount(): ?string    {
         return $this->depositAmount;
     }
 
-    public function setDepositamount(?string $depositAmount): self
+    public function setDepositAmount(?string $depositAmount): self
     {
         $this->depositAmount = $depositAmount;
         return $this;
     }
 
-    public function getTotalamount(): ?string    {
+    public function getTotalAmount(): ?string    {
         return $this->totalAmount;
     }
 
-    public function setTotalamount(?string $totalAmount): self
+    public function setTotalAmount(?string $totalAmount): self
     {
         $this->totalAmount = $totalAmount;
         return $this;
     }
 
-    public function getConfirmedat(): ?\DateTimeImmutable    {
+    public function getConfirmedAt(): ?\DateTimeImmutable    {
         return $this->confirmedAt;
     }
 
-    public function setConfirmedat(?\DateTimeImmutable $confirmedAt): self
+    public function setConfirmedAt(?\DateTimeImmutable $confirmedAt): self
     {
         $this->confirmedAt = $confirmedAt;
         return $this;
     }
 
-    public function getCancelledat(): ?\DateTimeImmutable    {
+    public function getCancelledAt(): ?\DateTimeImmutable    {
         return $this->cancelledAt;
     }
 
-    public function setCancelledat(?\DateTimeImmutable $cancelledAt): self
+    public function setCancelledAt(?\DateTimeImmutable $cancelledAt): self
     {
         $this->cancelledAt = $cancelledAt;
         return $this;
     }
 
-    public function getCancellationreason(): ?string    {
+    public function getCancellationReason(): ?string    {
         return $this->cancellationReason;
     }
 
-    public function setCancellationreason(?string $cancellationReason): self
+    public function setCancellationReason(?string $cancellationReason): self
     {
         $this->cancellationReason = $cancellationReason;
         return $this;
@@ -222,11 +222,11 @@ abstract class EventResourceBookingOutputDtoGenerated
         return $this;
     }
 
-    public function getRemindersent(): bool    {
+    public function getReminderSent(): bool    {
         return $this->reminderSent;
     }
 
-    public function setRemindersent(bool $reminderSent): self
+    public function setReminderSent(bool $reminderSent): self
     {
         $this->reminderSent = $reminderSent;
         return $this;

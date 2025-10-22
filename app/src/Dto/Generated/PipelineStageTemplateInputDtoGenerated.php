@@ -23,7 +23,7 @@ abstract class PipelineStageTemplateInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['pipelinestagetemplate:write'])]
@@ -52,7 +52,7 @@ abstract class PipelineStageTemplateInputDtoGenerated
 
     /**
      * pipelineTemplate reference
-     * Must be: IRI string (e.g., "/api/pipelinetemplates/uuid")
+     * Must be: IRI string (e.g., "/api/pipeline_templates/uuid")
      */
     #[Assert\NotNull]
     #[Groups(['pipelinestagetemplate:write'])]
@@ -146,21 +146,21 @@ abstract class PipelineStageTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getRottingdays(): ?int    {
+    public function getRottingDays(): ?int    {
         return $this->rottingDays;
     }
 
-    public function setRottingdays(?int $rottingDays): self
+    public function setRottingDays(?int $rottingDays): self
     {
         $this->rottingDays = $rottingDays;
         return $this;
     }
 
-    public function getPipelinetemplate(): ?string    {
+    public function getPipelineTemplate(): ?string    {
         return $this->pipelineTemplate;
     }
 
-    public function setPipelinetemplate(?string $pipelineTemplate): self
+    public function setPipelineTemplate(?string $pipelineTemplate): self
     {
         $this->pipelineTemplate = $pipelineTemplate;
         return $this;
@@ -186,31 +186,31 @@ abstract class PipelineStageTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getStagetype(): string    {
+    public function getStageType(): string    {
         return $this->stageType;
     }
 
-    public function setStagetype(string $stageType): self
+    public function setStageType(string $stageType): self
     {
         $this->stageType = $stageType;
         return $this;
     }
 
-    public function getAutomationrules(): ?array    {
+    public function getAutomationRules(): ?array    {
         return $this->automationRules;
     }
 
-    public function setAutomationrules(?array $automationRules): self
+    public function setAutomationRules(?array $automationRules): self
     {
         $this->automationRules = $automationRules;
         return $this;
     }
 
-    public function getRequiredfields(): ?array    {
+    public function getRequiredFields(): ?array    {
         return $this->requiredFields;
     }
 
-    public function setRequiredfields(?array $requiredFields): self
+    public function setRequiredFields(?array $requiredFields): self
     {
         $this->requiredFields = $requiredFields;
         return $this;

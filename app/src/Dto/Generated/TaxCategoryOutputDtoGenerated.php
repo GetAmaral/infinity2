@@ -86,11 +86,11 @@ abstract class TaxCategoryOutputDtoGenerated
         return $this;
     }
 
-    public function getTaxrate(): ?string    {
+    public function getTaxRate(): ?string    {
         return $this->taxRate;
     }
 
-    public function setTaxrate(?string $taxRate): self
+    public function setTaxRate(?string $taxRate): self
     {
         $this->taxRate = $taxRate;
         return $this;

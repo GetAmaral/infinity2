@@ -89,41 +89,41 @@ abstract class StudentLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getStudentcourse(): string|StudentCourseOutputDto|null    {
+    public function getStudentCourse(): string|StudentCourseOutputDto|null    {
         return $this->studentCourse;
     }
 
-    public function setStudentcourse(string|StudentCourseOutputDto|null $studentCourse): self
+    public function setStudentCourse(string|StudentCourseOutputDto|null $studentCourse): self
     {
         $this->studentCourse = $studentCourse;
         return $this;
     }
 
-    public function getWatchedseconds(): int    {
+    public function getWatchedSeconds(): int    {
         return $this->watchedSeconds;
     }
 
-    public function setWatchedseconds(int $watchedSeconds): self
+    public function setWatchedSeconds(int $watchedSeconds): self
     {
         $this->watchedSeconds = $watchedSeconds;
         return $this;
     }
 
-    public function getLastpositionseconds(): int    {
+    public function getLastPositionSeconds(): int    {
         return $this->lastPositionSeconds;
     }
 
-    public function setLastpositionseconds(int $lastPositionSeconds): self
+    public function setLastPositionSeconds(int $lastPositionSeconds): self
     {
         $this->lastPositionSeconds = $lastPositionSeconds;
         return $this;
     }
 
-    public function getCompletionpercentage(): string    {
+    public function getCompletionPercentage(): string    {
         return $this->completionPercentage;
     }
 
-    public function setCompletionpercentage(string $completionPercentage): self
+    public function setCompletionPercentage(string $completionPercentage): self
     {
         $this->completionPercentage = $completionPercentage;
         return $this;
@@ -139,21 +139,21 @@ abstract class StudentLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getLastwatchedat(): ?\DateTimeImmutable    {
+    public function getLastWatchedAt(): ?\DateTimeImmutable    {
         return $this->lastWatchedAt;
     }
 
-    public function setLastwatchedat(?\DateTimeImmutable $lastWatchedAt): self
+    public function setLastWatchedAt(?\DateTimeImmutable $lastWatchedAt): self
     {
         $this->lastWatchedAt = $lastWatchedAt;
         return $this;
     }
 
-    public function getCompletedat(): ?\DateTimeImmutable    {
+    public function getCompletedAt(): ?\DateTimeImmutable    {
         return $this->completedAt;
     }
 
-    public function setCompletedat(?\DateTimeImmutable $completedAt): self
+    public function setCompletedAt(?\DateTimeImmutable $completedAt): self
     {
         $this->completedAt = $completedAt;
         return $this;

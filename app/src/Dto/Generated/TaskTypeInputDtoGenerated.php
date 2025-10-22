@@ -22,7 +22,7 @@ abstract class TaskTypeInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['tasktype:write'])]
@@ -57,21 +57,21 @@ abstract class TaskTypeInputDtoGenerated
         return $this;
     }
 
-    public function getTaskfunction(): ?int    {
+    public function getTaskFunction(): ?int    {
         return $this->taskFunction;
     }
 
-    public function setTaskfunction(?int $taskFunction): self
+    public function setTaskFunction(?int $taskFunction): self
     {
         $this->taskFunction = $taskFunction;
         return $this;
     }
 
-    public function getTasktemplates(): ?string    {
+    public function getTaskTemplates(): ?string    {
         return $this->taskTemplates;
     }
 
-    public function setTasktemplates(?string $taskTemplates): self
+    public function setTaskTemplates(?string $taskTemplates): self
     {
         $this->taskTemplates = $taskTemplates;
         return $this;

@@ -46,7 +46,7 @@ resources:
     properties:
       organization:
         description: "Organization"
-        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
+        example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
       event:
         description: "The associated calendar event for this meeting"
         example: "\/api\/events\/0199cadd-0000-7000-0000-000000000001"

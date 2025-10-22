@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\ProductBatch;
 use App\Dto\ProductBatchInputDto;
+use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -33,6 +34,25 @@ class ProductBatchProcessor implements ProcessorInterface
         #[Autowire(service: 'App\MultiTenant\TenantEntityProcessor')]
         private readonly ProcessorInterface $persistProcessor
     ) {}
+
+    /**
+     * Normalize property name for matching (removes underscores, lowercase)
+     * Uses centralized Utils methods instead of manual string manipulation
+     */
+    private function normalizePropertyName(string $property): string
+    {
+        // Convert to camelCase (handles snake_case, etc.) then lowercase
+        return strtolower(Utils::toCamelCase($property));
+    }
+
+    /**
+     * Extract property name from method name (e.g., 'addItem' -> 'item')
+     */
+    private function extractPropertyFromMethod(string $methodName, string $prefix): string
+    {
+        // Remove prefix (e.g., 'add', 'set') and convert to lowercase
+        return strtolower(substr($methodName, strlen($prefix)));
+    }
 
     /**
      * @param ProductBatchInputDto $data
@@ -65,7 +85,7 @@ class ProductBatchProcessor implements ProcessorInterface
         // Map scalar properties from DTO to Entity
         // batchNumber
         if (!$isPatch || array_key_exists('batchNumber', $requestData)) {
-            $entity->setBatchnumber($data->batchNumber);
+            $entity->setBatchNumber($data->batchNumber);
         }
         // name
         if (!$isPatch || array_key_exists('name', $requestData)) {
@@ -73,15 +93,15 @@ class ProductBatchProcessor implements ProcessorInterface
         }
         // manufacturingDate
         if (!$isPatch || array_key_exists('manufacturingDate', $requestData)) {
-            $entity->setManufacturingdate($data->manufacturingDate);
+            $entity->setManufacturingDate($data->manufacturingDate);
         }
         // lotNumber
         if (!$isPatch || array_key_exists('lotNumber', $requestData)) {
-            $entity->setLotnumber($data->lotNumber);
+            $entity->setLotNumber($data->lotNumber);
         }
         // serialNumber
         if (!$isPatch || array_key_exists('serialNumber', $requestData)) {
-            $entity->setSerialnumber($data->serialNumber);
+            $entity->setSerialNumber($data->serialNumber);
         }
         // expired
         if (!$isPatch || array_key_exists('expired', $requestData)) {
@@ -93,7 +113,7 @@ class ProductBatchProcessor implements ProcessorInterface
         }
         // qualityStatus
         if (!$isPatch || array_key_exists('qualityStatus', $requestData)) {
-            $entity->setQualitystatus($data->qualityStatus);
+            $entity->setQualityStatus($data->qualityStatus);
         }
         // notes
         if (!$isPatch || array_key_exists('notes', $requestData)) {
@@ -101,7 +121,7 @@ class ProductBatchProcessor implements ProcessorInterface
         }
         // availableQuantity
         if (!$isPatch || array_key_exists('availableQuantity', $requestData)) {
-            $entity->setAvailablequantity($data->availableQuantity);
+            $entity->setAvailableQuantity($data->availableQuantity);
         }
         // active
         if (!$isPatch || array_key_exists('active', $requestData)) {
@@ -109,15 +129,15 @@ class ProductBatchProcessor implements ProcessorInterface
         }
         // commissionAmount
         if (!$isPatch || array_key_exists('commissionAmount', $requestData)) {
-            $entity->setCommissionamount($data->commissionAmount);
+            $entity->setCommissionAmount($data->commissionAmount);
         }
         // commissionRate
         if (!$isPatch || array_key_exists('commissionRate', $requestData)) {
-            $entity->setCommissionrate($data->commissionRate);
+            $entity->setCommissionRate($data->commissionRate);
         }
         // costPrice
         if (!$isPatch || array_key_exists('costPrice', $requestData)) {
-            $entity->setCostprice($data->costPrice);
+            $entity->setCostPrice($data->costPrice);
         }
         // currency
         if (!$isPatch || array_key_exists('currency', $requestData)) {
@@ -125,43 +145,43 @@ class ProductBatchProcessor implements ProcessorInterface
         }
         // discountAmount
         if (!$isPatch || array_key_exists('discountAmount', $requestData)) {
-            $entity->setDiscountamount($data->discountAmount);
+            $entity->setDiscountAmount($data->discountAmount);
         }
         // discountPercentage
         if (!$isPatch || array_key_exists('discountPercentage', $requestData)) {
-            $entity->setDiscountpercentage($data->discountPercentage);
+            $entity->setDiscountPercentage($data->discountPercentage);
         }
         // exchangeRate
         if (!$isPatch || array_key_exists('exchangeRate', $requestData)) {
-            $entity->setExchangerate($data->exchangeRate);
+            $entity->setExchangeRate($data->exchangeRate);
         }
         // expirationDate
         if (!$isPatch || array_key_exists('expirationDate', $requestData)) {
-            $entity->setExpirationdate($data->expirationDate);
+            $entity->setExpirationDate($data->expirationDate);
         }
         // listPrice
         if (!$isPatch || array_key_exists('listPrice', $requestData)) {
-            $entity->setListprice($data->listPrice);
+            $entity->setListPrice($data->listPrice);
         }
         // marginPercentage
         if (!$isPatch || array_key_exists('marginPercentage', $requestData)) {
-            $entity->setMarginpercentage($data->marginPercentage);
+            $entity->setMarginPercentage($data->marginPercentage);
         }
         // maximumDiscount
         if (!$isPatch || array_key_exists('maximumDiscount', $requestData)) {
-            $entity->setMaximumdiscount($data->maximumDiscount);
+            $entity->setMaximumDiscount($data->maximumDiscount);
         }
         // minimumPrice
         if (!$isPatch || array_key_exists('minimumPrice', $requestData)) {
-            $entity->setMinimumprice($data->minimumPrice);
+            $entity->setMinimumPrice($data->minimumPrice);
         }
         // reservedQuantity
         if (!$isPatch || array_key_exists('reservedQuantity', $requestData)) {
-            $entity->setReservedquantity($data->reservedQuantity);
+            $entity->setReservedQuantity($data->reservedQuantity);
         }
         // stockQuantity
         if (!$isPatch || array_key_exists('stockQuantity', $requestData)) {
-            $entity->setStockquantity($data->stockQuantity);
+            $entity->setStockQuantity($data->stockQuantity);
         }
 
         // Map relationship properties
@@ -170,7 +190,7 @@ class ProductBatchProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organization', $requestData)) {
             if ($data->organization !== null) {
                 if (is_string($data->organization)) {
-                    // IRI format: "/api/organizations/{id}"
+                    // IRI format: "/api/organizatia/{id}"
                     $organizationId = $this->extractIdFromIri($data->organization);
                     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
                     if (!$organization) {
@@ -223,6 +243,7 @@ class ProductBatchProcessor implements ProcessorInterface
 
     /**
      * Map array data to entity properties using setters
+     * Handles nested collections recursively
      *
      * @param array $data Associative array of property => value
      * @param object $entity Target entity instance
@@ -235,26 +256,111 @@ class ProductBatchProcessor implements ProcessorInterface
                 continue;
             }
 
-            // Convert snake_case to camelCase for setter
-            $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+            // Handle nested collections using reflection to find adder methods
+            if (is_array($value) && !empty($value) && isset($value[0]) && is_array($value[0])) {
+                // Find adder method using reflection - scan all methods starting with 'add'
+                $reflectionClass = new \ReflectionClass($entity);
+                foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                    if (!str_starts_with($method->getName(), 'add')) {
+                        continue;
+                    }
+
+                    // Check if this might be the right adder based on property name similarity
+                    $normalizedProperty = $this->normalizePropertyName($property);
+                    $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'add');
+
+                    // Try to match: property name should be similar to method's entity name
+                    // e.g., 'items' matches 'addItem', 'user_items' matches 'addUserItem'
+                    if (!str_contains($normalizedProperty, $extractedFromMethod) &&
+                        !str_contains($extractedFromMethod, $normalizedProperty)) {
+                        continue;
+                    }
+
+                    $parameters = $method->getParameters();
+                    if (count($parameters) > 0) {
+                        $paramType = $parameters[0]->getType();
+                        if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                            $className = $paramType->getName();
+                            if (class_exists($className)) {
+                                $addMethod = $method->getName();
+                                $setParentMethods = array_filter(
+                                    $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC),
+                                    fn($m) => str_starts_with($m->getName(), 'set')
+                                );
+
+                                foreach ($value as $itemData) {
+                                    $item = new $className();
+                                    $this->mapArrayToEntity($itemData, $item);
+
+                                    // Try to set parent relationship using reflection
+                                    $itemReflection = new \ReflectionClass($item);
+                                    foreach ($itemReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $itemMethod) {
+                                        if (str_starts_with($itemMethod->getName(), 'set')) {
+                                            $params = $itemMethod->getParameters();
+                                            if (count($params) > 0) {
+                                                $paramType = $params[0]->getType();
+                                                if ($paramType instanceof \ReflectionNamedType &&
+                                                    $paramType->getName() === get_class($entity)) {
+                                                    $item->{$itemMethod->getName()}($entity);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    $entity->$addMethod($item);
+                                    $this->entityManager->persist($item);
+                                }
+                                continue 2; // Skip to next property
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Find setter method using reflection - no string manipulation guessing
+            $reflectionClass = new \ReflectionClass($entity);
+            $setter = null;
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                if (!str_starts_with($method->getName(), 'set')) {
+                    continue;
+                }
+
+                // Check if method name matches property (case-insensitive, normalized matching)
+                $extractedFromMethod = $this->extractPropertyFromMethod($method->getName(), 'set');
+                $normalizedProperty = $this->normalizePropertyName($property);
+
+                if ($extractedFromMethod === $normalizedProperty) {
+                    $setter = $method->getName();
+                    break;
+                }
+            }
 
             if (method_exists($entity, $setter)) {
                 // Handle different value types
-                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value) || is_array($value)) {
+                if ($value instanceof \DateTimeInterface || $value === null || is_scalar($value)) {
                     $entity->$setter($value);
-                } elseif (is_string($value) && str_starts_with($value, '/api/')) {
-                    // Handle IRI references - resolve to actual entity
+                } elseif (is_array($value) && !empty($value)) {
+                    // Handle JSON arrays (like metadata, tags) - not entity collections
+                    $entity->$setter($value);
+                } elseif (is_string($value) && str_starts_with($value, '/api/') && $setter) {
+                    // Handle IRI references - use reflection to determine expected type
                     try {
                         $refId = $this->extractIdFromIri($value);
-                        // Infer entity class from IRI pattern (e.g., /api/users/... -> User)
-                        $parts = explode('/', trim($value, '/'));
-                        if (count($parts) >= 3) {
-                            $resourceName = $parts[1]; // e.g., "users"
-                            $className = 'App\Entity\\' . ucfirst(rtrim($resourceName, 's'));
-                            if (class_exists($className)) {
-                                $refEntity = $this->entityManager->getRepository($className)->find($refId);
-                                if ($refEntity) {
-                                    $entity->$setter($refEntity);
+
+                        // Use reflection to get the expected parameter type for the setter
+                        $reflectionMethod = new \ReflectionMethod($entity, $setter);
+                        $parameters = $reflectionMethod->getParameters();
+
+                        if (count($parameters) > 0) {
+                            $paramType = $parameters[0]->getType();
+                            if ($paramType && $paramType instanceof \ReflectionNamedType) {
+                                $className = $paramType->getName();
+                                if (class_exists($className)) {
+                                    $refEntity = $this->entityManager->getRepository($className)->find($refId);
+                                    if ($refEntity) {
+                                        $entity->$setter($refEntity);
+                                    }
                                 }
                             }
                         }

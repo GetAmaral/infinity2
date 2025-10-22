@@ -25,7 +25,7 @@ abstract class CompanyInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['company:write'])]
@@ -67,7 +67,7 @@ abstract class CompanyInputDtoGenerated
 
     /**
      * shippingCity reference
-     * Must be: IRI string (e.g., "/api/citys/uuid")
+     * Must be: IRI string (e.g., "/api/ties/uuid")
      */
     #[Groups(['company:write'])]
     public ?string $shippingCity = null;
@@ -89,7 +89,7 @@ abstract class CompanyInputDtoGenerated
 
     /**
      * parentCompany reference
-     * Must be: IRI string (e.g., "/api/companys/uuid")
+     * Must be: IRI string (e.g., "/api/nies/uuid")
      */
     #[Groups(['company:write'])]
     public ?string $parentCompany = null;
@@ -118,7 +118,7 @@ abstract class CompanyInputDtoGenerated
 
     /**
      * city reference
-     * Must be: IRI string (e.g., "/api/citys/uuid")
+     * Must be: IRI string (e.g., "/api/ties/uuid")
      */
     #[Groups(['company:write'])]
     public ?string $city = null;
@@ -283,11 +283,11 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getAccountmanager(): ?string    {
+    public function getAccountManager(): ?string    {
         return $this->accountManager;
     }
 
-    public function setAccountmanager(?string $accountManager): self
+    public function setAccountManager(?string $accountManager): self
     {
         $this->accountManager = $accountManager;
         return $this;
@@ -303,41 +303,41 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getBillingaddress(): ?string    {
+    public function getBillingAddress(): ?string    {
         return $this->billingAddress;
     }
 
-    public function setBillingaddress(?string $billingAddress): self
+    public function setBillingAddress(?string $billingAddress): self
     {
         $this->billingAddress = $billingAddress;
         return $this;
     }
 
-    public function getLegalname(): ?string    {
+    public function getLegalName(): ?string    {
         return $this->legalName;
     }
 
-    public function setLegalname(?string $legalName): self
+    public function setLegalName(?string $legalName): self
     {
         $this->legalName = $legalName;
         return $this;
     }
 
-    public function getShippingaddress(): ?string    {
+    public function getShippingAddress(): ?string    {
         return $this->shippingAddress;
     }
 
-    public function setShippingaddress(?string $shippingAddress): self
+    public function setShippingAddress(?string $shippingAddress): self
     {
         $this->shippingAddress = $shippingAddress;
         return $this;
     }
 
-    public function getShippingcity(): ?string    {
+    public function getShippingCity(): ?string    {
         return $this->shippingCity;
     }
 
-    public function setShippingcity(?string $shippingCity): self
+    public function setShippingCity(?string $shippingCity): self
     {
         $this->shippingCity = $shippingCity;
         return $this;
@@ -353,21 +353,21 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getShippingpostalcode(): ?string    {
+    public function getShippingPostalCode(): ?string    {
         return $this->shippingPostalCode;
     }
 
-    public function setShippingpostalcode(?string $shippingPostalCode): self
+    public function setShippingPostalCode(?string $shippingPostalCode): self
     {
         $this->shippingPostalCode = $shippingPostalCode;
         return $this;
     }
 
-    public function getAnnualrevenue(): ?string    {
+    public function getAnnualRevenue(): ?string    {
         return $this->annualRevenue;
     }
 
-    public function setAnnualrevenue(?string $annualRevenue): self
+    public function setAnnualRevenue(?string $annualRevenue): self
     {
         $this->annualRevenue = $annualRevenue;
         return $this;
@@ -383,31 +383,31 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getCompanytype(): ?string    {
+    public function getCompanyType(): ?string    {
         return $this->companyType;
     }
 
-    public function setCompanytype(?string $companyType): self
+    public function setCompanyType(?string $companyType): self
     {
         $this->companyType = $companyType;
         return $this;
     }
 
-    public function getParentcompany(): ?string    {
+    public function getParentCompany(): ?string    {
         return $this->parentCompany;
     }
 
-    public function setParentcompany(?string $parentCompany): self
+    public function setParentCompany(?string $parentCompany): self
     {
         $this->parentCompany = $parentCompany;
         return $this;
     }
 
-    public function getAccountsource(): ?string    {
+    public function getAccountSource(): ?string    {
         return $this->accountSource;
     }
 
-    public function setAccountsource(?string $accountSource): self
+    public function setAccountSource(?string $accountSource): self
     {
         $this->accountSource = $accountSource;
         return $this;
@@ -423,41 +423,41 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getCustomersince(): ?\DateTimeImmutable    {
+    public function getCustomerSince(): ?\DateTimeImmutable    {
         return $this->customerSince;
     }
 
-    public function setCustomersince(?\DateTimeImmutable $customerSince): self
+    public function setCustomerSince(?\DateTimeImmutable $customerSince): self
     {
         $this->customerSince = $customerSince;
         return $this;
     }
 
-    public function getPaymentterms(): ?string    {
+    public function getPaymentTerms(): ?string    {
         return $this->paymentTerms;
     }
 
-    public function setPaymentterms(?string $paymentTerms): self
+    public function setPaymentTerms(?string $paymentTerms): self
     {
         $this->paymentTerms = $paymentTerms;
         return $this;
     }
 
-    public function getCreditlimit(): ?string    {
+    public function getCreditLimit(): ?string    {
         return $this->creditLimit;
     }
 
-    public function setCreditlimit(?string $creditLimit): self
+    public function setCreditLimit(?string $creditLimit): self
     {
         $this->creditLimit = $creditLimit;
         return $this;
     }
 
-    public function getFiscalyearend(): ?string    {
+    public function getFiscalYearEnd(): ?string    {
         return $this->fiscalYearEnd;
     }
 
-    public function setFiscalyearend(?string $fiscalYearEnd): self
+    public function setFiscalYearEnd(?string $fiscalYearEnd): self
     {
         $this->fiscalYearEnd = $fiscalYearEnd;
         return $this;
@@ -473,21 +473,21 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getSiccode(): ?string    {
+    public function getSicCode(): ?string    {
         return $this->sicCode;
     }
 
-    public function setSiccode(?string $sicCode): self
+    public function setSicCode(?string $sicCode): self
     {
         $this->sicCode = $sicCode;
         return $this;
     }
 
-    public function getNaicscode(): ?string    {
+    public function getNaicsCode(): ?string    {
         return $this->naicsCode;
     }
 
-    public function setNaicscode(?string $naicsCode): self
+    public function setNaicsCode(?string $naicsCode): self
     {
         $this->naicsCode = $naicsCode;
         return $this;
@@ -503,41 +503,41 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getTickersymbol(): ?string    {
+    public function getTickerSymbol(): ?string    {
         return $this->tickerSymbol;
     }
 
-    public function setTickersymbol(?string $tickerSymbol): self
+    public function setTickerSymbol(?string $tickerSymbol): self
     {
         $this->tickerSymbol = $tickerSymbol;
         return $this;
     }
 
-    public function getLinkedinurl(): ?string    {
+    public function getLinkedInUrl(): ?string    {
         return $this->linkedInUrl;
     }
 
-    public function setLinkedinurl(?string $linkedInUrl): self
+    public function setLinkedInUrl(?string $linkedInUrl): self
     {
         $this->linkedInUrl = $linkedInUrl;
         return $this;
     }
 
-    public function getDonotcontact(): ?bool    {
+    public function getDoNotContact(): ?bool    {
         return $this->doNotContact;
     }
 
-    public function setDonotcontact(?bool $doNotContact): self
+    public function setDoNotContact(?bool $doNotContact): self
     {
         $this->doNotContact = $doNotContact;
         return $this;
     }
 
-    public function getGdprconsent(): ?bool    {
+    public function getGdprConsent(): ?bool    {
         return $this->gdprConsent;
     }
 
-    public function setGdprconsent(?bool $gdprConsent): self
+    public function setGdprConsent(?bool $gdprConsent): self
     {
         $this->gdprConsent = $gdprConsent;
         return $this;
@@ -553,21 +553,21 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getShippingcountry(): ?string    {
+    public function getShippingCountry(): ?string    {
         return $this->shippingCountry;
     }
 
-    public function setShippingcountry(?string $shippingCountry): self
+    public function setShippingCountry(?string $shippingCountry): self
     {
         $this->shippingCountry = $shippingCountry;
         return $this;
     }
 
-    public function getCompanysize(): ?int    {
+    public function getCompanySize(): ?int    {
         return $this->companySize;
     }
 
-    public function setCompanysize(?int $companySize): self
+    public function setCompanySize(?int $companySize): self
     {
         $this->companySize = $companySize;
         return $this;
@@ -633,31 +633,31 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getManufacturedbrands(): ?string    {
+    public function getManufacturedBrands(): ?string    {
         return $this->manufacturedBrands;
     }
 
-    public function setManufacturedbrands(?string $manufacturedBrands): self
+    public function setManufacturedBrands(?string $manufacturedBrands): self
     {
         $this->manufacturedBrands = $manufacturedBrands;
         return $this;
     }
 
-    public function getManufacturedproducts(): ?string    {
+    public function getManufacturedProducts(): ?string    {
         return $this->manufacturedProducts;
     }
 
-    public function setManufacturedproducts(?string $manufacturedProducts): self
+    public function setManufacturedProducts(?string $manufacturedProducts): self
     {
         $this->manufacturedProducts = $manufacturedProducts;
         return $this;
     }
 
-    public function getMobilephone(): ?string    {
+    public function getMobilePhone(): ?string    {
         return $this->mobilePhone;
     }
 
-    public function setMobilephone(?string $mobilePhone): self
+    public function setMobilePhone(?string $mobilePhone): self
     {
         $this->mobilePhone = $mobilePhone;
         return $this;
@@ -683,31 +683,31 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getPostalcode(): ?string    {
+    public function getPostalCode(): ?string    {
         return $this->postalCode;
     }
 
-    public function setPostalcode(?string $postalCode): self
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
         return $this;
     }
 
-    public function getPrimarycontactname(): ?string    {
+    public function getPrimaryContactName(): ?string    {
         return $this->primaryContactName;
     }
 
-    public function setPrimarycontactname(?string $primaryContactName): self
+    public function setPrimaryContactName(?string $primaryContactName): self
     {
         $this->primaryContactName = $primaryContactName;
         return $this;
     }
 
-    public function getSocialmedias(): ?string    {
+    public function getSocialMedias(): ?string    {
         return $this->socialMedias;
     }
 
-    public function setSocialmedias(?string $socialMedias): self
+    public function setSocialMedias(?string $socialMedias): self
     {
         $this->socialMedias = $socialMedias;
         return $this;
@@ -723,71 +723,71 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getSuppliedbrands(): ?string    {
+    public function getSuppliedBrands(): ?string    {
         return $this->suppliedBrands;
     }
 
-    public function setSuppliedbrands(?string $suppliedBrands): self
+    public function setSuppliedBrands(?string $suppliedBrands): self
     {
         $this->suppliedBrands = $suppliedBrands;
         return $this;
     }
 
-    public function getSuppliedproducts(): ?string    {
+    public function getSuppliedProducts(): ?string    {
         return $this->suppliedProducts;
     }
 
-    public function setSuppliedproducts(?string $suppliedProducts): self
+    public function setSuppliedProducts(?string $suppliedProducts): self
     {
         $this->suppliedProducts = $suppliedProducts;
         return $this;
     }
 
-    public function getTaxid(): ?string    {
+    public function getTaxId(): ?string    {
         return $this->taxId;
     }
 
-    public function setTaxid(?string $taxId): self
+    public function setTaxId(?string $taxId): self
     {
         $this->taxId = $taxId;
         return $this;
     }
 
-    public function getNextactivitydate(): ?\DateTimeImmutable    {
+    public function getNextActivityDate(): ?\DateTimeImmutable    {
         return $this->nextActivityDate;
     }
 
-    public function setNextactivitydate(?\DateTimeImmutable $nextActivityDate): self
+    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
     {
         $this->nextActivityDate = $nextActivityDate;
         return $this;
     }
 
-    public function getLastactivitydate(): ?\DateTimeImmutable    {
+    public function getLastActivityDate(): ?\DateTimeImmutable    {
         return $this->lastActivityDate;
     }
 
-    public function setLastactivitydate(?\DateTimeImmutable $lastActivityDate): self
+    public function setLastActivityDate(?\DateTimeImmutable $lastActivityDate): self
     {
         $this->lastActivityDate = $lastActivityDate;
         return $this;
     }
 
-    public function getTimezone(): string    {
+    public function getTimeZone(): string    {
         return $this->timeZone;
     }
 
-    public function setTimezone(string $timeZone): self
+    public function setTimeZone(string $timeZone): self
     {
         $this->timeZone = $timeZone;
         return $this;
     }
 
-    public function getStateprovince(): ?string    {
+    public function getStateProvince(): ?string    {
         return $this->stateProvince;
     }
 
-    public function setStateprovince(?string $stateProvince): self
+    public function setStateProvince(?string $stateProvince): self
     {
         $this->stateProvince = $stateProvince;
         return $this;
@@ -803,51 +803,51 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getLifecyclestage(): ?string    {
+    public function getLifecycleStage(): ?string    {
         return $this->lifecycleStage;
     }
 
-    public function setLifecyclestage(?string $lifecycleStage): self
+    public function setLifecycleStage(?string $lifecycleStage): self
     {
         $this->lifecycleStage = $lifecycleStage;
         return $this;
     }
 
-    public function getCompanydomain(): ?string    {
+    public function getCompanyDomain(): ?string    {
         return $this->companyDomain;
     }
 
-    public function setCompanydomain(?string $companyDomain): self
+    public function setCompanyDomain(?string $companyDomain): self
     {
         $this->companyDomain = $companyDomain;
         return $this;
     }
 
-    public function getLeadstatus(): ?string    {
+    public function getLeadStatus(): ?string    {
         return $this->leadStatus;
     }
 
-    public function setLeadstatus(?string $leadStatus): self
+    public function setLeadStatus(?string $leadStatus): self
     {
         $this->leadStatus = $leadStatus;
         return $this;
     }
 
-    public function getNumberofassociateddeals(): ?int    {
+    public function getNumberOfAssociatedDeals(): ?int    {
         return $this->numberOfAssociatedDeals;
     }
 
-    public function setNumberofassociateddeals(?int $numberOfAssociatedDeals): self
+    public function setNumberOfAssociatedDeals(?int $numberOfAssociatedDeals): self
     {
         $this->numberOfAssociatedDeals = $numberOfAssociatedDeals;
         return $this;
     }
 
-    public function getNumberofassociatedcontacts(): ?int    {
+    public function getNumberOfAssociatedContacts(): ?int    {
         return $this->numberOfAssociatedContacts;
     }
 
-    public function setNumberofassociatedcontacts(?int $numberOfAssociatedContacts): self
+    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
     {
         $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
         return $this;
@@ -863,11 +863,11 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getShippingstateprovince(): ?string    {
+    public function getShippingStateProvince(): ?string    {
         return $this->shippingStateProvince;
     }
 
-    public function setShippingstateprovince(?string $shippingStateProvince): self
+    public function setShippingStateProvince(?string $shippingStateProvince): self
     {
         $this->shippingStateProvince = $shippingStateProvince;
         return $this;

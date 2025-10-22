@@ -92,21 +92,21 @@ abstract class AttachmentOutputDtoGenerated
         return $this;
     }
 
-    public function getFilesize(): ?int    {
+    public function getFileSize(): ?int    {
         return $this->fileSize;
     }
 
-    public function setFilesize(?int $fileSize): self
+    public function setFileSize(?int $fileSize): self
     {
         $this->fileSize = $fileSize;
         return $this;
     }
 
-    public function getFiletype(): ?string    {
+    public function getFileType(): ?string    {
         return $this->fileType;
     }
 
-    public function setFiletype(?string $fileType): self
+    public function setFileType(?string $fileType): self
     {
         $this->fileType = $fileType;
         return $this;
@@ -132,11 +132,11 @@ abstract class AttachmentOutputDtoGenerated
         return $this;
     }
 
-    public function getTalkmessage(): string|TalkMessageOutputDto|null    {
+    public function getTalkMessage(): string|TalkMessageOutputDto|null    {
         return $this->talkMessage;
     }
 
-    public function setTalkmessage(string|TalkMessageOutputDto|null $talkMessage): self
+    public function setTalkMessage(string|TalkMessageOutputDto|null $talkMessage): self
     {
         $this->talkMessage = $talkMessage;
         return $this;

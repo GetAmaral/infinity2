@@ -28,7 +28,7 @@ abstract class TaskInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['task:write'])]
@@ -86,7 +86,7 @@ abstract class TaskInputDtoGenerated
 
     /**
      * pipelineStage reference
-     * Must be: IRI string (e.g., "/api/pipelinestages/uuid")
+     * Must be: IRI string (e.g., "/api/pipeline_stages/uuid")
      */
     #[Groups(['task:write'])]
     public ?string $pipelineStage = null;
@@ -103,7 +103,7 @@ abstract class TaskInputDtoGenerated
 
     /**
      * company reference
-     * Must be: IRI string (e.g., "/api/companys/uuid")
+     * Must be: IRI string (e.g., "/api/nies/uuid")
      */
     #[Groups(['task:write'])]
     public ?string $company = null;
@@ -153,7 +153,7 @@ abstract class TaskInputDtoGenerated
 
     /**
      * type reference
-     * Must be: IRI string (e.g., "/api/tasktypes/uuid")
+     * Must be: IRI string (e.g., "/api/task_types/uuid")
      */
     #[Groups(['task:write'])]
     public ?string $type = null;
@@ -198,21 +198,21 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getStartdate(): ?\DateTimeImmutable    {
+    public function getStartDate(): ?\DateTimeImmutable    {
         return $this->startDate;
     }
 
-    public function setStartdate(?\DateTimeImmutable $startDate): self
+    public function setStartDate(?\DateTimeImmutable $startDate): self
     {
         $this->startDate = $startDate;
         return $this;
     }
 
-    public function getCompletionpercentage(): ?int    {
+    public function getCompletionPercentage(): ?int    {
         return $this->completionPercentage;
     }
 
-    public function setCompletionpercentage(?int $completionPercentage): self
+    public function setCompletionPercentage(?int $completionPercentage): self
     {
         $this->completionPercentage = $completionPercentage;
         return $this;
@@ -228,11 +228,11 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getNotificationsent(): bool    {
+    public function getNotificationSent(): bool    {
         return $this->notificationSent;
     }
 
-    public function setNotificationsent(bool $notificationSent): self
+    public function setNotificationSent(bool $notificationSent): self
     {
         $this->notificationSent = $notificationSent;
         return $this;
@@ -258,11 +258,11 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getCompleteddate(): ?\DateTimeImmutable    {
+    public function getCompletedDate(): ?\DateTimeImmutable    {
         return $this->completedDate;
     }
 
-    public function setCompleteddate(?\DateTimeImmutable $completedDate): self
+    public function setCompletedDate(?\DateTimeImmutable $completedDate): self
     {
         $this->completedDate = $completedDate;
         return $this;
@@ -288,11 +288,11 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getDurationminutes(): ?int    {
+    public function getDurationMinutes(): ?int    {
         return $this->durationMinutes;
     }
 
-    public function setDurationminutes(?int $durationMinutes): self
+    public function setDurationMinutes(?int $durationMinutes): self
     {
         $this->durationMinutes = $durationMinutes;
         return $this;
@@ -308,11 +308,11 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getPipelinestage(): ?string    {
+    public function getPipelineStage(): ?string    {
         return $this->pipelineStage;
     }
 
-    public function setPipelinestage(?string $pipelineStage): self
+    public function setPipelineStage(?string $pipelineStage): self
     {
         $this->pipelineStage = $pipelineStage;
         return $this;
@@ -328,11 +328,11 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getScheduleddate(): ?\DateTimeImmutable    {
+    public function getScheduledDate(): ?\DateTimeImmutable    {
         return $this->scheduledDate;
     }
 
-    public function setScheduleddate(?\DateTimeImmutable $scheduledDate): self
+    public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
     {
         $this->scheduledDate = $scheduledDate;
         return $this;
@@ -358,11 +358,11 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getReminderdate(): ?\DateTimeImmutable    {
+    public function getReminderDate(): ?\DateTimeImmutable    {
         return $this->reminderDate;
     }
 
-    public function setReminderdate(?\DateTimeImmutable $reminderDate): self
+    public function setReminderDate(?\DateTimeImmutable $reminderDate): self
     {
         $this->reminderDate = $reminderDate;
         return $this;
@@ -388,11 +388,11 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getRecurrencerule(): ?string    {
+    public function getRecurrenceRule(): ?string    {
         return $this->recurrenceRule;
     }
 
-    public function setRecurrencerule(?string $recurrenceRule): self
+    public function setRecurrenceRule(?string $recurrenceRule): self
     {
         $this->recurrenceRule = $recurrenceRule;
         return $this;
@@ -418,41 +418,41 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getEmailsubject(): ?string    {
+    public function getEmailSubject(): ?string    {
         return $this->emailSubject;
     }
 
-    public function setEmailsubject(?string $emailSubject): self
+    public function setEmailSubject(?string $emailSubject): self
     {
         $this->emailSubject = $emailSubject;
         return $this;
     }
 
-    public function getTaskstatus(): string    {
+    public function getTaskStatus(): string    {
         return $this->taskStatus;
     }
 
-    public function setTaskstatus(string $taskStatus): self
+    public function setTaskStatus(string $taskStatus): self
     {
         $this->taskStatus = $taskStatus;
         return $this;
     }
 
-    public function getPhonenumber(): ?string    {
+    public function getPhoneNumber(): ?string    {
         return $this->phoneNumber;
     }
 
-    public function setPhonenumber(?string $phoneNumber): self
+    public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
         return $this;
     }
 
-    public function getMeetingurl(): ?string    {
+    public function getMeetingUrl(): ?string    {
         return $this->meetingUrl;
     }
 
-    public function setMeetingurl(?string $meetingUrl): self
+    public function setMeetingUrl(?string $meetingUrl): self
     {
         $this->meetingUrl = $meetingUrl;
         return $this;

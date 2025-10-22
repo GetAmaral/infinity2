@@ -106,11 +106,11 @@ abstract class DealStageOutputDtoGenerated
         return $this;
     }
 
-    public function getStagename(): ?string    {
+    public function getStageName(): ?string    {
         return $this->stageName;
     }
 
-    public function setStagename(?string $stageName): self
+    public function setStageName(?string $stageName): self
     {
         $this->stageName = $stageName;
         return $this;
@@ -126,11 +126,11 @@ abstract class DealStageOutputDtoGenerated
         return $this;
     }
 
-    public function getRottendays(): ?int    {
+    public function getRottenDays(): ?int    {
         return $this->rottenDays;
     }
 
-    public function setRottendays(?int $rottenDays): self
+    public function setRottenDays(?int $rottenDays): self
     {
         $this->rottenDays = $rottenDays;
         return $this;
@@ -146,61 +146,61 @@ abstract class DealStageOutputDtoGenerated
         return $this;
     }
 
-    public function getEnteredby(): string|UserOutputDto|null    {
+    public function getEnteredBy(): string|UserOutputDto|null    {
         return $this->enteredBy;
     }
 
-    public function setEnteredby(string|UserOutputDto|null $enteredBy): self
+    public function setEnteredBy(string|UserOutputDto|null $enteredBy): self
     {
         $this->enteredBy = $enteredBy;
         return $this;
     }
 
-    public function getExitedby(): string|UserOutputDto|null    {
+    public function getExitedBy(): string|UserOutputDto|null    {
         return $this->exitedBy;
     }
 
-    public function setExitedby(string|UserOutputDto|null $exitedBy): self
+    public function setExitedBy(string|UserOutputDto|null $exitedBy): self
     {
         $this->exitedBy = $exitedBy;
         return $this;
     }
 
-    public function getExpectedclosedate(): ?\DateTimeImmutable    {
+    public function getExpectedCloseDate(): ?\DateTimeImmutable    {
         return $this->expectedCloseDate;
     }
 
-    public function setExpectedclosedate(?\DateTimeImmutable $expectedCloseDate): self
+    public function setExpectedCloseDate(?\DateTimeImmutable $expectedCloseDate): self
     {
         $this->expectedCloseDate = $expectedCloseDate;
         return $this;
     }
 
-    public function getStagevalue(): ?string    {
+    public function getStageValue(): ?string    {
         return $this->stageValue;
     }
 
-    public function setStagevalue(?string $stageValue): self
+    public function setStageValue(?string $stageValue): self
     {
         $this->stageValue = $stageValue;
         return $this;
     }
 
-    public function getDaysinstage(): ?float    {
+    public function getDaysInStage(): ?float    {
         return $this->daysInStage;
     }
 
-    public function setDaysinstage(?float $daysInStage): self
+    public function setDaysInStage(?float $daysInStage): self
     {
         $this->daysInStage = $daysInStage;
         return $this;
     }
 
-    public function getWeightedvalue(): ?string    {
+    public function getWeightedValue(): ?string    {
         return $this->weightedValue;
     }
 
-    public function setWeightedvalue(?string $weightedValue): self
+    public function setWeightedValue(?string $weightedValue): self
     {
         $this->weightedValue = $weightedValue;
         return $this;
@@ -226,21 +226,21 @@ abstract class DealStageOutputDtoGenerated
         return $this;
     }
 
-    public function getEndedat(): ?\DateTimeImmutable    {
+    public function getEndedAt(): ?\DateTimeImmutable    {
         return $this->endedAt;
     }
 
-    public function setEndedat(?\DateTimeImmutable $endedAt): self
+    public function setEndedAt(?\DateTimeImmutable $endedAt): self
     {
         $this->endedAt = $endedAt;
         return $this;
     }
 
-    public function getLastupdatedat(): ?\DateTimeImmutable    {
+    public function getLastUpdatedAt(): ?\DateTimeImmutable    {
         return $this->lastUpdatedAt;
     }
 
-    public function setLastupdatedat(?\DateTimeImmutable $lastUpdatedAt): self
+    public function setLastUpdatedAt(?\DateTimeImmutable $lastUpdatedAt): self
     {
         $this->lastUpdatedAt = $lastUpdatedAt;
         return $this;
@@ -256,21 +256,21 @@ abstract class DealStageOutputDtoGenerated
         return $this;
     }
 
-    public function getPipelinestage(): string|PipelineStageOutputDto|null    {
+    public function getPipelineStage(): string|PipelineStageOutputDto|null    {
         return $this->pipelineStage;
     }
 
-    public function setPipelinestage(string|PipelineStageOutputDto|null $pipelineStage): self
+    public function setPipelineStage(string|PipelineStageOutputDto|null $pipelineStage): self
     {
         $this->pipelineStage = $pipelineStage;
         return $this;
     }
 
-    public function getStartedat(): ?\DateTimeImmutable    {
+    public function getStartedAt(): ?\DateTimeImmutable    {
         return $this->startedAt;
     }
 
-    public function setStartedat(?\DateTimeImmutable $startedAt): self
+    public function setStartedAt(?\DateTimeImmutable $startedAt): self
     {
         $this->startedAt = $startedAt;
         return $this;

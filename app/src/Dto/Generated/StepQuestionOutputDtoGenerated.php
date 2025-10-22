@@ -119,31 +119,31 @@ abstract class StepQuestionOutputDtoGenerated
         return $this;
     }
 
-    public function getVieworder(): int    {
+    public function getViewOrder(): int    {
         return $this->viewOrder;
     }
 
-    public function setVieworder(int $viewOrder): self
+    public function setViewOrder(int $viewOrder): self
     {
         $this->viewOrder = $viewOrder;
         return $this;
     }
 
-    public function getFewshotpositive(): ?array    {
+    public function getFewShotPositive(): ?array    {
         return $this->fewShotPositive;
     }
 
-    public function setFewshotpositive(?array $fewShotPositive): self
+    public function setFewShotPositive(?array $fewShotPositive): self
     {
         $this->fewShotPositive = $fewShotPositive;
         return $this;
     }
 
-    public function getFewshotnegative(): ?array    {
+    public function getFewShotNegative(): ?array    {
         return $this->fewShotNegative;
     }
 
-    public function setFewshotnegative(?array $fewShotNegative): self
+    public function setFewShotNegative(?array $fewShotNegative): self
     {
         $this->fewShotNegative = $fewShotNegative;
         return $this;

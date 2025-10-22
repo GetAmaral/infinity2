@@ -28,7 +28,7 @@ abstract class TalkMessageInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['talkmessage:write'])]
@@ -83,7 +83,7 @@ abstract class TalkMessageInputDtoGenerated
 
     /**
      * parentMessage reference
-     * Must be: IRI string (e.g., "/api/talkmessages/uuid")
+     * Must be: IRI string (e.g., "/api/talk_messages/uuid")
      */
     #[Groups(['talkmessage:write'])]
     public ?string $parentMessage = null;
@@ -93,7 +93,7 @@ abstract class TalkMessageInputDtoGenerated
 
     /**
      * notification reference
-     * Must be: IRI string (e.g., "/api/notifications/uuid")
+     * Must be: IRI string (e.g., "/api/notificatia/uuid")
      */
     #[Groups(['talkmessage:write'])]
     public ?string $notification = null;
@@ -146,41 +146,41 @@ abstract class TalkMessageInputDtoGenerated
         return $this;
     }
 
-    public function getFromcontact(): ?string    {
+    public function getFromContact(): ?string    {
         return $this->fromContact;
     }
 
-    public function setFromcontact(?string $fromContact): self
+    public function setFromContact(?string $fromContact): self
     {
         $this->fromContact = $fromContact;
         return $this;
     }
 
-    public function getFromuser(): ?string    {
+    public function getFromUser(): ?string    {
         return $this->fromUser;
     }
 
-    public function setFromuser(?string $fromUser): self
+    public function setFromUser(?string $fromUser): self
     {
         $this->fromUser = $fromUser;
         return $this;
     }
 
-    public function getFromagent(): ?string    {
+    public function getFromAgent(): ?string    {
         return $this->fromAgent;
     }
 
-    public function setFromagent(?string $fromAgent): self
+    public function setFromAgent(?string $fromAgent): self
     {
         $this->fromAgent = $fromAgent;
         return $this;
     }
 
-    public function getSentat(): \DateTimeImmutable    {
+    public function getSentAt(): \DateTimeImmutable    {
         return $this->sentAt;
     }
 
-    public function setSentat(\DateTimeImmutable $sentAt): self
+    public function setSentAt(\DateTimeImmutable $sentAt): self
     {
         $this->sentAt = $sentAt;
         return $this;
@@ -196,11 +196,11 @@ abstract class TalkMessageInputDtoGenerated
         return $this;
     }
 
-    public function getMessagetype(): string    {
+    public function getMessageType(): string    {
         return $this->messageType;
     }
 
-    public function setMessagetype(string $messageType): self
+    public function setMessageType(string $messageType): self
     {
         $this->messageType = $messageType;
         return $this;
@@ -226,11 +226,11 @@ abstract class TalkMessageInputDtoGenerated
         return $this;
     }
 
-    public function getReadat(): ?\DateTimeImmutable    {
+    public function getReadAt(): ?\DateTimeImmutable    {
         return $this->readAt;
     }
 
-    public function setReadat(?\DateTimeImmutable $readAt): self
+    public function setReadAt(?\DateTimeImmutable $readAt): self
     {
         $this->readAt = $readAt;
         return $this;
@@ -246,11 +246,11 @@ abstract class TalkMessageInputDtoGenerated
         return $this;
     }
 
-    public function getParentmessage(): ?string    {
+    public function getParentMessage(): ?string    {
         return $this->parentMessage;
     }
 
-    public function setParentmessage(?string $parentMessage): self
+    public function setParentMessage(?string $parentMessage): self
     {
         $this->parentMessage = $parentMessage;
         return $this;
@@ -286,11 +286,11 @@ abstract class TalkMessageInputDtoGenerated
         return $this;
     }
 
-    public function getDeliveredat(): ?\DateTimeImmutable    {
+    public function getDeliveredAt(): ?\DateTimeImmutable    {
         return $this->deliveredAt;
     }
 
-    public function setDeliveredat(?\DateTimeImmutable $deliveredAt): self
+    public function setDeliveredAt(?\DateTimeImmutable $deliveredAt): self
     {
         $this->deliveredAt = $deliveredAt;
         return $this;
@@ -316,11 +316,11 @@ abstract class TalkMessageInputDtoGenerated
         return $this;
     }
 
-    public function getEditedat(): ?\DateTimeImmutable    {
+    public function getEditedAt(): ?\DateTimeImmutable    {
         return $this->editedAt;
     }
 
-    public function setEditedat(?\DateTimeImmutable $editedAt): self
+    public function setEditedAt(?\DateTimeImmutable $editedAt): self
     {
         $this->editedAt = $editedAt;
         return $this;

@@ -198,11 +198,11 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getFirstname(): string    {
+    public function getFirstName(): string    {
         return $this->firstName;
     }
 
-    public function setFirstname(string $firstName): self
+    public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
         return $this;
@@ -218,21 +218,21 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getLastname(): string    {
+    public function getLastName(): string    {
         return $this->lastName;
     }
 
-    public function setLastname(string $lastName): self
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
         return $this;
     }
 
-    public function getAccountmanager(): string|UserOutputDto|null    {
+    public function getAccountManager(): string|UserOutputDto|null    {
         return $this->accountManager;
     }
 
-    public function setAccountmanager(string|UserOutputDto|null $accountManager): self
+    public function setAccountManager(string|UserOutputDto|null $accountManager): self
     {
         $this->accountManager = $accountManager;
         return $this;
@@ -248,11 +248,11 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getAccountteam(): array    {
+    public function getAccountTeam(): array    {
         return $this->accountTeam;
     }
 
-    public function setAccountteam(array $accountTeam): self
+    public function setAccountTeam(array $accountTeam): self
     {
         $this->accountTeam = $accountTeam;
         return $this;
@@ -268,31 +268,31 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getBillingaddress(): ?string    {
+    public function getBillingAddress(): ?string    {
         return $this->billingAddress;
     }
 
-    public function setBillingaddress(?string $billingAddress): self
+    public function setBillingAddress(?string $billingAddress): self
     {
         $this->billingAddress = $billingAddress;
         return $this;
     }
 
-    public function getBillingcity(): string|CityOutputDto|null    {
+    public function getBillingCity(): string|CityOutputDto|null    {
         return $this->billingCity;
     }
 
-    public function setBillingcity(string|CityOutputDto|null $billingCity): self
+    public function setBillingCity(string|CityOutputDto|null $billingCity): self
     {
         $this->billingCity = $billingCity;
         return $this;
     }
 
-    public function getBirthdate(): ?\DateTimeImmutable    {
+    public function getBirthDate(): ?\DateTimeImmutable    {
         return $this->birthDate;
     }
 
-    public function setBirthdate(?\DateTimeImmutable $birthDate): self
+    public function setBirthDate(?\DateTimeImmutable $birthDate): self
     {
         $this->birthDate = $birthDate;
         return $this;
@@ -338,21 +338,21 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getMobilephone(): ?string    {
+    public function getMobilePhone(): ?string    {
         return $this->mobilePhone;
     }
 
-    public function setMobilephone(?string $mobilePhone): self
+    public function setMobilePhone(?string $mobilePhone): self
     {
         $this->mobilePhone = $mobilePhone;
         return $this;
     }
 
-    public function getLinkedinurl(): ?string    {
+    public function getLinkedinUrl(): ?string    {
         return $this->linkedinUrl;
     }
 
-    public function setLinkedinurl(?string $linkedinUrl): self
+    public function setLinkedinUrl(?string $linkedinUrl): self
     {
         $this->linkedinUrl = $linkedinUrl;
         return $this;
@@ -378,51 +378,51 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getEmailoptout(): bool    {
+    public function getEmailOptOut(): bool    {
         return $this->emailOptOut;
     }
 
-    public function setEmailoptout(bool $emailOptOut): self
+    public function setEmailOptOut(bool $emailOptOut): self
     {
         $this->emailOptOut = $emailOptOut;
         return $this;
     }
 
-    public function getLeadsource(): ?string    {
+    public function getLeadSource(): ?string    {
         return $this->leadSource;
     }
 
-    public function setLeadsource(?string $leadSource): self
+    public function setLeadSource(?string $leadSource): self
     {
         $this->leadSource = $leadSource;
         return $this;
     }
 
-    public function getDonotcall(): bool    {
+    public function getDoNotCall(): bool    {
         return $this->doNotCall;
     }
 
-    public function setDonotcall(bool $doNotCall): self
+    public function setDoNotCall(bool $doNotCall): self
     {
         $this->doNotCall = $doNotCall;
         return $this;
     }
 
-    public function getPreferredcontactmethod(): ?string    {
+    public function getPreferredContactMethod(): ?string    {
         return $this->preferredContactMethod;
     }
 
-    public function setPreferredcontactmethod(?string $preferredContactMethod): self
+    public function setPreferredContactMethod(?string $preferredContactMethod): self
     {
         $this->preferredContactMethod = $preferredContactMethod;
         return $this;
     }
 
-    public function getLastcontactdate(): ?\DateTimeImmutable    {
+    public function getLastContactDate(): ?\DateTimeImmutable    {
         return $this->lastContactDate;
     }
 
-    public function setLastcontactdate(?\DateTimeImmutable $lastContactDate): self
+    public function setLastContactDate(?\DateTimeImmutable $lastContactDate): self
     {
         $this->lastContactDate = $lastContactDate;
         return $this;
@@ -448,21 +448,21 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getEventattendances(): array    {
+    public function getEventAttendances(): array    {
         return $this->eventAttendances;
     }
 
-    public function setEventattendances(array $eventAttendances): self
+    public function setEventAttendances(array $eventAttendances): self
     {
         $this->eventAttendances = $eventAttendances;
         return $this;
     }
 
-    public function getFirsttalkdate(): ?\DateTimeImmutable    {
+    public function getFirstTalkDate(): ?\DateTimeImmutable    {
         return $this->firstTalkDate;
     }
 
-    public function setFirsttalkdate(?\DateTimeImmutable $firstTalkDate): self
+    public function setFirstTalkDate(?\DateTimeImmutable $firstTalkDate): self
     {
         $this->firstTalkDate = $firstTalkDate;
         return $this;
@@ -488,11 +488,11 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getLasttalkdate(): ?\DateTimeImmutable    {
+    public function getLastTalkDate(): ?\DateTimeImmutable    {
         return $this->lastTalkDate;
     }
 
-    public function setLasttalkdate(?\DateTimeImmutable $lastTalkDate): self
+    public function setLastTalkDate(?\DateTimeImmutable $lastTalkDate): self
     {
         $this->lastTalkDate = $lastTalkDate;
         return $this;
@@ -548,31 +548,31 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getPostalcode(): ?string    {
+    public function getPostalCode(): ?string    {
         return $this->postalCode;
     }
 
-    public function setPostalcode(?string $postalCode): self
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
         return $this;
     }
 
-    public function getPrimarydeals(): array    {
+    public function getPrimaryDeals(): array    {
         return $this->primaryDeals;
     }
 
-    public function setPrimarydeals(array $primaryDeals): self
+    public function setPrimaryDeals(array $primaryDeals): self
     {
         $this->primaryDeals = $primaryDeals;
         return $this;
     }
 
-    public function getProfilepictureurl(): ?string    {
+    public function getProfilePictureUrl(): ?string    {
         return $this->profilePictureUrl;
     }
 
-    public function setProfilepictureurl(?string $profilePictureUrl): self
+    public function setProfilePictureUrl(?string $profilePictureUrl): self
     {
         $this->profilePictureUrl = $profilePictureUrl;
         return $this;
@@ -598,11 +598,11 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getSocialmedias(): array    {
+    public function getSocialMedias(): array    {
         return $this->socialMedias;
     }
 
-    public function setSocialmedias(array $socialMedias): self
+    public function setSocialMedias(array $socialMedias): self
     {
         $this->socialMedias = $socialMedias;
         return $this;

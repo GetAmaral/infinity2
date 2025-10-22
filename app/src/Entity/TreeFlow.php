@@ -6,19 +6,9 @@ namespace App\Entity;
 
 use App\Entity\Generated\TreeFlowGenerated;
 use App\Repository\TreeFlowRepository;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Delete;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Cache;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * TreeFlow - AI Agent Guidance System
@@ -29,40 +19,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: TreeFlowRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Cache(usage: 'NONSTRICT_READ_WRITE', region: 'treeflow_region')]
-#[ApiResource(
-    routePrefix: '/treeflows',
-    normalizationContext: ['groups' => ['treeflow:read']],
-    denormalizationContext: ['groups' => ['treeflow:write']],
-    operations: [
-        new Get(
-            uriTemplate: '/{id}',
-            security: "is_granted('ROLE_USER')",
-            normalizationContext: ['groups' => ['treeflow:read', 'step:read', 'question:read', 'fewshot:read']]
-        ),
-        new GetCollection(
-            uriTemplate: '',
-            security: "is_granted('ROLE_USER')"
-        ),
-        new Post(
-            uriTemplate: '',
-            security: "is_granted('ROLE_ADMIN')"
-        ),
-        new Put(
-            uriTemplate: '/{id}',
-            security: "is_granted('ROLE_ADMIN')"
-        ),
-        new Delete(
-            uriTemplate: '/{id}',
-            security: "is_granted('ROLE_ADMIN')"
-        ),
-        // Admin endpoint with audit information
-        new GetCollection(
-            uriTemplate: '/admin/treeflows',
-            security: "is_granted('ROLE_ADMIN')",
-            normalizationContext: ['groups' => ['treeflow:read', 'audit:read']]
-        )
-    ]
-)]
 class TreeFlow extends TreeFlowGenerated
 {
     public function __construct()
@@ -132,7 +88,7 @@ class TreeFlow extends TreeFlowGenerated
             $inputs = [];
             foreach ($step->getInputs() as $input) {
                 $inputs[$input->getSlug() ?? 'input-' . $input->getId()] = [
-                    'type' => $input->getType()->value,
+                    'type' => $input->getType(),
                     'prompt' => $input->getPrompt(),
                 ];
             }

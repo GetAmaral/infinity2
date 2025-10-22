@@ -110,11 +110,11 @@ abstract class CalendarExternalLinkOutputDtoGenerated
         return $this;
     }
 
-    public function getExternalprovider(): string    {
+    public function getExternalProvider(): string    {
         return $this->externalProvider;
     }
 
-    public function setExternalprovider(string $externalProvider): self
+    public function setExternalProvider(string $externalProvider): self
     {
         $this->externalProvider = $externalProvider;
         return $this;
@@ -130,11 +130,11 @@ abstract class CalendarExternalLinkOutputDtoGenerated
         return $this;
     }
 
-    public function getExternalid(): ?string    {
+    public function getExternalId(): ?string    {
         return $this->externalId;
     }
 
-    public function setExternalid(?string $externalId): self
+    public function setExternalId(?string $externalId): self
     {
         $this->externalId = $externalId;
         return $this;
@@ -150,131 +150,131 @@ abstract class CalendarExternalLinkOutputDtoGenerated
         return $this;
     }
 
-    public function getAccesstoken(): ?string    {
+    public function getAccessToken(): ?string    {
         return $this->accessToken;
     }
 
-    public function setAccesstoken(?string $accessToken): self
+    public function setAccessToken(?string $accessToken): self
     {
         $this->accessToken = $accessToken;
         return $this;
     }
 
-    public function getRefreshtoken(): ?string    {
+    public function getRefreshToken(): ?string    {
         return $this->refreshToken;
     }
 
-    public function setRefreshtoken(?string $refreshToken): self
+    public function setRefreshToken(?string $refreshToken): self
     {
         $this->refreshToken = $refreshToken;
         return $this;
     }
 
-    public function getTokenexpiresat(): ?\DateTimeImmutable    {
+    public function getTokenExpiresAt(): ?\DateTimeImmutable    {
         return $this->tokenExpiresAt;
     }
 
-    public function setTokenexpiresat(?\DateTimeImmutable $tokenExpiresAt): self
+    public function setTokenExpiresAt(?\DateTimeImmutable $tokenExpiresAt): self
     {
         $this->tokenExpiresAt = $tokenExpiresAt;
         return $this;
     }
 
-    public function getSynctoken(): ?string    {
+    public function getSyncToken(): ?string    {
         return $this->syncToken;
     }
 
-    public function setSynctoken(?string $syncToken): self
+    public function setSyncToken(?string $syncToken): self
     {
         $this->syncToken = $syncToken;
         return $this;
     }
 
-    public function getLastsyncedat(): ?\DateTimeImmutable    {
+    public function getLastSyncedAt(): ?\DateTimeImmutable    {
         return $this->lastSyncedAt;
     }
 
-    public function setLastsyncedat(?\DateTimeImmutable $lastSyncedAt): self
+    public function setLastSyncedAt(?\DateTimeImmutable $lastSyncedAt): self
     {
         $this->lastSyncedAt = $lastSyncedAt;
         return $this;
     }
 
-    public function getWebhookurl(): ?string    {
+    public function getWebhookUrl(): ?string    {
         return $this->webhookUrl;
     }
 
-    public function setWebhookurl(?string $webhookUrl): self
+    public function setWebhookUrl(?string $webhookUrl): self
     {
         $this->webhookUrl = $webhookUrl;
         return $this;
     }
 
-    public function getWebhookchannelid(): ?string    {
+    public function getWebhookChannelId(): ?string    {
         return $this->webhookChannelId;
     }
 
-    public function setWebhookchannelid(?string $webhookChannelId): self
+    public function setWebhookChannelId(?string $webhookChannelId): self
     {
         $this->webhookChannelId = $webhookChannelId;
         return $this;
     }
 
-    public function getWebhookexpiresat(): ?\DateTimeImmutable    {
+    public function getWebhookExpiresAt(): ?\DateTimeImmutable    {
         return $this->webhookExpiresAt;
     }
 
-    public function setWebhookexpiresat(?\DateTimeImmutable $webhookExpiresAt): self
+    public function setWebhookExpiresAt(?\DateTimeImmutable $webhookExpiresAt): self
     {
         $this->webhookExpiresAt = $webhookExpiresAt;
         return $this;
     }
 
-    public function getSyncdirection(): string    {
+    public function getSyncDirection(): string    {
         return $this->syncDirection;
     }
 
-    public function setSyncdirection(string $syncDirection): self
+    public function setSyncDirection(string $syncDirection): self
     {
         $this->syncDirection = $syncDirection;
         return $this;
     }
 
-    public function getLasterrormessage(): ?string    {
+    public function getLastErrorMessage(): ?string    {
         return $this->lastErrorMessage;
     }
 
-    public function setLasterrormessage(?string $lastErrorMessage): self
+    public function setLastErrorMessage(?string $lastErrorMessage): self
     {
         $this->lastErrorMessage = $lastErrorMessage;
         return $this;
     }
 
-    public function getLasterrorat(): ?\DateTimeImmutable    {
+    public function getLastErrorAt(): ?\DateTimeImmutable    {
         return $this->lastErrorAt;
     }
 
-    public function setLasterrorat(?\DateTimeImmutable $lastErrorAt): self
+    public function setLastErrorAt(?\DateTimeImmutable $lastErrorAt): self
     {
         $this->lastErrorAt = $lastErrorAt;
         return $this;
     }
 
-    public function getSyncintervalminutes(): int    {
+    public function getSyncIntervalMinutes(): int    {
         return $this->syncIntervalMinutes;
     }
 
-    public function setSyncintervalminutes(int $syncIntervalMinutes): self
+    public function setSyncIntervalMinutes(int $syncIntervalMinutes): self
     {
         $this->syncIntervalMinutes = $syncIntervalMinutes;
         return $this;
     }
 
-    public function getRetrycount(): int    {
+    public function getRetryCount(): int    {
         return $this->retryCount;
     }
 
-    public function setRetrycount(int $retryCount): self
+    public function setRetryCount(int $retryCount): self
     {
         $this->retryCount = $retryCount;
         return $this;

@@ -112,51 +112,51 @@ abstract class BillingFrequencyOutputDtoGenerated
         return $this;
     }
 
-    public function getDisplayname(): ?string    {
+    public function getDisplayName(): ?string    {
         return $this->displayName;
     }
 
-    public function setDisplayname(?string $displayName): self
+    public function setDisplayName(?string $displayName): self
     {
         $this->displayName = $displayName;
         return $this;
     }
 
-    public function getIntervaltype(): string    {
+    public function getIntervalType(): string    {
         return $this->intervalType;
     }
 
-    public function setIntervaltype(string $intervalType): self
+    public function setIntervalType(string $intervalType): self
     {
         $this->intervalType = $intervalType;
         return $this;
     }
 
-    public function getIntervalcount(): int    {
+    public function getIntervalCount(): int    {
         return $this->intervalCount;
     }
 
-    public function setIntervalcount(int $intervalCount): self
+    public function setIntervalCount(int $intervalCount): self
     {
         $this->intervalCount = $intervalCount;
         return $this;
     }
 
-    public function getDaysincycle(): ?int    {
+    public function getDaysInCycle(): ?int    {
         return $this->daysInCycle;
     }
 
-    public function setDaysincycle(?int $daysInCycle): self
+    public function setDaysInCycle(?int $daysInCycle): self
     {
         $this->daysInCycle = $daysInCycle;
         return $this;
     }
 
-    public function getDiscountpercentage(): ?string    {
+    public function getDiscountPercentage(): ?string    {
         return $this->discountPercentage;
     }
 
-    public function setDiscountpercentage(?string $discountPercentage): self
+    public function setDiscountPercentage(?string $discountPercentage): self
     {
         $this->discountPercentage = $discountPercentage;
         return $this;
@@ -172,11 +172,11 @@ abstract class BillingFrequencyOutputDtoGenerated
         return $this;
     }
 
-    public function getSortorder(): int    {
+    public function getSortOrder(): int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(int $sortOrder): self
+    public function setSortOrder(int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;

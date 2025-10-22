@@ -95,61 +95,61 @@ abstract class StudentCourseOutputDtoGenerated
         return $this;
     }
 
-    public function getEnrolledat(): \DateTimeImmutable    {
+    public function getEnrolledAt(): \DateTimeImmutable    {
         return $this->enrolledAt;
     }
 
-    public function setEnrolledat(\DateTimeImmutable $enrolledAt): self
+    public function setEnrolledAt(\DateTimeImmutable $enrolledAt): self
     {
         $this->enrolledAt = $enrolledAt;
         return $this;
     }
 
-    public function getStartdate(): ?\DateTimeImmutable    {
+    public function getStartDate(): ?\DateTimeImmutable    {
         return $this->startDate;
     }
 
-    public function setStartdate(?\DateTimeImmutable $startDate): self
+    public function setStartDate(?\DateTimeImmutable $startDate): self
     {
         $this->startDate = $startDate;
         return $this;
     }
 
-    public function getLastdate(): ?\DateTimeImmutable    {
+    public function getLastDate(): ?\DateTimeImmutable    {
         return $this->lastDate;
     }
 
-    public function setLastdate(?\DateTimeImmutable $lastDate): self
+    public function setLastDate(?\DateTimeImmutable $lastDate): self
     {
         $this->lastDate = $lastDate;
         return $this;
     }
 
-    public function getProgressseconds(): float    {
+    public function getProgressSeconds(): float    {
         return $this->progressSeconds;
     }
 
-    public function setProgressseconds(float $progressSeconds): self
+    public function setProgressSeconds(float $progressSeconds): self
     {
         $this->progressSeconds = $progressSeconds;
         return $this;
     }
 
-    public function getProgresspercentage(): string    {
+    public function getProgressPercentage(): string    {
         return $this->progressPercentage;
     }
 
-    public function setProgresspercentage(string $progressPercentage): self
+    public function setProgressPercentage(string $progressPercentage): self
     {
         $this->progressPercentage = $progressPercentage;
         return $this;
     }
 
-    public function getCompletedat(): ?\DateTimeImmutable    {
+    public function getCompletedAt(): ?\DateTimeImmutable    {
         return $this->completedAt;
     }
 
-    public function setCompletedat(?\DateTimeImmutable $completedAt): self
+    public function setCompletedAt(?\DateTimeImmutable $completedAt): self
     {
         $this->completedAt = $completedAt;
         return $this;
@@ -175,21 +175,21 @@ abstract class StudentCourseOutputDtoGenerated
         return $this;
     }
 
-    public function getCurrentlecture(): string|CourseLectureOutputDto|null    {
+    public function getCurrentLecture(): string|CourseLectureOutputDto|null    {
         return $this->currentLecture;
     }
 
-    public function setCurrentlecture(string|CourseLectureOutputDto|null $currentLecture): self
+    public function setCurrentLecture(string|CourseLectureOutputDto|null $currentLecture): self
     {
         $this->currentLecture = $currentLecture;
         return $this;
     }
 
-    public function getStudentlectures(): array    {
+    public function getStudentLectures(): array    {
         return $this->studentLectures;
     }
 
-    public function setStudentlectures(array $studentLectures): self
+    public function setStudentLectures(array $studentLectures): self
     {
         $this->studentLectures = $studentLectures;
         return $this;

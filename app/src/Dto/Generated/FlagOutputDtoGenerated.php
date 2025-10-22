@@ -127,21 +127,21 @@ abstract class FlagOutputDtoGenerated
         return $this;
     }
 
-    public function getEntitytype(): string    {
+    public function getEntityType(): string    {
         return $this->entityType;
     }
 
-    public function setEntitytype(string $entityType): self
+    public function setEntityType(string $entityType): self
     {
         $this->entityType = $entityType;
         return $this;
     }
 
-    public function getEntityid(): string    {
+    public function getEntityId(): string    {
         return $this->entityId;
     }
 
-    public function setEntityid(string $entityId): self
+    public function setEntityId(string $entityId): self
     {
         $this->entityId = $entityId;
         return $this;
@@ -157,11 +157,11 @@ abstract class FlagOutputDtoGenerated
         return $this;
     }
 
-    public function getDisplayorder(): int    {
+    public function getDisplayOrder(): int    {
         return $this->displayOrder;
     }
 
-    public function setDisplayorder(int $displayOrder): self
+    public function setDisplayOrder(int $displayOrder): self
     {
         $this->displayOrder = $displayOrder;
         return $this;
@@ -187,11 +187,11 @@ abstract class FlagOutputDtoGenerated
         return $this;
     }
 
-    public function getDuedate(): ?\DateTimeImmutable    {
+    public function getDueDate(): ?\DateTimeImmutable    {
         return $this->dueDate;
     }
 
-    public function setDuedate(?\DateTimeImmutable $dueDate): self
+    public function setDueDate(?\DateTimeImmutable $dueDate): self
     {
         $this->dueDate = $dueDate;
         return $this;

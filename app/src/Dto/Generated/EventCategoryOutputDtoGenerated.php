@@ -128,31 +128,31 @@ abstract class EventCategoryOutputDtoGenerated
         return $this;
     }
 
-    public function getEventtype(): ?string    {
+    public function getEventType(): ?string    {
         return $this->eventType;
     }
 
-    public function setEventtype(?string $eventType): self
+    public function setEventType(?string $eventType): self
     {
         $this->eventType = $eventType;
         return $this;
     }
 
-    public function getSortorder(): int    {
+    public function getSortOrder(): int    {
         return $this->sortOrder;
     }
 
-    public function setSortorder(int $sortOrder): self
+    public function setSortOrder(int $sortOrder): self
     {
         $this->sortOrder = $sortOrder;
         return $this;
     }
 
-    public function getAllowmultiple(): bool    {
+    public function getAllowMultiple(): bool    {
         return $this->allowMultiple;
     }
 
-    public function setAllowmultiple(bool $allowMultiple): self
+    public function setAllowMultiple(bool $allowMultiple): self
     {
         $this->allowMultiple = $allowMultiple;
         return $this;

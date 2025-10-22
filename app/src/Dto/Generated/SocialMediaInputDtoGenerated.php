@@ -26,7 +26,7 @@ abstract class SocialMediaInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['socialmedia:write'])]
@@ -40,7 +40,7 @@ abstract class SocialMediaInputDtoGenerated
 
     /**
      * company reference
-     * Must be: IRI string (e.g., "/api/companys/uuid")
+     * Must be: IRI string (e.g., "/api/nies/uuid")
      */
     #[Groups(['socialmedia:write'])]
     public ?string $company = null;
@@ -54,7 +54,7 @@ abstract class SocialMediaInputDtoGenerated
 
     /**
      * socialMediaType reference
-     * Must be: IRI string (e.g., "/api/socialmediatypes/uuid")
+     * Must be: IRI string (e.g., "/api/social_media_types/uuid")
      */
     #[Groups(['socialmedia:write'])]
     public ?string $socialMediaType = null;
@@ -92,11 +92,11 @@ abstract class SocialMediaInputDtoGenerated
         return $this;
     }
 
-    public function getApikey(): ?string    {
+    public function getApiKey(): ?string    {
         return $this->apiKey;
     }
 
-    public function setApikey(?string $apiKey): self
+    public function setApiKey(?string $apiKey): self
     {
         $this->apiKey = $apiKey;
         return $this;
@@ -132,11 +132,11 @@ abstract class SocialMediaInputDtoGenerated
         return $this;
     }
 
-    public function getSocialmediatype(): ?string    {
+    public function getSocialMediaType(): ?string    {
         return $this->socialMediaType;
     }
 
-    public function setSocialmediatype(?string $socialMediaType): self
+    public function setSocialMediaType(?string $socialMediaType): self
     {
         $this->socialMediaType = $socialMediaType;
         return $this;

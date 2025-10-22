@@ -24,7 +24,7 @@ abstract class EventResourceInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['eventresource:write'])]
@@ -86,7 +86,7 @@ abstract class EventResourceInputDtoGenerated
 
     /**
      * city reference
-     * Must be: IRI string (e.g., "/api/citys/uuid")
+     * Must be: IRI string (e.g., "/api/ties/uuid")
      */
     #[Groups(['eventresource:write'])]
     public ?string $city = null;
@@ -102,7 +102,7 @@ abstract class EventResourceInputDtoGenerated
 
     /**
      * type reference
-     * Must be: IRI string (e.g., "/api/eventresourcetypes/uuid")
+     * Must be: IRI string (e.g., "/api/event_resource_types/uuid")
      */
     #[Assert\NotNull]
     #[Groups(['eventresource:write'])]
@@ -141,11 +141,11 @@ abstract class EventResourceInputDtoGenerated
         return $this;
     }
 
-    public function getAvailabilityschedule(): ?array    {
+    public function getAvailabilitySchedule(): ?array    {
         return $this->availabilitySchedule;
     }
 
-    public function setAvailabilityschedule(?array $availabilitySchedule): self
+    public function setAvailabilitySchedule(?array $availabilitySchedule): self
     {
         $this->availabilitySchedule = $availabilitySchedule;
         return $this;
@@ -191,91 +191,91 @@ abstract class EventResourceInputDtoGenerated
         return $this;
     }
 
-    public function getRequiresapproval(): bool    {
+    public function getRequiresApproval(): bool    {
         return $this->requiresApproval;
     }
 
-    public function setRequiresapproval(bool $requiresApproval): self
+    public function setRequiresApproval(bool $requiresApproval): self
     {
         $this->requiresApproval = $requiresApproval;
         return $this;
     }
 
-    public function getAutoconfirm(): bool    {
+    public function getAutoConfirm(): bool    {
         return $this->autoConfirm;
     }
 
-    public function setAutoconfirm(bool $autoConfirm): self
+    public function setAutoConfirm(bool $autoConfirm): self
     {
         $this->autoConfirm = $autoConfirm;
         return $this;
     }
 
-    public function getMinimumbookingduration(): ?int    {
+    public function getMinimumBookingDuration(): ?int    {
         return $this->minimumBookingDuration;
     }
 
-    public function setMinimumbookingduration(?int $minimumBookingDuration): self
+    public function setMinimumBookingDuration(?int $minimumBookingDuration): self
     {
         $this->minimumBookingDuration = $minimumBookingDuration;
         return $this;
     }
 
-    public function getMaximumbookingduration(): ?int    {
+    public function getMaximumBookingDuration(): ?int    {
         return $this->maximumBookingDuration;
     }
 
-    public function setMaximumbookingduration(?int $maximumBookingDuration): self
+    public function setMaximumBookingDuration(?int $maximumBookingDuration): self
     {
         $this->maximumBookingDuration = $maximumBookingDuration;
         return $this;
     }
 
-    public function getPriceperhour(): ?string    {
+    public function getPricePerHour(): ?string    {
         return $this->pricePerHour;
     }
 
-    public function setPriceperhour(?string $pricePerHour): self
+    public function setPricePerHour(?string $pricePerHour): self
     {
         $this->pricePerHour = $pricePerHour;
         return $this;
     }
 
-    public function getBookingrules(): ?array    {
+    public function getBookingRules(): ?array    {
         return $this->bookingRules;
     }
 
-    public function setBookingrules(?array $bookingRules): self
+    public function setBookingRules(?array $bookingRules): self
     {
         $this->bookingRules = $bookingRules;
         return $this;
     }
 
-    public function getPriceperday(): ?string    {
+    public function getPricePerDay(): ?string    {
         return $this->pricePerDay;
     }
 
-    public function setPriceperday(?string $pricePerDay): self
+    public function setPricePerDay(?string $pricePerDay): self
     {
         $this->pricePerDay = $pricePerDay;
         return $this;
     }
 
-    public function getImageurl(): ?string    {
+    public function getImageUrl(): ?string    {
         return $this->imageUrl;
     }
 
-    public function setImageurl(?string $imageUrl): self
+    public function setImageUrl(?string $imageUrl): self
     {
         $this->imageUrl = $imageUrl;
         return $this;
     }
 
-    public function getThumbnailurl(): ?string    {
+    public function getThumbnailUrl(): ?string    {
         return $this->thumbnailUrl;
     }
 
-    public function setThumbnailurl(?string $thumbnailUrl): self
+    public function setThumbnailUrl(?string $thumbnailUrl): self
     {
         $this->thumbnailUrl = $thumbnailUrl;
         return $this;
@@ -321,21 +321,21 @@ abstract class EventResourceInputDtoGenerated
         return $this;
     }
 
-    public function getEventbookings(): ?string    {
+    public function getEventBookings(): ?string    {
         return $this->eventBookings;
     }
 
-    public function setEventbookings(?string $eventBookings): self
+    public function setEventBookings(?string $eventBookings): self
     {
         $this->eventBookings = $eventBookings;
         return $this;
     }
 
-    public function getGeocoordinates(): ?string    {
+    public function getGeoCoordinates(): ?string    {
         return $this->geoCoordinates;
     }
 
-    public function setGeocoordinates(?string $geoCoordinates): self
+    public function setGeoCoordinates(?string $geoCoordinates): self
     {
         $this->geoCoordinates = $geoCoordinates;
         return $this;

@@ -103,11 +103,11 @@ abstract class RoleOutputDtoGenerated
         return $this;
     }
 
-    public function getSystemrole(): bool    {
+    public function getSystemRole(): bool    {
         return $this->systemRole;
     }
 
-    public function setSystemrole(bool $systemRole): self
+    public function setSystemRole(bool $systemRole): self
     {
         $this->systemRole = $systemRole;
         return $this;

@@ -139,21 +139,21 @@ abstract class DealCategoryOutputDtoGenerated
         return $this;
     }
 
-    public function getDisplayorder(): ?int    {
+    public function getDisplayOrder(): ?int    {
         return $this->displayOrder;
     }
 
-    public function setDisplayorder(?int $displayOrder): self
+    public function setDisplayOrder(?int $displayOrder): self
     {
         $this->displayOrder = $displayOrder;
         return $this;
     }
 
-    public function getParentcategory(): string|DealCategoryOutputDto|null    {
+    public function getParentCategory(): string|DealCategoryOutputDto|null    {
         return $this->parentCategory;
     }
 
-    public function setParentcategory(string|DealCategoryOutputDto|null $parentCategory): self
+    public function setParentCategory(string|DealCategoryOutputDto|null $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
         return $this;

@@ -105,11 +105,11 @@ abstract class EventAttendeeOutputDtoGenerated
         return $this;
     }
 
-    public function getAttendeestatus(): ?int    {
+    public function getAttendeeStatus(): ?int    {
         return $this->attendeeStatus;
     }
 
-    public function setAttendeestatus(?int $attendeeStatus): self
+    public function setAttendeeStatus(?int $attendeeStatus): self
     {
         $this->attendeeStatus = $attendeeStatus;
         return $this;

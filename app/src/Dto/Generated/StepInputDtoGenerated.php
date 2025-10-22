@@ -25,7 +25,7 @@ abstract class StepInputDtoGenerated
 {
     /**
      * treeFlow reference
-     * Must be: IRI string (e.g., "/api/treeflows/uuid")
+     * Must be: IRI string (e.g., "/api/tree_flows/uuid")
      */
     #[Assert\NotNull]
     #[Groups(['step:write'])]
@@ -87,11 +87,11 @@ abstract class StepInputDtoGenerated
 
     // Getters and Setters
 
-    public function getTreeflow(): ?string    {
+    public function getTreeFlow(): ?string    {
         return $this->treeFlow;
     }
 
-    public function setTreeflow(?string $treeFlow): self
+    public function setTreeFlow(?string $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
         return $this;
@@ -147,31 +147,31 @@ abstract class StepInputDtoGenerated
         return $this;
     }
 
-    public function getVieworder(): int    {
+    public function getViewOrder(): int    {
         return $this->viewOrder;
     }
 
-    public function setVieworder(int $viewOrder): self
+    public function setViewOrder(int $viewOrder): self
     {
         $this->viewOrder = $viewOrder;
         return $this;
     }
 
-    public function getPositionx(): ?int    {
+    public function getPositionX(): ?int    {
         return $this->positionX;
     }
 
-    public function setPositionx(?int $positionX): self
+    public function setPositionX(?int $positionX): self
     {
         $this->positionX = $positionX;
         return $this;
     }
 
-    public function getPositiony(): ?int    {
+    public function getPositionY(): ?int    {
         return $this->positionY;
     }
 
-    public function setPositiony(?int $positionY): self
+    public function setPositionY(?int $positionY): self
     {
         $this->positionY = $positionY;
         return $this;

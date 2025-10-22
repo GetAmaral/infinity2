@@ -24,7 +24,7 @@ abstract class AgentInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['agent:write'])]
@@ -60,7 +60,7 @@ abstract class AgentInputDtoGenerated
 
     /**
      * agentType reference
-     * Must be: IRI string (e.g., "/api/agenttypes/uuid")
+     * Must be: IRI string (e.g., "/api/agent_types/uuid")
      */
     #[Groups(['agent:write'])]
     public ?string $agentType = null;
@@ -203,41 +203,41 @@ abstract class AgentInputDtoGenerated
         return $this;
     }
 
-    public function getAgenttype(): ?string    {
+    public function getAgentType(): ?string    {
         return $this->agentType;
     }
 
-    public function setAgenttype(?string $agentType): self
+    public function setAgentType(?string $agentType): self
     {
         $this->agentType = $agentType;
         return $this;
     }
 
-    public function getCommissionrate(): ?string    {
+    public function getCommissionRate(): ?string    {
         return $this->commissionRate;
     }
 
-    public function setCommissionrate(?string $commissionRate): self
+    public function setCommissionRate(?string $commissionRate): self
     {
         $this->commissionRate = $commissionRate;
         return $this;
     }
 
-    public function getStartdate(): ?\DateTimeImmutable    {
+    public function getStartDate(): ?\DateTimeImmutable    {
         return $this->startDate;
     }
 
-    public function setStartdate(?\DateTimeImmutable $startDate): self
+    public function setStartDate(?\DateTimeImmutable $startDate): self
     {
         $this->startDate = $startDate;
         return $this;
     }
 
-    public function getEnddate(): ?\DateTimeImmutable    {
+    public function getEndDate(): ?\DateTimeImmutable    {
         return $this->endDate;
     }
 
-    public function setEnddate(?\DateTimeImmutable $endDate): self
+    public function setEndDate(?\DateTimeImmutable $endDate): self
     {
         $this->endDate = $endDate;
         return $this;
@@ -273,71 +273,71 @@ abstract class AgentInputDtoGenerated
         return $this;
     }
 
-    public function getTotalsales(): ?string    {
+    public function getTotalSales(): ?string    {
         return $this->totalSales;
     }
 
-    public function setTotalsales(?string $totalSales): self
+    public function setTotalSales(?string $totalSales): self
     {
         $this->totalSales = $totalSales;
         return $this;
     }
 
-    public function getCurrentmonthsales(): ?string    {
+    public function getCurrentMonthSales(): ?string    {
         return $this->currentMonthSales;
     }
 
-    public function setCurrentmonthsales(?string $currentMonthSales): self
+    public function setCurrentMonthSales(?string $currentMonthSales): self
     {
         $this->currentMonthSales = $currentMonthSales;
         return $this;
     }
 
-    public function getConversionrate(): ?string    {
+    public function getConversionRate(): ?string    {
         return $this->conversionRate;
     }
 
-    public function setConversionrate(?string $conversionRate): self
+    public function setConversionRate(?string $conversionRate): self
     {
         $this->conversionRate = $conversionRate;
         return $this;
     }
 
-    public function getCustomersatisfactionscore(): ?string    {
+    public function getCustomerSatisfactionScore(): ?string    {
         return $this->customerSatisfactionScore;
     }
 
-    public function setCustomersatisfactionscore(?string $customerSatisfactionScore): self
+    public function setCustomerSatisfactionScore(?string $customerSatisfactionScore): self
     {
         $this->customerSatisfactionScore = $customerSatisfactionScore;
         return $this;
     }
 
-    public function getMaxconcurrentcustomers(): int    {
+    public function getMaxConcurrentCustomers(): int    {
         return $this->maxConcurrentCustomers;
     }
 
-    public function setMaxconcurrentcustomers(int $maxConcurrentCustomers): self
+    public function setMaxConcurrentCustomers(int $maxConcurrentCustomers): self
     {
         $this->maxConcurrentCustomers = $maxConcurrentCustomers;
         return $this;
     }
 
-    public function getCurrentcustomercount(): int    {
+    public function getCurrentCustomerCount(): int    {
         return $this->currentCustomerCount;
     }
 
-    public function setCurrentcustomercount(int $currentCustomerCount): self
+    public function setCurrentCustomerCount(int $currentCustomerCount): self
     {
         $this->currentCustomerCount = $currentCustomerCount;
         return $this;
     }
 
-    public function getAverageresponsetime(): ?int    {
+    public function getAverageResponseTime(): ?int    {
         return $this->averageResponseTime;
     }
 
-    public function setAverageresponsetime(?int $averageResponseTime): self
+    public function setAverageResponseTime(?int $averageResponseTime): self
     {
         $this->averageResponseTime = $averageResponseTime;
         return $this;

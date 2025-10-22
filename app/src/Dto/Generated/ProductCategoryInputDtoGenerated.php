@@ -23,7 +23,7 @@ abstract class ProductCategoryInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['productcategory:write'])]
@@ -37,7 +37,7 @@ abstract class ProductCategoryInputDtoGenerated
 
     /**
      * parentCategory reference
-     * Must be: IRI string (e.g., "/api/productcategorys/uuid")
+     * Must be: IRI string (e.g., "/api/product_ries/uuid")
      */
     #[Groups(['productcategory:write'])]
     public ?string $parentCategory = null;
@@ -75,11 +75,11 @@ abstract class ProductCategoryInputDtoGenerated
         return $this;
     }
 
-    public function getParentcategory(): ?string    {
+    public function getParentCategory(): ?string    {
         return $this->parentCategory;
     }
 
-    public function setParentcategory(?string $parentCategory): self
+    public function setParentCategory(?string $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
         return $this;

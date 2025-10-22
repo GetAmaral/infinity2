@@ -472,11 +472,11 @@ abstract class OrganizationOutputDtoGenerated
     }
 
 
-    public function getLogopath(): ?string    {
+    public function getLogoPath(): ?string    {
         return $this->logoPath;
     }
 
-    public function setLogopath(?string $logoPath): self
+    public function setLogoPath(?string $logoPath): self
     {
         $this->logoPath = $logoPath;
         return $this;
@@ -492,11 +492,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getLogopathdark(): ?string    {
+    public function getLogoPathDark(): ?string    {
         return $this->logoPathDark;
     }
 
-    public function setLogopathdark(?string $logoPathDark): self
+    public function setLogoPathDark(?string $logoPathDark): self
     {
         $this->logoPathDark = $logoPathDark;
         return $this;
@@ -512,21 +512,21 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getStudentcourses(): array    {
+    public function getStudentCourses(): array    {
         return $this->studentCourses;
     }
 
-    public function setStudentcourses(array $studentCourses): self
+    public function setStudentCourses(array $studentCourses): self
     {
         $this->studentCourses = $studentCourses;
         return $this;
     }
 
-    public function getLogourl(): ?string    {
+    public function getLogoUrl(): ?string    {
         return $this->logoUrl;
     }
 
-    public function setLogourl(?string $logoUrl): self
+    public function setLogoUrl(?string $logoUrl): self
     {
         $this->logoUrl = $logoUrl;
         return $this;
@@ -592,11 +592,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getBillingfrequencies(): array    {
+    public function getBillingFrequencies(): array    {
         return $this->billingFrequencies;
     }
 
-    public function setBillingfrequencies(array $billingFrequencies): self
+    public function setBillingFrequencies(array $billingFrequencies): self
     {
         $this->billingFrequencies = $billingFrequencies;
         return $this;
@@ -622,21 +622,21 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getBusinessphone(): ?string    {
+    public function getBusinessPhone(): ?string    {
         return $this->businessPhone;
     }
 
-    public function setBusinessphone(?string $businessPhone): self
+    public function setBusinessPhone(?string $businessPhone): self
     {
         $this->businessPhone = $businessPhone;
         return $this;
     }
 
-    public function getBusinesssettings(): ?array    {
+    public function getBusinessSettings(): ?array    {
         return $this->businessSettings;
     }
 
-    public function setBusinesssettings(?array $businessSettings): self
+    public function setBusinessSettings(?array $businessSettings): self
     {
         $this->businessSettings = $businessSettings;
         return $this;
@@ -662,21 +662,21 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getPipelinestagetemplates(): array    {
+    public function getPipelineStageTemplates(): array    {
         return $this->pipelineStageTemplates;
     }
 
-    public function setPipelinestagetemplates(array $pipelineStageTemplates): self
+    public function setPipelineStageTemplates(array $pipelineStageTemplates): self
     {
         $this->pipelineStageTemplates = $pipelineStageTemplates;
         return $this;
     }
 
-    public function getTasktemplates(): array    {
+    public function getTaskTemplates(): array    {
         return $this->taskTemplates;
     }
 
-    public function setTasktemplates(array $taskTemplates): self
+    public function setTaskTemplates(array $taskTemplates): self
     {
         $this->taskTemplates = $taskTemplates;
         return $this;
@@ -692,41 +692,41 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getCelphone(): ?string    {
+    public function getCelPhone(): ?string    {
         return $this->celPhone;
     }
 
-    public function setCelphone(?string $celPhone): self
+    public function setCelPhone(?string $celPhone): self
     {
         $this->celPhone = $celPhone;
         return $this;
     }
 
-    public function getPipelinetemplates(): array    {
+    public function getPipelineTemplates(): array    {
         return $this->pipelineTemplates;
     }
 
-    public function setPipelinetemplates(array $pipelineTemplates): self
+    public function setPipelineTemplates(array $pipelineTemplates): self
     {
         $this->pipelineTemplates = $pipelineTemplates;
         return $this;
     }
 
-    public function getWinreasons(): array    {
+    public function getWinReasons(): array    {
         return $this->winReasons;
     }
 
-    public function setWinreasons(array $winReasons): self
+    public function setWinReasons(array $winReasons): self
     {
         $this->winReasons = $winReasons;
         return $this;
     }
 
-    public function getTreeflows(): array    {
+    public function getTreeFlows(): array    {
         return $this->treeFlows;
     }
 
-    public function setTreeflows(array $treeFlows): self
+    public function setTreeFlows(array $treeFlows): self
     {
         $this->treeFlows = $treeFlows;
         return $this;
@@ -742,11 +742,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getCalendartypes(): array    {
+    public function getCalendarTypes(): array    {
         return $this->calendarTypes;
     }
 
-    public function setCalendartypes(array $calendarTypes): self
+    public function setCalendarTypes(array $calendarTypes): self
     {
         $this->calendarTypes = $calendarTypes;
         return $this;
@@ -762,51 +762,51 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getDealcategories(): array    {
+    public function getDealCategories(): array    {
         return $this->dealCategories;
     }
 
-    public function setDealcategories(array $dealCategories): self
+    public function setDealCategories(array $dealCategories): self
     {
         $this->dealCategories = $dealCategories;
         return $this;
     }
 
-    public function getDealtypes(): array    {
+    public function getDealTypes(): array    {
         return $this->dealTypes;
     }
 
-    public function setDealtypes(array $dealTypes): self
+    public function setDealTypes(array $dealTypes): self
     {
         $this->dealTypes = $dealTypes;
         return $this;
     }
 
-    public function getEventattendees(): array    {
+    public function getEventAttendees(): array    {
         return $this->eventAttendees;
     }
 
-    public function setEventattendees(array $eventAttendees): self
+    public function setEventAttendees(array $eventAttendees): self
     {
         $this->eventAttendees = $eventAttendees;
         return $this;
     }
 
-    public function getLostreasons(): array    {
+    public function getLostReasons(): array    {
         return $this->lostReasons;
     }
 
-    public function setLostreasons(array $lostReasons): self
+    public function setLostReasons(array $lostReasons): self
     {
         $this->lostReasons = $lostReasons;
         return $this;
     }
 
-    public function getMeetingdatas(): array    {
+    public function getMeetingDatas(): array    {
         return $this->meetingDatas;
     }
 
-    public function setMeetingdatas(array $meetingDatas): self
+    public function setMeetingDatas(array $meetingDatas): self
     {
         $this->meetingDatas = $meetingDatas;
         return $this;
@@ -842,11 +842,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getCompanysize(): ?int    {
+    public function getCompanySize(): ?int    {
         return $this->companySize;
     }
 
-    public function setCompanysize(?int $companySize): self
+    public function setCompanySize(?int $companySize): self
     {
         $this->companySize = $companySize;
         return $this;
@@ -862,11 +862,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getContactname(): ?string    {
+    public function getContactName(): ?string    {
         return $this->contactName;
     }
 
-    public function setContactname(?string $contactName): self
+    public function setContactName(?string $contactName): self
     {
         $this->contactName = $contactName;
         return $this;
@@ -902,11 +902,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getDealstages(): array    {
+    public function getDealStages(): array    {
         return $this->dealStages;
     }
 
-    public function setDealstages(array $dealStages): self
+    public function setDealStages(array $dealStages): self
     {
         $this->dealStages = $dealStages;
         return $this;
@@ -922,41 +922,41 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getEventcategories(): array    {
+    public function getEventCategories(): array    {
         return $this->eventCategories;
     }
 
-    public function setEventcategories(array $eventCategories): self
+    public function setEventCategories(array $eventCategories): self
     {
         $this->eventCategories = $eventCategories;
         return $this;
     }
 
-    public function getEventresourcebookings(): array    {
+    public function getEventResourceBookings(): array    {
         return $this->eventResourceBookings;
     }
 
-    public function setEventresourcebookings(array $eventResourceBookings): self
+    public function setEventResourceBookings(array $eventResourceBookings): self
     {
         $this->eventResourceBookings = $eventResourceBookings;
         return $this;
     }
 
-    public function getEventresourcetypes(): array    {
+    public function getEventResourceTypes(): array    {
         return $this->eventResourceTypes;
     }
 
-    public function setEventresourcetypes(array $eventResourceTypes): self
+    public function setEventResourceTypes(array $eventResourceTypes): self
     {
         $this->eventResourceTypes = $eventResourceTypes;
         return $this;
     }
 
-    public function getEventresources(): array    {
+    public function getEventResources(): array    {
         return $this->eventResources;
     }
 
-    public function setEventresources(array $eventResources): self
+    public function setEventResources(array $eventResources): self
     {
         $this->eventResources = $eventResources;
         return $this;
@@ -972,11 +972,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getFeatureflags(): ?array    {
+    public function getFeatureFlags(): ?array    {
         return $this->featureFlags;
     }
 
-    public function setFeatureflags(?array $featureFlags): self
+    public function setFeatureFlags(?array $featureFlags): self
     {
         $this->featureFlags = $featureFlags;
         return $this;
@@ -1012,21 +1012,21 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getIntegrationconfig(): ?array    {
+    public function getIntegrationConfig(): ?array    {
         return $this->integrationConfig;
     }
 
-    public function setIntegrationconfig(?array $integrationConfig): self
+    public function setIntegrationConfig(?array $integrationConfig): self
     {
         $this->integrationConfig = $integrationConfig;
         return $this;
     }
 
-    public function getLeadsources(): array    {
+    public function getLeadSources(): array    {
         return $this->leadSources;
     }
 
-    public function setLeadsources(array $leadSources): self
+    public function setLeadSources(array $leadSources): self
     {
         $this->leadSources = $leadSources;
         return $this;
@@ -1042,31 +1042,31 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getNavconfig(): ?array    {
+    public function getNavConfig(): ?array    {
         return $this->navConfig;
     }
 
-    public function setNavconfig(?array $navConfig): self
+    public function setNavConfig(?array $navConfig): self
     {
         $this->navConfig = $navConfig;
         return $this;
     }
 
-    public function getNotificationtypes(): array    {
+    public function getNotificationTypes(): array    {
         return $this->notificationTypes;
     }
 
-    public function setNotificationtypes(array $notificationTypes): self
+    public function setNotificationTypes(array $notificationTypes): self
     {
         $this->notificationTypes = $notificationTypes;
         return $this;
     }
 
-    public function getPipelinestages(): array    {
+    public function getPipelineStages(): array    {
         return $this->pipelineStages;
     }
 
-    public function setPipelinestages(array $pipelineStages): self
+    public function setPipelineStages(array $pipelineStages): self
     {
         $this->pipelineStages = $pipelineStages;
         return $this;
@@ -1082,41 +1082,41 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getPostalcode(): ?string    {
+    public function getPostalCode(): ?string    {
         return $this->postalCode;
     }
 
-    public function setPostalcode(?string $postalCode): self
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
         return $this;
     }
 
-    public function getProductbatches(): array    {
+    public function getProductBatches(): array    {
         return $this->productBatches;
     }
 
-    public function setProductbatches(array $productBatches): self
+    public function setProductBatches(array $productBatches): self
     {
         $this->productBatches = $productBatches;
         return $this;
     }
 
-    public function getProductcategories(): array    {
+    public function getProductCategories(): array    {
         return $this->productCategories;
     }
 
-    public function setProductcategories(array $productCategories): self
+    public function setProductCategories(array $productCategories): self
     {
         $this->productCategories = $productCategories;
         return $this;
     }
 
-    public function getProductlines(): array    {
+    public function getProductLines(): array    {
         return $this->productLines;
     }
 
-    public function setProductlines(array $productLines): self
+    public function setProductLines(array $productLines): self
     {
         $this->productLines = $productLines;
         return $this;
@@ -1132,11 +1132,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getSecurityconfig(): ?array    {
+    public function getSecurityConfig(): ?array    {
         return $this->securityConfig;
     }
 
-    public function setSecurityconfig(?array $securityConfig): self
+    public function setSecurityConfig(?array $securityConfig): self
     {
         $this->securityConfig = $securityConfig;
         return $this;
@@ -1152,11 +1152,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getSocialmedias(): array    {
+    public function getSocialMedias(): array    {
         return $this->socialMedias;
     }
 
-    public function setSocialmedias(array $socialMedias): self
+    public function setSocialMedias(array $socialMedias): self
     {
         $this->socialMedias = $socialMedias;
         return $this;
@@ -1182,21 +1182,21 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getTalkmessages(): array    {
+    public function getTalkMessages(): array    {
         return $this->talkMessages;
     }
 
-    public function setTalkmessages(array $talkMessages): self
+    public function setTalkMessages(array $talkMessages): self
     {
         $this->talkMessages = $talkMessages;
         return $this;
     }
 
-    public function getTalktypes(): array    {
+    public function getTalkTypes(): array    {
         return $this->talkTypes;
     }
 
-    public function setTalktypes(array $talkTypes): self
+    public function setTalkTypes(array $talkTypes): self
     {
         $this->talkTypes = $talkTypes;
         return $this;
@@ -1212,11 +1212,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getTasktypes(): array    {
+    public function getTaskTypes(): array    {
         return $this->taskTypes;
     }
 
-    public function setTasktypes(array $taskTypes): self
+    public function setTaskTypes(array $taskTypes): self
     {
         $this->taskTypes = $taskTypes;
         return $this;
@@ -1232,31 +1232,31 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getTaxcategories(): array    {
+    public function getTaxCategories(): array    {
         return $this->taxCategories;
     }
 
-    public function setTaxcategories(array $taxCategories): self
+    public function setTaxCategories(array $taxCategories): self
     {
         $this->taxCategories = $taxCategories;
         return $this;
     }
 
-    public function getTimezone(): string    {
+    public function getTimeZone(): string    {
         return $this->timeZone;
     }
 
-    public function setTimezone(string $timeZone): self
+    public function setTimeZone(string $timeZone): self
     {
         $this->timeZone = $timeZone;
         return $this;
     }
 
-    public function getUipreferences(): ?array    {
+    public function getUiPreferences(): ?array    {
         return $this->uiPreferences;
     }
 
-    public function setUipreferences(?array $uiPreferences): self
+    public function setUiPreferences(?array $uiPreferences): self
     {
         $this->uiPreferences = $uiPreferences;
         return $this;
@@ -1272,11 +1272,11 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getWorkinghours(): array    {
+    public function getWorkingHours(): array    {
         return $this->workingHours;
     }
 
-    public function setWorkinghours(array $workingHours): self
+    public function setWorkingHours(array $workingHours): self
     {
         $this->workingHours = $workingHours;
         return $this;

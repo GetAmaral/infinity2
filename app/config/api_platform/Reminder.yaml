@@ -46,7 +46,7 @@ resources:
     properties:
       organization:
         description: "Organization"
-        example: "/api/organizations/01234567-89ab-cdef-0123-456789abcdef"
+        example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "Short identifier or title for the reminder"
         example: "\"Follow up with John Doe\""

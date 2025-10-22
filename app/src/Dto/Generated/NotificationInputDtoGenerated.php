@@ -29,7 +29,7 @@ abstract class NotificationInputDtoGenerated
 {
     /**
      * organization reference
-     * Must be: IRI string (e.g., "/api/organizations/uuid")
+     * Must be: IRI string (e.g., "/api/organizatia/uuid")
      * Auto-assigned by system if not provided
      */
     #[Groups(['notification:write'])]
@@ -64,7 +64,7 @@ abstract class NotificationInputDtoGenerated
 
     /**
      * attendee reference
-     * Must be: IRI string (e.g., "/api/eventattendees/uuid")
+     * Must be: IRI string (e.g., "/api/event_attendees/uuid")
      */
     #[Groups(['notification:write'])]
     public ?string $attendee = null;
@@ -80,7 +80,7 @@ abstract class NotificationInputDtoGenerated
 
     /**
      * communicationMethod reference
-     * Must be: IRI string (e.g., "/api/communicationmethods/uuid")
+     * Must be: IRI string (e.g., "/api/communication_methods/uuid")
      */
     #[Groups(['notification:write'])]
     public ?string $communicationMethod = null;
@@ -110,14 +110,14 @@ abstract class NotificationInputDtoGenerated
 
     /**
      * talkMessage reference
-     * Must be: IRI string (e.g., "/api/talkmessages/uuid")
+     * Must be: IRI string (e.g., "/api/talk_messages/uuid")
      */
     #[Groups(['notification:write'])]
     public ?string $talkMessage = null;
 
     /**
      * type reference
-     * Must be: IRI string (e.g., "/api/notificationtypes/uuid")
+     * Must be: IRI string (e.g., "/api/notification_types/uuid")
      */
     #[Groups(['notification:write'])]
     public ?string $type = null;
@@ -175,11 +175,11 @@ abstract class NotificationInputDtoGenerated
         return $this;
     }
 
-    public function getActionurl(): ?string    {
+    public function getActionUrl(): ?string    {
         return $this->actionUrl;
     }
 
-    public function setActionurl(?string $actionUrl): self
+    public function setActionUrl(?string $actionUrl): self
     {
         $this->actionUrl = $actionUrl;
         return $this;
@@ -215,21 +215,21 @@ abstract class NotificationInputDtoGenerated
         return $this;
     }
 
-    public function getReadat(): ?\DateTimeImmutable    {
+    public function getReadAt(): ?\DateTimeImmutable    {
         return $this->readAt;
     }
 
-    public function setReadat(?\DateTimeImmutable $readAt): self
+    public function setReadAt(?\DateTimeImmutable $readAt): self
     {
         $this->readAt = $readAt;
         return $this;
     }
 
-    public function getCommunicationmethod(): ?string    {
+    public function getCommunicationMethod(): ?string    {
         return $this->communicationMethod;
     }
 
-    public function setCommunicationmethod(?string $communicationMethod): self
+    public function setCommunicationMethod(?string $communicationMethod): self
     {
         $this->communicationMethod = $communicationMethod;
         return $this;
@@ -255,11 +255,11 @@ abstract class NotificationInputDtoGenerated
         return $this;
     }
 
-    public function getNotificationstatus(): ?int    {
+    public function getNotificationStatus(): ?int    {
         return $this->notificationStatus;
     }
 
-    public function setNotificationstatus(?int $notificationStatus): self
+    public function setNotificationStatus(?int $notificationStatus): self
     {
         $this->notificationStatus = $notificationStatus;
         return $this;
@@ -275,21 +275,21 @@ abstract class NotificationInputDtoGenerated
         return $this;
     }
 
-    public function getSentat(): ?\DateTimeImmutable    {
+    public function getSentAt(): ?\DateTimeImmutable    {
         return $this->sentAt;
     }
 
-    public function setSentat(?\DateTimeImmutable $sentAt): self
+    public function setSentAt(?\DateTimeImmutable $sentAt): self
     {
         $this->sentAt = $sentAt;
         return $this;
     }
 
-    public function getTalkmessage(): ?string    {
+    public function getTalkMessage(): ?string    {
         return $this->talkMessage;
     }
 
-    public function setTalkmessage(?string $talkMessage): self
+    public function setTalkMessage(?string $talkMessage): self
     {
         $this->talkMessage = $talkMessage;
         return $this;

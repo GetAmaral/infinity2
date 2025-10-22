@@ -245,4 +245,4 @@ resources:
       holidayTemplates:
         writable: false
         description: "HolidayTemplates"
-        example: "/api/holidaytemplates/01234567-89ab-cdef-0123-456789abcdef"
+        example: "/api/holiday_templates/01234567-89ab-cdef-0123-456789abcdef"

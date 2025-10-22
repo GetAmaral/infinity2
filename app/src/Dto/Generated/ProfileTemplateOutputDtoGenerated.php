@@ -55,11 +55,11 @@ abstract class ProfileTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getGrantedroles(): array    {
+    public function getGrantedRoles(): array    {
         return $this->grantedRoles;
     }
 
-    public function setGrantedroles(array $grantedRoles): self
+    public function setGrantedRoles(array $grantedRoles): self
     {
         $this->grantedRoles = $grantedRoles;
         return $this;

@@ -23,7 +23,7 @@ abstract class StepConnectionInputDtoGenerated
 {
     /**
      * sourceOutput reference
-     * Must be: IRI string (e.g., "/api/stepoutputs/uuid")
+     * Must be: IRI string (e.g., "/api/step_outputs/uuid")
      */
     #[Assert\NotNull]
     #[Groups(['step_connection:write'])]
@@ -31,7 +31,7 @@ abstract class StepConnectionInputDtoGenerated
 
     /**
      * targetInput reference
-     * Must be: IRI string (e.g., "/api/stepinputs/uuid")
+     * Must be: IRI string (e.g., "/api/step_inputs/uuid")
      */
     #[Assert\NotNull]
     #[Groups(['step_connection:write'])]
@@ -40,21 +40,21 @@ abstract class StepConnectionInputDtoGenerated
 
     // Getters and Setters
 
-    public function getSourceoutput(): ?string    {
+    public function getSourceOutput(): ?string    {
         return $this->sourceOutput;
     }
 
-    public function setSourceoutput(?string $sourceOutput): self
+    public function setSourceOutput(?string $sourceOutput): self
     {
         $this->sourceOutput = $sourceOutput;
         return $this;
     }
 
-    public function getTargetinput(): ?string    {
+    public function getTargetInput(): ?string    {
         return $this->targetInput;
     }
 
-    public function setTargetinput(?string $targetInput): self
+    public function setTargetInput(?string $targetInput): self
     {
         $this->targetInput = $targetInput;
         return $this;
