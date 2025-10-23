@@ -1,0 +1,56 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ repository_namespace }};
+
+use {{ entity_namespace }}\{{ entity_name }};
+use {{ repository_generated_namespace }}\{{ entity_name }}RepositoryGenerated;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * {{ entity_name }}Repository
+ *
+ * {{ entity_description }}
+ *
+ * This class extends the generated base and is SAFE TO EDIT.
+ * Add custom query methods, eager loading, and business logic here.
+ *
+ * Examples of what to add here:
+ * - Custom find methods (findActiveByCategory, findRecentOrders, etc.)
+ * - Complex queries with joins
+ * - Eager loading strategies
+ * - Custom aggregations
+ * - Business-specific filters
+ *
+ * DO NOT modify getSearchableFields(), getSortableFields(), etc.
+ * Those are managed in the generated parent class.
+ *
+ * @extends {{ entity_name }}RepositoryGenerated
+ * @generated once by Genmax Code Generator
+ */
+final class {{ entity_name }}Repository extends {{ entity_name }}RepositoryGenerated
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, {{ entity_name }}::class);
+    }
+
+    // Add custom query methods below
+    // Example:
+    //
+    // /**
+    //  * Find active {{ entity_name|lower }}s by category
+    //  */
+    // public function findActiveByCategory(Category $category): array
+    // {
+    //     return $this->createQueryBuilder('e')
+    //         ->where('e.active = :active')
+    //         ->andWhere('e.category = :category')
+    //         ->setParameter('active', true)
+    //         ->setParameter('category', $category)
+    //         ->orderBy('e.createdAt', 'DESC')
+    //         ->getQuery()
+    //         ->getResult();
+    // }
+}

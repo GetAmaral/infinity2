@@ -32,7 +32,8 @@ class GenmaxOrchestrator
     private const API_ACTIVE = true;              // ✅ Phase 2 - ACTIVE
     private const DTO_ACTIVE = true;              // ✅ Phase 2.5 - ACTIVE
     private const STATE_PROCESSOR_ACTIVE = true;  // ✅ Phase 2.5 - ACTIVE
-    private const REPOSITORY_ACTIVE = false;      // ⏸️ Phase 2 - Future
+    private const REPOSITORY_ACTIVE = true;       // ✅ Phase 2 - ACTIVE
+    private const STATE_PROVIDER_ACTIVE = true;   // ✅ Phase 2.5 - ACTIVE
     private const CONTROLLER_ACTIVE = false;      // ⏸️ Phase 3 - Future
     private const VOTER_ACTIVE = false;           // ⏸️ Phase 3 - Future
     private const FORM_ACTIVE = false;            // ⏸️ Phase 3 - Future
@@ -52,8 +53,9 @@ class GenmaxOrchestrator
         private readonly ApiGenerator $apiGenerator,
         private readonly DtoGenerator $dtoGenerator,
         private readonly StateProcessorGenerator $stateProcessorGenerator,
+        private readonly RepositoryGenerator $repositoryGenerator,
+        private readonly StateProviderGenerator $stateProviderGenerator,
         // Future generators will be injected here:
-        // private readonly RepositoryGenerator $repositoryGenerator,
         // private readonly ControllerGenerator $controllerGenerator,
         // private readonly VoterGenerator $voterGenerator,
         // private readonly FormGenerator $formGenerator,
@@ -180,11 +182,34 @@ class GenmaxOrchestrator
                         }
                     }
 
-                    // Repository (Future)
+                    // Repository (ACTIVE)
                     if (self::REPOSITORY_ACTIVE) {
-                        // $files = $this->repositoryGenerator->generate($entity);
-                        // $generatedFiles = array_merge($generatedFiles, $files);
-                        $currentStep++;
+                        try {
+                            $files = $this->repositoryGenerator->generate($entity);
+                            $generatedFiles = array_merge($generatedFiles, $files);
+                            $currentStep++;
+                        } catch (\Throwable $e) {
+                            $this->logger->error("[GENMAX] Repository generation failed", [
+                                'entity' => $entity->getEntityName(),
+                                'error' => $e->getMessage()
+                            ]);
+                            throw $e;
+                        }
+                    }
+
+                    // State Provider (ACTIVE)
+                    if (self::STATE_PROVIDER_ACTIVE && $entity->isApiEnabled()) {
+                        try {
+                            $files = $this->stateProviderGenerator->generate($entity);
+                            $generatedFiles = array_merge($generatedFiles, $files);
+                            $currentStep++;
+                        } catch (\Throwable $e) {
+                            $this->logger->error("[GENMAX] State Provider generation failed", [
+                                'entity' => $entity->getEntityName(),
+                                'error' => $e->getMessage()
+                            ]);
+                            throw $e;
+                        }
                     }
 
                     // Controller (Future)
@@ -384,6 +409,7 @@ class GenmaxOrchestrator
         $count += self::DTO_ACTIVE ? 1 : 0;
         $count += self::STATE_PROCESSOR_ACTIVE ? 1 : 0;
         $count += self::REPOSITORY_ACTIVE ? 1 : 0;
+        $count += self::STATE_PROVIDER_ACTIVE ? 1 : 0;
         $count += self::CONTROLLER_ACTIVE ? 1 : 0;
         $count += self::VOTER_ACTIVE ? 1 : 0;
         $count += self::FORM_ACTIVE ? 1 : 0;
@@ -405,6 +431,7 @@ class GenmaxOrchestrator
         if (self::DTO_ACTIVE) $active[] = 'dto';
         if (self::STATE_PROCESSOR_ACTIVE) $active[] = 'state_processor';
         if (self::REPOSITORY_ACTIVE) $active[] = 'repository';
+        if (self::STATE_PROVIDER_ACTIVE) $active[] = 'state_provider';
         if (self::CONTROLLER_ACTIVE) $active[] = 'controller';
         if (self::VOTER_ACTIVE) $active[] = 'voter';
         if (self::FORM_ACTIVE) $active[] = 'form';

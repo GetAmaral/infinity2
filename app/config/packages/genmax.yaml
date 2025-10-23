@@ -49,6 +49,10 @@ parameters:
         processor_dir: 'src/State'
         processor_namespace: 'App\State'
 
+        # State Provider paths
+        provider_dir: 'src/State'
+        provider_namespace: 'App\State'
+
         # Template paths
         template_dir: 'templates'
 
@@ -119,6 +123,9 @@ parameters:
 
         # State Processor template
         state_processor: 'genmax/php/state_processor.php.twig'
+
+        # State Provider template
+        state_provider: 'genmax/php/state_provider.php.twig'
 
     # ====================================
     # GENMAX GENERATION OPTIONS

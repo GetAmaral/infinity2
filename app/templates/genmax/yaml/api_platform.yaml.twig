@@ -59,10 +59,12 @@ resources:
 {% else %}
       # Default operations - GetCollection, Get, Post, Put, Patch, Delete
       - class: ApiPlatform\Metadata\GetCollection
+        provider: App\State\{{ entity.getEntityName() }}Provider
 {% if entity.getApiSecurity() %}
         security: {{ entity.getApiSecurity()|json_encode|raw }}
 {% endif %}
       - class: ApiPlatform\Metadata\Get
+        provider: App\State\{{ entity.getEntityName() }}Provider
 {% if entity.getApiSecurity() %}
         security: {{ entity.getApiSecurity()|json_encode|raw }}
 {% endif %}

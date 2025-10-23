@@ -99,6 +99,12 @@ class TreeFlowJsonCacheSubscriber
             foreach ($this->affectedTreeFlows as $treeFlow) {
                 error_log("[TreeFlowJsonCacheSubscriber] BEFORE refresh - TreeFlow: {$treeFlow->getId()}");
 
+                // Skip if entity has been removed (deleted)
+                if (!$entityManager->contains($treeFlow)) {
+                    error_log("[TreeFlowJsonCacheSubscriber] Entity is not managed (likely deleted), skipping");
+                    continue;
+                }
+
                 // Refresh the entity to get the latest state with all relations
                 $entityManager->refresh($treeFlow);
 

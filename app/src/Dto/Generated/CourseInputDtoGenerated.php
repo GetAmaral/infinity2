@@ -30,12 +30,12 @@ abstract class CourseInputDtoGenerated
     #[Groups(['course:write'])]
     public ?string $organization = null;
 
-    #[Groups(['course:write'])]
-    public ?\DateTimeImmutable $releaseDate = null;
-
     #[Assert\Length(max: 255)]
     #[Groups(['course:write'])]
     public string $name;
+
+    #[Groups(['course:write'])]
+    public ?\DateTimeImmutable $releaseDate = null;
 
     #[Groups(['course:write'])]
     public ?string $description = null;
@@ -76,16 +76,6 @@ abstract class CourseInputDtoGenerated
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTimeImmutable    {
-        return $this->releaseDate;
-    }
-
-    public function setReleaseDate(?\DateTimeImmutable $releaseDate): self
-    {
-        $this->releaseDate = $releaseDate;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -93,6 +83,16 @@ abstract class CourseInputDtoGenerated
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getReleaseDate(): ?\DateTimeImmutable    {
+        return $this->releaseDate;
+    }
+
+    public function setReleaseDate(?\DateTimeImmutable $releaseDate): self
+    {
+        $this->releaseDate = $releaseDate;
         return $this;
     }
 
