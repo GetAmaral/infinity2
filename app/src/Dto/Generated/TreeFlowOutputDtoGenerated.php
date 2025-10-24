@@ -29,7 +29,7 @@ abstract class TreeFlowOutputDtoGenerated
 
     public string $name;
 
-    public string $slug;
+    public ?string $slug = null;
 
     public int $version;
 
@@ -84,11 +84,11 @@ abstract class TreeFlowOutputDtoGenerated
         return $this;
     }
 
-    public function getSlug(): string    {
+    public function getSlug(): ?string    {
         return $this->slug;
     }
 
-    public function setSlug(string $slug): self
+    public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
         return $this;

@@ -26,15 +26,15 @@ use App\Entity\StepConnection;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepInputGenerated extends EntityBase
 {
-    #[Groups(['input:read', 'input:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Length(max: 255)]
-    protected string $name;
-
     #[Groups(['input:read'])]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'inputs')]
     #[ORM\JoinColumn(nullable: false)]
     protected Step $step;
+
+    #[Groups(['input:read', 'input:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
+    protected string $name;
 
     #[Groups(['input:read', 'input:write'])]
     #[ORM\Column(name: 'type_prop', type: 'string')]
@@ -60,16 +60,6 @@ abstract class StepInputGenerated extends EntityBase
         $this->connections = new ArrayCollection();
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getStep(): Step
     {
         return $this->step;
@@ -78,6 +68,16 @@ abstract class StepInputGenerated extends EntityBase
     public function setStep(Step $step): self
     {
         $this->step = $step;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 

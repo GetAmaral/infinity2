@@ -21,13 +21,13 @@ abstract class StepOutputOutputDtoGenerated
 {
     public ?Uuid $id = null;
 
+    public string $name;
+
     /**
      * step reference
      * Can be: IRI string or nested StepOutput object
      */
     public string|StepOutputDto $step;
-
-    public string $name;
 
     public ?string $description = null;
 
@@ -58,16 +58,6 @@ abstract class StepOutputOutputDtoGenerated
     }
 
 
-    public function getStep(): string|StepOutputDto    {
-        return $this->step;
-    }
-
-    public function setStep(string|StepOutputDto $step): self
-    {
-        $this->step = $step;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -75,6 +65,16 @@ abstract class StepOutputOutputDtoGenerated
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getStep(): string|StepOutputDto    {
+        return $this->step;
+    }
+
+    public function setStep(string|StepOutputDto $step): self
+    {
+        $this->step = $step;
         return $this;
     }
 

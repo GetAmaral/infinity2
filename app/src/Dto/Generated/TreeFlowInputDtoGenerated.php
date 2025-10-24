@@ -35,7 +35,7 @@ abstract class TreeFlowInputDtoGenerated
 
     #[Assert\Length(max: 255)]
     #[Groups(['treeflow:write'])]
-    public string $slug;
+    public ?string $slug = null;
 
     #[Groups(['treeflow:write'])]
     public int $version = 1;
@@ -84,11 +84,11 @@ abstract class TreeFlowInputDtoGenerated
         return $this;
     }
 
-    public function getSlug(): string    {
+    public function getSlug(): ?string    {
         return $this->slug;
     }
 
-    public function setSlug(string $slug): self
+    public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
         return $this;
