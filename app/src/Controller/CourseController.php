@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Controller\Base\BaseApiController;
 use App\Entity\Course;
 use App\Entity\CourseLecture;
 use App\Entity\CourseModule;

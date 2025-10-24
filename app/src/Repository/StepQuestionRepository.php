@@ -6,13 +6,13 @@ namespace App\Repository;
 
 use App\Entity\StepQuestion;
 use App\Entity\Step;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\Generated\StepQuestionRepositoryGenerated;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<StepQuestion>
  */
-class StepQuestionRepository extends ServiceEntityRepository
+class StepQuestionRepository extends StepQuestionRepositoryGenerated
 {
     public function __construct(ManagerRegistry $registry)
     {

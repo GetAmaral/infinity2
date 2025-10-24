@@ -6,22 +6,22 @@ namespace App\Repository;
 
 use App\Entity\AuditLog;
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\Generated\AuditLogRepositoryGenerated;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 /**
  * Repository for querying audit log history
- *
- * @extends ServiceEntityRepository<AuditLog>
  */
-class AuditLogRepository extends ServiceEntityRepository
+final class AuditLogRepository extends AuditLogRepositoryGenerated
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, AuditLog::class);
     }
+
+    // Custom query methods below
 
     /**
      * Find all audit entries for a specific entity

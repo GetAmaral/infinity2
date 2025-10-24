@@ -289,7 +289,14 @@ class RepositoryGenerator
         $output = [];
         foreach ($properties as $prop) {
             $type = $prop->getPropertyType();
+            $relationshipType = $prop->getRelationshipType();
             $getter = '$entity->get' . ucfirst($prop->getPropertyName()) . '()';
+
+            // Check if it's a collection relationship (OneToMany or ManyToMany)
+            $isCollection = $relationshipType && in_array($relationshipType, ['OneToMany', 'ManyToMany']);
+
+            // Single relationship (ManyToOne or OneToOne)
+            $isRelation = $relationshipType && !$isCollection;
 
             $output[] = [
                 'apiName' => $prop->getPropertyName(),
@@ -297,8 +304,8 @@ class RepositoryGenerator
                 'isScalar' => in_array($type, ['string', 'int', 'float', 'bool', 'text']),
                 'isDate' => in_array($type, ['date', 'datetime', 'datetime_immutable', 'DateTimeImmutable']),
                 'isUuid' => $type === 'Uuid' || $type === 'uuid',
-                'isRelation' => $prop->getRelationshipType() && !str_contains($type, 'Collection'),
-                'isCollection' => str_contains($type, 'Collection'),
+                'isRelation' => $isRelation,
+                'isCollection' => $isCollection,
             ];
         }
 

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\StudentCourse;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\Generated\StudentCourseRepositoryGenerated;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<StudentCourse>
  */
-class StudentCourseRepository extends ServiceEntityRepository
+class StudentCourseRepository extends StudentCourseRepositoryGenerated
 {
     public function __construct(ManagerRegistry $registry)
     {

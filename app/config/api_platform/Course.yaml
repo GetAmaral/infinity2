@@ -47,12 +47,12 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
-      name:
-        description: "The brand name"
-        example: "Nike"
       releaseDate:
         description: "Release Date"
         example: "sample value"
+      name:
+        description: "The brand name"
+        example: "Nike"
       description:
         description: "..."
         example: "..."

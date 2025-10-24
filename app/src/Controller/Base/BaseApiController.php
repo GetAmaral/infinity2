@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Base;
 
 use App\DTO\SearchCriteria;
 use App\DTO\PaginatedResult;
-use App\Repository\BaseRepository;
+use App\Repository\Base\BaseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

@@ -7,13 +7,13 @@ namespace App\Repository;
 use App\Entity\StepInput;
 use App\Entity\Step;
 use App\Enum\InputType;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\Generated\StepInputRepositoryGenerated;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<StepInput>
  */
-class StepInputRepository extends ServiceEntityRepository
+class StepInputRepository extends StepInputRepositoryGenerated
 {
     public function __construct(ManagerRegistry $registry)
     {

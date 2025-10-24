@@ -34,13 +34,13 @@ abstract class CourseGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['course:read', 'course:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $releaseDate = null;
+
+    #[Groups(['course:read', 'course:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $name;
-
-    #[Groups(['course:read', 'course:write'])]
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?\DateTimeImmutable $releaseDate = null;
 
     #[Groups(['course:read', 'course:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
@@ -86,16 +86,6 @@ abstract class CourseGenerated extends EntityBase
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getReleaseDate(): ?\DateTimeImmutable    {
         return $this->releaseDate;
     }
@@ -103,6 +93,16 @@ abstract class CourseGenerated extends EntityBase
     public function setReleaseDate(?\DateTimeImmutable $releaseDate): self
     {
         $this->releaseDate = $releaseDate;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 

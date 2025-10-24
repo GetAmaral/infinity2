@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Controller\Base\BaseApiController;
 use App\Entity\StepQuestion;
 use App\Entity\Step;
 use App\Entity\StepInput;

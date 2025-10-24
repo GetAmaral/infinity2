@@ -4,26 +4,51 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\WorkingHour;
 use App\Repository\Generated\WorkingHourRepositoryGenerated;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * WorkingHour Repository
+ * WorkingHourRepository
+ *
+ * Defines employee/user working hours and availability schedules for calendar management and appointment booking
  *
  * This class extends the generated base and is SAFE TO EDIT.
- * Add custom query methods and complex logic here.
+ * Add custom query methods, eager loading, and business logic here.
  *
- * @generated once by Luminai Code Generator
+ * Examples of what to add here:
+ * - Custom find methods (findActiveByCategory, findRecentOrders, etc.)
+ * - Complex queries with joins
+ * - Eager loading strategies
+ * - Custom aggregations
+ * - Business-specific filters
+ *
+ * DO NOT modify getSearchableFields(), getSortableFields(), etc.
+ * Those are managed in the generated parent class.
+ *
+ * @extends WorkingHourRepositoryGenerated
+ * @generated once by Genmax Code Generator
  */
-class WorkingHourRepository extends WorkingHourRepositoryGenerated
+final class WorkingHourRepository extends WorkingHourRepositoryGenerated
 {
-    // Add custom query methods here
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, WorkingHour::class);
+    }
 
+    // Add custom query methods below
     // Example:
-    // public function findByCustomCriteria($criteria): array
+    //
+    // /**
+    //  * Find active workinghours by category
+    //  */
+    // public function findActiveByCategory(Category $category): array
     // {
     //     return $this->createQueryBuilder('e')
-    //         ->andWhere('e.field = :value')
-    //         ->setParameter('value', $criteria)
+    //         ->where('e.active = :active')
+    //         ->andWhere('e.category = :category')
+    //         ->setParameter('active', true)
+    //         ->setParameter('category', $category)
     //         ->orderBy('e.createdAt', 'DESC')
     //         ->getQuery()
     //         ->getResult();

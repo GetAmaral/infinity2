@@ -6,12 +6,13 @@ namespace App\Repository;
 
 use App\Entity\TreeFlow;
 use App\Entity\Organization;
+use App\Repository\Generated\TreeFlowRepositoryGenerated;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends BaseRepository<TreeFlow>
  */
-final class TreeFlowRepository extends BaseRepository
+final class TreeFlowRepository extends TreeFlowRepositoryGenerated
 {
     public function __construct(ManagerRegistry $registry)
     {

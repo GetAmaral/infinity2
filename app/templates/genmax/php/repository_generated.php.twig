@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace {{ repository_generated_namespace }};
 
 use {{ entity_namespace }}\{{ entity_name }};
-use App\Repository\BaseRepository;
+use App\Repository\Base\BaseRepository;
 
 /**
  * {{ entity_name }}Repository (Generated Base Class)
@@ -137,20 +137,20 @@ abstract class {{ entity_name }}RepositoryGenerated extends BaseRepository
         assert($entity instanceof {{ entity_name }});
 
         return [
-{%- for property in output_properties %}
-    {%- if property.isScalar %}
-            '{{ property.apiName }}' => {{ property.getter }},
-    {%- elseif property.isDate %}
-            '{{ property.apiName }}' => {{ property.getter }}?->format('c'),
-    {%- elseif property.isUuid %}
-            '{{ property.apiName }}' => {{ property.getter }}?->toString() ?? '',
-    {%- elseif property.isRelation %}
-            '{{ property.apiName }}' => {{ property.getter }}?->getId()?->toString() ?? '',
-            '{{ property.apiName }}Name' => {{ property.getter }}?->getName() ?? '',
-    {%- elseif property.isCollection %}
-            '{{ property.apiName }}Count' => {{ property.getter }}->count(),
-    {%- endif %}
-{%- endfor %}
+{% for property in output_properties %}
+{% if property.isScalar %}
+            '{{ property.apiName }}' => {{ property.getter|raw }},
+{% elseif property.isDate %}
+            '{{ property.apiName }}' => {{ property.getter|raw }}?->format('c'),
+{% elseif property.isUuid %}
+            '{{ property.apiName }}' => {{ property.getter|raw }}?->toString() ?? '',
+{% elseif property.isRelation %}
+            '{{ property.apiName }}' => {{ property.getter|raw }}?->getId()?->toString() ?? '',
+            '{{ property.apiName }}Name' => {{ property.getter|raw }}?->getName() ?? '',
+{% elseif property.isCollection %}
+            '{{ property.apiName }}Count' => {{ property.getter|raw }}->count(),
+{% endif %}
+{% endfor %}
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];

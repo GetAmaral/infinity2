@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Role;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\Generated\RoleRepositoryGenerated;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Role>
- */
-class RoleRepository extends ServiceEntityRepository
+final class RoleRepository extends RoleRepositoryGenerated
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Role::class);
     }
+
+    // Custom query methods below
 
     /**
      * Find all non-system roles

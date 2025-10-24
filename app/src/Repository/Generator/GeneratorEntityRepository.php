@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Repository\Generator;
 
 use App\Entity\Generator\GeneratorEntity;
-use App\Repository\BaseRepository;
+use App\Repository\Base\BaseRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

@@ -7,13 +7,13 @@ namespace App\Repository;
 use App\Entity\StepConnection;
 use App\Entity\StepInput;
 use App\Entity\StepOutput;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\Generated\StepConnectionRepositoryGenerated;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<StepConnection>
  */
-class StepConnectionRepository extends ServiceEntityRepository
+class StepConnectionRepository extends StepConnectionRepositoryGenerated
 {
     public function __construct(ManagerRegistry $registry)
     {

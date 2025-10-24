@@ -4,26 +4,51 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Holiday;
 use App\Repository\Generated\HolidayRepositoryGenerated;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * Holiday Repository
+ * HolidayRepository
+ *
+ * Company and regional holidays
  *
  * This class extends the generated base and is SAFE TO EDIT.
- * Add custom query methods and complex logic here.
+ * Add custom query methods, eager loading, and business logic here.
  *
- * @generated once by Luminai Code Generator
+ * Examples of what to add here:
+ * - Custom find methods (findActiveByCategory, findRecentOrders, etc.)
+ * - Complex queries with joins
+ * - Eager loading strategies
+ * - Custom aggregations
+ * - Business-specific filters
+ *
+ * DO NOT modify getSearchableFields(), getSortableFields(), etc.
+ * Those are managed in the generated parent class.
+ *
+ * @extends HolidayRepositoryGenerated
+ * @generated once by Genmax Code Generator
  */
-class HolidayRepository extends HolidayRepositoryGenerated
+final class HolidayRepository extends HolidayRepositoryGenerated
 {
-    // Add custom query methods here
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Holiday::class);
+    }
 
+    // Add custom query methods below
     // Example:
-    // public function findByCustomCriteria($criteria): array
+    //
+    // /**
+    //  * Find active holidays by category
+    //  */
+    // public function findActiveByCategory(Category $category): array
     // {
     //     return $this->createQueryBuilder('e')
-    //         ->andWhere('e.field = :value')
-    //         ->setParameter('value', $criteria)
+    //         ->where('e.active = :active')
+    //         ->andWhere('e.category = :category')
+    //         ->setParameter('active', true)
+    //         ->setParameter('category', $category)
     //         ->orderBy('e.createdAt', 'DESC')
     //         ->getQuery()
     //         ->getResult();

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Repository\Generated;
 
 use App\Entity\Course;
-use App\Repository\BaseRepository;
+use App\Repository\Base\BaseRepository;
 
 /**
  * CourseRepository (Generated Base Class)
@@ -112,11 +112,17 @@ abstract class CourseRepositoryGenerated extends BaseRepository
     {
         assert($entity instanceof Course);
 
-        return [            'organization' => $entity-&gt;getOrganization()?->getId()?->toString() ?? '',
-            'organizationName' => $entity-&gt;getOrganization()?->getName() ?? '',            'name' => $entity-&gt;getName(),            'releaseDate' => $entity-&gt;getReleaseDate()?->format('c'),            'description' => $entity-&gt;getDescription(),            'modules' => $entity-&gt;getModules()?->getId()?->toString() ?? '',
-            'modulesName' => $entity-&gt;getModules()?->getName() ?? '',            'owner' => $entity-&gt;getOwner()?->getId()?->toString() ?? '',
-            'ownerName' => $entity-&gt;getOwner()?->getName() ?? '',            'studentCourses' => $entity-&gt;getStudentCourses()?->getId()?->toString() ?? '',
-            'studentCoursesName' => $entity-&gt;getStudentCourses()?->getName() ?? '',            'createdAt' => $entity->getCreatedAt()->format('c'),
+        return [
+            'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
+            'organizationName' => $entity->getOrganization()?->getName() ?? '',
+            'releaseDate' => $entity->getReleaseDate()?->format('c'),
+            'name' => $entity->getName(),
+            'description' => $entity->getDescription(),
+            'modulesCount' => $entity->getModules()->count(),
+            'owner' => $entity->getOwner()?->getId()?->toString() ?? '',
+            'ownerName' => $entity->getOwner()?->getName() ?? '',
+            'studentCoursesCount' => $entity->getStudentCourses()->count(),
+            'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];
     }

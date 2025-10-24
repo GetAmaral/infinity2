@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\StudentCourse;
 use App\Form\UserFormType;
+use App\Controller\Base\BaseApiController;
 use App\Repository\UserRepository;
 use App\Repository\OrganizationRepository;
 use App\Repository\CourseRepository;
