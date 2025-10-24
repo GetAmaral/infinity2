@@ -43,7 +43,7 @@ abstract class StepOutputRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'name',            'step',            'description',            'slug',            'conditional',            'connection',        ];
+        return [            'step',            'name',            'description',            'slug',            'conditional',            'connection',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class StepOutputRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'step' => 'step',            'description' => 'description',            'slug' => 'slug',            'conditional' => 'conditional',            'connection' => 'connection',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'step' => 'step',            'name' => 'name',            'description' => 'description',            'slug' => 'slug',            'conditional' => 'conditional',            'connection' => 'connection',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -113,8 +113,8 @@ abstract class StepOutputRepositoryGenerated extends BaseRepository
         assert($entity instanceof StepOutput);
 
         return [
-            'name' => $entity->getName(),
             'step' => $entity->getStep(),
+            'name' => $entity->getName(),
             'description' => $entity->getDescription(),
             'slug' => $entity->getSlug(),
             'conditional' => $entity->getConditional(),

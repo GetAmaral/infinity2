@@ -43,7 +43,7 @@ abstract class StepQuestionRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'name',            'step',            'slug',            'prompt',            'objective',        ];
+        return [            'step',            'name',            'slug',            'prompt',            'objective',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class StepQuestionRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'step' => 'step',            'slug' => 'slug',            'prompt' => 'prompt',            'objective' => 'objective',            'importance' => 'importance',            'viewOrder' => 'viewOrder',            'fewShotPositive' => 'fewShotPositive',            'fewShotNegative' => 'fewShotNegative',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'step' => 'step',            'name' => 'name',            'slug' => 'slug',            'prompt' => 'prompt',            'objective' => 'objective',            'importance' => 'importance',            'viewOrder' => 'viewOrder',            'fewShotPositive' => 'fewShotPositive',            'fewShotNegative' => 'fewShotNegative',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -113,8 +113,8 @@ abstract class StepQuestionRepositoryGenerated extends BaseRepository
         assert($entity instanceof StepQuestion);
 
         return [
-            'name' => $entity->getName(),
             'step' => $entity->getStep(),
+            'name' => $entity->getName(),
             'slug' => $entity->getSlug(),
             'prompt' => $entity->getPrompt(),
             'objective' => $entity->getObjective(),

@@ -43,7 +43,7 @@ abstract class StepInputRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'step',            'name',            'type',            'slug',            'prompt',            'connections',        ];
+        return [            'name',            'step',            'type',            'slug',            'prompt',            'connections',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class StepInputRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'step' => 'step',            'name' => 'name',            'type' => 'type',            'slug' => 'slug',            'prompt' => 'prompt',            'connections' => 'connections',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'step' => 'step',            'type' => 'type',            'slug' => 'slug',            'prompt' => 'prompt',            'connections' => 'connections',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -113,8 +113,8 @@ abstract class StepInputRepositoryGenerated extends BaseRepository
         assert($entity instanceof StepInput);
 
         return [
-            'step' => $entity->getStep(),
             'name' => $entity->getName(),
+            'step' => $entity->getStep(),
             'type' => $entity->getType(),
             'slug' => $entity->getSlug(),
             'prompt' => $entity->getPrompt(),

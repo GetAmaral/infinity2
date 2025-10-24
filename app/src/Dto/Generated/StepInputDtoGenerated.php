@@ -23,10 +23,6 @@ use App\Dto\StepInputInputDto;
  */
 abstract class StepInputDtoGenerated
 {
-    #[Assert\Length(max: 255)]
-    #[Groups(['step:write'])]
-    public string $name;
-
     /**
      * treeFlow reference
      * Must be: IRI string (e.g., "/api/tree_flows/uuid")
@@ -34,6 +30,10 @@ abstract class StepInputDtoGenerated
     #[Assert\NotNull]
     #[Groups(['step:write'])]
     public ?string $treeFlow = null;
+
+    #[Assert\Length(max: 255)]
+    #[Groups(['step:write'])]
+    public string $name;
 
     #[Groups(['step:write'])]
     public bool $first = false;
@@ -87,16 +87,6 @@ abstract class StepInputDtoGenerated
 
     // Getters and Setters
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getTreeFlow(): ?string    {
         return $this->treeFlow;
     }
@@ -104,6 +94,16 @@ abstract class StepInputDtoGenerated
     public function setTreeFlow(?string $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
