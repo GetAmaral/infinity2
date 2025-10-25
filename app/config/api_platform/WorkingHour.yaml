@@ -50,27 +50,54 @@ resources:
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       calendar:
         description: "Calendar"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       dayOfWeek:
         description: "DayOfWeek (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       endTime:
         description: "EndTime"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       event:
         description: "Event"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       minimalMinutesEventDuration:
         description: "MinimalMinutesEventDuration (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notes:
         description: "Additional notes"
         example: "This is a longer text field with more content"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       startTime:
         description: "StartTime"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       timeZone:
         description: "TimeZone"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

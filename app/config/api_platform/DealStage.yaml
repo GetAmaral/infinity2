@@ -51,17 +51,22 @@ resources:
         writable: false
         description: "Denormalized stage name from PipelineStage for quick reference and reporting"
         example: "Qualification"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       probability:
         description: "Win probability percentage (0-100) for this stage. Based on historical data and stage definition."
         example: "60.00"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       rottenDays:
         description: "Number of days allowed in this stage before deal is marked as rotten\/stale. NULL or 0 means no limit."
         example: "14"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       rotten:
         writable: false
@@ -69,58 +74,90 @@ resources:
         example: "false"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       enteredBy:
         writable: false
         description: "User who moved the deal into this stage"
         example: "\/api\/users\/0199cadd-1111-7c91-8b73-c726b6d7bbd0"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       exitedBy:
         writable: false
         description: "User who moved the deal out of this stage"
         example: "\/api\/users\/0199cadd-2222-7c91-8b73-c726b6d7bbd0"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       expectedCloseDate:
         description: "Forecasted close date for the deal when it was in this stage"
         example: "2025-11-15"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: DateFilter
       stageValue:
         description: "Snapshot of the deal value when it entered this stage, used for pipeline reporting"
         example: "50000.00"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       daysInStage:
         description: "Number of days the deal has been in this pipeline stage"
         example: "5.5"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       weightedValue:
         writable: false
         description: "Probability-weighted deal value (stageValue * probability\/100) for forecasting"
         example: "30000.00"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       active:
         description: "Indicates if the deal is currently in this stage (true) or has moved on (false)"
         example: "true"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       deal:
         description: "The deal that this stage record belongs to"
         example: "\/api\/deals\/0199cadd-9abc-7c91-8b73-c726b6d7bbd0"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       endedAt:
         description: "Timestamp when the deal exited this pipeline stage"
         example: "2025-10-20T16:20:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lastUpdatedAt:
         description: "Timestamp of the last update or activity in this stage"
         example: "2025-10-19T09:45:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notes:
         description: "Notes and comments about this stage transition or current stage status"
         example: "Customer requested pricing for enterprise plan. Awaiting approval from finance."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       pipelineStage:
         description: "Reference to the pipeline stage configuration that defines this stage"
         example: "\/api\/pipeline_stages\/0199cadd-1234-7c91-8b73-c726b6d7bbd0"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       startedAt:
         description: "Timestamp when the deal entered this pipeline stage"
         example: "2025-10-15T14:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

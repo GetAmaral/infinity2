@@ -50,9 +50,15 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       icon:
         description: "Bootstrap icon class for visual representation in UI"
         example: "\"bi-envelope-fill\""
@@ -60,6 +66,9 @@ resources:
         writable: false
         description: "Collection of notification instances created from this type"
         example: "[\"\/api\/notifications\/0199cadd-5678-7506-9958-b9b877badbaa\"]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this notification type is currently active and can be used"
         example: "true"

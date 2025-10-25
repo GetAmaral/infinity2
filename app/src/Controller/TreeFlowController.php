@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Controller\Base\BaseApiController;
-use App\Entity\StepQuestion;
+use App\Entity\StepIteration;
 use App\Entity\Step;
 use App\Entity\StepInput;
 use App\Entity\StepOutput;
@@ -316,7 +316,7 @@ final class TreeFlowController extends BaseApiController
                     'prompt' => $step->getPrompt(),
 
                     // Questions with FewShot JSONB arrays
-                    'questions' => array_map(function(StepQuestion $q) {
+                    'questions' => array_map(function(StepIteration $q) {
                         return [
                             'id' => $q->getId()?->toString(),
                             'name' => $q->getName(),

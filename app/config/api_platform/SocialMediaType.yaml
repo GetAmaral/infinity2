@@ -47,9 +47,18 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       iconUrl:
         description: "IconUrl (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       url:
         description: "Url (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

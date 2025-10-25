@@ -47,9 +47,18 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       offsetMinutes:
         description: "OffsetMinutes (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       workingHours:
         description: "WorkingHours"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

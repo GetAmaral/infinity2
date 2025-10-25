@@ -50,21 +50,42 @@ resources:
       event:
         description: "Event"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       fileSize:
         description: "FileSize (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       fileType:
         description: "FileType (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       filename:
         description: "Filename (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       product:
         description: "Product"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       talkMessage:
         description: "TalkMessage"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       url:
         description: "Url (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

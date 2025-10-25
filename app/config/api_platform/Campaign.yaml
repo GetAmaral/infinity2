@@ -50,12 +50,21 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       actualBudget:
         description: "Actual Budget (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
@@ -65,6 +74,9 @@ resources:
       actualReturn:
         description: "Actual Return (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       actualRevenue:
         description: "Actual Revenue (decimal value)"
         example: "99.99"
@@ -77,6 +89,9 @@ resources:
       campaignStatus:
         description: "Campaign Status (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       campaignType:
         description: "Campaign Type (text field)"
         example: "Sample longer text value"
@@ -86,24 +101,39 @@ resources:
       companies:
         description: "Companies"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       contacts:
         description: "Contacts"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       deals:
         description: "Deals"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       draft:
         description: "Draft (yes\/no)"
         example: "true"
       duration:
         description: "Duration (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       emailAddress:
         description: "Email Address (text field)"
         example: "Sample longer text value"
       endDate:
         description: "End Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       expectedResponse:
         description: "Expected Response (%) (numeric value)"
         example: "42"
@@ -113,6 +143,9 @@ resources:
       manager:
         description: "Manager"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       message:
         description: "Message (long text)"
         example: "This is a longer text field with more content"
@@ -147,39 +180,69 @@ resources:
       plannedBudget:
         description: "Planned Budget (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       plannedDuration:
         description: "Planned Duration (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       plannedEndDate:
         description: "Planned End Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       plannedReturn:
         description: "Planned Return (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       plannedStartDate:
         description: "Planned Start Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       roi:
         description: "ROI (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       socialMedias:
         description: "Social Medias"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       startDate:
         description: "Start Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       status:
         description: "Current status"
         example: "Sample longer text value"
       talks:
         description: "Talks"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       targetAudience:
         description: "Target Audience (long text)"
         example: "This is a longer text field with more content"
       team:
         description: "Team"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       template:
         description: "Is Template (yes\/no)"
         example: "true"

@@ -47,52 +47,94 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       videoFileName:
         writable: false
         description: "VideoFileName (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       videoPath:
         writable: false
         description: "VideoPath (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       processingStatus:
         writable: false
         description: "ProcessingStatus (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       processingStep:
         writable: false
         description: "ProcessingStep (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       processingPercentage:
         writable: false
         description: "ProcessingPercentage (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       processingError:
         writable: false
         description: "ProcessingError (long text)"
         example: "This is a longer text field with more content"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       processedAt:
         writable: false
         description: "ProcessedAt"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       viewOrder:
         description: "ViewOrder (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lengthSeconds:
         description: "LengthSeconds (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       courseModule:
         description: "CourseModule (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       studentLectures:
         description: "StudentLectures (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       studentCoursesOnThisLecture:
         description: "StudentCoursesOnThisLecture (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       organization:
         writable: false
         description: "Organization"

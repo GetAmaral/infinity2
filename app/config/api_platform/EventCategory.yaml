@@ -54,20 +54,31 @@ resources:
         filters:
           - type: SearchFilter
             strategy: partial
+          - type: OrderFilter
       color:
         description: "Hexadecimal color code for calendar visualization"
         example: "#3498db"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       icon:
         description: "Bootstrap icon class for visual representation"
         example: "bi-calendar-check"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       default:
         description: "Whether this is the default category for new events"
         example: "false"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       eventType:
         description: "Type of events this category is designed for"
@@ -96,3 +107,6 @@ resources:
         writable: false
         description: "Collection of events assigned to this category"
         example: "[\"\/api\/events\/0199cadd-64e7-73cf-9c8a-4a4dfe0a8ecf\"]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

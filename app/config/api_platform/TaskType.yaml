@@ -50,12 +50,24 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       taskFunction:
         description: "TaskFunction (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       taskTemplates:
         description: "TaskTemplates"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tasks:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter

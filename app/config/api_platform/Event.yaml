@@ -50,66 +50,129 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       startTime:
         description: "Event start date and time"
         example: "2025-10-19T14:00:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       endTime:
         description: "Event end date and time"
         example: "2025-10-19T15:00:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       allDay:
         description: "Full day event without specific times"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       location:
         description: "Physical location or address of the event"
         example: "Conference Room A, Building 2"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       meetingUrl:
         description: "URL to join online meeting (Zoom, Teams, etc.)"
         example: "https:\/\/zoom.us\/j\/1234567890?pwd=abc123"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       calendar:
         description: "Parent calendar containing this event"
         example: "\/api\/calendars\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       organizer:
         description: "User who created\/organized the event"
         example: "\/api\/users\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       attendees:
         description: "List of event participants and their response status"
         example: "[{\"email\": \"john@example.com\", \"responseStatus\": \"accepted\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       categories:
         description: "Event category tags for organization and filtering"
         example: "[{\"id\": \"01234567-89ab-cdef-0123-456789abcdef\", \"name\": \"Team Meeting\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       attachments:
         description: "File attachments associated with this event"
         example: "[{\"id\": \"01234567-89ab-cdef-0123-456789abcdef\", \"filename\": \"agenda.pdf\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       reminders:
         description: "Reminder notifications for this event"
         example: "[{\"method\": \"email\", \"minutes\": 15}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       resourceBookings:
         description: "Room and equipment bookings for this event"
         example: "[{\"resource\": \"Conference Room A\", \"status\": \"confirmed\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       parentEvent:
         description: "Parent recurring event for this instance"
         example: "\/api\/events\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       childrenEvents:
         description: "Child instances of recurring event pattern"
         example: "[{\"id\": \"01234567-89ab-cdef-0123-456789abcdef\", \"startTime\": \"2025-10-26T10:00:00Z\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       originalStartTime:
         description: "Original start time for modified recurring instance"
         example: "2025-10-19T14:00:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       sequence:
         description: "iCalendar sequence number for update tracking"
         example: 42
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       conferenceData:
         description: "Google Calendar conference data (Meet, Hangouts)"
         example: "{\"entryPoints\": [{\"entryPointType\": \"video\", \"uri\": \"https:\/\/meet.google.com\/abc-defg-hij\"}]}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       extendedProperties:
         description: "Extended properties for external calendar sync"
         example: "{\"private\": {\"customField1\": \"value1\"}, \"shared\": {\"visibility\": \"public\"}}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       source:
         description: "External source information for synced events"
         example: "{\"url\": \"https:\/\/external.com\/event\/123\", \"title\": \"External Calendar\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       workingHours:
         writable: false
         description: "WorkingHours"

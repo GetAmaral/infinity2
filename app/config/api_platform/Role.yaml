@@ -47,6 +47,9 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       permissions:
         description: "Permissions (JSON data)"
         example: "{\"key\": \"value\"}"
@@ -56,9 +59,18 @@ resources:
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       priority:
         description: "Priority level"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       systemRole:
         description: "SystemRole (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

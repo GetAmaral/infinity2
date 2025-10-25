@@ -50,23 +50,34 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       probability:
         description: "The probability percentage (0-100) that a deal in this stage will close successfully. Used for weighted pipeline forecasting."
         example: "75.50"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       order:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Indicates whether this pipeline stage template is active and available for creating new pipeline instances"
         example: "true"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       color:
         description: "Hexadecimal color code for visual representation of this stage in UI (format: #RRGGBB)"
@@ -76,22 +87,33 @@ resources:
         example: "30"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       pipelineTemplate:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tasks:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       final:
         description: "Indicates if this is a final\/terminal stage where deals cannot progress further (e.g., Won, Lost, Closed)"
         example: "false"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       stageType:
         description: "Categorizes the stage type: \"active\" for in-progress stages, \"won\" for successful closes, \"lost\" for unsuccessful closes"
         example: "\"active\""
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       automationRules:
         description: "JSON object defining automation rules (e.g., email notifications, task creation) triggered when a deal enters this stage"
         example: "{\"notify_owner\": true, \"create_tasks\": [\"follow_up_call\"], \"send_email_template\": \"proposal_sent\"}"

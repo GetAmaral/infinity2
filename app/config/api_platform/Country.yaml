@@ -53,7 +53,6 @@ resources:
             strategy: exact
           - type: SearchFilter
             strategy: partial
-          - type: OrderFilter
       name:
         description: "The brand name"
         example: "Nike"
@@ -73,7 +72,6 @@ resources:
             strategy: exact
           - type: SearchFilter
             strategy: partial
-          - type: OrderFilter
       numericCode:
         description: "Three-digit country code (ISO 3166-1 numeric)"
         example: "840"
@@ -92,7 +90,6 @@ resources:
             strategy: exact
           - type: SearchFilter
             strategy: partial
-          - type: OrderFilter
       phoneCode:
         description: "International phone dialing code"
         example: "+1"
@@ -109,7 +106,6 @@ resources:
         filters:
           - type: SearchFilter
             strategy: exact
-          - type: OrderFilter
       capital:
         description: "Capital city name"
         example: "Washington, D.C."
@@ -119,7 +115,6 @@ resources:
             strategy: partial
           - type: SearchFilter
             strategy: partial
-          - type: OrderFilter
       currencySymbol:
         description: "Currency display symbol"
         example: "$"
@@ -136,7 +131,6 @@ resources:
         filters:
           - type: SearchFilter
             strategy: exact
-          - type: OrderFilter
       nativeName:
         description: "Country name in native language"
         example: "United States of America"
@@ -148,7 +142,6 @@ resources:
         example: "1"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: BooleanFilter
       subregion:
         description: "UN geographic subregion"
@@ -224,14 +217,12 @@ resources:
         example: "331900000"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       area:
         description: "Total area in square kilometers"
         example: "9833520"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       unMemberSince:
         description: "Year joined United Nations"

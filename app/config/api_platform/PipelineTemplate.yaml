@@ -50,31 +50,58 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       default:
         description: "Whether this is a default system template that cannot be deleted"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       public:
         description: "Whether this template is publicly available across all organizations"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       templateCategory:
         description: "The category of this template (Sales, Customer Success, Support, Custom)"
         example: "Sales"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       estimatedDuration:
         description: "Estimated average duration for completing this pipeline in days"
         example: "90"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       industry:
         description: "The target industry for this pipeline template (e.g., SaaS, Real Estate, Healthcare)"
         example: "SaaS"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       stageCount:
         writable: false
         description: "Total number of stages in this template (computed from stages relationship)"
         example: "7"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       targetDealSize:
         description: "Target average deal size for this pipeline template"
         example: "50000.00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       color:
         description: "Visual color for the template (hex format)"
         example: "#6f42c1"
@@ -85,12 +112,21 @@ resources:
         writable: false
         description: "Number of times this template has been used to create pipelines"
         example: "15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       stages:
         description: "Collection of stage templates that define the pipeline flow"
         example: "[{\"name\":\"Lead Generation\",\"order\":1},{\"name\":\"Qualification\",\"order\":2}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tags:
         description: "Tags for categorizing and searching templates"
         example: "[\"enterprise\",\"b2b\",\"saas\"]"
       active:
         description: "Whether this pipeline template is active and available for use"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

@@ -47,9 +47,15 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       calendars:
         description: "Collection of calendars linked to this external provider connection"
         example: "[{\"id\": \"0199...\", \"name\": \"Work Calendar\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       externalProvider:
         description: "External calendar provider type (Google Calendar, Microsoft Outlook, Apple iCloud)"
         example: "google_calendar"
@@ -65,6 +71,9 @@ resources:
       url:
         description: "Public calendar URL or CalDAV endpoint (if applicable)"
         example: "https:\/\/calendar.google.com\/calendar\/ical\/user@example.com\/public\/basic.ics"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       accessToken:
         readable: false
         description: "OAuth 2.0 access token (encrypted at rest, never exposed in API responses)"
@@ -89,6 +98,7 @@ resources:
         example: "2025-10-19T14:25:00Z"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: DateFilter
       webhookUrl:
         writable: false

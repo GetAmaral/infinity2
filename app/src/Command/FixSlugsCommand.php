@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\Entity\TreeFlow;
 use App\Entity\Step;
-use App\Entity\StepQuestion;
+use App\Entity\StepIteration;
 use App\Entity\StepInput;
 use App\Entity\StepOutput;
 use App\Service\Utils;
@@ -63,9 +63,9 @@ class FixSlugsCommand extends Command
             }
         }
 
-        // Fix StepQuestion slugs
-        $io->section('Fixing StepQuestion slugs');
-        $questions = $this->entityManager->getRepository(StepQuestion::class)->findAll();
+        // Fix StepIteration slugs
+        $io->section('Fixing StepIteration slugs');
+        $questions = $this->entityManager->getRepository(StepIteration::class)->findAll();
         foreach ($questions as $question) {
             $oldSlug = $question->getSlug();
             $newSlug = Utils::stringToSlug($question->getName());

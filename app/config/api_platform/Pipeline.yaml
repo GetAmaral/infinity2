@@ -50,27 +50,48 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       pipelineType:
         description: "Pipeline Type (text field)"
         example: "Sample longer text value"
       default:
         description: "Is Default (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       owner:
         description: "Owner"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       stages:
         description: "Stages"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       displayOrder:
         description: "Display Order (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       color:
         description: "Color (text field)"
         example: "Sample text"

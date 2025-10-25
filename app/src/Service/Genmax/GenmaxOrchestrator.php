@@ -34,7 +34,7 @@ class GenmaxOrchestrator
     private const STATE_PROCESSOR_ACTIVE = true;  // ✅ Phase 2.5 - ACTIVE
     private const REPOSITORY_ACTIVE = true;       // ✅ Phase 2 - ACTIVE
     private const STATE_PROVIDER_ACTIVE = true;   // ✅ Phase 2.5 - ACTIVE
-    private const CONTROLLER_ACTIVE = false;      // ⏸️ Phase 3 - Future
+    private const CONTROLLER_ACTIVE = true;       // ✅ Phase 3 - ACTIVE
     private const VOTER_ACTIVE = false;           // ⏸️ Phase 3 - Future
     private const FORM_ACTIVE = false;            // ⏸️ Phase 3 - Future
     private const TEMPLATE_ACTIVE = false;        // ⏸️ Phase 4 - Future
@@ -55,8 +55,8 @@ class GenmaxOrchestrator
         private readonly StateProcessorGenerator $stateProcessorGenerator,
         private readonly RepositoryGenerator $repositoryGenerator,
         private readonly StateProviderGenerator $stateProviderGenerator,
+        private readonly ControllerGenerator $controllerGenerator,
         // Future generators will be injected here:
-        // private readonly ControllerGenerator $controllerGenerator,
         // private readonly VoterGenerator $voterGenerator,
         // private readonly FormGenerator $formGenerator,
         // private readonly TemplateGenerator $templateGenerator,
@@ -212,11 +212,19 @@ class GenmaxOrchestrator
                         }
                     }
 
-                    // Controller (Future)
-                    if (self::CONTROLLER_ACTIVE) {
-                        // $files = $this->controllerGenerator->generate($entity);
-                        // $generatedFiles = array_merge($generatedFiles, $files);
-                        $currentStep++;
+                    // Controller (ACTIVE)
+                    if (self::CONTROLLER_ACTIVE && $entity->isGenerateController()) {
+                        try {
+                            $files = $this->controllerGenerator->generate($entity);
+                            $generatedFiles = array_merge($generatedFiles, $files);
+                            $currentStep++;
+                        } catch (\Throwable $e) {
+                            $this->logger->error("[GENMAX] Controller generation failed", [
+                                'entity' => $entity->getEntityName(),
+                                'error' => $e->getMessage()
+                            ]);
+                            throw $e;
+                        }
                     }
 
                     // Voter (Future)

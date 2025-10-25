@@ -50,13 +50,22 @@ resources:
       name:
         description: "The name of the calendar type (e.g., Personal, Shared, Public, Team)"
         example: "Personal Calendar"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "Optional description explaining the purpose and usage of this calendar type"
         example: "This calendar type is used for personal appointments and private events"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       calendars:
         writable: false
         description: "Collection of calendars that use this calendar type"
         example: "[\"\/api\/calendars\/0199c000-0000-0000-0000-000000000001\"]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       color:
         description: "Hexadecimal color code for visual representation of the calendar type"
         example: "#3788d8"
@@ -66,18 +75,30 @@ resources:
       active:
         description: "Whether this calendar type is active and available for use"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       default:
         description: "Whether this is the default calendar type for new calendars"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       visibility:
         description: "Visibility level of calendars using this type (personal, shared, public, team)"
         example: "personal"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       access_level:
         description: "Default access level for calendars of this type"
         example: "read_write"
       sort_order:
         description: "Order in which this calendar type appears in lists (lower numbers appear first)"
         example: "10"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       allow_sharing:
         description: "Whether calendars of this type can be shared with other users"
         example: "true"

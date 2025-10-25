@@ -292,9 +292,6 @@ class GeneratorProperty
     private bool $filterSearchable = false;  // Enable full-text search filter
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
-    private bool $filterOrderable = false;  // Enable ordering on this property
-
-    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $filterBoolean = false;  // Enable boolean filter
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
@@ -530,8 +527,6 @@ class GeneratorProperty
     public function setFilterStrategy(?string $filterStrategy): self { $this->filterStrategy = $filterStrategy; return $this; }
     public function isFilterSearchable(): bool { return $this->filterSearchable; }
     public function setFilterSearchable(bool $filterSearchable): self { $this->filterSearchable = $filterSearchable; return $this; }
-    public function isFilterOrderable(): bool { return $this->filterOrderable; }
-    public function setFilterOrderable(bool $filterOrderable): self { $this->filterOrderable = $filterOrderable; return $this; }
     public function isFilterBoolean(): bool { return $this->filterBoolean; }
     public function setFilterBoolean(bool $filterBoolean): self { $this->filterBoolean = $filterBoolean; return $this; }
     public function isFilterDate(): bool { return $this->filterDate; }

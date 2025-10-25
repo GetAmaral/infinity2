@@ -56,6 +56,9 @@ resources:
       viewOrder:
         description: "View Order (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       totalLengthSeconds:
         writable: false
         description: "Total Length Seconds (numeric value)"

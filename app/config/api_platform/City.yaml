@@ -50,12 +50,21 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       state:
         description: "State\/Province (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       country:
         description: "Country"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       latitude:
         description: "Latitude"
         example: "sample value"
@@ -74,12 +83,21 @@ resources:
       ibgeCode:
         description: "IBGE Code (Brazil) (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
       eventResources:
         description: "EventResources"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       holidayTemplates:
         description: "HolidayTemplates"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

@@ -53,22 +53,43 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       modules:
         description: "Modules"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       owner:
         description: "Owner"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       studentCourses:
         description: "Student Courses"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       totalLengthSeconds:
         writable: false
         description: "Total Length Seconds (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

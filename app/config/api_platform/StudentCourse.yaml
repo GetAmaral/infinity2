@@ -50,34 +50,67 @@ resources:
       enrolledAt:
         description: "EnrolledAt"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       startDate:
         description: "StartDate"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lastDate:
         description: "LastDate"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       progressSeconds:
         description: "ProgressSeconds"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       progressPercentage:
         description: "ProgressPercentage (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       completedAt:
         description: "CompletedAt"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       student:
         description: "Student (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       course:
         description: "Course (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       currentLecture:
         writable: false
         description: "CurrentLecture (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       studentLectures:
         description: "StudentLectures (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

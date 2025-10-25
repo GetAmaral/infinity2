@@ -50,67 +50,127 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       user:
         description: "User"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       timeZone:
         description: "TimeZone (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       color:
         description: "Color (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       primary:
         description: "Primary (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       visible:
         description: "Visible (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       accessRole:
         description: "AccessRole (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       calendarType:
         description: "CalendarType"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       events:
         description: "Events"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       externalLink:
         description: "ExternalLink"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       externalApiKey:
         description: "ExternalApiKey (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       workingHours:
         description: "WorkingHours"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       holidays:
         description: "Holidays"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       default:
         description: "Is Default Calendar (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Is Active (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       public:
         description: "Is Public (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       icon:
         description: "Icon (text field)"
         example: "Sample longer text value"
       sortOrder:
         description: "Sort Order (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       externalId:
         description: "External ID (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lastSyncedAt:
         writable: false
         description: "Last Synced At"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       permissions:
         description: "Sharing Permissions (JSON data)"
         example: "{\"key\": \"value\"}"

@@ -67,6 +67,7 @@ resources:
             strategy: partial
           - type: SearchFilter
             strategy: partial
+          - type: OrderFilter
       category:
         description: "Category (text field)"
         example: "Sample text"
@@ -87,3 +88,6 @@ resources:
       deals:
         description: "Deals"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

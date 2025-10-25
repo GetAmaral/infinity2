@@ -62,79 +62,154 @@ resources:
       batchNumber:
         description: "Batch Number (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       manufacturingDate:
         description: "Manufacturing Date (date)"
         example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lotNumber:
         description: "Lot Number (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       serialNumber:
         description: "Serial Number (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       expired:
         writable: false
         description: "Expired (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       supplier:
         description: "Supplier (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       qualityStatus:
         description: "Quality Status (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notes:
         description: "Additional notes"
         example: "This is a longer text field with more content"
       availableQuantity:
         description: "AvailableQuantity (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       commissionAmount:
         description: "CommissionAmount (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       commissionRate:
         description: "CommissionRate (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       costPrice:
         description: "CostPrice (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       currency:
         description: "Currency (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       discountAmount:
         description: "DiscountAmount (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       discountPercentage:
         description: "DiscountPercentage (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       exchangeRate:
         description: "ExchangeRate"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       expirationDate:
         description: "ExpirationDate (date)"
         example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       listPrice:
         description: "ListPrice (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       marginPercentage:
         description: "MarginPercentage (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       maximumDiscount:
         description: "MaximumDiscount (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       minimumPrice:
         description: "MinimumPrice (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       product:
         description: "Product"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       reservedQuantity:
         description: "ReservedQuantity (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       stockQuantity:
         description: "StockQuantity (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

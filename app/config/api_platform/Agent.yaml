@@ -75,20 +75,17 @@ resources:
             strategy: partial
           - type: SearchFilter
             strategy: partial
-          - type: OrderFilter
       active:
         description: "Whether agent is active in the system"
         example: "true"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: BooleanFilter
       available:
         description: "Whether agent is available for new assignments"
         example: "true"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: BooleanFilter
       territory:
         description: "Geographic or account-based territory"
@@ -99,13 +96,11 @@ resources:
             strategy: exact
           - type: SearchFilter
             strategy: partial
-          - type: OrderFilter
       quota:
         description: "Sales quota amount"
         example: "150000.00"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       user:
         description: "User"
@@ -126,21 +121,18 @@ resources:
         example: "8.50"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       startDate:
         description: "Employment start date"
         example: "2024-01-15"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: DateFilter
       endDate:
         description: "End Date (date)"
         example: "2025-01-15"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: DateFilter
       specialization:
         description: "Area of sales expertise"
@@ -151,7 +143,6 @@ resources:
             strategy: partial
           - type: SearchFilter
             strategy: partial
-          - type: OrderFilter
       languages:
         description: "Languages spoken (JSON array)"
         example: "[\"English\", \"Spanish\", \"French\"]"
@@ -163,49 +154,42 @@ resources:
         example: "1250000.00"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       currentMonthSales:
         description: "Sales for current month"
         example: "45000.00"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       conversionRate:
         description: "Lead-to-sale conversion percentage"
         example: "23.50"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       customerSatisfactionScore:
         description: "Customer satisfaction score (0-10)"
         example: "4.75"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       maxConcurrentCustomers:
         description: "Maximum simultaneous customers"
         example: "10"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       currentCustomerCount:
         description: "Current active customer count"
         example: "7"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       averageResponseTime:
         description: "Average response time in minutes"
         example: "15"
         # Advanced filters
         filters:
-          - type: OrderFilter
           - type: NumericFilter
       skills:
         description: "Comma-separated skills or JSON array"
@@ -219,3 +203,6 @@ resources:
       talks:
         description: "Talks"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

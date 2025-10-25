@@ -43,7 +43,7 @@ abstract class StepRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'treeFlow',            'name',            'slug',            'objective',            'prompt',            'questions',            'outputs',            'inputs',        ];
+        return [            'name',            'treeFlow',            'slug',            'objective',            'prompt',            'questions',            'outputs',            'inputs',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class StepRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'treeFlow' => 'treeFlow',            'name' => 'name',            'first' => 'first',            'slug' => 'slug',            'objective' => 'objective',            'prompt' => 'prompt',            'viewOrder' => 'viewOrder',            'positionX' => 'positionX',            'positionY' => 'positionY',            'questions' => 'questions',            'outputs' => 'outputs',            'inputs' => 'inputs',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'treeFlow' => 'treeFlow',            'first' => 'first',            'slug' => 'slug',            'objective' => 'objective',            'prompt' => 'prompt',            'viewOrder' => 'viewOrder',            'positionX' => 'positionX',            'positionY' => 'positionY',            'questions' => 'questions',            'outputs' => 'outputs',            'inputs' => 'inputs',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -113,8 +113,8 @@ abstract class StepRepositoryGenerated extends BaseRepository
         assert($entity instanceof Step);
 
         return [
-            'treeFlow' => $entity->getTreeFlow(),
             'name' => $entity->getName(),
+            'treeFlow' => $entity->getTreeFlow(),
             'slug' => $entity->getSlug(),
             'objective' => $entity->getObjective(),
             'prompt' => $entity->getPrompt(),

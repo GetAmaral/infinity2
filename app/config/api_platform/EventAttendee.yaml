@@ -50,33 +50,66 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       attendeeStatus:
         description: "Current status of the attendee in the event workflow"
         example: "1"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       comment:
         description: "Additional comments or notes about this attendee"
         example: "Requires wheelchair access"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       contact:
         description: "Associated contact record if attendee is from CRM"
         example: "\/api\/contacts\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       email:
         description: "Email address of the attendee"
         example: "john.doe@example.com"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       event:
         description: "The event this attendee is registered for"
         example: "\/api\/events\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notifications:
         description: "All notifications sent to this attendee"
         example: "[\"\/api\/notifications\/01234567-89ab-cdef-0123-456789abcdef\"]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       optional:
         description: "Whether attendance is optional for this attendee"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       organizer:
         description: "Whether this attendee is an organizer of the event"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       phone:
         description: "Phone number of the attendee"
         example: "+1-555-123-4567"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       user:
         description: "Associated user account if attendee is a registered user"
         example: "\/api\/users\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

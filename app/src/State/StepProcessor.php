@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\TreeFlow;
-use App\Entity\StepQuestion;
+use App\Entity\StepIteration;
 use App\Entity\StepOutput;
 use App\Entity\StepInput;
 
@@ -189,7 +189,7 @@ class StepProcessor implements ProcessorInterface
      * Process questions collection
      *
      * @param Step $entity
-     * @param array $itemsData Array of StepQuestionInput or arrays with @id
+     * @param array $itemsData Array of StepIterationInput or arrays with @id
      * @param string $strategy 'create_only', 'update_only', or 'create_and_update'
      * @param bool $orphanRemoval Remove items not in input array
      */
@@ -216,9 +216,9 @@ class StepProcessor implements ProcessorInterface
                     $itemId = $this->extractIdFromIri($itemId);
                 }
 
-                $item = $this->entityManager->getRepository(StepQuestion::class)->find($itemId);
+                $item = $this->entityManager->getRepository(StepIteration::class)->find($itemId);
                 if (!$item) {
-                    throw new BadRequestHttpException('StepQuestion not found: ' . $itemId);
+                    throw new BadRequestHttpException('StepIteration not found: ' . $itemId);
                 }
 
                 // Update item properties from DTO array
@@ -231,7 +231,7 @@ class StepProcessor implements ProcessorInterface
                     throw new BadRequestHttpException('Cannot create questions: update_only strategy');
                 }
 
-                $item = new StepQuestion();
+                $item = new StepIteration();
 
                 // Set properties from DTO array
                 $this->mapArrayToEntity($itemData, $item);

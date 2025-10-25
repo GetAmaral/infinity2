@@ -50,141 +50,279 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       company:
         description: "Company"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       dealStatus:
         description: "DealStatus (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       currentStage:
         description: "CurrentStage"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       probability:
         description: "Probability (decimal value)"
         example: "99.99"
       pipeline:
         description: "Pipeline"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       dealType:
         description: "DealType"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       priority:
         description: "Priority level"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       category:
         description: "Category"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       dealNumber:
         description: "DealNumber (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       expectedAmount:
         description: "ExpectedAmount (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       weightedAmount:
         description: "WeightedAmount (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       closureAmount:
         description: "ClosureAmount (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       initialAmount:
         description: "InitialAmount (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       currency:
         description: "Currency (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       exchangeRate:
         description: "ExchangeRate"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       discountPercentage:
         description: "DiscountPercentage (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       discountAmount:
         description: "DiscountAmount (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       commissionRate:
         description: "CommissionRate (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       commissionAmount:
         description: "CommissionAmount (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       expectedClosureDate:
         description: "ExpectedClosureDate (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       closureDate:
         description: "ClosureDate (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       products:
         description: "Products associated..."
         example: "[{\"@id\": \"\/api\/products\/123\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       initialDate:
         description: "InitialDate (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lastActivityDate:
         description: "LastActivityDate (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       nextFollowUp:
         description: "NextFollowUp (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       daysInCurrentStage:
         description: "DaysInCurrentStage"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       forecastCategory:
         description: "ForecastCategory (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       manager:
         description: "Manager"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       team:
         description: "Team"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       owner:
         description: "Deal Owner"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       primaryContact:
         description: "PrimaryContact"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       contacts:
         description: "Contacts"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       leadSource:
         description: "LeadSource"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       campaign:
         description: "Campaign"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       sourceDetails:
         description: "SourceDetails (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notes:
         description: "Additional notes"
         example: "This is a longer text field with more content"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       dealStages:
         description: "DealStages"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       talks:
         description: "Talks"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tasks:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       competitors:
         description: "Competitors"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tags:
         description: "Tags"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       customFields:
         description: "CustomFields (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lostReason:
         description: "LostReason"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       winReason:
         description: "WinReason"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       actualClosureDate:
         description: "Actual Closure Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\TreeFlow;
-use App\Entity\StepQuestion;
+use App\Entity\StepIteration;
 use App\Entity\StepOutput;
 use App\Entity\StepInput;
 
@@ -29,14 +29,14 @@ use App\Entity\StepInput;
 abstract class StepGenerated extends EntityBase
 {
     #[Groups(['step:read', 'step:write'])]
-    #[ORM\ManyToOne(targetEntity: TreeFlow::class, inversedBy: 'steps')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected TreeFlow $treeFlow;
-
-    #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $name;
+
+    #[Groups(['step:read', 'step:write'])]
+    #[ORM\ManyToOne(targetEntity: TreeFlow::class, inversedBy: 'steps')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected TreeFlow $treeFlow;
 
     #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(name: 'first_prop', type: 'boolean')]
@@ -68,7 +68,7 @@ abstract class StepGenerated extends EntityBase
     protected ?int $positionY = null;
 
     #[Groups(['step:read'])]
-    #[ORM\OneToMany(targetEntity: StepQuestion::class, mappedBy: 'step', orphanRemoval: true, fetch: 'LAZY')]
+    #[ORM\OneToMany(targetEntity: StepIteration::class, mappedBy: 'step', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $questions;
 
     #[Groups(['step:read'])]
@@ -88,6 +88,16 @@ abstract class StepGenerated extends EntityBase
         $this->inputs = new ArrayCollection();
     }
 
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function getTreeFlow(): TreeFlow
     {
         return $this->treeFlow;
@@ -96,16 +106,6 @@ abstract class StepGenerated extends EntityBase
     public function setTreeFlow(TreeFlow $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
-        return $this;
-    }
-
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
         return $this;
     }
 
@@ -185,14 +185,14 @@ abstract class StepGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, StepQuestion>
+     * @return Collection<int, StepIteration>
      */
     public function getQuestions(): Collection
     {
         return $this->questions;
     }
 
-    public function addQuestion(StepQuestion $question): self
+    public function addQuestion(StepIteration $question): self
     {
         if (!$this->questions->contains($question)) {
             $this->questions->add($question);
@@ -201,7 +201,7 @@ abstract class StepGenerated extends EntityBase
         return $this;
     }
 
-    public function removeQuestion(StepQuestion $question): self
+    public function removeQuestion(StepIteration $question): self
     {
         if ($this->questions->removeElement($question)) {
             if ($question->getStep() === $this) {

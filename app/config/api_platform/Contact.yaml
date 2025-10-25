@@ -50,45 +50,84 @@ resources:
       firstName:
         description: "First Name (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lastName:
         description: "Last Name (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       accountManager:
         description: "AccountManager"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       website:
         description: "Official website URL..."
         example: "https:\/\/www.nike.com"
       accountTeam:
         description: "AccountTeam"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       address:
         description: "Address (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       billingAddress:
         description: "BillingAddress (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       billingCity:
         description: "BillingCity"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       birthDate:
         description: "BirthDate (date)"
         example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       campaigns:
         description: "Campaigns"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       city:
         description: "City"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       company:
         description: "Company"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       deals:
         description: "Deals"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       mobilePhone:
         description: "Mobile Phone (text field)"
         example: "Sample text"
@@ -101,12 +140,18 @@ resources:
       department:
         description: "Department (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       emailOptOut:
         description: "Email Opt-Out (yes\/no)"
         example: "true"
       leadSource:
         description: "Lead Source (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       doNotCall:
         description: "Do Not Call (yes\/no)"
         example: "true"
@@ -116,66 +161,132 @@ resources:
       lastContactDate:
         description: "Last Contact Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       document:
         description: "Document (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       email:
         description: "Email address"
         example: "user@example.com"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       eventAttendances:
         description: "EventAttendances"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       firstTalkDate:
         description: "FirstTalkDate (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       gender:
         description: "Gender (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       geo:
         description: "Geo (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lastTalkDate:
         description: "LastTalkDate (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       neighborhood:
         description: "Neighborhood (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       nickname:
         description: "Nickname (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notes:
         description: "Additional notes"
         example: "This is a longer text field with more content"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       origin:
         description: "Origin (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       phone:
         description: "Phone number"
         example: "+1234567890"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       postalCode:
         description: "PostalCode (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       primaryDeals:
         description: "PrimaryDeals"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       profilePictureUrl:
         description: "ProfilePictureUrl (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       ranking:
         description: "Ranking (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       score:
         description: "Score (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       socialMedias:
         description: "SocialMedias"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       status:
         description: "Current status"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       talks:
         description: "Talks"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tasks:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter

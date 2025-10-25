@@ -50,12 +50,24 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       products:
         description: "Products associated..."
         example: "[{\"@id\": \"\/api\/products\/123\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

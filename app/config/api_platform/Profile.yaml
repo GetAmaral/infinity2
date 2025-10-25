@@ -50,12 +50,24 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       grantedRoles:
         description: "GrantedRoles"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       users:
         description: "Users"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

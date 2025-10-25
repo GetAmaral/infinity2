@@ -1,0 +1,125 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use {{ generatedNamespace }}\{{ entityName }}ControllerGenerated;
+use App\Entity\{{ entityName }};
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+/**
+ * {{ entityName }} Controller
+ *
+ * This controller handles all {{ entityVariable }} operations.
+ * Custom business logic can be added by overriding lifecycle hooks.
+ *
+ * @see {{ entityName }}ControllerGenerated for available lifecycle hooks
+ */
+#[Route('/{{ routePrefix }}')]
+final class {{ entityName }}Controller extends {{ entityName }}ControllerGenerated
+{
+{% if operations.index %}
+    /**
+     * List all {{ entityPluralVariable }}
+     */
+    #[Route('', name: '{{ routePrefix }}_index', methods: ['GET'])]
+    public function index(): Response
+    {
+        return $this->indexAction();
+    }
+
+{% endif %}
+{% if operations.apiSearch %}
+    /**
+     * API endpoint for searching {{ entityPluralVariable }}
+     * Used by list page for dynamic data loading
+     */
+    #[Route('/search', name: '{{ routePrefix }}_search', methods: ['GET'])]
+    public function apiSearch(Request $request): Response
+    {
+        return $this->apiSearchAction($request);
+    }
+
+{% endif %}
+{% if operations.new %}
+    /**
+     * Create new {{ entityVariable }}
+     * Handles both GET (show form) and POST (process form)
+     */
+    #[Route('/new', name: '{{ routePrefix }}_new', methods: ['GET', 'POST'])]
+    public function new(Request $request): Response
+    {
+        if ($request->isMethod('POST')) {
+            return $this->createAction($request);
+        }
+
+        return $this->newFormAction($request);
+    }
+
+{% endif %}
+{% if operations.edit %}
+    /**
+     * Edit existing {{ entityVariable }}
+     * Handles both GET (show form) and POST (process form)
+     */
+    #[Route('/{id}/edit', name: '{{ routePrefix }}_edit', methods: ['GET', 'POST'])]
+    public function edit({{ entityName }} ${{ entityVariable }}, Request $request): Response
+    {
+        if ($request->isMethod('POST')) {
+            return $this->updateAction(${{ entityVariable }}, $request);
+        }
+
+        return $this->editFormAction(${{ entityVariable }}, $request);
+    }
+
+{% endif %}
+{% if operations.delete %}
+    /**
+     * Delete {{ entityVariable }}
+     */
+    #[Route('/{id}', name: '{{ routePrefix }}_delete', methods: ['POST'])]
+    public function delete({{ entityName }} ${{ entityVariable }}, Request $request): Response
+    {
+        return $this->deleteAction(${{ entityVariable }}, $request);
+    }
+
+{% endif %}
+{% if operations.show %}
+    /**
+     * Show {{ entityVariable }} details
+     */
+    #[Route('/{id}', name: '{{ routePrefix }}_show', methods: ['GET'])]
+    public function show({{ entityName }} ${{ entityVariable }}): Response
+    {
+        return $this->showAction(${{ entityVariable }});
+    }
+
+{% endif %}
+    // ====================================
+    // CUSTOM METHODS & LIFECYCLE HOOKS
+    // ====================================
+
+    // Example: Override lifecycle hooks for custom logic
+    //
+    // protected function afterCreate({{ entityName }} ${{ entityVariable }}): void
+    // {
+    //     // Send notification email
+    //     // $this->emailService->sendCreationNotification(${{ entityVariable }});
+    //
+    //     // Trigger domain event
+    //     // $this->eventDispatcher->dispatch(new {{ entityName }}CreatedEvent(${{ entityVariable }}));
+    // }
+    //
+    // protected function beforeDelete({{ entityName }} ${{ entityVariable }}): void
+    // {
+    //     // Check for dependencies
+    //     // if (${{ entityVariable }}->hasRelatedRecords()) {
+    //     //     throw new \RuntimeException('Cannot delete {{ entityVariable }} with related records');
+    //     // }
+    // }
+
+    // Add your custom controller methods here
+}

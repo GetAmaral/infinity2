@@ -51,20 +51,33 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       category:
         description: "Category of the win reason to group similar reasons for analysis (e.g., PRICING, PRODUCT_FEATURES, CUSTOMER_SERVICE)"
         example: "PRODUCT_FEATURES"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       sortOrder:
         description: "Numeric value to control display order of win reasons in dropdowns and lists"
         example: "10"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       impactScore:
         description: "Numeric score (0.00 to 100.00) representing the business impact of this win reason on deal closure"
         example: "85.50"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       usageCount:
         writable: false
@@ -72,6 +85,7 @@ resources:
         example: "42"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       lastUsedAt:
         writable: false
@@ -79,6 +93,7 @@ resources:
         example: "2025-10-15T14:30:00+00:00"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: DateFilter
       competitorRelated:
         description: "Indicates whether this win reason is related to competitive advantages over specific competitors"
@@ -103,6 +118,7 @@ resources:
         example: "true"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       notes:
         description: "Internal notes for sales team about when and how to use this win reason effectively"
@@ -117,3 +133,6 @@ resources:
         writable: false
         description: "Collection of deals that were won using this reason"
         example: "\/api\/deals?winReason=\/api\/win_reasons\/0199cadd-6423-78bb-9621-908c082af885"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

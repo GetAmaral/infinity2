@@ -47,15 +47,30 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       function:
         description: "Function (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notifications:
         description: "Notifications"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       property:
         description: "Property (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       reminders:
         description: "Reminders"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

@@ -50,67 +50,130 @@ resources:
       talk:
         description: "Talk"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       fromContact:
         description: "FromContact"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       fromUser:
         description: "FromUser"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       fromAgent:
         description: "FromAgent"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       sentAt:
         description: "Sent At (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       body:
         description: "Message Body (long text)"
         example: "This is a longer text field with more content"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       messageType:
         description: "Message Type (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       attachments:
         description: "Attachments"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       read:
         description: "Is Read (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       readAt:
         description: "ReadAt (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       sentiment:
         description: "Sentiment (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       parentMessage:
         description: "ParentMessage"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       edited:
         description: "Edited (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notification:
         description: "Notification"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       direction:
         description: "Direction (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       deliveredAt:
         description: "Delivered At (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       internal:
         description: "Is Internal Note (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       system:
         writable: false
         description: "Is System Message (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       editedAt:
         description: "Edited At (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       channel:
         description: "Communication Channel (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       subject:
         description: "Subject (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       metadata:
         description: "Metadata (JSON data)"
         example: "{\"key\": \"value\"}"

@@ -50,79 +50,151 @@ resources:
       subject:
         description: "Subject (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       summary:
         description: "Summary (long text)"
         example: "This is a longer text field with more content"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       company:
         description: "Company"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       contact:
         description: "Contact"
         example: "/api/contacts/01234567-89ab-cdef-0123-456789abcdef"
       deal:
         description: "Deal"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       talkType:
         description: "TalkType"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       channel:
         description: "Channel (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       status:
         description: "Current status"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       priority:
         description: "Priority level"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       outcome:
         description: "Outcome (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       sentiment:
         description: "Sentiment (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       dateStart:
         description: "DateStart (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       dateLastMessage:
         description: "DateLastMessage (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       closedAt:
         description: "Closed At (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       durationSeconds:
         description: "DurationSeconds (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       recordingUrl:
         description: "RecordingUrl (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       users:
         description: "Users"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       owner:
         description: "Owner"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       assignedTo:
         description: "Assigned To"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       agents:
         description: "Agents"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       campaigns:
         description: "Campaigns"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       messages:
         description: "Messages"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       messageCount:
         writable: false
         description: "Message Count (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       archived:
         description: "IsArchived (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       internal:
         description: "Is Internal (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tags:
         description: "Tags (JSON data)"
         example: "{\"key\": \"value\"}"

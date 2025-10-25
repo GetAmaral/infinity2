@@ -62,114 +62,216 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
       industry:
         description: "Industry (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       accountManager:
         description: "AccountManager"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       website:
         description: "Company website URL"
         example: "https:\/\/www.nike.com"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       billingAddress:
         description: "Address (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       legalName:
         description: "Legal Name (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       shippingAddress:
         description: "Shipping Address (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       shippingCity:
         description: "Shipping City"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       campaigns:
         description: "Campaigns"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       shippingPostalCode:
         description: "Shipping Postal Code (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       annualRevenue:
         description: "Annual Revenue (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       currency:
         description: "Currency (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       companyType:
         description: "Company Type (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       parentCompany:
         description: "Parent Company"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       accountSource:
         description: "Account Source (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       rating:
         description: "Rating (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       customerSince:
         description: "Customer Since (date)"
         example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       paymentTerms:
         description: "Payment Terms (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       creditLimit:
         description: "Credit Limit (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       fiscalYearEnd:
         description: "Fiscal Year End (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       city:
         description: "City"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       sicCode:
         description: "SIC Code (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       naicsCode:
         description: "NAICS Code (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       ownership:
         description: "Ownership (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tickerSymbol:
         description: "Ticker Symbol (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       linkedInUrl:
         description: "LinkedIn URL (text field)"
         example: "Sample longer text value"
       doNotContact:
         description: "Do Not Contact (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       gdprConsent:
         description: "GDPR Consent (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       country:
         description: "Country (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       shippingCountry:
         description: "Shipping Country (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       companySize:
         description: "Number of Employees (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       fax:
         description: "Fax (text field)"
         example: "Sample text"
       contacts:
         description: "Contacts"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       coordinates:
         description: "Geo (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       deals:
         description: "Deals"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       email:
         description: "Email address"
         example: "user@example.com"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       talks:
         writable: false
         description: "Talks"
@@ -177,75 +279,135 @@ resources:
       manufacturedBrands:
         description: "ManufacturedBrands"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       manufacturedProducts:
         description: "ManufacturedProducts"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       mobilePhone:
         description: "CelPhone (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notes:
         description: "Additional notes"
         example: "This is a longer text field with more content"
       phone:
         description: "Phone number"
         example: "+1234567890"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       postalCode:
         description: "PostalCode (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       primaryContactName:
         description: "ContactName (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       socialMedias:
         description: "SocialMedias"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       status:
         description: "Current status"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       suppliedBrands:
         description: "SuppliedBrands"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       suppliedProducts:
         description: "SuppliedProducts"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       taxId:
         description: "Document (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       nextActivityDate:
         description: "Next Activity Date (date)"
         example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lastActivityDate:
         writable: false
         description: "Last Activity Date (date)"
         example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       timeZone:
         description: "Time Zone (text field)"
         example: "Sample longer text value"
       stateProvince:
         description: "State\/Province (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tags:
         description: "Tags (text field)"
         example: "Sample longer text value"
       lifecycleStage:
         description: "Lifecycle Stage (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       companyDomain:
         description: "Company Domain (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       leadStatus:
         description: "Lead Status (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       numberOfAssociatedDeals:
         writable: false
         description: "Number of Deals (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       numberOfAssociatedContacts:
         writable: false
         description: "Number of Contacts (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       public:
         description: "Is Public Company (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       shippingStateProvince:
         description: "Shipping State\/Province (text field)"
         example: "Sample longer text value"

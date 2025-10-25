@@ -141,7 +141,7 @@ resources:
           collection: true
           path: {{ property.getSubresourcePath()|json_encode|raw }}
 {% endif %}
-{% set hasFilters = property.getFilterStrategy() or property.isFilterSearchable() or property.isFilterOrderable() or property.isFilterBoolean() or property.isFilterDate() or property.isFilterNumericRange() or property.isFilterExists() %}
+{% set hasFilters = property.getFilterStrategy() or property.isFilterSearchable() or property.isSortable() or property.isFilterBoolean() or property.isFilterDate() or property.isFilterNumericRange() or property.isFilterExists() %}
 {% if hasFilters %}
         # Advanced filters
         filters:
@@ -153,7 +153,7 @@ resources:
           - type: SearchFilter
             strategy: partial
 {% endif %}
-{% if property.isFilterOrderable() %}
+{% if property.isSortable() %}
           - type: OrderFilter
 {% endif %}
 {% if property.isFilterBoolean() %}

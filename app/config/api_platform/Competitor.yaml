@@ -50,57 +50,102 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       industry:
         description: "Primary industry or vertical this competitor operates in"
         example: "Enterprise Software \/ CRM"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       targetMarket:
         description: "Primary target customer segments and market focus"
         example: "Enterprise and mid-market B2B companies, particularly in technology, financial services, and healthcare sectors"
       deals:
         description: "Deals where this competitor was mentioned or competed against"
         example: "[\"\/api\/deals\/0199cadd-640b-7b50-92d3-bff3676c1812\"]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       foundedYear:
         description: "Year the competitor company was founded"
         example: "1999"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       website:
         description: "Official website URL..."
         example: "https:\/\/www.nike.com"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this competitor is actively being tracked and monitored"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       marketPosition:
         description: "Market positioning tier (Leader, Challenger, Niche, Emerging)"
         example: "Leader"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       strengths:
         description: "Key strengths and competitive advantages of this competitor"
         example: "Strong brand recognition, extensive integration ecosystem, robust enterprise features"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       products:
         description: "Products associated..."
         example: "[{\"@id\": \"\/api\/products\/123\"}]"
       weaknesses:
         description: "Known weaknesses and disadvantages of this competitor"
         example: "High pricing, complex implementation, steep learning curve for new users"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       revenue:
         description: "Estimated annual revenue or company size category"
         example: "$30B+ annually"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       employeeCount:
         description: "Approximate number of employees (for company size assessment)"
         example: "70000"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       winRate:
         description: "Percentage of deals won when competing against this competitor (0-100)"
         example: "65.50"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lossRate:
         description: "Percentage of deals lost to this competitor (0-100)"
         example: "34.50"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       pricingModel:
         description: "Description of competitor pricing strategy and model"
         example: "Subscription-based SaaS pricing, tiered by user count and features. Entry level at $25\/user\/month, Enterprise at $300\/user\/month"
       headquarters:
         description: "Location of competitor headquarters (city, country)"
         example: "San Francisco, California, USA"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       opportunities:
         description: "Market opportunities this competitor may pursue (SWOT Analysis)"
         example: "AI\/ML integration trends, expanding into SMB market, international expansion in Asia-Pacific region"
@@ -113,6 +158,9 @@ resources:
       lastAnalyzedAt:
         description: "Date and time when this competitor analysis was last reviewed and updated"
         example: "2025-10-15T14:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       keyDifferentiators:
         description: "What makes this competitor unique or different from others in the market"
         example: "Proprietary AI Einstein engine, Trailhead learning platform, AppExchange marketplace with 5000+ apps, Native mobile-first architecture"

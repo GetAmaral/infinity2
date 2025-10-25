@@ -47,9 +47,18 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       organization:
         description: "The organization..."
         example: "\/api\/organizations\/..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter

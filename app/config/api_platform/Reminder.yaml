@@ -50,21 +50,37 @@ resources:
       name:
         description: "Short identifier or title for the reminder"
         example: "\"Follow up with John Doe\""
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this reminder is currently active and should be processed"
         example: "true"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       communicationMethod:
         description: "The communication channel through which the reminder will be delivered"
         example: "\/api\/communication_methods\/0199cadd-1234-5678-9abc-def012345678"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       event:
         description: "Event"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       minutesBeforeStart:
         description: "Number of minutes before the event to trigger the reminder"
         example: "15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notifications:
         description: "Notifications"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

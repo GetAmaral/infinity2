@@ -6,7 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Uid\Uuid;
 use App\Dto\TreeFlowOutputDto;
-use App\Dto\StepQuestionOutputDto;
+use App\Dto\StepIterationOutputDto;
 use App\Dto\StepOutputOutputDto;
 use App\Dto\StepInputOutputDto;
 
@@ -23,13 +23,13 @@ abstract class StepOutputDtoGenerated
 {
     public ?Uuid $id = null;
 
+    public string $name;
+
     /**
      * treeFlow reference
      * Can be: IRI string or nested TreeFlowOutput object
      */
     public string|TreeFlowOutputDto $treeFlow;
-
-    public string $name;
 
     public bool $first;
 
@@ -47,7 +47,7 @@ abstract class StepOutputDtoGenerated
 
     /**
      * questions collection
-     * @var StepQuestionOutputDto[]
+     * @var StepIterationOutputDto[]
      */
     public array $questions = [];
 
@@ -80,16 +80,6 @@ abstract class StepOutputDtoGenerated
     }
 
 
-    public function getTreeFlow(): string|TreeFlowOutputDto    {
-        return $this->treeFlow;
-    }
-
-    public function setTreeFlow(string|TreeFlowOutputDto $treeFlow): self
-    {
-        $this->treeFlow = $treeFlow;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -97,6 +87,16 @@ abstract class StepOutputDtoGenerated
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getTreeFlow(): string|TreeFlowOutputDto    {
+        return $this->treeFlow;
+    }
+
+    public function setTreeFlow(string|TreeFlowOutputDto $treeFlow): self
+    {
+        $this->treeFlow = $treeFlow;
         return $this;
     }
 

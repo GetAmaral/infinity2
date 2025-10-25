@@ -50,54 +50,102 @@ resources:
       startTime:
         description: "Start date and time of the resource booking"
         example: "2025-10-20T14:00:00+00:00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       bookedBy:
         description: "User who made this booking"
         example: "\/api\/users\/0199cadd-6516-71c2-a3f5-08a1640fefa8"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       endTime:
         description: "End date and time of the resource booking"
         example: "2025-10-20T16:00:00+00:00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       confirmed:
         description: "Whether the booking has been confirmed by staff"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       cancelled:
         description: "Whether the booking has been cancelled"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       paid:
         description: "Whether payment has been received for this booking"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       depositAmount:
         description: "Deposit amount paid to secure the booking"
         example: "50.00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       totalAmount:
         description: "Total amount for the booking"
         example: "150.00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       confirmedAt:
         writable: false
         description: "Timestamp when the booking was confirmed"
         example: "2025-10-19T10:30:00+00:00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       cancelledAt:
         writable: false
         description: "Timestamp when the booking was cancelled"
         example: "2025-10-19T11:00:00+00:00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       cancellationReason:
         description: "Reason for cancelling the booking"
         example: "Event postponed due to weather conditions"
       event:
         description: "Event this resource booking is for"
         example: "\/api\/events\/0199cadd-6516-71c2-a3f5-08a1640fefa8"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       reminderSent:
         writable: false
         description: "Whether automated reminder has been sent to the booker"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notes:
         description: "Additional notes or special requirements for the booking"
         example: "Need projector and whiteboard setup"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       quantity:
         description: "Number of resources being booked (e.g., 3 meeting rooms, 5 chairs)"
         example: "2"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       resource:
         description: "Resource being booked (e.g., meeting room, equipment, vehicle)"
         example: "\/api\/event_resources\/0199cadd-6516-71c2-a3f5-08a1640fefa8"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       status:
         description: "Current status of the booking (pending, confirmed, cancelled, completed)"
         example: "confirmed"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

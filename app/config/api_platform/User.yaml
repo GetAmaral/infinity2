@@ -50,36 +50,69 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       agents:
         description: "Agents"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       avatarUrl:
         description: "AvatarUrl (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       birthDate:
         description: "BirthDate (date)"
         example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       calendars:
         description: "Calendars"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       campaigns:
         description: "Campaigns"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       celPhone:
         description: "CelPhone (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       contacts:
         description: "Contacts"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       deals:
         description: "Deals"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       email:
         description: "Email address"
         example: "user@example.com"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       ownedDeals:
         writable: false
         description: "Deals"
@@ -99,9 +132,15 @@ resources:
       emailVerifiedAt:
         description: "EmailVerifiedAt (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       eventAttendances:
         description: "EventAttendances"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       verified:
         description: "Verified"
         example: true
@@ -121,6 +160,9 @@ resources:
         writable: false
         description: "FailedLoginAttempts (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       apiToken:
         readable: false
         writable: false
@@ -139,6 +181,9 @@ resources:
       gender:
         description: "Gender (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lastLoginAt:
         writable: false
         description: "Last Login At"
@@ -159,6 +204,9 @@ resources:
       lastPasswordChange:
         description: "LastPasswordChange (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       twoFactorSecret:
         readable: false
         writable: false
@@ -201,6 +249,9 @@ resources:
       managedCampaigns:
         description: "ManagedCampaigns"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       passkeyCredentials:
         readable: false
         writable: false
@@ -212,15 +263,24 @@ resources:
       managedCompanies:
         description: "ManagedCompanies"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       managedContacts:
         description: "ManagedContacts"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       username:
         description: "Username"
         example: "Sample username"
       managedDeals:
         description: "ManagedDeals"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       phone:
         description: "Phone"
         example: "Sample phone"
@@ -266,6 +326,9 @@ resources:
       organizedEvents:
         description: "OrganizedEvents"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       manager:
         description: "Manager"
         example: "/api/users/01234567-89ab-cdef-0123-456789abcdef"
@@ -291,6 +354,9 @@ resources:
       ownedCourses:
         description: "OwnedCourses"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       avatar:
         description: "Avatar"
         example: "Sample avatar"
@@ -298,6 +364,9 @@ resources:
         readable: false
         description: "Password (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       title:
         description: "Title"
         example: "Sample title"
@@ -319,6 +388,9 @@ resources:
       position:
         description: "Position (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       secondaryEmail:
         description: "Secondary Email"
         example: "Sample secondary email"
@@ -349,6 +421,9 @@ resources:
       profilePictureUrl:
         description: "ProfilePictureUrl (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       city:
         description: "City"
         example: "Sample city"
@@ -370,6 +445,9 @@ resources:
       profiles:
         description: "Profiles"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       employeeId:
         description: "Employee ID"
         example: "Sample employee id"
@@ -400,6 +478,9 @@ resources:
       socialMedias:
         description: "SocialMedias"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       skills:
         description: "Skills"
         example: "{\"key\": \"value\"}"
@@ -421,6 +502,9 @@ resources:
       studentCourses:
         description: "Student Courses"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       loginCount:
         writable: false
         description: "Login Count"
@@ -450,6 +534,9 @@ resources:
       talks:
         description: "Talks"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       statusMessage:
         description: "Status Message"
         example: "Sample status message"
@@ -459,6 +546,9 @@ resources:
       tasks:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lockedReason:
         writable: false
         description: "Locked Reason"

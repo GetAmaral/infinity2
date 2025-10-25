@@ -50,24 +50,48 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       apiKey:
         description: "ApiKey (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       campaigns:
         description: "Campaigns"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       company:
         description: "Company"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       contact:
         description: "Contact"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       socialMediaType:
         description: "SocialMediaType"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       url:
         description: "Url (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       user:
         description: "User"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

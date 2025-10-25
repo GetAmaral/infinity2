@@ -50,12 +50,24 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       taxRate:
         description: "TaxRate (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       products:
         description: "Products associated..."
         example: "[{\"@id\": \"\/api\/products\/123\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

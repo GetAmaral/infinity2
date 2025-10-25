@@ -50,6 +50,9 @@ resources:
       title:
         description: "The notification title or subject line"
         example: "New message from John Doe"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       recipient:
         description: "The user who receives this notification"
         example: "\/api\/users\/01234567-89ab-cdef-0123-456789abcdef"
@@ -59,44 +62,83 @@ resources:
       priority:
         description: "Priority level: low, medium, high, urgent"
         example: "high"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       actionUrl:
         description: "URL to the resource or action related to this notification"
         example: "\/events\/123\/details"
       attendee:
         description: "Related attendee for attendee-specific notifications"
         example: "\/api\/event_attendees\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       read:
         description: "Indicates whether the notification has been read by the recipient"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       archived:
         description: "Indicates whether the notification has been archived by the recipient"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       readAt:
         writable: false
         description: "Timestamp when the notification was read by the recipient"
         example: "2025-10-19T14:30:00+00:00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       communicationMethod:
         description: "Communication method used to send this notification"
         example: "\/api\/communication_methods\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       event:
         description: "Related event for event-based notifications"
         example: "\/api\/events\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       message:
         description: "The main body content of the notification message"
         example: "Your event \"Team Meeting\" starts in 15 minutes."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notificationStatus:
         writable: false
         description: "DEPRECATED: Use read boolean field instead. Legacy status code."
         example: "1"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       reminder:
         description: "Related reminder for reminder-based notifications"
         example: "\/api\/reminders\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       sentAt:
         description: "Timestamp when the notification was sent"
         example: "2025-10-19T14:30:00+00:00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       talkMessage:
         description: "Related talk message for chat-based notifications"
         example: "\/api\/talk_messages\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       type:
         description: "The type\/category of this notification"
         example: "\/api\/notification_types\/01234567-89ab-cdef-0123-456789abcdef"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

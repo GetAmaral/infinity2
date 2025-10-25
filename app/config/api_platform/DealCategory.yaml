@@ -50,27 +50,46 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       color:
         description: "Hex color code for visual identification of the category (e.g., #FF5733)"
         example: "#6f42c1"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       icon:
         description: "Bootstrap Icon class name for visual representation (e.g., bi-briefcase, bi-star)"
         example: "bi-tag"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       default:
         description: "Indicates whether this is the default category automatically assigned to new deals"
         example: "false"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       displayOrder:
         description: "Numerical order for displaying categories in lists and dropdowns (lower numbers appear first)"
         example: "10"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       parentCategory:
         description: "Parent category for creating hierarchical category structures"
         example: "\/api\/deal_categories\/0199cadd-1234-75ee-b3b7-66e40a72df84"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       subcategories:
         writable: false
         description: "Collection of child categories under this parent category"
@@ -78,12 +97,19 @@ resources:
       deals:
         description: "Deals"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Indicates whether this category is currently active and available for use"
         example: "true"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       group:
         description: "Group (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

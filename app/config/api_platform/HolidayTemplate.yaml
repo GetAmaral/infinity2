@@ -47,21 +47,42 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       blocksScheduling:
         description: "Blocks Scheduling (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       city:
         description: "City"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       country:
         description: "Country"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       recurrenceFrequency:
         description: "RecurrenceFrequency (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       recurrenceInterval:
         description: "RecurrenceInterval (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       sentAt:
         description: "Sent At (date)"
         example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

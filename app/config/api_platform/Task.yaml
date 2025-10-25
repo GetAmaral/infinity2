@@ -50,51 +50,96 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       startDate:
         description: "Start Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       completionPercentage:
         description: "Completion % (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       category:
         description: "Category (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notificationSent:
         description: "Notification Sent (yes\/no)"
         example: "true"
       archived:
         description: "Archived (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       command:
         description: "Command (long text)"
         example: "This is a longer text field with more content"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       completedDate:
         description: "Completed Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       contact:
         description: "Contact"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       deal:
         description: "Deal"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       durationMinutes:
         description: "Duration Minutes (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       location:
         description: "Location (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       pipelineStage:
         description: "Pipeline Stage"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       priority:
         description: "Priority level"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       scheduledDate:
         description: "Due Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       completed:
         description: "Completed (yes\/no)"
         example: "true"
@@ -125,6 +170,9 @@ resources:
       taskStatus:
         description: "Status (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       phoneNumber:
         description: "Phone Number (text field)"
         example: "Sample text"
@@ -140,6 +188,12 @@ resources:
       type:
         description: "Task Type"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       user:
         description: "Assigned To"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

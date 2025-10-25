@@ -48,29 +48,56 @@ resources:
         writable: false
         description: "Student (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lecture:
         writable: false
         description: "Lecture (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       studentCourse:
         writable: false
         description: "StudentCourse (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       watchedSeconds:
         description: "WatchedSeconds (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lastPositionSeconds:
         description: "LastPositionSeconds (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       completionPercentage:
         description: "CompletionPercentage (decimal value)"
         example: "99.99"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       completed:
         description: "Completed (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lastWatchedAt:
         description: "LastWatchedAt"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       completedAt:
         description: "CompletedAt"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

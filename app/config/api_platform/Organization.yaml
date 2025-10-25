@@ -50,57 +50,102 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       logoPathDark:
         description: "Logo Path Dark (text field)"
         example: "Sample longer text value"
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       studentCourses:
         description: "Student Courses"
         example: "sample value"
       logoUrl:
         description: "URL to the brand logo..."
         example: "https:\/\/example.com\/logos\/nike.png"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       industry:
         description: "Industry (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       address:
         description: "Address (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       website:
         description: "Official website URL..."
         example: "https:\/\/www.nike.com"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
       agents:
         description: "Agents"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       products:
         description: "Products associated..."
         example: "[{\"@id\": \"\/api\/products\/123\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       billingFrequencies:
         description: "BillingFrequencies"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       branding:
         description: "Branding (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       brands:
         description: "Brands"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       businessPhone:
         description: "BusinessPhone (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       businessSettings:
         description: "BusinessSettings (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       calendars:
         description: "Calendars"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       campaigns:
         description: "Campaigns"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       pipelineStageTemplates:
         writable: false
         description: "PipelineStageTemplates"
@@ -116,6 +161,9 @@ resources:
       celPhone:
         description: "CelPhone (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       pipelineTemplates:
         writable: false
         description: "PipelineTemplates"
@@ -167,138 +215,276 @@ resources:
       city:
         description: "City"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       companies:
         description: "Companies"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       companySize:
         description: "CompanySize (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       competitors:
         description: "Competitors"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       contactName:
         description: "ContactName (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       contacts:
         description: "Contacts"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       courses:
         description: "Courses"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       currency:
         description: "Currency (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       dealStages:
         description: "DealStages"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       deals:
         description: "Deals"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       eventCategories:
         description: "EventCategories"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       eventResourceBookings:
         description: "EventResourceBookings"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       eventResourceTypes:
         description: "EventResourceTypes"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       eventResources:
         description: "EventResources"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       events:
         description: "Events"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       featureFlags:
         description: "FeatureFlags (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       flags:
         description: "Flags"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       geo:
         description: "Geo (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       holidays:
         description: "Holidays"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       integrationConfig:
         description: "IntegrationConfig (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       leadSources:
         description: "LeadSources"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       modules:
         description: "Modules"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       navConfig:
         description: "NavConfig (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       notificationTypes:
         description: "NotificationTypes"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       pipelineStages:
         description: "PipelineStages"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       pipelines:
         description: "Pipelines"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       postalCode:
         description: "PostalCode (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       productBatches:
         description: "ProductBatches"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       productCategories:
         description: "ProductCategories"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       productLines:
         description: "ProductLines"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       profiles:
         description: "Profiles"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       securityConfig:
         description: "SecurityConfig (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       slug:
         description: "Slug (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       socialMedias:
         description: "SocialMedias"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       status:
         description: "Current status"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tags:
         description: "Tags"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       talkMessages:
         description: "TalkMessages"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       talkTypes:
         description: "TalkTypes"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       talks:
         description: "Talks"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       taskTypes:
         description: "TaskTypes"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tasks:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       taxCategories:
         description: "TaxCategories"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       timeZone:
         description: "TimeZone (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       uiPreferences:
         description: "UiPreferences (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       users:
         description: "Users"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       workingHours:
         description: "WorkingHours"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

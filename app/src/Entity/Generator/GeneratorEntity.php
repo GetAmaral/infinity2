@@ -230,6 +230,34 @@ class GeneratorEntity
     private bool $testEnabled = true;
 
     // ====================================
+    // CONTROLLER CONFIGURATION (6 fields)
+    // ====================================
+
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    protected bool $generateController = true;
+
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    protected bool $controllerOperationIndex = true;
+
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    protected bool $controllerOperationNew = true;
+
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    protected bool $controllerOperationEdit = true;
+
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    protected bool $controllerOperationDelete = true;
+
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    protected bool $controllerOperationShow = true;
+
+    // ====================================
     // ADDITIONAL CONFIGURATION (6 fields)
     // ====================================
 
@@ -377,10 +405,11 @@ class GeneratorEntity
 
     /**
      * Get entity slug (snake_case from PascalCase)
+     * Uses centralized Utils::stringToSlug() for consistency
      */
     public function getSlug(): string
     {
-        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $this->entityName));
+        return \App\Service\Utils::stringToSlug($this->entityName);
     }
 
     /**
@@ -453,6 +482,45 @@ class GeneratorEntity
         }
 
         return $this;
+    }
+
+    /**
+     * Check if entity has any searchable properties
+     */
+    public function hasSearchableProperties(): bool
+    {
+        foreach ($this->properties as $property) {
+            if ($property->isSearchable()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if entity has any filterable properties
+     */
+    public function hasFilterableProperties(): bool
+    {
+        foreach ($this->properties as $property) {
+            if ($property->isFilterable()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if entity has any sortable properties
+     */
+    public function hasSortableProperties(): bool
+    {
+        foreach ($this->properties as $property) {
+            if ($property->isSortable()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -945,6 +1013,76 @@ class GeneratorEntity
     public function setValidationMessages(?array $validationMessages): self
     {
         $this->validationMessages = $validationMessages;
+        return $this;
+    }
+
+    // ====================================
+    // CONTROLLER CONFIGURATION GETTERS/SETTERS
+    // ====================================
+
+    public function isGenerateController(): bool
+    {
+        return $this->generateController;
+    }
+
+    public function setGenerateController(bool $generateController): self
+    {
+        $this->generateController = $generateController;
+        return $this;
+    }
+
+    public function isControllerOperationIndex(): bool
+    {
+        return $this->controllerOperationIndex;
+    }
+
+    public function setControllerOperationIndex(bool $controllerOperationIndex): self
+    {
+        $this->controllerOperationIndex = $controllerOperationIndex;
+        return $this;
+    }
+
+    public function isControllerOperationNew(): bool
+    {
+        return $this->controllerOperationNew;
+    }
+
+    public function setControllerOperationNew(bool $controllerOperationNew): self
+    {
+        $this->controllerOperationNew = $controllerOperationNew;
+        return $this;
+    }
+
+    public function isControllerOperationEdit(): bool
+    {
+        return $this->controllerOperationEdit;
+    }
+
+    public function setControllerOperationEdit(bool $controllerOperationEdit): self
+    {
+        $this->controllerOperationEdit = $controllerOperationEdit;
+        return $this;
+    }
+
+    public function isControllerOperationDelete(): bool
+    {
+        return $this->controllerOperationDelete;
+    }
+
+    public function setControllerOperationDelete(bool $controllerOperationDelete): self
+    {
+        $this->controllerOperationDelete = $controllerOperationDelete;
+        return $this;
+    }
+
+    public function isControllerOperationShow(): bool
+    {
+        return $this->controllerOperationShow;
+    }
+
+    public function setControllerOperationShow(bool $controllerOperationShow): self
+    {
+        $this->controllerOperationShow = $controllerOperationShow;
         return $this;
     }
 }

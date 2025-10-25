@@ -50,48 +50,93 @@ resources:
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       dealStages:
         description: "Collection of deal stage transitions associated with this pipeline stage"
         example: "[{\"id\": \"0199cadd-635e-76d8-98fe-38d61ab9751f\", \"dealId\": \"...\", \"enteredAt\": \"2025-01-15T10:30:00Z\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       probability:
         description: "Win probability percentage (0-100) indicating likelihood of closing deals at this stage"
         example: "75"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       final:
         description: "Whether this is a final stage (Won or Lost) that concludes the pipeline"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       won:
         description: "Whether this is a Won stage indicating successful deal closure"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this stage is currently active and available for use"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       lost:
         description: "Whether this is a Lost stage indicating unsuccessful deal closure"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       color:
         description: "Hex color code for visual identification of the stage in UI"
         example: "#3498db"
       deals:
         description: "Collection of deals currently in this pipeline stage"
         example: "[{\"id\": \"0199cadd-635e-76d8-98fe-38d61ab9751f\", \"name\": \"Acme Corp Deal\", \"value\": 50000}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       displayOrder:
         description: "Numeric position determining the order of stages in the pipeline (lower numbers appear first)"
         example: "2"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       migrationCriteria:
         description: "Criteria or conditions that must be met before a deal can progress to the next stage"
         example: "Budget confirmed and decision maker identified"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       next:
         description: "Reference to the next pipeline stage in the sequence (if any)"
         example: "\/api\/pipeline_stages\/0199cadd-635e-76d8-98fe-38d61ab9751f"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       pipeline:
         description: "The pipeline to which this stage belongs"
         example: "\/api\/pipelines\/0199cadd-635e-76d8-98fe-38d61ab9751f"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       previous:
         description: "Reference to the previous pipeline stage in the sequence (if any)"
         example: "\/api\/pipeline_stages\/0199cadd-635e-76d8-98fe-38d61ab9751f"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       stageName:
         description: "The name of the pipeline stage (e.g., \"Qualified\", \"Proposal Sent\", \"Negotiation\")"
         example: "Proposal Sent"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tasks:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter

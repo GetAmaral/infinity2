@@ -50,18 +50,36 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       color:
         description: "Color (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       deals:
         description: "Deals"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       products:
         description: "Products associated..."
         example: "[{\"@id\": \"\/api\/products\/123\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       sentiment:
         description: "Sentiment (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

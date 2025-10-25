@@ -38,6 +38,9 @@ resources:
         writable: false
         description: "Action (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       checksum:
         writable: false
         description: "Checksum (text field)"
@@ -46,6 +49,9 @@ resources:
         writable: false
         description: "Entity Class (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       entityId:
         writable: false
         description: "Entity ID"

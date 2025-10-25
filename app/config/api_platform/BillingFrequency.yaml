@@ -51,15 +51,24 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       value:
         description: "Unique code identifier for the billing frequency (e.g., \"monthly\", \"quarterly\", \"annual\"). Lowercase, underscore-separated."
         example: "monthly"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
       displayName:
         description: "Optional custom display name (e.g., \"Every 3 months\" instead of \"Quarterly\")"
         example: "Every 3 months"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       intervalType:
         description: "Time unit for billing interval (day, week, month, year)"
         example: "month"
@@ -67,11 +76,13 @@ resources:
         filters:
           - type: SearchFilter
             strategy: exact
+          - type: OrderFilter
       intervalCount:
         description: "Number of interval units between billing cycles (e.g., 3 for quarterly when intervalType=month)"
         example: "1"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       daysInCycle:
         writable: false
@@ -79,31 +90,39 @@ resources:
         example: "30"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       discountPercentage:
         description: "Optional discount percentage offered for this billing frequency (e.g., 15% off for annual billing)"
         example: "15.00"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       default:
         description: "Whether this is the default billing frequency for new subscriptions"
         example: "false"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       sortOrder:
         description: "Display order for sorting billing frequencies (lower values appear first)"
         example: "10"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       active:
         description: "Whether this billing frequency is active and available for use"
         example: "true"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       products:
         description: "Products associated..."
         example: "[{\"@id\": \"\/api\/products\/123\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

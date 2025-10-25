@@ -54,29 +54,39 @@ resources:
         filters:
           - type: SearchFilter
             strategy: partial
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       recurring:
         description: "Whether this holiday recurs annually on the same date"
         example: "true"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       blocksScheduling:
         description: "Whether this holiday blocks scheduling and calendar operations"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       observed:
         description: "Whether this is an observed holiday (moved from weekend to business day)"
         example: "false"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       active:
         description: "Whether this holiday is currently active and should be considered in scheduling"
         example: "true"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       country:
         description: "ISO 3166-1 alpha-2 country code where this holiday is observed"
@@ -85,9 +95,13 @@ resources:
         filters:
           - type: SearchFilter
             strategy: partial
+          - type: OrderFilter
       calendar:
         description: "The calendar to which this holiday belongs"
         example: "\/api\/calendars\/0199cadd-5678-7bcb-a551-8ede90d819b3"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       region:
         description: "Specific region or state within the country where this holiday applies (e.g., California, Texas)"
         example: "California"
@@ -95,15 +109,20 @@ resources:
         filters:
           - type: SearchFilter
             strategy: partial
+          - type: OrderFilter
       year:
         description: "Specific year for non-recurring holidays or to override recurring holiday dates"
         example: "2025"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: NumericFilter
       event:
         description: "The event associated with this holiday occurrence"
         example: "\/api\/events\/0199cadd-9abc-7bcb-a551-8ede90d819b3"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       holidayType:
         description: "Type of holiday: national, regional, religious, bank, custom"
         example: "national"
@@ -111,23 +130,27 @@ resources:
         filters:
           - type: SearchFilter
             strategy: partial
+          - type: OrderFilter
       originalDate:
         description: "Original date of the holiday before being observed on a different day (e.g., when moved from weekend)"
         example: "2025-12-26"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: DateFilter
       affectsSLA:
         description: "Whether this holiday should pause or affect Service Level Agreement calculations"
         example: "true"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: BooleanFilter
       sentAt:
         description: "The date when the holiday is observed"
         example: "2025-12-25"
         # Advanced filters
         filters:
+          - type: OrderFilter
           - type: DateFilter
       workingDay:
         description: "Whether this is a partial working day (half-day holiday)"

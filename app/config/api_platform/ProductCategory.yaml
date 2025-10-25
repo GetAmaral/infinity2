@@ -50,15 +50,30 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       parentCategory:
         description: "ParentCategory"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       subcategories:
         description: "Subcategories"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       products:
         description: "Products associated..."
         example: "[{\"@id\": \"\/api\/products\/123\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

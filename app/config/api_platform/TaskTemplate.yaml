@@ -50,33 +50,66 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       command:
         description: "Command (long text)"
         example: "This is a longer text field with more content"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       durationMinutes:
         description: "DurationMinutes (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       location:
         description: "Location (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       periodicityInterval:
         description: "PeriodicityInterval"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       periodicityTimeframe:
         description: "PeriodicityTimeframe (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       pipelineStageTemplate:
         description: "PipelineStageTemplate"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       priority:
         description: "Priority level"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       type:
         description: "Type"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

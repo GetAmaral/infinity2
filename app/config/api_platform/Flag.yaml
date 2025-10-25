@@ -50,37 +50,67 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       category:
         description: "Category (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
       color:
         description: "Color (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       icon:
         description: "Icon (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       entityType:
         description: "Entity Type (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       entityId:
         description: "Entity ID"
         example: "sample value"
       priority:
         description: "Priority level"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       displayOrder:
         description: "Display Order (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Active (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       system:
         writable: false
         description: "System Flag (yes\/no)"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       dueDate:
         description: "Due Date"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

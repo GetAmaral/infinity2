@@ -50,21 +50,33 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       description:
         description: "..."
         example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tagline:
         description: "Brand tagline or slogan"
         example: "Just Do It"
       logoUrl:
         description: "URL to the brand logo..."
         example: "https:\/\/example.com\/logos\/nike.png"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       primaryColor:
         description: "Primary brand color (hex code)"
         example: "#FF6B00"
       industry:
         description: "Industry or sector the brand operates in"
         example: "Sporting Goods"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       positioning:
         description: "How the brand positions itself in the market"
         example: "Premium performance athletic wear with innovative technology"
@@ -74,27 +86,54 @@ resources:
       marketShare:
         description: "Market share percentage (0.00 to 100.00)"
         example: "15.75"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       brandValue:
         description: "Estimated brand value in USD"
         example: "35000000000.00"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       countryOfOrigin:
         description: "Country where the brand originated"
         example: "United States"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       foundedYear:
         description: "Year the brand was founded"
         example: "1964"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       website:
         description: "Official website URL..."
         example: "https:\/\/www.nike.com"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this brand is currently active in the market"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       products:
         description: "Products associated..."
         example: "[{\"@id\": \"\/api\/products\/123\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       manufacturers:
         description: "Companies that manufacture..."
         example: "[{\"@id\": \"\/api\/companies\/123\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       suppliers:
         description: "Companies that supply..."
         example: "[{\"@id\": \"\/api\/companies\/789\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter

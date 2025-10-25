@@ -96,6 +96,10 @@ services:
         arguments:
             $projectDir: '%kernel.project_dir%'
 
+    App\Service\Genmax\ControllerGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
     # Tenant Entity Processor
     # Unified processor for automatic tenant/organization assignment
     # Handles both API Platform operations and Doctrine persist events

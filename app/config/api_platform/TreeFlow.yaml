@@ -50,27 +50,51 @@ resources:
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       slug:
         writable: false
         description: "Slug (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       version:
         description: "Version (numeric value)"
         example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       canvasViewState:
         description: "CanvasViewState (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       jsonStructure:
         writable: false
         description: "JsonStructure (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       talkFlow:
         writable: false
         description: "TalkFlow (JSON data)"
         example: "{\"key\": \"value\"}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       steps:
         description: "Steps (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       active:
         description: "Whether this record is active"
         example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
