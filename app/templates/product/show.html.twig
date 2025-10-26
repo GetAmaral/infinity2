@@ -1,187 +1,166 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'Product'|trans }} - {{ product }}{% endblock %}
+{% block title %}{{ product }} - {{ 'product.singular'|trans({}, 'product') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
 
 {% block body %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h2>
-                            <i class="bi-circle me-2"></i>
-                            {{ 'Product'|trans }} Details
-                        </h2>
-                        <div class="btn-group">
-                            <a href="{{ path('product_edit', {id: product.id}) }}"
-                               class="btn btn-warning">
-                                <i class="bi bi-pencil me-1"></i>
-                                {{ 'action.edit'|trans }}
-                            </a>
-                            <a href="{{ path('product_index') }}"
-                               class="btn btn-secondary">
-                                <i class="bi bi-arrow-left me-1"></i>
-                                {{ 'action.back'|trans }}
+{# Navigation #}
+<div class="mb-4 d-flex gap-2 align-items-center">
+    {{ button_back(path('product_index'), 'product.back.to.list', 'product') }}
+{% if true %}
+    {% if is_granted(constant('App\\Security\\Voter\\ProductVoter::EDIT'), product) %}
+        {{ button_edit(product.id, path('product_edit', {id: product.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+    {% endif %}
+{% else %}
+    {{ button_edit(product.id, path('product_edit', {id: product.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+{% endif %}
+</div>
+
+{# Entity Header #}
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center">
+            <div class="position-relative me-4">
+                <div class="p-3 rounded-3" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <i class="bi bi-box-seam text-white fs-2"></i>
+                </div>
+                <div class="position-absolute top-0 end-0 translate-middle">
+                    <span class="badge rounded-pill" style="background: var(--luminai-ai-gradient); font-size: 0.7rem;">{{ 'ui.ai'|trans }}</span>
+                </div>
+            </div>
+            <div>
+                <h1 class="text-gradient mb-2">{{ product }}</h1>
+                <p class="text-secondary mb-0 fs-5">{{ 'product.singular'|trans({}, 'product') }}</p>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="ai-status-indicator">
+                <i class="bi bi-box-seam"></i> {{ 'product.section'|trans({}, 'product') }}
+            </div>
+            <div class="real-time-badge">
+                {{ 'ui.active'|trans }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Entity Details Bento Grid #}
+<div class="bento-grid">
+    {# Main Information Card #}
+    <div class="bento-item large">
+        <div class="luminai-card ai-enhanced p-4 h-100">
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-info-circle me-2"></i>{{ 'entity.details'|trans }}
+            </h5>
+
+            <div class="row g-3">
+{% for property in showProperties %}
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-{{ property.icon|default('circle') }} text-neon fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-1">{{ property.label|trans }}</div>
+                            <div class="text-white">
+{% if property.isRelationship %}
+                                {# Relationship: Link with toString #}
+                                {% if product.{{ property.getter }}() %}
+                                    <a href="{{ path('{{ property.relationshipRoute }}', {id: product.{{ property.getter }}().id}) }}"
+                                       class="text-white text-decoration-none">
+                                        {{ product.{{ property.getter }}() }}
+                                        <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+{% elseif property.type == 'boolean' %}
+                                {# Boolean: Badge #}
+                                {% if product.{{ property.getter }}() %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>{{ 'common.yes'|trans }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>{{ 'common.no'|trans }}
+                                    </span>
+                                {% endif %}
+{% elseif property.type in ['datetime', 'datetime_immutable'] %}
+                                {# DateTime: Full format #}
+                                {{ product.{{ property.getter }}()|date('F j, Y, g:i A') }}
+{% elseif property.type == 'date' %}
+                                {# Date: Short format #}
+                                {{ product.{{ property.getter }}()|date('M d, Y') }}
+{% elseif property.type == 'time' %}
+                                {# Time: 24-hour format #}
+                                {{ product.{{ property.getter }}()|date('H:i') }}
+{% elseif property.type == 'uuid' %}
+                                {# UUID: toString #}
+                                <code class="text-muted">{{ product.{{ property.getter }}().toString }}</code>
+{% elseif property.type == 'text' %}
+                                {# Text: Multi-line with preserved formatting #}
+                                <div class="text-white" style="white-space: pre-wrap;">{{ product.{{ property.getter }}() ?? '-' }}</div>
+{% elseif property.type == 'json' %}
+                                {# JSON: Formatted code block #}
+                                <pre class="bg-dark text-white p-2 rounded" style="font-size: 0.85rem;"><code>{{ product.{{ property.getter }}()|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
+{% else %}
+                                {# Default: Direct output #}
+                                {{ product.{{ property.getter }}() ?? '-' }}
+{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {# Metadata Card #}
+    <div class="bento-item">
+        <div class="luminai-card ai-enhanced p-4 h-100">
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-clock-history me-2"></i>{{ 'entity.metadata'|trans }}
+            </h5>
+
+            <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-calendar-plus text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.created_at'|trans }}</div>
+                        <div class="text-white">{{ product.createdAt|date('F j, Y, g:i A') }}</div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-clock-history text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.updated_at'|trans }}</div>
+                        <div class="text-white">{{ product.updatedAt|date('F j, Y, g:i A') }}</div>
+                    </div>
+                </div>
+
+{% if true %}
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-building text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.organization'|trans }}</div>
+                        <div class="text-white">
+                            <a href="{{ path('organization_show', {id: product.organization.id}) }}"
+                               class="text-white text-decoration-none">
+                                {{ product.organization }}
+                                <i class="bi bi-arrow-right ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <dl class="row">
+{% endif %}
 
-                        <dt class="col-sm-3">{{ 'ProductCode'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.productCode }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Name'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.name }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Organization'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.organization }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Description'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.description }}</dd>
-
-                        <dt class="col-sm-3">{{ 'ShortDescription'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.shortDescription }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Category'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.category }}</dd>
-
-                        <dt class="col-sm-3">{{ 'ProductLine'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.productLine }}</dd>
-
-                        <dt class="col-sm-3">{{ 'ProductType'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.productType }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Brand'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.brand }}</dd>
-
-                        <dt class="col-sm-3">{{ 'ListPrice'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.listPrice }}</dd>
-
-                        <dt class="col-sm-3">{{ 'CostPrice'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.costPrice }}</dd>
-
-                        <dt class="col-sm-3">{{ 'MinimumPrice'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.minimumPrice }}</dd>
-
-                        <dt class="col-sm-3">{{ 'MaximumDiscount'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.maximumDiscount }}</dd>
-
-                        <dt class="col-sm-3">{{ 'DiscountAmount'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.discountAmount }}</dd>
-
-                        <dt class="col-sm-3">{{ 'DiscountPercentage'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.discountPercentage }}</dd>
-
-                        <dt class="col-sm-3">{{ 'CommissionRate'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.commissionRate }}</dd>
-
-                        <dt class="col-sm-3">{{ 'CommissionAmount'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.commissionAmount }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Currency'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.currency }}</dd>
-
-                        <dt class="col-sm-3">{{ 'ExchangeRate'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.exchangeRate }}</dd>
-
-                        <dt class="col-sm-3">{{ 'UnitOfMeasure'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.unitOfMeasure }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Weight'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.weight }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Dimensions'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.dimensions }}</dd>
-
-                        <dt class="col-sm-3">{{ 'TaxCategory'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.taxCategory }}</dd>
-
-                        <dt class="col-sm-3">{{ 'MarginPercentage'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.marginPercentage }}</dd>
-
-                        <dt class="col-sm-3">{{ 'StockQuantity'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.stockQuantity }}</dd>
-
-                        <dt class="col-sm-3">{{ 'ReservedQuantity'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.reservedQuantity }}</dd>
-
-                        <dt class="col-sm-3">{{ 'AvailableQuantity'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.availableQuantity }}</dd>
-
-                        <dt class="col-sm-3">{{ 'WarrantyPeriod'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.warrantyPeriod }}</dd>
-
-                        <dt class="col-sm-3">{{ 'SupportPeriod'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.supportPeriod }}</dd>
-
-                        <dt class="col-sm-3">{{ 'LifecycleStage'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.lifecycleStage }}</dd>
-
-                        <dt class="col-sm-3">{{ 'LaunchDate'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.launchDate }}</dd>
-
-                        <dt class="col-sm-3">{{ 'EndOfLifeDate'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.endOfLifeDate }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Active'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.active }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Sellable'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.sellable }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Purchasable'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.purchasable }}</dd>
-
-                        <dt class="col-sm-3">{{ 'RequiresApproval'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.requiresApproval }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Subscription'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.subscription }}</dd>
-
-                        <dt class="col-sm-3">{{ 'SubscriptionPeriod'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.subscriptionPeriod }}</dd>
-
-                        <dt class="col-sm-3">{{ 'BillingFrequency'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.billingFrequency }}</dd>
-
-                        <dt class="col-sm-3">{{ 'SetupFee'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.setupFee }}</dd>
-
-                        <dt class="col-sm-3">{{ 'RecurringFee'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.recurringFee }}</dd>
-
-                        <dt class="col-sm-3">{{ 'CancellationFee'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.cancellationFee }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Specifications'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.specifications }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Features'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.features }}</dd>
-
-                        <dt class="col-sm-3">{{ 'CustomFields'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.customFields }}</dd>
-
-                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.createdAt|date('Y-m-d H:i:s') }}</dd>
-
-                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
-                        <dd class="col-sm-9">{{ product.updatedAt|date('Y-m-d H:i:s') }}</dd>
-                    </dl>
-                </div>
-                <div class="card-footer">
-                    <form method="post"
-                          action="{{ path('product_delete', {id: product.id}) }}"
-                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-trash me-1"></i>
-                            {{ 'action.delete'|trans }}
-                        </button>
-                    </form>
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-key text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.id'|trans }}</div>
+                        <div class="text-white">
+                            <code class="text-muted" style="font-size: 0.75rem;">{{ product.id.toString }}</code>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

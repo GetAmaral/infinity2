@@ -2,9 +2,9 @@
 
 {% block title %}
     {% if event.id %}
-        {{ 'action.edit'|trans }} {{ 'Event'|trans }}
+        {{ 'action.edit'|trans }} {{ 'event.singular'|trans({}, 'event') }}
     {% else %}
-        {{ 'action.create'|trans }} {{ 'Event'|trans }}
+        {{ 'action.create'|trans }} {{ 'event.singular'|trans({}, 'event') }}
     {% endif %}
 {% endblock %}
 
@@ -12,186 +12,46 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
                     <h2>
                         {% if event.id %}
-                            <i class="bi bi-pencil me-2"></i>
-                            {{ 'action.edit'|trans }} {{ 'Event'|trans }}
+                            <i class="bi bi-pencil me-2"></i>{{ 'action.edit'|trans }} {{ 'event.singular'|trans({}, 'event') }}
                         {% else %}
-                            <i class="bi bi-plus-circle me-2"></i>
-                            {{ 'action.create'|trans }} {{ 'Event'|trans }}
+                            <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'event.singular'|trans({}, 'event') }}
                         {% endif %}
                     </h2>
                 </div>
-                <div class="card-body">
-                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
 
-                    {{ form_errors(form) }}
+                {# CRITICAL: Add form-navigation controller for Enter-as-Tab behavior #}
+                {{ form_start(form, {
+                    'attr': {
+                        'data-turbo': 'true',
+                        'data-controller': 'form-navigation'
+                    }
+                }) }}
 
+                {{ form_errors(form) }}
 
-                    <div class="mb-3">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                        {{ form_errors(form.name) }}
+                {# Render all form fields automatically #}
+                {% for child in form.children %}
+                    {% if child.vars.name not in ['_token'] %}
+                        <div class="mb-3">
+                            {{ form_row(child) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.description) }}
-                        {{ form_widget(form.description) }}
-                        {{ form_errors(form.description) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.location) }}
-                        {{ form_widget(form.location) }}
-                        {{ form_errors(form.location) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.geo) }}
-                        {{ form_widget(form.geo) }}
-                        {{ form_errors(form.geo) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.startTime) }}
-                        {{ form_widget(form.startTime) }}
-                        {{ form_errors(form.startTime) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.endTime) }}
-                        {{ form_widget(form.endTime) }}
-                        {{ form_errors(form.endTime) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.allDay) }}
-                        {{ form_widget(form.allDay) }}
-                        {{ form_errors(form.allDay) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.eventStatus) }}
-                        {{ form_widget(form.eventStatus) }}
-                        {{ form_errors(form.eventStatus) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.visibility) }}
-                        {{ form_widget(form.visibility) }}
-                        {{ form_errors(form.visibility) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.priority) }}
-                        {{ form_widget(form.priority) }}
-                        {{ form_errors(form.priority) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.recurrenceInterval) }}
-                        {{ form_widget(form.recurrenceInterval) }}
-                        {{ form_errors(form.recurrenceInterval) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.recurrenceFrequency) }}
-                        {{ form_widget(form.recurrenceFrequency) }}
-                        {{ form_errors(form.recurrenceFrequency) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.recurrenceEndDate) }}
-                        {{ form_widget(form.recurrenceEndDate) }}
-                        {{ form_errors(form.recurrenceEndDate) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.recurrenceCount) }}
-                        {{ form_widget(form.recurrenceCount) }}
-                        {{ form_errors(form.recurrenceCount) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.originalStartTime) }}
-                        {{ form_widget(form.originalStartTime) }}
-                        {{ form_errors(form.originalStartTime) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.sequence) }}
-                        {{ form_widget(form.sequence) }}
-                        {{ form_errors(form.sequence) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.hangoutLink) }}
-                        {{ form_widget(form.hangoutLink) }}
-                        {{ form_errors(form.hangoutLink) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.conferenceData) }}
-                        {{ form_widget(form.conferenceData) }}
-                        {{ form_errors(form.conferenceData) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.extendedProperties) }}
-                        {{ form_widget(form.extendedProperties) }}
-                        {{ form_errors(form.extendedProperties) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.source) }}
-                        {{ form_widget(form.source) }}
-                        {{ form_errors(form.source) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.notes) }}
-                        {{ form_widget(form.notes) }}
-                        {{ form_errors(form.notes) }}
-
-                    </div>
-
-
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ path('event_index') }}"
-                           class="btn btn-secondary">
-                            <i class="bi bi-arrow-left me-1"></i>
-                            {{ 'action.back'|trans }}
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle me-1"></i>
-                            {{ 'action.save'|trans }}
-                        </button>
-                    </div>
-
-                    {{ form_end(form) }}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('event_index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>{{ 'action.back'|trans }}
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>{{ 'action.save'|trans }}
+                    </button>
                 </div>
+
+                {{ form_end(form) }}
             </div>
         </div>
     </div>

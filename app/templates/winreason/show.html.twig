@@ -1,58 +1,166 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'WinReason'|trans }} - {{ winreason }}{% endblock %}
+{% block title %}{{ winReason }} - {{ 'winreason.singular'|trans({}, 'winreason') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
 
 {% block body %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h2>
-                            <i class="bi-trophy me-2"></i>
-                            {{ 'WinReason'|trans }} Details
-                        </h2>
-                        <div class="btn-group">
-                            <a href="{{ path('win_reason_edit', {id: winreason.id}) }}"
-                               class="btn btn-warning">
-                                <i class="bi bi-pencil me-1"></i>
-                                {{ 'action.edit'|trans }}
-                            </a>
-                            <a href="{{ path('win_reason_index') }}"
-                               class="btn btn-secondary">
-                                <i class="bi bi-arrow-left me-1"></i>
-                                {{ 'action.back'|trans }}
+{# Navigation #}
+<div class="mb-4 d-flex gap-2 align-items-center">
+    {{ button_back(path('winreason_index'), 'winreason.back.to.list', 'winreason') }}
+{% if true %}
+    {% if is_granted(constant('App\\Security\\Voter\\WinReasonVoter::EDIT'), winReason) %}
+        {{ button_edit(winReason.id, path('winreason_edit', {id: winReason.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+    {% endif %}
+{% else %}
+    {{ button_edit(winReason.id, path('winreason_edit', {id: winReason.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+{% endif %}
+</div>
+
+{# Entity Header #}
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center">
+            <div class="position-relative me-4">
+                <div class="p-3 rounded-3" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <i class="bi bi-trophy text-white fs-2"></i>
+                </div>
+                <div class="position-absolute top-0 end-0 translate-middle">
+                    <span class="badge rounded-pill" style="background: var(--luminai-ai-gradient); font-size: 0.7rem;">{{ 'ui.ai'|trans }}</span>
+                </div>
+            </div>
+            <div>
+                <h1 class="text-gradient mb-2">{{ winReason }}</h1>
+                <p class="text-secondary mb-0 fs-5">{{ 'winreason.singular'|trans({}, 'winreason') }}</p>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="ai-status-indicator">
+                <i class="bi bi-trophy"></i> {{ 'winreason.section'|trans({}, 'winreason') }}
+            </div>
+            <div class="real-time-badge">
+                {{ 'ui.active'|trans }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Entity Details Bento Grid #}
+<div class="bento-grid">
+    {# Main Information Card #}
+    <div class="bento-item large">
+        <div class="luminai-card ai-enhanced p-4 h-100">
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-info-circle me-2"></i>{{ 'entity.details'|trans }}
+            </h5>
+
+            <div class="row g-3">
+{% for property in showProperties %}
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-{{ property.icon|default('circle') }} text-neon fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-1">{{ property.label|trans }}</div>
+                            <div class="text-white">
+{% if property.isRelationship %}
+                                {# Relationship: Link with toString #}
+                                {% if winReason.{{ property.getter }}() %}
+                                    <a href="{{ path('{{ property.relationshipRoute }}', {id: winReason.{{ property.getter }}().id}) }}"
+                                       class="text-white text-decoration-none">
+                                        {{ winReason.{{ property.getter }}() }}
+                                        <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+{% elseif property.type == 'boolean' %}
+                                {# Boolean: Badge #}
+                                {% if winReason.{{ property.getter }}() %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>{{ 'common.yes'|trans }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>{{ 'common.no'|trans }}
+                                    </span>
+                                {% endif %}
+{% elseif property.type in ['datetime', 'datetime_immutable'] %}
+                                {# DateTime: Full format #}
+                                {{ winReason.{{ property.getter }}()|date('F j, Y, g:i A') }}
+{% elseif property.type == 'date' %}
+                                {# Date: Short format #}
+                                {{ winReason.{{ property.getter }}()|date('M d, Y') }}
+{% elseif property.type == 'time' %}
+                                {# Time: 24-hour format #}
+                                {{ winReason.{{ property.getter }}()|date('H:i') }}
+{% elseif property.type == 'uuid' %}
+                                {# UUID: toString #}
+                                <code class="text-muted">{{ winReason.{{ property.getter }}().toString }}</code>
+{% elseif property.type == 'text' %}
+                                {# Text: Multi-line with preserved formatting #}
+                                <div class="text-white" style="white-space: pre-wrap;">{{ winReason.{{ property.getter }}() ?? '-' }}</div>
+{% elseif property.type == 'json' %}
+                                {# JSON: Formatted code block #}
+                                <pre class="bg-dark text-white p-2 rounded" style="font-size: 0.85rem;"><code>{{ winReason.{{ property.getter }}()|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
+{% else %}
+                                {# Default: Direct output #}
+                                {{ winReason.{{ property.getter }}() ?? '-' }}
+{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {# Metadata Card #}
+    <div class="bento-item">
+        <div class="luminai-card ai-enhanced p-4 h-100">
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-clock-history me-2"></i>{{ 'entity.metadata'|trans }}
+            </h5>
+
+            <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-calendar-plus text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.created_at'|trans }}</div>
+                        <div class="text-white">{{ winReason.createdAt|date('F j, Y, g:i A') }}</div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-clock-history text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.updated_at'|trans }}</div>
+                        <div class="text-white">{{ winReason.updatedAt|date('F j, Y, g:i A') }}</div>
+                    </div>
+                </div>
+
+{% if true %}
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-building text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.organization'|trans }}</div>
+                        <div class="text-white">
+                            <a href="{{ path('organization_show', {id: winReason.organization.id}) }}"
+                               class="text-white text-decoration-none">
+                                {{ winReason.organization }}
+                                <i class="bi bi-arrow-right ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <dl class="row">
+{% endif %}
 
-                        <dt class="col-sm-3">{{ 'Name'|trans }}</dt>
-                        <dd class="col-sm-9">{{ winreason.name }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Description'|trans }}</dt>
-                        <dd class="col-sm-9">{{ winreason.description }}</dd>
-
-                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
-                        <dd class="col-sm-9">{{ winreason.createdAt|date('Y-m-d H:i:s') }}</dd>
-
-                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
-                        <dd class="col-sm-9">{{ winreason.updatedAt|date('Y-m-d H:i:s') }}</dd>
-                    </dl>
-                </div>
-                <div class="card-footer">
-                    <form method="post"
-                          action="{{ path('win_reason_delete', {id: winreason.id}) }}"
-                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ winreason.id) }}">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-trash me-1"></i>
-                            {{ 'action.delete'|trans }}
-                        </button>
-                    </form>
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-key text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.id'|trans }}</div>
+                        <div class="text-white">
+                            <code class="text-muted" style="font-size: 0.75rem;">{{ winReason.id.toString }}</code>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

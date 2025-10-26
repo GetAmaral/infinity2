@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if tasktype.id %}
-        {{ 'action.edit'|trans }} {{ 'TaskType'|trans }}
+    {% if taskType.id %}
+        {{ 'action.edit'|trans }} {{ 'tasktype.singular'|trans({}, 'tasktype') }}
     {% else %}
-        {{ 'action.create'|trans }} {{ 'TaskType'|trans }}
+        {{ 'action.create'|trans }} {{ 'tasktype.singular'|trans({}, 'tasktype') }}
     {% endif %}
 {% endblock %}
 
@@ -12,53 +12,46 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
                     <h2>
-                        {% if tasktype.id %}
-                            <i class="bi bi-pencil me-2"></i>
-                            {{ 'action.edit'|trans }} {{ 'TaskType'|trans }}
+                        {% if taskType.id %}
+                            <i class="bi bi-pencil me-2"></i>{{ 'action.edit'|trans }} {{ 'tasktype.singular'|trans({}, 'tasktype') }}
                         {% else %}
-                            <i class="bi bi-plus-circle me-2"></i>
-                            {{ 'action.create'|trans }} {{ 'TaskType'|trans }}
+                            <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'tasktype.singular'|trans({}, 'tasktype') }}
                         {% endif %}
                     </h2>
                 </div>
-                <div class="card-body">
-                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
 
-                    {{ form_errors(form) }}
+                {# CRITICAL: Add form-navigation controller for Enter-as-Tab behavior #}
+                {{ form_start(form, {
+                    'attr': {
+                        'data-turbo': 'true',
+                        'data-controller': 'form-navigation'
+                    }
+                }) }}
 
+                {{ form_errors(form) }}
 
-                    <div class="mb-3">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                        {{ form_errors(form.name) }}
+                {# Render all form fields automatically #}
+                {% for child in form.children %}
+                    {% if child.vars.name not in ['_token'] %}
+                        <div class="mb-3">
+                            {{ form_row(child) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.taskFunction) }}
-                        {{ form_widget(form.taskFunction) }}
-                        {{ form_errors(form.taskFunction) }}
-
-                    </div>
-
-
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ path('task_type_index') }}"
-                           class="btn btn-secondary">
-                            <i class="bi bi-arrow-left me-1"></i>
-                            {{ 'action.back'|trans }}
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle me-1"></i>
-                            {{ 'action.save'|trans }}
-                        </button>
-                    </div>
-
-                    {{ form_end(form) }}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('tasktype_index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>{{ 'action.back'|trans }}
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>{{ 'action.save'|trans }}
+                    </button>
                 </div>
+
+                {{ form_end(form) }}
             </div>
         </div>
     </div>

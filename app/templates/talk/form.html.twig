@@ -2,9 +2,9 @@
 
 {% block title %}
     {% if talk.id %}
-        {{ 'action.edit'|trans }} {{ 'Talk'|trans }}
+        {{ 'action.edit'|trans }} {{ 'talk.singular'|trans({}, 'talk') }}
     {% else %}
-        {{ 'action.create'|trans }} {{ 'Talk'|trans }}
+        {{ 'action.create'|trans }} {{ 'talk.singular'|trans({}, 'talk') }}
     {% endif %}
 {% endblock %}
 
@@ -12,116 +12,46 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
                     <h2>
                         {% if talk.id %}
-                            <i class="bi bi-pencil me-2"></i>
-                            {{ 'action.edit'|trans }} {{ 'Talk'|trans }}
+                            <i class="bi bi-pencil me-2"></i>{{ 'action.edit'|trans }} {{ 'talk.singular'|trans({}, 'talk') }}
                         {% else %}
-                            <i class="bi bi-plus-circle me-2"></i>
-                            {{ 'action.create'|trans }} {{ 'Talk'|trans }}
+                            <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'talk.singular'|trans({}, 'talk') }}
                         {% endif %}
                     </h2>
                 </div>
-                <div class="card-body">
-                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
 
-                    {{ form_errors(form) }}
+                {# CRITICAL: Add form-navigation controller for Enter-as-Tab behavior #}
+                {{ form_start(form, {
+                    'attr': {
+                        'data-turbo': 'true',
+                        'data-controller': 'form-navigation'
+                    }
+                }) }}
 
+                {{ form_errors(form) }}
 
-                    <div class="mb-3">
-                        {{ form_label(form.dateStart) }}
-                        {{ form_widget(form.dateStart) }}
-                        {{ form_errors(form.dateStart) }}
+                {# Render all form fields automatically #}
+                {% for child in form.children %}
+                    {% if child.vars.name not in ['_token'] %}
+                        <div class="mb-3">
+                            {{ form_row(child) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.dateLastMessage) }}
-                        {{ form_widget(form.dateLastMessage) }}
-                        {{ form_errors(form.dateLastMessage) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.status) }}
-                        {{ form_widget(form.status) }}
-                        {{ form_errors(form.status) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.summary) }}
-                        {{ form_widget(form.summary) }}
-                        {{ form_errors(form.summary) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.subject) }}
-                        {{ form_widget(form.subject) }}
-                        {{ form_errors(form.subject) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.outcome) }}
-                        {{ form_widget(form.outcome) }}
-                        {{ form_errors(form.outcome) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.priority) }}
-                        {{ form_widget(form.priority) }}
-                        {{ form_errors(form.priority) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.channel) }}
-                        {{ form_widget(form.channel) }}
-                        {{ form_errors(form.channel) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.durationSeconds) }}
-                        {{ form_widget(form.durationSeconds) }}
-                        {{ form_errors(form.durationSeconds) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.recordingUrl) }}
-                        {{ form_widget(form.recordingUrl) }}
-                        {{ form_errors(form.recordingUrl) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.isArchived) }}
-                        {{ form_widget(form.isArchived) }}
-                        {{ form_errors(form.isArchived) }}
-
-                    </div>
-
-
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ path('talk_index') }}"
-                           class="btn btn-secondary">
-                            <i class="bi bi-arrow-left me-1"></i>
-                            {{ 'action.back'|trans }}
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle me-1"></i>
-                            {{ 'action.save'|trans }}
-                        </button>
-                    </div>
-
-                    {{ form_end(form) }}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('talk_index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>{{ 'action.back'|trans }}
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>{{ 'action.save'|trans }}
+                    </button>
                 </div>
+
+                {{ form_end(form) }}
             </div>
         </div>
     </div>

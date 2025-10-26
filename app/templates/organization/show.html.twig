@@ -1,121 +1,168 @@
 {% extends 'base.html.twig' %}
-{% import '_macros/organization_logo.html.twig' as org_logo %}
 
-{% block title %}{{ organization.name }} - {{ 'organization.singular'|trans({}, 'organization') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
+{% block title %}{{ organization }} - {{ 'organization.singular'|trans({}, 'organization') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
 
 {% block body %}
-<!-- Navigation -->
+{# Navigation #}
 <div class="mb-4 d-flex gap-2 align-items-center">
     {{ button_back(path('organization_index'), 'organization.back.to.list', 'organization') }}
+{% if true %}
+    {% if is_granted(constant('App\\Security\\Voter\\OrganizationVoter::EDIT'), organization) %}
+        {{ button_edit(organization.id, path('organization_edit', {id: organization.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+    {% endif %}
+{% else %}
     {{ button_edit(organization.id, path('organization_edit', {id: organization.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+{% endif %}
 </div>
 
-<!-- Organization Header -->
+{# Entity Header #}
 <div class="ai-dashboard-header mb-4">
     <div class="d-flex justify-content-between align-items-start">
         <div class="d-flex align-items-center">
-            {{ org_logo.logo(organization, 'lg', 'me-4') }}
+            <div class="position-relative me-4">
+                <div class="p-3 rounded-3" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <i class="bi bi-building-fill text-white fs-2"></i>
+                </div>
+                <div class="position-absolute top-0 end-0 translate-middle">
+                    <span class="badge rounded-pill" style="background: var(--luminai-ai-gradient); font-size: 0.7rem;">{{ 'ui.ai'|trans }}</span>
+                </div>
+            </div>
             <div>
-                <h1 class="text-gradient mb-2">{{ organization.name }}</h1>
-                {% if organization.description %}
-                    <p class="text-secondary mb-0 fs-5">{{ organization.description }}</p>
-                {% else %}
-                    <p class="text-muted mb-0 fst-italic">{{ 'empty.no.description'|trans }}</p>
-                {% endif %}
+                <h1 class="text-gradient mb-2">{{ organization }}</h1>
+                <p class="text-secondary mb-0 fs-5">{{ 'organization.singular'|trans({}, 'organization') }}</p>
             </div>
         </div>
         <div class="d-flex gap-2">
             <div class="ai-status-indicator">
-                <i class="bi bi-star-fill"></i> {{ 'organization.singular'|trans({}, 'organization') }}
+                <i class="bi bi-building-fill"></i> {{ 'organization.section'|trans({}, 'organization') }}
             </div>
             <div class="real-time-badge">
-                {% if organization.users|length == 0 %}
-                    {{ 'organization.no.users'|trans({}, 'organization') }}
-                {% else %}
-                    {{ 'organization.users.count'|trans({'%count%': organization.users|length}, 'messages', null, organization.users|length) }}
-                {% endif %}
+                {{ 'ui.active'|trans }}
             </div>
         </div>
     </div>
 </div>
 
-<!-- Organization Details Bento Grid -->
+{# Entity Details Bento Grid #}
 <div class="bento-grid">
-    <!-- Quick Stats -->
-    <div class="bento-item">
-        <div class="metric-card">
-            <i class="bi bi-people-fill text-neon fs-1"></i>
-            <div class="metric-value">{{ organization.users|length }}</div>
-            <div class="metric-label">{{ 'metric.total.contacts'|trans({}, 'insights') }}</div>
-            <div class="metric-trend trend-up">
-                <i class="bi bi-arrow-up"></i> {{ 'insight.active.organization'|trans({}, 'insights') }}
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Insights -->
-    <div class="bento-item">
-        <div class="luminai-card ai-enhanced p-4 h-100">
-            <div class="d-flex align-items-center mb-3">
-                <i class="bi bi-magic text-neon me-2"></i>
-                <h6 class="text-gradient mb-0">{{ 'ai.insights'|trans({}, 'insights') }}</h6>
-            </div>
-            <div class="text-secondary">
-                <p class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>{{ 'insight.strong.engagement'|trans({}, 'insights') }}</p>
-                <p class="mb-2"><i class="bi bi-trending-up text-neon me-2"></i>{{ 'insight.growth.potential'|trans({}, 'insights') }}</p>
-                <p class="mb-0"><i class="bi bi-heart text-danger me-2"></i>{{ 'insight.high.relationship.score'|trans({}, 'insights') }}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Contacts Section -->
+    {# Main Information Card #}
     <div class="bento-item large">
-        <div class="luminai-card p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="text-neon mb-0">
-                    <i class="bi bi-people me-2"></i>{{ 'organization.users.in.organization'|trans({}, 'organization') }} ({{ organization.users|length }})
-                </h5>
-                <button class="btn luminai-btn-primary btn-sm">
-                    <i class="bi bi-person-plus me-1"></i>{{ 'button.add.contact'|trans }}
-                </button>
-            </div>
+        <div class="luminai-card ai-enhanced p-4 h-100">
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-info-circle me-2"></i>{{ 'entity.details'|trans }}
+            </h5>
 
-            {% if organization.users %}
-                <div class="row">
-                    {% for user in organization.users %}
-                        <div class="col-lg-4 col-md-6 mb-3">
-                            <div class="luminai-card p-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <div class="p-2 rounded-3 me-3" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
-                                        <i class="bi bi-person-circle text-white"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="text-white mb-1">{{ user.name }}</h6>
-                                        <small class="text-secondary">{{ user.email }}</small>
-                                    </div>
-                                    <a href="{{ path('user_show', {id: user.id}) }}" class="btn btn-sm luminai-btn-ai">
-                                        <i class="bi bi-arrow-right"></i>
+            <div class="row g-3">
+{% for property in showProperties %}
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-{{ property.icon|default('circle') }} text-neon fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-1">{{ property.label|trans }}</div>
+                            <div class="text-white">
+{% if property.isRelationship %}
+                                {# Relationship: Link with toString #}
+                                {% if organization.{{ property.getter }}() %}
+                                    <a href="{{ path('{{ property.relationshipRoute }}', {id: organization.{{ property.getter }}().id}) }}"
+                                       class="text-white text-decoration-none">
+                                        {{ organization.{{ property.getter }}() }}
+                                        <i class="bi bi-arrow-right ms-1"></i>
                                     </a>
-                                </div>
-                                <div class="mt-2">
-                                    <span class="real-time-badge">
-                                        <i class="bi bi-calendar me-1"></i>{{ user.createdAt|date('M d') }}
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+{% elseif property.type == 'boolean' %}
+                                {# Boolean: Badge #}
+                                {% if organization.{{ property.getter }}() %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>{{ 'common.yes'|trans }}
                                     </span>
-                                </div>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>{{ 'common.no'|trans }}
+                                    </span>
+                                {% endif %}
+{% elseif property.type in ['datetime', 'datetime_immutable'] %}
+                                {# DateTime: Full format #}
+                                {{ organization.{{ property.getter }}()|date('F j, Y, g:i A') }}
+{% elseif property.type == 'date' %}
+                                {# Date: Short format #}
+                                {{ organization.{{ property.getter }}()|date('M d, Y') }}
+{% elseif property.type == 'time' %}
+                                {# Time: 24-hour format #}
+                                {{ organization.{{ property.getter }}()|date('H:i') }}
+{% elseif property.type == 'uuid' %}
+                                {# UUID: toString #}
+                                <code class="text-muted">{{ organization.{{ property.getter }}().toString }}</code>
+{% elseif property.type == 'text' %}
+                                {# Text: Multi-line with preserved formatting #}
+                                <div class="text-white" style="white-space: pre-wrap;">{{ organization.{{ property.getter }}() ?? '-' }}</div>
+{% elseif property.type == 'json' %}
+                                {# JSON: Formatted code block #}
+                                <pre class="bg-dark text-white p-2 rounded" style="font-size: 0.85rem;"><code>{{ organization.{{ property.getter }}()|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
+{% else %}
+                                {# Default: Direct output #}
+                                {{ organization.{{ property.getter }}() ?? '-' }}
+{% endif %}
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
-            {% else %}
-                <div class="text-center py-5">
-                    <i class="bi bi-person-plus" style="font-size: 3rem; color: var(--luminai-text-muted);"></i>
-                    <h5 class="text-white mt-3 mb-2">{{ 'empty.no.contacts.yet'|trans }}</h5>
-                    <p class="text-secondary mb-4">{{ 'empty.organization.contacts.description'|trans }}</p>
-                    <button class="btn luminai-btn-primary">
-                        <i class="bi bi-person-plus me-2"></i>{{ 'button.add.first.contact'|trans }}
-                    </button>
+{% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {# Metadata Card #}
+    <div class="bento-item">
+        <div class="luminai-card ai-enhanced p-4 h-100">
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-clock-history me-2"></i>{{ 'entity.metadata'|trans }}
+            </h5>
+
+            <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-calendar-plus text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.created_at'|trans }}</div>
+                        <div class="text-white">{{ organization.createdAt|date('F j, Y, g:i A') }}</div>
+                    </div>
                 </div>
-            {% endif %}
+
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-clock-history text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.updated_at'|trans }}</div>
+                        <div class="text-white">{{ organization.updatedAt|date('F j, Y, g:i A') }}</div>
+                    </div>
+                </div>
+
+{% if false %}
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-building text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.organization'|trans }}</div>
+                        <div class="text-white">
+                            <a href="{{ path('organization_show', {id: organization.organization.id}) }}"
+                               class="text-white text-decoration-none">
+                                {{ organization.organization }}
+                                <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+{% endif %}
+
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-key text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.id'|trans }}</div>
+                        <div class="text-white">
+                            <code class="text-muted" style="font-size: 0.75rem;">{{ organization.id.toString }}</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

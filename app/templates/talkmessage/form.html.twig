@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if talkmessage.id %}
-        {{ 'action.edit'|trans }} {{ 'TalkMessage'|trans }}
+    {% if talkMessage.id %}
+        {{ 'action.edit'|trans }} {{ 'talkmessage.singular'|trans({}, 'talkmessage') }}
     {% else %}
-        {{ 'action.create'|trans }} {{ 'TalkMessage'|trans }}
+        {{ 'action.create'|trans }} {{ 'talkmessage.singular'|trans({}, 'talkmessage') }}
     {% endif %}
 {% endblock %}
 
@@ -12,88 +12,46 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
                     <h2>
-                        {% if talkmessage.id %}
-                            <i class="bi bi-pencil me-2"></i>
-                            {{ 'action.edit'|trans }} {{ 'TalkMessage'|trans }}
+                        {% if talkMessage.id %}
+                            <i class="bi bi-pencil me-2"></i>{{ 'action.edit'|trans }} {{ 'talkmessage.singular'|trans({}, 'talkmessage') }}
                         {% else %}
-                            <i class="bi bi-plus-circle me-2"></i>
-                            {{ 'action.create'|trans }} {{ 'TalkMessage'|trans }}
+                            <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'talkmessage.singular'|trans({}, 'talkmessage') }}
                         {% endif %}
                     </h2>
                 </div>
-                <div class="card-body">
-                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
 
-                    {{ form_errors(form) }}
+                {# CRITICAL: Add form-navigation controller for Enter-as-Tab behavior #}
+                {{ form_start(form, {
+                    'attr': {
+                        'data-turbo': 'true',
+                        'data-controller': 'form-navigation'
+                    }
+                }) }}
 
+                {{ form_errors(form) }}
 
-                    <div class="mb-3">
-                        {{ form_label(form.date) }}
-                        {{ form_widget(form.date) }}
-                        {{ form_errors(form.date) }}
+                {# Render all form fields automatically #}
+                {% for child in form.children %}
+                    {% if child.vars.name not in ['_token'] %}
+                        <div class="mb-3">
+                            {{ form_row(child) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.text) }}
-                        {{ form_widget(form.text) }}
-                        {{ form_errors(form.text) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.messageType) }}
-                        {{ form_widget(form.messageType) }}
-                        {{ form_errors(form.messageType) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.read) }}
-                        {{ form_widget(form.read) }}
-                        {{ form_errors(form.read) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.readAt) }}
-                        {{ form_widget(form.readAt) }}
-                        {{ form_errors(form.readAt) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.sentiment) }}
-                        {{ form_widget(form.sentiment) }}
-                        {{ form_errors(form.sentiment) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.edited) }}
-                        {{ form_widget(form.edited) }}
-                        {{ form_errors(form.edited) }}
-
-                    </div>
-
-
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ path('talk_message_index') }}"
-                           class="btn btn-secondary">
-                            <i class="bi bi-arrow-left me-1"></i>
-                            {{ 'action.back'|trans }}
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle me-1"></i>
-                            {{ 'action.save'|trans }}
-                        </button>
-                    </div>
-
-                    {{ form_end(form) }}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('talkmessage_index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>{{ 'action.back'|trans }}
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>{{ 'action.save'|trans }}
+                    </button>
                 </div>
+
+                {{ form_end(form) }}
             </div>
         </div>
     </div>

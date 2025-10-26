@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if productbatch.id %}
-        {{ 'action.edit'|trans }} {{ 'ProductBatch'|trans }}
+    {% if productBatch.id %}
+        {{ 'action.edit'|trans }} {{ 'productbatch.singular'|trans({}, 'productbatch') }}
     {% else %}
-        {{ 'action.create'|trans }} {{ 'ProductBatch'|trans }}
+        {{ 'action.create'|trans }} {{ 'productbatch.singular'|trans({}, 'productbatch') }}
     {% endif %}
 {% endblock %}
 
@@ -12,151 +12,46 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
                     <h2>
-                        {% if productbatch.id %}
-                            <i class="bi bi-pencil me-2"></i>
-                            {{ 'action.edit'|trans }} {{ 'ProductBatch'|trans }}
+                        {% if productBatch.id %}
+                            <i class="bi bi-pencil me-2"></i>{{ 'action.edit'|trans }} {{ 'productbatch.singular'|trans({}, 'productbatch') }}
                         {% else %}
-                            <i class="bi bi-plus-circle me-2"></i>
-                            {{ 'action.create'|trans }} {{ 'ProductBatch'|trans }}
+                            <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'productbatch.singular'|trans({}, 'productbatch') }}
                         {% endif %}
                     </h2>
                 </div>
-                <div class="card-body">
-                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
 
-                    {{ form_errors(form) }}
+                {# CRITICAL: Add form-navigation controller for Enter-as-Tab behavior #}
+                {{ form_start(form, {
+                    'attr': {
+                        'data-turbo': 'true',
+                        'data-controller': 'form-navigation'
+                    }
+                }) }}
 
+                {{ form_errors(form) }}
 
-                    <div class="mb-3">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                        {{ form_errors(form.name) }}
+                {# Render all form fields automatically #}
+                {% for child in form.children %}
+                    {% if child.vars.name not in ['_token'] %}
+                        <div class="mb-3">
+                            {{ form_row(child) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.listPrice) }}
-                        {{ form_widget(form.listPrice) }}
-                        {{ form_errors(form.listPrice) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.costPrice) }}
-                        {{ form_widget(form.costPrice) }}
-                        {{ form_errors(form.costPrice) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.minimumPrice) }}
-                        {{ form_widget(form.minimumPrice) }}
-                        {{ form_errors(form.minimumPrice) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.maximumDiscount) }}
-                        {{ form_widget(form.maximumDiscount) }}
-                        {{ form_errors(form.maximumDiscount) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.discountAmount) }}
-                        {{ form_widget(form.discountAmount) }}
-                        {{ form_errors(form.discountAmount) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.discountPercentage) }}
-                        {{ form_widget(form.discountPercentage) }}
-                        {{ form_errors(form.discountPercentage) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.commissionRate) }}
-                        {{ form_widget(form.commissionRate) }}
-                        {{ form_errors(form.commissionRate) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.commissionAmount) }}
-                        {{ form_widget(form.commissionAmount) }}
-                        {{ form_errors(form.commissionAmount) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.currency) }}
-                        {{ form_widget(form.currency) }}
-                        {{ form_errors(form.currency) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.exchangeRate) }}
-                        {{ form_widget(form.exchangeRate) }}
-                        {{ form_errors(form.exchangeRate) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.marginPercentage) }}
-                        {{ form_widget(form.marginPercentage) }}
-                        {{ form_errors(form.marginPercentage) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.stockQuantity) }}
-                        {{ form_widget(form.stockQuantity) }}
-                        {{ form_errors(form.stockQuantity) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.reservedQuantity) }}
-                        {{ form_widget(form.reservedQuantity) }}
-                        {{ form_errors(form.reservedQuantity) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.availableQuantity) }}
-                        {{ form_widget(form.availableQuantity) }}
-                        {{ form_errors(form.availableQuantity) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.expirationDate) }}
-                        {{ form_widget(form.expirationDate) }}
-                        {{ form_errors(form.expirationDate) }}
-
-                    </div>
-
-
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ path('product_batch_index') }}"
-                           class="btn btn-secondary">
-                            <i class="bi bi-arrow-left me-1"></i>
-                            {{ 'action.back'|trans }}
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle me-1"></i>
-                            {{ 'action.save'|trans }}
-                        </button>
-                    </div>
-
-                    {{ form_end(form) }}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('productbatch_index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>{{ 'action.back'|trans }}
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>{{ 'action.save'|trans }}
+                    </button>
                 </div>
+
+                {{ form_end(form) }}
             </div>
         </div>
     </div>

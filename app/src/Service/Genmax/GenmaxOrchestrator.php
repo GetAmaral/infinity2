@@ -37,7 +37,7 @@ class GenmaxOrchestrator
     private const CONTROLLER_ACTIVE = true;       // ✅ Phase 3 - ACTIVE
     private const VOTER_ACTIVE = true;            // ✅ Phase 3 - ACTIVE
     private const FORM_ACTIVE = true;             // ✅ Phase 3 - ACTIVE
-    private const TEMPLATE_ACTIVE = false;        // ⏸️ Phase 4 - Future
+    private const TEMPLATE_ACTIVE = true;         // ✅ Phase 4 - ACTIVE
     private const NAVIGATION_ACTIVE = false;      // ⏸️ Phase 4 - Future
     private const TRANSLATION_ACTIVE = false;     // ⏸️ Phase 4 - Future
     private const TESTS_ACTIVE = false;           // ⏸️ Phase 5 - Future
@@ -58,8 +58,8 @@ class GenmaxOrchestrator
         private readonly ControllerGenerator $controllerGenerator,
         private readonly VoterGenerator $voterGenerator,
         private readonly FormGenerator $formGenerator,
+        private readonly TemplateGenerator $templateGenerator,
         // Future generators will be injected here:
-        // private readonly TemplateGenerator $templateGenerator,
         // private readonly NavigationGenerator $navigationGenerator,
         // private readonly TranslationGenerator $translationGenerator,
         // private readonly TestGenerator $testGenerator,
@@ -257,11 +257,19 @@ class GenmaxOrchestrator
                         }
                     }
 
-                    // Templates (Future)
+                    // Templates (ACTIVE)
                     if (self::TEMPLATE_ACTIVE) {
-                        // $files = $this->templateGenerator->generate($entity);
-                        // $generatedFiles = array_merge($generatedFiles, $files);
-                        $currentStep++;
+                        try {
+                            $files = $this->templateGenerator->generate($entity);
+                            $generatedFiles = array_merge($generatedFiles, $files);
+                            $currentStep++;
+                        } catch (\Throwable $e) {
+                            $this->logger->error("[GENMAX] Template generation failed", [
+                                'entity' => $entity->getEntityName(),
+                                'error' => $e->getMessage()
+                            ]);
+                            throw $e;
+                        }
                     }
 
                     // Tests (Future)
@@ -390,12 +398,14 @@ class GenmaxOrchestrator
                 $files[] = sprintf('%s/%s/%sType.php', $this->projectDir, $this->paths['form_dir'], $entityName);
             }
 
-            // Future: Templates
+            // Templates (ACTIVE)
             if (self::TEMPLATE_ACTIVE) {
                 $slug = $entity->getSlug();
                 $files[] = sprintf('%s/%s/%s/index.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
-                $files[] = sprintf('%s/%s/%s/form.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
                 $files[] = sprintf('%s/%s/%s/show.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
+                $files[] = sprintf('%s/%s/%s/new.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
+                $files[] = sprintf('%s/%s/%s/edit.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
+                $files[] = sprintf('%s/%s/%s/form.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
             }
 
             // Future: API Platform config

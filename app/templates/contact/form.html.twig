@@ -2,9 +2,9 @@
 
 {% block title %}
     {% if contact.id %}
-        {{ 'action.edit'|trans }} {{ 'Contact'|trans }}
+        {{ 'action.edit'|trans }} {{ 'contact.singular'|trans({}, 'contact') }}
     {% else %}
-        {{ 'action.create'|trans }} {{ 'Contact'|trans }}
+        {{ 'action.create'|trans }} {{ 'contact.singular'|trans({}, 'contact') }}
     {% endif %}
 {% endblock %}
 
@@ -12,179 +12,46 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
                     <h2>
                         {% if contact.id %}
-                            <i class="bi bi-pencil me-2"></i>
-                            {{ 'action.edit'|trans }} {{ 'Contact'|trans }}
+                            <i class="bi bi-pencil me-2"></i>{{ 'action.edit'|trans }} {{ 'contact.singular'|trans({}, 'contact') }}
                         {% else %}
-                            <i class="bi bi-plus-circle me-2"></i>
-                            {{ 'action.create'|trans }} {{ 'Contact'|trans }}
+                            <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'contact.singular'|trans({}, 'contact') }}
                         {% endif %}
                     </h2>
                 </div>
-                <div class="card-body">
-                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
 
-                    {{ form_errors(form) }}
+                {# CRITICAL: Add form-navigation controller for Enter-as-Tab behavior #}
+                {{ form_start(form, {
+                    'attr': {
+                        'data-turbo': 'true',
+                        'data-controller': 'form-navigation'
+                    }
+                }) }}
 
+                {{ form_errors(form) }}
 
-                    <div class="mb-3">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                        {{ form_errors(form.name) }}
+                {# Render all form fields automatically #}
+                {% for child in form.children %}
+                    {% if child.vars.name not in ['_token'] %}
+                        <div class="mb-3">
+                            {{ form_row(child) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.origin) }}
-                        {{ form_widget(form.origin) }}
-                        {{ form_errors(form.origin) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.nickname) }}
-                        {{ form_widget(form.nickname) }}
-                        {{ form_errors(form.nickname) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.ranking) }}
-                        {{ form_widget(form.ranking) }}
-                        {{ form_errors(form.ranking) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.email) }}
-                        {{ form_widget(form.email) }}
-                        {{ form_errors(form.email) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.phone) }}
-                        {{ form_widget(form.phone) }}
-                        {{ form_errors(form.phone) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.address) }}
-                        {{ form_widget(form.address) }}
-                        {{ form_errors(form.address) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.neighborhood) }}
-                        {{ form_widget(form.neighborhood) }}
-                        {{ form_errors(form.neighborhood) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.postalCode) }}
-                        {{ form_widget(form.postalCode) }}
-                        {{ form_errors(form.postalCode) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.geo) }}
-                        {{ form_widget(form.geo) }}
-                        {{ form_errors(form.geo) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.birthDate) }}
-                        {{ form_widget(form.birthDate) }}
-                        {{ form_errors(form.birthDate) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.gender) }}
-                        {{ form_widget(form.gender) }}
-                        {{ form_errors(form.gender) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.document) }}
-                        {{ form_widget(form.document) }}
-                        {{ form_errors(form.document) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.score) }}
-                        {{ form_widget(form.score) }}
-                        {{ form_errors(form.score) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.notes) }}
-                        {{ form_widget(form.notes) }}
-                        {{ form_errors(form.notes) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.firstTalkDate) }}
-                        {{ form_widget(form.firstTalkDate) }}
-                        {{ form_errors(form.firstTalkDate) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.lastTalkDate) }}
-                        {{ form_widget(form.lastTalkDate) }}
-                        {{ form_errors(form.lastTalkDate) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.profilePictureUrl) }}
-                        {{ form_widget(form.profilePictureUrl) }}
-                        {{ form_errors(form.profilePictureUrl) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.status) }}
-                        {{ form_widget(form.status) }}
-                        {{ form_errors(form.status) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.billingAddress) }}
-                        {{ form_widget(form.billingAddress) }}
-                        {{ form_errors(form.billingAddress) }}
-
-                    </div>
-
-
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ path('contact_index') }}"
-                           class="btn btn-secondary">
-                            <i class="bi bi-arrow-left me-1"></i>
-                            {{ 'action.back'|trans }}
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle me-1"></i>
-                            {{ 'action.save'|trans }}
-                        </button>
-                    </div>
-
-                    {{ form_end(form) }}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('contact_index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>{{ 'action.back'|trans }}
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>{{ 'action.save'|trans }}
+                    </button>
                 </div>
+
+                {{ form_end(form) }}
             </div>
         </div>
     </div>

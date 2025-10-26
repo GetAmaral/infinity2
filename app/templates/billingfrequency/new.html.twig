@@ -1,0 +1,5 @@
+{% set billingFrequency = billingFrequency ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'billingFrequency': billingFrequency,
+    'form': form
+} %}

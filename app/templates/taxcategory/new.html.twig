@@ -1,0 +1,5 @@
+{% set taxCategory = taxCategory ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'taxCategory': taxCategory,
+    'form': form
+} %}

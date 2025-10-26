@@ -1,849 +1,169 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ treeflow.name }} - {{ 'treeflow.singular'|trans({}, 'treeflow') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
+{% block title %}{{ treeFlow }} - {{ 'treeflow.singular'|trans({}, 'treeflow') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
 
 {% block body %}
-<style>
-    /* Remove vertical padding but keep horizontal margins */
-    main.container {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-        max-width: 100% !important;
-    }
-</style>
+{# Navigation #}
+<div class="mb-4 d-flex gap-2 align-items-center">
+    {{ button_back(path('treeflow_index'), 'treeflow.back.to.list', 'treeflow') }}
+{% if true %}
+    {% if is_granted(constant('App\\Security\\Voter\\TreeFlowVoter::EDIT'), treeFlow) %}
+        {{ button_edit(treeFlow.id, path('treeflow_edit', {id: treeFlow.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+    {% endif %}
+{% else %}
+    {{ button_edit(treeFlow.id, path('treeflow_edit', {id: treeFlow.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+{% endif %}
+</div>
 
-<!-- Compact Header -->
-<div class="d-flex justify-content-between align-items-center" style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-    <div class="d-flex align-items-center gap-2">
-        {{ button_back(path('treeflow_index'), 'treeflow.back.to.list', 'treeflow', 'luminai-btn-ai btn-sm') }}
-        <div class="p-1 rounded" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
-            <i class="bi bi-diagram-3 text-white" style="font-size: 1.2rem;"></i>
+{# Entity Header #}
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center">
+            <div class="position-relative me-4">
+                <div class="p-3 rounded-3" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <i class="bi bi-diagram-3 text-white fs-2"></i>
+                </div>
+                <div class="position-absolute top-0 end-0 translate-middle">
+                    <span class="badge rounded-pill" style="background: var(--luminai-ai-gradient); font-size: 0.7rem;">{{ 'ui.ai'|trans }}</span>
+                </div>
+            </div>
+            <div>
+                <h1 class="text-gradient mb-2">{{ treeFlow }}</h1>
+                <p class="text-secondary mb-0 fs-5">{{ 'treeflow.singular'|trans({}, 'treeflow') }}</p>
+            </div>
         </div>
-        <h1 class="text-gradient mb-0" style="font-size: 1.3rem;">{{ treeflow.name }}</h1>
-        <span class="badge bg-info" style="font-size: 0.7rem;">v{{ treeflow.version }}</span>
-        {% if treeflow.active %}
-            <span class="badge bg-success" style="font-size: 0.7rem;">{{ 'common.status.active'|trans }}</span>
-        {% else %}
-            <span class="badge bg-secondary" style="font-size: 0.7rem;">{{ 'common.status.inactive'|trans }}</span>
-        {% endif %}
-        <span class="badge bg-primary" style="font-size: 0.7rem;">{{ treeflow.steps|length }} {{ 'treeflow.steps'|trans({}, 'treeflow') }}</span>
-    </div>
-    <div class="d-flex gap-1 align-items-center">
-        {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-            {{ button_edit(treeflow.id, path('treeflow_edit', {id: treeflow.id}), 'button.edit', 'messages', null, null, null, 'btn-sm', null, null, false) }}
-        {% endif %}
+        <div class="d-flex gap-2">
+            <div class="ai-status-indicator">
+                <i class="bi bi-diagram-3"></i> {{ 'treeflow.section'|trans({}, 'treeflow') }}
+            </div>
+            <div class="real-time-badge">
+                {{ 'ui.active'|trans }}
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Steps Section -->
-{% set stepsArray = [] %}
-{% for step in treeflow.steps %}
-    {% set questionsArray = [] %}
-    {% for question in step.questions %}
-        {% set questionsArray = questionsArray|merge([{
-            'id': question.id,
-            'questionText': question.name,
-            'text': question.name,
-            'viewOrder': question.viewOrder,
-            'stepId': step.id
-        }]) %}
-    {% endfor %}
+{# Entity Details Bento Grid #}
+<div class="bento-grid">
+    {# Main Information Card #}
+    <div class="bento-item large">
+        <div class="luminai-card ai-enhanced p-4 h-100">
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-info-circle me-2"></i>{{ 'entity.details'|trans }}
+            </h5>
 
-    {% set outputsArray = [] %}
-    {# Sort outputs by ID for consistent ordering #}
-    {% set sortedOutputs = step.outputs|sort((a, b) => a.id <=> b.id) %}
-    {% for output in sortedOutputs %}
-        {% set outputsArray = outputsArray|merge([{
-            'id': output.id,
-            'name': output.name,
-            'stepId': step.id
-        }]) %}
-    {% endfor %}
-
-    {% set inputsArray = [] %}
-    {% for input in step.inputs %}
-        {% set inputsArray = inputsArray|merge([{
-            'id': input.id,
-            'name': input.name,
-            'type': input.type.value,
-            'stepId': step.id
-        }]) %}
-    {% endfor %}
-
-    {% set stepsArray = stepsArray|merge([{
-        'id': step.id,
-        'name': step.name,
-        'first': step.first,
-        'positionX': step.positionX,
-        'positionY': step.positionY,
-        'questions': questionsArray,
-        'outputs': outputsArray,
-        'inputs': inputsArray
-    }]) %}
+            <div class="row g-3">
+{% for property in showProperties %}
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-{{ property.icon|default('circle') }} text-neon fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-1">{{ property.label|trans }}</div>
+                            <div class="text-white">
+{% if property.isRelationship %}
+                                {# Relationship: Link with toString #}
+                                {% if treeFlow.{{ property.getter }}() %}
+                                    <a href="{{ path('{{ property.relationshipRoute }}', {id: treeFlow.{{ property.getter }}().id}) }}"
+                                       class="text-white text-decoration-none">
+                                        {{ treeFlow.{{ property.getter }}() }}
+                                        <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+{% elseif property.type == 'boolean' %}
+                                {# Boolean: Badge #}
+                                {% if treeFlow.{{ property.getter }}() %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>{{ 'common.yes'|trans }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>{{ 'common.no'|trans }}
+                                    </span>
+                                {% endif %}
+{% elseif property.type in ['datetime', 'datetime_immutable'] %}
+                                {# DateTime: Full format #}
+                                {{ treeFlow.{{ property.getter }}()|date('F j, Y, g:i A') }}
+{% elseif property.type == 'date' %}
+                                {# Date: Short format #}
+                                {{ treeFlow.{{ property.getter }}()|date('M d, Y') }}
+{% elseif property.type == 'time' %}
+                                {# Time: 24-hour format #}
+                                {{ treeFlow.{{ property.getter }}()|date('H:i') }}
+{% elseif property.type == 'uuid' %}
+                                {# UUID: toString #}
+                                <code class="text-muted">{{ treeFlow.{{ property.getter }}().toString }}</code>
+{% elseif property.type == 'text' %}
+                                {# Text: Multi-line with preserved formatting #}
+                                <div class="text-white" style="white-space: pre-wrap;">{{ treeFlow.{{ property.getter }}() ?? '-' }}</div>
+{% elseif property.type == 'json' %}
+                                {# JSON: Formatted code block #}
+                                <pre class="bg-dark text-white p-2 rounded" style="font-size: 0.85rem;"><code>{{ treeFlow.{{ property.getter }}()|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
+{% else %}
+                                {# Default: Direct output #}
+                                {{ treeFlow.{{ property.getter }}() ?? '-' }}
+{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
 {% endfor %}
-
-<div id="treeflow-canvas-card" class="luminai-card"
-     data-controller="treeflow-canvas"
-     data-treeflow-canvas-treeflow-id-value="{{ treeflow.id }}"
-     data-treeflow-canvas-steps-value="{{ stepsArray|json_encode|e('html_attr') }}"
-     data-treeflow-canvas-canvas-state-value="{{ treeflow.canvasViewState ? (treeflow.canvasViewState|json_encode|e('html_attr')) : '{}' }}"
-     style="margin: 0; padding: 0.5rem;">
-
-    <div class="d-flex justify-content-between align-items-center px-2" style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-        <div class="d-flex align-items-center gap-2">
-            <h2 class="text-gradient mb-0" style="font-size: 1rem;">{{ 'step.plural'|trans({}, 'treeflow') }} ({{ treeflow.steps|length }})</h2>
-            {% if is_granted('TREEFLOW_EDIT', treeflow) %}
-                {{ button_create(path('step_new', {treeflowId: treeflow.id}), 'step.add.step', 'treeflow', true, 'bi-plus-circle') }}
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Canvas View -->
-    <div data-treeflow-canvas-target="canvasContainer" style="margin-top: 0.5rem;">
-        <!-- Canvas Controls -->
-        <div class="canvas-controls">
-            <div class="btn-group-vertical" role="group">
-                <button type="button"
-                        class="btn btn-sm luminai-btn-primary"
-                        data-action="click->treeflow-canvas#toggleFullscreen"
-                        title="{{ 'button.fullscreen'|trans }}">
-                    <i class="bi bi-fullscreen"></i>
-                </button>
-                <button type="button"
-                        class="btn btn-sm luminai-btn-primary"
-                        data-action="click->treeflow-canvas#zoomIn"
-                        title="{{ 'button.zoom.in'|trans }}">
-                    <i class="bi bi-zoom-in"></i>
-                </button>
-                <button type="button"
-                        class="btn btn-sm luminai-btn-primary"
-                        data-action="click->treeflow-canvas#zoomOut"
-                        title="{{ 'button.zoom.out'|trans }}">
-                    <i class="bi bi-zoom-out"></i>
-                </button>
-                <button type="button"
-                        class="btn btn-sm luminai-btn-primary"
-                        data-action="click->treeflow-canvas#fitToScreen"
-                        title="{{ 'button.fit.to.screen'|trans }}">
-                    <i class="bi bi-arrows-angle-contract"></i>
-                </button>
             </div>
-            <button type="button"
-                    class="btn btn-sm luminai-btn-primary mt-2"
-                    data-action="click->treeflow-canvas#autoLayout"
-                    title="{{ 'button.auto.layout'|trans }}">
-                <i class="bi bi-diagram-3"></i>
-            </button>
         </div>
-
-        <div id="treeflow-canvas" data-treeflow-canvas-target="canvas"></div>
     </div>
-</div><!-- end card with controller -->
 
-
-{% block javascripts %}
-    {{ parent() }}
-
-    <style>
-        /* Canvas View Styles - Compact */
-        #treeflow-canvas {
-            width: 100%;
-            /* height set dynamically by JavaScript */
-            min-height: 250px;
-            background:
-                radial-gradient(circle, rgba(139, 92, 246, 0.15) 1px, transparent 1px),
-                radial-gradient(circle, rgba(139, 92, 246, 0.15) 1px, transparent 1px);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 6px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-
-        /* Ensure no scrolling - fit everything on screen */
-        body {
-            overflow: hidden !important;
-            height: 100vh;
-        }
-
-        main.container {
-            height: 100%;
-            overflow: hidden;
-        }
-
-        #treeflow-canvas-card {
-            margin: 0 !important;
-            margin-top: 20px !important;
-        }
-
-        /* Step Node on Canvas - Compact */
-        .treeflow-node {
-            position: absolute;
-            min-width: 220px;
-            max-width: 320px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(124, 58, 237, 0.9));
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            cursor: move;
-            transition: box-shadow 0.2s;
-            padding: 10px;
-            color: white;
-            user-select: none;
-        }
-
-        .treeflow-node:hover {
-            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.5);
-        }
-
-        /* Unreachable Step - Not connected to first step */
-        .treeflow-node.unreachable-step {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.9));
-            border: 2px solid rgba(239, 68, 68, 1);
-            box-shadow: 0 2px 12px rgba(239, 68, 68, 0.4);
-            animation: unreachable-pulse 2s ease-in-out infinite;
-        }
-
-        .treeflow-node.unreachable-step:hover {
-            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.6);
-            animation: none; /* Stop pulsing on hover */
-        }
-
-        @keyframes unreachable-pulse {
-            0%, 100% {
-                box-shadow: 0 2px 12px rgba(239, 68, 68, 0.4);
-            }
-            50% {
-                box-shadow: 0 4px 20px rgba(239, 68, 68, 0.7);
-            }
-        }
-
-        .treeflow-node-header {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 6px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .treeflow-node-title {
-            font-weight: bold;
-            font-size: 0.85rem;
-            flex-grow: 1;
-            line-height: 1.2;
-        }
-
-        .step-edit-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.8);
-            width: 22px;
-            height: 22px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            padding: 0;
-            flex-shrink: 0;
-        }
-
-        .step-edit-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
-        }
-
-        .step-edit-btn i {
-            font-size: 0.7rem;
-        }
-
-        .treeflow-node-badges {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            font-size: 0.65rem;
-            margin-bottom: 6px;
-        }
-
-        .treeflow-questions {
-            margin-bottom: 8px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .questions-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .question-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 6px;
-            padding: 4px 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-            font-size: 0.7rem;
-            line-height: 1.3;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            position: relative;
-        }
-
-        .question-item:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateX(2px);
-        }
-
-        .question-item:hover::after {
-            content: '\F4CB';
-            font-family: 'bootstrap-icons';
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            opacity: 0.5;
-            font-size: 0.7rem;
-            pointer-events: none;
-        }
-
-        .question-item i {
-            color: #60a5fa;
-            font-size: 0.9rem;
-            margin-top: 2px;
-            flex-shrink: 0;
-        }
-
-        .question-item span {
-            flex: 1;
-        }
-
-        .treeflow-node-body {
-            display: flex;
-            gap: 0;
-            align-items: stretch;
-        }
-
-        .treeflow-inputs,
-        .treeflow-outputs {
-            flex: 1;
-            min-width: 0;
-            padding: 0 6px;
-        }
-
-        .treeflow-inputs {
-            padding-left: 0;
-        }
-
-        .treeflow-outputs {
-            padding-right: 0;
-        }
-
-        .io-separator {
-            width: 1px;
-            background: linear-gradient(
-                to bottom,
-                transparent,
-                rgba(255, 255, 255, 0.2) 20%,
-                rgba(255, 255, 255, 0.2) 80%,
-                transparent
-            );
-            margin: 0 4px;
-            align-self: stretch;
-        }
-
-        .section-label {
-            font-size: 0.6rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            opacity: 0.7;
-            margin-bottom: 4px;
-            letter-spacing: 0.3px;
-        }
-
-        .section-label-add {
-            cursor: pointer;
-            padding: 2px 4px;
-            margin: 0 -4px 4px -4px;
-            border-radius: 3px;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .section-label-add:hover {
-            background: rgba(255, 255, 255, 0.1);
-            opacity: 1;
-        }
-
-        .section-label-add::after {
-            content: '+';
-            position: absolute;
-            right: 4px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #fff;
-            transition: opacity 0.2s;
-            line-height: 1;
-            pointer-events: none;
-        }
-
-        .section-label-add:hover::after {
-            opacity: 0.9;
-        }
-
-        .inputs-list,
-        .outputs-list {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .io-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 2px 4px;
-            margin: 0 -4px;
-            position: relative;
-            border-radius: 3px;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        .io-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .io-item:hover::after {
-            content: '\F4CB';
-            font-family: 'bootstrap-icons';
-            position: absolute;
-            right: 4px;
-            opacity: 0.5;
-            font-size: 0.6rem;
-            pointer-events: none;
-        }
-
-        .io-item.input-item:hover::after {
-            right: auto;
-            left: 4px;
-        }
-
-        .io-item.input-item {
-            justify-content: flex-start;
-        }
-
-        .io-item.input-item:hover {
-            transform: translateX(2px);
-        }
-
-        .io-item.output-item {
-            justify-content: flex-end;
-        }
-
-        .io-item.output-item:hover {
-            transform: translateX(-2px);
-        }
-
-        .io-label {
-            font-size: 0.65rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex: 1;
-            line-height: 1.2;
-        }
-
-        .io-item.input-item .connection-point {
-            position: relative;
-            left: -16px;
-            margin-right: -10px;
-        }
-
-        .io-item.output-item .connection-point {
-            position: relative;
-            right: -16px;
-            margin-left: -10px;
-        }
-
-        .empty-list {
-            font-size: 0.65rem;
-            opacity: 0.5;
-            font-style: italic;
-            padding: 4px 0;
-        }
-
-        /* Continuation lines (n8n-style) */
-        .continuation-line {
-            position: absolute;
-            stroke: #8b5cf6;
-            stroke-width: 1.5;
-            stroke-dasharray: 6, 3;
-            fill: none;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .continuation-add-button {
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            border: 1.5px solid #1a1a2e;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            z-index: 3;
-            box-shadow: 0 1px 4px rgba(139, 92, 246, 0.3);
-        }
-
-        .continuation-add-button:hover {
-            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
-            transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.5);
-        }
-
-        .continuation-add-button::before {
-            content: '+';
-            font-size: 14px;
-            font-weight: bold;
-            color: white;
-            line-height: 1;
-        }
-
-        /* Active view button */
-        .btn-group .btn.active {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            border-color: #8b5cf6;
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            #treeflow-canvas {
-                height: 70vh;
-                min-height: 400px;
-            }
-
-            .treeflow-node {
-                min-width: 240px;
-                max-width: 320px;
-            }
-
-            .treeflow-node-body {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .io-separator {
-                width: 100%;
-                height: 1px;
-                background: linear-gradient(
-                    to right,
-                    transparent,
-                    rgba(255, 255, 255, 0.2) 20%,
-                    rgba(255, 255, 255, 0.2) 80%,
-                    transparent
-                );
-                margin: 8px 0;
-            }
-
-            .treeflow-inputs,
-            .treeflow-outputs {
-                padding: 0;
-            }
-
-            .connection-point {
-                width: 18px;
-                height: 18px;
-            }
-
-            .question-item {
-                font-size: 0.75rem;
-            }
-        }
-
-        /* Connection Points - Compact */
-        .connection-point {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            cursor: crosshair;
-            transition: transform 0.2s, box-shadow 0.2s;
-            z-index: 10;
-            border: 1.5px solid;
-            flex-shrink: 0;
-        }
-
-        .connection-point:hover {
-            transform: scale(1.3);
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-        }
-
-        .connection-point.drag-target {
-            transform: scale(3);
-            box-shadow: 0 0 12px rgba(139, 92, 246, 0.8);
-            z-index: 100;
-        }
-
-        .output-point {
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-color: #065f46;
-        }
-
-        .input-point {
-            /* Background color set dynamically by JavaScript based on InputType */
-        }
-
-        /* Connection Lines - Phase 3 */
-        .connection-line {
-            fill: none;
-            stroke-width: 3;
-            stroke-linecap: round;
-            transition: stroke-width 0.2s;
-            pointer-events: stroke;
-            cursor: pointer;
-        }
-
-        .connection-line:hover {
-            stroke-width: 5;
-        }
-
-        /* Connection Tooltip - Phase 3 */
-        .connection-tooltip {
-            background: rgba(30, 41, 59, 0.98);
-            border: 1px solid rgba(139, 92, 246, 0.5);
-            border-radius: 8px;
-            padding: 12px;
-            color: white;
-            font-size: 0.875rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 10000;
-            max-width: 300px;
-            pointer-events: none;
-        }
-
-        .connection-tooltip .tooltip-header {
-            font-weight: bold;
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
-            color: #8b5cf6;
-        }
-
-        .connection-tooltip .tooltip-body > div {
-            margin-bottom: 4px;
-        }
-
-        .connection-tooltip .tooltip-body > div:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Connection Context Menu */
-        .connection-context-menu {
-            background: rgba(30, 41, 59, 0.98);
-            border: 1px solid rgba(139, 92, 246, 0.5);
-            border-radius: 8px;
-            padding: 4px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 10000;
-            min-width: 180px;
-        }
-
-        .context-menu-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            padding: 8px 12px;
-            border: none;
-            background: transparent;
-            color: white;
-            font-size: 0.875rem;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-
-        .context-menu-item:hover {
-            background: rgba(139, 92, 246, 0.2);
-        }
-
-        .context-menu-item.delete-btn {
-            color: #ef4444;
-        }
-
-        .context-menu-item.delete-btn:hover {
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .context-menu-item i {
-            font-size: 1rem;
-        }
-
-        /* Ghost Connection Line - Phase 4 */
-        .ghost-connection-line {
-            opacity: 0.7;
-            animation: ghost-pulse 1s ease-in-out infinite;
-        }
-
-        @keyframes ghost-pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 0.9; }
-        }
-
-        /* Input Point Highlight - Phase 4 */
-        .input-point.highlight {
-            transform: scale(1.5);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.8);
-            animation: highlight-pulse 0.5s ease-in-out infinite;
-        }
-
-        @keyframes highlight-pulse {
-            0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.8); }
-            50% { box-shadow: 0 0 25px rgba(139, 92, 246, 1); }
-        }
-
-        /* Node Highlight for Auto-Input Drop */
-        .treeflow-node.highlight-drop {
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
-            border: 2px solid #10b981;
-            animation: node-drop-pulse 0.5s ease-in-out infinite;
-        }
-
-        @keyframes node-drop-pulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.8); }
-            50% { box-shadow: 0 0 30px rgba(16, 185, 129, 1); }
-        }
-
-        /* Error Toast - Phase 4 */
-        .connection-error-toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(239, 68, 68, 0.95);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            font-size: 0.95rem;
-            max-width: 400px;
-            animation: toast-slide-in 0.3s ease-out;
-        }
-
-        .connection-error-toast.fade-out {
-            animation: toast-fade-out 0.3s ease-in;
-        }
-
-        @keyframes toast-slide-in {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes toast-fade-out {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
-
-        /* Connection Line Click Hint */
-        .connection-line {
-            cursor: pointer;
-        }
-
-        .connection-line:hover::after {
-            content: '✕';
-            position: absolute;
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .connection-line.selected {
-            stroke-width: 5;
-            filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.8));
-        }
-
-        /* Canvas Controls - Compact */
-        .canvas-controls {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .canvas-controls .btn {
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-        }
-
-        .canvas-controls .btn-group-vertical .btn {
-            min-width: 28px;
-            min-height: 28px;
-        }
-
-        /* Loading Overlay */
-        .canvas-loading {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            border-radius: 12px;
-        }
-
-        .canvas-loading .spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(139, 92, 246, 0.3);
-            border-top-color: #8b5cf6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
-{% endblock %}
-
+    {# Metadata Card #}
+    <div class="bento-item">
+        <div class="luminai-card ai-enhanced p-4 h-100">
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-clock-history me-2"></i>{{ 'entity.metadata'|trans }}
+            </h5>
+
+            <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-calendar-plus text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.created_at'|trans }}</div>
+                        <div class="text-white">{{ treeFlow.createdAt|date('F j, Y, g:i A') }}</div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-clock-history text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.updated_at'|trans }}</div>
+                        <div class="text-white">{{ treeFlow.updatedAt|date('F j, Y, g:i A') }}</div>
+                    </div>
+                </div>
+
+{% if true %}
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-building text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.organization'|trans }}</div>
+                        <div class="text-white">
+                            <a href="{{ path('organization_show', {id: treeFlow.organization.id}) }}"
+                               class="text-white text-decoration-none">
+                                {{ treeFlow.organization }}
+                                <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+{% endif %}
+
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-key text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.id'|trans }}</div>
+                        <div class="text-white">
+                            <code class="text-muted" style="font-size: 0.75rem;">{{ treeFlow.id.toString }}</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -55,6 +55,7 @@ parameters:
 
         # Template paths
         template_dir: 'templates'
+        template_genmax_dir: 'templates/genmax/twig'
 
         # API Platform config
         api_platform_config_dir: 'config/api_platform'
@@ -126,6 +127,13 @@ parameters:
 
         # State Provider template
         state_provider: 'genmax/php/state_provider.php.twig'
+
+        # Twig View templates (Phase 4)
+        template_index_generated: 'genmax/twig/index_generated.html.twig'
+        template_show_generated: 'genmax/twig/show_generated.html.twig'
+        template_form_generated: 'genmax/twig/form_generated.html.twig'
+        template_new_generated: 'genmax/twig/new_generated.html.twig'
+        template_edit_generated: 'genmax/twig/edit_generated.html.twig'
 
     # ====================================
     # GENMAX GENERATION OPTIONS

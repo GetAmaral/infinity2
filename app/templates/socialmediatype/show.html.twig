@@ -1,61 +1,166 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'SocialMediaType'|trans }} - {{ socialmediatype }}{% endblock %}
+{% block title %}{{ socialMediaType }} - {{ 'socialmediatype.singular'|trans({}, 'socialmediatype') }} - {{ 'page.luminai.suffix'|trans }}{% endblock %}
 
 {% block body %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h2>
-                            <i class="bi-circle me-2"></i>
-                            {{ 'SocialMediaType'|trans }} Details
-                        </h2>
-                        <div class="btn-group">
-                            <a href="{{ path('social_media_type_edit', {id: socialmediatype.id}) }}"
-                               class="btn btn-warning">
-                                <i class="bi bi-pencil me-1"></i>
-                                {{ 'action.edit'|trans }}
-                            </a>
-                            <a href="{{ path('social_media_type_index') }}"
-                               class="btn btn-secondary">
-                                <i class="bi bi-arrow-left me-1"></i>
-                                {{ 'action.back'|trans }}
+{# Navigation #}
+<div class="mb-4 d-flex gap-2 align-items-center">
+    {{ button_back(path('socialmediatype_index'), 'socialmediatype.back.to.list', 'socialmediatype') }}
+{% if true %}
+    {% if is_granted(constant('App\\Security\\Voter\\SocialMediaTypeVoter::EDIT'), socialMediaType) %}
+        {{ button_edit(socialMediaType.id, path('socialmediatype_edit', {id: socialMediaType.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+    {% endif %}
+{% else %}
+    {{ button_edit(socialMediaType.id, path('socialmediatype_edit', {id: socialMediaType.id}), 'button.edit', 'messages', null, null, null, '', null, null, false) }}
+{% endif %}
+</div>
+
+{# Entity Header #}
+<div class="ai-dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center">
+            <div class="position-relative me-4">
+                <div class="p-3 rounded-3" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <i class="bi bi-share-fill text-white fs-2"></i>
+                </div>
+                <div class="position-absolute top-0 end-0 translate-middle">
+                    <span class="badge rounded-pill" style="background: var(--luminai-ai-gradient); font-size: 0.7rem;">{{ 'ui.ai'|trans }}</span>
+                </div>
+            </div>
+            <div>
+                <h1 class="text-gradient mb-2">{{ socialMediaType }}</h1>
+                <p class="text-secondary mb-0 fs-5">{{ 'socialmediatype.singular'|trans({}, 'socialmediatype') }}</p>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="ai-status-indicator">
+                <i class="bi bi-share-fill"></i> {{ 'socialmediatype.section'|trans({}, 'socialmediatype') }}
+            </div>
+            <div class="real-time-badge">
+                {{ 'ui.active'|trans }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Entity Details Bento Grid #}
+<div class="bento-grid">
+    {# Main Information Card #}
+    <div class="bento-item large">
+        <div class="luminai-card ai-enhanced p-4 h-100">
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-info-circle me-2"></i>{{ 'entity.details'|trans }}
+            </h5>
+
+            <div class="row g-3">
+{% for property in showProperties %}
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-{{ property.icon|default('circle') }} text-neon fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-1">{{ property.label|trans }}</div>
+                            <div class="text-white">
+{% if property.isRelationship %}
+                                {# Relationship: Link with toString #}
+                                {% if socialMediaType.{{ property.getter }}() %}
+                                    <a href="{{ path('{{ property.relationshipRoute }}', {id: socialMediaType.{{ property.getter }}().id}) }}"
+                                       class="text-white text-decoration-none">
+                                        {{ socialMediaType.{{ property.getter }}() }}
+                                        <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+{% elseif property.type == 'boolean' %}
+                                {# Boolean: Badge #}
+                                {% if socialMediaType.{{ property.getter }}() %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>{{ 'common.yes'|trans }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>{{ 'common.no'|trans }}
+                                    </span>
+                                {% endif %}
+{% elseif property.type in ['datetime', 'datetime_immutable'] %}
+                                {# DateTime: Full format #}
+                                {{ socialMediaType.{{ property.getter }}()|date('F j, Y, g:i A') }}
+{% elseif property.type == 'date' %}
+                                {# Date: Short format #}
+                                {{ socialMediaType.{{ property.getter }}()|date('M d, Y') }}
+{% elseif property.type == 'time' %}
+                                {# Time: 24-hour format #}
+                                {{ socialMediaType.{{ property.getter }}()|date('H:i') }}
+{% elseif property.type == 'uuid' %}
+                                {# UUID: toString #}
+                                <code class="text-muted">{{ socialMediaType.{{ property.getter }}().toString }}</code>
+{% elseif property.type == 'text' %}
+                                {# Text: Multi-line with preserved formatting #}
+                                <div class="text-white" style="white-space: pre-wrap;">{{ socialMediaType.{{ property.getter }}() ?? '-' }}</div>
+{% elseif property.type == 'json' %}
+                                {# JSON: Formatted code block #}
+                                <pre class="bg-dark text-white p-2 rounded" style="font-size: 0.85rem;"><code>{{ socialMediaType.{{ property.getter }}()|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
+{% else %}
+                                {# Default: Direct output #}
+                                {{ socialMediaType.{{ property.getter }}() ?? '-' }}
+{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {# Metadata Card #}
+    <div class="bento-item">
+        <div class="luminai-card ai-enhanced p-4 h-100">
+            <h5 class="text-neon mb-4">
+                <i class="bi bi-clock-history me-2"></i>{{ 'entity.metadata'|trans }}
+            </h5>
+
+            <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-calendar-plus text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.created_at'|trans }}</div>
+                        <div class="text-white">{{ socialMediaType.createdAt|date('F j, Y, g:i A') }}</div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-clock-history text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.updated_at'|trans }}</div>
+                        <div class="text-white">{{ socialMediaType.updatedAt|date('F j, Y, g:i A') }}</div>
+                    </div>
+                </div>
+
+{% if false %}
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-building text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.organization'|trans }}</div>
+                        <div class="text-white">
+                            <a href="{{ path('organization_show', {id: socialMediaType.organization.id}) }}"
+                               class="text-white text-decoration-none">
+                                {{ socialMediaType.organization }}
+                                <i class="bi bi-arrow-right ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <dl class="row">
+{% endif %}
 
-                        <dt class="col-sm-3">{{ 'Name'|trans }}</dt>
-                        <dd class="col-sm-9">{{ socialmediatype.name }}</dd>
-
-                        <dt class="col-sm-3">{{ 'Url'|trans }}</dt>
-                        <dd class="col-sm-9">{{ socialmediatype.url }}</dd>
-
-                        <dt class="col-sm-3">{{ 'IconUrl'|trans }}</dt>
-                        <dd class="col-sm-9">{{ socialmediatype.iconUrl }}</dd>
-
-                        <dt class="col-sm-3">{{ 'field.created_at'|trans }}</dt>
-                        <dd class="col-sm-9">{{ socialmediatype.createdAt|date('Y-m-d H:i:s') }}</dd>
-
-                        <dt class="col-sm-3">{{ 'field.updated_at'|trans }}</dt>
-                        <dd class="col-sm-9">{{ socialmediatype.updatedAt|date('Y-m-d H:i:s') }}</dd>
-                    </dl>
-                </div>
-                <div class="card-footer">
-                    <form method="post"
-                          action="{{ path('social_media_type_delete', {id: socialmediatype.id}) }}"
-                          onsubmit="return confirm('{{ 'action.confirm_delete'|trans }}');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ socialmediatype.id) }}">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-trash me-1"></i>
-                            {{ 'action.delete'|trans }}
-                        </button>
-                    </form>
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-key text-neon fs-5"></i>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small mb-1">{{ 'field.id'|trans }}</div>
+                        <div class="text-white">
+                            <code class="text-muted" style="font-size: 0.75rem;">{{ socialMediaType.id.toString }}</code>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

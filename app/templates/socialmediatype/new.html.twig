@@ -1,0 +1,5 @@
+{% set socialMediaType = socialMediaType ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'socialMediaType': socialMediaType,
+    'form': form
+} %}

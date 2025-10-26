@@ -1,0 +1,5 @@
+{% set stepConnection = stepConnection ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'stepConnection': stepConnection,
+    'form': form
+} %}

@@ -1,0 +1,5 @@
+{% set productLine = productLine ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'productLine': productLine,
+    'form': form
+} %}

@@ -1,0 +1,5 @@
+{% set pipelineStage = pipelineStage ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'pipelineStage': pipelineStage,
+    'form': form
+} %}

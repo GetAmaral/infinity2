@@ -1,0 +1,5 @@
+{% set auditLog = auditLog ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'auditLog': auditLog,
+    'form': form
+} %}

@@ -1,0 +1,5 @@
+{% set holiday = holiday ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'holiday': holiday,
+    'form': form
+} %}

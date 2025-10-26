@@ -2,9 +2,9 @@
 
 {% block title %}
     {% if notification.id %}
-        {{ 'action.edit'|trans }} {{ 'Notification'|trans }}
+        {{ 'action.edit'|trans }} {{ 'notification.singular'|trans({}, 'notification') }}
     {% else %}
-        {{ 'action.create'|trans }} {{ 'Notification'|trans }}
+        {{ 'action.create'|trans }} {{ 'notification.singular'|trans({}, 'notification') }}
     {% endif %}
 {% endblock %}
 
@@ -12,60 +12,46 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
                     <h2>
                         {% if notification.id %}
-                            <i class="bi bi-pencil me-2"></i>
-                            {{ 'action.edit'|trans }} {{ 'Notification'|trans }}
+                            <i class="bi bi-pencil me-2"></i>{{ 'action.edit'|trans }} {{ 'notification.singular'|trans({}, 'notification') }}
                         {% else %}
-                            <i class="bi bi-plus-circle me-2"></i>
-                            {{ 'action.create'|trans }} {{ 'Notification'|trans }}
+                            <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'notification.singular'|trans({}, 'notification') }}
                         {% endif %}
                     </h2>
                 </div>
-                <div class="card-body">
-                    {{ form_start(form, {'attr': {'data-turbo': 'true'}}) }}
 
-                    {{ form_errors(form) }}
+                {# CRITICAL: Add form-navigation controller for Enter-as-Tab behavior #}
+                {{ form_start(form, {
+                    'attr': {
+                        'data-turbo': 'true',
+                        'data-controller': 'form-navigation'
+                    }
+                }) }}
 
+                {{ form_errors(form) }}
 
-                    <div class="mb-3">
-                        {{ form_label(form.sentAt) }}
-                        {{ form_widget(form.sentAt) }}
-                        {{ form_errors(form.sentAt) }}
+                {# Render all form fields automatically #}
+                {% for child in form.children %}
+                    {% if child.vars.name not in ['_token'] %}
+                        <div class="mb-3">
+                            {{ form_row(child) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.notificationStatus) }}
-                        {{ form_widget(form.notificationStatus) }}
-                        {{ form_errors(form.notificationStatus) }}
-
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.message) }}
-                        {{ form_widget(form.message) }}
-                        {{ form_errors(form.message) }}
-
-                    </div>
-
-
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ path('notification_index') }}"
-                           class="btn btn-secondary">
-                            <i class="bi bi-arrow-left me-1"></i>
-                            {{ 'action.back'|trans }}
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle me-1"></i>
-                            {{ 'action.save'|trans }}
-                        </button>
-                    </div>
-
-                    {{ form_end(form) }}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('notification_index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>{{ 'action.back'|trans }}
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>{{ 'action.save'|trans }}
+                    </button>
                 </div>
+
+                {{ form_end(form) }}
             </div>
         </div>
     </div>

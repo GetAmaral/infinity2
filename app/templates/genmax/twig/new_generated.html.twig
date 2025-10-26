@@ -1,0 +1,5 @@
+{% set {{ entityVariable }} = {{ entityVariable }} ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    '{{ entityVariable }}': {{ entityVariable }},
+    'form': form
+} %}

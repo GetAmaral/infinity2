@@ -1,0 +1,5 @@
+{% set dealType = dealType ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'dealType': dealType,
+    'form': form
+} %}
