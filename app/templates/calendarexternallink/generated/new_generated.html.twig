@@ -1,0 +1,5 @@
+{% set calendarExternalLink = calendarExternalLink ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'calendarExternalLink': calendarExternalLink,
+    'form': form
+} %}

@@ -1,0 +1,5 @@
+{% set reminder = reminder ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'reminder': reminder,
+    'form': form
+} %}

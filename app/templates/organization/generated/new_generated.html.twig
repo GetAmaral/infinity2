@@ -1,0 +1,5 @@
+{% set organization = organization ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'organization': organization,
+    'form': form
+} %}

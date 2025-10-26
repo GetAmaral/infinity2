@@ -1,0 +1,5 @@
+{% set agentType = agentType ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'agentType': agentType,
+    'form': form
+} %}

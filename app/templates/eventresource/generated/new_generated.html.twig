@@ -1,0 +1,5 @@
+{% set eventResource = eventResource ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'eventResource': eventResource,
+    'form': form
+} %}

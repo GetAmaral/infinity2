@@ -1,0 +1,5 @@
+{% set campaign = campaign ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'campaign': campaign,
+    'form': form
+} %}

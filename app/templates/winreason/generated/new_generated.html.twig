@@ -1,0 +1,5 @@
+{% set winReason = winReason ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'winReason': winReason,
+    'form': form
+} %}

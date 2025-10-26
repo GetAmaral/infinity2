@@ -1,0 +1,5 @@
+{% set dealCategory = dealCategory ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'dealCategory': dealCategory,
+    'form': form
+} %}

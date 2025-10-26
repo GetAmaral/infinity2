@@ -1,0 +1,171 @@
+{% extends '_base_entity_list.html.twig' %}
+
+{#
+ # Data-Bind Template System for LeadSource
+ # ============================================
+ # This template extends the base entity list system with Grid/List/Table views
+ # and uses data-bind for client-side rendering via the view-toggle controller.
+ #
+ # Example API response structure:
+ # {
+ #   "id": "uuid-here",
+{% for property in listProperties|slice(0, 5) %}
+ #   "{{ property.name }}": "{{ property.type == 'string' ? 'Example Value' : (property.type == 'boolean' ? 'true' : (property.isRelationship ? '{"id": "uuid", "display": "Related Entity"}' : 'value')) }}",
+{% endfor %}
+ #   "createdAt": "2025-01-01T00:00:00+00:00",
+ #   "createdAtFormatted": "Jan 01, 2025",
+ #   "updatedAtFormatted": "Jan 15, 2025"
+ # }
+#}
+
+{# Customize page icon #}
+{% block page_icon %}<i class="bi bi-funnel text-neon fs-2 me-3"></i>{% endblock %}
+
+{# Grid View Template #}
+{% block grid_view_item_template %}
+    <div class="col">
+        <div class="luminai-card h-100 p-4" style="cursor: pointer;"
+             onclick="window.location.href='/leadsource/' + this.closest('[data-entity-id]').dataset.entityId">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div onclick="event.stopPropagation();" class="dropdown card-dropdown me-3">
+                    {{ button_dropdown_toggle() }}
+                    <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--luminai-dark-surface); z-index: 1060;">
+                        <li><a class="dropdown-item" onclick="window.location.href='/leadsource/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}</a></li>
+                        <li>{{ button_edit('{entityId}', '/leadsource/{entityId}/edit', null, 'messages', label='button.edit') }}</li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>{{ button_delete('{entityId}', '/leadsource/{entityId}/delete', 'confirm.delete.entity', label='button.delete') }}</li>
+                    </ul>
+                </div>
+                <div class="d-flex align-items-center flex-grow-1">
+                    <div class="rounded-3 d-flex align-items-center justify-content-center me-3"
+                         style="width: 48px; height: 48px; background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="bi bi-funnel text-white fs-5"></i>
+                    </div>
+                    <div class="flex-grow-1">
+{% for property in listProperties|slice(0, 3) %}
+{% if loop.first %}
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <h5 class="mb-0 text-white" data-bind="{{ property.name }}" data-bind-text></h5>
+{% if property.type == 'boolean' %}
+                            <span class="badge bg-success" data-bind-if="{{ property.name }}">
+                                <i class="bi bi-check-circle-fill"></i>
+                            </span>
+                            <span class="badge bg-secondary" data-bind-if="!{{ property.name }}">
+                                <i class="bi bi-x-circle"></i>
+                            </span>
+{% endif %}
+                        </div>
+{% else %}
+                        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+{% if property.isRelationship %}
+                            <i class="bi bi-{{ property.icon }} me-1"></i><span data-bind="{{ property.name }}.display" data-bind-text></span>
+{% else %}
+                            <i class="bi bi-{{ property.icon }} me-1"></i><span data-bind="{{ property.name }}" data-bind-text></span>
+{% endif %}
+                        </p>
+{% endif %}
+{% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="mt-auto pt-2 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        <i class="bi bi-calendar-plus me-1"></i><span data-bind="createdAtFormatted" data-bind-text></span>
+                    </small>
+                    <small class="text-muted" data-bind-if="updatedAtFormatted">
+                        <i class="bi bi-clock-history me-1"></i><span data-bind="updatedAtFormatted" data-bind-text></span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{# List View Template #}
+{% block list_view_item_template %}
+    <div class="luminai-card mb-3 p-3">
+        <div class="d-flex align-items-center">
+            <div onclick="event.stopPropagation();" class="dropdown card-dropdown me-3">
+                {{ button_dropdown_toggle() }}
+                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--luminai-dark-surface); z-index: 1060;">
+                    <li><a class="dropdown-item" onclick="window.location.href='/leadsource/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}</a></li>
+                    <li>{{ button_edit('{entityId}', '/leadsource/{entityId}/edit', null, 'messages') }}</li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>{{ button_delete('{entityId}', '/leadsource/{entityId}/delete', 'confirm.delete.entity') }}</li>
+                </ul>
+            </div>
+            <div class="d-flex align-items-center flex-grow-1" style="cursor: pointer;"
+                 onclick="window.location.href='/leadsource/' + this.closest('[data-entity-id]').dataset.entityId">
+                <div class="rounded-3 d-flex align-items-center justify-content-center me-3"
+                     style="width: 40px; height: 40px; background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <i class="bi bi-funnel text-white"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+{% for property in listProperties|slice(0, 4) %}
+{% if loop.first %}
+                        <h6 class="mb-0 text-white" data-bind="{{ property.name }}" data-bind-text></h6>
+{% elseif property.isRelationship %}
+                        <span class="badge bg-info">
+                            <i class="bi bi-{{ property.icon }} me-1"></i><span data-bind="{{ property.name }}.display" data-bind-text></span>
+                        </span>
+{% elseif property.type == 'boolean' %}
+                        <span class="badge bg-success" data-bind-if="{{ property.name }}"><i class="bi bi-check-circle-fill"></i></span>
+                        <span class="badge bg-secondary" data-bind-if="!{{ property.name }}"><i class="bi bi-x-circle"></i></span>
+{% else %}
+                        <span class="text-muted" style="font-size: 0.85rem;">
+                            <span data-bind="{{ property.name }}" data-bind-text></span>
+                        </span>
+{% endif %}
+{% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{# Table Headers #}
+{% block table_headers %}
+    <th style="width: 60px;">{{ 'common.label.actions'|trans }}</th>
+{% for property in listProperties %}
+    <th{% if property.sortable %} data-sort-field="{{ property.name }}"{% endif %}{% if property.type == 'boolean' %} data-field-type="boolean"{% endif %}{% if property.type in ['datetime', 'datetime_immutable', 'date'] %} data-field-type="date"{% endif %}>
+        {{ property.label|trans }}
+    </th>
+{% endfor %}
+{% endblock %}
+
+{# Table Row Template #}
+{% block table_view_row_template %}
+    <tr style="cursor: pointer;"
+        onclick="window.location.href='/leadsource/' + this.closest('[data-entity-id]').dataset.entityId">
+        <td onclick="event.stopPropagation();">
+            <div class="dropdown card-dropdown">
+                {{ button_dropdown_toggle() }}
+                <ul class="dropdown-menu dropdown-menu-dark" style="background: var(--luminai-dark-surface); z-index: 1060;">
+                    <li><a class="dropdown-item" onclick="window.location.href='/leadsource/'+this.closest('[data-entity-id]').dataset.entityId"><i class="bi bi-eye me-2"></i>{{ 'common.action.view.details'|trans }}</a></li>
+                    <li>{{ button_edit('{entityId}', '/leadsource/{entityId}/edit', null, 'messages') }}</li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>{{ button_delete('{entityId}', '/leadsource/{entityId}/delete', 'confirm.delete.entity') }}</li>
+                </ul>
+            </div>
+        </td>
+{% for property in listProperties %}
+        <td>
+{% if property.isRelationship %}
+            <span data-bind="{{ property.name }}.display" data-bind-text></span>
+{% elseif property.type == 'boolean' %}
+            <span class="badge bg-success" data-bind-if="{{ property.name }}">
+                <i class="bi bi-check-circle me-1"></i>{{ 'common.yes'|trans }}
+            </span>
+            <span class="badge bg-secondary" data-bind-if="!{{ property.name }}">
+                <i class="bi bi-x-circle me-1"></i>{{ 'common.no'|trans }}
+            </span>
+{% else %}
+            <span data-bind="{{ property.name }}" data-bind-text></span>
+{% endif %}
+        </td>
+{% endfor %}
+    </tr>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% set eventAttendee = eventAttendee ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'eventAttendee': eventAttendee,
+    'form': form
+} %}

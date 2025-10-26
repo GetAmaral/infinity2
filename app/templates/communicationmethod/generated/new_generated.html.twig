@@ -1,0 +1,5 @@
+{% set communicationMethod = communicationMethod ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'communicationMethod': communicationMethod,
+    'form': form
+} %}

@@ -1,0 +1,5 @@
+{% set profileTemplate = profileTemplate ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'profileTemplate': profileTemplate,
+    'form': form
+} %}

@@ -1,0 +1,5 @@
+{% set calendarType = calendarType ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'calendarType': calendarType,
+    'form': form
+} %}

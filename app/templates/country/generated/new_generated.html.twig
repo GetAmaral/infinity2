@@ -1,0 +1,5 @@
+{% set country = country ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'country': country,
+    'form': form
+} %}

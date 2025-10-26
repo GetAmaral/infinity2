@@ -1,0 +1,5 @@
+{% set notificationType = notificationType ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'notificationType': notificationType,
+    'form': form
+} %}

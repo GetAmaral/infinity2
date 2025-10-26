@@ -1,0 +1,5 @@
+{% set talkType = talkType ?? null %}
+{% include 'genmax/twig/form_generated.html.twig' with {
+    'talkType': talkType,
+    'form': form
+} %}
