@@ -262,6 +262,23 @@ class ControllerGenerator
     /**
      * Get serialization logic for a property
      *
+     * IMPORTANT: Enum-Backed Properties
+     * ----------------------------------
+     * Properties with PHP enum backing types (like InputType) are stored as STRINGS
+     * in the database via Doctrine. Generated getters return strings directly, not enum objects.
+     *
+     * Example:
+     *   - Database column: type_prop VARCHAR - stores "fully_completed"
+     *   - Entity property: protected string $type = 'ANY'
+     *   - Getter: getType(): string - returns "fully_completed" (NOT InputType enum object)
+     *
+     * This means:
+     *   ✅ CORRECT: $entity->getType()          // Returns string: "fully_completed"
+     *   ❌ WRONG:   $entity->getType()->value   // Error: "Attempt to read property 'value' on string"
+     *
+     * If business logic needs the enum object:
+     *   $enumObj = InputType::from($entity->getType())
+     *
      * Note: Relationships are handled directly in the template using entity __toString()
      */
     protected function getSerializationLogic(GeneratorProperty $property): string
@@ -285,6 +302,12 @@ class ControllerGenerator
 
         // Boolean - direct access
         if ($type === 'boolean') {
+            return "";
+        }
+
+        // String types (including enum-backed strings) - direct access
+        // Note: Even if backed by an enum, getters return string values directly
+        if ($type === 'string') {
             return "";
         }
 

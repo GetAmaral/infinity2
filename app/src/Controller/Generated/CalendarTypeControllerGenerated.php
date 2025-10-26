@@ -60,6 +60,17 @@ abstract class CalendarTypeControllerGenerated extends BaseApiController
 
     /**
      * Convert entity to array for API responses
+     *
+     * ⚠️ IMPORTANT: Enum Properties Stored as Strings
+     * -------------------------------------------------
+     * Properties with enum-backed types (like InputType) are stored as STRINGS
+     * in the database and getters return strings directly, NOT enum objects.
+     *
+     * ❌ WRONG:   $entity->getType()->value   (Error: "Attempt to read property 'value' on string")
+     * ✅ CORRECT: $entity->getType()          (Already a string - 'fully_completed')
+     *
+     * If you need the enum object for business logic, use:
+     *    InputType::from($entity->getType())
      */
     protected function entityToArray(object $entity): array
     {

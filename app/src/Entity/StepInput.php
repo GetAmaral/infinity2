@@ -54,6 +54,6 @@ class StepInput extends StepInputGenerated
      */
     public function __toString(): string
     {
-        return $this->name . ' [' . $this->getType()->value . ']';
+        return $this->name . ' [' . $this->getType() . ']';
     }
 }

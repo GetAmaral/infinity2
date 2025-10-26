@@ -12,7 +12,7 @@ use App\Form\Generated\LeadSourceTypeGenerated;
  * This class extends the generated base and is SAFE TO EDIT.
  * Add custom form fields, transformers, and event listeners here.
  *
- * @generated once by Luminai Code Generator
+ * @generated once by Genmax
  */
 class LeadSourceType extends LeadSourceTypeGenerated
 {
@@ -28,5 +28,8 @@ class LeadSourceType extends LeadSourceTypeGenerated
     //         'label' => 'Custom Field',
     //         'required' => false,
     //     ]);
+    //
+    //     // Or modify existing field
+    //     $builder->get('existingField')->setRequired(false);
     // }
 }

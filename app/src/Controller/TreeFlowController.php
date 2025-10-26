@@ -349,7 +349,7 @@ final class TreeFlowController extends BaseApiController
                             'id' => $in->getId()?->toString(),
                             'name' => $in->getName(),
                             'slug' => $in->getSlug(),
-                            'type' => $in->getType()->value,
+                            'type' => $in->getType(),
                             'prompt' => $in->getPrompt(),
                         ];
                     }, $step->getInputs()->toArray()),

@@ -25,6 +25,8 @@ abstract class EventResourceBookingVoterGenerated extends Voter
     ) {}
 
     // Permission constants
+    public const LIST = 'EVENT_RESOURCE_BOOKING_LIST';
+    public const CREATE = 'EVENT_RESOURCE_BOOKING_CREATE';
     public const VIEW = 'EVENT_RESOURCE_BOOKING_VIEW';
     public const EDIT = 'EVENT_RESOURCE_BOOKING_EDIT';
     public const DELETE = 'EVENT_RESOURCE_BOOKING_DELETE';
@@ -42,6 +44,8 @@ abstract class EventResourceBookingVoterGenerated extends Voter
     {
         // Check if this is a supported permission
         if (!in_array($attribute, [
+            self::LIST,
+            self::CREATE,
             self::VIEW,
             self::EDIT,
             self::DELETE,
@@ -51,6 +55,8 @@ abstract class EventResourceBookingVoterGenerated extends Voter
 
         // For class-based permissions (LIST, CREATE), subject can be null
         if (in_array($attribute, [
+            self::LIST,
+            self::CREATE,
         ], true)) {
             return true;
         }
@@ -72,11 +78,41 @@ abstract class EventResourceBookingVoterGenerated extends Voter
         $eventResourceBooking = $subject;
 
         return match ($attribute) {
+            self::LIST => $this->canLIST($user),
+            self::CREATE => $this->canCREATE($user),
             self::VIEW => $this->canVIEW($eventResourceBooking, $user),
             self::EDIT => $this->canEDIT($eventResourceBooking, $user),
             self::DELETE => $this->canDELETE($eventResourceBooking, $user),
             default => false,
         };
+    }
+
+    /**
+     * Check if user can list EventResourceBooking     */
+    protected function canLIST(User $user): bool
+    {
+        // ADMIN and SUPER_ADMIN can do anything
+        if ($this->hasRole($user, 'ROLE_ADMIN')
+            || $this->hasRole($user, 'ROLE_SUPER_ADMIN')) {
+            return true;
+        }
+
+        // ORGANIZATION_ADMIN can list
+        return $this->hasRole($user, 'ROLE_ORGANIZATION_ADMIN');
+    }
+
+    /**
+     * Check if user can create EventResourceBooking     */
+    protected function canCREATE(User $user): bool
+    {
+        // ADMIN and SUPER_ADMIN can do anything
+        if ($this->hasRole($user, 'ROLE_ADMIN')
+            || $this->hasRole($user, 'ROLE_SUPER_ADMIN')) {
+            return true;
+        }
+
+        // ORGANIZATION_ADMIN can create
+        return $this->hasRole($user, 'ROLE_ORGANIZATION_ADMIN');
     }
 
     /**

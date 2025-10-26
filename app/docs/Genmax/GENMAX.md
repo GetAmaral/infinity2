@@ -694,6 +694,94 @@ final class InvoiceVoter extends InvoiceVoterGenerated
 - Use global ROLE_ADMIN security (use operation-level instead)
 - Forget to set validation rules
 
+### Enum Properties (String-Backed Enums)
+
+⚠️ **CRITICAL: Understanding Enum Storage**
+
+Genmax stores PHP enum-backed properties as **plain strings** in the database and entity properties:
+
+**Example:** `InputType` enum property
+```php
+// PHP Enum Definition
+enum InputType: string
+{
+    case FULLY_COMPLETED = 'fully_completed';
+    case ANY = 'any';
+}
+
+// Database Storage
+type_prop VARCHAR - stores "fully_completed" (string value)
+
+// Generated Entity Property
+protected string $type = 'ANY';  // String, NOT InputType enum
+
+// Generated Getter
+public function getType(): string  // Returns string, NOT InputType
+{
+    return $this->type;  // "fully_completed" string
+}
+```
+
+**In Controllers and Serialization:**
+
+✅ **CORRECT:**
+```php
+'type' => $entity->getType()  // Returns "fully_completed" (string)
+```
+
+❌ **WRONG:**
+```php
+'type' => $entity->getType()->value
+// ERROR: "Attempt to read property 'value' on string"
+// getType() already returns a string, not an enum object!
+```
+
+**When You Need the Enum Object:**
+
+If business logic requires the actual enum (for match expressions, methods, etc.):
+
+```php
+// Convert string to enum
+$typeEnum = InputType::from($entity->getType());
+
+// Now you can use enum features
+match ($typeEnum) {
+    InputType::FULLY_COMPLETED => '...',
+    InputType::ANY => '...',
+};
+
+// Or use enum methods
+$label = $typeEnum->getLabel();
+```
+
+**Why This Design?**
+
+1. **Database Portability**: Strings work across all database systems
+2. **Validation Flexibility**: Easy to validate with constraints
+3. **API Simplicity**: JSON-friendly (enums serialize to strings automatically)
+4. **Migration Safety**: Changing enum cases doesn't break existing data
+
+**Custom entityToArray Override:**
+
+When overriding `entityToArray()` with deep nested serialization:
+
+```php
+protected function entityToArray(object $entity): array
+{
+    return [
+        // ✅ CORRECT: getType() returns string directly
+        'type' => $input->getType(),
+
+        // ❌ WRONG: Don't add ->value
+        'type' => $input->getType()->value,  // ERROR!
+    ];
+}
+```
+
+**Generated Controllers:**
+
+Genmax-generated controllers handle this correctly. The issue only appears when manually writing deep nested serialization or custom array conversions.
+
 ### Validation
 
 ✅ **DO:**

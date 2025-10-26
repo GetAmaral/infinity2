@@ -1383,3 +1383,154 @@ main {
     background: linear-gradient(90deg, #5B21B6 0%, #9333EA 100%);
     box-shadow: 0 0 10px rgba(91, 33, 182, 0.5);
 }
+
+/* ==================================================================
+   GENMAX FORM STYLES - Modern Luminai Form Theme
+   ================================================================== */
+
+/* Form group modern */
+.form-group-modern {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+/* Form label modern */
+.form-label-modern {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--luminai-text-primary);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-label-modern.required::after {
+    content: ' *';
+    color: #ef4444;
+}
+
+/* Form input modern */
+.form-input-modern {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--luminai-text-primary);
+    background-color: var(--luminai-input-bg);
+    border: 1px solid var(--luminai-border-color);
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.form-input-modern:focus {
+    border-color: var(--luminai-primary);
+    outline: 0;
+    background-color: var(--luminai-input-focus-bg);
+    box-shadow: 0 0 0 0.2rem rgba(109, 40, 217, 0.25);
+}
+
+.form-input-modern.input-error {
+    border-color: #ef4444;
+}
+
+.form-input-modern::placeholder {
+    color: var(--luminai-text-muted);
+    opacity: 0.6;
+}
+
+/* Form errors */
+.form-errors {
+    margin-top: 0.25rem;
+}
+
+.form-errors li {
+    font-size: 0.875rem;
+}
+
+/* Form check (checkboxes and radios) */
+.form-check-input {
+    background-color: var(--luminai-input-bg);
+    border-color: var(--luminai-border-color);
+}
+
+.form-check-input:checked {
+    background-color: var(--luminai-primary);
+    border-color: var(--luminai-primary);
+}
+
+.form-check-input:focus {
+    border-color: var(--luminai-primary);
+    box-shadow: 0 0 0 0.2rem rgba(109, 40, 217, 0.25);
+}
+
+.form-check-label {
+    color: var(--luminai-text-primary);
+}
+
+/* Select styling */
+select.form-input-modern {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    padding-right: 2.5rem;
+}
+
+/* Textarea specific */
+textarea.form-input-modern {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Form has-error state */
+.form-group-modern.has-error .form-input-modern {
+    border-color: #ef4444;
+}
+
+.form-group-modern.has-error .form-label-modern {
+    color: #ef4444;
+}
+
+/* Disabled state */
+.form-input-modern:disabled {
+    background-color: rgba(var(--luminai-dark-surface), 0.5);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Light theme overrides */
+[data-theme="light"] .form-label-modern {
+    color: #1f2937;
+}
+
+[data-theme="light"] .form-input-modern {
+    color: #1f2937;
+    background-color: #ffffff;
+    border-color: #d1d5db;
+}
+
+[data-theme="light"] .form-input-modern:focus {
+    background-color: #f9fafb;
+    border-color: #6D28D9;
+    box-shadow: 0 0 0 0.2rem rgba(109, 40, 217, 0.1);
+}
+
+[data-theme="light"] .form-input-modern::placeholder {
+    color: #6b7280;
+}
+
+[data-theme="light"] .form-check-input {
+    background-color: #ffffff;
+    border-color: #d1d5db;
+}
+
+[data-theme="light"] .form-check-label {
+    color: #1f2937;
+}
+
+[data-theme="light"] select.form-input-modern {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%231f2937' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+}
+
+[data-theme="light"] .form-input-modern:disabled {
+    background-color: #f3f4f6;
+}

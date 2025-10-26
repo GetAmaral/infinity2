@@ -233,6 +233,25 @@ class GeneratorProperty
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $formHelp = null;
 
+    // Form widget options (6 new fields for form generator)
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $formExpanded = false;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private bool $collectionAllowAdd = true;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private bool $collectionAllowDelete = true;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $formWidgetAttr = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $formLabelAttr = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $formRowAttr = null;
+
     // ====================================
     // UI DISPLAY
     // ====================================
@@ -545,4 +564,18 @@ class GeneratorProperty
     public function setDtoNestedOrphanRemoval(bool $dtoNestedOrphanRemoval): self { $this->dtoNestedOrphanRemoval = $dtoNestedOrphanRemoval; return $this; }
     public function getDtoNestedMaxItems(): ?int { return $this->dtoNestedMaxItems; }
     public function setDtoNestedMaxItems(?int $dtoNestedMaxItems): self { $this->dtoNestedMaxItems = $dtoNestedMaxItems; return $this; }
+
+    // Form widget options getters and setters (6 new fields)
+    public function isFormExpanded(): bool { return $this->formExpanded; }
+    public function setFormExpanded(bool $formExpanded): self { $this->formExpanded = $formExpanded; return $this; }
+    public function isCollectionAllowAdd(): bool { return $this->collectionAllowAdd; }
+    public function setCollectionAllowAdd(bool $collectionAllowAdd): self { $this->collectionAllowAdd = $collectionAllowAdd; return $this; }
+    public function isCollectionAllowDelete(): bool { return $this->collectionAllowDelete; }
+    public function setCollectionAllowDelete(bool $collectionAllowDelete): self { $this->collectionAllowDelete = $collectionAllowDelete; return $this; }
+    public function getFormWidgetAttr(): ?array { return $this->formWidgetAttr; }
+    public function setFormWidgetAttr(?array $formWidgetAttr): self { $this->formWidgetAttr = $formWidgetAttr; return $this; }
+    public function getFormLabelAttr(): ?array { return $this->formLabelAttr; }
+    public function setFormLabelAttr(?array $formLabelAttr): self { $this->formLabelAttr = $formLabelAttr; return $this; }
+    public function getFormRowAttr(): ?array { return $this->formRowAttr; }
+    public function setFormRowAttr(?array $formRowAttr): self { $this->formRowAttr = $formRowAttr; return $this; }
 }

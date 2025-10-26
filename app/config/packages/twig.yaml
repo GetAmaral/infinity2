@@ -2,6 +2,8 @@ twig:
     file_name_pattern: '*.twig'
     globals:
         app_base_domain: '%env(APP_BASE_DOMAIN)%'
+    form_themes:
+        - 'genmax/twig/form_theme.html.twig'
 
 when@test:
     twig:

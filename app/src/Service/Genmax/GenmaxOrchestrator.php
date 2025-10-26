@@ -36,7 +36,7 @@ class GenmaxOrchestrator
     private const STATE_PROVIDER_ACTIVE = true;   // ✅ Phase 2.5 - ACTIVE
     private const CONTROLLER_ACTIVE = true;       // ✅ Phase 3 - ACTIVE
     private const VOTER_ACTIVE = true;            // ✅ Phase 3 - ACTIVE
-    private const FORM_ACTIVE = false;            // ⏸️ Phase 3 - Future
+    private const FORM_ACTIVE = true;             // ✅ Phase 3 - ACTIVE
     private const TEMPLATE_ACTIVE = false;        // ⏸️ Phase 4 - Future
     private const NAVIGATION_ACTIVE = false;      // ⏸️ Phase 4 - Future
     private const TRANSLATION_ACTIVE = false;     // ⏸️ Phase 4 - Future
@@ -57,8 +57,8 @@ class GenmaxOrchestrator
         private readonly StateProviderGenerator $stateProviderGenerator,
         private readonly ControllerGenerator $controllerGenerator,
         private readonly VoterGenerator $voterGenerator,
+        private readonly FormGenerator $formGenerator,
         // Future generators will be injected here:
-        // private readonly FormGenerator $formGenerator,
         // private readonly TemplateGenerator $templateGenerator,
         // private readonly NavigationGenerator $navigationGenerator,
         // private readonly TranslationGenerator $translationGenerator,
@@ -242,11 +242,19 @@ class GenmaxOrchestrator
                         }
                     }
 
-                    // Form (Future)
+                    // Form (ACTIVE)
                     if (self::FORM_ACTIVE) {
-                        // $files = $this->formGenerator->generate($entity);
-                        // $generatedFiles = array_merge($generatedFiles, $files);
-                        $currentStep++;
+                        try {
+                            $files = $this->formGenerator->generate($entity);
+                            $generatedFiles = array_merge($generatedFiles, $files);
+                            $currentStep++;
+                        } catch (\Throwable $e) {
+                            $this->logger->error("[GENMAX] Form generation failed", [
+                                'entity' => $entity->getEntityName(),
+                                'error' => $e->getMessage()
+                            ]);
+                            throw $e;
+                        }
                     }
 
                     // Templates (Future)
@@ -376,7 +384,7 @@ class GenmaxOrchestrator
                 $files[] = sprintf('%s/%s/%sVoter.php', $this->projectDir, $this->paths['voter_dir'], $entityName);
             }
 
-            // Future: Form files
+            // Form files (ACTIVE)
             if (self::FORM_ACTIVE) {
                 $files[] = sprintf('%s/%s/%sTypeGenerated.php', $this->projectDir, $this->paths['form_generated_dir'], $entityName);
                 $files[] = sprintf('%s/%s/%sType.php', $this->projectDir, $this->paths['form_dir'], $entityName);

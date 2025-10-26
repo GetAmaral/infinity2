@@ -25,6 +25,8 @@ abstract class NotificationTypeVoterGenerated extends Voter
     ) {}
 
     // Permission constants
+    public const LIST = 'NOTIFICATION_TYPE_LIST';
+    public const CREATE = 'NOTIFICATION_TYPE_CREATE';
     public const VIEW = 'NOTIFICATION_TYPE_VIEW';
     public const EDIT = 'NOTIFICATION_TYPE_EDIT';
     public const DELETE = 'NOTIFICATION_TYPE_DELETE';
@@ -42,6 +44,8 @@ abstract class NotificationTypeVoterGenerated extends Voter
     {
         // Check if this is a supported permission
         if (!in_array($attribute, [
+            self::LIST,
+            self::CREATE,
             self::VIEW,
             self::EDIT,
             self::DELETE,
@@ -51,6 +55,8 @@ abstract class NotificationTypeVoterGenerated extends Voter
 
         // For class-based permissions (LIST, CREATE), subject can be null
         if (in_array($attribute, [
+            self::LIST,
+            self::CREATE,
         ], true)) {
             return true;
         }
@@ -72,11 +78,41 @@ abstract class NotificationTypeVoterGenerated extends Voter
         $notificationType = $subject;
 
         return match ($attribute) {
+            self::LIST => $this->canLIST($user),
+            self::CREATE => $this->canCREATE($user),
             self::VIEW => $this->canVIEW($notificationType, $user),
             self::EDIT => $this->canEDIT($notificationType, $user),
             self::DELETE => $this->canDELETE($notificationType, $user),
             default => false,
         };
+    }
+
+    /**
+     * Check if user can list NotificationType     */
+    protected function canLIST(User $user): bool
+    {
+        // ADMIN and SUPER_ADMIN can do anything
+        if ($this->hasRole($user, 'ROLE_ADMIN')
+            || $this->hasRole($user, 'ROLE_SUPER_ADMIN')) {
+            return true;
+        }
+
+        // ORGANIZATION_ADMIN can list
+        return $this->hasRole($user, 'ROLE_ORGANIZATION_ADMIN');
+    }
+
+    /**
+     * Check if user can create NotificationType     */
+    protected function canCREATE(User $user): bool
+    {
+        // ADMIN and SUPER_ADMIN can do anything
+        if ($this->hasRole($user, 'ROLE_ADMIN')
+            || $this->hasRole($user, 'ROLE_SUPER_ADMIN')) {
+            return true;
+        }
+
+        // ORGANIZATION_ADMIN can create
+        return $this->hasRole($user, 'ROLE_ORGANIZATION_ADMIN');
     }
 
     /**

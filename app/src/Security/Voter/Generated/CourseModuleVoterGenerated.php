@@ -25,6 +25,8 @@ abstract class CourseModuleVoterGenerated extends Voter
     ) {}
 
     // Permission constants
+    public const LIST = 'COURSE_MODULE_LIST';
+    public const CREATE = 'COURSE_MODULE_CREATE';
     public const VIEW = 'COURSE_MODULE_VIEW';
     public const EDIT = 'COURSE_MODULE_EDIT';
     public const DELETE = 'COURSE_MODULE_DELETE';
@@ -42,6 +44,8 @@ abstract class CourseModuleVoterGenerated extends Voter
     {
         // Check if this is a supported permission
         if (!in_array($attribute, [
+            self::LIST,
+            self::CREATE,
             self::VIEW,
             self::EDIT,
             self::DELETE,
@@ -51,6 +55,8 @@ abstract class CourseModuleVoterGenerated extends Voter
 
         // For class-based permissions (LIST, CREATE), subject can be null
         if (in_array($attribute, [
+            self::LIST,
+            self::CREATE,
         ], true)) {
             return true;
         }
@@ -72,11 +78,41 @@ abstract class CourseModuleVoterGenerated extends Voter
         $courseModule = $subject;
 
         return match ($attribute) {
+            self::LIST => $this->canLIST($user),
+            self::CREATE => $this->canCREATE($user),
             self::VIEW => $this->canVIEW($courseModule, $user),
             self::EDIT => $this->canEDIT($courseModule, $user),
             self::DELETE => $this->canDELETE($courseModule, $user),
             default => false,
         };
+    }
+
+    /**
+     * Check if user can list CourseModule     */
+    protected function canLIST(User $user): bool
+    {
+        // ADMIN and SUPER_ADMIN can do anything
+        if ($this->hasRole($user, 'ROLE_ADMIN')
+            || $this->hasRole($user, 'ROLE_SUPER_ADMIN')) {
+            return true;
+        }
+
+        // ORGANIZATION_ADMIN can list
+        return $this->hasRole($user, 'ROLE_ORGANIZATION_ADMIN');
+    }
+
+    /**
+     * Check if user can create CourseModule     */
+    protected function canCREATE(User $user): bool
+    {
+        // ADMIN and SUPER_ADMIN can do anything
+        if ($this->hasRole($user, 'ROLE_ADMIN')
+            || $this->hasRole($user, 'ROLE_SUPER_ADMIN')) {
+            return true;
+        }
+
+        // ORGANIZATION_ADMIN can create
+        return $this->hasRole($user, 'ROLE_ORGANIZATION_ADMIN');
     }
 
     /**
