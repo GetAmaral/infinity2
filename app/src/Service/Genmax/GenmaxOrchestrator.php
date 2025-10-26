@@ -35,7 +35,7 @@ class GenmaxOrchestrator
     private const REPOSITORY_ACTIVE = true;       // ✅ Phase 2 - ACTIVE
     private const STATE_PROVIDER_ACTIVE = true;   // ✅ Phase 2.5 - ACTIVE
     private const CONTROLLER_ACTIVE = true;       // ✅ Phase 3 - ACTIVE
-    private const VOTER_ACTIVE = false;           // ⏸️ Phase 3 - Future
+    private const VOTER_ACTIVE = true;            // ✅ Phase 3 - ACTIVE
     private const FORM_ACTIVE = false;            // ⏸️ Phase 3 - Future
     private const TEMPLATE_ACTIVE = false;        // ⏸️ Phase 4 - Future
     private const NAVIGATION_ACTIVE = false;      // ⏸️ Phase 4 - Future
@@ -56,8 +56,8 @@ class GenmaxOrchestrator
         private readonly RepositoryGenerator $repositoryGenerator,
         private readonly StateProviderGenerator $stateProviderGenerator,
         private readonly ControllerGenerator $controllerGenerator,
+        private readonly VoterGenerator $voterGenerator,
         // Future generators will be injected here:
-        // private readonly VoterGenerator $voterGenerator,
         // private readonly FormGenerator $formGenerator,
         // private readonly TemplateGenerator $templateGenerator,
         // private readonly NavigationGenerator $navigationGenerator,
@@ -227,11 +227,19 @@ class GenmaxOrchestrator
                         }
                     }
 
-                    // Voter (Future)
+                    // Voter (ACTIVE)
                     if (self::VOTER_ACTIVE && $entity->isVoterEnabled()) {
-                        // $files = $this->voterGenerator->generate($entity);
-                        // $generatedFiles = array_merge($generatedFiles, $files);
-                        $currentStep++;
+                        try {
+                            $files = $this->voterGenerator->generate($entity);
+                            $generatedFiles = array_merge($generatedFiles, $files);
+                            $currentStep++;
+                        } catch (\Throwable $e) {
+                            $this->logger->error("[GENMAX] Voter generation failed", [
+                                'entity' => $entity->getEntityName(),
+                                'error' => $e->getMessage()
+                            ]);
+                            throw $e;
+                        }
                     }
 
                     // Form (Future)
