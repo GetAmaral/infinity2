@@ -28,6 +28,7 @@ INSERT INTO generator_entity (
     api_enabled,
     dto_enabled,
     has_organization,
+    voter_enabled,
     api_operations,
     api_security
 ) VALUES (
@@ -35,6 +36,7 @@ INSERT INTO generator_entity (
     'Task',
     'Task',
     'Tasks',
+    true,
     true,
     true,
     true,
@@ -90,6 +92,7 @@ class TaskEntityFixture extends Fixture
         $entity->setApiEnabled(true);
         $entity->setDtoEnabled(true);
         $entity->setHasOrganization(true);
+        $entity->setVoterEnabled(true);  // Enable security voters
         $entity->setApiOperations(['GetCollection', 'Get', 'Post', 'Put', 'Delete']);
         $entity->setApiSecurity("is_granted('ROLE_USER')");
 
@@ -179,9 +182,11 @@ docker-compose exec app php bin/console genmax:generate Task
 [GENMAX] Generated Repository extension
 [GENMAX] Generated Controller base
 [GENMAX] Generated Controller extension
+[GENMAX] Generated Voter base
+[GENMAX] Generated Voter extension
 [GENMAX] Completed Task (100%)
 [GENMAX] Code generation completed successfully
-Files generated: 13
+Files generated: 15
 ```
 
 ---
@@ -268,10 +273,15 @@ app/
 │   └── Generated/
 │       └── TaskRepositoryGenerated.php  # ← Auto-generated base
 │
-└── src/Controller/
-    ├── TaskController.php               # ← Add custom actions
+├── src/Controller/
+│   ├── TaskController.php               # ← Add custom actions
+│   └── Generated/
+│       └── TaskControllerGenerated.php  # ← Auto-generated base
+│
+└── src/Security/Voter/
+    ├── TaskVoter.php                    # ← Add custom permissions
     └── Generated/
-        └── TaskControllerGenerated.php  # ← Auto-generated base
+        └── TaskVoterGenerated.php       # ← Auto-generated base
 ```
 
 **Safe to edit:**
@@ -280,6 +290,7 @@ app/
 - `src/Dto/TaskOutputDto.php`
 - `src/Repository/TaskRepository.php`
 - `src/Controller/TaskController.php`
+- `src/Security/Voter/TaskVoter.php`
 
 **Never edit (always regenerated):**
 - All files in `Generated/` folders
@@ -338,6 +349,74 @@ $description->setPropertyLabel('Description');
 $description->setPropertyType('text');
 $description->setNullable(true);
 $description->setFilterStrategy('partial');
+```
+
+### Use Voters in Controllers
+
+Generated voters provide permission constants for checking access:
+
+```php
+// src/Controller/TaskController.php
+namespace App\Controller;
+
+use App\Entity\Task;
+use App\Security\Voter\TaskVoter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class TaskController extends AbstractController
+{
+    #[Route('/tasks/{id}', name: 'task_show')]
+    public function show(Task $task): Response
+    {
+        // Check if user can view this task
+        $this->denyAccessUnlessGranted(TaskVoter::VIEW, $task);
+
+        return $this->render('task/show.html.twig', [
+            'task' => $task,
+        ]);
+    }
+
+    #[Route('/tasks/{id}/edit', name: 'task_edit')]
+    public function edit(Task $task): Response
+    {
+        // Check if user can edit this task
+        $this->denyAccessUnlessGranted(TaskVoter::EDIT, $task);
+
+        // ... edit logic
+    }
+
+    #[Route('/tasks/{id}/delete', name: 'task_delete', methods: ['POST'])]
+    public function delete(Task $task): Response
+    {
+        // Check if user can delete this task
+        $this->denyAccessUnlessGranted(TaskVoter::DELETE, $task);
+
+        // ... delete logic
+    }
+}
+```
+
+**Available permission constants:**
+- `TaskVoter::LIST` - Can list tasks
+- `TaskVoter::CREATE` - Can create tasks
+- `TaskVoter::VIEW` - Can view a specific task
+- `TaskVoter::EDIT` - Can edit a specific task
+- `TaskVoter::DELETE` - Can delete a specific task
+
+**In Twig templates:**
+
+```twig
+{% if is_granted(constant('App\\Security\\Voter\\TaskVoter::EDIT'), task) %}
+    <a href="{{ path('task_edit', {id: task.id}) }}" class="btn btn-primary">
+        Edit Task
+    </a>
+{% endif %}
+
+{% if is_granted(constant('App\\Security\\Voter\\TaskVoter::DELETE'), task) %}
+    <button class="btn btn-danger">Delete</button>
+{% endif %}
 ```
 
 ---

@@ -21,6 +21,7 @@ Genmax generates production-ready Symfony code directly from database entities (
 | State Providers | ✅ Active | Custom data fetching logic |
 | Repositories | ✅ Active | Base + Extension with query methods |
 | Controllers | ✅ Active | Web controllers with CRUD operations |
+| Security Voters | ✅ Active | RBAC permission checking with role hierarchy |
 | Batch Operations | 🔨 Planned | Bulk create/update/delete (future) |
 
 ### Architecture Pattern
@@ -65,6 +66,10 @@ Defines what entities to generate.
 - `apiOperations` - Operations: `['GetCollection', 'Get', 'Post', 'Put', 'Delete']`
 - `apiSecurity` - Global security: `"is_granted('ROLE_USER')"`
 - `dtoEnabled` - Use DTOs instead of direct entity exposure (bool)
+
+**Security/Voter Configuration:**
+- `voterEnabled` - Enable security voter generation (bool, default: true)
+- `voterAttributes` - Custom permissions: `['LIST', 'CREATE', 'VIEW', 'EDIT', 'DELETE']`
 
 **Advanced:**
 - `operationSecurity` - Per-operation security overrides
@@ -114,7 +119,7 @@ Defines properties within an entity.
 
 ## Generated File Structure
 
-For entity `Contact` with API enabled, DTOs enabled, and controllers enabled:
+For entity `Contact` with API enabled, DTOs enabled, controllers enabled, and voters enabled:
 
 ```
 app/
@@ -142,10 +147,15 @@ app/
 │   └── Generated/
 │       └── ContactRepositoryGenerated.php        # ALWAYS regenerated
 │
-└── src/Controller/
-    ├── ContactController.php                     # Created once, safe to edit
+├── src/Controller/
+│   ├── ContactController.php                     # Created once, safe to edit
+│   └── Generated/
+│       └── ContactControllerGenerated.php        # ALWAYS regenerated
+│
+└── src/Security/Voter/
+    ├── ContactVoter.php                          # Created once, safe to edit
     └── Generated/
-        └── ContactControllerGenerated.php        # ALWAYS regenerated
+        └── ContactVoterGenerated.php             # ALWAYS regenerated
 ```
 
 ---
@@ -167,6 +177,249 @@ Genmax automatically protects against SQL reserved keywords:
 **400+ keywords protected** from PostgreSQL, MySQL, SQL Server, and PHP.
 
 See `app/src/Twig/ReservedKeywordExtension.php` for full list.
+
+### Security Voters
+
+Genmax automatically generates **Security Voters** for authorization and permission checking using Symfony's Voter pattern with role hierarchy support.
+
+#### What Are Voters?
+
+Security Voters implement fine-grained authorization logic:
+- **Instance-based permissions**: Can this user VIEW/EDIT/DELETE **this specific** Contact?
+- **Class-based permissions**: Can this user LIST/CREATE Contacts in general?
+- **Multi-tenant support**: Automatic organization isolation
+- **Role hierarchy**: Respects Symfony's role inheritance (ROLE_ADMIN includes ROLE_USER)
+
+#### Generated Permission Constants
+
+Each voter generates entity-specific permission constants:
+
+```php
+// ContactVoter constants
+public const LIST = 'CONTACT_LIST';      // Can list contacts
+public const CREATE = 'CONTACT_CREATE';  // Can create contacts
+public const VIEW = 'CONTACT_VIEW';      // Can view a specific contact
+public const EDIT = 'CONTACT_EDIT';      // Can edit a specific contact
+public const DELETE = 'CONTACT_DELETE';  // Can delete a specific contact
+```
+
+**Naming Convention**: `{ENTITY_UPPER_SNAKE}_{PERMISSION}`
+
+#### Using Voters in Controllers
+
+```php
+use App\Security\Voter\ContactVoter;
+
+class ContactController extends AbstractController
+{
+    #[Route('/contacts/{id}', methods: ['GET'])]
+    public function show(Contact $contact): Response
+    {
+        // Instance-based check: Can user view THIS contact?
+        $this->denyAccessUnlessGranted(ContactVoter::VIEW, $contact);
+
+        return $this->render('contact/show.html.twig', [
+            'contact' => $contact,
+        ]);
+    }
+
+    #[Route('/contacts', methods: ['GET'])]
+    public function index(): Response
+    {
+        // Class-based check: Can user list contacts?
+        $this->denyAccessUnlessGranted(ContactVoter::LIST);
+
+        // ... fetch contacts
+    }
+
+    #[Route('/contacts/{id}/edit', methods: ['POST'])]
+    public function edit(Contact $contact, Request $request): Response
+    {
+        // Instance-based check: Can user edit THIS contact?
+        $this->denyAccessUnlessGranted(ContactVoter::EDIT, $contact);
+
+        // ... update contact
+    }
+}
+```
+
+#### Using Voters in Twig Templates
+
+```twig
+{% if is_granted(constant('App\\Security\\Voter\\ContactVoter::EDIT'), contact) %}
+    <a href="{{ path('contact_edit', {id: contact.id}) }}" class="btn btn-primary">
+        Edit Contact
+    </a>
+{% endif %}
+
+{% if is_granted(constant('App\\Security\\Voter\\ContactVoter::DELETE'), contact) %}
+    <button class="btn btn-danger">Delete</button>
+{% endif %}
+```
+
+#### Default Permission Logic
+
+**Generated voters implement this hierarchy:**
+
+1. **ADMIN/SUPER_ADMIN**: Full access to everything
+2. **Organization Check**: User must be in same organization as entity (if `hasOrganization = true`)
+3. **Permission-Specific Rules**:
+   - **VIEW**: All authenticated users in same organization
+   - **EDIT**: ORGANIZATION_ADMIN + owner (if entity has `owner` property)
+   - **DELETE**: ORGANIZATION_ADMIN only
+   - **LIST/CREATE**: ORGANIZATION_ADMIN only
+
+**Example generated method:**
+
+```php
+protected function canEDIT(?Contact $contact, User $user): bool
+{
+    if (!$contact) {
+        return false;
+    }
+
+    // ADMIN and SUPER_ADMIN can do anything
+    if ($this->hasRole($user, 'ROLE_ADMIN')
+        || $this->hasRole($user, 'ROLE_SUPER_ADMIN')) {
+        return true;
+    }
+
+    // Must be in same organization
+    $sameOrganization = $user->getOrganization()
+        && $contact->getOrganization()
+        && $user->getOrganization()->getId()->equals($contact->getOrganization()->getId());
+
+    if (!$sameOrganization) {
+        return false;
+    }
+
+    // ORGANIZATION_ADMIN can edit within their organization
+    if ($this->hasRole($user, 'ROLE_ORGANIZATION_ADMIN')) {
+        return true;
+    }
+
+    // Owner can edit their own contact (if entity has owner property)
+    if ($contact->getOwner() && $user->getId()->equals($contact->getOwner()->getId())) {
+        return true;
+    }
+
+    // Regular users can edit (customize as needed)
+    return true;
+}
+```
+
+#### Customizing Voter Logic
+
+The **extension voter** is safe to edit and won't be overwritten:
+
+```php
+// src/Security/Voter/ContactVoter.php (safe to edit)
+namespace App\Security\Voter;
+
+use App\Security\Voter\Generated\ContactVoterGenerated;
+
+final class ContactVoter extends ContactVoterGenerated
+{
+    // Override VIEW permission: Public contacts visible to everyone
+    protected function canVIEW(?Contact $contact, User $user): bool
+    {
+        if ($contact && $contact->isPublic()) {
+            return true;
+        }
+
+        // Fall back to base logic
+        return parent::canVIEW($contact, $user);
+    }
+
+    // Override DELETE: Prevent deletion if contact has deals
+    protected function canDELETE(?Contact $contact, User $user): bool
+    {
+        if ($contact && $contact->getDeals()->count() > 0) {
+            return false; // Cannot delete contacts with deals
+        }
+
+        return parent::canDELETE($contact, $user);
+    }
+}
+```
+
+#### Configuring Voter Generation
+
+**Enable/disable voter generation:**
+
+```php
+$entity = new GeneratorEntity();
+$entity->setEntityName('Contact');
+$entity->setVoterEnabled(true); // Default: true
+```
+
+**Custom permissions (instead of default LIST/CREATE/VIEW/EDIT/DELETE):**
+
+```php
+$entity->setVoterAttributes(['LIST', 'CREATE', 'VIEW', 'APPROVE', 'ARCHIVE']);
+```
+
+This generates:
+- `CONTACT_LIST`
+- `CONTACT_CREATE`
+- `CONTACT_VIEW`
+- `CONTACT_APPROVE` (custom)
+- `CONTACT_ARCHIVE` (custom)
+
+**When to disable voters:**
+
+```php
+// System/reference data (Country, TimeZone, Currency)
+$entity->setVoterEnabled(false);
+
+// Entities with public read access (BlogPost might use different authorization)
+$entity->setVoterEnabled(false);
+```
+
+#### Role Hierarchy Integration
+
+Voters respect Symfony's role hierarchy via `RoleHierarchyInterface`:
+
+**config/packages/security.yaml:**
+```yaml
+security:
+    role_hierarchy:
+        ROLE_ORGANIZATION_ADMIN: ROLE_USER
+        ROLE_ADMIN: ROLE_ORGANIZATION_ADMIN
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+```
+
+**Voter checks role properly:**
+
+```php
+protected function hasRole(User $user, string $role): bool
+{
+    $userRoles = $this->roleHierarchy->getReachableRoleNames($user->getRoles());
+    return in_array($role, $userRoles, true);
+}
+```
+
+Result: If checking `hasRole($user, 'ROLE_USER')` and user has `ROLE_ADMIN`, it returns `true`.
+
+#### Multi-Tenant Isolation
+
+Voters automatically enforce organization boundaries:
+
+```php
+// Organization check is generated automatically for entities with hasOrganization = true
+$sameOrganization = $user->getOrganization()
+    && $contact->getOrganization()
+    && $user->getOrganization()->getId()->equals($contact->getOrganization()->getId());
+
+if (!$sameOrganization) {
+    return false; // Access denied across organizations
+}
+```
+
+**Cross-organization access:**
+- ADMIN/SUPER_ADMIN: Can access all organizations
+- ORGANIZATION_ADMIN: Limited to their organization
+- Regular users: Limited to their organization
 
 ### API Filter Examples
 
@@ -313,6 +566,104 @@ $stages->setOrderBy(['position' => 'ASC']);
 $em->persist($stages);
 ```
 
+### Example 4: Configuring Voter Settings
+
+```php
+// Entity with custom voter permissions
+$entity = new GeneratorEntity();
+$entity->setEntityName('Invoice');
+$entity->setEntityLabel('Invoice');
+$entity->setPluralLabel('Invoices');
+$entity->setVoterEnabled(true);
+
+// Custom permissions instead of default LIST/CREATE/VIEW/EDIT/DELETE
+$entity->setVoterAttributes(['LIST', 'CREATE', 'VIEW', 'APPROVE', 'CANCEL', 'SEND']);
+
+$em->persist($entity);
+$em->flush();
+
+// Generate voter
+// Result: InvoiceVoter with constants:
+//   - INVOICE_LIST
+//   - INVOICE_CREATE
+//   - INVOICE_VIEW
+//   - INVOICE_APPROVE (custom)
+//   - INVOICE_CANCEL (custom)
+//   - INVOICE_SEND (custom)
+```
+
+**Using custom permissions in controller:**
+
+```php
+use App\Security\Voter\InvoiceVoter;
+
+class InvoiceController extends AbstractController
+{
+    #[Route('/invoices/{id}/approve', methods: ['POST'])]
+    public function approve(Invoice $invoice): Response
+    {
+        // Check custom APPROVE permission
+        $this->denyAccessUnlessGranted(InvoiceVoter::APPROVE, $invoice);
+
+        // Approve invoice logic...
+    }
+
+    #[Route('/invoices/{id}/send', methods: ['POST'])]
+    public function send(Invoice $invoice): Response
+    {
+        // Check custom SEND permission
+        $this->denyAccessUnlessGranted(InvoiceVoter::SEND, $invoice);
+
+        // Send invoice logic...
+    }
+}
+```
+
+**Customizing permission logic in extension voter:**
+
+```php
+// src/Security/Voter/InvoiceVoter.php
+namespace App\Security\Voter;
+
+use App\Security\Voter\Generated\InvoiceVoterGenerated;
+use App\Entity\Invoice;
+use App\Entity\User;
+
+final class InvoiceVoter extends InvoiceVoterGenerated
+{
+    // Only accountants can approve invoices
+    protected function canAPPROVE(?Invoice $invoice, User $user): bool
+    {
+        if (!$invoice) {
+            return false;
+        }
+
+        // Must have accountant role
+        if (!$this->hasRole($user, 'ROLE_ACCOUNTANT')) {
+            return false;
+        }
+
+        // Cannot approve your own invoice
+        if ($invoice->getCreatedBy() && $user->getId()->equals($invoice->getCreatedBy()->getId())) {
+            return false;
+        }
+
+        // Fall back to organization check
+        return parent::canAPPROVE($invoice, $user);
+    }
+
+    // Only send approved invoices
+    protected function canSEND(?Invoice $invoice, User $user): bool
+    {
+        if (!$invoice || !$invoice->isApproved()) {
+            return false;
+        }
+
+        return parent::canSEND($invoice, $user);
+    }
+}
+```
+
 ---
 
 ## Best Practices
@@ -354,6 +705,22 @@ $em->persist($stages);
 - Rely on database constraints alone
 - Skip validation on optional fields that have format requirements
 
+### Security & Voters
+
+✅ **DO:**
+- Enable voters for all user-manageable entities (`voterEnabled = true`)
+- Use voters in controllers with `$this->denyAccessUnlessGranted()`
+- Customize voter logic in extension class for business rules
+- Test permission logic with different roles
+- Use entity-specific permission constants (e.g., `ContactVoter::VIEW`)
+
+❌ **DON'T:**
+- Disable voters for entities that users can create/edit/delete
+- Bypass voter checks with direct repository queries in controllers
+- Edit generated voter files (edit extension voter instead)
+- Hardcode role checks in controllers (use voters instead)
+- Forget to check permissions before allowing sensitive operations
+
 ---
 
 ## Troubleshooting
@@ -386,6 +753,31 @@ $em->persist($stages);
 2. Verify `inversedBy`/`mappedBy` are correct
 3. Ensure target entity exists and is generated
 
+### Problem: Access denied errors with voters
+
+**Solution:**
+1. Check voter is registered in Symfony (should auto-register via `_defaults: autowire: true`)
+2. Verify user is authenticated: `$this->getUser()` returns User instance
+3. Check role hierarchy in `config/packages/security.yaml`
+4. Debug voter decision: `bin/console debug:autowiring Voter`
+5. Add custom logic in extension voter if base logic is too restrictive
+
+### Problem: Voter not generated or skipped
+
+**Solution:**
+1. Check `voterEnabled = true` in `generator_entity` table
+2. Verify `VOTER_ACTIVE = true` in `GenmaxOrchestrator.php`
+3. Regenerate: `php bin/console genmax:generate EntityName`
+4. Check generation logs for errors
+
+### Problem: Permission constants not found
+
+**Solution:**
+1. Clear cache: `php bin/console cache:clear`
+2. Verify voter file exists: `src/Security/Voter/EntityVoter.php`
+3. Check namespace in voter class matches controller import
+4. Use fully qualified constant: `\App\Security\Voter\EntityVoter::VIEW`
+
 ---
 
 ## Configuration
@@ -403,6 +795,10 @@ parameters:
         provider_dir: 'src/State'
         repository_dir: 'src/Repository'
         repository_generated_dir: 'src/Repository/Generated'
+        controller_dir: 'src/Controller'
+        controller_generated_dir: 'src/Controller/Generated'
+        voter_dir: 'src/Security/Voter'
+        voter_generated_dir: 'src/Security/Voter/Generated'
         api_platform_config_dir: 'config/api_platform'
 
     genmax.templates:
@@ -416,6 +812,10 @@ parameters:
         state_provider: 'genmax/php/state_provider.php.twig'
         repository_generated: 'genmax/php/repository_generated.php.twig'
         repository_extension: 'genmax/php/repository_extension.php.twig'
+        controller_generated: 'genmax/php/controller_generated.php.twig'
+        controller_extension: 'genmax/php/controller_extension.php.twig'
+        voter_generated: 'genmax/php/voter_generated.php.twig'
+        voter_extension: 'genmax/php/voter_extension.php.twig'
         api_platform: 'genmax/yaml/api_platform.yaml.twig'
 ```
 
@@ -431,7 +831,8 @@ GenmaxOrchestrator (Main Controller)
 ├── StateProcessorGenerator → DTO → Entity processors
 ├── StateProviderGenerator → Custom data providers
 ├── RepositoryGenerator → Repositories (base + extension)
-└── ControllerGenerator → Web controllers (base + extension)
+├── ControllerGenerator → Web controllers (base + extension)
+└── VoterGenerator → Security voters (base + extension)
 ```
 
 **Feature Flags:** See `GenmaxOrchestrator.php:28-43`
@@ -473,7 +874,6 @@ php bin/console doctrine:migrations:migrate
 ### Planned (Not Yet Implemented)
 
 - ✨ **Batch Operations** - Bulk create/update/delete API endpoints
-- ✨ **Security Voters** - RBAC permission checking
 - ✨ **Forms** - Symfony forms for web UI
 - ✨ **Templates** - Twig templates for CRUD pages
 - ✨ **Tests** - Automated PHPUnit tests
