@@ -57,24 +57,34 @@ class TemplateGenerator
         // Build template context once for all templates
         $context = $this->buildTemplateContext($entity);
 
-        // Generate master templates (always regenerated)
-        $generatedFiles[] = $this->generateTemplate($entity, $context, 'index', $this->templates['template_index_generated']);
-        $generatedFiles[] = $this->generateTemplate($entity, $context, 'show', $this->templates['template_show_generated']);
-        $generatedFiles[] = $this->generateTemplate($entity, $context, 'form', $this->templates['template_form_generated']);
-        $generatedFiles[] = $this->generateTemplate($entity, $context, 'new', $this->templates['template_new_generated']);
-        $generatedFiles[] = $this->generateTemplate($entity, $context, 'edit', $this->templates['template_edit_generated']);
+        // Generate base templates (always regenerated) + extension templates (once only)
+        $generatedFiles[] = $this->generateBaseTemplate($entity, $context, 'index', $this->templates['template_index_generated']);
+        $generatedFiles[] = $this->generateExtensionTemplate($entity, 'index');
+
+        $generatedFiles[] = $this->generateBaseTemplate($entity, $context, 'show', $this->templates['template_show_generated']);
+        $generatedFiles[] = $this->generateExtensionTemplate($entity, 'show');
+
+        $generatedFiles[] = $this->generateBaseTemplate($entity, $context, 'form', $this->templates['template_form_generated']);
+        $generatedFiles[] = $this->generateExtensionTemplate($entity, 'form');
+
+        $generatedFiles[] = $this->generateBaseTemplate($entity, $context, 'new', $this->templates['template_new_generated']);
+        $generatedFiles[] = $this->generateExtensionTemplate($entity, 'new');
+
+        $generatedFiles[] = $this->generateBaseTemplate($entity, $context, 'edit', $this->templates['template_edit_generated']);
+        $generatedFiles[] = $this->generateExtensionTemplate($entity, 'edit');
 
         return array_filter($generatedFiles);
     }
 
     /**
-     * Generate a single template file
+     * Generate base template file (Generated - always regenerated)
      */
-    protected function generateTemplate(GeneratorEntity $entity, array $context, string $type, string $templateName): string
+    protected function generateBaseTemplate(GeneratorEntity $entity, array $context, string $type, string $templateName): string
     {
         $slug = $entity->getSlug();
+        // Generated template goes to {entity}/generated/{type}_generated.html.twig
         $filePath = sprintf(
-            '%s/%s/%s/%s.html.twig',
+            '%s/%s/%s/generated/%s_generated.html.twig',
             $this->projectDir,
             $this->paths['template_dir'],
             $slug,
@@ -132,7 +142,7 @@ class TemplateGenerator
             // Write file with smart comparison
             $status = $this->fileWriter->writeFile($filePath, $content);
 
-            $this->logger->info('[GENMAX] Generated template', [
+            $this->logger->info('[GENMAX] Generated base template', [
                 'type' => $type,
                 'file' => $filePath,
                 'entity' => $entity->getEntityName(),
@@ -142,14 +152,78 @@ class TemplateGenerator
             return $filePath;
 
         } catch (\Exception $e) {
-            $this->logger->error('[GENMAX] Failed to generate template', [
+            $this->logger->error('[GENMAX] Failed to generate base template', [
                 'type' => $type,
                 'entity' => $entity->getEntityName(),
                 'file' => $filePath,
                 'error' => $e->getMessage()
             ]);
             throw new \RuntimeException(
-                "Failed to generate {$type} template for {$entity->getEntityName()}: {$e->getMessage()}",
+                "Failed to generate {$type} base template for {$entity->getEntityName()}: {$e->getMessage()}",
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * Generate extension template file (Extension - created once, safe to edit)
+     */
+    protected function generateExtensionTemplate(GeneratorEntity $entity, string $type): ?string
+    {
+        $slug = $entity->getSlug();
+        $filePath = sprintf(
+            '%s/%s/%s/%s.html.twig',
+            $this->projectDir,
+            $this->paths['template_dir'],
+            $slug,
+            $type
+        );
+
+        // Skip if exists (user may have customized)
+        if (file_exists($filePath)) {
+            $this->logger->info('[GENMAX] Skipping extension template (already exists)', [
+                'file' => $filePath,
+                'entity' => $entity->getEntityName(),
+                'type' => $type
+            ]);
+            return null;
+        }
+
+        try {
+            // Create directory if needed
+            $dir = dirname($filePath);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            // Create simple include wrapper
+            $entityName = $entity->getEntityName();
+            $content = "{# Extension template for {$entityName} {$type} page #}\n";
+            $content .= "{# You can customize this template or simply include the generated one #}\n";
+            $content .= "{% include '{$slug}/generated/{$type}_generated.html.twig' %}\n";
+
+            // Write file
+            $status = $this->fileWriter->writeFile($filePath, $content);
+
+            $this->logger->info('[GENMAX] Generated extension template', [
+                'type' => $type,
+                'file' => $filePath,
+                'entity' => $entity->getEntityName(),
+                'status' => $status
+            ]);
+
+            return $filePath;
+
+        } catch (\Exception $e) {
+            $this->logger->error('[GENMAX] Failed to generate extension template', [
+                'type' => $type,
+                'entity' => $entity->getEntityName(),
+                'file' => $filePath,
+                'error' => $e->getMessage()
+            ]);
+            throw new \RuntimeException(
+                "Failed to generate {$type} extension template for {$entity->getEntityName()}: {$e->getMessage()}",
                 0,
                 $e
             );

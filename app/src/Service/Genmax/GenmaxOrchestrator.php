@@ -401,11 +401,18 @@ class GenmaxOrchestrator
             // Templates (ACTIVE)
             if (self::TEMPLATE_ACTIVE) {
                 $slug = $entity->getSlug();
+                // Generated templates (always regenerated)
+                $files[] = sprintf('%s/%s/%s/generated/index_generated.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
+                $files[] = sprintf('%s/%s/%s/generated/show_generated.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
+                $files[] = sprintf('%s/%s/%s/generated/form_generated.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
+                $files[] = sprintf('%s/%s/%s/generated/new_generated.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
+                $files[] = sprintf('%s/%s/%s/generated/edit_generated.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
+                // Extension templates (created once, safe to edit)
                 $files[] = sprintf('%s/%s/%s/index.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
                 $files[] = sprintf('%s/%s/%s/show.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
+                $files[] = sprintf('%s/%s/%s/form.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
                 $files[] = sprintf('%s/%s/%s/new.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
                 $files[] = sprintf('%s/%s/%s/edit.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
-                $files[] = sprintf('%s/%s/%s/form.html.twig', $this->projectDir, $this->paths['template_dir'], $slug);
             }
 
             // Future: API Platform config
