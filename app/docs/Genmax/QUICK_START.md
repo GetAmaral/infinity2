@@ -104,7 +104,7 @@ class TaskEntityFixture extends Fixture
         $title->setLength(200);
         $title->setNullable(false);
         $title->setFilterStrategy('partial');
-        $title->setFilterOrderable(true);
+        $title->setSortable(true);
         $title->setValidationRules([
             ['constraint' => 'NotBlank'],
             ['constraint' => 'Length', 'max' => 200]
@@ -121,7 +121,7 @@ class TaskEntityFixture extends Fixture
         $completed->setNullable(false);
         $completed->setDefaultValue('false');
         $completed->setFilterBoolean(true);
-        $completed->setFilterOrderable(true);
+        $completed->setSortable(true);
 
         $manager->persist($completed);
 
@@ -133,7 +133,7 @@ class TaskEntityFixture extends Fixture
         $dueDate->setPropertyType('datetime_immutable');
         $dueDate->setNullable(true);
         $dueDate->setFilterDate(true);
-        $dueDate->setFilterOrderable(true);
+        $dueDate->setSortable(true);
 
         $manager->persist($dueDate);
 
@@ -177,9 +177,11 @@ docker-compose exec app php bin/console genmax:generate Task
 [GENMAX] Generated State Provider
 [GENMAX] Generated Repository base
 [GENMAX] Generated Repository extension
+[GENMAX] Generated Controller base
+[GENMAX] Generated Controller extension
 [GENMAX] Completed Task (100%)
 [GENMAX] Code generation completed successfully
-Files generated: 11
+Files generated: 13
 ```
 
 ---
@@ -261,10 +263,15 @@ app/
 │   ├── TaskProcessor.php                # Handles create/update
 │   └── TaskProvider.php                 # Handles read operations
 │
-└── src/Repository/
-    ├── TaskRepository.php               # ← Add custom queries
+├── src/Repository/
+│   ├── TaskRepository.php               # ← Add custom queries
+│   └── Generated/
+│       └── TaskRepositoryGenerated.php  # ← Auto-generated base
+│
+└── src/Controller/
+    ├── TaskController.php               # ← Add custom actions
     └── Generated/
-        └── TaskRepositoryGenerated.php  # ← Auto-generated base
+        └── TaskControllerGenerated.php  # ← Auto-generated base
 ```
 
 **Safe to edit:**
@@ -272,6 +279,7 @@ app/
 - `src/Dto/TaskInputDto.php`
 - `src/Dto/TaskOutputDto.php`
 - `src/Repository/TaskRepository.php`
+- `src/Controller/TaskController.php`
 
 **Never edit (always regenerated):**
 - All files in `Generated/` folders

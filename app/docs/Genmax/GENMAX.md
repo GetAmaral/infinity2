@@ -20,6 +20,7 @@ Genmax generates production-ready Symfony code directly from database entities (
 | State Processors | ✅ Active | Handles DTO → Entity transformations |
 | State Providers | ✅ Active | Custom data fetching logic |
 | Repositories | ✅ Active | Base + Extension with query methods |
+| Controllers | ✅ Active | Web controllers with CRUD operations |
 | Batch Operations | 🔨 Planned | Bulk create/update/delete (future) |
 
 ### Architecture Pattern
@@ -97,7 +98,7 @@ Defines properties within an entity.
 **API Filters:**
 - `filterStrategy` - `'partial'`, `'exact'`, `'start'`, `'end'`, `'word_start'`
 - `filterSearchable` - Enable text search
-- `filterOrderable` - Enable sorting
+- `sortable` - Enable sorting (both UI and API)
 - `filterBoolean` - Boolean filter
 - `filterDate` - Date range filter
 - `filterNumericRange` - Numeric range filter
@@ -113,7 +114,7 @@ Defines properties within an entity.
 
 ## Generated File Structure
 
-For entity `Contact` with API enabled and DTOs enabled:
+For entity `Contact` with API enabled, DTOs enabled, and controllers enabled:
 
 ```
 app/
@@ -136,10 +137,15 @@ app/
 │   ├── ContactProcessor.php                      # ALWAYS regenerated
 │   └── ContactProvider.php                       # ALWAYS regenerated
 │
-└── src/Repository/
-    ├── ContactRepository.php                     # Created once, safe to edit
+├── src/Repository/
+│   ├── ContactRepository.php                     # Created once, safe to edit
+│   └── Generated/
+│       └── ContactRepositoryGenerated.php        # ALWAYS regenerated
+│
+└── src/Controller/
+    ├── ContactController.php                     # Created once, safe to edit
     └── Generated/
-        └── ContactRepositoryGenerated.php        # ALWAYS regenerated
+        └── ContactControllerGenerated.php        # ALWAYS regenerated
 ```
 
 ---
@@ -241,7 +247,7 @@ $fullName->setPropertyType('string');
 $fullName->setLength(100);
 $fullName->setNullable(false);
 $fullName->setFilterStrategy('partial');
-$fullName->setFilterOrderable(true);
+$fullName->setSortable(true);
 $fullName->setValidationRules([
     ['constraint' => 'NotBlank'],
     ['constraint' => 'Length', 'max' => 100]
@@ -258,7 +264,7 @@ $email->setPropertyType('string');
 $email->setLength(180);
 $email->setUnique(true);
 $email->setFilterStrategy('exact');
-$email->setFilterOrderable(true);
+$email->setSortable(true);
 $email->setValidationRules([
     ['constraint' => 'NotBlank'],
     ['constraint' => 'Email']
@@ -330,7 +336,7 @@ $em->persist($stages);
 - Enable DTOs for all entities with write operations
 - Use per-operation security for sensitive actions
 - Set appropriate filter strategies (exact for IDs/emails, partial for names)
-- Enable `filterOrderable` on sortable fields
+- Enable `sortable` on fields that need sorting (both UI and API)
 
 ❌ **DON'T:**
 - Expose entities directly without DTOs
@@ -424,7 +430,8 @@ GenmaxOrchestrator (Main Controller)
 ├── DtoGenerator → Input/Output DTOs (base + extension)
 ├── StateProcessorGenerator → DTO → Entity processors
 ├── StateProviderGenerator → Custom data providers
-└── RepositoryGenerator → Repositories (base + extension)
+├── RepositoryGenerator → Repositories (base + extension)
+└── ControllerGenerator → Web controllers (base + extension)
 ```
 
 **Feature Flags:** See `GenmaxOrchestrator.php:28-43`
@@ -466,13 +473,13 @@ php bin/console doctrine:migrations:migrate
 ### Planned (Not Yet Implemented)
 
 - ✨ **Batch Operations** - Bulk create/update/delete API endpoints
-- ✨ **Controllers** - Web controllers for Twig templates
 - ✨ **Security Voters** - RBAC permission checking
 - ✨ **Forms** - Symfony forms for web UI
 - ✨ **Templates** - Twig templates for CRUD pages
 - ✨ **Tests** - Automated PHPUnit tests
 
 See `app/docs/Genmax/old/BATCH_OPERATIONS_IMPLEMENTATION_PLAN.md` for batch operations roadmap.
+See `app/docs/Genmax/CONTROLLER_GENERATOR.md` for complete controller generation documentation.
 
 ---
 
