@@ -184,9 +184,11 @@ docker-compose exec app php bin/console genmax:generate Task
 [GENMAX] Generated Controller extension
 [GENMAX] Generated Voter base
 [GENMAX] Generated Voter extension
+[GENMAX] Generated Form base
+[GENMAX] Generated Form extension
 [GENMAX] Completed Task (100%)
 [GENMAX] Code generation completed successfully
-Files generated: 15
+Files generated: 17
 ```
 
 ---
@@ -278,10 +280,15 @@ app/
 │   └── Generated/
 │       └── TaskControllerGenerated.php  # ← Auto-generated base
 │
-└── src/Security/Voter/
-    ├── TaskVoter.php                    # ← Add custom permissions
+├── src/Security/Voter/
+│   ├── TaskVoter.php                    # ← Add custom permissions
+│   └── Generated/
+│       └── TaskVoterGenerated.php       # ← Auto-generated base
+│
+└── src/Form/
+    ├── TaskType.php                     # ← Add custom form fields
     └── Generated/
-        └── TaskVoterGenerated.php       # ← Auto-generated base
+        └── TaskTypeGenerated.php        # ← Auto-generated base
 ```
 
 **Safe to edit:**
@@ -291,6 +298,7 @@ app/
 - `src/Repository/TaskRepository.php`
 - `src/Controller/TaskController.php`
 - `src/Security/Voter/TaskVoter.php`
+- `src/Form/TaskType.php`
 
 **Never edit (always regenerated):**
 - All files in `Generated/` folders

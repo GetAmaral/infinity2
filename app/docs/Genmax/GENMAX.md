@@ -22,6 +22,7 @@ Genmax generates production-ready Symfony code directly from database entities (
 | Repositories | ✅ Active | Base + Extension with query methods |
 | Controllers | ✅ Active | Web controllers with CRUD operations |
 | Security Voters | ✅ Active | RBAC permission checking with role hierarchy |
+| Symfony Forms | ✅ Active | Form classes with auto field detection and Stimulus integration |
 | Batch Operations | 🔨 Planned | Bulk create/update/delete (future) |
 
 ### Architecture Pattern
@@ -119,7 +120,7 @@ Defines properties within an entity.
 
 ## Generated File Structure
 
-For entity `Contact` with API enabled, DTOs enabled, controllers enabled, and voters enabled:
+For entity `Contact` with API enabled, DTOs enabled, controllers enabled, voters enabled, and forms enabled:
 
 ```
 app/
@@ -152,10 +153,15 @@ app/
 │   └── Generated/
 │       └── ContactControllerGenerated.php        # ALWAYS regenerated
 │
-└── src/Security/Voter/
-    ├── ContactVoter.php                          # Created once, safe to edit
+├── src/Security/Voter/
+│   ├── ContactVoter.php                          # Created once, safe to edit
+│   └── Generated/
+│       └── ContactVoterGenerated.php             # ALWAYS regenerated
+│
+└── src/Form/
+    ├── ContactType.php                           # Created once, safe to edit
     └── Generated/
-        └── ContactVoterGenerated.php             # ALWAYS regenerated
+        └── ContactTypeGenerated.php              # ALWAYS regenerated
 ```
 
 ---
@@ -420,6 +426,409 @@ if (!$sameOrganization) {
 - ADMIN/SUPER_ADMIN: Can access all organizations
 - ORGANIZATION_ADMIN: Limited to their organization
 - Regular users: Limited to their organization
+
+### Symfony Forms
+
+Genmax automatically generates **Symfony Form classes** with automatic field type detection, validation, and relationship handling.
+
+#### What Are Forms?
+
+Symfony Forms provide:
+- **Type-safe form handling**: Proper field types for text, numbers, dates, enums, relationships
+- **Validation integration**: Automatically applies validation rules
+- **Relationship widgets**: Smart dropdowns and collections with Stimulus controllers
+- **CSRF protection**: Built-in security
+- **Custom styling**: Luminai theme with light/dark mode support
+
+#### Form Configuration Fields
+
+**GeneratorProperty fields for form configuration:**
+
+```php
+// Basic form control
+$property->setShowInForm(true);           // Include in form (default: true)
+$property->setFormType('TextType');       // Override auto-detected type
+$property->setFormRequired(true);         // Required field (default: follows nullable)
+$property->setFormReadOnly(false);        // Read-only field
+$property->setFormHelp('Helper text');    // Help text below field
+
+// Relationship display options
+$property->setFormExpanded(false);        // Use checkboxes/radios instead of select
+
+// Collection options (OneToMany relationships)
+$property->setCollectionAllowAdd(true);   // Allow adding items
+$property->setCollectionAllowDelete(true); // Allow deleting items
+
+// HTML attributes (stored as JSON)
+$property->setFormWidgetAttr([
+    'class' => 'custom-class',
+    'placeholder' => 'Enter value',
+    'data-controller' => 'custom'
+]);
+$property->setFormLabelAttr(['class' => 'custom-label']);
+$property->setFormRowAttr(['class' => 'custom-row']);
+
+// Advanced: Full form options override
+$property->setFormOptions([
+    'label' => 'Custom Label',
+    'attr' => ['class' => 'special'],
+    'help' => 'Custom help'
+]);
+```
+
+#### Automatic Form Type Detection
+
+Genmax automatically selects appropriate form types based on property types:
+
+| Property Type | Form Type | Notes |
+|--------------|-----------|-------|
+| `string` (≤255) | `TextType` | Standard text input |
+| `string` (>255) / `text` | `TextareaType` | Multi-line text |
+| `integer` / `smallint` / `bigint` | `IntegerType` | Number input |
+| `float` / `decimal` | `NumberType` | Decimal input |
+| `boolean` | `CheckboxType` | Checkbox |
+| `datetime` / `datetime_immutable` | `DateTimeType` | Date + time picker |
+| `date` | `DateType` | Date picker |
+| `time` | `TimeType` | Time picker |
+| Enum | `EnumType` | Dropdown with enum values |
+| ManyToOne / ManyToMany / OneToOne | `EntityType` | Relationship selector with AJAX search |
+| OneToMany | `CollectionType` | Dynamic collection with add/delete |
+
+#### Generated Form Structure
+
+**Base form (always regenerated):**
+```php
+// src/Form/Generated/ContactTypeGenerated.php
+abstract class ContactTypeGenerated extends AbstractType
+{
+    public function __construct(
+        protected readonly TranslatorInterface $translator
+    ) {}
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder->add('fullName', TextType::class, [
+            'label' => 'Full Name',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter full name',
+            ],
+        ]);
+
+        $builder->add('email', TextType::class, [
+            'label' => 'Email',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter email',
+            ],
+        ]);
+
+        $builder->add('company', EntityType::class, [
+            'label' => 'Company',
+            'required' => true,
+            'class' => App\Entity\Company::class,
+            'choice_label' => '__toString',
+            'attr' => [
+                'class' => 'form-input-modern',
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Company',
+                'data-relation-select-route-value' => 'company_api_search',
+            ],
+        ]);
+    }
+}
+```
+
+**Extension form (created once, safe to customize):**
+```php
+// src/Form/ContactType.php
+namespace App\Form;
+
+use App\Form\Generated\ContactTypeGenerated;
+
+class ContactType extends ContactTypeGenerated
+{
+    // Add custom fields or override base behavior
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        parent::buildForm($builder, $options);
+
+        // Add custom field
+        $builder->add('notes', TextareaType::class, [
+            'label' => 'Internal Notes',
+            'required' => false,
+            'mapped' => false,  // Not mapped to entity
+        ]);
+    }
+}
+```
+
+#### Relationship Handling
+
+**ManyToOne / OneToOne Relationships:**
+
+Generated with AJAX search via Stimulus `relation-select` controller:
+
+```php
+$builder->add('company', EntityType::class, [
+    'class' => App\Entity\Company::class,
+    'choice_label' => '__toString',
+    'attr' => [
+        'data-controller' => 'relation-select',
+        'data-relation-select-entity-value' => 'Company',
+        'data-relation-select-route-value' => 'company_api_search',
+        'data-relation-select-add-route-value' => 'company_new_modal',
+        'data-relation-select-multiple-value' => 'false',
+        'placeholder' => 'Select company',
+    ],
+]);
+```
+
+**ManyToMany Relationships:**
+
+Multiple selection with AJAX search:
+
+```php
+$builder->add('tags', EntityType::class, [
+    'class' => App\Entity\Tag::class,
+    'choice_label' => '__toString',
+    'multiple' => true,
+    'attr' => [
+        'data-controller' => 'relation-select',
+        'data-relation-select-multiple-value' => 'true',
+        'placeholder' => 'Select one or more tags',
+    ],
+]);
+```
+
+**OneToMany Collections:**
+
+Dynamic add/delete with Stimulus `live-collection` controller:
+
+```php
+$builder->add('phoneNumbers', CollectionType::class, [
+    'entry_type' => App\Form\PhoneNumberType::class,
+    'entry_options' => ['label' => false],
+    'allow_add' => true,
+    'allow_delete' => true,
+    'by_reference' => false,
+    'prototype' => true,
+    'attr' => [
+        'data-controller' => 'live-collection',
+        'data-live-collection-allow-add-value' => true,
+        'data-live-collection-allow-delete-value' => true,
+        'data-live-collection-max-items-value' => 5,
+    ],
+    'constraints' => [
+        new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
+    ],
+]);
+```
+
+#### Enum Support
+
+Enums automatically generate dropdowns with proper labeling:
+
+```php
+// Enum class
+enum LeadSourceCategory: string
+{
+    case ORGANIC = 'organic';
+    case PAID = 'paid';
+    case REFERRAL = 'referral';
+
+    public function getLabel(): string
+    {
+        return match($this) {
+            self::ORGANIC => 'Organic',
+            self::PAID => 'Paid Advertising',
+            self::REFERRAL => 'Referral',
+        };
+    }
+}
+
+// Generated form field
+$builder->add('category', EnumType::class, [
+    'class' => App\Enum\LeadSourceCategory::class,
+    'choice_label' => 'getLabel',
+    'attr' => [
+        'class' => 'form-input-modern',
+    ],
+]);
+```
+
+#### Using Forms in Controllers
+
+**In generated controllers:**
+
+Forms are automatically integrated in create/edit actions:
+
+```php
+// src/Controller/Generated/ContactControllerGenerated.php
+#[Route('/contacts/new', name: 'contact_new', methods: ['GET', 'POST'])]
+public function new(Request $request): Response
+{
+    $contact = new Contact();
+    $form = $this->createForm(ContactType::class, $contact);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $this->entityManager->persist($contact);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('contact_show', ['id' => $contact->getId()]);
+    }
+
+    return $this->render('contact/new.html.twig', [
+        'form' => $form,
+    ]);
+}
+```
+
+**In custom controllers:**
+
+```php
+use App\Form\ContactType;
+
+class ContactController extends AbstractController
+{
+    #[Route('/contacts/{id}/edit', name: 'contact_edit')]
+    public function edit(Contact $contact, Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(ContactType::class, $contact);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Contact updated successfully');
+
+            return $this->redirectToRoute('contact_show', ['id' => $contact->getId()]);
+        }
+
+        return $this->render('contact/edit.html.twig', [
+            'contact' => $contact,
+            'form' => $form,
+        ]);
+    }
+}
+```
+
+#### Form Theming
+
+Genmax includes a custom form theme with Luminai styling:
+
+**Configuration (already set in `config/packages/twig.yaml`):**
+```yaml
+twig:
+    form_themes:
+        - 'genmax/twig/form_theme.html.twig'
+```
+
+**Features:**
+- Modern input styling with `form-input-modern` class
+- Light/Dark theme support via CSS variables
+- Error messages with proper styling
+- Checkbox and radio button custom styles
+- Proper label formatting
+
+**Custom CSS classes (in `assets/styles/app.css`):**
+- `.form-input-modern` - Styled input fields
+- `.form-label-modern` - Styled labels
+- `.form-error-modern` - Error messages
+- `.form-checkbox-modern` - Checkbox styling
+
+#### Customizing Forms
+
+**Override specific field:**
+```php
+// src/Form/ContactType.php
+class ContactType extends ContactTypeGenerated
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        parent::buildForm($builder, $options);
+
+        // Override email field to add custom validation message
+        $builder->add('email', TextType::class, [
+            'label' => 'Email Address',
+            'help' => 'We will never share your email',
+            'attr' => [
+                'placeholder' => 'you@example.com',
+                'autocomplete' => 'email',
+            ],
+        ]);
+    }
+}
+```
+
+**Add conditional fields:**
+```php
+class ContactType extends ContactTypeGenerated
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        parent::buildForm($builder, $options);
+
+        // Add field based on options
+        if ($options['show_internal_notes'] ?? false) {
+            $builder->add('internalNotes', TextareaType::class, [
+                'label' => 'Internal Notes',
+                'required' => false,
+            ]);
+        }
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'show_internal_notes' => false,
+        ]);
+    }
+}
+```
+
+**Add form events:**
+```php
+class ContactType extends ContactTypeGenerated
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        parent::buildForm($builder, $options);
+
+        // Add event listener
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $contact = $event->getData();
+            $form = $event->getForm();
+
+            // Modify form based on data
+            if ($contact && $contact->isVip()) {
+                $form->add('vipNotes', TextareaType::class, [
+                    'label' => 'VIP Notes',
+                ]);
+            }
+        });
+    }
+}
+```
+
+#### Form Configuration Best Practices
+
+✅ **DO:**
+- Use `showInForm = true` for fields that should appear in forms
+- Configure `formExpanded = true` for small enum/relationship sets (shows as radios/checkboxes)
+- Set `collectionAllowAdd/Delete` appropriately for OneToMany relationships
+- Use `formHelp` for complex fields that need explanation
+- Leverage `formWidgetAttr` for custom Stimulus controllers
+
+❌ **DON'T:**
+- Include auto-generated fields like `id`, `createdAt`, `updatedAt` in forms
+- Forget to set `formRequired` for mandatory business fields
+- Use collections without setting max items limit
+- Edit generated form base classes (edit extension class instead)
 
 ### API Filter Examples
 
@@ -887,6 +1296,8 @@ parameters:
         controller_generated_dir: 'src/Controller/Generated'
         voter_dir: 'src/Security/Voter'
         voter_generated_dir: 'src/Security/Voter/Generated'
+        form_dir: 'src/Form'
+        form_generated_dir: 'src/Form/Generated'
         api_platform_config_dir: 'config/api_platform'
 
     genmax.templates:
@@ -904,6 +1315,8 @@ parameters:
         controller_extension: 'genmax/php/controller_extension.php.twig'
         voter_generated: 'genmax/php/voter_generated.php.twig'
         voter_extension: 'genmax/php/voter_extension.php.twig'
+        form_generated: 'genmax/php/form_generated.php.twig'
+        form_extension: 'genmax/php/form_extension.php.twig'
         api_platform: 'genmax/yaml/api_platform.yaml.twig'
 ```
 
@@ -920,7 +1333,8 @@ GenmaxOrchestrator (Main Controller)
 ├── StateProviderGenerator → Custom data providers
 ├── RepositoryGenerator → Repositories (base + extension)
 ├── ControllerGenerator → Web controllers (base + extension)
-└── VoterGenerator → Security voters (base + extension)
+├── VoterGenerator → Security voters (base + extension)
+└── FormGenerator → Symfony forms (base + extension)
 ```
 
 **Feature Flags:** See `GenmaxOrchestrator.php:28-43`
@@ -962,11 +1376,11 @@ php bin/console doctrine:migrations:migrate
 ### Planned (Not Yet Implemented)
 
 - ✨ **Batch Operations** - Bulk create/update/delete API endpoints
-- ✨ **Forms** - Symfony forms for web UI
 - ✨ **Templates** - Twig templates for CRUD pages
 - ✨ **Tests** - Automated PHPUnit tests
 
 See `app/docs/Genmax/old/BATCH_OPERATIONS_IMPLEMENTATION_PLAN.md` for batch operations roadmap.
+See `app/docs/Genmax/FORM_GENERATOR.md` for complete form generation documentation.
 See `app/docs/Genmax/CONTROLLER_GENERATOR.md` for complete controller generation documentation.
 
 ---
