@@ -23,6 +23,7 @@ Genmax generates production-ready Symfony code directly from database entities (
 | Controllers | ✅ Active | Web controllers with CRUD operations |
 | Security Voters | ✅ Active | RBAC permission checking with role hierarchy |
 | Symfony Forms | ✅ Active | Form classes with auto field detection and Stimulus integration |
+| Twig Templates | ✅ Active | List/Show/Form templates with data-bind and Enter-Tab navigation |
 | Batch Operations | 🔨 Planned | Bulk create/update/delete (future) |
 
 ### Architecture Pattern
@@ -120,7 +121,7 @@ Defines properties within an entity.
 
 ## Generated File Structure
 
-For entity `Contact` with API enabled, DTOs enabled, controllers enabled, voters enabled, and forms enabled:
+For entity `Contact` with API enabled, DTOs enabled, controllers enabled, voters enabled, forms enabled, and templates enabled:
 
 ```
 app/
@@ -158,10 +159,23 @@ app/
 │   └── Generated/
 │       └── ContactVoterGenerated.php             # ALWAYS regenerated
 │
-└── src/Form/
-    ├── ContactType.php                           # Created once, safe to edit
-    └── Generated/
-        └── ContactTypeGenerated.php              # ALWAYS regenerated
+├── src/Form/
+│   ├── ContactType.php                           # Created once, safe to edit
+│   └── Generated/
+│       └── ContactTypeGenerated.php              # ALWAYS regenerated
+│
+└── templates/contact/
+    ├── index.html.twig                           # Created once, safe to edit
+    ├── show.html.twig                            # Created once, safe to edit
+    ├── form.html.twig                            # Created once, safe to edit
+    ├── new.html.twig                             # Created once, safe to edit
+    ├── edit.html.twig                            # Created once, safe to edit
+    └── generated/
+        ├── index_generated.html.twig             # ALWAYS regenerated
+        ├── show_generated.html.twig              # ALWAYS regenerated
+        ├── form_generated.html.twig              # ALWAYS regenerated
+        ├── new_generated.html.twig               # ALWAYS regenerated
+        └── edit_generated.html.twig              # ALWAYS regenerated
 ```
 
 ---
@@ -1191,6 +1205,302 @@ protected function entityToArray(object $entity): array
 
 Genmax-generated controllers handle this correctly. The issue only appears when manually writing deep nested serialization or custom array conversions.
 
+### Twig Templates
+
+Genmax automatically generates **Twig templates** for all CRUD operations with Generated/Extended pattern, data-bind rendering, and proper field type formatting.
+
+#### What Are Templates?
+
+Genmax templates provide:
+- **Multi-view support**: Grid, List, and Table views for index pages
+- **Data-bind rendering**: Client-side rendering using `view-toggle` Stimulus controller
+- **Enter-Tab navigation**: Forms use `form-navigation` controller for keyboard efficiency
+- **Field type formatting**: Proper display for booleans, dates, relationships, UUIDs, etc.
+- **Responsive layouts**: Bento Grid for show pages, Bootstrap cards for lists
+- **Voter integration**: Permission-based button visibility
+
+#### Generated Template Structure
+
+**Base templates (always regenerated):**
+```
+templates/{entity}/generated/
+├── index_generated.html.twig    # List page (extends _base_entity_list.html.twig)
+├── show_generated.html.twig     # Detail page with Bento Grid layout
+├── form_generated.html.twig     # Shared form template
+├── new_generated.html.twig      # Create page wrapper
+└── edit_generated.html.twig     # Edit page wrapper
+```
+
+**Extension templates (created once, safe to customize):**
+```
+templates/{entity}/
+├── index.html.twig              # Includes index_generated.html.twig
+├── show.html.twig               # Includes show_generated.html.twig
+├── form.html.twig               # Includes form_generated.html.twig
+├── new.html.twig                # Includes new_generated.html.twig
+└── edit.html.twig               # Includes edit_generated.html.twig
+```
+
+#### List Page (index.html.twig)
+
+Generated list pages extend `_base_entity_list.html.twig` which provides:
+
+**Multi-view system:**
+- **Grid View**: Card-based layout with icons and badges
+- **List View**: Compact rows with essential info
+- **Table View**: Full data table with sorting
+
+**Data-bind rendering:**
+```twig
+{# API provides data, templates render client-side #}
+<h5 data-bind="fullName" data-bind-text></h5>
+<span data-bind="company.display" data-bind-text></span>
+
+{# Conditional rendering #}
+<span class="badge bg-success" data-bind-if="isActive">Active</span>
+```
+
+**Example Grid View:**
+```twig
+{% block grid_view_item_template %}
+    <div class="col">
+        <div class="luminai-card h-100 p-4" style="cursor: pointer;"
+             onclick="window.location.href='/contact/' + this.closest('[data-entity-id]').dataset.entityId">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-person text-neon fs-2 me-3"></i>
+                <div class="flex-grow-1">
+                    <h5 data-bind="fullName" data-bind-text></h5>
+                    <p class="text-muted" data-bind="company.display" data-bind-text></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+```
+
+#### Show Page (show.html.twig)
+
+Detail pages use **Bento Grid layout** with proper field type formatting:
+
+**Boolean fields:**
+```twig
+{% if contact.isActive %}
+    <span class="badge bg-success">
+        <i class="bi bi-check-circle me-1"></i>{{ 'common.yes'|trans }}
+    </span>
+{% else %}
+    <span class="badge bg-secondary">
+        <i class="bi bi-x-circle me-1"></i>{{ 'common.no'|trans }}
+    </span>
+{% endif %}
+```
+
+**DateTime fields:**
+```twig
+{# Full datetime #}
+{{ contact.createdAt|date('F j, Y, g:i A') }}
+{# Output: January 15, 2025, 2:30 PM #}
+
+{# Date only #}
+{{ contact.birthDate|date('M d, Y') }}
+{# Output: Jan 15, 2025 #}
+```
+
+**Relationship fields:**
+```twig
+{# Clickable link with toString #}
+{% if contact.company %}
+    <a href="{{ path('company_show', {id: contact.company.id}) }}">
+        {{ contact.company }}  {# Uses __toString() #}
+        <i class="bi bi-arrow-right ms-1"></i>
+    </a>
+{% else %}
+    <span class="text-muted">-</span>
+{% endif %}
+```
+
+**Null value handling:**
+```twig
+{{ contact.middleName ?? '-' }}
+```
+
+#### Form Pages (new.html.twig, edit.html.twig)
+
+Generated forms include critical features:
+
+**Enter-as-Tab behavior:**
+```twig
+{{ form_start(form, {
+    'attr': {
+        'data-turbo': 'true',
+        'data-controller': 'form-navigation'  {# CRITICAL: Enter-Tab navigation #}
+    }
+}) }}
+```
+
+**Behavior:**
+- Press Enter → moves to next field (instead of submitting)
+- Last field → Enter submits form
+- Textareas → Enter inserts new line (natural)
+- Tom-select fields → Properly handled
+
+**Auto field rendering:**
+```twig
+{% for child in form.children %}
+    {% if child.vars.name not in ['_token'] %}
+        <div class="mb-3">
+            {{ form_row(child) }}
+        </div>
+    {% endif %}
+{% endfor %}
+```
+
+#### Customizing Templates
+
+Extension templates are safe to edit and won't be overwritten:
+
+```twig
+{# templates/contact/show.html.twig - Customize show page #}
+{% extends 'contact/generated/show_generated.html.twig' %}
+
+{# Add custom section #}
+{% block before_metadata %}
+    <div class="bento-item">
+        <div class="luminai-card p-4">
+            <h5>Custom Section</h5>
+            {# Your custom content #}
+        </div>
+    </div>
+{% endblock %}
+```
+
+```twig
+{# templates/contact/index.html.twig - Customize list page #}
+{% extends 'contact/generated/index_generated.html.twig' %}
+
+{# Override grid item template #}
+{% block grid_view_item_template %}
+    {# Your custom grid item layout #}
+{% endblock %}
+```
+
+```twig
+{# templates/contact/form.html.twig - Customize form #}
+{% include 'contact/generated/form_generated.html.twig' %}
+
+{# Or extend and modify #}
+{% block form_fields %}
+    {{ parent() }}
+    {# Add extra fields #}
+{% endblock %}
+```
+
+#### Template Configuration Fields
+
+**GeneratorProperty fields for template configuration:**
+
+```php
+// List page display
+$property->setShowInList(true);           // Show in Grid/List/Table views
+$property->setSortable(true);             // Enable sorting (both UI and API)
+
+// Detail page display
+$property->setShowInDetail(true);         // Show in show/detail page
+
+// Form display (inherited from Form Generator)
+$property->setShowInForm(true);           // Show in forms
+```
+
+#### Field Type Icons
+
+Genmax automatically assigns Bootstrap icons based on field types:
+
+| Field Type | Icon | Example |
+|------------|------|---------|
+| `string` | `circle` | General text |
+| `text` | `align-left` | Long text |
+| `integer` / `bigint` | `hash` | Numbers |
+| `float` / `decimal` | `currency-dollar` | Money |
+| `boolean` | `toggle-on` | True/False |
+| `datetime` / `datetime_immutable` | `calendar-event` | Timestamps |
+| `date` | `calendar` | Dates |
+| `time` | `clock` | Time |
+| `uuid` | `key` | Identifiers |
+| Relationships | `arrow-right-circle` | Links |
+
+**Entity-specific icons:**
+- User → `people`
+- Company/Organization → `building`
+- Contact → `person-circle`
+- Course → `book`
+- Task → `check2-square`
+- Message → `chat-dots`
+- And 20+ more patterns...
+
+#### Using Templates in Controllers
+
+Generated controllers automatically integrate with templates:
+
+```php
+// src/Controller/Generated/ContactControllerGenerated.php
+#[Route('/contacts', name: 'contact_index')]
+public function index(): Response
+{
+    // Controller provides API endpoint, template uses data-bind
+    return $this->render('contact/index.html.twig', [
+        'entity_name' => 'contact',
+        'page_icon' => 'bi-person',
+    ]);
+}
+
+#[Route('/contacts/{id}', name: 'contact_show')]
+public function show(Contact $contact): Response
+{
+    $this->denyAccessUnlessGranted(ContactVoter::VIEW, $contact);
+
+    return $this->render('contact/show.html.twig', [
+        'contact' => $contact,
+    ]);
+}
+
+#[Route('/contacts/new', name: 'contact_new', methods: ['GET', 'POST'])]
+public function new(Request $request): Response
+{
+    $contact = new Contact();
+    $form = $this->createForm(ContactType::class, $contact);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $this->entityManager->persist($contact);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('contact_show', ['id' => $contact->getId()]);
+    }
+
+    return $this->render('contact/new.html.twig', [
+        'contact' => $contact,
+        'form' => $form,
+    ]);
+}
+```
+
+#### Best Practices
+
+✅ **DO:**
+- Use `showInList = true` for important fields (limit to 4-5 per entity)
+- Use `showInDetail = true` for all user-facing fields
+- Enable `sortable = true` on fields users need to sort by
+- Customize extension templates for entity-specific layouts
+- Use voter integration for permission-based UI
+- Test all three views (Grid/List/Table) after generation
+
+❌ **DON'T:**
+- Include auto-generated fields (`id`, `createdAt`, `updatedAt`) in list views (shown automatically in metadata)
+- Edit generated template files (edit extension templates instead)
+- Forget to implement `__toString()` on entities with relationships
+- Skip testing Enter-Tab navigation in forms
+- Disable data-bind rendering (breaks multi-view system)
+
 ### Validation
 
 ✅ **DO:**
@@ -1298,6 +1608,8 @@ parameters:
         voter_generated_dir: 'src/Security/Voter/Generated'
         form_dir: 'src/Form'
         form_generated_dir: 'src/Form/Generated'
+        template_dir: 'templates'
+        template_genmax_dir: 'templates/genmax/twig'
         api_platform_config_dir: 'config/api_platform'
 
     genmax.templates:
@@ -1317,6 +1629,11 @@ parameters:
         voter_extension: 'genmax/php/voter_extension.php.twig'
         form_generated: 'genmax/php/form_generated.php.twig'
         form_extension: 'genmax/php/form_extension.php.twig'
+        template_index_generated: 'genmax/twig/index_generated.html.twig'
+        template_show_generated: 'genmax/twig/show_generated.html.twig'
+        template_form_generated: 'genmax/twig/form_generated.html.twig'
+        template_new_generated: 'genmax/twig/new_generated.html.twig'
+        template_edit_generated: 'genmax/twig/edit_generated.html.twig'
         api_platform: 'genmax/yaml/api_platform.yaml.twig'
 ```
 
@@ -1334,7 +1651,8 @@ GenmaxOrchestrator (Main Controller)
 ├── RepositoryGenerator → Repositories (base + extension)
 ├── ControllerGenerator → Web controllers (base + extension)
 ├── VoterGenerator → Security voters (base + extension)
-└── FormGenerator → Symfony forms (base + extension)
+├── FormGenerator → Symfony forms (base + extension)
+└── TemplateGenerator → Twig templates (base + extension)
 ```
 
 **Feature Flags:** See `GenmaxOrchestrator.php:28-43`
@@ -1376,12 +1694,17 @@ php bin/console doctrine:migrations:migrate
 ### Planned (Not Yet Implemented)
 
 - ✨ **Batch Operations** - Bulk create/update/delete API endpoints
-- ✨ **Templates** - Twig templates for CRUD pages
 - ✨ **Tests** - Automated PHPUnit tests
 
 See `app/docs/Genmax/old/BATCH_OPERATIONS_IMPLEMENTATION_PLAN.md` for batch operations roadmap.
-See `app/docs/Genmax/FORM_GENERATOR.md` for complete form generation documentation.
-See `app/docs/Genmax/CONTROLLER_GENERATOR.md` for complete controller generation documentation.
+
+### Genmax Documentation
+
+- **Main Documentation**: `app/docs/Genmax/GENMAX.md` (this file)
+- **Quick Start Guide**: `app/docs/Genmax/QUICK_START.md`
+- **Template Generator**: `app/docs/Genmax/TEMPLATE_GENERATOR.md`
+- **Form Generator**: Referenced in this documentation
+- **Controller Generator**: Referenced in this documentation
 
 ---
 

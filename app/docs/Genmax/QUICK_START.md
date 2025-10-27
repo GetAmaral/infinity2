@@ -186,9 +186,19 @@ docker-compose exec app php bin/console genmax:generate Task
 [GENMAX] Generated Voter extension
 [GENMAX] Generated Form base
 [GENMAX] Generated Form extension
+[GENMAX] Generated index template base
+[GENMAX] Generated index template extension
+[GENMAX] Generated show template base
+[GENMAX] Generated show template extension
+[GENMAX] Generated form template base
+[GENMAX] Generated form template extension
+[GENMAX] Generated new template base
+[GENMAX] Generated new template extension
+[GENMAX] Generated edit template base
+[GENMAX] Generated edit template extension
 [GENMAX] Completed Task (100%)
 [GENMAX] Code generation completed successfully
-Files generated: 17
+Files generated: 27
 ```
 
 ---
@@ -285,10 +295,23 @@ app/
 │   └── Generated/
 │       └── TaskVoterGenerated.php       # ← Auto-generated base
 │
-└── src/Form/
-    ├── TaskType.php                     # ← Add custom form fields
-    └── Generated/
-        └── TaskTypeGenerated.php        # ← Auto-generated base
+├── src/Form/
+│   ├── TaskType.php                     # ← Add custom form fields
+│   └── Generated/
+│       └── TaskTypeGenerated.php        # ← Auto-generated base
+│
+└── templates/task/
+    ├── index.html.twig                  # ← Customize list page
+    ├── show.html.twig                   # ← Customize detail page
+    ├── form.html.twig                   # ← Customize form
+    ├── new.html.twig                    # ← Customize create page
+    ├── edit.html.twig                   # ← Customize edit page
+    └── generated/
+        ├── index_generated.html.twig    # ← Auto-generated base
+        ├── show_generated.html.twig     # ← Auto-generated base
+        ├── form_generated.html.twig     # ← Auto-generated base
+        ├── new_generated.html.twig      # ← Auto-generated base
+        └── edit_generated.html.twig     # ← Auto-generated base
 ```
 
 **Safe to edit:**
@@ -299,9 +322,10 @@ app/
 - `src/Controller/TaskController.php`
 - `src/Security/Voter/TaskVoter.php`
 - `src/Form/TaskType.php`
+- `templates/task/*.html.twig` (extension templates)
 
 **Never edit (always regenerated):**
-- All files in `Generated/` folders
+- All files in `Generated/` or `generated/` folders
 - `src/State/*Processor.php` and `*Provider.php`
 - `config/api_platform/*.yaml`
 
