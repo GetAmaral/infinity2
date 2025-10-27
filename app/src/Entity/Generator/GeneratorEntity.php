@@ -208,7 +208,7 @@ class GeneratorEntity
     private ?array $validationMessages = null;  // Default messages for common validations
 
     // ====================================
-    // NAVIGATION (2 fields)
+    // NAVIGATION (3 fields)
     // ====================================
 
     #[ORM\Column(length: 100, nullable: true)]
@@ -216,10 +216,15 @@ class GeneratorEntity
     #[Groups(['generator_entity:read', 'generator_entity:write'])]
     private ?string $menuGroup = null;       // "CRM", "System", "Reports"
 
-    #[ORM\Column(type: 'integer', options: ['default' => 100])]
+    #[ORM\Column(type: 'integer', nullable: true)]
     #[Assert\Range(min: 0, max: 9999)]
     #[Groups(['generator_entity:read', 'generator_entity:write'])]
-    private int $menuOrder = 100;
+    private ?int $menuOrder = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    #[Groups(['generator_entity:read', 'generator_entity:write'])]
+    private ?string $navigationLabel = null;  // Future: Custom translation key metadata
 
     // ====================================
     // TESTING (1 field)
@@ -736,14 +741,25 @@ class GeneratorEntity
         return $this;
     }
 
-    public function getMenuOrder(): int
+    public function getMenuOrder(): ?int
     {
         return $this->menuOrder;
     }
 
-    public function setMenuOrder(int $menuOrder): self
+    public function setMenuOrder(?int $menuOrder): self
     {
         $this->menuOrder = $menuOrder;
+        return $this;
+    }
+
+    public function getNavigationLabel(): ?string
+    {
+        return $this->navigationLabel;
+    }
+
+    public function setNavigationLabel(?string $navigationLabel): self
+    {
+        $this->navigationLabel = $navigationLabel;
         return $this;
     }
 
@@ -1084,5 +1100,54 @@ class GeneratorEntity
     {
         $this->controllerOperationShow = $controllerOperationShow;
         return $this;
+    }
+
+    // ====================================
+    // NAVIGATION HELPER METHODS
+    // ====================================
+
+    /**
+     * Determine if entity should appear in navigation
+     *
+     * Rules:
+     * - If menuGroup OR menuOrder is set → show in navigation
+     * - If NEITHER is set → do NOT show in navigation
+     */
+    public function isShownInNavigation(): bool
+    {
+        return $this->menuGroup !== null || $this->menuOrder !== null;
+    }
+
+    /**
+     * Get effective menu group
+     *
+     * Rules:
+     * - If menuGroup is set → use it
+     * - If menuGroup is null but menuOrder is set → use "System"
+     * - Otherwise → return null (not shown)
+     */
+    public function getEffectiveMenuGroup(): ?string
+    {
+        if ($this->menuGroup !== null) {
+            return $this->menuGroup;
+        }
+
+        if ($this->menuOrder !== null) {
+            return 'System';  // Default group when only menuOrder is set
+        }
+
+        return null;
+    }
+
+    /**
+     * Get effective menu order
+     *
+     * Rules:
+     * - If menuOrder is set → use it
+     * - If menuOrder is null → use 9999 (appears last in group)
+     */
+    public function getEffectiveMenuOrder(): int
+    {
+        return $this->menuOrder ?? 9999;
     }
 }

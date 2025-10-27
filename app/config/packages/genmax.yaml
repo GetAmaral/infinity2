@@ -60,6 +60,10 @@ parameters:
         # API Platform config
         api_platform_config_dir: 'config/api_platform'
 
+        # Navigation Config paths
+        navigation_config_dir: 'src/Service'
+        navigation_config_generated_dir: 'src/Service/Generated'
+
         # Test paths
         test_entity_dir: 'tests/Entity'
         test_repository_dir: 'tests/Repository'
@@ -134,6 +138,10 @@ parameters:
         template_form_generated: 'genmax/twig/form_generated.html.twig'
         template_new_generated: 'genmax/twig/new_generated.html.twig'
         template_edit_generated: 'genmax/twig/edit_generated.html.twig'
+
+        # Navigation Config templates
+        navigation_config_generated: 'genmax/php/navigation_config_generated.php.twig'
+        navigation_config_extension: 'genmax/php/navigation_config_extension.php.twig'
 
     # ====================================
     # GENMAX GENERATION OPTIONS

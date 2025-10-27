@@ -41,6 +41,14 @@ nav.terms: Terms of Use
 nav.toggle.navigation: Toggle navigation
 nav.users: Users
 
+# Genmax Generated Navigation Sections
+nav.section.crm: CRM
+nav.section.calendar: Calendar
+nav.section.catalogs: Catalogs
+nav.section.data: Data
+nav.section.learning: Learning
+nav.section.system: System
+
 # ================================================================================
 # Authentication
 # ================================================================================

@@ -38,7 +38,7 @@ class GenmaxOrchestrator
     private const VOTER_ACTIVE = true;            // ✅ Phase 3 - ACTIVE
     private const FORM_ACTIVE = true;             // ✅ Phase 3 - ACTIVE
     private const TEMPLATE_ACTIVE = true;         // ✅ Phase 4 - ACTIVE
-    private const NAVIGATION_ACTIVE = false;      // ⏸️ Phase 4 - Future
+    private const NAVIGATION_ACTIVE = true;       // ✅ Phase 4 - ACTIVE
     private const TRANSLATION_ACTIVE = false;     // ⏸️ Phase 4 - Future
     private const TESTS_ACTIVE = false;           // ⏸️ Phase 5 - Future
 
@@ -59,8 +59,8 @@ class GenmaxOrchestrator
         private readonly VoterGenerator $voterGenerator,
         private readonly FormGenerator $formGenerator,
         private readonly TemplateGenerator $templateGenerator,
+        private readonly NavigationGenerator $navigationGenerator,
         // Future generators will be injected here:
-        // private readonly NavigationGenerator $navigationGenerator,
         // private readonly TranslationGenerator $translationGenerator,
         // private readonly TestGenerator $testGenerator,
         private readonly LoggerInterface $logger
@@ -292,10 +292,19 @@ class GenmaxOrchestrator
                 }
             }
 
-            // 5. Generate navigation (Future)
+            // 5. Generate navigation (ACTIVE)
             if (self::NAVIGATION_ACTIVE && !$dryRun) {
-                $this->logger->info('[GENMAX] Generating navigation...');
-                // $this->navigationGenerator->generate($entities);
+                try {
+                    $this->logger->info('[GENMAX] Generating navigation configuration');
+                    $files = $this->navigationGenerator->generate();
+                    $generatedFiles = array_merge($generatedFiles, $files);
+                } catch (\Throwable $e) {
+                    $this->logger->error('[GENMAX] Navigation generation failed', [
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+                    throw $e;
+                }
             }
 
             // 6. Generate translations (Future)
@@ -455,6 +464,7 @@ class GenmaxOrchestrator
         $count += self::VOTER_ACTIVE ? 1 : 0;
         $count += self::FORM_ACTIVE ? 1 : 0;
         $count += self::TEMPLATE_ACTIVE ? 1 : 0;
+        $count += self::NAVIGATION_ACTIVE ? 1 : 0;
         $count += self::TESTS_ACTIVE ? 1 : 0;
         return $count;
     }

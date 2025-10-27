@@ -1,39 +1,41 @@
-<?php
+{% verbatim %}<?php
+
+/**
+ * NavigationConfig - Customizable Navigation Configuration
+ *
+ * This file extends NavigationConfigGenerated and allows manual customization.
+ *
+ * Generated at: {% endverbatim %}{{ generation_timestamp|date('Y-m-d H:i:s') }}{% verbatim %}
+ *
+ * SAFE TO EDIT:
+ * - Add custom menu items
+ * - Override group order
+ * - Add custom sections
+ * - Modify existing items
+ * - Add conditional logic
+ * - Reorder sections
+ *
+ * IMPORTANT:
+ * - Do NOT edit NavigationConfigGenerated.php (will be overwritten)
+ * - This file is created ONCE and safe to customize
+ * - getGeneratedMenuItems() provides database-driven items
+ */
 
 declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Security\Voter\CourseVoter;
-use App\Security\Voter\OrganizationVoter;
-use App\Security\Voter\TreeFlowVoter;
-use App\Security\Voter\UserVoter;
 use App\Service\Generated\NavigationConfigGenerated;
 
-/**
- * NavigationConfig - Single Source of Truth for Navigation Menu Structure
- *
- * Centralizes menu configuration including:
- * - Menu structure and hierarchy
- * - Required permissions for each menu item
- * - Route names, icons, and labels
- * - Visibility rules based on roles and permissions
- *
- * Following Symfony 2025 best practices:
- * - Uses Security Voters as permission source
- * - Supports role-based and attribute-based access control
- * - Compatible with is_granted() Twig function
- * - Provides single configuration point for all navigation
- *
- * GENMAX INTEGRATION:
- * - Extends NavigationConfigGenerated for automatic menu item generation
- * - Merges manual items (home, student courses) with generated items
- * - Generated items come from generator_entity table via Genmax
- */
 final class NavigationConfig extends NavigationConfigGenerated
 {
     /**
      * Get main navigation menu structure
+     *
+     * Combines:
+     * 1. Manual/hardcoded items (home, student courses)
+     * 2. Generated items from database (from getGeneratedMenuItems())
+     * 3. Admin section
      *
      * @return array<string, array{
      *   label: string,
@@ -56,7 +58,7 @@ final class NavigationConfig extends NavigationConfigGenerated
                 'label' => 'nav.home',
                 'route' => 'app_home',
                 'icon' => 'bi-house',
-                // No permission required - all authenticated users can access home
+                // No permission required - all authenticated users
             ],
             'student_courses' => [
                 'label' => 'nav.my.courses',
@@ -64,35 +66,10 @@ final class NavigationConfig extends NavigationConfigGenerated
                 'icon' => 'bi-mortarboard',
                 'role' => 'ROLE_STUDENT',
             ],
-            'organizations' => [
-                'label' => 'nav.organizations',
-                'route' => 'organization_index',
-                'icon' => 'bi-building',
-                'permission' => OrganizationVoter::LIST,
-            ],
-            'users' => [
-                'label' => 'nav.users',
-                'route' => 'user_index',
-                'icon' => 'bi-people',
-                'permission' => UserVoter::LIST,
-            ],
-            'courses' => [
-                'label' => 'nav.courses',
-                'route' => 'course_index',
-                'icon' => 'bi-book',
-                'permission' => CourseVoter::LIST,
-            ],
-            'treeflows' => [
-                'label' => 'treeflow.plural',
-                'route' => 'treeflow_index',
-                'icon' => 'bi-diagram-3',
-                'permission' => TreeFlowVoter::LIST,
-                'translation_domain' => 'treeflow',
-            ],
         ];
 
         // ============================================
-        // GENERATED ITEMS (from database via Genmax)
+        // GENERATED ITEMS (from database)
         // ============================================
         $generatedItems = $this->getGeneratedMenuItems();
 
@@ -128,19 +105,12 @@ final class NavigationConfig extends NavigationConfigGenerated
     /**
      * Get user profile dropdown menu structure
      *
-     * @return array<string, array{
-     *   label: string,
-     *   route: string,
-     *   icon: string,
-     *   permission?: string,
-     *   role?: string,
-     *   divider_before?: bool,
-     *   css_class?: string
-     * }>
+     * @return array<string, array>
      */
     public function getUserMenu(): array
     {
-        return [
+        // Manual user menu items
+        $manualItems = [
             'settings' => [
                 'label' => 'nav.settings',
                 'route' => 'app_settings',
@@ -161,6 +131,11 @@ final class NavigationConfig extends NavigationConfigGenerated
                 'css_class' => 'text-danger',
             ],
         ];
+
+        // Generated user menu items (if any)
+        $generatedItems = $this->getGeneratedUserMenuItems();
+
+        return array_merge($manualItems, $generatedItems);
     }
 
     /**
@@ -212,3 +187,4 @@ final class NavigationConfig extends NavigationConfigGenerated
         return $item['translation_domain'] ?? 'messages';
     }
 }
+{% endverbatim %}
