@@ -8,7 +8,7 @@ import { Controller } from '@hotwired/stimulus';
  */
 export default class extends Controller {
     connect() {
-        console.log('Fullscreen Textarea Controller initialized');
+        // Fullscreen textarea controller connected
         this.fullscreenModal = null;
         this.textareaButtons = new Map(); // Map of textarea -> {button, container}
 

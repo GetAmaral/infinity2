@@ -34,7 +34,7 @@ final class ContactController extends ContactControllerGenerated
      * API endpoint for searching contacts
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'contact_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'contact_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

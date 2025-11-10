@@ -25,8 +25,6 @@ export default class extends Controller {
     }
 
     connect() {
-        console.log('🔐 Enhanced Session Monitor initialized');
-
         // Initialize state
         this.lastActivity = Date.now();
         this.sessionStart = Date.now();
@@ -97,8 +95,13 @@ export default class extends Controller {
             autoExtend: window.PreferenceManager?.getUserPreference('session_auto_extend', true) ?? true,
         };
 
-        console.log('🔊 Sound alerts:', this.preferences.soundEnabled ? 'enabled' : 'disabled');
-        console.log('♻️ Auto-extend:', this.preferences.autoExtend ? 'enabled' : 'disabled');
+        // Only log in development mode
+        if (window.location.hostname === 'localhost') {
+            console.log('🔐 Session Monitor:', {
+                sound: this.preferences.soundEnabled,
+                autoExtend: this.preferences.autoExtend
+            });
+        }
     }
 
     /**

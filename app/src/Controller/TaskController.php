@@ -34,7 +34,7 @@ final class TaskController extends TaskControllerGenerated
      * API endpoint for searching tasks
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'task_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'task_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

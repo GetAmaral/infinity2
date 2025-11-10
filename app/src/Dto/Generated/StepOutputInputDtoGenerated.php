@@ -21,6 +21,10 @@ use App\Dto\StepConnectionInputDto;
  */
 abstract class StepOutputInputDtoGenerated
 {
+    #[Assert\Length(max: 255)]
+    #[Groups(['step_output:write'])]
+    public string $name;
+
     /**
      * step reference
      * Must be: IRI string (e.g., "/api/steps/uuid")
@@ -31,17 +35,10 @@ abstract class StepOutputInputDtoGenerated
 
     #[Assert\Length(max: 255)]
     #[Groups(['step_output:write'])]
-    public string $name;
-
-    #[Groups(['step_output:write'])]
-    public ?string $description = null;
-
-    #[Assert\Length(max: 255)]
-    #[Groups(['step_output:write'])]
     public ?string $slug = null;
 
     #[Groups(['step_output:write'])]
-    public ?string $conditional = null;
+    public ?string $condition = null;
 
     /**
      * connection reference
@@ -53,16 +50,6 @@ abstract class StepOutputInputDtoGenerated
 
     // Getters and Setters
 
-    public function getStep(): ?string    {
-        return $this->step;
-    }
-
-    public function setStep(?string $step): self
-    {
-        $this->step = $step;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -73,13 +60,13 @@ abstract class StepOutputInputDtoGenerated
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
+    public function getStep(): ?string    {
+        return $this->step;
     }
 
-    public function setDescription(?string $description): self
+    public function setStep(?string $step): self
     {
-        $this->description = $description;
+        $this->step = $step;
         return $this;
     }
 
@@ -93,13 +80,13 @@ abstract class StepOutputInputDtoGenerated
         return $this;
     }
 
-    public function getConditional(): ?string    {
-        return $this->conditional;
+    public function getCondition(): ?string    {
+        return $this->condition;
     }
 
-    public function setConditional(?string $conditional): self
+    public function setCondition(?string $condition): self
     {
-        $this->conditional = $conditional;
+        $this->condition = $condition;
         return $this;
     }
 

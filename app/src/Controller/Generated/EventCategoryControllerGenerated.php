@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\EventCategory;
 use App\Repository\EventCategoryRepository;
 use App\Security\Voter\EventCategoryVoter;
-use App\Form\EventCategoryFormType;
+use App\Form\EventCategoryType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,10 +93,13 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
             'sortOrder' => $entity->getSortOrder(),
             'allowMultiple' => $entity->getAllowMultiple(),
             'active' => $entity->getActive(),
-            'events' => ($eventsRel = $entity->getEvents()) ? [
-                'id' => $eventsRel->getId()->toString(),
-                'display' => (string) $eventsRel,
-            ] : null,
+            'events' => ($eventsRel = $entity->getEvents()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $eventsRel->toArray()
+            ) : [],
         ];
     }
 
@@ -116,7 +119,7 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
 
         return $this->render('eventcategory/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'eventCategory',
+            'entity_name' => 'eventcategory',
             'entity_name_plural' => 'ries',
             'page_icon' => 'bi-calendar2-event',
             'default_view' => $savedView,
@@ -126,9 +129,16 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => EventCategoryVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"default","label":"Default Category","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"eventType","label":"Event Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventType","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"events","label":"Events","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvents","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"color","label":"Color","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"icon","label":"Icon","type":"string"},{"name":"eventType","label":"Event Type","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"default","label":"Default Category","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"eventType","label":"Event Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sortOrder","label":"Sort Order","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"color","label":"Color"},{"name":"description","label":"Description"},{"name":"icon","label":"Icon"},{"name":"default","label":"Default Category"},{"name":"eventType","label":"Event Type"},{"name":"sortOrder","label":"Sort Order"},{"name":"active","label":"Active"},{"name":"events","label":"Events"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon"},{"name":"default","label":"Default Category","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault"},{"name":"eventType","label":"Event Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventType"},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getSortOrder"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"events","label":"Events","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvents"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"default","label":"Default Category","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"eventType","label":"Event Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventType","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"events","label":"Events","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvents","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"color","label":"Color","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"icon","label":"Icon","type":"string"},{"name":"eventType","label":"Event Type","type":"string"}]',
             'filterable_fields' => '[{"name":"default","label":"Default Category","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"eventType","label":"Event Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sortOrder","label":"Sort Order","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"color","label":"Color"},{"name":"description","label":"Description"},{"name":"icon","label":"Icon"},{"name":"default","label":"Default Category"},{"name":"eventType","label":"Event Type"},{"name":"sortOrder","label":"Sort Order"},{"name":"active","label":"Active"},{"name":"events","label":"Events"}]',
@@ -146,9 +156,9 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventCategoryVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -167,7 +177,7 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($eventCategory);
 
-        $form = $this->createForm(EventCategoryFormType::class, $eventCategory);
+        $form = $this->createForm(EventCategoryType::class, $eventCategory);
 
         return $this->render('eventcategory/_form_modal.html.twig', [
             'form' => $form,
@@ -192,7 +202,7 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($eventCategory);
 
-        $form = $this->createForm(EventCategoryFormType::class, $eventCategory);
+        $form = $this->createForm(EventCategoryType::class, $eventCategory);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -242,7 +252,7 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventCategoryVoter::EDIT, $eventCategory);
 
-        $form = $this->createForm(EventCategoryFormType::class, $eventCategory);
+        $form = $this->createForm(EventCategoryType::class, $eventCategory);
 
         return $this->render('eventcategory/_form_modal.html.twig', [
             'form' => $form,
@@ -262,7 +272,7 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventCategoryVoter::EDIT, $eventCategory);
 
-        $form = $this->createForm(EventCategoryFormType::class, $eventCategory);
+        $form = $this->createForm(EventCategoryType::class, $eventCategory);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

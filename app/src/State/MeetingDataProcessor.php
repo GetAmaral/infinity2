@@ -167,13 +167,13 @@ class MeetingDataProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organizer', $requestData)) {
             $entity->setOrganizer($data->organizer);
         }
-        // tags
-        if (!$isPatch || array_key_exists('tags', $requestData)) {
-            $entity->setTags($data->tags);
-        }
         // platform
         if (!$isPatch || array_key_exists('platform', $requestData)) {
             $entity->setPlatform($data->platform);
+        }
+        // tags
+        if (!$isPatch || array_key_exists('tags', $requestData)) {
+            $entity->setTags($data->tags);
         }
         // confidential
         if (!$isPatch || array_key_exists('confidential', $requestData)) {

@@ -48,15 +48,6 @@ class StepFormType extends AbstractType
                     'placeholder' => 'step.form.objective_placeholder',
                 ],
             ])
-            ->add('prompt', TextareaType::class, [
-                'label' => 'step.form.prompt',
-                'required' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'rows' => 5,
-                    'placeholder' => 'step.form.prompt_placeholder',
-                ],
-            ])
             ->add('submit', SubmitType::class, [
                 'label' => $isEdit ? 'button.update' : 'button.create',
                 'attr' => [

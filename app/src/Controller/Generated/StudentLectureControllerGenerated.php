@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\StudentLecture;
 use App\Repository\StudentLectureRepository;
 use App\Security\Voter\StudentLectureVoter;
-use App\Form\StudentLectureFormType;
+use App\Form\StudentLectureType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -117,7 +117,7 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
 
         return $this->render('studentlecture/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'studentLecture',
+            'entity_name' => 'studentlecture',
             'entity_name_plural' => 'studentLectures',
             'page_icon' => 'bi-play-btn',
             'default_view' => $savedView,
@@ -127,9 +127,16 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => StudentLectureVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"student","label":"Student","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudent","isRelationship":true},{"name":"lecture","label":"Lecture","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLecture","isRelationship":true},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletionPercentage","isRelationship":false},{"name":"completed","label":"Completed","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompleted","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"student","label":"Student","type":"string"},{"name":"lecture","label":"Lecture","type":"string"},{"name":"studentCourse","label":"StudentCourse","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"student","label":"Student","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lecture","label":"Lecture","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"studentCourse","label":"StudentCourse","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"watchedSeconds","label":"WatchedSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastPositionSeconds","label":"LastPositionSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completed","label":"Completed","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastWatchedAt","label":"LastWatchedAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completedAt","label":"CompletedAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"student","label":"Student"},{"name":"lecture","label":"Lecture"},{"name":"studentCourse","label":"StudentCourse"},{"name":"watchedSeconds","label":"WatchedSeconds"},{"name":"lastPositionSeconds","label":"LastPositionSeconds"},{"name":"completionPercentage","label":"CompletionPercentage"},{"name":"completed","label":"Completed"},{"name":"lastWatchedAt","label":"LastWatchedAt"},{"name":"completedAt","label":"CompletedAt"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"student","label":"Student","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudent"},{"name":"lecture","label":"Lecture","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLecture"},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletionPercentage"},{"name":"completed","label":"Completed","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompleted"}]',
+            'list_fields' => '[{"name":"student","label":"Student","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudent","isRelationship":true},{"name":"lecture","label":"Lecture","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLecture","isRelationship":true},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletionPercentage","isRelationship":false},{"name":"completed","label":"Completed","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompleted","isRelationship":false}]',
             'searchable_fields' => '[{"name":"student","label":"Student","type":"string"},{"name":"lecture","label":"Lecture","type":"string"},{"name":"studentCourse","label":"StudentCourse","type":"string"}]',
             'filterable_fields' => '[{"name":"student","label":"Student","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lecture","label":"Lecture","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"studentCourse","label":"StudentCourse","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"watchedSeconds","label":"WatchedSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastPositionSeconds","label":"LastPositionSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completed","label":"Completed","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastWatchedAt","label":"LastWatchedAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completedAt","label":"CompletedAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"student","label":"Student"},{"name":"lecture","label":"Lecture"},{"name":"studentCourse","label":"StudentCourse"},{"name":"watchedSeconds","label":"WatchedSeconds"},{"name":"lastPositionSeconds","label":"LastPositionSeconds"},{"name":"completionPercentage","label":"CompletionPercentage"},{"name":"completed","label":"Completed"},{"name":"lastWatchedAt","label":"LastWatchedAt"},{"name":"completedAt","label":"CompletedAt"}]',
@@ -147,9 +154,9 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(StudentLectureVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -168,7 +175,7 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($studentLecture);
 
-        $form = $this->createForm(StudentLectureFormType::class, $studentLecture);
+        $form = $this->createForm(StudentLectureType::class, $studentLecture);
 
         return $this->render('studentlecture/_form_modal.html.twig', [
             'form' => $form,
@@ -193,7 +200,7 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($studentLecture);
 
-        $form = $this->createForm(StudentLectureFormType::class, $studentLecture);
+        $form = $this->createForm(StudentLectureType::class, $studentLecture);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -243,7 +250,7 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(StudentLectureVoter::EDIT, $studentLecture);
 
-        $form = $this->createForm(StudentLectureFormType::class, $studentLecture);
+        $form = $this->createForm(StudentLectureType::class, $studentLecture);
 
         return $this->render('studentlecture/_form_modal.html.twig', [
             'form' => $form,
@@ -263,7 +270,7 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(StudentLectureVoter::EDIT, $studentLecture);
 
-        $form = $this->createForm(StudentLectureFormType::class, $studentLecture);
+        $form = $this->createForm(StudentLectureType::class, $studentLecture);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

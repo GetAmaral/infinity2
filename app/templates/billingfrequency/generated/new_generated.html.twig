@@ -1,5 +1,24 @@
-{% set billingFrequency = billingFrequency ?? null %}
-{% include 'genmax/twig/form_generated.html.twig' with {
-    'billingFrequency': billingFrequency,
-    'form': form
-} %}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'action.create'|trans }} {{ 'billingfrequency.singular'|trans({}, 'billingfrequency') }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
+                    <h2>
+                        <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'billingfrequency.singular'|trans({}, 'billingfrequency') }}
+                    </h2>
+                </div>
+
+                {% include 'billingfrequency/generated/form_generated.html.twig' with {
+                    'billingFrequency': billingFrequency,
+                    'form': form
+                } %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

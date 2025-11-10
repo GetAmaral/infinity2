@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\StepOutputInputDto;
-use App\Dto\StepInputInputDto;
+use App\Dto\StepInputDto;
 
 /**
  * StepConnection Input DTO (Generated Base Class)
@@ -30,12 +30,12 @@ abstract class StepConnectionInputDtoGenerated
     public ?string $sourceOutput = null;
 
     /**
-     * targetInput reference
-     * Must be: IRI string (e.g., "/api/step_inputs/uuid")
+     * targetStep reference
+     * Must be: IRI string (e.g., "/api/steps/uuid")
      */
     #[Assert\NotNull]
     #[Groups(['step_connection:write'])]
-    public ?string $targetInput = null;
+    public ?string $targetStep = null;
 
 
     // Getters and Setters
@@ -50,13 +50,13 @@ abstract class StepConnectionInputDtoGenerated
         return $this;
     }
 
-    public function getTargetInput(): ?string    {
-        return $this->targetInput;
+    public function getTargetStep(): ?string    {
+        return $this->targetStep;
     }
 
-    public function setTargetInput(?string $targetInput): self
+    public function setTargetStep(?string $targetStep): self
     {
-        $this->targetInput = $targetInput;
+        $this->targetStep = $targetStep;
         return $this;
     }
 }

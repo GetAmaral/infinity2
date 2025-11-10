@@ -20,19 +20,19 @@ use App\Dto\CityInputDto;
  */
 abstract class OrganizationInputDtoGenerated
 {
-    #[Assert\Length(max: 255)]
-    #[Groups(['organization:write'])]
-    public ?string $logoPath = null;
-
     #[Groups(['organization:write'])]
     public string $name;
 
     #[Assert\Length(max: 255)]
     #[Groups(['organization:write'])]
-    public ?string $logoPathDark = null;
+    public ?string $logoPath = null;
 
     #[Groups(['organization:write'])]
     public ?string $description = null;
+
+    #[Assert\Length(max: 255)]
+    #[Groups(['organization:write'])]
+    public ?string $logoPathDark = null;
 
     #[Groups(['organization:write'])]
     public ?string $logoUrl = null;
@@ -114,16 +114,6 @@ abstract class OrganizationInputDtoGenerated
 
     // Getters and Setters
 
-    public function getLogoPath(): ?string    {
-        return $this->logoPath;
-    }
-
-    public function setLogoPath(?string $logoPath): self
-    {
-        $this->logoPath = $logoPath;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -134,13 +124,13 @@ abstract class OrganizationInputDtoGenerated
         return $this;
     }
 
-    public function getLogoPathDark(): ?string    {
-        return $this->logoPathDark;
+    public function getLogoPath(): ?string    {
+        return $this->logoPath;
     }
 
-    public function setLogoPathDark(?string $logoPathDark): self
+    public function setLogoPath(?string $logoPath): self
     {
-        $this->logoPathDark = $logoPathDark;
+        $this->logoPath = $logoPath;
         return $this;
     }
 
@@ -151,6 +141,16 @@ abstract class OrganizationInputDtoGenerated
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getLogoPathDark(): ?string    {
+        return $this->logoPathDark;
+    }
+
+    public function setLogoPathDark(?string $logoPathDark): self
+    {
+        $this->logoPathDark = $logoPathDark;
         return $this;
     }
 
@@ -304,6 +304,56 @@ abstract class OrganizationInputDtoGenerated
         return $this;
     }
 
+    public function getNotifications(): ?string    {
+        return $this->notifications;
+    }
+
+    public function setNotifications(?string $notifications): self
+    {
+        $this->notifications = $notifications;
+        return $this;
+    }
+
+    public function getCelPhone(): ?string    {
+        return $this->celPhone;
+    }
+
+    public function setCelPhone(?string $celPhone): self
+    {
+        $this->celPhone = $celPhone;
+        return $this;
+    }
+
+    public function getAttachments(): ?string    {
+        return $this->attachments;
+    }
+
+    public function setAttachments(?string $attachments): self
+    {
+        $this->attachments = $attachments;
+        return $this;
+    }
+
+    public function getCalendarTypes(): ?string    {
+        return $this->calendarTypes;
+    }
+
+    public function setCalendarTypes(?string $calendarTypes): self
+    {
+        $this->calendarTypes = $calendarTypes;
+        return $this;
+    }
+
+    public function getCities(): ?string    {
+        return $this->cities;
+    }
+
+    public function setCities(?string $cities): self
+    {
+        $this->cities = $cities;
+        return $this;
+    }
+
     public function getPipelineStageTemplates(): ?string    {
         return $this->pipelineStageTemplates;
     }
@@ -311,6 +361,66 @@ abstract class OrganizationInputDtoGenerated
     public function setPipelineStageTemplates(?string $pipelineStageTemplates): self
     {
         $this->pipelineStageTemplates = $pipelineStageTemplates;
+        return $this;
+    }
+
+    public function getTreeFlows(): ?string    {
+        return $this->treeFlows;
+    }
+
+    public function setTreeFlows(?string $treeFlows): self
+    {
+        $this->treeFlows = $treeFlows;
+        return $this;
+    }
+
+    public function getMeetingDatas(): ?string    {
+        return $this->meetingDatas;
+    }
+
+    public function setMeetingDatas(?string $meetingDatas): self
+    {
+        $this->meetingDatas = $meetingDatas;
+        return $this;
+    }
+
+    public function getLostReasons(): ?string    {
+        return $this->lostReasons;
+    }
+
+    public function setLostReasons(?string $lostReasons): self
+    {
+        $this->lostReasons = $lostReasons;
+        return $this;
+    }
+
+    public function getEventAttendees(): ?string    {
+        return $this->eventAttendees;
+    }
+
+    public function setEventAttendees(?string $eventAttendees): self
+    {
+        $this->eventAttendees = $eventAttendees;
+        return $this;
+    }
+
+    public function getDealTypes(): ?string    {
+        return $this->dealTypes;
+    }
+
+    public function setDealTypes(?string $dealTypes): self
+    {
+        $this->dealTypes = $dealTypes;
+        return $this;
+    }
+
+    public function getDealCategories(): ?string    {
+        return $this->dealCategories;
+    }
+
+    public function setDealCategories(?string $dealCategories): self
+    {
+        $this->dealCategories = $dealCategories;
         return $this;
     }
 
@@ -334,16 +444,6 @@ abstract class OrganizationInputDtoGenerated
         return $this;
     }
 
-    public function getCelPhone(): ?string    {
-        return $this->celPhone;
-    }
-
-    public function setCelPhone(?string $celPhone): self
-    {
-        $this->celPhone = $celPhone;
-        return $this;
-    }
-
     public function getPipelineTemplates(): ?string    {
         return $this->pipelineTemplates;
     }
@@ -361,106 +461,6 @@ abstract class OrganizationInputDtoGenerated
     public function setWinReasons(?string $winReasons): self
     {
         $this->winReasons = $winReasons;
-        return $this;
-    }
-
-    public function getTreeFlows(): ?string    {
-        return $this->treeFlows;
-    }
-
-    public function setTreeFlows(?string $treeFlows): self
-    {
-        $this->treeFlows = $treeFlows;
-        return $this;
-    }
-
-    public function getCities(): ?string    {
-        return $this->cities;
-    }
-
-    public function setCities(?string $cities): self
-    {
-        $this->cities = $cities;
-        return $this;
-    }
-
-    public function getCalendarTypes(): ?string    {
-        return $this->calendarTypes;
-    }
-
-    public function setCalendarTypes(?string $calendarTypes): self
-    {
-        $this->calendarTypes = $calendarTypes;
-        return $this;
-    }
-
-    public function getAttachments(): ?string    {
-        return $this->attachments;
-    }
-
-    public function setAttachments(?string $attachments): self
-    {
-        $this->attachments = $attachments;
-        return $this;
-    }
-
-    public function getDealCategories(): ?string    {
-        return $this->dealCategories;
-    }
-
-    public function setDealCategories(?string $dealCategories): self
-    {
-        $this->dealCategories = $dealCategories;
-        return $this;
-    }
-
-    public function getDealTypes(): ?string    {
-        return $this->dealTypes;
-    }
-
-    public function setDealTypes(?string $dealTypes): self
-    {
-        $this->dealTypes = $dealTypes;
-        return $this;
-    }
-
-    public function getEventAttendees(): ?string    {
-        return $this->eventAttendees;
-    }
-
-    public function setEventAttendees(?string $eventAttendees): self
-    {
-        $this->eventAttendees = $eventAttendees;
-        return $this;
-    }
-
-    public function getLostReasons(): ?string    {
-        return $this->lostReasons;
-    }
-
-    public function setLostReasons(?string $lostReasons): self
-    {
-        $this->lostReasons = $lostReasons;
-        return $this;
-    }
-
-    public function getMeetingDatas(): ?string    {
-        return $this->meetingDatas;
-    }
-
-    public function setMeetingDatas(?string $meetingDatas): self
-    {
-        $this->meetingDatas = $meetingDatas;
-        return $this;
-    }
-
-    public function getNotifications(): ?string    {
-        return $this->notifications;
-    }
-
-    public function setNotifications(?string $notifications): self
-    {
-        $this->notifications = $notifications;
         return $this;
     }
 

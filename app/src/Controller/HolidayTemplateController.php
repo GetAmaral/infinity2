@@ -34,7 +34,7 @@ final class HolidayTemplateController extends HolidayTemplateControllerGenerated
      * API endpoint for searching holidayTemplates
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'holidaytemplate_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'holidaytemplate_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

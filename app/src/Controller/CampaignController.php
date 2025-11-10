@@ -34,7 +34,7 @@ final class CampaignController extends CampaignControllerGenerated
      * API endpoint for searching campaigns
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'campaign_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'campaign_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

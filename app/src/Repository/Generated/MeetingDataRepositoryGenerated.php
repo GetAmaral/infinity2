@@ -54,7 +54,7 @@ abstract class MeetingDataRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'event' => 'event',            'title' => 'title',            'meetingType' => 'meetingType',            'status' => 'status',            'startTime' => 'startTime',            'endTime' => 'endTime',            'duration' => 'duration',            'meetingId' => 'meetingId',            'platform' => 'platform',            'recordUrl' => 'recordUrl',            'secret' => 'secret',            'url' => 'url',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'title' => 'title',            'event' => 'event',            'meetingType' => 'meetingType',            'status' => 'status',            'startTime' => 'startTime',            'endTime' => 'endTime',            'duration' => 'duration',            'meetingId' => 'meetingId',            'platform' => 'platform',            'recordUrl' => 'recordUrl',            'secret' => 'secret',            'url' => 'url',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class MeetingDataRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'title' => 'title',            'meetingType' => 'meetingType',            'status' => 'status',            'startTime' => 'startTime',            'endTime' => 'endTime',            'duration' => 'duration',            'recordingAvailable' => 'recordingAvailable',            'nextMeetingDate' => 'nextMeetingDate',            'tags' => 'tags',            'platform' => 'platform',            'confidential' => 'confidential',            'recurring' => 'recurring',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'title' => 'title',            'meetingType' => 'meetingType',            'status' => 'status',            'startTime' => 'startTime',            'endTime' => 'endTime',            'duration' => 'duration',            'recordingAvailable' => 'recordingAvailable',            'nextMeetingDate' => 'nextMeetingDate',            'platform' => 'platform',            'tags' => 'tags',            'confidential' => 'confidential',            'recurring' => 'recurring',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -115,9 +115,9 @@ abstract class MeetingDataRepositoryGenerated extends BaseRepository
         return [
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
+            'title' => $entity->getTitle(),
             'event' => $entity->getEvent()?->getId()?->toString() ?? '',
             'eventName' => $entity->getEvent()?->getName() ?? '',
-            'title' => $entity->getTitle(),
             'meetingType' => $entity->getMeetingType(),
             'status' => $entity->getStatus(),
             'startTime' => $entity->getStartTime()?->format('c'),

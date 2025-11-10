@@ -14,10 +14,10 @@ use App\Dto\AttachmentOutputDto;
 use App\Dto\ReminderOutputDto;
 use App\Dto\EventResourceBookingOutputDto;
 use App\Dto\EventOutputDto;
-use App\Dto\WorkingHourOutputDto;
 use App\Dto\NotificationOutputDto;
-use App\Dto\MeetingDataOutputDto;
 use App\Dto\HolidayOutputDto;
+use App\Dto\WorkingHourOutputDto;
+use App\Dto\MeetingDataOutputDto;
 use App\Dto\ContactOutputDto;
 use App\Dto\CompanyOutputDto;
 use App\Dto\DealOutputDto;
@@ -43,9 +43,9 @@ abstract class EventOutputDtoGenerated
 
     public string $name;
 
-    public \DateTimeImmutable $startTime;
-
     public ?string $description = null;
+
+    public \DateTimeImmutable $startTime;
 
     public \DateTimeImmutable $endTime;
 
@@ -120,18 +120,22 @@ abstract class EventOutputDtoGenerated
     public ?array $source = null;
 
     /**
-     * workingHours collection
-     * @var WorkingHourOutputDto[]
-     */
-    public array $workingHours = [];
-
-    public ?string $subject = null;
-
-    /**
      * notifications collection
      * @var NotificationOutputDto[]
      */
     public array $notifications = [];
+
+    /**
+     * holidays collection
+     * @var HolidayOutputDto[]
+     */
+    public array $holidays = [];
+
+    /**
+     * workingHours collection
+     * @var WorkingHourOutputDto[]
+     */
+    public array $workingHours = [];
 
     /**
      * meetingDatas collection
@@ -139,11 +143,7 @@ abstract class EventOutputDtoGenerated
      */
     public array $meetingDatas = [];
 
-    /**
-     * holidays collection
-     * @var HolidayOutputDto[]
-     */
-    public array $holidays = [];
+    public ?string $subject = null;
 
     public string $status;
 
@@ -280,16 +280,6 @@ abstract class EventOutputDtoGenerated
         return $this;
     }
 
-    public function getStartTime(): \DateTimeImmutable    {
-        return $this->startTime;
-    }
-
-    public function setStartTime(\DateTimeImmutable $startTime): self
-    {
-        $this->startTime = $startTime;
-        return $this;
-    }
-
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -297,6 +287,16 @@ abstract class EventOutputDtoGenerated
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getStartTime(): \DateTimeImmutable    {
+        return $this->startTime;
+    }
+
+    public function setStartTime(\DateTimeImmutable $startTime): self
+    {
+        $this->startTime = $startTime;
         return $this;
     }
 
@@ -480,26 +480,6 @@ abstract class EventOutputDtoGenerated
         return $this;
     }
 
-    public function getWorkingHours(): array    {
-        return $this->workingHours;
-    }
-
-    public function setWorkingHours(array $workingHours): self
-    {
-        $this->workingHours = $workingHours;
-        return $this;
-    }
-
-    public function getSubject(): ?string    {
-        return $this->subject;
-    }
-
-    public function setSubject(?string $subject): self
-    {
-        $this->subject = $subject;
-        return $this;
-    }
-
     public function getNotifications(): array    {
         return $this->notifications;
     }
@@ -507,6 +487,26 @@ abstract class EventOutputDtoGenerated
     public function setNotifications(array $notifications): self
     {
         $this->notifications = $notifications;
+        return $this;
+    }
+
+    public function getHolidays(): array    {
+        return $this->holidays;
+    }
+
+    public function setHolidays(array $holidays): self
+    {
+        $this->holidays = $holidays;
+        return $this;
+    }
+
+    public function getWorkingHours(): array    {
+        return $this->workingHours;
+    }
+
+    public function setWorkingHours(array $workingHours): self
+    {
+        $this->workingHours = $workingHours;
         return $this;
     }
 
@@ -520,13 +520,13 @@ abstract class EventOutputDtoGenerated
         return $this;
     }
 
-    public function getHolidays(): array    {
-        return $this->holidays;
+    public function getSubject(): ?string    {
+        return $this->subject;
     }
 
-    public function setHolidays(array $holidays): self
+    public function setSubject(?string $subject): self
     {
-        $this->holidays = $holidays;
+        $this->subject = $subject;
         return $this;
     }
 

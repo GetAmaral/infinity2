@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\City;
 use App\Repository\CityRepository;
 use App\Security\Voter\CityVoter;
-use App\Form\CityFormType;
+use App\Form\CityType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -97,14 +97,20 @@ abstract class CityControllerGenerated extends BaseApiController
             'capital' => $entity->getCapital(),
             'ibgeCode' => $entity->getIbgeCode(),
             'active' => $entity->getActive(),
-            'eventResources' => ($eventResourcesRel = $entity->getEventResources()) ? [
-                'id' => $eventResourcesRel->getId()->toString(),
-                'display' => (string) $eventResourcesRel,
-            ] : null,
-            'holidayTemplates' => ($holidayTemplatesRel = $entity->getHolidayTemplates()) ? [
-                'id' => $holidayTemplatesRel->getId()->toString(),
-                'display' => (string) $holidayTemplatesRel,
-            ] : null,
+            'eventResources' => ($eventResourcesRel = $entity->getEventResources()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $eventResourcesRel->toArray()
+            ) : [],
+            'holidayTemplates' => ($holidayTemplatesRel = $entity->getHolidayTemplates()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $holidayTemplatesRel->toArray()
+            ) : [],
         ];
     }
 
@@ -134,9 +140,16 @@ abstract class CityControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => CityVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"City Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"state","label":"State\/Province","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getState","isRelationship":false},{"name":"country","label":"Country","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountry","isRelationship":true},{"name":"latitude","label":"Latitude","type":"float","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLatitude","isRelationship":false},{"name":"longitude","label":"Longitude","type":"float","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLongitude","isRelationship":false},{"name":"timezone","label":"Timezone","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimezone","isRelationship":false},{"name":"population","label":"Population","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPopulation","isRelationship":false},{"name":"capital","label":"Capital","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCapital","isRelationship":false},{"name":"ibgeCode","label":"IBGE Code (Brazil)","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIbgeCode","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"eventResources","label":"EventResources","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResources","isRelationship":true},{"name":"holidayTemplates","label":"HolidayTemplates","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidayTemplates","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"City Name","type":"string"},{"name":"state","label":"State\/Province","type":"string"},{"name":"ibgeCode","label":"IBGE Code (Brazil)","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"name","label":"City Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"state","label":"State\/Province","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"City Name"},{"name":"state","label":"State\/Province"},{"name":"country","label":"Country"},{"name":"ibgeCode","label":"IBGE Code (Brazil)"},{"name":"eventResources","label":"EventResources"},{"name":"holidayTemplates","label":"HolidayTemplates"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"City Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"state","label":"State\/Province","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getState"},{"name":"country","label":"Country","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountry"},{"name":"latitude","label":"Latitude","type":"float","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLatitude"},{"name":"longitude","label":"Longitude","type":"float","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLongitude"},{"name":"timezone","label":"Timezone","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimezone"},{"name":"population","label":"Population","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPopulation"},{"name":"capital","label":"Capital","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCapital"},{"name":"ibgeCode","label":"IBGE Code (Brazil)","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIbgeCode"},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"eventResources","label":"EventResources","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResources"},{"name":"holidayTemplates","label":"HolidayTemplates","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidayTemplates"}]',
+            'list_fields' => '[{"name":"name","label":"City Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"state","label":"State\/Province","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getState","isRelationship":false},{"name":"country","label":"Country","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountry","isRelationship":true},{"name":"latitude","label":"Latitude","type":"float","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLatitude","isRelationship":false},{"name":"longitude","label":"Longitude","type":"float","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLongitude","isRelationship":false},{"name":"timezone","label":"Timezone","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimezone","isRelationship":false},{"name":"population","label":"Population","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPopulation","isRelationship":false},{"name":"capital","label":"Capital","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCapital","isRelationship":false},{"name":"ibgeCode","label":"IBGE Code (Brazil)","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIbgeCode","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"eventResources","label":"EventResources","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResources","isRelationship":true},{"name":"holidayTemplates","label":"HolidayTemplates","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidayTemplates","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"City Name","type":"string"},{"name":"state","label":"State\/Province","type":"string"},{"name":"ibgeCode","label":"IBGE Code (Brazil)","type":"string"}]',
             'filterable_fields' => '[{"name":"name","label":"City Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"state","label":"State\/Province","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"City Name"},{"name":"state","label":"State\/Province"},{"name":"country","label":"Country"},{"name":"ibgeCode","label":"IBGE Code (Brazil)"},{"name":"eventResources","label":"EventResources"},{"name":"holidayTemplates","label":"HolidayTemplates"}]',
@@ -154,9 +167,9 @@ abstract class CityControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CityVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -175,7 +188,7 @@ abstract class CityControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($city);
 
-        $form = $this->createForm(CityFormType::class, $city);
+        $form = $this->createForm(CityType::class, $city);
 
         return $this->render('city/_form_modal.html.twig', [
             'form' => $form,
@@ -200,7 +213,7 @@ abstract class CityControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($city);
 
-        $form = $this->createForm(CityFormType::class, $city);
+        $form = $this->createForm(CityType::class, $city);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -250,7 +263,7 @@ abstract class CityControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CityVoter::EDIT, $city);
 
-        $form = $this->createForm(CityFormType::class, $city);
+        $form = $this->createForm(CityType::class, $city);
 
         return $this->render('city/_form_modal.html.twig', [
             'form' => $form,
@@ -270,7 +283,7 @@ abstract class CityControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CityVoter::EDIT, $city);
 
-        $form = $this->createForm(CityFormType::class, $city);
+        $form = $this->createForm(CityType::class, $city);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

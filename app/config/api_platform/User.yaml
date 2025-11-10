@@ -113,28 +113,28 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      ownedDeals:
-        writable: false
-        description: "Deals"
-        example: "/api/deals/01234567-89ab-cdef-0123-456789abcdef"
-      calendarExternalLinks:
-        writable: false
-        description: "CalendarExternalLinks"
-        example: "/api/calendar_external_links/01234567-89ab-cdef-0123-456789abcdef"
-      grantedRoles:
-        writable: false
-        description: "Granted Roles"
-        example: "/api/roles/01234567-89ab-cdef-0123-456789abcdef"
-      resourceBookings:
-        writable: false
-        description: "EventResourceBookings"
-        example: "/api/event_resource_bookings/01234567-89ab-cdef-0123-456789abcdef"
       emailVerifiedAt:
         description: "EmailVerifiedAt (date and time)"
         example: "2025-01-15T10:30:00Z"
         # Advanced filters
         filters:
           - type: OrderFilter
+      grantedRoles:
+        writable: false
+        description: "Granted Roles"
+        example: "/api/roles/01234567-89ab-cdef-0123-456789abcdef"
+      calendarExternalLinks:
+        writable: false
+        description: "CalendarExternalLinks"
+        example: "/api/calendar_external_links/01234567-89ab-cdef-0123-456789abcdef"
+      resourceBookings:
+        writable: false
+        description: "EventResourceBookings"
+        example: "/api/event_resource_bookings/01234567-89ab-cdef-0123-456789abcdef"
+      ownedDeals:
+        writable: false
+        description: "Deals"
+        example: "/api/deals/01234567-89ab-cdef-0123-456789abcdef"
       eventAttendances:
         description: "EventAttendances"
         example: "sample value"
@@ -156,6 +156,11 @@ resources:
         writable: false
         description: "Verification Token"
         example: "Sample verification token"
+      apiToken:
+        readable: false
+        writable: false
+        description: "API Token"
+        example: "Sample api token"
       failedLoginAttempts:
         writable: false
         description: "FailedLoginAttempts (numeric value)"
@@ -163,11 +168,6 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      apiToken:
-        readable: false
-        writable: false
-        description: "API Token"
-        example: "Sample api token"
       apiTokenExpiresAt:
         readable: false
         writable: false
@@ -178,16 +178,16 @@ resources:
         writable: false
         description: "OpenAI API Key"
         example: "Sample openai api key"
+      lastLoginAt:
+        writable: false
+        description: "Last Login At"
+        example: "2025-01-15T10:30:00Z"
       gender:
         description: "Gender (numeric value)"
         example: "42"
         # Advanced filters
         filters:
           - type: OrderFilter
-      lastLoginAt:
-        writable: false
-        description: "Last Login At"
-        example: "2025-01-15T10:30:00Z"
       lockedUntil:
         writable: false
         description: "Locked Until"
@@ -323,15 +323,15 @@ resources:
       dateFormat:
         description: "Date Format"
         example: "Sample date format"
+      manager:
+        description: "Manager"
+        example: "/api/users/01234567-89ab-cdef-0123-456789abcdef"
       organizedEvents:
         description: "OrganizedEvents"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
-      manager:
-        description: "Manager"
-        example: "/api/users/01234567-89ab-cdef-0123-456789abcdef"
       salesTeam:
         description: "Sales Team"
         example: "Sample sales team"
@@ -347,19 +347,22 @@ resources:
       agentType:
         description: "Agent Type"
         example: "Sample agent type"
-      deletedAt:
-        writable: false
-        description: "Deleted At"
-        example: "2025-01-15T10:30:00Z"
       ownedCourses:
         description: "OwnedCourses"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
+      deletedAt:
+        writable: false
+        description: "Deleted At"
+        example: "2025-01-15T10:30:00Z"
       avatar:
         description: "Avatar"
         example: "Sample avatar"
+      title:
+        description: "Title"
+        example: "Sample title"
       password:
         readable: false
         description: "Password (text field)"
@@ -367,9 +370,6 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      title:
-        description: "Title"
-        example: "Sample title"
       firstName:
         description: "First Name"
         example: "Sample first name"
@@ -415,15 +415,15 @@ resources:
       twitterHandle:
         description: "Twitter Handle"
         example: "Sample twitter handle"
-      address:
-        description: "Address"
-        example: "Sample address"
       profilePictureUrl:
         description: "ProfilePictureUrl (text field)"
         example: "Sample longer text value"
         # Advanced filters
         filters:
           - type: OrderFilter
+      address:
+        description: "Address"
+        example: "Sample address"
       city:
         description: "City"
         example: "Sample city"
@@ -442,15 +442,15 @@ resources:
       officeLocation:
         description: "Office Location"
         example: "Sample office location"
+      employeeId:
+        description: "Employee ID"
+        example: "Sample employee id"
       profiles:
         description: "Profiles"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
-      employeeId:
-        description: "Employee ID"
-        example: "Sample employee id"
       hireDate:
         description: "Hire Date"
         example: "2025-01-15"
@@ -499,16 +499,16 @@ resources:
       tags:
         description: "Tags"
         example: "{\"key\": \"value\"}"
+      loginCount:
+        writable: false
+        description: "Login Count"
+        example: 0
       studentCourses:
         description: "Student Courses"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
-      loginCount:
-        writable: false
-        description: "Login Count"
-        example: 0
       lastIpAddress:
         writable: false
         description: "Last IP Address"
@@ -540,15 +540,15 @@ resources:
       statusMessage:
         description: "Status Message"
         example: "Sample status message"
-      locked:
-        description: "Locked"
-        example: true
       tasks:
         description: "..."
         example: "..."
         # Advanced filters
         filters:
           - type: OrderFilter
+      locked:
+        description: "Locked"
+        example: true
       lockedReason:
         writable: false
         description: "Locked Reason"

@@ -45,9 +45,21 @@ nav.users: Users
 nav.section.crm: CRM
 nav.section.calendar: Calendar
 nav.section.catalogs: Catalogs
+nav.section.configuration: Configuration
 nav.section.data: Data
+nav.section.education: Education
+nav.section.general: General
 nav.section.learning: Learning
+nav.section.marketing: Marketing
 nav.section.system: System
+nav.section.admin: Administration
+
+# Sidebar
+sidebar.collapse: Collapse
+sidebar.favorites: Favorites
+sidebar.menu: Menu
+sidebar.search.placeholder: Search menus
+sidebar.toggle.tooltip: Toggle sidebar (Ctrl+B)
 
 # ================================================================================
 # Authentication
@@ -442,6 +454,17 @@ form.autosave.unsaved.changes: Unsaved Changes Recovered
 form.autosave.found.changes: We found unsaved changes from %time% ago. Would you like to restore them?
 form.autosave.restore: Restore
 form.autosave.discard: Discard
+
+# Sidebar Navigation
+sidebar:
+    collapse: Collapse
+    expand: Expand
+    search:
+        placeholder: Search menu...
+    favorites: Favorites
+    favorite: Add to favorites
+    unfavorite: Remove from favorites
+    no_favorites: No favorites yet. Click the star icon to add items.
 
 # Session Settings
 settings.session.management: Session Management

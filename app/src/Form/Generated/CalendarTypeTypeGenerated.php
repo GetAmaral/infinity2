@@ -87,8 +87,6 @@ abstract class CalendarTypeTypeGenerated extends AbstractType
         $builder->add('visibility', ChoiceType::class, [
             'label' => 'Visibility',
             'required' => true,
-            'class' => App\Enum\VisibilityEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -97,8 +95,6 @@ abstract class CalendarTypeTypeGenerated extends AbstractType
         $builder->add('access_level', ChoiceType::class, [
             'label' => 'Access Level',
             'required' => true,
-            'class' => App\Enum\AccessLevelEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -142,6 +138,7 @@ abstract class CalendarTypeTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CalendarType::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

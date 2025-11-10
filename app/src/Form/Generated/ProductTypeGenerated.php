@@ -12,9 +12,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use App\Entity\BillingFrequency;
+use App\Entity\Brand;
+use App\Entity\ProductCategory;
+use App\Entity\Deal;
+use App\Entity\Company;
+use App\Entity\ProductLine;
+use App\Entity\Tag;
+use App\Entity\TaxCategory;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -140,12 +149,15 @@ abstract class ProductTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('attachments', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('attachments', CollectionType::class, [
             'label' => 'Attachments',
             'required' => false,
-            'entry_type' => App\Form\AttachmentType::class,
+            'entry_type' => \App\Form\AttachmentType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -158,6 +170,7 @@ abstract class ProductTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('reorderLevel', IntegerType::class, [
             'label' => 'Reorder Level',
@@ -215,12 +228,15 @@ abstract class ProductTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('batches', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('batches', CollectionType::class, [
             'label' => 'Batches',
             'required' => false,
-            'entry_type' => App\Form\ProductBatchType::class,
+            'entry_type' => \App\Form\ProductBatchType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -233,26 +249,31 @@ abstract class ProductTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('billingFrequency', EntityType::class, [
             'label' => 'BillingFrequency',
             'required' => false,
-            'class' => BillingFrequency::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\BillingFrequency::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('brand', EntityType::class, [
             'label' => 'Brand',
             'required' => false,
-            'class' => Brand::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Brand::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('cancellationFee', TextType::class, [
             'label' => 'CancellationFee',
@@ -263,15 +284,17 @@ abstract class ProductTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('category', EntityType::class, [
             'label' => 'Category',
             'required' => false,
-            'class' => ProductCategory::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\ProductCategory::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('commissionAmount', TextType::class, [
             'label' => 'CommissionAmount',
@@ -321,8 +344,7 @@ abstract class ProductTypeGenerated extends AbstractType
         $builder->add('deals', EntityType::class, [
             'label' => 'Deals',
             'required' => false,
-            'class' => Deal::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Deal::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -411,8 +433,7 @@ abstract class ProductTypeGenerated extends AbstractType
         $builder->add('manufacturer', EntityType::class, [
             'label' => 'Manufacturer',
             'required' => false,
-            'class' => Company::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Company::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -455,15 +476,17 @@ abstract class ProductTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('productLine', EntityType::class, [
             'label' => 'ProductLine',
             'required' => false,
-            'class' => ProductLine::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\ProductLine::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('productType', IntegerType::class, [
             'label' => 'ProductType',
@@ -493,8 +516,7 @@ abstract class ProductTypeGenerated extends AbstractType
         $builder->add('relatedFrom', EntityType::class, [
             'label' => 'RelatedFrom',
             'required' => false,
-            'class' => Product::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Product::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -504,8 +526,7 @@ abstract class ProductTypeGenerated extends AbstractType
         $builder->add('relatedTo', EntityType::class, [
             'label' => 'RelatedTo',
             'required' => false,
-            'class' => Product::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Product::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -591,8 +612,7 @@ abstract class ProductTypeGenerated extends AbstractType
         $builder->add('substituteFrom', EntityType::class, [
             'label' => 'SubstituteFrom',
             'required' => false,
-            'class' => Product::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Product::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -602,8 +622,7 @@ abstract class ProductTypeGenerated extends AbstractType
         $builder->add('substituteTo', EntityType::class, [
             'label' => 'SubstituteTo',
             'required' => false,
-            'class' => Product::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Product::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -613,8 +632,7 @@ abstract class ProductTypeGenerated extends AbstractType
         $builder->add('supplier', EntityType::class, [
             'label' => 'Supplier',
             'required' => false,
-            'class' => Company::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Company::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -632,23 +650,24 @@ abstract class ProductTypeGenerated extends AbstractType
         $builder->add('tags', EntityType::class, [
             'label' => 'Tags',
             'required' => false,
-            'class' => Tag::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Tag::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('taxCategory', EntityType::class, [
             'label' => 'TaxCategory',
             'required' => false,
-            'class' => TaxCategory::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\TaxCategory::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('unitOfMeasure', TextType::class, [
             'label' => 'UnitOfMeasure',
@@ -682,6 +701,7 @@ abstract class ProductTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Product::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

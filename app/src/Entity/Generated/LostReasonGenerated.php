@@ -40,12 +40,12 @@ abstract class LostReasonGenerated extends EntityBase
     protected ?string $description = null;
 
     #[Groups(['lostreason:read', 'lostreason:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $category;
-
-    #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'lostReason', fetch: 'LAZY')]
     protected Collection $deals;
+
+    #[Groups(['lostreason:read', 'lostreason:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $category;
 
     #[Groups(['lostreason:read', 'lostreason:write'])]
     #[ORM\Column(type: 'boolean')]
@@ -133,16 +133,6 @@ abstract class LostReasonGenerated extends EntityBase
         return $this;
     }
 
-    public function getCategory(): string    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Deal>
      */
@@ -167,6 +157,16 @@ abstract class LostReasonGenerated extends EntityBase
                 $deal->setLostReason(null);
             }
         }
+        return $this;
+    }
+
+    public function getCategory(): string    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
         return $this;
     }
 

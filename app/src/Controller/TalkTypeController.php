@@ -34,7 +34,7 @@ final class TalkTypeController extends TalkTypeControllerGenerated
      * API endpoint for searching talkTypes
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'talktype_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'talktype_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

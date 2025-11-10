@@ -54,7 +54,7 @@ abstract class DealTypeRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'description' => 'description',            'category' => 'category',            'deals' => 'deals',            'default' => 'default',            'sortOrder' => 'sortOrder',            'active' => 'active',            'expectedDuration' => 'expectedDuration',            'winProbability' => 'winProbability',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'description' => 'description',            'category' => 'category',            'deals' => 'deals',            'default' => 'default',            'active' => 'active',            'sortOrder' => 'sortOrder',            'expectedDuration' => 'expectedDuration',            'winProbability' => 'winProbability',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -118,8 +118,8 @@ abstract class DealTypeRepositoryGenerated extends BaseRepository
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
             'category' => $entity->getCategory(),
-            'dealsCount' => $entity->getDeals()->count(),
             'color' => $entity->getColor(),
+            'dealsCount' => $entity->getDeals()->count(),
             'icon' => $entity->getIcon(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),

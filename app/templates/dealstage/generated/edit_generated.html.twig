@@ -1,4 +1,24 @@
-{% include 'genmax/twig/form_generated.html.twig' with {
-    'dealStage': dealStage,
-    'form': form
-} %}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'action.edit'|trans }} {{ 'dealstage.singular'|trans({}, 'dealstage') }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
+                    <h2>
+                        <i class="bi bi-pencil me-2"></i>{{ 'action.edit'|trans }} {{ 'dealstage.singular'|trans({}, 'dealstage') }}
+                    </h2>
+                </div>
+
+                {% include 'dealstage/generated/form_generated.html.twig' with {
+                    'dealStage': dealStage,
+                    'form': form
+                } %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

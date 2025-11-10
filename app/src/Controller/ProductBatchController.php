@@ -34,7 +34,7 @@ final class ProductBatchController extends ProductBatchControllerGenerated
      * API endpoint for searching productBatches
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'productbatch_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'productbatch_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

@@ -9,6 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\StepOutput;
+use App\Entity\Step;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -31,22 +33,23 @@ abstract class StepConnectionTypeGenerated extends AbstractType
         $builder->add('sourceOutput', EntityType::class, [
             'label' => 'SourceOutput',
             'required' => true,
-            'class' => StepOutput::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\StepOutput::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('targetInput', EntityType::class, [
-            'label' => 'TargetInput',
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('targetStep', EntityType::class, [
+            'label' => 'Target Step',
             'required' => true,
-            'class' => StepInput::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Step::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
     }
 
@@ -54,6 +57,7 @@ abstract class StepConnectionTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => StepConnection::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

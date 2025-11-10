@@ -34,7 +34,7 @@ final class ProfileTemplateController extends ProfileTemplateControllerGenerated
      * API endpoint for searching profileTemplates
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'profiletemplate_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'profiletemplate_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

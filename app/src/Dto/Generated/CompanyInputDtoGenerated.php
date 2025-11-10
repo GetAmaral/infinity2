@@ -112,16 +112,16 @@ abstract class CompanyInputDtoGenerated
     #[Groups(['company:write'])]
     public ?string $creditLimit = null;
 
-    #[Assert\Length(max: 20)]
-    #[Groups(['company:write'])]
-    public ?string $fiscalYearEnd = null;
-
     /**
      * city reference
      * Must be: IRI string (e.g., "/api/ties/uuid")
      */
     #[Groups(['company:write'])]
     public ?string $city = null;
+
+    #[Assert\Length(max: 20)]
+    #[Groups(['company:write'])]
+    public ?string $fiscalYearEnd = null;
 
     #[Assert\Length(max: 10)]
     #[Groups(['company:write'])]
@@ -201,8 +201,34 @@ abstract class CompanyInputDtoGenerated
     #[Groups(['company:write'])]
     public ?\DateTimeImmutable $nextActivityDate = null;
 
+    #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
+    public ?string $leadStatus = null;
+
+    #[Assert\Length(max: 255)]
+    #[Groups(['company:write'])]
+    public ?string $companyDomain = null;
+
+    #[Groups(['company:write'])]
+    public ?int $numberOfAssociatedContacts = null;
+
+    #[Assert\Length(max: 100)]
+    #[Groups(['company:write'])]
+    public ?string $shippingStateProvince = null;
+
+    #[Assert\Length(max: 500)]
+    #[Groups(['company:write'])]
+    public ?string $tags = null;
+
     #[Groups(['company:write'])]
     public ?\DateTimeImmutable $lastActivityDate = null;
+
+    #[Groups(['company:write'])]
+    public ?bool $public = null;
+
+    #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
+    public ?string $lifecycleStage = null;
 
     #[Groups(['company:write'])]
     public string $timeZone = 'UTC';
@@ -211,34 +237,8 @@ abstract class CompanyInputDtoGenerated
     #[Groups(['company:write'])]
     public ?string $stateProvince = null;
 
-    #[Assert\Length(max: 500)]
-    #[Groups(['company:write'])]
-    public ?string $tags = null;
-
-    #[Assert\Length(max: 50)]
-    #[Groups(['company:write'])]
-    public ?string $lifecycleStage = null;
-
-    #[Assert\Length(max: 255)]
-    #[Groups(['company:write'])]
-    public ?string $companyDomain = null;
-
-    #[Assert\Length(max: 50)]
-    #[Groups(['company:write'])]
-    public ?string $leadStatus = null;
-
     #[Groups(['company:write'])]
     public ?int $numberOfAssociatedDeals = null;
-
-    #[Groups(['company:write'])]
-    public ?int $numberOfAssociatedContacts = null;
-
-    #[Groups(['company:write'])]
-    public ?bool $public = null;
-
-    #[Assert\Length(max: 100)]
-    #[Groups(['company:write'])]
-    public ?string $shippingStateProvince = null;
 
 
     // Getters and Setters
@@ -343,16 +343,6 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getCampaigns(): ?string    {
-        return $this->campaigns;
-    }
-
-    public function setCampaigns(?string $campaigns): self
-    {
-        $this->campaigns = $campaigns;
-        return $this;
-    }
-
     public function getShippingPostalCode(): ?string    {
         return $this->shippingPostalCode;
     }
@@ -360,6 +350,16 @@ abstract class CompanyInputDtoGenerated
     public function setShippingPostalCode(?string $shippingPostalCode): self
     {
         $this->shippingPostalCode = $shippingPostalCode;
+        return $this;
+    }
+
+    public function getCampaigns(): ?string    {
+        return $this->campaigns;
+    }
+
+    public function setCampaigns(?string $campaigns): self
+    {
+        $this->campaigns = $campaigns;
         return $this;
     }
 
@@ -453,16 +453,6 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getFiscalYearEnd(): ?string    {
-        return $this->fiscalYearEnd;
-    }
-
-    public function setFiscalYearEnd(?string $fiscalYearEnd): self
-    {
-        $this->fiscalYearEnd = $fiscalYearEnd;
-        return $this;
-    }
-
     public function getCity(): ?string    {
         return $this->city;
     }
@@ -470,6 +460,16 @@ abstract class CompanyInputDtoGenerated
     public function setCity(?string $city): self
     {
         $this->city = $city;
+        return $this;
+    }
+
+    public function getFiscalYearEnd(): ?string    {
+        return $this->fiscalYearEnd;
+    }
+
+    public function setFiscalYearEnd(?string $fiscalYearEnd): self
+    {
+        $this->fiscalYearEnd = $fiscalYearEnd;
         return $this;
     }
 
@@ -763,6 +763,56 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
+    public function getLeadStatus(): ?string    {
+        return $this->leadStatus;
+    }
+
+    public function setLeadStatus(?string $leadStatus): self
+    {
+        $this->leadStatus = $leadStatus;
+        return $this;
+    }
+
+    public function getCompanyDomain(): ?string    {
+        return $this->companyDomain;
+    }
+
+    public function setCompanyDomain(?string $companyDomain): self
+    {
+        $this->companyDomain = $companyDomain;
+        return $this;
+    }
+
+    public function getNumberOfAssociatedContacts(): ?int    {
+        return $this->numberOfAssociatedContacts;
+    }
+
+    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
+    {
+        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
+        return $this;
+    }
+
+    public function getShippingStateProvince(): ?string    {
+        return $this->shippingStateProvince;
+    }
+
+    public function setShippingStateProvince(?string $shippingStateProvince): self
+    {
+        $this->shippingStateProvince = $shippingStateProvince;
+        return $this;
+    }
+
+    public function getTags(): ?string    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): self
+    {
+        $this->tags = $tags;
+        return $this;
+    }
+
     public function getLastActivityDate(): ?\DateTimeImmutable    {
         return $this->lastActivityDate;
     }
@@ -770,6 +820,26 @@ abstract class CompanyInputDtoGenerated
     public function setLastActivityDate(?\DateTimeImmutable $lastActivityDate): self
     {
         $this->lastActivityDate = $lastActivityDate;
+        return $this;
+    }
+
+    public function getPublic(): ?bool    {
+        return $this->public;
+    }
+
+    public function setPublic(?bool $public): self
+    {
+        $this->public = $public;
+        return $this;
+    }
+
+    public function getLifecycleStage(): ?string    {
+        return $this->lifecycleStage;
+    }
+
+    public function setLifecycleStage(?string $lifecycleStage): self
+    {
+        $this->lifecycleStage = $lifecycleStage;
         return $this;
     }
 
@@ -793,46 +863,6 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getTags(): ?string    {
-        return $this->tags;
-    }
-
-    public function setTags(?string $tags): self
-    {
-        $this->tags = $tags;
-        return $this;
-    }
-
-    public function getLifecycleStage(): ?string    {
-        return $this->lifecycleStage;
-    }
-
-    public function setLifecycleStage(?string $lifecycleStage): self
-    {
-        $this->lifecycleStage = $lifecycleStage;
-        return $this;
-    }
-
-    public function getCompanyDomain(): ?string    {
-        return $this->companyDomain;
-    }
-
-    public function setCompanyDomain(?string $companyDomain): self
-    {
-        $this->companyDomain = $companyDomain;
-        return $this;
-    }
-
-    public function getLeadStatus(): ?string    {
-        return $this->leadStatus;
-    }
-
-    public function setLeadStatus(?string $leadStatus): self
-    {
-        $this->leadStatus = $leadStatus;
-        return $this;
-    }
-
     public function getNumberOfAssociatedDeals(): ?int    {
         return $this->numberOfAssociatedDeals;
     }
@@ -840,36 +870,6 @@ abstract class CompanyInputDtoGenerated
     public function setNumberOfAssociatedDeals(?int $numberOfAssociatedDeals): self
     {
         $this->numberOfAssociatedDeals = $numberOfAssociatedDeals;
-        return $this;
-    }
-
-    public function getNumberOfAssociatedContacts(): ?int    {
-        return $this->numberOfAssociatedContacts;
-    }
-
-    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
-    {
-        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
-        return $this;
-    }
-
-    public function getPublic(): ?bool    {
-        return $this->public;
-    }
-
-    public function setPublic(?bool $public): self
-    {
-        $this->public = $public;
-        return $this;
-    }
-
-    public function getShippingStateProvince(): ?string    {
-        return $this->shippingStateProvince;
-    }
-
-    public function setShippingStateProvince(?string $shippingStateProvince): self
-    {
-        $this->shippingStateProvince = $shippingStateProvince;
         return $this;
     }
 }

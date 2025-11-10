@@ -6,8 +6,7 @@ namespace App\EventSubscriber;
 
 use App\Entity\TreeFlow;
 use App\Entity\Step;
-use App\Entity\StepIteration;
-use App\Entity\StepInput;
+use App\Entity\StepAction;
 use App\Entity\StepOutput;
 use App\Entity\StepConnection;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
@@ -22,8 +21,7 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
  * Automatically regenerates the cached JSON structure for TreeFlows when:
  * - TreeFlow itself is updated
  * - Any Step is added/updated/removed
- * - Any StepIteration is added/updated/removed
- * - Any StepInput is added/updated/removed
+ * - Any StepAction is added/updated/removed
  * - Any StepOutput is added/updated/removed
  * - Any StepConnection is added/updated/removed
  *
@@ -155,9 +153,7 @@ class TreeFlowJsonCacheSubscriber
                 $treeFlow = $entity;
             } elseif ($entity instanceof Step) {
                 $treeFlow = $entity->getTreeFlow();
-            } elseif ($entity instanceof StepIteration) {
-                $treeFlow = $entity->getStep()->getTreeFlow();
-            } elseif ($entity instanceof StepInput) {
+            } elseif ($entity instanceof StepAction) {
                 $treeFlow = $entity->getStep()->getTreeFlow();
             } elseif ($entity instanceof StepOutput) {
                 $treeFlow = $entity->getStep()->getTreeFlow();

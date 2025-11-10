@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Tag;
 use App\Repository\TagRepository;
 use App\Security\Voter\TagVoter;
-use App\Form\TagFormType;
+use App\Form\TagType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,14 +87,20 @@ abstract class TagControllerGenerated extends BaseApiController
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
             'color' => $entity->getColor(),
-            'deals' => ($dealsRel = $entity->getDeals()) ? [
-                'id' => $dealsRel->getId()->toString(),
-                'display' => (string) $dealsRel,
-            ] : null,
-            'products' => ($productsRel = $entity->getProducts()) ? [
-                'id' => $productsRel->getId()->toString(),
-                'display' => (string) $productsRel,
-            ] : null,
+            'deals' => ($dealsRel = $entity->getDeals()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealsRel->toArray()
+            ) : [],
+            'products' => ($productsRel = $entity->getProducts()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $productsRel->toArray()
+            ) : [],
             'sentiment' => $entity->getSentiment(),
         ];
     }
@@ -125,9 +131,16 @@ abstract class TagControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => TagVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts","isRelationship":true},{"name":"sentiment","label":"Sentiment","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSentiment","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"color","label":"Color","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"color","label":"Color"},{"name":"deals","label":"Deals"},{"name":"products","label":"Products"},{"name":"sentiment","label":"Sentiment"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals"},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts"},{"name":"sentiment","label":"Sentiment","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSentiment"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts","isRelationship":true},{"name":"sentiment","label":"Sentiment","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSentiment","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"color","label":"Color","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"color","label":"Color"},{"name":"deals","label":"Deals"},{"name":"products","label":"Products"},{"name":"sentiment","label":"Sentiment"}]',
@@ -145,9 +158,9 @@ abstract class TagControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TagVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -166,7 +179,7 @@ abstract class TagControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($tag);
 
-        $form = $this->createForm(TagFormType::class, $tag);
+        $form = $this->createForm(TagType::class, $tag);
 
         return $this->render('tag/_form_modal.html.twig', [
             'form' => $form,
@@ -191,7 +204,7 @@ abstract class TagControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($tag);
 
-        $form = $this->createForm(TagFormType::class, $tag);
+        $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -241,7 +254,7 @@ abstract class TagControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TagVoter::EDIT, $tag);
 
-        $form = $this->createForm(TagFormType::class, $tag);
+        $form = $this->createForm(TagType::class, $tag);
 
         return $this->render('tag/_form_modal.html.twig', [
             'form' => $form,
@@ -261,7 +274,7 @@ abstract class TagControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TagVoter::EDIT, $tag);
 
-        $form = $this->createForm(TagFormType::class, $tag);
+        $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

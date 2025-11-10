@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -129,8 +130,7 @@ abstract class EventCategoryTypeGenerated extends AbstractType
         $builder->add('events', EntityType::class, [
             'label' => 'Events',
             'required' => false,
-            'class' => Event::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Event::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -143,6 +143,7 @@ abstract class EventCategoryTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => EventCategory::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

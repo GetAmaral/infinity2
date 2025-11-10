@@ -12,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use App\Entity\CommunicationMethod;
+use App\Entity\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -50,26 +53,30 @@ abstract class ReminderTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('communicationMethod', EntityType::class, [
             'label' => 'CommunicationMethod',
             'required' => false,
             'help' => 'Select how you want to receive this reminder (email, SMS, push notification, etc.)',
-            'class' => CommunicationMethod::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\CommunicationMethod::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('event', EntityType::class, [
             'label' => 'Event',
             'required' => false,
-            'class' => Event::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Event::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('minutesBeforeStart', IntegerType::class, [
             'label' => 'Minutes Before Trigger',
@@ -80,12 +87,15 @@ abstract class ReminderTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('notifications', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('notifications', CollectionType::class, [
             'label' => 'Notifications',
             'required' => false,
-            'entry_type' => App\Form\NotificationType::class,
+            'entry_type' => \App\Form\NotificationType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -98,6 +108,7 @@ abstract class ReminderTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
     }
 
@@ -105,6 +116,7 @@ abstract class ReminderTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Reminder::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

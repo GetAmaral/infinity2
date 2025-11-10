@@ -8,9 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\TreeFlowInputDto;
-use App\Dto\StepIterationInputDto;
+use App\Dto\StepActionInputDto;
 use App\Dto\StepOutputInputDto;
-use App\Dto\StepInputInputDto;
 
 /**
  * Step Input DTO (Generated Base Class)
@@ -23,10 +22,6 @@ use App\Dto\StepInputInputDto;
  */
 abstract class StepInputDtoGenerated
 {
-    #[Assert\Length(max: 255)]
-    #[Groups(['step:write'])]
-    public string $name;
-
     /**
      * treeFlow reference
      * Must be: IRI string (e.g., "/api/tree_flows/uuid")
@@ -34,6 +29,10 @@ abstract class StepInputDtoGenerated
     #[Assert\NotNull]
     #[Groups(['step:write'])]
     public ?string $treeFlow = null;
+
+    #[Assert\Length(max: 255)]
+    #[Groups(['step:write'])]
+    public string $name;
 
     #[Groups(['step:write'])]
     public bool $first = false;
@@ -46,9 +45,6 @@ abstract class StepInputDtoGenerated
     public ?string $objective = null;
 
     #[Groups(['step:write'])]
-    public ?string $prompt = null;
-
-    #[Groups(['step:write'])]
     public int $viewOrder = 1;
 
     #[Groups(['step:write'])]
@@ -58,13 +54,13 @@ abstract class StepInputDtoGenerated
     public ?int $positionY = null;
 
     /**
-     * Nested questions collection
+     * Nested actions collection
      * Strategy: create_and_update
      * Max items: 20     */
     #[Assert\Valid]
-    #[Assert\Count(max: 20, maxMessage: 'Cannot have more than 20 questions')]
+    #[Assert\Count(max: 20, maxMessage: 'Cannot have more than 20 actions')]
     #[Groups(['step:write'])]
-    public array $questions = [];
+    public array $actions = [];
 
     /**
      * Nested outputs collection
@@ -75,27 +71,8 @@ abstract class StepInputDtoGenerated
     #[Groups(['step:write'])]
     public array $outputs = [];
 
-    /**
-     * Nested inputs collection
-     * Strategy: create_and_update
-     * Max items: 20     */
-    #[Assert\Valid]
-    #[Assert\Count(max: 20, maxMessage: 'Cannot have more than 20 inputs')]
-    #[Groups(['step:write'])]
-    public array $inputs = [];
-
 
     // Getters and Setters
-
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
 
     public function getTreeFlow(): ?string    {
         return $this->treeFlow;
@@ -104,6 +81,16 @@ abstract class StepInputDtoGenerated
     public function setTreeFlow(?string $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -137,16 +124,6 @@ abstract class StepInputDtoGenerated
         return $this;
     }
 
-    public function getPrompt(): ?string    {
-        return $this->prompt;
-    }
-
-    public function setPrompt(?string $prompt): self
-    {
-        $this->prompt = $prompt;
-        return $this;
-    }
-
     public function getViewOrder(): int    {
         return $this->viewOrder;
     }
@@ -177,13 +154,13 @@ abstract class StepInputDtoGenerated
         return $this;
     }
 
-    public function getQuestions(): array    {
-        return $this->questions;
+    public function getActions(): array    {
+        return $this->actions;
     }
 
-    public function setQuestions(array $questions): self
+    public function setActions(array $actions): self
     {
-        $this->questions = $questions;
+        $this->actions = $actions;
         return $this;
     }
 
@@ -197,13 +174,13 @@ abstract class StepInputDtoGenerated
         return $this;
     }
 
-    public function getInputs(): array    {
-        return $this->inputs;
+    public function getIncomingConnections(): ?string    {
+        return $this->incomingConnections;
     }
 
-    public function setInputs(array $inputs): self
+    public function setIncomingConnections(?string $incomingConnections): self
     {
-        $this->inputs = $inputs;
+        $this->incomingConnections = $incomingConnections;
         return $this;
     }
 }

@@ -1,0 +1,131 @@
+{% extends '_base_modal.html.twig' %}
+
+{# Configure modal appearance and behavior #}
+{% set entity_type = 'action' %}
+{% set icon = 'action-circle' %}
+{% set form_action = (is_edit and action.id) ? path('action_edit', {treeflowId: treeFlow.id.toRfc4122(), stepId: step.id.toRfc4122(), actionId: action.id.toRfc4122()}) : path('action_new', {treeflowId: treeFlow.id.toRfc4122(), stepId: step.id.toRfc4122()}) %}
+{% set title_create = 'action.modal.create.title' %}
+{% set subtitle_create = 'action.modal.create.subtitle' %}
+{% set subtitle_edit = 'action.modal.edit.subtitle' %}
+{% set subtitle_domain = 'treeflow' %}
+{% set submit_key = is_edit ? 'button.save.changes' : 'action.button.create.action' %}
+{% set submit_domain = is_edit ? 'messages' : 'treeflow' %}
+{% set entity = action %}
+
+{# Form fields #}
+{% block modal_body %}
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.name) }}</label>
+        {{ form_widget(form.name, {
+            'attr': {
+                'class': 'form-input-modern' ~ (form.name.vars.errors|length > 0 ? ' input-error' : ''),
+                'placeholder': 'action.form.name.placeholder'|trans({}, 'treeflow'),
+                'autofocus': 'autofocus'
+            }
+        }) }}
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.prompt) }}</label>
+        {{ form_widget(form.prompt, {
+            'attr': {
+                'class': 'form-input-modern' ~ (form.prompt.vars.errors|length > 0 ? ' input-error' : ''),
+                'placeholder': 'action.form.prompt.placeholder'|trans({}, 'treeflow'),
+                'rows': 4
+            }
+        }) }}
+        {{ form_errors(form.prompt) }}
+    </div>
+
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.importance) }}</label>
+        <div class="star-rating-container" data-controller="star-rating">
+            <!-- Hidden radio inputs (without labels) -->
+            <div style="display: none;">
+                {% for choice in form.importance %}
+                    {{ form_widget(choice, {
+                        'label': false,
+                        'attr': {
+                            'data-star-value': choice.vars.label,
+                            'data-star-rating-target': 'input'
+                        }
+                    }) }}
+                {% endfor %}
+            </div>
+
+            <!-- Visible clickable stars -->
+            <div class="clickable-stars">
+                <i class="bi bi-star-fill clickable-star" data-star="1"
+                   data-star-rating-target="star"
+                   data-action="click->star-rating#clickStar mouseenter->star-rating#hoverStar mouseleave->star-rating#leaveStar"></i>
+                <i class="bi bi-star-fill clickable-star" data-star="2"
+                   data-star-rating-target="star"
+                   data-action="click->star-rating#clickStar mouseenter->star-rating#hoverStar mouseleave->star-rating#leaveStar"></i>
+                <i class="bi bi-star-fill clickable-star" data-star="3"
+                   data-star-rating-target="star"
+                   data-action="click->star-rating#clickStar mouseenter->star-rating#hoverStar mouseleave->star-rating#leaveStar"></i>
+            </div>
+        </div>
+        <small class="text-muted mt-1 d-block">{{ 'action.form.importance.help'|trans({}, 'treeflow') }}</small>
+        {{ form_errors(form.importance) }}
+    </div>
+
+    {# Few-Shot Examples #}
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.fewShot) }}</label>
+        <small class="text-muted d-block mb-2">{{ 'action.form.fewshot.help'|trans({}, 'treeflow') }}</small>
+        <div class="fewshot-collection-container" data-collection="fewshot" data-index="{{ form.fewShot|length }}" data-prototype="{{ form_widget(form.fewShot.vars.prototype)|e('html_attr') }}">
+            <div class="fewshot-items">
+                {% for item in form.fewShot %}
+                    <div class="fewshot-item mb-2" style="position: relative;">
+                        {{ form_widget(item, {'attr': {'class': 'form-input-modern fewshot-entry'}}) }}
+                        <button type="button" class="fewshot-remove-btn-permanent"
+                                title="{{ 'button.remove'|trans({}, 'messages') }}"
+                                data-bs-toggle="tooltip">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-sm luminai-btn-success fewshot-add mt-2"
+                    title="{{ 'action.button.add.example'|trans({}, 'treeflow') }}"
+                    data-bs-toggle="tooltip">
+                <i class="bi bi-plus-circle"></i>
+            </button>
+        </div>
+        {{ form_errors(form.fewShot) }}
+    </div>
+
+    {{ form_widget(form._token) }}
+
+    {% if is_edit and action.id %}
+        <div class="form-group-modern mt-4 pt-3 border-top">
+            <button type="button" class="btn btn-sm btn-danger delete-trigger-btn" data-entity-type="action">
+                <i class="bi bi-trash"></i> {{ 'button.delete'|trans }}
+            </button>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block modal_footer %}
+    <div class="modal-footer-actions" id="modal-default-actions-action">
+        {{ button_modal_cancel() }}
+        {{ button_modal_submit(is_edit, submit_key|default(null), submit_domain|default('messages')) }}
+    </div>
+
+    {% if is_edit and action.id %}
+        <div class="modal-footer-actions" id="modal-delete-confirmation-action" style="display: none;">
+            <div class="text-danger fw-bold">{{ 'confirm.delete.entity'|trans }}</div>
+            <button type="button" class="btn btn-sm btn-secondary delete-cancel-btn" data-entity-type="action">
+                <i class="bi bi-x-circle"></i> {{ 'button.cancel'|trans }}
+            </button>
+            <button type="button" class="btn btn-sm btn-danger delete-confirm-btn"
+                    data-entity-type="action"
+                    data-delete-url="{{ path('action_delete', {treeflowId: treeFlow.id.toRfc4122(), stepId: step.id.toRfc4122(), actionId: action.id.toRfc4122()}) }}"
+                    data-csrf-token="{{ csrf_token('delete-action-' ~ action.id.toRfc4122()) }}">
+                <i class="bi bi-trash"></i> {{ 'button.confirm'|trans }}
+            </button>
+        </div>
+    {% endif %}
+{% endblock %}

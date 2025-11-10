@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\StepOutput;
-use App\Entity\StepInput;
+use App\Entity\Step;
 
 /**
  * StepConnection State Processor
@@ -105,23 +105,23 @@ class StepConnectionProcessor implements ProcessorInterface
             }
         }
 
-        // targetInput: ManyToOne
-        if (!$isPatch || array_key_exists('targetInput', $requestData)) {
-            if ($data->targetInput !== null) {
-                if (is_string($data->targetInput)) {
-                    // IRI format: "/api/step_inputs/{id}"
-                    $targetInputId = $this->extractIdFromIri($data->targetInput);
-                    $targetInput = $this->entityManager->getRepository(StepInput::class)->find($targetInputId);
-                    if (!$targetInput) {
-                        throw new BadRequestHttpException('StepInput not found: ' . $targetInputId);
+        // targetStep: ManyToOne
+        if (!$isPatch || array_key_exists('targetStep', $requestData)) {
+            if ($data->targetStep !== null) {
+                if (is_string($data->targetStep)) {
+                    // IRI format: "/api/steps/{id}"
+                    $targetStepId = $this->extractIdFromIri($data->targetStep);
+                    $targetStep = $this->entityManager->getRepository(Step::class)->find($targetStepId);
+                    if (!$targetStep) {
+                        throw new BadRequestHttpException('Step not found: ' . $targetStepId);
                     }
-                    $entity->setTargetInput($targetInput);
+                    $entity->setTargetStep($targetStep);
                 } else {
                     // Nested object creation (if supported)
-                    throw new BadRequestHttpException('Nested targetInput creation not supported. Use IRI format.');
+                    throw new BadRequestHttpException('Nested targetStep creation not supported. Use IRI format.');
                 }
             } else {
-                throw new BadRequestHttpException('targetInput is required');
+                throw new BadRequestHttpException('targetStep is required');
             }
         }
 

@@ -74,9 +74,9 @@ abstract class TaskOutputDtoGenerated
 
     public ?int $priority = null;
 
-    public ?\DateTimeImmutable $scheduledDate = null;
-
     public bool $completed;
+
+    public ?\DateTimeImmutable $scheduledDate = null;
 
     /**
      * company reference
@@ -98,9 +98,9 @@ abstract class TaskOutputDtoGenerated
 
     public ?string $emailSubject = null;
 
-    public string $taskStatus;
-
     public ?string $phoneNumber = null;
+
+    public string $taskStatus;
 
     public ?string $meetingUrl = null;
 
@@ -297,16 +297,6 @@ abstract class TaskOutputDtoGenerated
         return $this;
     }
 
-    public function getScheduledDate(): ?\DateTimeImmutable    {
-        return $this->scheduledDate;
-    }
-
-    public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
-    {
-        $this->scheduledDate = $scheduledDate;
-        return $this;
-    }
-
     public function getCompleted(): bool    {
         return $this->completed;
     }
@@ -314,6 +304,16 @@ abstract class TaskOutputDtoGenerated
     public function setCompleted(bool $completed): self
     {
         $this->completed = $completed;
+        return $this;
+    }
+
+    public function getScheduledDate(): ?\DateTimeImmutable    {
+        return $this->scheduledDate;
+    }
+
+    public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
+    {
+        $this->scheduledDate = $scheduledDate;
         return $this;
     }
 
@@ -397,16 +397,6 @@ abstract class TaskOutputDtoGenerated
         return $this;
     }
 
-    public function getTaskStatus(): string    {
-        return $this->taskStatus;
-    }
-
-    public function setTaskStatus(string $taskStatus): self
-    {
-        $this->taskStatus = $taskStatus;
-        return $this;
-    }
-
     public function getPhoneNumber(): ?string    {
         return $this->phoneNumber;
     }
@@ -414,6 +404,16 @@ abstract class TaskOutputDtoGenerated
     public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
+        return $this;
+    }
+
+    public function getTaskStatus(): string    {
+        return $this->taskStatus;
+    }
+
+    public function setTaskStatus(string $taskStatus): self
+    {
+        $this->taskStatus = $taskStatus;
         return $this;
     }
 

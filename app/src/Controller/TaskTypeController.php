@@ -34,7 +34,7 @@ final class TaskTypeController extends TaskTypeControllerGenerated
      * API endpoint for searching taskTypes
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'tasktype_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'tasktype_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

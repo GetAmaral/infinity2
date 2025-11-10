@@ -54,7 +54,7 @@ abstract class EventRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'startTime' => 'startTime',            'description' => 'description',            'endTime' => 'endTime',            'allDay' => 'allDay',            'location' => 'location',            'meetingUrl' => 'meetingUrl',            'calendar' => 'calendar',            'organizer' => 'organizer',            'attendees' => 'attendees',            'categories' => 'categories',            'attachments' => 'attachments',            'reminders' => 'reminders',            'resourceBookings' => 'resourceBookings',            'parentEvent' => 'parentEvent',            'childrenEvents' => 'childrenEvents',            'originalStartTime' => 'originalStartTime',            'sequence' => 'sequence',            'conferenceData' => 'conferenceData',            'extendedProperties' => 'extendedProperties',            'source' => 'source',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'description' => 'description',            'startTime' => 'startTime',            'endTime' => 'endTime',            'allDay' => 'allDay',            'location' => 'location',            'meetingUrl' => 'meetingUrl',            'calendar' => 'calendar',            'organizer' => 'organizer',            'attendees' => 'attendees',            'categories' => 'categories',            'attachments' => 'attachments',            'reminders' => 'reminders',            'resourceBookings' => 'resourceBookings',            'parentEvent' => 'parentEvent',            'childrenEvents' => 'childrenEvents',            'originalStartTime' => 'originalStartTime',            'sequence' => 'sequence',            'conferenceData' => 'conferenceData',            'extendedProperties' => 'extendedProperties',            'source' => 'source',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -116,8 +116,8 @@ abstract class EventRepositoryGenerated extends BaseRepository
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
             'name' => $entity->getName(),
-            'startTime' => $entity->getStartTime()?->format('c'),
             'description' => $entity->getDescription(),
+            'startTime' => $entity->getStartTime()?->format('c'),
             'endTime' => $entity->getEndTime()?->format('c'),
             'location' => $entity->getLocation(),
             'meetingUrl' => $entity->getMeetingUrl(),
@@ -134,11 +134,11 @@ abstract class EventRepositoryGenerated extends BaseRepository
             'parentEventName' => $entity->getParentEvent()?->getName() ?? '',
             'childrenEventsCount' => $entity->getChildrenEvents()->count(),
             'originalStartTime' => $entity->getOriginalStartTime()?->format('c'),
-            'workingHoursCount' => $entity->getWorkingHours()->count(),
-            'subject' => $entity->getSubject(),
             'notificationsCount' => $entity->getNotifications()->count(),
-            'meetingDatasCount' => $entity->getMeetingDatas()->count(),
             'holidaysCount' => $entity->getHolidays()->count(),
+            'workingHoursCount' => $entity->getWorkingHours()->count(),
+            'meetingDatasCount' => $entity->getMeetingDatas()->count(),
+            'subject' => $entity->getSubject(),
             'status' => $entity->getStatus(),
             'showAs' => $entity->getShowAs(),
             'eventType' => $entity->getEventType(),

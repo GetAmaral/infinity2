@@ -11,13 +11,13 @@ use App\Dto\CalendarOutputDto;
 use App\Dto\CampaignOutputDto;
 use App\Dto\ContactOutputDto;
 use App\Dto\DealOutputDto;
-use App\Dto\CalendarExternalLinkOutputDto;
 use App\Dto\RoleOutputDto;
+use App\Dto\CalendarExternalLinkOutputDto;
 use App\Dto\EventResourceBookingOutputDto;
 use App\Dto\EventAttendeeOutputDto;
 use App\Dto\CompanyOutputDto;
-use App\Dto\EventOutputDto;
 use App\Dto\UserOutputDto;
+use App\Dto\EventOutputDto;
 use App\Dto\CourseOutputDto;
 use App\Dto\ProfileOutputDto;
 use App\Dto\SocialMediaOutputDto;
@@ -87,17 +87,7 @@ abstract class UserOutputDtoGenerated
 
     public string $email;
 
-    /**
-     * ownedDeals collection
-     * @var DealOutputDto[]
-     */
-    public array $ownedDeals = [];
-
-    /**
-     * calendarExternalLinks collection
-     * @var CalendarExternalLinkOutputDto[]
-     */
-    public array $calendarExternalLinks = [];
+    public ?\DateTimeImmutable $emailVerifiedAt = null;
 
     /**
      * grantedRoles collection
@@ -106,12 +96,22 @@ abstract class UserOutputDtoGenerated
     public array $grantedRoles = [];
 
     /**
+     * calendarExternalLinks collection
+     * @var CalendarExternalLinkOutputDto[]
+     */
+    public array $calendarExternalLinks = [];
+
+    /**
      * resourceBookings collection
      * @var EventResourceBookingOutputDto[]
      */
     public array $resourceBookings = [];
 
-    public ?\DateTimeImmutable $emailVerifiedAt = null;
+    /**
+     * ownedDeals collection
+     * @var DealOutputDto[]
+     */
+    public array $ownedDeals = [];
 
     /**
      * eventAttendances collection
@@ -127,17 +127,17 @@ abstract class UserOutputDtoGenerated
 
     public ?string $verificationToken = null;
 
-    public int $failedLoginAttempts;
-
     public ?string $apiToken = null;
+
+    public int $failedLoginAttempts;
 
     public ?\DateTimeImmutable $apiTokenExpiresAt = null;
 
     public ?string $openAiApiKey = null;
 
-    public ?int $gender = null;
-
     public ?\DateTimeImmutable $lastLoginAt = null;
+
+    public ?int $gender = null;
 
     public ?\DateTimeImmutable $lockedUntil = null;
 
@@ -230,16 +230,16 @@ abstract class UserOutputDtoGenerated
     public ?string $dateFormat = null;
 
     /**
-     * organizedEvents collection
-     * @var EventOutputDto[]
-     */
-    public array $organizedEvents = [];
-
-    /**
      * manager reference
      * Can be: IRI string or nested UserOutput object
      */
     public string|UserOutputDto|null $manager = null;
+
+    /**
+     * organizedEvents collection
+     * @var EventOutputDto[]
+     */
+    public array $organizedEvents = [];
 
     public ?string $salesTeam = null;
 
@@ -251,19 +251,19 @@ abstract class UserOutputDtoGenerated
 
     public ?string $agentType = null;
 
-    public ?\DateTimeImmutable $deletedAt = null;
-
     /**
      * ownedCourses collection
      * @var CourseOutputDto[]
      */
     public array $ownedCourses = [];
 
+    public ?\DateTimeImmutable $deletedAt = null;
+
     public ?string $avatar = null;
 
-    public string $password;
-
     public ?string $title = null;
+
+    public string $password;
 
     public ?string $firstName = null;
 
@@ -293,9 +293,9 @@ abstract class UserOutputDtoGenerated
 
     public ?string $twitterHandle = null;
 
-    public ?string $address = null;
-
     public ?string $profilePictureUrl = null;
+
+    public ?string $address = null;
 
     public ?string $city = null;
 
@@ -309,13 +309,13 @@ abstract class UserOutputDtoGenerated
 
     public ?string $officeLocation = null;
 
+    public ?string $employeeId = null;
+
     /**
      * profiles collection
      * @var ProfileOutputDto[]
      */
     public array $profiles = [];
-
-    public ?string $employeeId = null;
 
     public ?\DateTimeImmutable $hireDate = null;
 
@@ -351,13 +351,13 @@ abstract class UserOutputDtoGenerated
 
     public ?array $tags = null;
 
+    public int $loginCount;
+
     /**
      * studentCourses collection
      * @var StudentCourseOutputDto[]
      */
     public array $studentCourses = [];
-
-    public int $loginCount;
 
     public ?string $lastIpAddress = null;
 
@@ -379,13 +379,13 @@ abstract class UserOutputDtoGenerated
 
     public ?string $statusMessage = null;
 
-    public bool $locked;
-
     /**
      * tasks collection
      * @var TaskOutputDto[]
      */
     public array $tasks = [];
+
+    public bool $locked;
 
     public ?string $lockedReason = null;
 
@@ -536,23 +536,13 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getOwnedDeals(): array    {
-        return $this->ownedDeals;
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
+        return $this->emailVerifiedAt;
     }
 
-    public function setOwnedDeals(array $ownedDeals): self
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
     {
-        $this->ownedDeals = $ownedDeals;
-        return $this;
-    }
-
-    public function getCalendarExternalLinks(): array    {
-        return $this->calendarExternalLinks;
-    }
-
-    public function setCalendarExternalLinks(array $calendarExternalLinks): self
-    {
-        $this->calendarExternalLinks = $calendarExternalLinks;
+        $this->emailVerifiedAt = $emailVerifiedAt;
         return $this;
     }
 
@@ -566,6 +556,16 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
+    public function getCalendarExternalLinks(): array    {
+        return $this->calendarExternalLinks;
+    }
+
+    public function setCalendarExternalLinks(array $calendarExternalLinks): self
+    {
+        $this->calendarExternalLinks = $calendarExternalLinks;
+        return $this;
+    }
+
     public function getResourceBookings(): array    {
         return $this->resourceBookings;
     }
@@ -576,13 +576,13 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
-        return $this->emailVerifiedAt;
+    public function getOwnedDeals(): array    {
+        return $this->ownedDeals;
     }
 
-    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
+    public function setOwnedDeals(array $ownedDeals): self
     {
-        $this->emailVerifiedAt = $emailVerifiedAt;
+        $this->ownedDeals = $ownedDeals;
         return $this;
     }
 
@@ -636,16 +636,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getFailedLoginAttempts(): int    {
-        return $this->failedLoginAttempts;
-    }
-
-    public function setFailedLoginAttempts(int $failedLoginAttempts): self
-    {
-        $this->failedLoginAttempts = $failedLoginAttempts;
-        return $this;
-    }
-
     public function getApiToken(): ?string    {
         return $this->apiToken;
     }
@@ -653,6 +643,16 @@ abstract class UserOutputDtoGenerated
     public function setApiToken(?string $apiToken): self
     {
         $this->apiToken = $apiToken;
+        return $this;
+    }
+
+    public function getFailedLoginAttempts(): int    {
+        return $this->failedLoginAttempts;
+    }
+
+    public function setFailedLoginAttempts(int $failedLoginAttempts): self
+    {
+        $this->failedLoginAttempts = $failedLoginAttempts;
         return $this;
     }
 
@@ -676,16 +676,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getGender(): ?int    {
-        return $this->gender;
-    }
-
-    public function setGender(?int $gender): self
-    {
-        $this->gender = $gender;
-        return $this;
-    }
-
     public function getLastLoginAt(): ?\DateTimeImmutable    {
         return $this->lastLoginAt;
     }
@@ -693,6 +683,16 @@ abstract class UserOutputDtoGenerated
     public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
     {
         $this->lastLoginAt = $lastLoginAt;
+        return $this;
+    }
+
+    public function getGender(): ?int    {
+        return $this->gender;
+    }
+
+    public function setGender(?int $gender): self
+    {
+        $this->gender = $gender;
         return $this;
     }
 
@@ -1046,16 +1046,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getOrganizedEvents(): array    {
-        return $this->organizedEvents;
-    }
-
-    public function setOrganizedEvents(array $organizedEvents): self
-    {
-        $this->organizedEvents = $organizedEvents;
-        return $this;
-    }
-
     public function getManager(): string|UserOutputDto|null    {
         return $this->manager;
     }
@@ -1063,6 +1053,16 @@ abstract class UserOutputDtoGenerated
     public function setManager(string|UserOutputDto|null $manager): self
     {
         $this->manager = $manager;
+        return $this;
+    }
+
+    public function getOrganizedEvents(): array    {
+        return $this->organizedEvents;
+    }
+
+    public function setOrganizedEvents(array $organizedEvents): self
+    {
+        $this->organizedEvents = $organizedEvents;
         return $this;
     }
 
@@ -1116,16 +1116,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-        return $this;
-    }
-
     public function getOwnedCourses(): array    {
         return $this->ownedCourses;
     }
@@ -1133,6 +1123,16 @@ abstract class UserOutputDtoGenerated
     public function setOwnedCourses(array $ownedCourses): self
     {
         $this->ownedCourses = $ownedCourses;
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
         return $this;
     }
 
@@ -1146,16 +1146,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getPassword(): string    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-        return $this;
-    }
-
     public function getTitle(): ?string    {
         return $this->title;
     }
@@ -1163,6 +1153,16 @@ abstract class UserOutputDtoGenerated
     public function setTitle(?string $title): self
     {
         $this->title = $title;
+        return $this;
+    }
+
+    public function getPassword(): string    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
         return $this;
     }
 
@@ -1306,16 +1306,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getAddress(): ?string    {
-        return $this->address;
-    }
-
-    public function setAddress(?string $address): self
-    {
-        $this->address = $address;
-        return $this;
-    }
-
     public function getProfilePictureUrl(): ?string    {
         return $this->profilePictureUrl;
     }
@@ -1323,6 +1313,16 @@ abstract class UserOutputDtoGenerated
     public function setProfilePictureUrl(?string $profilePictureUrl): self
     {
         $this->profilePictureUrl = $profilePictureUrl;
+        return $this;
+    }
+
+    public function getAddress(): ?string    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
         return $this;
     }
 
@@ -1386,16 +1386,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getProfiles(): array    {
-        return $this->profiles;
-    }
-
-    public function setProfiles(array $profiles): self
-    {
-        $this->profiles = $profiles;
-        return $this;
-    }
-
     public function getEmployeeId(): ?string    {
         return $this->employeeId;
     }
@@ -1403,6 +1393,16 @@ abstract class UserOutputDtoGenerated
     public function setEmployeeId(?string $employeeId): self
     {
         $this->employeeId = $employeeId;
+        return $this;
+    }
+
+    public function getProfiles(): array    {
+        return $this->profiles;
+    }
+
+    public function setProfiles(array $profiles): self
+    {
+        $this->profiles = $profiles;
         return $this;
     }
 
@@ -1556,16 +1556,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getStudentCourses(): array    {
-        return $this->studentCourses;
-    }
-
-    public function setStudentCourses(array $studentCourses): self
-    {
-        $this->studentCourses = $studentCourses;
-        return $this;
-    }
-
     public function getLoginCount(): int    {
         return $this->loginCount;
     }
@@ -1573,6 +1563,16 @@ abstract class UserOutputDtoGenerated
     public function setLoginCount(int $loginCount): self
     {
         $this->loginCount = $loginCount;
+        return $this;
+    }
+
+    public function getStudentCourses(): array    {
+        return $this->studentCourses;
+    }
+
+    public function setStudentCourses(array $studentCourses): self
+    {
+        $this->studentCourses = $studentCourses;
         return $this;
     }
 
@@ -1656,16 +1656,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getLocked(): bool    {
-        return $this->locked;
-    }
-
-    public function setLocked(bool $locked): self
-    {
-        $this->locked = $locked;
-        return $this;
-    }
-
     public function getTasks(): array    {
         return $this->tasks;
     }
@@ -1673,6 +1663,16 @@ abstract class UserOutputDtoGenerated
     public function setTasks(array $tasks): self
     {
         $this->tasks = $tasks;
+        return $this;
+    }
+
+    public function getLocked(): bool    {
+        return $this->locked;
+    }
+
+    public function setLocked(bool $locked): self
+    {
+        $this->locked = $locked;
         return $this;
     }
 

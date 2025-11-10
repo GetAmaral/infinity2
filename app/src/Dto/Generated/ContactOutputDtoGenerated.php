@@ -35,9 +35,9 @@ abstract class ContactOutputDtoGenerated
      */
     public string|OrganizationOutputDto $organization;
 
-    public string $firstName;
-
     public string $name;
+
+    public string $firstName;
 
     public string $lastName;
 
@@ -85,25 +85,25 @@ abstract class ContactOutputDtoGenerated
      */
     public string|CompanyOutputDto $company;
 
+    public ?string $mobilePhone = null;
+
     /**
      * deals collection
      * @var DealOutputDto[]
      */
     public array $deals = [];
 
-    public ?string $mobilePhone = null;
+    public ?string $title = null;
 
     public ?string $linkedinUrl = null;
 
-    public ?string $title = null;
+    public bool $emailOptOut;
 
     public ?string $department = null;
 
-    public bool $emailOptOut;
+    public bool $doNotCall;
 
     public ?string $leadSource = null;
-
-    public bool $doNotCall;
 
     public ?string $preferredContactMethod = null;
 
@@ -198,16 +198,6 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getFirstName(): string    {
-        return $this->firstName;
-    }
-
-    public function setFirstName(string $firstName): self
-    {
-        $this->firstName = $firstName;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -215,6 +205,16 @@ abstract class ContactOutputDtoGenerated
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getFirstName(): string    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
         return $this;
     }
 
@@ -328,16 +328,6 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getDeals(): array    {
-        return $this->deals;
-    }
-
-    public function setDeals(array $deals): self
-    {
-        $this->deals = $deals;
-        return $this;
-    }
-
     public function getMobilePhone(): ?string    {
         return $this->mobilePhone;
     }
@@ -348,13 +338,13 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getLinkedinUrl(): ?string    {
-        return $this->linkedinUrl;
+    public function getDeals(): array    {
+        return $this->deals;
     }
 
-    public function setLinkedinUrl(?string $linkedinUrl): self
+    public function setDeals(array $deals): self
     {
-        $this->linkedinUrl = $linkedinUrl;
+        $this->deals = $deals;
         return $this;
     }
 
@@ -368,13 +358,13 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getDepartment(): ?string    {
-        return $this->department;
+    public function getLinkedinUrl(): ?string    {
+        return $this->linkedinUrl;
     }
 
-    public function setDepartment(?string $department): self
+    public function setLinkedinUrl(?string $linkedinUrl): self
     {
-        $this->department = $department;
+        $this->linkedinUrl = $linkedinUrl;
         return $this;
     }
 
@@ -388,13 +378,13 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getLeadSource(): ?string    {
-        return $this->leadSource;
+    public function getDepartment(): ?string    {
+        return $this->department;
     }
 
-    public function setLeadSource(?string $leadSource): self
+    public function setDepartment(?string $department): self
     {
-        $this->leadSource = $leadSource;
+        $this->department = $department;
         return $this;
     }
 
@@ -405,6 +395,16 @@ abstract class ContactOutputDtoGenerated
     public function setDoNotCall(bool $doNotCall): self
     {
         $this->doNotCall = $doNotCall;
+        return $this;
+    }
+
+    public function getLeadSource(): ?string    {
+        return $this->leadSource;
+    }
+
+    public function setLeadSource(?string $leadSource): self
+    {
+        $this->leadSource = $leadSource;
         return $this;
     }
 

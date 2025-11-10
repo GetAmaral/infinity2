@@ -37,7 +37,7 @@ final class {{ entityName }}Controller extends {{ entityName }}ControllerGenerat
      * API endpoint for searching {{ entityPluralVariable }}
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: '{{ routePrefix }}_search', methods: ['GET'])]
+    #[Route('/api/search', name: '{{ routePrefix }}_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

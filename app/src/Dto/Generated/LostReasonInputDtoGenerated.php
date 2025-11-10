@@ -106,16 +106,6 @@ abstract class LostReasonInputDtoGenerated
         return $this;
     }
 
-    public function getCategory(): string    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
-        return $this;
-    }
-
     public function getDeals(): ?string    {
         return $this->deals;
     }
@@ -123,6 +113,16 @@ abstract class LostReasonInputDtoGenerated
     public function setDeals(?string $deals): self
     {
         $this->deals = $deals;
+        return $this;
+    }
+
+    public function getCategory(): string    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
         return $this;
     }
 

@@ -43,7 +43,7 @@ abstract class StepConnectionRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'sourceOutput',            'targetInput',        ];
+        return [            'sourceOutput',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class StepConnectionRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'sourceOutput' => 'sourceOutput',            'targetInput' => 'targetInput',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'sourceOutput' => 'sourceOutput',            'targetStep' => 'targetStep',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -77,7 +77,7 @@ abstract class StepConnectionRepositoryGenerated extends BaseRepository
      */
     protected function getRelationshipFilterFields(): array
     {
-        return [            'sourceOutputName' => ['relation' => 'sourceOutput', 'field' => 'name'],            'targetInputName' => ['relation' => 'targetInput', 'field' => 'name'],        ];
+        return [            'sourceOutputName' => ['relation' => 'sourceOutput', 'field' => 'name'],            'targetStepName' => ['relation' => 'targetStep', 'field' => 'name'],        ];
     }
 
     /**
@@ -114,7 +114,8 @@ abstract class StepConnectionRepositoryGenerated extends BaseRepository
 
         return [
             'sourceOutput' => $entity->getSourceOutput(),
-            'targetInput' => $entity->getTargetInput(),
+            'targetStep' => $entity->getTargetStep()?->getId()?->toString() ?? '',
+            'targetStepName' => $entity->getTargetStep()?->getName() ?? '',
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];

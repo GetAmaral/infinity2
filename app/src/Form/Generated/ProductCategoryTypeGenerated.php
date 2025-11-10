@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -48,22 +49,27 @@ abstract class ProductCategoryTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('parentCategory', EntityType::class, [
             'label' => 'ParentCategory',
             'required' => false,
-            'class' => ProductCategory::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\ProductCategory::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
-        $builder->add('subcategories', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('subcategories', CollectionType::class, [
             'label' => 'Subcategories',
             'required' => false,
-            'entry_type' => App\Form\ProductCategoryType::class,
+            'entry_type' => \App\Form\ProductCategoryType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -76,13 +82,17 @@ abstract class ProductCategoryTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('products', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('products', CollectionType::class, [
             'label' => 'Products',
             'required' => false,
-            'entry_type' => App\Form\ProductType::class,
+            'entry_type' => \App\Form\ProductType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -95,6 +105,7 @@ abstract class ProductCategoryTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
     }
 
@@ -102,6 +113,7 @@ abstract class ProductCategoryTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ProductCategory::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

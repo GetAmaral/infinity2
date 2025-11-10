@@ -43,7 +43,7 @@ abstract class StepRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'name',            'treeFlow',            'slug',            'objective',            'prompt',            'questions',            'outputs',            'inputs',        ];
+        return [            'treeFlow',            'name',            'slug',            'objective',            'actions',            'outputs',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class StepRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'treeFlow' => 'treeFlow',            'first' => 'first',            'slug' => 'slug',            'objective' => 'objective',            'prompt' => 'prompt',            'viewOrder' => 'viewOrder',            'positionX' => 'positionX',            'positionY' => 'positionY',            'questions' => 'questions',            'outputs' => 'outputs',            'inputs' => 'inputs',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'treeFlow' => 'treeFlow',            'name' => 'name',            'first' => 'first',            'slug' => 'slug',            'objective' => 'objective',            'viewOrder' => 'viewOrder',            'positionX' => 'positionX',            'positionY' => 'positionY',            'actions' => 'actions',            'outputs' => 'outputs',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class StepRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'name' => 'name',            'first' => 'first',            'slug' => 'slug',            'objective' => 'objective',            'prompt' => 'prompt',            'viewOrder' => 'viewOrder',            'positionX' => 'positionX',            'positionY' => 'positionY',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'first' => 'first',            'slug' => 'slug',            'objective' => 'objective',            'viewOrder' => 'viewOrder',            'positionX' => 'positionX',            'positionY' => 'positionY',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -77,7 +77,7 @@ abstract class StepRepositoryGenerated extends BaseRepository
      */
     protected function getRelationshipFilterFields(): array
     {
-        return [            'treeFlowName' => ['relation' => 'treeFlow', 'field' => 'name'],            'questionsName' => ['relation' => 'questions', 'field' => 'name'],            'outputsName' => ['relation' => 'outputs', 'field' => 'name'],            'inputsName' => ['relation' => 'inputs', 'field' => 'name'],        ];
+        return [            'treeFlowName' => ['relation' => 'treeFlow', 'field' => 'name'],            'actionsName' => ['relation' => 'actions', 'field' => 'name'],            'outputsName' => ['relation' => 'outputs', 'field' => 'name'],            'incomingConnectionsName' => ['relation' => 'incomingConnections', 'field' => 'name'],        ];
     }
 
     /**
@@ -113,14 +113,13 @@ abstract class StepRepositoryGenerated extends BaseRepository
         assert($entity instanceof Step);
 
         return [
-            'name' => $entity->getName(),
             'treeFlow' => $entity->getTreeFlow(),
+            'name' => $entity->getName(),
             'slug' => $entity->getSlug(),
             'objective' => $entity->getObjective(),
-            'prompt' => $entity->getPrompt(),
-            'questions' => $entity->getQuestions(),
+            'actions' => $entity->getActions(),
             'outputs' => $entity->getOutputs(),
-            'inputs' => $entity->getInputs(),
+            'incomingConnectionsCount' => $entity->getIncomingConnections()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];

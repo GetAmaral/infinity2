@@ -41,12 +41,6 @@
                         {{ form_errors(form.objective) }}
                     </div>
 
-                    <div class="form-group-modern">
-                        {{ form_label(form.prompt, null, {'label_attr': {'class': 'form-label-modern'}}) }}
-                        {{ form_widget(form.prompt, {'attr': {'class': 'form-input-modern', 'rows': '5', 'placeholder': 'step.form.prompt.placeholder'|trans({}, 'treeflow')}}) }}
-                        {{ form_errors(form.prompt) }}
-                    </div>
-
                     {{ form_rest(form) }}
 
                     <div class="d-flex gap-2 mt-4">

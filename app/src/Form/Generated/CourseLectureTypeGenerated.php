@@ -13,8 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Entity\CourseModule;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -68,22 +68,27 @@ abstract class CourseLectureTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('courseModule', EntityType::class, [
             'label' => 'CourseModule',
             'required' => true,
-            'class' => CourseModule::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\CourseModule::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
         $builder->add('studentLectures', CollectionType::class, [
             'label' => 'StudentLectures',
             'required' => false,
-            'entry_type' => App\Form\StudentLectureType::class,
+            'entry_type' => \App\Form\StudentLectureType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -96,13 +101,17 @@ abstract class CourseLectureTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
         $builder->add('studentCoursesOnThisLecture', CollectionType::class, [
             'label' => 'StudentCoursesOnThisLecture',
             'required' => false,
-            'entry_type' => App\Form\StudentCourseType::class,
+            'entry_type' => \App\Form\StudentCourseType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -115,6 +124,7 @@ abstract class CourseLectureTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
@@ -126,7 +136,7 @@ abstract class CourseLectureTypeGenerated extends AbstractType
 
         $builder->add('published', CheckboxType::class, [
             'label' => 'Published',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -134,7 +144,7 @@ abstract class CourseLectureTypeGenerated extends AbstractType
 
         $builder->add('free', CheckboxType::class, [
             'label' => 'Free',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -223,7 +233,7 @@ abstract class CourseLectureTypeGenerated extends AbstractType
 
         $builder->add('durationSeconds', IntegerType::class, [
             'label' => 'Duration (seconds)',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -270,6 +280,7 @@ abstract class CourseLectureTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CourseLecture::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

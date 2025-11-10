@@ -1,5 +1,24 @@
-{% set notificationTypeTemplate = notificationTypeTemplate ?? null %}
-{% include 'genmax/twig/form_generated.html.twig' with {
-    'notificationTypeTemplate': notificationTypeTemplate,
-    'form': form
-} %}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'action.create'|trans }} {{ 'notificationtypetemplate.singular'|trans({}, 'notificationtypetemplate') }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
+                    <h2>
+                        <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'notificationtypetemplate.singular'|trans({}, 'notificationtypetemplate') }}
+                    </h2>
+                </div>
+
+                {% include 'notificationtypetemplate/generated/form_generated.html.twig' with {
+                    'notificationTypeTemplate': notificationTypeTemplate,
+                    'form': form
+                } %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

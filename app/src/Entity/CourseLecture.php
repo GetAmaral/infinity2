@@ -61,7 +61,7 @@ class CourseLecture extends CourseLectureGenerated
     /**
      * Set published status and automatically set publishedAt timestamp
      */
-    public function setPublished(bool $published): self
+    public function setPublished(?bool $published): self
     {
         $this->published = $published;
         if ($published && $this->publishedAt === null) {
@@ -113,7 +113,7 @@ class CourseLecture extends CourseLectureGenerated
 
     // === DURATION METHODS ===
 
-    public function setDurationSeconds(int $durationSeconds): self
+    public function setDurationSeconds(?int $durationSeconds): self
     {
         $this->durationSeconds = $durationSeconds;
         // Keep deprecated field in sync for backward compatibility
@@ -124,7 +124,7 @@ class CourseLecture extends CourseLectureGenerated
     /**
      * @deprecated Use getDurationSeconds() instead
      */
-    public function getLengthSeconds(): int
+    public function getLengthSeconds(): ?int
     {
         return $this->durationSeconds;
     }
@@ -132,13 +132,17 @@ class CourseLecture extends CourseLectureGenerated
     /**
      * @deprecated Use setDurationSeconds() instead
      */
-    public function setLengthSeconds(int $lengthSeconds): self
+    public function setLengthSeconds(?int $lengthSeconds): self
     {
         return $this->setDurationSeconds($lengthSeconds);
     }
 
     public function getDurationFormatted(): string
     {
+        if ($this->durationSeconds === null) {
+            return 'N/A';
+        }
+
         if ($this->durationSeconds < 60) {
             return $this->durationSeconds . ' s';
         }

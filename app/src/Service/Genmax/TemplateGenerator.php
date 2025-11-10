@@ -73,6 +73,10 @@ class TemplateGenerator
         $generatedFiles[] = $this->generateBaseTemplate($entity, $context, 'edit', $this->templates['template_edit_generated']);
         $generatedFiles[] = $this->generateExtensionTemplate($entity, 'edit');
 
+        // Generate form modal template (for list page add/edit modals)
+        $generatedFiles[] = $this->generateBaseTemplate($entity, $context, '_form_modal', 'genmax/twig/form_modal_generated.html.twig');
+        $generatedFiles[] = $this->generateExtensionTemplate($entity, '_form_modal');
+
         return array_filter($generatedFiles);
     }
 
@@ -168,6 +172,9 @@ class TemplateGenerator
 
     /**
      * Generate extension template file (Extension - created once, safe to edit)
+     *
+     * Extension templates EXTEND the generated templates with NO content by default.
+     * This allows users to customize by overriding specific blocks if needed.
      */
     protected function generateExtensionTemplate(GeneratorEntity $entity, string $type): ?string
     {
@@ -197,11 +204,16 @@ class TemplateGenerator
                 mkdir($dir, 0755, true);
             }
 
-            // Create simple include wrapper
+            // Create simple extends wrapper with NO content
+            // User can override specific blocks for customization
             $entityName = $entity->getEntityName();
             $content = "{# Extension template for {$entityName} {$type} page #}\n";
-            $content .= "{# You can customize this template or simply include the generated one #}\n";
-            $content .= "{% include '{$slug}/generated/{$type}_generated.html.twig' %}\n";
+            $content .= "{# This template extends the generated one. Override specific blocks to customize. #}\n";
+            $content .= "{# Generated template: {$slug}/generated/{$type}_generated.html.twig #}\n\n";
+            $content .= "{% extends '{$slug}/generated/{$type}_generated.html.twig' %}\n\n";
+            $content .= "{# Uncomment to customize specific blocks: #}\n";
+            $content .= "{# {% block page_icon %}<i class=\"bi bi-custom-icon text-neon fs-2 me-3\"></i>{% endblock %} #}\n";
+            $content .= "{# {% block grid_view_item_template %}...custom grid layout...{% endblock %} #}\n";
 
             // Write file
             $status = $this->fileWriter->writeFile($filePath, $content);
@@ -336,6 +348,8 @@ class TemplateGenerator
             $formatted['relationshipType'] = $relationshipType;
             $formatted['relationshipRoute'] = $this->getRelationshipRoute($property);
             $formatted['relationshipProperty'] = 'name'; // Default, can be customized
+            // OneToMany and ManyToMany return collections
+            $formatted['isCollection'] = in_array($relationshipType, ['OneToMany', 'ManyToMany'], true);
         }
 
         return $formatted;

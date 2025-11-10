@@ -41,6 +41,26 @@ nav.terms: Termos de Uso
 nav.toggle.navigation: Alternar navegação
 nav.users: Usuários
 
+# Seções de Navegação Geradas pelo Genmax
+nav.section.admin: Administração
+nav.section.calendar: Calendário
+nav.section.catalogs: Catálogos
+nav.section.configuration: Configuração
+nav.section.crm: CRM
+nav.section.data: Dados
+nav.section.education: Educação
+nav.section.general: Geral
+nav.section.learning: Aprendizagem
+nav.section.marketing: Marketing
+nav.section.system: Sistema
+
+# Barra Lateral
+sidebar.collapse: Recolher
+sidebar.favorites: Favoritos
+sidebar.menu: Menu
+sidebar.search.placeholder: Pesquisar menus
+sidebar.toggle.tooltip: Alternar barra lateral (Ctrl+B)
+
 # ================================================================================
 # Autenticação
 # ================================================================================

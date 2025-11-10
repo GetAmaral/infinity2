@@ -87,17 +87,13 @@ class StepOutputProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('name', $requestData)) {
             $entity->setName($data->name);
         }
-        // description
-        if (!$isPatch || array_key_exists('description', $requestData)) {
-            $entity->setDescription($data->description);
-        }
         // slug
         if (!$isPatch || array_key_exists('slug', $requestData)) {
             $entity->setSlug($data->slug);
         }
-        // conditional
-        if (!$isPatch || array_key_exists('conditional', $requestData)) {
-            $entity->setConditional($data->conditional);
+        // condition
+        if (!$isPatch || array_key_exists('condition', $requestData)) {
+            $entity->setCondition($data->condition);
         }
 
         // Map relationship properties

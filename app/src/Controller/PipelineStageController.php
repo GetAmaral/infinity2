@@ -34,7 +34,7 @@ final class PipelineStageController extends PipelineStageControllerGenerated
      * API endpoint for searching pipelineStages
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'pipelinestage_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'pipelinestage_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

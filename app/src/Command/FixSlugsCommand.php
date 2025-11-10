@@ -6,8 +6,7 @@ namespace App\Command;
 
 use App\Entity\TreeFlow;
 use App\Entity\Step;
-use App\Entity\StepIteration;
-use App\Entity\StepInput;
+use App\Entity\StepAction;
 use App\Entity\StepOutput;
 use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -63,28 +62,15 @@ class FixSlugsCommand extends Command
             }
         }
 
-        // Fix StepIteration slugs
-        $io->section('Fixing StepIteration slugs');
-        $questions = $this->entityManager->getRepository(StepIteration::class)->findAll();
+        // Fix StepAction slugs
+        $io->section('Fixing StepAction slugs');
+        $questions = $this->entityManager->getRepository(StepAction::class)->findAll();
         foreach ($questions as $question) {
             $oldSlug = $question->getSlug();
             $newSlug = Utils::stringToSlug($question->getName());
             if ($oldSlug !== $newSlug) {
                 $question->setSlug($newSlug);
                 $io->writeln("  Question: '{$question->getName()}' | {$oldSlug} → {$newSlug}");
-                $totalFixed++;
-            }
-        }
-
-        // Fix StepInput slugs (only if slug is not null)
-        $io->section('Fixing StepInput slugs');
-        $inputs = $this->entityManager->getRepository(StepInput::class)->findAll();
-        foreach ($inputs as $input) {
-            $oldSlug = $input->getSlug();
-            $newSlug = Utils::stringToSlug($input->getName());
-            if ($oldSlug !== null && $oldSlug !== $newSlug) {
-                $input->setSlug($newSlug);
-                $io->writeln("  Input: '{$input->getName()}' | {$oldSlug} → {$newSlug}");
                 $totalFixed++;
             }
         }

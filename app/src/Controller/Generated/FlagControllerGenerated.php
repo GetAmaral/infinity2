@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Flag;
 use App\Repository\FlagRepository;
 use App\Security\Voter\FlagVoter;
-use App\Form\FlagFormType;
+use App\Form\FlagType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,9 +125,16 @@ abstract class FlagControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => FlagVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"entityType","label":"Entity Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEntityType","isRelationship":false},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"system","label":"System Flag","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSystem","isRelationship":false},{"name":"dueDate","label":"Due Date","type":"datetime_immutable","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDueDate","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"category","label":"Category","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"color","label":"Color","type":"string"},{"name":"icon","label":"Icon","type":"string"},{"name":"entityType","label":"Entity Type","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"name","label":"Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"entityType","label":"Entity Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"entityId","label":"Entity ID","type":"uuid","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"priority","label":"Priority","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"system","label":"System Flag","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"dueDate","label":"Due Date","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"category","label":"Category"},{"name":"color","label":"Color"},{"name":"icon","label":"Icon"},{"name":"entityType","label":"Entity Type"},{"name":"priority","label":"Priority"},{"name":"displayOrder","label":"Display Order"},{"name":"active","label":"Active"},{"name":"system","label":"System Flag"},{"name":"dueDate","label":"Due Date"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory"},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon"},{"name":"entityType","label":"Entity Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEntityType"},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"system","label":"System Flag","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSystem"},{"name":"dueDate","label":"Due Date","type":"datetime_immutable","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDueDate"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"entityType","label":"Entity Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEntityType","isRelationship":false},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"system","label":"System Flag","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSystem","isRelationship":false},{"name":"dueDate","label":"Due Date","type":"datetime_immutable","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDueDate","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"category","label":"Category","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"color","label":"Color","type":"string"},{"name":"icon","label":"Icon","type":"string"},{"name":"entityType","label":"Entity Type","type":"string"}]',
             'filterable_fields' => '[{"name":"name","label":"Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"entityType","label":"Entity Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"entityId","label":"Entity ID","type":"uuid","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"priority","label":"Priority","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"system","label":"System Flag","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"dueDate","label":"Due Date","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"category","label":"Category"},{"name":"color","label":"Color"},{"name":"icon","label":"Icon"},{"name":"entityType","label":"Entity Type"},{"name":"priority","label":"Priority"},{"name":"displayOrder","label":"Display Order"},{"name":"active","label":"Active"},{"name":"system","label":"System Flag"},{"name":"dueDate","label":"Due Date"}]',
@@ -145,9 +152,9 @@ abstract class FlagControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(FlagVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -166,7 +173,7 @@ abstract class FlagControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($flag);
 
-        $form = $this->createForm(FlagFormType::class, $flag);
+        $form = $this->createForm(FlagType::class, $flag);
 
         return $this->render('flag/_form_modal.html.twig', [
             'form' => $form,
@@ -191,7 +198,7 @@ abstract class FlagControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($flag);
 
-        $form = $this->createForm(FlagFormType::class, $flag);
+        $form = $this->createForm(FlagType::class, $flag);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -241,7 +248,7 @@ abstract class FlagControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(FlagVoter::EDIT, $flag);
 
-        $form = $this->createForm(FlagFormType::class, $flag);
+        $form = $this->createForm(FlagType::class, $flag);
 
         return $this->render('flag/_form_modal.html.twig', [
             'form' => $form,
@@ -261,7 +268,7 @@ abstract class FlagControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(FlagVoter::EDIT, $flag);
 
-        $form = $this->createForm(FlagFormType::class, $flag);
+        $form = $this->createForm(FlagType::class, $flag);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

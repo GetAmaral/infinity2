@@ -134,15 +134,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      completed:
+        description: "Completed (yes\/no)"
+        example: "true"
       scheduledDate:
         description: "Due Date (date and time)"
         example: "2025-01-15T10:30:00Z"
         # Advanced filters
         filters:
           - type: OrderFilter
-      completed:
-        description: "Completed (yes\/no)"
-        example: "true"
       company:
         description: "Company"
         example: "sample value"
@@ -167,15 +167,15 @@ resources:
       emailSubject:
         description: "Email Subject (text field)"
         example: "Sample longer text value"
+      phoneNumber:
+        description: "Phone Number (text field)"
+        example: "Sample text"
       taskStatus:
         description: "Status (text field)"
         example: "Sample text"
         # Advanced filters
         filters:
           - type: OrderFilter
-      phoneNumber:
-        description: "Phone Number (text field)"
-        example: "Sample text"
       meetingUrl:
         description: "Meeting URL (text field)"
         example: "Sample longer text value"

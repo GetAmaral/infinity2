@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Role;
 use App\Repository\RoleRepository;
 use App\Security\Voter\RoleVoter;
-use App\Form\RoleFormType;
+use App\Form\RoleType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,10 +82,13 @@ abstract class RoleControllerGenerated extends BaseApiController
             'id' => $entity->getId()->toString(),
             'name' => $entity->getName(),
             'permissions' => $entity->getPermissions(),
-            'users' => ($usersRel = $entity->getUsers()) ? [
-                'id' => $usersRel->getId()->toString(),
-                'display' => (string) $usersRel,
-            ] : null,
+            'users' => ($usersRel = $entity->getUsers()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $usersRel->toArray()
+            ) : [],
             'description' => $entity->getDescription(),
             'priority' => $entity->getPriority(),
             'systemRole' => $entity->getSystemRole(),
@@ -118,9 +121,16 @@ abstract class RoleControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => RoleVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"systemRole","label":"SystemRole","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSystemRole","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"priority","label":"Priority"},{"name":"systemRole","label":"SystemRole"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority"},{"name":"systemRole","label":"SystemRole","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSystemRole"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"systemRole","label":"SystemRole","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSystemRole","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"priority","label":"Priority"},{"name":"systemRole","label":"SystemRole"}]',
@@ -138,9 +148,9 @@ abstract class RoleControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(RoleVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -159,7 +169,7 @@ abstract class RoleControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($role);
 
-        $form = $this->createForm(RoleFormType::class, $role);
+        $form = $this->createForm(RoleType::class, $role);
 
         return $this->render('role/_form_modal.html.twig', [
             'form' => $form,
@@ -184,7 +194,7 @@ abstract class RoleControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($role);
 
-        $form = $this->createForm(RoleFormType::class, $role);
+        $form = $this->createForm(RoleType::class, $role);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -234,7 +244,7 @@ abstract class RoleControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(RoleVoter::EDIT, $role);
 
-        $form = $this->createForm(RoleFormType::class, $role);
+        $form = $this->createForm(RoleType::class, $role);
 
         return $this->render('role/_form_modal.html.twig', [
             'form' => $form,
@@ -254,7 +264,7 @@ abstract class RoleControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(RoleVoter::EDIT, $role);
 
-        $form = $this->createForm(RoleFormType::class, $role);
+        $form = $this->createForm(RoleType::class, $role);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

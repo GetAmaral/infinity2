@@ -19,8 +19,8 @@ use App\Entity\Calendar;
 use App\Entity\Campaign;
 use App\Entity\Contact;
 use App\Entity\Deal;
-use App\Entity\CalendarExternalLink;
 use App\Entity\Role;
+use App\Entity\CalendarExternalLink;
 use App\Entity\EventResourceBooking;
 use App\Entity\EventAttendee;
 use App\Entity\Company;
@@ -144,13 +144,13 @@ class UserProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('verificationToken', $requestData)) {
             $entity->setVerificationToken($data->verificationToken);
         }
-        // failedLoginAttempts
-        if (!$isPatch || array_key_exists('failedLoginAttempts', $requestData)) {
-            $entity->setFailedLoginAttempts($data->failedLoginAttempts);
-        }
         // apiToken
         if (!$isPatch || array_key_exists('apiToken', $requestData)) {
             $entity->setApiToken($data->apiToken);
+        }
+        // failedLoginAttempts
+        if (!$isPatch || array_key_exists('failedLoginAttempts', $requestData)) {
+            $entity->setFailedLoginAttempts($data->failedLoginAttempts);
         }
         // apiTokenExpiresAt
         if (!$isPatch || array_key_exists('apiTokenExpiresAt', $requestData)) {
@@ -160,13 +160,13 @@ class UserProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('openAiApiKey', $requestData)) {
             $entity->setOpenAiApiKey($data->openAiApiKey);
         }
-        // gender
-        if (!$isPatch || array_key_exists('gender', $requestData)) {
-            $entity->setGender($data->gender);
-        }
         // lastLoginAt
         if (!$isPatch || array_key_exists('lastLoginAt', $requestData)) {
             $entity->setLastLoginAt($data->lastLoginAt);
+        }
+        // gender
+        if (!$isPatch || array_key_exists('gender', $requestData)) {
+            $entity->setGender($data->gender);
         }
         // lockedUntil
         if (!$isPatch || array_key_exists('lockedUntil', $requestData)) {
@@ -316,13 +316,13 @@ class UserProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('avatar', $requestData)) {
             $entity->setAvatar($data->avatar);
         }
-        // password
-        if (!$isPatch || array_key_exists('password', $requestData)) {
-            $entity->setPassword($data->password);
-        }
         // title
         if (!$isPatch || array_key_exists('title', $requestData)) {
             $entity->setTitle($data->title);
+        }
+        // password
+        if (!$isPatch || array_key_exists('password', $requestData)) {
+            $entity->setPassword($data->password);
         }
         // firstName
         if (!$isPatch || array_key_exists('firstName', $requestData)) {
@@ -380,13 +380,13 @@ class UserProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('twitterHandle', $requestData)) {
             $entity->setTwitterHandle($data->twitterHandle);
         }
-        // address
-        if (!$isPatch || array_key_exists('address', $requestData)) {
-            $entity->setAddress($data->address);
-        }
         // profilePictureUrl
         if (!$isPatch || array_key_exists('profilePictureUrl', $requestData)) {
             $entity->setProfilePictureUrl($data->profilePictureUrl);
+        }
+        // address
+        if (!$isPatch || array_key_exists('address', $requestData)) {
+            $entity->setAddress($data->address);
         }
         // city
         if (!$isPatch || array_key_exists('city', $requestData)) {

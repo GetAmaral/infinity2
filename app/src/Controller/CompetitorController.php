@@ -34,7 +34,7 @@ final class CompetitorController extends CompetitorControllerGenerated
      * API endpoint for searching competitors
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'competitor_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'competitor_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

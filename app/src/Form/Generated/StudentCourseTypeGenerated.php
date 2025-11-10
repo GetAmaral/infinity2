@@ -10,6 +10,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Entity\User;
+use App\Entity\Course;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -29,25 +31,29 @@ abstract class StudentCourseTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('student', EntityType::class, [
             'label' => 'Student',
             'required' => true,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('course', EntityType::class, [
             'label' => 'Course',
             'required' => true,
-            'class' => Course::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Course::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
@@ -63,6 +69,7 @@ abstract class StudentCourseTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => StudentCourse::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

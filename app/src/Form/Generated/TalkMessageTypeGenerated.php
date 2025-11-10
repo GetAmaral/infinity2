@@ -12,8 +12,14 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Entity\Talk;
+use App\Entity\Contact;
+use App\Entity\User;
+use App\Entity\Agent;
+use App\Entity\Notification;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -33,21 +39,22 @@ abstract class TalkMessageTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('talk', EntityType::class, [
             'label' => 'Talk',
             'required' => true,
-            'class' => Talk::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Talk::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('fromContact', EntityType::class, [
             'label' => 'FromContact',
             'required' => false,
-            'class' => Contact::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Contact::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -56,8 +63,7 @@ abstract class TalkMessageTypeGenerated extends AbstractType
         $builder->add('fromUser', EntityType::class, [
             'label' => 'FromUser',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -66,8 +72,7 @@ abstract class TalkMessageTypeGenerated extends AbstractType
         $builder->add('fromAgent', EntityType::class, [
             'label' => 'FromAgent',
             'required' => false,
-            'class' => Agent::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Agent::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -93,19 +98,20 @@ abstract class TalkMessageTypeGenerated extends AbstractType
         $builder->add('messageType', ChoiceType::class, [
             'label' => 'Message Type',
             'required' => true,
-            'class' => App\Enum\MessagetypeEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('attachments', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('attachments', CollectionType::class, [
             'label' => 'Attachments',
             'required' => false,
-            'entry_type' => App\Form\AttachmentType::class,
+            'entry_type' => \App\Form\AttachmentType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -118,6 +124,7 @@ abstract class TalkMessageTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('read', CheckboxType::class, [
             'label' => 'Is Read',
@@ -138,8 +145,6 @@ abstract class TalkMessageTypeGenerated extends AbstractType
         $builder->add('sentiment', ChoiceType::class, [
             'label' => 'Sentiment',
             'required' => false,
-            'class' => App\Enum\SentimentEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -148,8 +153,7 @@ abstract class TalkMessageTypeGenerated extends AbstractType
         $builder->add('parentMessage', EntityType::class, [
             'label' => 'ParentMessage',
             'required' => false,
-            'class' => TalkMessage::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\TalkMessage::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -166,8 +170,7 @@ abstract class TalkMessageTypeGenerated extends AbstractType
         $builder->add('notification', EntityType::class, [
             'label' => 'Notification',
             'required' => false,
-            'class' => Notification::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Notification::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -176,8 +179,6 @@ abstract class TalkMessageTypeGenerated extends AbstractType
         $builder->add('direction', ChoiceType::class, [
             'label' => 'Direction',
             'required' => true,
-            'class' => App\Enum\DirectionEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -202,8 +203,6 @@ abstract class TalkMessageTypeGenerated extends AbstractType
         $builder->add('channel', ChoiceType::class, [
             'label' => 'Communication Channel',
             'required' => false,
-            'class' => App\Enum\ChannelEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -224,6 +223,7 @@ abstract class TalkMessageTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => TalkMessage::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

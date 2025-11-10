@@ -59,9 +59,6 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      icon:
-        description: "Bootstrap icon class for visual representation in UI"
-        example: "\"bi-envelope-fill\""
       notifications:
         writable: false
         description: "Collection of notification instances created from this type"
@@ -69,6 +66,9 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      icon:
+        description: "Bootstrap icon class for visual representation in UI"
+        example: "\"bi-envelope-fill\""
       active:
         description: "Whether this notification type is currently active and can be used"
         example: "true"

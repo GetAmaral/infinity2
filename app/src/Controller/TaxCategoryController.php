@@ -34,7 +34,7 @@ final class TaxCategoryController extends TaxCategoryControllerGenerated
      * API endpoint for searching ries
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'taxcategory_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'taxcategory_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

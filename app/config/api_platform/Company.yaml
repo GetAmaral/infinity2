@@ -110,15 +110,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      campaigns:
-        description: "Campaigns"
-        example: "sample value"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       shippingPostalCode:
         description: "Shipping Postal Code (text field)"
         example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      campaigns:
+        description: "Campaigns"
+        example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
@@ -176,15 +176,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      fiscalYearEnd:
-        description: "Fiscal Year End (text field)"
-        example: "Sample text"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       city:
         description: "City"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      fiscalYearEnd:
+        description: "Fiscal Year End (text field)"
+        example: "Sample text"
         # Advanced filters
         filters:
           - type: OrderFilter
@@ -351,10 +351,47 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      leadStatus:
+        description: "Lead Status (text field)"
+        example: "Sample text"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      companyDomain:
+        description: "Company Domain (text field)"
+        example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      numberOfAssociatedContacts:
+        writable: false
+        description: "Number of Contacts (numeric value)"
+        example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      shippingStateProvince:
+        description: "Shipping State\/Province (text field)"
+        example: "Sample longer text value"
+      tags:
+        description: "Tags (text field)"
+        example: "Sample longer text value"
       lastActivityDate:
         writable: false
         description: "Last Activity Date (date)"
         example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      public:
+        description: "Is Public Company (yes\/no)"
+        example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      lifecycleStage:
+        description: "Lifecycle Stage (text field)"
+        example: "Sample text"
         # Advanced filters
         filters:
           - type: OrderFilter
@@ -367,27 +404,6 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      tags:
-        description: "Tags (text field)"
-        example: "Sample longer text value"
-      lifecycleStage:
-        description: "Lifecycle Stage (text field)"
-        example: "Sample text"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
-      companyDomain:
-        description: "Company Domain (text field)"
-        example: "Sample longer text value"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
-      leadStatus:
-        description: "Lead Status (text field)"
-        example: "Sample text"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       numberOfAssociatedDeals:
         writable: false
         description: "Number of Deals (numeric value)"
@@ -395,19 +411,3 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      numberOfAssociatedContacts:
-        writable: false
-        description: "Number of Contacts (numeric value)"
-        example: "42"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
-      public:
-        description: "Is Public Company (yes\/no)"
-        example: "true"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
-      shippingStateProvince:
-        description: "Shipping State\/Province (text field)"
-        example: "Sample longer text value"

@@ -9,7 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -47,12 +47,15 @@ abstract class CommunicationMethodTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('notifications', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('notifications', CollectionType::class, [
             'label' => 'Notifications',
             'required' => false,
-            'entry_type' => App\Form\NotificationType::class,
+            'entry_type' => \App\Form\NotificationType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -65,6 +68,7 @@ abstract class CommunicationMethodTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('property', TextType::class, [
             'label' => 'Property',
@@ -75,12 +79,15 @@ abstract class CommunicationMethodTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('reminders', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('reminders', CollectionType::class, [
             'label' => 'Reminders',
             'required' => false,
-            'entry_type' => App\Form\ReminderType::class,
+            'entry_type' => \App\Form\ReminderType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -93,6 +100,7 @@ abstract class CommunicationMethodTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
     }
 
@@ -100,6 +108,7 @@ abstract class CommunicationMethodTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CommunicationMethod::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

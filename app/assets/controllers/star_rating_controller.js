@@ -1,60 +1,61 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * Star Rating Controller
+ *
+ * Manages star rating UI for importance field
+ * Syncs visual stars with hidden radio inputs
+ */
 export default class extends Controller {
-    static targets = ['star', 'input'];
+    static targets = ['input', 'star'];
 
     connect() {
-        // Set initial state based on checked radio
-        this.inputTargets.forEach((radio) => {
-            if (radio.checked) {
-                this.updateStars(parseInt(radio.getAttribute('data-star-value')));
-            }
-        });
+        console.log('[star-rating] Controller connected');
+        this.updateStars();
     }
 
     clickStar(event) {
-        event.preventDefault();
-        const starValue = parseInt(event.currentTarget.getAttribute('data-star'));
-        this.updateStars(starValue);
+        const starValue = parseInt(event.currentTarget.dataset.star);
+        console.log('[star-rating] Star clicked:', starValue);
 
-        // Update radio buttons
-        this.inputTargets.forEach(radio => {
-            radio.checked = (parseInt(radio.getAttribute('data-star-value')) === starValue);
+        // Find and check the corresponding radio input
+        this.inputTargets.forEach(input => {
+            const inputValue = parseInt(input.dataset.starValue);
+            if (inputValue === starValue) {
+                input.checked = true;
+                console.log('[star-rating] Radio input checked:', inputValue);
+            }
         });
+
+        this.updateStars();
     }
 
     hoverStar(event) {
-        const starValue = parseInt(event.currentTarget.getAttribute('data-star'));
-        this.starTargets.forEach((star, idx) => {
-            if (idx < starValue) {
-                star.style.color = '#f59e0b';
-            } else {
-                star.style.color = ''; // Reset to default
-            }
-        });
+        const starValue = parseInt(event.currentTarget.dataset.star);
+        this.highlightStars(starValue);
     }
 
     leaveStar() {
-        // Reset all inline styles
-        this.starTargets.forEach(star => {
-            star.style.color = '';
-        });
-
-        // Restore active state
-        this.inputTargets.forEach((radio) => {
-            if (radio.checked) {
-                this.updateStars(parseInt(radio.getAttribute('data-star-value')));
-            }
-        });
+        this.updateStars();
     }
 
-    updateStars(value) {
-        this.starTargets.forEach((star, idx) => {
-            // Reset inline style first
-            star.style.color = '';
+    updateStars() {
+        // Find which radio is checked
+        let checkedValue = 0;
+        this.inputTargets.forEach(input => {
+            if (input.checked) {
+                checkedValue = parseInt(input.dataset.starValue);
+            }
+        });
 
-            // Then apply class
-            if (idx + 1 <= value) {
+        console.log('[star-rating] Updating stars, checked value:', checkedValue);
+        this.highlightStars(checkedValue);
+    }
+
+    highlightStars(upTo) {
+        this.starTargets.forEach(star => {
+            const starValue = parseInt(star.dataset.star);
+            if (starValue <= upTo) {
                 star.classList.add('active');
             } else {
                 star.classList.remove('active');

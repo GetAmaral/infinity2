@@ -36,13 +36,12 @@ export default class extends Controller {
         this.panStartY = 0;
         this.nodes = new Map(); // stepId -> nodeElement
         this.outputPoints = new Map(); // outputId -> {element, step, output}
-        this.inputPoints = new Map(); // inputId -> {element, step, input}
         this.connections = []; // Array of connection data
 
         // Connection drag state
         this.isDraggingConnection = false;
         this.dragSourceOutput = null;
-        this.dragSourceInput = null;
+        this.dragSourceStep = null;
         this.ghostLine = null;
 
         // Selection state
@@ -67,6 +66,10 @@ export default class extends Controller {
         // Listen for entity deletion events
         this.handleEntityDeleted = this.handleEntityDeleted.bind(this);
         document.addEventListener('treeflow-entity-deleted', this.handleEntityDeleted);
+
+        // Listen for modal success events (create/edit actions, inputs, outputs)
+        this.handleModalSuccess = this.handleModalSuccess.bind(this);
+        window.addEventListener('modal:success', this.handleModalSuccess);
 
         // Initialize canvas immediately (no view toggle anymore)
         this.initializeCanvas();
@@ -118,12 +121,52 @@ export default class extends Controller {
         }
     }
 
+    async handleModalSuccess(event) {
+        // Refresh canvas after modal create/edit success
+        console.log('[CANVAS] Modal success, refreshing canvas...', event.detail);
+
+        try {
+            // Fetch the current page to get updated step data
+            const response = await fetch(window.location.href, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (response.ok) {
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // Extract the updated steps data attribute
+                const canvasCard = doc.querySelector('[data-treeflow-canvas-steps-value]');
+                if (canvasCard) {
+                    const updatedStepsJson = canvasCard.getAttribute('data-treeflow-canvas-steps-value');
+                    this.stepsValue = JSON.parse(updatedStepsJson);
+
+                    // Clear and re-render canvas
+                    this.clearCanvas();
+                    this.renderSteps();
+
+                    // Reload and render connections
+                    await this.loadConnections();
+                    requestAnimationFrame(() => {
+                        this.renderConnections();
+                    });
+
+                    console.log('[CANVAS] Canvas refreshed successfully');
+                }
+            }
+        } catch (error) {
+            console.error('[CANVAS] Failed to refresh canvas:', error);
+        }
+    }
+
     clearCanvas() {
         // Remove all nodes
         this.nodes.forEach((node) => node.remove());
         this.nodes.clear();
         this.outputPoints.clear();
-        this.inputPoints.clear();
         this.connections = [];
 
         // Clear SVG layer
@@ -312,27 +355,30 @@ export default class extends Controller {
         node.style.left = x + 'px';
         node.style.top = y + 'px';
 
-        // Build questions HTML
-        let questionsHtml = '';
-        const hasQuestions = step.questions && step.questions.length > 0;
-        const questionsList = hasQuestions
-            ? step.questions.map(q =>
-                `<div class="question-item editable-item" data-item-type="question" data-item-id="${q.id}">
-                    <i class="bi bi-patch-question-fill"></i>
-                    <span>${this.escapeHtml(q.questionText || q.text || 'Question')}</span>
+        // Build actions HTML
+        let actionsHtml = '';
+        const hasActions = step.actions && step.actions.length > 0;
+        const actionsList = hasActions
+            ? step.actions.map(q =>
+                `<div class="action-item editable-item" data-item-type="action" data-item-id="${q.id}">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    <span>${this.escapeHtml(q.name || q.text || 'Question')}</span>
                 </div>`
             ).join('')
             : '<div class="empty-list">No questions</div>';
 
-        questionsHtml = `
-            <div class="treeflow-questions">
-                <div class="section-label section-label-add" data-section-type="question" data-step-id="${step.id}">Questions</div>
-                <div class="questions-list">${questionsList}</div>
+        actionsHtml = `
+            <div class="treeflow-actions">
+                <div class="section-label section-label-add" data-section-type="action" data-step-id="${step.id}">Actions</div>
+                <div class="actions-list">${actionsList}</div>
             </div>
         `;
 
         // Build node HTML
         node.innerHTML = `
+            <div class="step-input-connector" data-step-id="${step.id}" title="Connect to this step">
+                <div class="connection-point step-connector-point"></div>
+            </div>
             <div class="treeflow-node-header">
                 <div class="rounded-circle d-flex align-items-center justify-content-center"
                      style="width: 30px; height: 30px; background: linear-gradient(135deg, #10b981, #059669);">
@@ -345,15 +391,10 @@ export default class extends Controller {
             </div>
             <div class="treeflow-node-badges">
                 ${step.first ? '<span class="badge bg-success">First</span>' : ''}
-                ${step.questions && step.questions.length > 0 ? `<span class="badge bg-info">${step.questions.length} Q</span>` : ''}
+                ${step.actions && step.actions.length > 0 ? `<span class="badge bg-info">${step.actions.length} Q</span>` : ''}
             </div>
-            ${questionsHtml}
+            ${actionsHtml}
             <div class="treeflow-node-body">
-                <div class="treeflow-inputs">
-                    <div class="section-label section-label-add" data-section-type="input" data-step-id="${step.id}">Inputs</div>
-                    <div class="inputs-list"></div>
-                </div>
-                <div class="io-separator"></div>
                 <div class="treeflow-outputs">
                     <div class="section-label section-label-add" data-section-type="output" data-step-id="${step.id}">Outputs</div>
                     <div class="outputs-list"></div>
@@ -477,54 +518,7 @@ export default class extends Controller {
     }
 
     addConnectionPoints(node, step) {
-        const inputsList = node.querySelector('.inputs-list');
         const outputsList = node.querySelector('.outputs-list');
-
-        // Add input items
-        if (step.inputs && step.inputs.length > 0) {
-            step.inputs.forEach((input) => {
-                const inputItem = document.createElement('div');
-                inputItem.className = 'io-item input-item editable-item';
-                inputItem.dataset.itemType = 'input';
-                inputItem.dataset.itemId = input.id;
-
-                // Connection circle
-                const circle = document.createElement('div');
-                circle.className = 'connection-point input-point';
-                circle.dataset.inputId = input.id;
-                circle.dataset.stepId = step.id;
-                circle.dataset.inputType = input.type;
-                circle.title = `${input.name} (${input.type})`;
-
-                // Color code by input type
-                if (input.type === 'fully_completed') {
-                    circle.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-                    circle.style.borderColor = '#065f46';
-                } else if (input.type === 'not_completed_after_attempts') {
-                    circle.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-                    circle.style.borderColor = '#991b1b';
-                } else {
-                    circle.style.background = 'linear-gradient(135deg, #3b82f6, #2563eb)';
-                    circle.style.borderColor = '#1e40af';
-                }
-
-                // Make input point draggable for creating connections
-                this.makeInputDraggable(circle, step, input);
-
-                // Label
-                const label = document.createElement('span');
-                label.className = 'io-label';
-                label.textContent = input.name;
-
-                inputItem.appendChild(circle);
-                inputItem.appendChild(label);
-                inputsList.appendChild(inputItem);
-
-                this.inputPoints.set(input.id, { element: circle, step, input });
-            });
-        } else {
-            inputsList.innerHTML = '<div class="empty-list">No inputs</div>';
-        }
 
         // Add output items
         if (step.outputs && step.outputs.length > 0) {
@@ -562,6 +556,12 @@ export default class extends Controller {
             outputsList.innerHTML = '<div class="empty-list">No outputs</div>';
         }
 
+        // Make step connector draggable (uses first output or shows error)
+        const stepConnector = node.querySelector('.step-connector-point');
+        if (stepConnector) {
+            this.makeStepConnectorDraggable(stepConnector, step);
+        }
+
         // Add click handlers for editable items
         this.addEditableItemHandlers(node, step);
 
@@ -593,8 +593,8 @@ export default class extends Controller {
 
                 // Construct edit URL based on item type
                 let editUrl;
-                if (itemType === 'question') {
-                    editUrl = `/treeflow/${treeflowId}/step/${stepId}/question/${itemId}/edit`;
+                if (itemType === 'action') {
+                    editUrl = `/treeflow/${treeflowId}/step/${stepId}/action/${itemId}/edit`;
                 } else if (itemType === 'input') {
                     editUrl = `/treeflow/${treeflowId}/step/${stepId}/input/${itemId}/edit`;
                 } else if (itemType === 'output') {
@@ -627,8 +627,8 @@ export default class extends Controller {
 
                 // Construct new URL based on section type
                 let newUrl;
-                if (sectionType === 'question') {
-                    newUrl = `/treeflow/${treeflowId}/step/${stepId}/question/new`;
+                if (sectionType === 'action') {
+                    newUrl = `/treeflow/${treeflowId}/step/${stepId}/action/new`;
                 } else if (sectionType === 'input') {
                     newUrl = `/treeflow/${treeflowId}/step/${stepId}/input/new`;
                 } else if (sectionType === 'output') {
@@ -684,35 +684,15 @@ export default class extends Controller {
                 // CRITICAL: Disable Turbo Drive to prevent interception
                 form.setAttribute('data-turbo', 'false');
 
-                // Remove form action to prevent default submission
-                form.removeAttribute('action');
+                // DON'T remove form action - crud_modal_controller needs it for AJAX submission
+                // form.removeAttribute('action');
 
-                // Remove Stimulus controllers from form only
+                // Remove Stimulus controllers from form only (not from buttons!)
                 form.removeAttribute('data-controller');
-                // Only remove crud-modal actions from form
-                const formAction = form.getAttribute('data-action');
-                if (formAction && formAction.includes('crud-modal')) {
-                    form.removeAttribute('data-action');
-                }
-
-                // Remove crud-modal targets and actions ONLY (preserve star-rating, etc.)
-                doc.querySelectorAll('[data-crud-modal-target]').forEach(el => {
-                    el.removeAttribute('data-crud-modal-target');
-                });
-
-                // Remove ONLY data-action attributes that reference crud-modal, keep others
-                doc.querySelectorAll('[data-action*="crud-modal"]').forEach(el => {
-                    const action = el.getAttribute('data-action');
-                    if (action) {
-                        // Remove only the crud-modal parts, keep other actions
-                        const actions = action.split(' ').filter(a => !a.includes('crud-modal'));
-                        if (actions.length > 0) {
-                            el.setAttribute('data-action', actions.join(' '));
-                        } else {
-                            el.removeAttribute('data-action');
-                        }
-                    }
-                });
+                // Remove data-action from form only (buttons need to keep theirs)
+                form.removeAttribute('data-action');
+                // Remove data-crud-modal-target from form only
+                form.removeAttribute('data-crud-modal-target');
 
                 // Remove inline scripts
                 const scripts = doc.querySelectorAll('script');
@@ -731,10 +711,13 @@ export default class extends Controller {
                 container.innerHTML = rawHTML;
                 console.log('[CANVAS] HTML inserted');
 
-                // Ensure form has data-controller attribute for form-navigation
+                // Ensure form has required attributes for form-navigation and crud-modal
                 const form = container.querySelector('form');
+                const overlay = container.querySelector('.modal-fullscreen-overlay');
                 console.log('[CANVAS] Form found:', !!form);
-                if (form) {
+                console.log('[CANVAS] Overlay found:', !!overlay);
+
+                if (form && overlay) {
                     const existingController = form.getAttribute('data-controller');
                     console.log('[CANVAS] Form data-controller BEFORE fix:', existingController);
 
@@ -743,7 +726,17 @@ export default class extends Controller {
                         const controllers = existingController ? existingController + ' form-navigation' : 'form-navigation';
                         form.setAttribute('data-controller', controllers);
                         console.log('[CANVAS] Form data-controller AFTER fix:', form.getAttribute('data-controller'));
-                        console.log('[CANVAS] Stimulus MutationObserver will auto-detect the new attribute');
+                    }
+
+                    // Re-add crud-modal target and action to form so it submits via AJAX
+                    form.setAttribute('data-crud-modal-target', 'form');
+                    form.setAttribute('data-action', 'submit->crud-modal#submit');
+                    console.log('[CANVAS] Re-added crud-modal target and action to form');
+
+                    // Ensure overlay has crud-modal controller
+                    if (!overlay.getAttribute('data-controller')) {
+                        overlay.setAttribute('data-controller', 'crud-modal');
+                        console.log('[CANVAS] Added crud-modal controller to overlay');
                     }
                 }
 
@@ -754,8 +747,8 @@ export default class extends Controller {
                     // Focus first field in modal
                     this.focusFirstFieldInModal(container);
 
-                    // Now set up AJAX handler
-                    this.setupModalFormHandler(container);
+                    // Form submission is now handled by crud-modal controller
+                    // this.setupModalFormHandler(container);
                 }, 150);
             } else {
                 console.error('[CANVAS] Global modal container not found');
@@ -946,7 +939,8 @@ export default class extends Controller {
                                 this.focusFirstFieldInModal(container);
                             }
                         }, 100);
-                        this.setupModalFormHandler(container);
+                        // Form submission is now handled by crud-modal controller
+                        // this.setupModalFormHandler(container);
                     } else if (result.error) {
                         alert(result.error);
                     }
@@ -1152,7 +1146,6 @@ export default class extends Controller {
 
             // Clear and re-render canvas
             this.nodes.clear();
-            this.inputPoints.clear();
             this.outputPoints.clear();
             this.connections = [];
 
@@ -1201,10 +1194,7 @@ export default class extends Controller {
         // Clear existing connections
         this.svgLayer.innerHTML = '';
 
-        if (this.connections.length === 0) {
-            return;
-        }
-
+        // Render existing connections
         this.connections.forEach(connection => {
             this.renderConnection(connection);
         });
@@ -1218,16 +1208,24 @@ export default class extends Controller {
 
     renderConnection(connection) {
         const sourcePoint = this.outputPoints.get(connection.sourceOutput.id);
-        const targetPoint = this.inputPoints.get(connection.targetInput.id);
+        const targetNode = this.nodes.get(connection.targetStep.id);
 
-        if (!sourcePoint || !targetPoint) {
+        if (!sourcePoint || !targetNode) {
             console.warn('Missing connection points for connection:', connection);
             return;
         }
 
         // Get positions
         const sourcePos = this.getConnectionPointPosition(sourcePoint.element, sourcePoint.step);
-        const targetPos = this.getConnectionPointPosition(targetPoint.element, targetPoint.step);
+
+        // Calculate target position (left edge, middle of step node)
+        const targetX = parseInt(targetNode.style.left) || 0;
+        const targetY = parseInt(targetNode.style.top) || 0;
+        const targetHeight = targetNode.offsetHeight;
+        const targetPos = {
+            x: targetX,
+            y: targetY + (targetHeight / 2)
+        };
 
         // Create SVG path
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -1245,21 +1243,14 @@ export default class extends Controller {
         path.setAttribute('class', 'connection-line');
         path.setAttribute('data-connection-id', connection.id);
 
-        // Color based on input type
-        const inputType = targetPoint.input.type;
-        if (inputType === 'fully_completed') {
-            path.style.stroke = '#10b981';
-        } else if (inputType === 'not_completed_after_attempts') {
-            path.style.stroke = '#ef4444';
-        } else {
-            path.style.stroke = '#3b82f6';
-        }
+        // Default color (blue)
+        path.style.stroke = '#3b82f6';
 
         // Add hover effects
         path.style.pointerEvents = 'stroke';
         path.addEventListener('mouseenter', (e) => {
             path.style.strokeWidth = '5';
-            this.showConnectionTooltip(e, connection, targetPoint.input);
+            this.showConnectionTooltip(e, connection);
         });
         path.addEventListener('mouseleave', () => {
             path.style.strokeWidth = '3';
@@ -1303,6 +1294,10 @@ export default class extends Controller {
             ? JSON.parse(this.stepsValue)
             : this.stepsValue;
 
+        console.log('[CONTINUATION] Rendering continuation lines for', stepsArray.length, 'steps');
+
+        let continuationsRendered = 0;
+
         stepsArray.forEach(step => {
             const node = this.nodes.get(step.id);
             if (!node) return;
@@ -1315,14 +1310,18 @@ export default class extends Controller {
                 sortedOutputs.forEach(output => {
                     if (!this.isOutputConnected(output.id)) {
                         this.renderContinuationForOutput(output, step, node);
+                        continuationsRendered++;
                     }
                 });
             }
             // Case 2: Step has NO outputs - render continuation from step itself
             else {
                 this.renderContinuationForStep(step, node);
+                continuationsRendered++;
             }
         });
+
+        console.log('[CONTINUATION] Rendered', continuationsRendered, 'continuation lines with + buttons');
     }
 
     isOutputConnected(outputId) {
@@ -1371,9 +1370,9 @@ export default class extends Controller {
         const button = document.createElement('div');
         button.className = 'continuation-add-button';
         button.style.pointerEvents = 'auto'; // Enable events (parent container has none)
-        // Button is 18px + 1.5px border on each side = 21px total
-        button.style.left = `${endX - 9}px`; // X position was already correct
-        button.style.top = `${startPos.y - 10.5}px`; // Center vertically on the line (21/2 = 10.5)
+        // Button is 28px + 2px border on each side = 32px total (per CSS)
+        button.style.left = `${endX - 16}px`; // Center horizontally (32/2 = 16)
+        button.style.top = `${startPos.y - 16}px`; // Center vertically (32/2 = 16)
         button.dataset.stepId = step.id;
         button.dataset.sourceType = source.type; // 'output' or 'step'
         if (source.type === 'output') {
@@ -1568,7 +1567,7 @@ export default class extends Controller {
         return { x: centerX, y: centerY };
     }
 
-    showConnectionTooltip(event, connection, input) {
+    showConnectionTooltip(event, connection) {
         // Remove existing tooltip
         this.hideConnectionTooltip();
 
@@ -1576,11 +1575,10 @@ export default class extends Controller {
         tooltip.id = 'connection-tooltip';
         tooltip.className = 'connection-tooltip';
         tooltip.innerHTML = `
-            <div class="tooltip-header">${this.escapeHtml(connection.sourceOutput.stepName)} → ${this.escapeHtml(connection.targetInput.stepName)}</div>
+            <div class="tooltip-header">${this.escapeHtml(connection.sourceOutput.stepName)} → ${this.escapeHtml(connection.targetStep.name)}</div>
             <div class="tooltip-body">
                 <div><strong>Output:</strong> ${this.escapeHtml(connection.sourceOutput.name)}</div>
-                <div><strong>Input:</strong> ${this.escapeHtml(connection.targetInput.name)}</div>
-                <div><strong>Type:</strong> <span class="badge bg-${this.getTypeBadgeColor(input.type)}">${input.type}</span></div>
+                <div><strong>Target Step:</strong> ${this.escapeHtml(connection.targetStep.name)}</div>
             </div>
         `;
 
@@ -1661,8 +1659,8 @@ export default class extends Controller {
             this.isDraggingConnection = true;
             this.dragSourceOutput = { element: outputPoint, step, output };
 
-            // Expand all INPUT circles (potential drop targets)
-            this.expandTargetCircles('input', outputPoint);
+            // Highlight all step nodes as potential drop targets
+            this.expandTargetSteps(step.id);
 
             // Create ghost line
             this.createGhostLine();
@@ -1680,26 +1678,23 @@ export default class extends Controller {
             this.isDraggingConnection = true;
             this.dragSourceOutput = { element: outputPoint, step, output };
 
-            // Expand all INPUT circles (potential drop targets)
-            this.expandTargetCircles('input', outputPoint);
+            // Highlight all step nodes as potential drop targets
+            this.expandTargetSteps(step.id);
 
             // Create ghost line
             this.createGhostLine();
         }, { passive: false });
     }
 
-    makeInputDraggable(inputPoint, step, input) {
+    makeStepConnectorDraggable(connectorPoint, step) {
         // Mouse drag
-        inputPoint.addEventListener('mousedown', (e) => {
+        connectorPoint.addEventListener('mousedown', (e) => {
             e.preventDefault();
             e.stopPropagation();
 
-            // Start connection drag from input
+            // Start connection drag FROM step TO output
             this.isDraggingConnection = true;
-            this.dragSourceInput = { element: inputPoint, step, input };
-
-            // Expand all OUTPUT circles (potential drop targets)
-            this.expandTargetCircles('output', inputPoint);
+            this.dragSourceStep = { element: connectorPoint, step };
 
             // Create ghost line
             this.createGhostLine();
@@ -1709,21 +1704,19 @@ export default class extends Controller {
         });
 
         // Touch drag
-        inputPoint.addEventListener('touchstart', (e) => {
+        connectorPoint.addEventListener('touchstart', (e) => {
             e.preventDefault();
             e.stopPropagation();
 
-            // Start connection drag from input
+            // Start connection drag FROM step TO output
             this.isDraggingConnection = true;
-            this.dragSourceInput = { element: inputPoint, step, input };
-
-            // Expand all OUTPUT circles (potential drop targets)
-            this.expandTargetCircles('output', inputPoint);
+            this.dragSourceStep = { element: connectorPoint, step };
 
             // Create ghost line
             this.createGhostLine();
         }, { passive: false });
     }
+
 
     createGhostLine() {
         // Create temporary SVG line
@@ -1740,8 +1733,8 @@ export default class extends Controller {
     handleConnectionDragMove(e) {
         if (!this.isDraggingConnection || !this.ghostLine) return;
 
-        // Determine source (output or input)
-        const dragSource = this.dragSourceOutput || this.dragSourceInput;
+        // Get source (output or step)
+        const dragSource = this.dragSourceOutput || this.dragSourceStep;
         if (!dragSource) return;
 
         // Get source position
@@ -1774,35 +1767,34 @@ export default class extends Controller {
         const targetElement = document.elementFromPoint(e.clientX, e.clientY);
 
         // Remove previous highlights
-        document.querySelectorAll('.input-point.highlight, .output-point.highlight, .treeflow-node.highlight-drop').forEach(el => {
-            el.classList.remove('highlight', 'highlight-drop');
+        document.querySelectorAll('.output-point.highlight, .step-connector-point.highlight').forEach(el => {
+            el.classList.remove('highlight');
         });
 
-        // Dragging from output → highlight inputs
+        // Dragging from OUTPUT → highlight target STEP connectors only
         if (this.dragSourceOutput) {
-            if (targetElement && targetElement.classList.contains('input-point')) {
-                targetElement.classList.add('highlight');
-            } else {
-                // Check if over a node (for auto-input creation)
-                const node = targetElement.closest('.treeflow-node');
-                if (node) {
-                    const stepId = node.dataset.stepId;
-                    // Check if this step has no inputs
-                    const stepsArray = typeof this.stepsValue === 'string'
-                        ? JSON.parse(this.stepsValue)
-                        : this.stepsValue;
-                    const step = stepsArray.find(s => s.id === stepId);
-
-                    if (step && (!step.inputs || step.inputs.length === 0)) {
-                        node.classList.add('highlight-drop');
+            const connectorPoint = targetElement.closest('.step-connector-point');
+            if (connectorPoint) {
+                const connector = connectorPoint.closest('.step-input-connector');
+                if (connector) {
+                    const stepId = connector.dataset.stepId;
+                    // Don't allow connecting to self
+                    if (stepId !== this.dragSourceOutput.step.id) {
+                        connectorPoint.classList.add('highlight');
                     }
                 }
             }
         }
-        // Dragging from input → highlight outputs
-        else if (this.dragSourceInput) {
-            if (targetElement && targetElement.classList.contains('output-point')) {
-                targetElement.classList.add('highlight');
+
+        // Dragging from STEP → highlight target OUTPUT circles only
+        if (this.dragSourceStep) {
+            const outputPoint = targetElement.closest('.output-point');
+            if (outputPoint) {
+                const stepId = outputPoint.dataset.stepId;
+                // Don't allow connecting to self
+                if (stepId !== this.dragSourceStep.step.id) {
+                    outputPoint.classList.add('highlight');
+                }
             }
         }
     }
@@ -1812,36 +1804,24 @@ export default class extends Controller {
 
         const targetElement = document.elementFromPoint(e.clientX, e.clientY);
 
-        // Dragging from output to input (normal direction)
+        // Dragging from OUTPUT to STEP connector
         if (this.dragSourceOutput) {
-            // Check if dropping on an input point
-            if (targetElement && targetElement.classList.contains('input-point')) {
-                const inputId = targetElement.dataset.inputId;
-                const targetInput = this.inputPoints.get(inputId);
-
-                if (targetInput) {
-                    await this.createConnection(this.dragSourceOutput, targetInput);
-                }
-            } else {
-                // Check if dropping on a node (for auto-input creation)
-                const node = targetElement.closest('.treeflow-node');
-                if (node) {
-                    const stepId = node.dataset.stepId;
-                    await this.handleDropOnStep(stepId);
+            const connectorPoint = targetElement.closest('.step-connector-point');
+            if (connectorPoint) {
+                const connector = connectorPoint.closest('.step-input-connector');
+                if (connector) {
+                    const stepId = connector.dataset.stepId;
+                    await this.handleDropOutputOnStep(stepId);
                 }
             }
         }
-        // Dragging from input to output (reverse direction)
-        else if (this.dragSourceInput) {
-            // Check if dropping on an output point
-            if (targetElement && targetElement.classList.contains('output-point')) {
-                const outputId = targetElement.dataset.outputId;
-                const targetOutput = this.outputPoints.get(outputId);
 
-                if (targetOutput) {
-                    // Create connection with reversed parameters (output → input)
-                    await this.createConnection(targetOutput, this.dragSourceInput);
-                }
+        // Dragging from STEP to OUTPUT circle
+        if (this.dragSourceStep) {
+            const outputPoint = targetElement.closest('.output-point');
+            if (outputPoint) {
+                const outputId = outputPoint.dataset.outputId;
+                await this.handleDropStepOnOutput(outputId);
             }
         }
 
@@ -1849,7 +1829,7 @@ export default class extends Controller {
         this.cleanupConnectionDrag();
     }
 
-    async handleDropOnStep(stepId) {
+    async handleDropOutputOnStep(stepId) {
         const stepsArray = typeof this.stepsValue === 'string'
             ? JSON.parse(this.stepsValue)
             : this.stepsValue;
@@ -1857,104 +1837,36 @@ export default class extends Controller {
 
         if (!targetStep) return;
 
-        // Check if step has inputs
-        if (targetStep.inputs && targetStep.inputs.length > 0) {
-            // Step has inputs - user should drop on specific input point
-            this.showError('Please drop on a specific input point');
-            return;
-        }
+        // Create connection from output to step
+        const targetStepData = {
+            step: targetStep
+        };
 
-        // Step has no inputs - auto-create one
-        this.showLoading();
-
-        try {
-            const response = await fetch(
-                `/treeflow/${this.treeflowIdValue}/step/${stepId}/input/auto`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({
-                        outputName: this.dragSourceOutput.output.name,
-                        sourceStepName: this.dragSourceOutput.step.name
-                    })
-                }
-            );
-
-            const data = await response.json();
-
-            if (!data.success) {
-                this.hideLoading();
-                this.showError(data.error || 'Failed to create input');
-                return;
-            }
-
-
-            // Update step's inputs array in memory
-            if (!targetStep.inputs) {
-                targetStep.inputs = [];
-            }
-            targetStep.inputs.push(data.input);
-
-            // Find the step node element
-            const stepNode = document.querySelector(`.treeflow-node[data-step-id="${stepId}"]`);
-
-            if (stepNode) {
-                // Create new input point on canvas
-                const inputPoint = document.createElement('div');
-                inputPoint.className = 'input-point';
-                inputPoint.dataset.inputId = data.input.id;
-                inputPoint.dataset.stepId = stepId;
-                inputPoint.title = `Input: ${data.input.name} (${data.input.type})`;
-
-                // Style by type
-                const typeColors = {
-                    'fully_completed': 'linear-gradient(135deg, #10b981, #059669)',
-                    'partial': 'linear-gradient(135deg, #3b82f6, #2563eb)',
-                    'error': 'linear-gradient(135deg, #ef4444, #dc2626)',
-                    'any': 'linear-gradient(135deg, #8b5cf6, #7c3aed)'
-                };
-                inputPoint.style.background = typeColors[data.input.type] || typeColors['any'];
-
-                // Position on left side
-                const inputContainer = stepNode.querySelector('.input-points-container');
-                if (inputContainer) {
-                    inputContainer.appendChild(inputPoint);
-                } else {
-                    // Create container if it doesn't exist
-                    const container = document.createElement('div');
-                    container.className = 'input-points-container';
-                    container.style.cssText = 'position: absolute; left: -8px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px;';
-                    container.appendChild(inputPoint);
-                    stepNode.appendChild(container);
-                }
-
-                // Store in inputPoints map
-                const newInputData = {
-                    element: inputPoint,
-                    step: targetStep,
-                    input: data.input
-                };
-                this.inputPoints.set(data.input.id, newInputData);
-
-                // Now create the connection with the new input
-                await this.createConnection(this.dragSourceOutput, newInputData);
-            }
-
-            this.hideLoading();
-
-        } catch (error) {
-            this.hideLoading();
-            console.error('Error auto-creating input:', error);
-            this.showError('Network error creating input');
-        }
+        await this.createConnection(this.dragSourceOutput, targetStepData);
     }
 
-    async createConnection(sourceOutput, targetInput) {
+    async handleDropStepOnOutput(outputId) {
+        // Find the output by ID
+        const outputData = this.outputPoints.get(outputId);
+        if (!outputData) return;
+
+        // Create connection from this output to the drag source step
+        const sourceOutputData = {
+            element: outputData.element,
+            step: outputData.step,
+            output: outputData.output
+        };
+
+        const targetStepData = {
+            step: this.dragSourceStep.step
+        };
+
+        await this.createConnection(sourceOutputData, targetStepData);
+    }
+
+    async createConnection(sourceOutput, targetStep) {
         // Validate
-        const validation = this.validateConnection(sourceOutput, targetInput);
+        const validation = this.validateConnection(sourceOutput, targetStep);
         if (!validation.valid) {
             this.showError(validation.error);
             return;
@@ -1970,7 +1882,7 @@ export default class extends Controller {
                 },
                 body: JSON.stringify({
                     outputId: sourceOutput.output.id,
-                    inputId: targetInput.input.id
+                    targetStepId: targetStep.step.id
                 })
             });
 
@@ -2034,9 +1946,9 @@ export default class extends Controller {
         }
     }
 
-    validateConnection(sourceOutput, targetInput) {
+    validateConnection(sourceOutput, targetStep) {
         // Rule 1: No self-loops
-        if (sourceOutput.step.id === targetInput.step.id) {
+        if (sourceOutput.step.id === targetStep.step.id) {
             return {
                 valid: false,
                 error: 'Cannot connect step to itself'
@@ -2055,16 +1967,16 @@ export default class extends Controller {
             };
         }
 
-        // Rule 3: Check for duplicate (same output → same input)
+        // Rule 3: Check for duplicate (same output → same step)
         const duplicate = this.connections.find(
             conn => conn.sourceOutput.id === sourceOutput.output.id &&
-                    conn.targetInput.id === targetInput.input.id
+                    conn.targetStep.id === targetStep.step.id
         );
 
         if (duplicate) {
             return {
                 valid: false,
-                error: 'Connection already exists between this output and input'
+                error: 'Connection already exists between this output and step'
             };
         }
 
@@ -2101,19 +2013,36 @@ export default class extends Controller {
         });
     }
 
+    expandTargetSteps(excludeStepId) {
+        // Highlight all step nodes as drop targets (except the source step)
+        this.nodes.forEach((node, stepId) => {
+            if (stepId !== excludeStepId) {
+                node.classList.add('drop-target');
+            }
+        });
+    }
+
     resetCircleSizes() {
         document.querySelectorAll('.connection-point.drag-target').forEach(circle => {
             circle.classList.remove('drag-target');
         });
     }
 
+    resetStepHighlights() {
+        this.nodes.forEach((node) => {
+            node.classList.remove('drop-target');
+        });
+    }
+
     cleanupConnectionDrag() {
         this.isDraggingConnection = false;
         this.dragSourceOutput = null;
-        this.dragSourceInput = null;
 
         // Reset expanded circles
         this.resetCircleSizes();
+
+        // Reset step highlights
+        this.resetStepHighlights();
 
         if (this.ghostLine) {
             this.ghostLine.remove();
@@ -2123,7 +2052,7 @@ export default class extends Controller {
         document.body.style.cursor = '';
 
         // Remove highlights
-        document.querySelectorAll('.input-point.highlight, .output-point.highlight').forEach(el => {
+        document.querySelectorAll('.output-point.highlight').forEach(el => {
             el.classList.remove('highlight');
         });
     }
@@ -2396,9 +2325,9 @@ export default class extends Controller {
     }
 
     getConnectionInfoForStep(stepId) {
-        // Find which connection targets this step (via its inputs)
+        // Find which connection targets this step
         const targetConnection = this.connections.find(conn =>
-            conn.targetInput && conn.targetInput.stepId === stepId
+            conn.targetStep && conn.targetStep.id === stepId
         );
 
         if (!targetConnection) {
@@ -2509,7 +2438,7 @@ export default class extends Controller {
         const connectedSteps = new Set();
         this.connections.forEach(conn => {
             connectedSteps.add(conn.sourceOutput.stepId);
-            connectedSteps.add(conn.targetInput.stepId);
+            connectedSteps.add(conn.targetStep.id);
         });
 
         // Separate orphan steps (no connections)
@@ -2534,7 +2463,7 @@ export default class extends Controller {
 
             this.connections.forEach(conn => {
                 const sourceStepId = conn.sourceOutput.stepId;
-                const targetStepId = conn.targetInput.stepId;
+                const targetStepId = conn.targetStep.id;
 
                 const sourceLevel = levels.get(sourceStepId) ?? 0;
                 const targetLevel = levels.get(targetStepId);
@@ -2781,7 +2710,7 @@ export default class extends Controller {
             // Find all connections where this step is the source
             this.connections.forEach(conn => {
                 if (conn.sourceOutput.stepId === currentStepId) {
-                    const targetStepId = conn.targetInput.stepId;
+                    const targetStepId = conn.targetStep.id;
                     if (!reachable.has(targetStepId)) {
                         reachable.add(targetStepId);
                         queue.push(targetStepId);

@@ -34,13 +34,13 @@ abstract class CalendarOutputDtoGenerated
 
     public string $name;
 
-    public ?string $description = null;
-
     /**
      * user reference
      * Can be: IRI string or nested UserOutput object
      */
     public string|UserOutputDto|null $user = null;
+
+    public ?string $description = null;
 
     public string $timeZone;
 
@@ -139,16 +139,6 @@ abstract class CalendarOutputDtoGenerated
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
     public function getUser(): string|UserOutputDto|null    {
         return $this->user;
     }
@@ -156,6 +146,16 @@ abstract class CalendarOutputDtoGenerated
     public function setUser(string|UserOutputDto|null $user): self
     {
         $this->user = $user;
+        return $this;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 

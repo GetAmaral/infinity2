@@ -3,7 +3,7 @@
 {# Configure modal appearance and behavior #}
 {% set entity_type = 'input' %}
 {% set icon = 'arrow-left-circle' %}
-{% set form_action = (is_edit and input.id) ? path('input_edit', {treeflowId: treeflow.id, stepId: step.id, inputId: input.id}) : path('input_new', {treeflowId: treeflow.id, stepId: step.id}) %}
+{% set form_action = (is_edit and input.id) ? path('input_edit', {treeflowId: treeFlow.id.toRfc4122(), stepId: step.id.toRfc4122(), inputId: input.id.toRfc4122()}) : path('input_new', {treeflowId: treeFlow.id.toRfc4122(), stepId: step.id.toRfc4122()}) %}
 {% set title_create = 'input.modal.create.title' %}
 {% set subtitle_create = 'input.modal.create.subtitle' %}
 {% set subtitle_edit = 'input.modal.edit.subtitle' %}
@@ -87,8 +87,8 @@
         </button>
         <button type="button" class="btn btn-sm btn-danger delete-confirm-btn"
                 data-entity-type="input"
-                data-delete-url="{{ path('input_delete', {treeflowId: treeflow.id, stepId: step.id, inputId: input.id}) }}"
-                data-csrf-token="{{ csrf_token('delete-input-' ~ input.id) }}">
+                data-delete-url="{{ path('input_delete', {treeflowId: treeFlow.id.toRfc4122(), stepId: step.id.toRfc4122(), inputId: input.id.toRfc4122()}) }}"
+                data-csrf-token="{{ csrf_token('delete-input-' ~ input.id.toRfc4122()) }}">
             <i class="bi bi-trash"></i> {{ 'button.confirm'|trans }}
         </button>
     </div>

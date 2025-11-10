@@ -157,6 +157,9 @@ class GenmaxExtension extends AbstractExtension
             new TwigFunction('getAdderName', [$this, 'getAdderName']),
             new TwigFunction('getRemoverName', [$this, 'getRemoverName']),
             new TwigFunction('getIsserName', [$this, 'getIsserName']),
+
+            // Enum naming
+            new TwigFunction('getEnumClassName', [$this, 'getEnumClassName']),
         ];
     }
 
@@ -410,6 +413,24 @@ class GenmaxExtension extends AbstractExtension
     public function getIsserName(string $propertyName): string
     {
         return 'is' . Utils::toPascalCase($propertyName);
+    }
+
+    // ==================== Enum Naming ====================
+
+    /**
+     * Generate enum class name from property name
+     *
+     * Examples:
+     * - status → StatusEnum
+     * - holidayType → HolidayTypeEnum
+     * - dealCategory → DealCategoryEnum
+     *
+     * @param string $propertyName The property name
+     * @return string The enum class name (PascalCase with Enum suffix)
+     */
+    public function getEnumClassName(string $propertyName): string
+    {
+        return Utils::toPascalCase($propertyName) . 'Enum';
     }
 
     // ==================== Static Utility Methods ====================

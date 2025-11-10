@@ -65,8 +65,22 @@ final class CourseController extends BaseApiController
             'page_icon' => 'bi bi-book',
             'default_view' => $savedView, // Use saved preference
             'enable_search' => true,
-            'enable_filters' => true,
+            'enable_filters' => false,
+            'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => CourseVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"modules","label":"Modules","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getModules","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"owner","label":"Owner","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOwner","isRelationship":true},{"name":"studentCourses","label":"Student Courses","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudentCourses","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"modules","label":"Modules"},{"name":"active","label":"Active"},{"name":"owner","label":"Owner"},{"name":"studentCourses","label":"Student Courses"},{"name":"totalLengthSeconds","label":"Total Length Seconds"}]', true),
+
+            // Property metadata for client-side rendering (as JSON strings)
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"modules","label":"Modules","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getModules","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"owner","label":"Owner","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOwner","isRelationship":true},{"name":"studentCourses","label":"Student Courses","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudentCourses","isRelationship":true}]',
+            'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]',
+            'filterable_fields' => '[]',
+            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"modules","label":"Modules"},{"name":"active","label":"Active"},{"name":"owner","label":"Owner"},{"name":"studentCourses","label":"Student Courses"},{"name":"totalLengthSeconds","label":"Total Length Seconds"}]',
 
             // Backward compatibility: keep old variable name
             'courses' => [], // Empty - JS will load via API
@@ -228,6 +242,7 @@ final class CourseController extends BaseApiController
 
         $lecture = new CourseLecture();
         $lecture->setCourseModule($module);
+        $lecture->setActive(true); // Default to active
 
         // Set default view order to be last in this module
         $existingLectures = $this->lectureRepository->findByModuleOrdered($moduleId);
@@ -253,7 +268,10 @@ final class CourseController extends BaseApiController
 
             $this->addFlash('success', 'course.lecture.flash.created_successfully');
 
-            return $this->redirectToRoute('course_show', ['id' => $courseId]);
+            // Return 303 See Other to refresh via Turbo without full reload
+            return $this->redirectToRoute('course_show', [
+                'id' => $courseId
+            ], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('course/_lecture_form_modal.html.twig', [
@@ -328,7 +346,10 @@ final class CourseController extends BaseApiController
 
             $this->addFlash('success', 'course.lecture.flash.updated_successfully');
 
-            return $this->redirectToRoute('course_show', ['id' => $courseId]);
+            // Return 303 See Other to refresh via Turbo without full reload
+            return $this->redirectToRoute('course_show', [
+                'id' => $courseId
+            ], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('course/_lecture_form_modal.html.twig', [
@@ -373,7 +394,12 @@ final class CourseController extends BaseApiController
             $this->addFlash('error', 'common.error.invalid_csrf');
         }
 
-        return $this->redirectToRoute('course_show', ['id' => $courseId]);
+        // Return Turbo Stream to refresh page without redirect
+        return new Response(
+            '<turbo-stream action="refresh"></turbo-stream>',
+            Response::HTTP_OK,
+            ['Content-Type' => 'text/vnd.turbo-stream.html']
+        );
     }
 
     #[Route('/{id}/lectures/reorder', name: 'course_lectures_reorder', requirements: ['id' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'], methods: ['POST'])]

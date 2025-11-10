@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\BillingFrequency;
 use App\Repository\BillingFrequencyRepository;
 use App\Security\Voter\BillingFrequencyVoter;
-use App\Form\BillingFrequencyFormType;
+use App\Form\BillingFrequencyType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,10 +84,10 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
                 'id' => $organizationRel->getId()->toString(),
                 'display' => (string) $organizationRel,
             ] : null,
-            'name' => $entity->getName(),
             'value' => $entity->getValue(),
-            'description' => $entity->getDescription(),
+            'name' => $entity->getName(),
             'displayName' => $entity->getDisplayName(),
+            'description' => $entity->getDescription(),
             'intervalType' => $entity->getIntervalType(),
             'intervalCount' => $entity->getIntervalCount(),
             'daysInCycle' => $entity->getDaysInCycle(),
@@ -95,10 +95,13 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
             'default' => $entity->getDefault(),
             'sortOrder' => $entity->getSortOrder(),
             'active' => $entity->getActive(),
-            'products' => ($productsRel = $entity->getProducts()) ? [
-                'id' => $productsRel->getId()->toString(),
-                'display' => (string) $productsRel,
-            ] : null,
+            'products' => ($productsRel = $entity->getProducts()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $productsRel->toArray()
+            ) : [],
         ];
     }
 
@@ -118,7 +121,7 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
 
         return $this->render('billingfrequency/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'billingFrequency',
+            'entity_name' => 'billingfrequency',
             'entity_name_plural' => 'cies',
             'page_icon' => 'bi-calendar-range',
             'default_view' => $savedView,
@@ -128,12 +131,19 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => BillingFrequencyVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"value","label":"Value","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getValue","isRelationship":false},{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"displayName","label":"Display Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDisplayName","isRelationship":false},{"name":"intervalType","label":"Interval Type","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIntervalType","isRelationship":false},{"name":"intervalCount","label":"Interval Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getIntervalCount","isRelationship":false},{"name":"daysInCycle","label":"Days in Cycle","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getDaysInCycle","isRelationship":false},{"name":"discountPercentage","label":"Discount Percentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getDiscountPercentage","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"value","label":"Value","type":"string"},{"name":"name","label":"Name","type":"string"},{"name":"displayName","label":"Display Name","type":"string"},{"name":"description","label":"Description","type":"text"}]', true),
+            'filterableFields' => json_decode('[{"name":"value","label":"Value","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"intervalType","label":"Interval Type","type":"string","strategy":"exact","boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"intervalCount","label":"Interval Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"daysInCycle","label":"Days in Cycle","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"discountPercentage","label":"Discount Percentage","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"sortOrder","label":"Sort Order","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"value","label":"Value"},{"name":"name","label":"Name"},{"name":"displayName","label":"Display Name"},{"name":"intervalType","label":"Interval Type"},{"name":"intervalCount","label":"Interval Count"},{"name":"daysInCycle","label":"Days in Cycle"},{"name":"discountPercentage","label":"Discount Percentage"},{"name":"default","label":"Default"},{"name":"sortOrder","label":"Sort Order"},{"name":"active","label":"Active"},{"name":"products","label":"Products"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"value","label":"Value","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getValue"},{"name":"displayName","label":"Display Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDisplayName"},{"name":"intervalType","label":"Interval Type","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIntervalType"},{"name":"intervalCount","label":"Interval Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getIntervalCount"},{"name":"daysInCycle","label":"Days in Cycle","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getDaysInCycle"},{"name":"discountPercentage","label":"Discount Percentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getDiscountPercentage"},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault"},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getSortOrder"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"}]',
-            'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"value","label":"Value","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"displayName","label":"Display Name","type":"string"}]',
+            'list_fields' => '[{"name":"value","label":"Value","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getValue","isRelationship":false},{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"displayName","label":"Display Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDisplayName","isRelationship":false},{"name":"intervalType","label":"Interval Type","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIntervalType","isRelationship":false},{"name":"intervalCount","label":"Interval Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getIntervalCount","isRelationship":false},{"name":"daysInCycle","label":"Days in Cycle","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getDaysInCycle","isRelationship":false},{"name":"discountPercentage","label":"Discount Percentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getDiscountPercentage","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false}]',
+            'searchable_fields' => '[{"name":"value","label":"Value","type":"string"},{"name":"name","label":"Name","type":"string"},{"name":"displayName","label":"Display Name","type":"string"},{"name":"description","label":"Description","type":"text"}]',
             'filterable_fields' => '[{"name":"value","label":"Value","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"intervalType","label":"Interval Type","type":"string","strategy":"exact","boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"intervalCount","label":"Interval Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"daysInCycle","label":"Days in Cycle","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"discountPercentage","label":"Discount Percentage","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"sortOrder","label":"Sort Order","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]',
-            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"value","label":"Value"},{"name":"displayName","label":"Display Name"},{"name":"intervalType","label":"Interval Type"},{"name":"intervalCount","label":"Interval Count"},{"name":"daysInCycle","label":"Days in Cycle"},{"name":"discountPercentage","label":"Discount Percentage"},{"name":"default","label":"Default"},{"name":"sortOrder","label":"Sort Order"},{"name":"active","label":"Active"},{"name":"products","label":"Products"}]',
+            'sortable_fields' => '[{"name":"value","label":"Value"},{"name":"name","label":"Name"},{"name":"displayName","label":"Display Name"},{"name":"intervalType","label":"Interval Type"},{"name":"intervalCount","label":"Interval Count"},{"name":"daysInCycle","label":"Days in Cycle"},{"name":"discountPercentage","label":"Discount Percentage"},{"name":"default","label":"Default"},{"name":"sortOrder","label":"Sort Order"},{"name":"active","label":"Active"},{"name":"products","label":"Products"}]',
         ]);
     }
 
@@ -148,9 +158,9 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(BillingFrequencyVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -169,7 +179,7 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($billingFrequency);
 
-        $form = $this->createForm(BillingFrequencyFormType::class, $billingFrequency);
+        $form = $this->createForm(BillingFrequencyType::class, $billingFrequency);
 
         return $this->render('billingfrequency/_form_modal.html.twig', [
             'form' => $form,
@@ -194,7 +204,7 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($billingFrequency);
 
-        $form = $this->createForm(BillingFrequencyFormType::class, $billingFrequency);
+        $form = $this->createForm(BillingFrequencyType::class, $billingFrequency);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -244,7 +254,7 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(BillingFrequencyVoter::EDIT, $billingFrequency);
 
-        $form = $this->createForm(BillingFrequencyFormType::class, $billingFrequency);
+        $form = $this->createForm(BillingFrequencyType::class, $billingFrequency);
 
         return $this->render('billingfrequency/_form_modal.html.twig', [
             'form' => $form,
@@ -264,7 +274,7 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(BillingFrequencyVoter::EDIT, $billingFrequency);
 
-        $form = $this->createForm(BillingFrequencyFormType::class, $billingFrequency);
+        $form = $this->createForm(BillingFrequencyType::class, $billingFrequency);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

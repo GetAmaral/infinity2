@@ -1,59 +1,9 @@
-{% extends 'base.html.twig' %}
+{# Extension template for SocialMediaType form page #}
+{# This template extends the generated one. Override specific blocks to customize. #}
+{# Generated template: socialmediatype/generated/form_generated.html.twig #}
 
-{% block title %}
-    {% if socialMediaType.id %}
-        {{ 'action.edit'|trans }} {{ 'socialmediatype.singular'|trans({}, 'socialmediatype') }}
-    {% else %}
-        {{ 'action.create'|trans }} {{ 'socialmediatype.singular'|trans({}, 'socialmediatype') }}
-    {% endif %}
-{% endblock %}
+{% extends 'socialmediatype/generated/form_generated.html.twig' %}
 
-{% block body %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="luminai-card p-4">
-                <div class="mb-4">
-                    <h2>
-                        {% if socialMediaType.id %}
-                            <i class="bi bi-pencil me-2"></i>{{ 'action.edit'|trans }} {{ 'socialmediatype.singular'|trans({}, 'socialmediatype') }}
-                        {% else %}
-                            <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'socialmediatype.singular'|trans({}, 'socialmediatype') }}
-                        {% endif %}
-                    </h2>
-                </div>
-
-                {# CRITICAL: Add form-navigation controller for Enter-as-Tab behavior #}
-                {{ form_start(form, {
-                    'attr': {
-                        'data-turbo': 'true',
-                        'data-controller': 'form-navigation'
-                    }
-                }) }}
-
-                {{ form_errors(form) }}
-
-                {# Render all form fields automatically #}
-                {% for child in form.children %}
-                    {% if child.vars.name not in ['_token'] %}
-                        <div class="mb-3">
-                            {{ form_row(child) }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-
-                <div class="d-flex justify-content-between mt-4">
-                    <a href="{{ path('socialmediatype_index') }}" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left me-1"></i>{{ 'action.back'|trans }}
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-circle me-1"></i>{{ 'action.save'|trans }}
-                    </button>
-                </div>
-
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+{# Uncomment to customize specific blocks: #}
+{# {% block page_icon %}<i class="bi bi-custom-icon text-neon fs-2 me-3"></i>{% endblock %} #}
+{# {% block grid_view_item_template %}...custom grid layout...{% endblock %} #}

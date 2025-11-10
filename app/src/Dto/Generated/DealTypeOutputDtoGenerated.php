@@ -33,21 +33,21 @@ abstract class DealTypeOutputDtoGenerated
 
     public ?string $category = null;
 
+    public string $color;
+
     /**
      * deals collection
      * @var DealOutputDto[]
      */
     public array $deals = [];
 
-    public string $color;
-
     public string $icon;
 
     public bool $default;
 
-    public int $sortOrder;
-
     public bool $active;
+
+    public int $sortOrder;
 
     public ?int $expectedDuration = null;
 
@@ -110,16 +110,6 @@ abstract class DealTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getDeals(): array    {
-        return $this->deals;
-    }
-
-    public function setDeals(array $deals): self
-    {
-        $this->deals = $deals;
-        return $this;
-    }
-
     public function getColor(): string    {
         return $this->color;
     }
@@ -127,6 +117,16 @@ abstract class DealTypeOutputDtoGenerated
     public function setColor(string $color): self
     {
         $this->color = $color;
+        return $this;
+    }
+
+    public function getDeals(): array    {
+        return $this->deals;
+    }
+
+    public function setDeals(array $deals): self
+    {
+        $this->deals = $deals;
         return $this;
     }
 
@@ -150,16 +150,6 @@ abstract class DealTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getSortOrder(): int    {
-        return $this->sortOrder;
-    }
-
-    public function setSortOrder(int $sortOrder): self
-    {
-        $this->sortOrder = $sortOrder;
-        return $this;
-    }
-
     public function getActive(): bool    {
         return $this->active;
     }
@@ -167,6 +157,16 @@ abstract class DealTypeOutputDtoGenerated
     public function setActive(bool $active): self
     {
         $this->active = $active;
+        return $this;
+    }
+
+    public function getSortOrder(): int    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(int $sortOrder): self
+    {
+        $this->sortOrder = $sortOrder;
         return $this;
     }
 

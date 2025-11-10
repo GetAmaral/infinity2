@@ -34,7 +34,7 @@ final class ReminderController extends ReminderControllerGenerated
      * API endpoint for searching reminders
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'reminder_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'reminder_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

@@ -1,4 +1,24 @@
-{% include 'genmax/twig/form_generated.html.twig' with {
-    'pipelineTemplate': pipelineTemplate,
-    'form': form
-} %}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'action.edit'|trans }} {{ 'pipelinetemplate.singular'|trans({}, 'pipelinetemplate') }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
+                    <h2>
+                        <i class="bi bi-pencil me-2"></i>{{ 'action.edit'|trans }} {{ 'pipelinetemplate.singular'|trans({}, 'pipelinetemplate') }}
+                    </h2>
+                </div>
+
+                {% include 'pipelinetemplate/generated/form_generated.html.twig' with {
+                    'pipelineTemplate': pipelineTemplate,
+                    'form': form
+                } %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

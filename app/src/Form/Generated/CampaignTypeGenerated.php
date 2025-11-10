@@ -14,7 +14,13 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use App\Entity\Company;
+use App\Entity\Contact;
+use App\Entity\User;
+use App\Entity\SocialMedia;
+use App\Entity\Talk;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -139,8 +145,7 @@ abstract class CampaignTypeGenerated extends AbstractType
         $builder->add('companies', EntityType::class, [
             'label' => 'Companies',
             'required' => false,
-            'class' => Company::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Company::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -150,20 +155,22 @@ abstract class CampaignTypeGenerated extends AbstractType
         $builder->add('contacts', EntityType::class, [
             'label' => 'Contacts',
             'required' => false,
-            'class' => Contact::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Contact::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('deals', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('deals', CollectionType::class, [
             'label' => 'Deals',
             'required' => false,
-            'entry_type' => App\Form\DealType::class,
+            'entry_type' => \App\Form\DealType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -176,6 +183,7 @@ abstract class CampaignTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('draft', CheckboxType::class, [
             'label' => 'Draft',
@@ -226,15 +234,17 @@ abstract class CampaignTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('manager', EntityType::class, [
             'label' => 'Manager',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('message', TextareaType::class, [
             'label' => 'Message',
@@ -294,25 +304,29 @@ abstract class CampaignTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('owner', EntityType::class, [
             'label' => 'Owner',
             'required' => true,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('parentCampaign', EntityType::class, [
             'label' => 'Parent Campaign',
             'required' => false,
-            'class' => Campaign::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Campaign::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('plannedBudget', TextType::class, [
             'label' => 'Planned Budget',
@@ -368,8 +382,7 @@ abstract class CampaignTypeGenerated extends AbstractType
         $builder->add('socialMedias', EntityType::class, [
             'label' => 'Social Medias',
             'required' => false,
-            'class' => SocialMedia::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\SocialMedia::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -396,8 +409,7 @@ abstract class CampaignTypeGenerated extends AbstractType
         $builder->add('talks', EntityType::class, [
             'label' => 'Talks',
             'required' => false,
-            'class' => Talk::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Talk::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -416,8 +428,7 @@ abstract class CampaignTypeGenerated extends AbstractType
         $builder->add('team', EntityType::class, [
             'label' => 'Team',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -438,6 +449,7 @@ abstract class CampaignTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Campaign::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -80,6 +80,7 @@ abstract class RoleTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Role::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\StepInput;
+use App\Entity\Step;
 use App\Entity\StepOutput;
 use App\Repository\StepConnectionRepository;
 
@@ -14,7 +14,7 @@ use App\Repository\StepConnectionRepository;
  * Validation Rules:
  * 1. No self-loops (Step A → Step A)
  * 2. One StepOutput can only have one connection
- * 3. No duplicate connections (same output → same input)
+ * 3. No duplicate connections (same output → same step)
  */
 class StepConnectionValidator
 {
@@ -28,10 +28,10 @@ class StepConnectionValidator
      *
      * @return array{valid: bool, error?: string}
      */
-    public function validate(StepOutput $output, StepInput $input): array
+    public function validate(StepOutput $output, Step $targetStep): array
     {
         // Rule 1: No self-loops
-        if ($output->getStep()->getId() === $input->getStep()->getId()) {
+        if ($output->getStep()->getId() === $targetStep->getId()) {
             return [
                 'valid' => false,
                 'error' => 'Cannot connect step to itself',
@@ -46,11 +46,11 @@ class StepConnectionValidator
             ];
         }
 
-        // Rule 3: No duplicate output→input pairs
-        if ($this->connectionRepository->connectionExists($output, $input)) {
+        // Rule 3: No duplicate output→step pairs
+        if ($this->connectionRepository->connectionExists($output, $targetStep)) {
             return [
                 'valid' => false,
-                'error' => 'Connection already exists between this output and input',
+                'error' => 'Connection already exists between this output and step',
             ];
         }
 

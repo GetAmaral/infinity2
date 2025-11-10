@@ -9,18 +9,18 @@ use App\Repository\StepConnectionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StepConnection - Visual connection between StepOutput and StepInput
+ * StepConnection - Visual connection between StepOutput and Step
  *
  * Represents a visual workflow connection on the canvas:
  * - One StepOutput can have AT MOST one StepConnection
- * - One StepInput can have MANY StepConnections
+ * - One Step can have MANY incoming StepConnections
  * - No self-loops allowed (Step A → Step A)
  * - Unique constraint prevents duplicate connections
  *
  * Extends generated base class - only add custom business logic here
  */
 #[ORM\Entity(repositoryClass: StepConnectionRepository::class)]
-#[ORM\UniqueConstraint(name: 'unique_connection', columns: ['source_output_id', 'target_input_id'])]
+#[ORM\UniqueConstraint(name: 'unique_connection', columns: ['source_output_id', 'target_step_id'])]
 class StepConnection extends StepConnectionGenerated
 {
     /**
@@ -29,7 +29,7 @@ class StepConnection extends StepConnectionGenerated
     public function __toString(): string
     {
         $output = $this->sourceOutput->getStep()->getName() . '.' . $this->sourceOutput->getName();
-        $input = $this->targetInput->getStep()->getName() . '.' . $this->targetInput->getName();
-        return $output . ' → ' . $input;
+        $target = $this->targetStep->getName();
+        return $output . ' → ' . $target;
     }
 }

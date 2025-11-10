@@ -43,7 +43,7 @@ abstract class StepOutputRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'step',            'name',            'description',            'slug',            'conditional',            'connection',        ];
+        return [            'name',            'step',            'slug',            'condition',            'connection',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class StepOutputRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'step' => 'step',            'name' => 'name',            'description' => 'description',            'slug' => 'slug',            'conditional' => 'conditional',            'connection' => 'connection',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'step' => 'step',            'slug' => 'slug',            'condition' => 'condition',            'connection' => 'connection',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class StepOutputRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'name' => 'name',            'description' => 'description',            'slug' => 'slug',            'conditional' => 'conditional',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'slug' => 'slug',            'condition' => 'condition',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -113,11 +113,10 @@ abstract class StepOutputRepositoryGenerated extends BaseRepository
         assert($entity instanceof StepOutput);
 
         return [
-            'step' => $entity->getStep(),
             'name' => $entity->getName(),
-            'description' => $entity->getDescription(),
+            'step' => $entity->getStep(),
             'slug' => $entity->getSlug(),
-            'conditional' => $entity->getConditional(),
+            'condition' => $entity->getCondition(),
             'connection' => $entity->getConnection(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),

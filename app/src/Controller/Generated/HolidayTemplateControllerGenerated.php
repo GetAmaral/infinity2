@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\HolidayTemplate;
 use App\Repository\HolidayTemplateRepository;
 use App\Security\Voter\HolidayTemplateVoter;
-use App\Form\HolidayTemplateFormType;
+use App\Form\HolidayTemplateType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -112,7 +112,7 @@ abstract class HolidayTemplateControllerGenerated extends BaseApiController
 
         return $this->render('holidaytemplate/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'holidayTemplate',
+            'entity_name' => 'holidaytemplate',
             'entity_name_plural' => 'holidayTemplates',
             'page_icon' => 'bi-calendar-x',
             'default_view' => $savedView,
@@ -122,9 +122,16 @@ abstract class HolidayTemplateControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => HolidayTemplateVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"blocksScheduling","label":"Blocks Scheduling","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBlocksScheduling","isRelationship":false},{"name":"city","label":"City","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCity","isRelationship":true},{"name":"country","label":"Country","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountry","isRelationship":true},{"name":"recurrenceFrequency","label":"RecurrenceFrequency","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurrenceFrequency","isRelationship":false},{"name":"recurrenceInterval","label":"RecurrenceInterval","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurrenceInterval","isRelationship":false},{"name":"sentAt","label":"Sent At","type":"date","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSentAt","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"blocksScheduling","label":"Blocks Scheduling"},{"name":"city","label":"City"},{"name":"country","label":"Country"},{"name":"recurrenceFrequency","label":"RecurrenceFrequency"},{"name":"recurrenceInterval","label":"RecurrenceInterval"},{"name":"sentAt","label":"Sent At"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"blocksScheduling","label":"Blocks Scheduling","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBlocksScheduling"},{"name":"city","label":"City","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCity"},{"name":"country","label":"Country","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountry"},{"name":"recurrenceFrequency","label":"RecurrenceFrequency","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurrenceFrequency"},{"name":"recurrenceInterval","label":"RecurrenceInterval","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurrenceInterval"},{"name":"sentAt","label":"Sent At","type":"date","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSentAt"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"blocksScheduling","label":"Blocks Scheduling","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBlocksScheduling","isRelationship":false},{"name":"city","label":"City","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCity","isRelationship":true},{"name":"country","label":"Country","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountry","isRelationship":true},{"name":"recurrenceFrequency","label":"RecurrenceFrequency","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurrenceFrequency","isRelationship":false},{"name":"recurrenceInterval","label":"RecurrenceInterval","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurrenceInterval","isRelationship":false},{"name":"sentAt","label":"Sent At","type":"date","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSentAt","isRelationship":false}]',
             'searchable_fields' => '[]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"blocksScheduling","label":"Blocks Scheduling"},{"name":"city","label":"City"},{"name":"country","label":"Country"},{"name":"recurrenceFrequency","label":"RecurrenceFrequency"},{"name":"recurrenceInterval","label":"RecurrenceInterval"},{"name":"sentAt","label":"Sent At"}]',
@@ -142,9 +149,9 @@ abstract class HolidayTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(HolidayTemplateVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -163,7 +170,7 @@ abstract class HolidayTemplateControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($holidayTemplate);
 
-        $form = $this->createForm(HolidayTemplateFormType::class, $holidayTemplate);
+        $form = $this->createForm(HolidayTemplateType::class, $holidayTemplate);
 
         return $this->render('holidaytemplate/_form_modal.html.twig', [
             'form' => $form,
@@ -188,7 +195,7 @@ abstract class HolidayTemplateControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($holidayTemplate);
 
-        $form = $this->createForm(HolidayTemplateFormType::class, $holidayTemplate);
+        $form = $this->createForm(HolidayTemplateType::class, $holidayTemplate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -238,7 +245,7 @@ abstract class HolidayTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(HolidayTemplateVoter::EDIT, $holidayTemplate);
 
-        $form = $this->createForm(HolidayTemplateFormType::class, $holidayTemplate);
+        $form = $this->createForm(HolidayTemplateType::class, $holidayTemplate);
 
         return $this->render('holidaytemplate/_form_modal.html.twig', [
             'form' => $form,
@@ -258,7 +265,7 @@ abstract class HolidayTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(HolidayTemplateVoter::EDIT, $holidayTemplate);
 
-        $form = $this->createForm(HolidayTemplateFormType::class, $holidayTemplate);
+        $form = $this->createForm(HolidayTemplateType::class, $holidayTemplate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

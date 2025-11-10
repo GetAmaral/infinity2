@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\AuditLog;
 use App\Repository\AuditLogRepository;
 use App\Security\Voter\AuditLogVoter;
-use App\Form\AuditLogFormType;
+use App\Form\AuditLogType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -109,7 +109,7 @@ abstract class AuditLogControllerGenerated extends BaseApiController
 
         return $this->render('auditlog/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'auditLog',
+            'entity_name' => 'auditlog',
             'entity_name_plural' => 'auditLogs',
             'page_icon' => 'bi-journal-text',
             'default_view' => $savedView,
@@ -119,9 +119,16 @@ abstract class AuditLogControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => AuditLogVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"action","label":"Action","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAction","isRelationship":false},{"name":"entityClass","label":"Entity Class","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEntityClass","isRelationship":false},{"name":"user","label":"User","type":"","sortable":false,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"action","label":"Action","type":"string"},{"name":"entityClass","label":"Entity Class","type":"string"},{"name":"entityId","label":"Entity ID","type":"uuid"},{"name":"user","label":"User","type":""}]', true),
+            'filterableFields' => json_decode('[{"name":"entityClass","label":"Entity Class","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"entityId","label":"Entity ID","type":"uuid","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"user","label":"User","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"action","label":"Action"},{"name":"entityClass","label":"Entity Class"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"action","label":"Action","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAction"},{"name":"entityClass","label":"Entity Class","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEntityClass"},{"name":"user","label":"User","type":"","sortable":false,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser"}]',
+            'list_fields' => '[{"name":"action","label":"Action","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAction","isRelationship":false},{"name":"entityClass","label":"Entity Class","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEntityClass","isRelationship":false},{"name":"user","label":"User","type":"","sortable":false,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true}]',
             'searchable_fields' => '[{"name":"action","label":"Action","type":"string"},{"name":"entityClass","label":"Entity Class","type":"string"},{"name":"entityId","label":"Entity ID","type":"uuid"},{"name":"user","label":"User","type":""}]',
             'filterable_fields' => '[{"name":"entityClass","label":"Entity Class","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"entityId","label":"Entity ID","type":"uuid","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"user","label":"User","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"action","label":"Action"},{"name":"entityClass","label":"Entity Class"}]',
@@ -139,9 +146,9 @@ abstract class AuditLogControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AuditLogVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -160,7 +167,7 @@ abstract class AuditLogControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($auditLog);
 
-        $form = $this->createForm(AuditLogFormType::class, $auditLog);
+        $form = $this->createForm(AuditLogType::class, $auditLog);
 
         return $this->render('auditlog/_form_modal.html.twig', [
             'form' => $form,
@@ -185,7 +192,7 @@ abstract class AuditLogControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($auditLog);
 
-        $form = $this->createForm(AuditLogFormType::class, $auditLog);
+        $form = $this->createForm(AuditLogType::class, $auditLog);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -235,7 +242,7 @@ abstract class AuditLogControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AuditLogVoter::EDIT, $auditLog);
 
-        $form = $this->createForm(AuditLogFormType::class, $auditLog);
+        $form = $this->createForm(AuditLogType::class, $auditLog);
 
         return $this->render('auditlog/_form_modal.html.twig', [
             'form' => $form,
@@ -255,7 +262,7 @@ abstract class AuditLogControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AuditLogVoter::EDIT, $auditLog);
 
-        $form = $this->createForm(AuditLogFormType::class, $auditLog);
+        $form = $this->createForm(AuditLogType::class, $auditLog);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

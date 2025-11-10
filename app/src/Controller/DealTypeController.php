@@ -34,7 +34,7 @@ final class DealTypeController extends DealTypeControllerGenerated
      * API endpoint for searching dealTypes
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'dealtype_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'dealtype_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

@@ -9,10 +9,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Pipeline;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -41,12 +43,23 @@ abstract class PipelineStageTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('dealStages', EntityType::class, [
+        $builder->add('probability', IntegerType::class, [
+            'label' => 'Probability',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('dealStages', CollectionType::class, [
             'label' => 'DealStages',
             'required' => false,
-            'entry_type' => App\Form\DealStageType::class,
+            'entry_type' => \App\Form\DealStageType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -59,14 +72,7 @@ abstract class PipelineStageTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
-
-        $builder->add('probability', IntegerType::class, [
-            'label' => 'Probability',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
+        }
 
         $builder->add('final', CheckboxType::class, [
             'label' => 'Final',
@@ -84,16 +90,16 @@ abstract class PipelineStageTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('active', CheckboxType::class, [
-            'label' => 'Active',
+        $builder->add('lost', CheckboxType::class, [
+            'label' => 'Lost',
             'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('lost', CheckboxType::class, [
-            'label' => 'Lost',
+        $builder->add('active', CheckboxType::class, [
+            'label' => 'Active',
             'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -108,12 +114,15 @@ abstract class PipelineStageTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('deals', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('deals', CollectionType::class, [
             'label' => 'Deals',
             'required' => false,
-            'entry_type' => App\Form\DealType::class,
+            'entry_type' => \App\Form\DealType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -126,6 +135,7 @@ abstract class PipelineStageTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('displayOrder', IntegerType::class, [
             'label' => 'Display Order',
@@ -147,28 +157,28 @@ abstract class PipelineStageTypeGenerated extends AbstractType
         $builder->add('next', EntityType::class, [
             'label' => 'Next',
             'required' => false,
-            'class' => PipelineStage::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\PipelineStage::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('pipeline', EntityType::class, [
             'label' => 'Pipeline',
             'required' => false,
-            'class' => Pipeline::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Pipeline::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('previous', EntityType::class, [
             'label' => 'Previous',
             'required' => false,
-            'class' => PipelineStage::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\PipelineStage::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -183,12 +193,15 @@ abstract class PipelineStageTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('tasks', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('tasks', CollectionType::class, [
             'label' => 'Tasks',
             'required' => false,
-            'entry_type' => App\Form\TaskType::class,
+            'entry_type' => \App\Form\TaskType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -201,6 +214,7 @@ abstract class PipelineStageTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
     }
 
@@ -208,6 +222,7 @@ abstract class PipelineStageTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PipelineStage::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

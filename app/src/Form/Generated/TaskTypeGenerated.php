@@ -15,6 +15,12 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Contact;
+use App\Entity\Deal;
+use App\Entity\PipelineStage;
+use App\Entity\Company;
+use App\Entity\TaskType;
+use App\Entity\User;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -73,8 +79,6 @@ abstract class TaskTypeGenerated extends AbstractType
         $builder->add('category', ChoiceType::class, [
             'label' => 'Category',
             'required' => false,
-            'class' => App\Enum\CategoryEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -114,25 +118,29 @@ abstract class TaskTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('contact', EntityType::class, [
             'label' => 'Contact',
             'required' => false,
-            'class' => Contact::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Contact::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('deal', EntityType::class, [
             'label' => 'Deal',
             'required' => false,
-            'class' => Deal::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Deal::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('durationMinutes', IntegerType::class, [
             'label' => 'Duration Minutes',
@@ -151,21 +159,21 @@ abstract class TaskTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('pipelineStage', EntityType::class, [
             'label' => 'Pipeline Stage',
             'required' => false,
-            'class' => PipelineStage::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\PipelineStage::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('priority', ChoiceType::class, [
             'label' => 'Priority',
             'required' => false,
-            'class' => App\Enum\PriorityEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -179,14 +187,6 @@ abstract class TaskTypeGenerated extends AbstractType
             'placeholder' => 'Select priority',
         ]);
 
-        $builder->add('scheduledDate', DateTimeType::class, [
-            'label' => 'Due Date',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('completed', CheckboxType::class, [
             'label' => 'Completed',
             'required' => true,
@@ -195,14 +195,22 @@ abstract class TaskTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('company', EntityType::class, [
-            'label' => 'Company',
+        $builder->add('scheduledDate', DateTimeType::class, [
+            'label' => 'Due Date',
             'required' => false,
-            'class' => App\Entity\Company::class,
-            'choice_label' => 'name',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
+        ]);
+
+        $builder->add('company', EntityType::class, [
+            'label' => 'Company',
+            'required' => false,
+            'class' => \App\Entity\Company::class,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+            'choice_label' => 'name',
             'placeholder' => 'Select company',
         ]);
 
@@ -266,11 +274,18 @@ abstract class TaskTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('phoneNumber', TextType::class, [
+            'label' => 'Phone Number',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter phone number',
+            ],
+        ]);
+
         $builder->add('taskStatus', ChoiceType::class, [
             'label' => 'Status',
             'required' => true,
-            'class' => App\Enum\TaskstatusEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -282,15 +297,6 @@ abstract class TaskTypeGenerated extends AbstractType
                 'Deferred' => 'deferred',
             ],
             'placeholder' => 'Select status',
-        ]);
-
-        $builder->add('phoneNumber', TextType::class, [
-            'label' => 'Phone Number',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter phone number',
-            ],
         ]);
 
         $builder->add('meetingUrl', TextType::class, [
@@ -319,25 +325,29 @@ abstract class TaskTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('type', EntityType::class, [
             'label' => 'Task Type',
             'required' => false,
-            'class' => TaskType::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\TaskType::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('user', EntityType::class, [
             'label' => 'Assigned To',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
     }
 
@@ -345,6 +355,7 @@ abstract class TaskTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Task::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

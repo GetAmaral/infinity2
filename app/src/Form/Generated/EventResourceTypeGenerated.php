@@ -16,6 +16,9 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use App\Entity\City;
+use App\Entity\EventResourceType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -188,15 +191,17 @@ abstract class EventResourceTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('city', EntityType::class, [
             'label' => 'City',
             'required' => false,
-            'class' => City::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\City::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('equipment', TextareaType::class, [
             'label' => 'Equipment',
@@ -207,12 +212,15 @@ abstract class EventResourceTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('eventBookings', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('eventBookings', CollectionType::class, [
             'label' => 'EventBookings',
             'required' => false,
-            'entry_type' => App\Form\EventResourceBookingType::class,
+            'entry_type' => \App\Form\EventResourceBookingType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -225,6 +233,7 @@ abstract class EventResourceTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('geoCoordinates', TextType::class, [
             'label' => 'Geo Coordinates',
@@ -247,8 +256,7 @@ abstract class EventResourceTypeGenerated extends AbstractType
         $builder->add('type', EntityType::class, [
             'label' => 'Type',
             'required' => true,
-            'class' => EventResourceType::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\EventResourceType::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -260,6 +268,7 @@ abstract class EventResourceTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => EventResource::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

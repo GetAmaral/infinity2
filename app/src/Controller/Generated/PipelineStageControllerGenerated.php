@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\PipelineStage;
 use App\Repository\PipelineStageRepository;
 use App\Security\Voter\PipelineStageVoter;
-use App\Form\PipelineStageFormType;
+use App\Form\PipelineStageType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -85,20 +85,26 @@ abstract class PipelineStageControllerGenerated extends BaseApiController
                 'display' => (string) $organizationRel,
             ] : null,
             'description' => $entity->getDescription(),
-            'dealStages' => ($dealStagesRel = $entity->getDealStages()) ? [
-                'id' => $dealStagesRel->getId()->toString(),
-                'display' => (string) $dealStagesRel,
-            ] : null,
             'probability' => $entity->getProbability(),
+            'dealStages' => ($dealStagesRel = $entity->getDealStages()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealStagesRel->toArray()
+            ) : [],
             'final' => $entity->getFinal(),
             'won' => $entity->getWon(),
-            'active' => $entity->getActive(),
             'lost' => $entity->getLost(),
+            'active' => $entity->getActive(),
             'color' => $entity->getColor(),
-            'deals' => ($dealsRel = $entity->getDeals()) ? [
-                'id' => $dealsRel->getId()->toString(),
-                'display' => (string) $dealsRel,
-            ] : null,
+            'deals' => ($dealsRel = $entity->getDeals()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealsRel->toArray()
+            ) : [],
             'displayOrder' => $entity->getDisplayOrder(),
             'migrationCriteria' => $entity->getMigrationCriteria(),
             'next' => ($nextRel = $entity->getNext()) ? [
@@ -114,10 +120,13 @@ abstract class PipelineStageControllerGenerated extends BaseApiController
                 'display' => (string) $previousRel,
             ] : null,
             'stageName' => $entity->getStageName(),
-            'tasks' => ($tasksRel = $entity->getTasks()) ? [
-                'id' => $tasksRel->getId()->toString(),
-                'display' => (string) $tasksRel,
-            ] : null,
+            'tasks' => ($tasksRel = $entity->getTasks()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $tasksRel->toArray()
+            ) : [],
         ];
     }
 
@@ -137,7 +146,7 @@ abstract class PipelineStageControllerGenerated extends BaseApiController
 
         return $this->render('pipelinestage/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'pipelineStage',
+            'entity_name' => 'pipelinestage',
             'entity_name_plural' => 'pipelineStages',
             'page_icon' => 'bi-diagram-2',
             'default_view' => $savedView,
@@ -147,12 +156,19 @@ abstract class PipelineStageControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => PipelineStageVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"probability","label":"Probability","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProbability","isRelationship":false},{"name":"dealStages","label":"DealStages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDealStages","isRelationship":true},{"name":"final","label":"Final","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFinal","isRelationship":false},{"name":"won","label":"Won","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWon","isRelationship":false},{"name":"lost","label":"Lost","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLost","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"displayOrder","label":"Display Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDisplayOrder","isRelationship":false},{"name":"migrationCriteria","label":"MigrationCriteria","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMigrationCriteria","isRelationship":false},{"name":"next","label":"Next","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNext","isRelationship":true},{"name":"pipeline","label":"Pipeline","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipeline","isRelationship":true},{"name":"previous","label":"Previous","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPrevious","isRelationship":true},{"name":"stageName","label":"Stage Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageName","isRelationship":false},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"description","label":"Description","type":"string"},{"name":"migrationCriteria","label":"MigrationCriteria","type":"string"},{"name":"stageName","label":"Stage Name","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"probability","label":"Probability","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"final","label":"Final","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"won","label":"Won","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lost","label":"Lost","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"description","label":"Description"},{"name":"probability","label":"Probability"},{"name":"dealStages","label":"DealStages"},{"name":"final","label":"Final"},{"name":"won","label":"Won"},{"name":"lost","label":"Lost"},{"name":"active","label":"Active"},{"name":"deals","label":"Deals"},{"name":"displayOrder","label":"Display Order"},{"name":"migrationCriteria","label":"MigrationCriteria"},{"name":"next","label":"Next"},{"name":"pipeline","label":"Pipeline"},{"name":"previous","label":"Previous"},{"name":"stageName","label":"Stage Name"},{"name":"tasks","label":"Tasks"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"dealStages","label":"DealStages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDealStages"},{"name":"probability","label":"Probability","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProbability"},{"name":"final","label":"Final","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFinal"},{"name":"won","label":"Won","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWon"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"lost","label":"Lost","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLost"},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals"},{"name":"displayOrder","label":"Display Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDisplayOrder"},{"name":"migrationCriteria","label":"MigrationCriteria","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMigrationCriteria"},{"name":"next","label":"Next","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNext"},{"name":"pipeline","label":"Pipeline","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipeline"},{"name":"previous","label":"Previous","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPrevious"},{"name":"stageName","label":"Stage Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageName"},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks"}]',
+            'list_fields' => '[{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"probability","label":"Probability","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProbability","isRelationship":false},{"name":"dealStages","label":"DealStages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDealStages","isRelationship":true},{"name":"final","label":"Final","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFinal","isRelationship":false},{"name":"won","label":"Won","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWon","isRelationship":false},{"name":"lost","label":"Lost","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLost","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"displayOrder","label":"Display Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDisplayOrder","isRelationship":false},{"name":"migrationCriteria","label":"MigrationCriteria","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMigrationCriteria","isRelationship":false},{"name":"next","label":"Next","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNext","isRelationship":true},{"name":"pipeline","label":"Pipeline","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipeline","isRelationship":true},{"name":"previous","label":"Previous","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPrevious","isRelationship":true},{"name":"stageName","label":"Stage Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageName","isRelationship":false},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks","isRelationship":true}]',
             'searchable_fields' => '[{"name":"description","label":"Description","type":"string"},{"name":"migrationCriteria","label":"MigrationCriteria","type":"string"},{"name":"stageName","label":"Stage Name","type":"string"}]',
-            'filterable_fields' => '[{"name":"probability","label":"Probability","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"final","label":"Final","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"won","label":"Won","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lost","label":"Lost","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
-            'sortable_fields' => '[{"name":"description","label":"Description"},{"name":"dealStages","label":"DealStages"},{"name":"probability","label":"Probability"},{"name":"final","label":"Final"},{"name":"won","label":"Won"},{"name":"active","label":"Active"},{"name":"lost","label":"Lost"},{"name":"deals","label":"Deals"},{"name":"displayOrder","label":"Display Order"},{"name":"migrationCriteria","label":"MigrationCriteria"},{"name":"next","label":"Next"},{"name":"pipeline","label":"Pipeline"},{"name":"previous","label":"Previous"},{"name":"stageName","label":"Stage Name"},{"name":"tasks","label":"Tasks"}]',
+            'filterable_fields' => '[{"name":"probability","label":"Probability","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"final","label":"Final","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"won","label":"Won","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lost","label":"Lost","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
+            'sortable_fields' => '[{"name":"description","label":"Description"},{"name":"probability","label":"Probability"},{"name":"dealStages","label":"DealStages"},{"name":"final","label":"Final"},{"name":"won","label":"Won"},{"name":"lost","label":"Lost"},{"name":"active","label":"Active"},{"name":"deals","label":"Deals"},{"name":"displayOrder","label":"Display Order"},{"name":"migrationCriteria","label":"MigrationCriteria"},{"name":"next","label":"Next"},{"name":"pipeline","label":"Pipeline"},{"name":"previous","label":"Previous"},{"name":"stageName","label":"Stage Name"},{"name":"tasks","label":"Tasks"}]',
         ]);
     }
 
@@ -167,9 +183,9 @@ abstract class PipelineStageControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(PipelineStageVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -188,7 +204,7 @@ abstract class PipelineStageControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($pipelineStage);
 
-        $form = $this->createForm(PipelineStageFormType::class, $pipelineStage);
+        $form = $this->createForm(PipelineStageType::class, $pipelineStage);
 
         return $this->render('pipelinestage/_form_modal.html.twig', [
             'form' => $form,
@@ -213,7 +229,7 @@ abstract class PipelineStageControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($pipelineStage);
 
-        $form = $this->createForm(PipelineStageFormType::class, $pipelineStage);
+        $form = $this->createForm(PipelineStageType::class, $pipelineStage);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -263,7 +279,7 @@ abstract class PipelineStageControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(PipelineStageVoter::EDIT, $pipelineStage);
 
-        $form = $this->createForm(PipelineStageFormType::class, $pipelineStage);
+        $form = $this->createForm(PipelineStageType::class, $pipelineStage);
 
         return $this->render('pipelinestage/_form_modal.html.twig', [
             'form' => $form,
@@ -283,7 +299,7 @@ abstract class PipelineStageControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(PipelineStageVoter::EDIT, $pipelineStage);
 
-        $form = $this->createForm(PipelineStageFormType::class, $pipelineStage);
+        $form = $this->createForm(PipelineStageType::class, $pipelineStage);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

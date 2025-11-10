@@ -32,20 +32,20 @@ abstract class BillingFrequencyGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $name;
-
-    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(name: 'value_prop', type: 'string', length: 50, unique: true)]
     protected string $value;
 
     #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
-    #[ORM\Column(type: 'text', length: 500, nullable: true)]
-    protected ?string $description = null;
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $name;
 
     #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $displayName = null;
+
+    #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
+    #[ORM\Column(type: 'text', length: 500, nullable: true)]
+    protected ?string $description = null;
 
     #[Groups(['billingfrequency:read', 'billingfrequency:write'])]
     #[ORM\Column(type: 'string', length: 20)]
@@ -97,16 +97,6 @@ abstract class BillingFrequencyGenerated extends EntityBase
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getValue(): string    {
         return $this->value;
     }
@@ -117,13 +107,13 @@ abstract class BillingFrequencyGenerated extends EntityBase
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
+    public function getName(): string    {
+        return $this->name;
     }
 
-    public function setDescription(?string $description): self
+    public function setName(string $name): self
     {
-        $this->description = $description;
+        $this->name = $name;
         return $this;
     }
 
@@ -134,6 +124,16 @@ abstract class BillingFrequencyGenerated extends EntityBase
     public function setDisplayName(?string $displayName): self
     {
         $this->displayName = $displayName;
+        return $this;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 

@@ -84,12 +84,12 @@ abstract class WinReasonGenerated extends EntityBase
     protected string $color = '#0dcaf0';
 
     #[Groups(['winreason:read', 'winreason:write'])]
-    #[ORM\Column(type: 'json', nullable: true)]
-    protected ?array $tags = null;
-
-    #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
+
+    #[Groups(['winreason:read', 'winreason:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $tags = null;
 
     #[Groups(['winreason:read', 'winreason:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
@@ -237,16 +237,6 @@ abstract class WinReasonGenerated extends EntityBase
         return $this;
     }
 
-    public function getTags(): ?array    {
-        return $this->tags;
-    }
-
-    public function setTags(?array $tags): self
-    {
-        $this->tags = $tags;
-        return $this;
-    }
-
     public function getActive(): bool    {
         return $this->active;
     }
@@ -260,6 +250,16 @@ abstract class WinReasonGenerated extends EntityBase
     public function isActive(): bool
     {
         return $this->active === true;
+    }
+
+    public function getTags(): ?array    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): self
+    {
+        $this->tags = $tags;
+        return $this;
     }
 
     public function getNotes(): ?string    {

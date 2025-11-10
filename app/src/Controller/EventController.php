@@ -34,7 +34,7 @@ final class EventController extends EventControllerGenerated
      * API endpoint for searching events
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'event_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'event_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

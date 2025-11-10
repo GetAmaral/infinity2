@@ -34,7 +34,7 @@ final class EventCategoryController extends EventCategoryControllerGenerated
      * API endpoint for searching ries
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'eventcategory_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'eventcategory_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

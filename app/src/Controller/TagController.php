@@ -34,7 +34,7 @@ final class TagController extends TagControllerGenerated
      * API endpoint for searching tags
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'tag_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'tag_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

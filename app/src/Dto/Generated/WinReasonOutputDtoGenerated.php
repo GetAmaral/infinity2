@@ -49,9 +49,9 @@ abstract class WinReasonOutputDtoGenerated
 
     public string $color;
 
-    public ?array $tags = null;
-
     public bool $active;
+
+    public ?array $tags = null;
 
     public ?string $notes = null;
 
@@ -200,16 +200,6 @@ abstract class WinReasonOutputDtoGenerated
         return $this;
     }
 
-    public function getTags(): ?array    {
-        return $this->tags;
-    }
-
-    public function setTags(?array $tags): self
-    {
-        $this->tags = $tags;
-        return $this;
-    }
-
     public function getActive(): bool    {
         return $this->active;
     }
@@ -217,6 +207,16 @@ abstract class WinReasonOutputDtoGenerated
     public function setActive(bool $active): self
     {
         $this->active = $active;
+        return $this;
+    }
+
+    public function getTags(): ?array    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): self
+    {
+        $this->tags = $tags;
         return $this;
     }
 

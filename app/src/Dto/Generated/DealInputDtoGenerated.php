@@ -10,8 +10,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\CompanyInputDto;
 use App\Dto\PipelineStageInputDto;
-use App\Dto\PipelineInputDto;
 use App\Dto\DealTypeInputDto;
+use App\Dto\PipelineInputDto;
 use App\Dto\DealCategoryInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\ContactInputDto;
@@ -66,18 +66,18 @@ abstract class DealInputDtoGenerated
     public ?string $probability = null;
 
     /**
-     * pipeline reference
-     * Must be: IRI string (e.g., "/api/pipelines/uuid")
-     */
-    #[Groups(['deal:write'])]
-    public ?string $pipeline = null;
-
-    /**
      * dealType reference
      * Must be: IRI string (e.g., "/api/deal_types/uuid")
      */
     #[Groups(['deal:write'])]
     public ?string $dealType = null;
+
+    /**
+     * pipeline reference
+     * Must be: IRI string (e.g., "/api/pipelines/uuid")
+     */
+    #[Groups(['deal:write'])]
+    public ?string $pipeline = null;
 
     #[Groups(['deal:write'])]
     public ?string $priority = null;
@@ -280,16 +280,6 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getPipeline(): ?string    {
-        return $this->pipeline;
-    }
-
-    public function setPipeline(?string $pipeline): self
-    {
-        $this->pipeline = $pipeline;
-        return $this;
-    }
-
     public function getDealType(): ?string    {
         return $this->dealType;
     }
@@ -297,6 +287,16 @@ abstract class DealInputDtoGenerated
     public function setDealType(?string $dealType): self
     {
         $this->dealType = $dealType;
+        return $this;
+    }
+
+    public function getPipeline(): ?string    {
+        return $this->pipeline;
+    }
+
+    public function setPipeline(?string $pipeline): self
+    {
+        $this->pipeline = $pipeline;
         return $this;
     }
 
@@ -440,16 +440,6 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getClosureDate(): ?\DateTimeImmutable    {
-        return $this->closureDate;
-    }
-
-    public function setClosureDate(?\DateTimeImmutable $closureDate): self
-    {
-        $this->closureDate = $closureDate;
-        return $this;
-    }
-
     public function getProducts(): ?string    {
         return $this->products;
     }
@@ -457,6 +447,16 @@ abstract class DealInputDtoGenerated
     public function setProducts(?string $products): self
     {
         $this->products = $products;
+        return $this;
+    }
+
+    public function getClosureDate(): ?\DateTimeImmutable    {
+        return $this->closureDate;
+    }
+
+    public function setClosureDate(?\DateTimeImmutable $closureDate): self
+    {
+        $this->closureDate = $closureDate;
         return $this;
     }
 

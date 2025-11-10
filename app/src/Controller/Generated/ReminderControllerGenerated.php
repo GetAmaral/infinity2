@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Reminder;
 use App\Repository\ReminderRepository;
 use App\Security\Voter\ReminderVoter;
-use App\Form\ReminderFormType;
+use App\Form\ReminderType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -95,10 +95,13 @@ abstract class ReminderControllerGenerated extends BaseApiController
                 'display' => (string) $eventRel,
             ] : null,
             'minutesBeforeStart' => $entity->getMinutesBeforeStart(),
-            'notifications' => ($notificationsRel = $entity->getNotifications()) ? [
-                'id' => $notificationsRel->getId()->toString(),
-                'display' => (string) $notificationsRel,
-            ] : null,
+            'notifications' => ($notificationsRel = $entity->getNotifications()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $notificationsRel->toArray()
+            ) : [],
         ];
     }
 
@@ -128,9 +131,16 @@ abstract class ReminderControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => ReminderVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"communicationMethod","label":"CommunicationMethod","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCommunicationMethod","isRelationship":true},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"minutesBeforeStart","label":"Minutes Before Trigger","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMinutesBeforeStart","isRelationship":false},{"name":"notifications","label":"Notifications","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotifications","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"active","label":"Active"},{"name":"communicationMethod","label":"CommunicationMethod"},{"name":"event","label":"Event"},{"name":"minutesBeforeStart","label":"Minutes Before Trigger"},{"name":"notifications","label":"Notifications"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"communicationMethod","label":"CommunicationMethod","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCommunicationMethod"},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent"},{"name":"minutesBeforeStart","label":"Minutes Before Trigger","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMinutesBeforeStart"},{"name":"notifications","label":"Notifications","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotifications"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"communicationMethod","label":"CommunicationMethod","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCommunicationMethod","isRelationship":true},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"minutesBeforeStart","label":"Minutes Before Trigger","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMinutesBeforeStart","isRelationship":false},{"name":"notifications","label":"Notifications","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotifications","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"}]',
             'filterable_fields' => '[{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"active","label":"Active"},{"name":"communicationMethod","label":"CommunicationMethod"},{"name":"event","label":"Event"},{"name":"minutesBeforeStart","label":"Minutes Before Trigger"},{"name":"notifications","label":"Notifications"}]',
@@ -148,9 +158,9 @@ abstract class ReminderControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ReminderVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -169,7 +179,7 @@ abstract class ReminderControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($reminder);
 
-        $form = $this->createForm(ReminderFormType::class, $reminder);
+        $form = $this->createForm(ReminderType::class, $reminder);
 
         return $this->render('reminder/_form_modal.html.twig', [
             'form' => $form,
@@ -194,7 +204,7 @@ abstract class ReminderControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($reminder);
 
-        $form = $this->createForm(ReminderFormType::class, $reminder);
+        $form = $this->createForm(ReminderType::class, $reminder);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -244,7 +254,7 @@ abstract class ReminderControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ReminderVoter::EDIT, $reminder);
 
-        $form = $this->createForm(ReminderFormType::class, $reminder);
+        $form = $this->createForm(ReminderType::class, $reminder);
 
         return $this->render('reminder/_form_modal.html.twig', [
             'form' => $form,
@@ -264,7 +274,7 @@ abstract class ReminderControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ReminderVoter::EDIT, $reminder);
 
-        $form = $this->createForm(ReminderFormType::class, $reminder);
+        $form = $this->createForm(ReminderType::class, $reminder);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

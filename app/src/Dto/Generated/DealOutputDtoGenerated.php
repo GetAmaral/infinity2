@@ -8,8 +8,8 @@ use Symfony\Component\Uid\Uuid;
 use App\Dto\OrganizationOutputDto;
 use App\Dto\CompanyOutputDto;
 use App\Dto\PipelineStageOutputDto;
-use App\Dto\PipelineOutputDto;
 use App\Dto\DealTypeOutputDto;
+use App\Dto\PipelineOutputDto;
 use App\Dto\DealCategoryOutputDto;
 use App\Dto\ProductOutputDto;
 use App\Dto\UserOutputDto;
@@ -64,16 +64,16 @@ abstract class DealOutputDtoGenerated
     public ?string $probability = null;
 
     /**
-     * pipeline reference
-     * Can be: IRI string or nested PipelineOutput object
-     */
-    public string|PipelineOutputDto|null $pipeline = null;
-
-    /**
      * dealType reference
      * Can be: IRI string or nested DealTypeOutput object
      */
     public string|DealTypeOutputDto|null $dealType = null;
+
+    /**
+     * pipeline reference
+     * Can be: IRI string or nested PipelineOutput object
+     */
+    public string|PipelineOutputDto|null $pipeline = null;
 
     public ?string $priority = null;
 
@@ -107,13 +107,13 @@ abstract class DealOutputDtoGenerated
 
     public ?\DateTimeImmutable $expectedClosureDate = null;
 
-    public ?\DateTimeImmutable $closureDate = null;
-
     /**
      * products collection
      * @var ProductOutputDto[]
      */
     public array $products = [];
+
+    public ?\DateTimeImmutable $closureDate = null;
 
     public ?\DateTimeImmutable $initialDate = null;
 
@@ -304,16 +304,6 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getPipeline(): string|PipelineOutputDto|null    {
-        return $this->pipeline;
-    }
-
-    public function setPipeline(string|PipelineOutputDto|null $pipeline): self
-    {
-        $this->pipeline = $pipeline;
-        return $this;
-    }
-
     public function getDealType(): string|DealTypeOutputDto|null    {
         return $this->dealType;
     }
@@ -321,6 +311,16 @@ abstract class DealOutputDtoGenerated
     public function setDealType(string|DealTypeOutputDto|null $dealType): self
     {
         $this->dealType = $dealType;
+        return $this;
+    }
+
+    public function getPipeline(): string|PipelineOutputDto|null    {
+        return $this->pipeline;
+    }
+
+    public function setPipeline(string|PipelineOutputDto|null $pipeline): self
+    {
+        $this->pipeline = $pipeline;
         return $this;
     }
 
@@ -464,16 +464,6 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getClosureDate(): ?\DateTimeImmutable    {
-        return $this->closureDate;
-    }
-
-    public function setClosureDate(?\DateTimeImmutable $closureDate): self
-    {
-        $this->closureDate = $closureDate;
-        return $this;
-    }
-
     public function getProducts(): array    {
         return $this->products;
     }
@@ -481,6 +471,16 @@ abstract class DealOutputDtoGenerated
     public function setProducts(array $products): self
     {
         $this->products = $products;
+        return $this;
+    }
+
+    public function getClosureDate(): ?\DateTimeImmutable    {
+        return $this->closureDate;
+    }
+
+    public function setClosureDate(?\DateTimeImmutable $closureDate): self
+    {
+        $this->closureDate = $closureDate;
         return $this;
     }
 

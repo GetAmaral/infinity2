@@ -75,8 +75,8 @@ abstract class CourseLectureGenerated extends EntityBase
     protected int $viewOrder = 0;
 
     #[Groups(['course_lecture:read', 'course_lecture:write'])]
-    #[ORM\Column(type: 'integer')]
-    protected int $lengthSeconds = 0;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $lengthSeconds = 0;
 
     #[Groups(['course_lecture:read', 'course_lecture:write'])]
     #[ORM\ManyToOne(targetEntity: CourseModule::class, inversedBy: 'lectures')]
@@ -101,12 +101,12 @@ abstract class CourseLectureGenerated extends EntityBase
     protected bool $active;
 
     #[Groups(['course_lecture:read', 'course_lecture:write'])]
-    #[ORM\Column(type: 'boolean')]
-    protected bool $published;
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    protected ?bool $published = null;
 
     #[Groups(['course_lecture:read', 'course_lecture:write', 'student:read'])]
-    #[ORM\Column(name: 'free_prop', type: 'boolean')]
-    protected bool $free;
+    #[ORM\Column(name: 'free_prop', type: 'boolean', nullable: true)]
+    protected ?bool $free = null;
 
     #[Groups(['course_lecture:read'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
@@ -177,8 +177,8 @@ abstract class CourseLectureGenerated extends EntityBase
     protected ?int $ratingCount = null;
 
     #[Groups(['course_lecture:read', 'course_lecture:write', 'student:read'])]
-    #[ORM\Column(type: 'integer')]
-    protected int $durationSeconds;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $durationSeconds = null;
 
     #[Groups(['course_lecture:read', 'course_lecture:write'])]
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
@@ -308,11 +308,11 @@ abstract class CourseLectureGenerated extends EntityBase
         return $this;
     }
 
-    public function getLengthSeconds(): int    {
+    public function getLengthSeconds(): ?int    {
         return $this->lengthSeconds;
     }
 
-    public function setLengthSeconds(int $lengthSeconds): self
+    public function setLengthSeconds(?int $lengthSeconds): self
     {
         $this->lengthSeconds = $lengthSeconds;
         return $this;
@@ -409,11 +409,11 @@ abstract class CourseLectureGenerated extends EntityBase
         return $this->active === true;
     }
 
-    public function getPublished(): bool    {
+    public function getPublished(): ?bool    {
         return $this->published;
     }
 
-    public function setPublished(bool $published): self
+    public function setPublished(?bool $published): self
     {
         $this->published = $published;
         return $this;
@@ -424,11 +424,11 @@ abstract class CourseLectureGenerated extends EntityBase
         return $this->published === true;
     }
 
-    public function getFree(): bool    {
+    public function getFree(): ?bool    {
         return $this->free;
     }
 
-    public function setFree(bool $free): self
+    public function setFree(?bool $free): self
     {
         $this->free = $free;
         return $this;
@@ -609,11 +609,11 @@ abstract class CourseLectureGenerated extends EntityBase
         return $this;
     }
 
-    public function getDurationSeconds(): int    {
+    public function getDurationSeconds(): ?int    {
         return $this->durationSeconds;
     }
 
-    public function setDurationSeconds(int $durationSeconds): self
+    public function setDurationSeconds(?int $durationSeconds): self
     {
         $this->durationSeconds = $durationSeconds;
         return $this;

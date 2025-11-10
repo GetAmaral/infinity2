@@ -60,20 +60,33 @@
                         <div class="flex-grow-1">
                             <div class="text-muted small mb-1">{{ property.label|trans }}</div>
                             <div class="text-white">
+{% set value = attribute(deal, property.getter) %}
 {% if property.isRelationship %}
-                                {# Relationship: Link with toString #}
-                                {% if deal.{{ property.getter }}() %}
-                                    <a href="{{ path('{{ property.relationshipRoute }}', {id: deal.{{ property.getter }}().id}) }}"
-                                       class="text-white text-decoration-none">
-                                        {{ deal.{{ property.getter }}() }}
-                                        <i class="bi bi-arrow-right ms-1"></i>
-                                    </a>
+                                {# Relationship: Link with toString or show collection count #}
+                                {% if property.isCollection %}
+                                    {# Collection relationship (OneToMany, ManyToMany) #}
+                                    {% if value|length > 0 %}
+                                        <span class="badge bg-info">
+                                            {{ value|length }} {{ property.label }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
                                 {% else %}
-                                    <span class="text-muted">-</span>
+                                    {# Single relationship (ManyToOne, OneToOne) #}
+                                    {% if value %}
+                                        <a href="{{ path(property.relationshipRoute, {id: value.id}) }}"
+                                           class="text-white text-decoration-none">
+                                            {{ value }}
+                                            <i class="bi bi-arrow-right ms-1"></i>
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
                                 {% endif %}
 {% elseif property.type == 'boolean' %}
                                 {# Boolean: Badge #}
-                                {% if deal.{{ property.getter }}() %}
+                                {% if value %}
                                     <span class="badge bg-success">
                                         <i class="bi bi-check-circle me-1"></i>{{ 'common.yes'|trans }}
                                     </span>
@@ -84,25 +97,25 @@
                                 {% endif %}
 {% elseif property.type in ['datetime', 'datetime_immutable'] %}
                                 {# DateTime: Full format #}
-                                {{ deal.{{ property.getter }}()|date('F j, Y, g:i A') }}
+                                {{ value|date('F j, Y, g:i A') }}
 {% elseif property.type == 'date' %}
                                 {# Date: Short format #}
-                                {{ deal.{{ property.getter }}()|date('M d, Y') }}
+                                {{ value|date('M d, Y') }}
 {% elseif property.type == 'time' %}
                                 {# Time: 24-hour format #}
-                                {{ deal.{{ property.getter }}()|date('H:i') }}
+                                {{ value|date('H:i') }}
 {% elseif property.type == 'uuid' %}
                                 {# UUID: toString #}
-                                <code class="text-muted">{{ deal.{{ property.getter }}().toString }}</code>
+                                <code class="text-muted">{{ value.toString }}</code>
 {% elseif property.type == 'text' %}
                                 {# Text: Multi-line with preserved formatting #}
-                                <div class="text-white" style="white-space: pre-wrap;">{{ deal.{{ property.getter }}() ?? '-' }}</div>
+                                <div class="text-white" style="white-space: pre-wrap;">{{ value ?? '-' }}</div>
 {% elseif property.type == 'json' %}
                                 {# JSON: Formatted code block #}
-                                <pre class="bg-dark text-white p-2 rounded" style="font-size: 0.85rem;"><code>{{ deal.{{ property.getter }}()|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
+                                <pre class="bg-dark text-white p-2 rounded" style="font-size: 0.85rem;"><code>{{ value|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
 {% else %}
                                 {# Default: Direct output #}
-                                {{ deal.{{ property.getter }}() ?? '-' }}
+                                {{ value ?? '-' }}
 {% endif %}
                             </div>
                         </div>

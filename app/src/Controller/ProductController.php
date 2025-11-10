@@ -34,7 +34,7 @@ final class ProductController extends ProductControllerGenerated
      * API endpoint for searching products
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'product_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'product_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

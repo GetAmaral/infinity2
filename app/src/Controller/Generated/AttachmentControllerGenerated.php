@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Attachment;
 use App\Repository\AttachmentRepository;
 use App\Security\Voter\AttachmentVoter;
-use App\Form\AttachmentFormType;
+use App\Form\AttachmentType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -129,9 +129,16 @@ abstract class AttachmentControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => AttachmentVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"fileSize","label":"FileSize","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFileSize","isRelationship":false},{"name":"fileType","label":"FileType","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFileType","isRelationship":false},{"name":"filename","label":"Filename","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFilename","isRelationship":false},{"name":"product","label":"Product","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProduct","isRelationship":true},{"name":"talkMessage","label":"TalkMessage","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkMessage","isRelationship":true},{"name":"url","label":"Url","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"fileType","label":"FileType","type":"string"},{"name":"filename","label":"Filename","type":"string"},{"name":"url","label":"Url","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"event","label":"Event"},{"name":"fileSize","label":"FileSize"},{"name":"fileType","label":"FileType"},{"name":"filename","label":"Filename"},{"name":"product","label":"Product"},{"name":"talkMessage","label":"TalkMessage"},{"name":"url","label":"Url"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent"},{"name":"fileSize","label":"FileSize","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFileSize"},{"name":"fileType","label":"FileType","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFileType"},{"name":"filename","label":"Filename","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFilename"},{"name":"product","label":"Product","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProduct"},{"name":"talkMessage","label":"TalkMessage","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkMessage"},{"name":"url","label":"Url","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl"}]',
+            'list_fields' => '[{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"fileSize","label":"FileSize","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFileSize","isRelationship":false},{"name":"fileType","label":"FileType","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFileType","isRelationship":false},{"name":"filename","label":"Filename","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFilename","isRelationship":false},{"name":"product","label":"Product","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProduct","isRelationship":true},{"name":"talkMessage","label":"TalkMessage","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkMessage","isRelationship":true},{"name":"url","label":"Url","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl","isRelationship":false}]',
             'searchable_fields' => '[{"name":"fileType","label":"FileType","type":"string"},{"name":"filename","label":"Filename","type":"string"},{"name":"url","label":"Url","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"event","label":"Event"},{"name":"fileSize","label":"FileSize"},{"name":"fileType","label":"FileType"},{"name":"filename","label":"Filename"},{"name":"product","label":"Product"},{"name":"talkMessage","label":"TalkMessage"},{"name":"url","label":"Url"}]',
@@ -149,9 +156,9 @@ abstract class AttachmentControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AttachmentVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -170,7 +177,7 @@ abstract class AttachmentControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($attachment);
 
-        $form = $this->createForm(AttachmentFormType::class, $attachment);
+        $form = $this->createForm(AttachmentType::class, $attachment);
 
         return $this->render('attachment/_form_modal.html.twig', [
             'form' => $form,
@@ -195,7 +202,7 @@ abstract class AttachmentControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($attachment);
 
-        $form = $this->createForm(AttachmentFormType::class, $attachment);
+        $form = $this->createForm(AttachmentType::class, $attachment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -245,7 +252,7 @@ abstract class AttachmentControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AttachmentVoter::EDIT, $attachment);
 
-        $form = $this->createForm(AttachmentFormType::class, $attachment);
+        $form = $this->createForm(AttachmentType::class, $attachment);
 
         return $this->render('attachment/_form_modal.html.twig', [
             'form' => $form,
@@ -265,7 +272,7 @@ abstract class AttachmentControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AttachmentVoter::EDIT, $attachment);
 
-        $form = $this->createForm(AttachmentFormType::class, $attachment);
+        $form = $this->createForm(AttachmentType::class, $attachment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

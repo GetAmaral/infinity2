@@ -9,6 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\User;
+use App\Entity\CourseLecture;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -31,22 +33,23 @@ abstract class StudentLectureTypeGenerated extends AbstractType
         $builder->add('student', EntityType::class, [
             'label' => 'Student',
             'required' => true,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('lecture', EntityType::class, [
             'label' => 'Lecture',
             'required' => true,
-            'class' => CourseLecture::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\CourseLecture::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
     }
 
@@ -54,6 +57,7 @@ abstract class StudentLectureTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => StudentLecture::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -14,6 +14,9 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use App\Entity\User;
+use App\Entity\Event;
+use App\Entity\EventResource;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -41,15 +44,17 @@ abstract class EventResourceBookingTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('bookedBy', EntityType::class, [
             'label' => 'Booked By',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('endTime', DateTimeType::class, [
             'label' => 'End Time',
@@ -108,15 +113,17 @@ abstract class EventResourceBookingTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('event', EntityType::class, [
             'label' => 'Event',
             'required' => false,
-            'class' => Event::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Event::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('notes', TextareaType::class, [
             'label' => 'Notes',
@@ -135,15 +142,17 @@ abstract class EventResourceBookingTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('resource', EntityType::class, [
             'label' => 'Resource',
             'required' => false,
-            'class' => EventResource::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\EventResource::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('status', IntegerType::class, [
             'label' => 'Status',
@@ -159,6 +168,7 @@ abstract class EventResourceBookingTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => EventResourceBooking::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -51,12 +51,15 @@ abstract class AgentTypeTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('agents', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('agents', CollectionType::class, [
             'label' => 'Agents',
             'required' => false,
-            'entry_type' => App\Form\AgentType::class,
+            'entry_type' => \App\Form\AgentType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -69,6 +72,7 @@ abstract class AgentTypeTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
@@ -135,6 +139,7 @@ abstract class AgentTypeTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => AgentType::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

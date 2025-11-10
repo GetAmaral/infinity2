@@ -34,7 +34,7 @@ final class AgentController extends AgentControllerGenerated
      * API endpoint for searching agents
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'agent_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'agent_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

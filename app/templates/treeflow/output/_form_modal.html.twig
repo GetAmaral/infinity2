@@ -3,7 +3,7 @@
 {# Configure modal appearance and behavior #}
 {% set entity_type = 'output' %}
 {% set icon = 'arrow-right-circle' %}
-{% set form_action = (is_edit and output.id) ? path('output_edit', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}) : path('output_new', {treeflowId: treeflow.id, stepId: step.id}) %}
+{% set form_action = (is_edit and output.id) ? path('output_edit', {treeflowId: treeFlow.id.toRfc4122(), stepId: step.id.toRfc4122(), outputId: output.id.toRfc4122()}) : path('output_new', {treeflowId: treeFlow.id.toRfc4122(), stepId: step.id.toRfc4122()}) %}
 {% set title_create = 'output.modal.create.title' %}
 {% set subtitle_create = 'output.modal.create.subtitle' %}
 {% set subtitle_edit = 'output.modal.edit.subtitle' %}
@@ -27,28 +27,16 @@
     </div>
 
     <div class="form-group-modern">
-        <label class="form-label-modern">{{ form_label(form.description) }}</label>
-        {{ form_widget(form.description, {
+        <label class="form-label-modern">{{ form_label(form.condition) }}</label>
+        {{ form_widget(form.condition, {
             'attr': {
-                'class': 'form-input-modern' ~ (form.description.vars.errors|length > 0 ? ' input-error' : ''),
-                'placeholder': 'output.form.description.placeholder'|trans({}, 'treeflow'),
+                'class': 'form-input-modern' ~ (form.condition.vars.errors|length > 0 ? ' input-error' : ''),
+                'placeholder': 'output.form.condition.placeholder'|trans({}, 'treeflow'),
                 'rows': 3
             }
         }) }}
-        {{ form_errors(form.description) }}
-    </div>
-
-    <div class="form-group-modern">
-        <label class="form-label-modern">{{ form_label(form.conditional) }}</label>
-        {{ form_widget(form.conditional, {
-            'attr': {
-                'class': 'form-input-modern' ~ (form.conditional.vars.errors|length > 0 ? ' input-error' : ''),
-                'placeholder': 'output.form.conditional.placeholder'|trans({}, 'treeflow'),
-                'rows': 3
-            }
-        }) }}
-        <small class="text-muted mt-1 d-block">{{ 'output.form.conditional.help'|trans({}, 'treeflow') }}</small>
-        {{ form_errors(form.conditional) }}
+        <small class="text-muted mt-1 d-block">{{ 'output.form.condition.help'|trans({}, 'treeflow') }}</small>
+        {{ form_errors(form.condition) }}
     </div>
 
     {{ form_widget(form._token) }}
@@ -76,8 +64,8 @@
         </button>
         <button type="button" class="btn btn-sm btn-danger delete-confirm-btn"
                 data-entity-type="output"
-                data-delete-url="{{ path('output_delete', {treeflowId: treeflow.id, stepId: step.id, outputId: output.id}) }}"
-                data-csrf-token="{{ csrf_token('delete-output-' ~ output.id) }}">
+                data-delete-url="{{ path('output_delete', {treeflowId: treeFlow.id.toRfc4122(), stepId: step.id.toRfc4122(), outputId: output.id.toRfc4122()}) }}"
+                data-csrf-token="{{ csrf_token('delete-output-' ~ output.id.toRfc4122()) }}">
             <i class="bi bi-trash"></i> {{ 'button.confirm'|trans }}
         </button>
     </div>

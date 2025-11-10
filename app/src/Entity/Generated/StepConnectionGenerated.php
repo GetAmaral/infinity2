@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\StepOutput;
-use App\Entity\StepInput;
+use App\Entity\Step;
 
 /**
  * StepConnection Entity (Generated Base Class)
@@ -29,10 +29,10 @@ abstract class StepConnectionGenerated extends EntityBase
     #[ORM\JoinColumn(nullable: false)]
     protected StepOutput $sourceOutput;
 
-    #[Groups(['connection:read', 'connection:write'])]
-    #[ORM\ManyToOne(targetEntity: StepInput::class, inversedBy: 'connections')]
+    #[Groups(['stepconnection:read', 'stepconnection:write'])]
+    #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'incomingConnections')]
     #[ORM\JoinColumn(nullable: false)]
-    protected StepInput $targetInput;
+    protected Step $targetStep;
 
 
     public function __construct()
@@ -51,14 +51,14 @@ abstract class StepConnectionGenerated extends EntityBase
         return $this;
     }
 
-    public function getTargetInput(): StepInput
+    public function getTargetStep(): Step
     {
-        return $this->targetInput;
+        return $this->targetStep;
     }
 
-    public function setTargetInput(StepInput $targetInput): self
+    public function setTargetStep(Step $targetStep): self
     {
-        $this->targetInput = $targetInput;
+        $this->targetStep = $targetStep;
         return $this;
     }
 

@@ -38,10 +38,10 @@ abstract class EventInputDtoGenerated
     public string $name;
 
     #[Groups(['event:write'])]
-    public \DateTimeImmutable $startTime;
+    public ?string $description = null;
 
     #[Groups(['event:write'])]
-    public ?string $description = null;
+    public \DateTimeImmutable $startTime;
 
     #[Groups(['event:write'])]
     public \DateTimeImmutable $endTime;
@@ -256,16 +256,6 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getStartTime(): \DateTimeImmutable    {
-        return $this->startTime;
-    }
-
-    public function setStartTime(\DateTimeImmutable $startTime): self
-    {
-        $this->startTime = $startTime;
-        return $this;
-    }
-
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -273,6 +263,16 @@ abstract class EventInputDtoGenerated
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getStartTime(): \DateTimeImmutable    {
+        return $this->startTime;
+    }
+
+    public function setStartTime(\DateTimeImmutable $startTime): self
+    {
+        $this->startTime = $startTime;
         return $this;
     }
 
@@ -456,26 +456,6 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getWorkingHours(): ?string    {
-        return $this->workingHours;
-    }
-
-    public function setWorkingHours(?string $workingHours): self
-    {
-        $this->workingHours = $workingHours;
-        return $this;
-    }
-
-    public function getSubject(): ?string    {
-        return $this->subject;
-    }
-
-    public function setSubject(?string $subject): self
-    {
-        $this->subject = $subject;
-        return $this;
-    }
-
     public function getNotifications(): ?string    {
         return $this->notifications;
     }
@@ -483,6 +463,26 @@ abstract class EventInputDtoGenerated
     public function setNotifications(?string $notifications): self
     {
         $this->notifications = $notifications;
+        return $this;
+    }
+
+    public function getHolidays(): ?string    {
+        return $this->holidays;
+    }
+
+    public function setHolidays(?string $holidays): self
+    {
+        $this->holidays = $holidays;
+        return $this;
+    }
+
+    public function getWorkingHours(): ?string    {
+        return $this->workingHours;
+    }
+
+    public function setWorkingHours(?string $workingHours): self
+    {
+        $this->workingHours = $workingHours;
         return $this;
     }
 
@@ -496,13 +496,13 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getHolidays(): ?string    {
-        return $this->holidays;
+    public function getSubject(): ?string    {
+        return $this->subject;
     }
 
-    public function setHolidays(?string $holidays): self
+    public function setSubject(?string $subject): self
     {
-        $this->holidays = $holidays;
+        $this->subject = $subject;
         return $this;
     }
 

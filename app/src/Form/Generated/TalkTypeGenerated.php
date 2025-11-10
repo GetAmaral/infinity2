@@ -13,7 +13,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Entity\Company;
+use App\Entity\Contact;
+use App\Entity\Deal;
+use App\Entity\TalkType;
+use App\Entity\User;
+use App\Entity\Agent;
+use App\Entity\Campaign;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -51,45 +59,53 @@ abstract class TalkTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('company', EntityType::class, [
             'label' => 'Company',
             'required' => false,
-            'class' => Company::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Company::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('contact', EntityType::class, [
             'label' => 'Contact',
             'required' => false,
-            'class' => Contact::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Contact::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('deal', EntityType::class, [
             'label' => 'Deal',
             'required' => false,
-            'class' => Deal::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Deal::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('talkType', EntityType::class, [
             'label' => 'TalkType',
             'required' => true,
-            'class' => TalkType::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\TalkType::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('channel', IntegerType::class, [
             'label' => 'Channel',
@@ -175,8 +191,7 @@ abstract class TalkTypeGenerated extends AbstractType
         $builder->add('users', EntityType::class, [
             'label' => 'Users',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -186,8 +201,7 @@ abstract class TalkTypeGenerated extends AbstractType
         $builder->add('owner', EntityType::class, [
             'label' => 'Owner',
             'required' => true,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -196,8 +210,7 @@ abstract class TalkTypeGenerated extends AbstractType
         $builder->add('assignedTo', EntityType::class, [
             'label' => 'Assigned To',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -206,8 +219,7 @@ abstract class TalkTypeGenerated extends AbstractType
         $builder->add('agents', EntityType::class, [
             'label' => 'Agents',
             'required' => false,
-            'class' => Agent::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Agent::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -217,20 +229,22 @@ abstract class TalkTypeGenerated extends AbstractType
         $builder->add('campaigns', EntityType::class, [
             'label' => 'Campaigns',
             'required' => false,
-            'class' => Campaign::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Campaign::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('messages', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('messages', CollectionType::class, [
             'label' => 'Messages',
             'required' => false,
-            'entry_type' => App\Form\TalkMessageType::class,
+            'entry_type' => \App\Form\TalkMessageType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -243,6 +257,7 @@ abstract class TalkTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('archived', CheckboxType::class, [
             'label' => 'IsArchived',
@@ -275,6 +290,7 @@ abstract class TalkTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Talk::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

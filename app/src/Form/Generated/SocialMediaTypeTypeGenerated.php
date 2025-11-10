@@ -61,6 +61,7 @@ abstract class SocialMediaTypeTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => SocialMediaType::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

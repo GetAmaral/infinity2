@@ -28,16 +28,10 @@
                     </div>
 
                     <div class="form-group-modern">
-                        {{ form_label(form.description, null, {'label_attr': {'class': 'form-label-modern'}}) }}
-                        {{ form_widget(form.description, {'attr': {'class': 'form-input-modern', 'rows': '3', 'placeholder': 'output.form.description.placeholder'|trans({}, 'treeflow')}}) }}
-                        {{ form_errors(form.description) }}
-                    </div>
-
-                    <div class="form-group-modern">
-                        {{ form_label(form.conditional, null, {'label_attr': {'class': 'form-label-modern'}}) }}
-                        {{ form_widget(form.conditional, {'attr': {'class': 'form-input-modern', 'rows': '3', 'placeholder': 'output.form.conditional.placeholder'|trans({}, 'treeflow')}}) }}
-                        <small class="text-muted">{{ 'output.form.conditional.help'|trans({}, 'treeflow') }}</small>
-                        {{ form_errors(form.conditional) }}
+                        {{ form_label(form.condition, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                        {{ form_widget(form.condition, {'attr': {'class': 'form-input-modern', 'rows': '3', 'placeholder': 'output.form.condition.placeholder'|trans({}, 'treeflow')}}) }}
+                        <small class="text-muted">{{ 'output.form.condition.help'|trans({}, 'treeflow') }}</small>
+                        {{ form_errors(form.condition) }}
                     </div>
 
                     {{ form_rest(form) }}

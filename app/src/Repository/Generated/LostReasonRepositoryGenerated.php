@@ -54,7 +54,7 @@ abstract class LostReasonRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'description' => 'description',            'category' => 'category',            'deals' => 'deals',            'active' => 'active',            'sortOrder' => 'sortOrder',            'impact' => 'impact',            'winBackPotential' => 'winBackPotential',            'competitorName' => 'competitorName',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'description' => 'description',            'deals' => 'deals',            'category' => 'category',            'active' => 'active',            'sortOrder' => 'sortOrder',            'impact' => 'impact',            'winBackPotential' => 'winBackPotential',            'competitorName' => 'competitorName',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -117,8 +117,8 @@ abstract class LostReasonRepositoryGenerated extends BaseRepository
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
-            'category' => $entity->getCategory(),
             'dealsCount' => $entity->getDeals()->count(),
+            'category' => $entity->getCategory(),
             'color' => $entity->getColor(),
             'impact' => $entity->getImpact(),
             'winBackPotential' => $entity->getWinBackPotential(),

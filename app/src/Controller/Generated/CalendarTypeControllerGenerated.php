@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\CalendarType;
 use App\Repository\CalendarTypeRepository;
 use App\Security\Voter\CalendarTypeVoter;
-use App\Form\CalendarTypeFormType;
+use App\Form\CalendarTypeType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,10 +86,13 @@ abstract class CalendarTypeControllerGenerated extends BaseApiController
             ] : null,
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
-            'calendars' => ($calendarsRel = $entity->getCalendars()) ? [
-                'id' => $calendarsRel->getId()->toString(),
-                'display' => (string) $calendarsRel,
-            ] : null,
+            'calendars' => ($calendarsRel = $entity->getCalendars()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $calendarsRel->toArray()
+            ) : [],
             'color' => $entity->getColor(),
             'icon' => $entity->getIcon(),
             'active' => $entity->getActive(),
@@ -119,7 +122,7 @@ abstract class CalendarTypeControllerGenerated extends BaseApiController
 
         return $this->render('calendartype/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'calendarType',
+            'entity_name' => 'calendartype',
             'entity_name_plural' => 'calendarTypes',
             'page_icon' => 'bi-calendar3',
             'default_view' => $savedView,
@@ -129,9 +132,16 @@ abstract class CalendarTypeControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => CalendarTypeVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"calendars","label":"Calendars","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendars","isRelationship":true},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"visibility","label":"Visibility","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVisibility","isRelationship":false},{"name":"access_level","label":"Access Level","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAccess_level","isRelationship":false},{"name":"sort_order","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSort_order","isRelationship":false},{"name":"allow_sharing","label":"Allow Sharing","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAllow_sharing","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"visibility","label":"Visibility","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"name","label":"Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"color","label":"Color","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"visibility","label":"Visibility","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"access_level","label":"Access Level","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"allow_sharing","label":"Allow Sharing","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"require_approval","label":"Require Approval","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"calendars","label":"Calendars"},{"name":"active","label":"Active"},{"name":"default","label":"Default"},{"name":"visibility","label":"Visibility"},{"name":"sort_order","label":"Sort Order"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"calendars","label":"Calendars","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendars"},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault"},{"name":"visibility","label":"Visibility","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVisibility"},{"name":"access_level","label":"Access Level","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAccess_level"},{"name":"sort_order","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSort_order"},{"name":"allow_sharing","label":"Allow Sharing","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAllow_sharing"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"calendars","label":"Calendars","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendars","isRelationship":true},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"visibility","label":"Visibility","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVisibility","isRelationship":false},{"name":"access_level","label":"Access Level","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAccess_level","isRelationship":false},{"name":"sort_order","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSort_order","isRelationship":false},{"name":"allow_sharing","label":"Allow Sharing","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAllow_sharing","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"visibility","label":"Visibility","type":"string"}]',
             'filterable_fields' => '[{"name":"name","label":"Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"color","label":"Color","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"visibility","label":"Visibility","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"access_level","label":"Access Level","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"allow_sharing","label":"Allow Sharing","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"require_approval","label":"Require Approval","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"calendars","label":"Calendars"},{"name":"active","label":"Active"},{"name":"default","label":"Default"},{"name":"visibility","label":"Visibility"},{"name":"sort_order","label":"Sort Order"}]',
@@ -149,9 +159,9 @@ abstract class CalendarTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CalendarTypeVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -170,7 +180,7 @@ abstract class CalendarTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($calendarType);
 
-        $form = $this->createForm(CalendarTypeFormType::class, $calendarType);
+        $form = $this->createForm(CalendarTypeType::class, $calendarType);
 
         return $this->render('calendartype/_form_modal.html.twig', [
             'form' => $form,
@@ -195,7 +205,7 @@ abstract class CalendarTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($calendarType);
 
-        $form = $this->createForm(CalendarTypeFormType::class, $calendarType);
+        $form = $this->createForm(CalendarTypeType::class, $calendarType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -245,7 +255,7 @@ abstract class CalendarTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CalendarTypeVoter::EDIT, $calendarType);
 
-        $form = $this->createForm(CalendarTypeFormType::class, $calendarType);
+        $form = $this->createForm(CalendarTypeType::class, $calendarType);
 
         return $this->render('calendartype/_form_modal.html.twig', [
             'form' => $form,
@@ -265,7 +275,7 @@ abstract class CalendarTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CalendarTypeVoter::EDIT, $calendarType);
 
-        $form = $this->createForm(CalendarTypeFormType::class, $calendarType);
+        $form = $this->createForm(CalendarTypeType::class, $calendarType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

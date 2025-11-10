@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Entity\Course;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -67,15 +68,17 @@ abstract class CourseModuleTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('course', EntityType::class, [
             'label' => 'Course',
             'required' => true,
-            'class' => Course::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Course::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
@@ -91,6 +94,7 @@ abstract class CourseModuleTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CourseModule::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

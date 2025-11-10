@@ -243,9 +243,37 @@ class CompanyProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('nextActivityDate', $requestData)) {
             $entity->setNextActivityDate($data->nextActivityDate);
         }
+        // leadStatus
+        if (!$isPatch || array_key_exists('leadStatus', $requestData)) {
+            $entity->setLeadStatus($data->leadStatus);
+        }
+        // companyDomain
+        if (!$isPatch || array_key_exists('companyDomain', $requestData)) {
+            $entity->setCompanyDomain($data->companyDomain);
+        }
+        // numberOfAssociatedContacts
+        if (!$isPatch || array_key_exists('numberOfAssociatedContacts', $requestData)) {
+            $entity->setNumberOfAssociatedContacts($data->numberOfAssociatedContacts);
+        }
+        // shippingStateProvince
+        if (!$isPatch || array_key_exists('shippingStateProvince', $requestData)) {
+            $entity->setShippingStateProvince($data->shippingStateProvince);
+        }
+        // tags
+        if (!$isPatch || array_key_exists('tags', $requestData)) {
+            $entity->setTags($data->tags);
+        }
         // lastActivityDate
         if (!$isPatch || array_key_exists('lastActivityDate', $requestData)) {
             $entity->setLastActivityDate($data->lastActivityDate);
+        }
+        // public
+        if (!$isPatch || array_key_exists('public', $requestData)) {
+            $entity->setPublic($data->public);
+        }
+        // lifecycleStage
+        if (!$isPatch || array_key_exists('lifecycleStage', $requestData)) {
+            $entity->setLifecycleStage($data->lifecycleStage);
         }
         // timeZone
         if (!$isPatch || array_key_exists('timeZone', $requestData)) {
@@ -255,37 +283,9 @@ class CompanyProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('stateProvince', $requestData)) {
             $entity->setStateProvince($data->stateProvince);
         }
-        // tags
-        if (!$isPatch || array_key_exists('tags', $requestData)) {
-            $entity->setTags($data->tags);
-        }
-        // lifecycleStage
-        if (!$isPatch || array_key_exists('lifecycleStage', $requestData)) {
-            $entity->setLifecycleStage($data->lifecycleStage);
-        }
-        // companyDomain
-        if (!$isPatch || array_key_exists('companyDomain', $requestData)) {
-            $entity->setCompanyDomain($data->companyDomain);
-        }
-        // leadStatus
-        if (!$isPatch || array_key_exists('leadStatus', $requestData)) {
-            $entity->setLeadStatus($data->leadStatus);
-        }
         // numberOfAssociatedDeals
         if (!$isPatch || array_key_exists('numberOfAssociatedDeals', $requestData)) {
             $entity->setNumberOfAssociatedDeals($data->numberOfAssociatedDeals);
-        }
-        // numberOfAssociatedContacts
-        if (!$isPatch || array_key_exists('numberOfAssociatedContacts', $requestData)) {
-            $entity->setNumberOfAssociatedContacts($data->numberOfAssociatedContacts);
-        }
-        // public
-        if (!$isPatch || array_key_exists('public', $requestData)) {
-            $entity->setPublic($data->public);
-        }
-        // shippingStateProvince
-        if (!$isPatch || array_key_exists('shippingStateProvince', $requestData)) {
-            $entity->setShippingStateProvince($data->shippingStateProvince);
         }
 
         // Map relationship properties

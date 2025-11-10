@@ -34,7 +34,7 @@ final class TaskTemplateController extends TaskTemplateControllerGenerated
      * API endpoint for searching taskTemplates
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'tasktemplate_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'tasktemplate_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

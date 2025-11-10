@@ -31,13 +31,13 @@ abstract class LostReasonOutputDtoGenerated
 
     public ?string $description = null;
 
-    public string $category;
-
     /**
      * deals collection
      * @var DealOutputDto[]
      */
     public array $deals = [];
+
+    public string $category;
 
     public bool $active;
 
@@ -110,16 +110,6 @@ abstract class LostReasonOutputDtoGenerated
         return $this;
     }
 
-    public function getCategory(): string    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
-        return $this;
-    }
-
     public function getDeals(): array    {
         return $this->deals;
     }
@@ -127,6 +117,16 @@ abstract class LostReasonOutputDtoGenerated
     public function setDeals(array $deals): self
     {
         $this->deals = $deals;
+        return $this;
+    }
+
+    public function getCategory(): string    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
         return $this;
     }
 

@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use App\Entity\City;
+use App\Entity\Country;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -49,25 +51,29 @@ abstract class HolidayTemplateTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('city', EntityType::class, [
             'label' => 'City',
             'required' => false,
-            'class' => City::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\City::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('country', EntityType::class, [
             'label' => 'Country',
             'required' => false,
-            'class' => Country::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Country::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('recurrenceFrequency', IntegerType::class, [
             'label' => 'RecurrenceFrequency',
@@ -99,6 +105,7 @@ abstract class HolidayTemplateTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => HolidayTemplate::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

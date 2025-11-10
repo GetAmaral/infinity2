@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\LeadSource;
 use App\Repository\LeadSourceRepository;
 use App\Security\Voter\LeadSourceVoter;
-use App\Form\LeadSourceFormType;
+use App\Form\LeadSourceType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,10 +88,13 @@ abstract class LeadSourceControllerGenerated extends BaseApiController
             'description' => $entity->getDescription(),
             'category' => $entity->getCategory(),
             'active' => $entity->getActive(),
-            'deals' => ($dealsRel = $entity->getDeals()) ? [
-                'id' => $dealsRel->getId()->toString(),
-                'display' => (string) $dealsRel,
-            ] : null,
+            'deals' => ($dealsRel = $entity->getDeals()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealsRel->toArray()
+            ) : [],
         ];
     }
 
@@ -111,7 +114,7 @@ abstract class LeadSourceControllerGenerated extends BaseApiController
 
         return $this->render('leadsource/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'leadSource',
+            'entity_name' => 'leadsource',
             'entity_name_plural' => 'leadSources',
             'page_icon' => 'bi-funnel',
             'default_view' => $savedView,
@@ -121,9 +124,16 @@ abstract class LeadSourceControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => LeadSourceVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"category","label":"Category","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"category","label":"Category"},{"name":"active","label":"Active"},{"name":"deals","label":"Deals"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"category","label":"Category","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"category","label":"Category"},{"name":"active","label":"Active"},{"name":"deals","label":"Deals"}]',
@@ -141,9 +151,9 @@ abstract class LeadSourceControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(LeadSourceVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -162,7 +172,7 @@ abstract class LeadSourceControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($leadSource);
 
-        $form = $this->createForm(LeadSourceFormType::class, $leadSource);
+        $form = $this->createForm(LeadSourceType::class, $leadSource);
 
         return $this->render('leadsource/_form_modal.html.twig', [
             'form' => $form,
@@ -187,7 +197,7 @@ abstract class LeadSourceControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($leadSource);
 
-        $form = $this->createForm(LeadSourceFormType::class, $leadSource);
+        $form = $this->createForm(LeadSourceType::class, $leadSource);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -237,7 +247,7 @@ abstract class LeadSourceControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(LeadSourceVoter::EDIT, $leadSource);
 
-        $form = $this->createForm(LeadSourceFormType::class, $leadSource);
+        $form = $this->createForm(LeadSourceType::class, $leadSource);
 
         return $this->render('leadsource/_form_modal.html.twig', [
             'form' => $form,
@@ -257,7 +267,7 @@ abstract class LeadSourceControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(LeadSourceVoter::EDIT, $leadSource);
 
-        $form = $this->createForm(LeadSourceFormType::class, $leadSource);
+        $form = $this->createForm(LeadSourceType::class, $leadSource);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

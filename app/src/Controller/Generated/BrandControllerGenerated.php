@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Brand;
 use App\Repository\BrandRepository;
 use App\Security\Voter\BrandVoter;
-use App\Form\BrandFormType;
+use App\Form\BrandType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,18 +98,27 @@ abstract class BrandControllerGenerated extends BaseApiController
             'foundedYear' => $entity->getFoundedYear(),
             'website' => $entity->getWebsite(),
             'active' => $entity->getActive(),
-            'products' => ($productsRel = $entity->getProducts()) ? [
-                'id' => $productsRel->getId()->toString(),
-                'display' => (string) $productsRel,
-            ] : null,
-            'manufacturers' => ($manufacturersRel = $entity->getManufacturers()) ? [
-                'id' => $manufacturersRel->getId()->toString(),
-                'display' => (string) $manufacturersRel,
-            ] : null,
-            'suppliers' => ($suppliersRel = $entity->getSuppliers()) ? [
-                'id' => $suppliersRel->getId()->toString(),
-                'display' => (string) $suppliersRel,
-            ] : null,
+            'products' => ($productsRel = $entity->getProducts()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $productsRel->toArray()
+            ) : [],
+            'manufacturers' => ($manufacturersRel = $entity->getManufacturers()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $manufacturersRel->toArray()
+            ) : [],
+            'suppliers' => ($suppliersRel = $entity->getSuppliers()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $suppliersRel->toArray()
+            ) : [],
         ];
     }
 
@@ -139,9 +148,16 @@ abstract class BrandControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => BrandVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"logoUrl","label":"LogoUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLogoUrl","isRelationship":false},{"name":"industry","label":"Industry","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIndustry","isRelationship":false},{"name":"marketShare","label":"Market Share","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMarketShare","isRelationship":false},{"name":"brandValue","label":"Brand Value","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBrandValue","isRelationship":false},{"name":"countryOfOrigin","label":"Country of Origin","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountryOfOrigin","isRelationship":false},{"name":"foundedYear","label":"Founded Year","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFoundedYear","isRelationship":false},{"name":"website","label":"Website","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWebsite","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts","isRelationship":true},{"name":"manufacturers","label":"Manufacturers","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getManufacturers","isRelationship":true},{"name":"suppliers","label":"Suppliers","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSuppliers","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"tagline","label":"Tagline","type":"string"},{"name":"logoUrl","label":"LogoUrl","type":"string"},{"name":"industry","label":"Industry","type":"string"},{"name":"positioning","label":"Brand Positioning","type":"text"},{"name":"targetMarket","label":"Target Market","type":"text"},{"name":"countryOfOrigin","label":"Country of Origin","type":"string"},{"name":"website","label":"Website","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"industry","label":"Industry","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"countryOfOrigin","label":"Country of Origin","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"logoUrl","label":"LogoUrl"},{"name":"industry","label":"Industry"},{"name":"marketShare","label":"Market Share"},{"name":"brandValue","label":"Brand Value"},{"name":"countryOfOrigin","label":"Country of Origin"},{"name":"foundedYear","label":"Founded Year"},{"name":"website","label":"Website"},{"name":"active","label":"Active"},{"name":"products","label":"Products"},{"name":"manufacturers","label":"Manufacturers"},{"name":"suppliers","label":"Suppliers"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"logoUrl","label":"LogoUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLogoUrl"},{"name":"industry","label":"Industry","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIndustry"},{"name":"marketShare","label":"Market Share","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMarketShare"},{"name":"brandValue","label":"Brand Value","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBrandValue"},{"name":"countryOfOrigin","label":"Country of Origin","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountryOfOrigin"},{"name":"foundedYear","label":"Founded Year","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFoundedYear"},{"name":"website","label":"Website","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWebsite"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts"},{"name":"manufacturers","label":"Manufacturers","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getManufacturers"},{"name":"suppliers","label":"Suppliers","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSuppliers"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"logoUrl","label":"LogoUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLogoUrl","isRelationship":false},{"name":"industry","label":"Industry","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIndustry","isRelationship":false},{"name":"marketShare","label":"Market Share","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMarketShare","isRelationship":false},{"name":"brandValue","label":"Brand Value","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBrandValue","isRelationship":false},{"name":"countryOfOrigin","label":"Country of Origin","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountryOfOrigin","isRelationship":false},{"name":"foundedYear","label":"Founded Year","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFoundedYear","isRelationship":false},{"name":"website","label":"Website","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWebsite","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts","isRelationship":true},{"name":"manufacturers","label":"Manufacturers","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getManufacturers","isRelationship":true},{"name":"suppliers","label":"Suppliers","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSuppliers","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"tagline","label":"Tagline","type":"string"},{"name":"logoUrl","label":"LogoUrl","type":"string"},{"name":"industry","label":"Industry","type":"string"},{"name":"positioning","label":"Brand Positioning","type":"text"},{"name":"targetMarket","label":"Target Market","type":"text"},{"name":"countryOfOrigin","label":"Country of Origin","type":"string"},{"name":"website","label":"Website","type":"string"}]',
             'filterable_fields' => '[{"name":"industry","label":"Industry","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"countryOfOrigin","label":"Country of Origin","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"logoUrl","label":"LogoUrl"},{"name":"industry","label":"Industry"},{"name":"marketShare","label":"Market Share"},{"name":"brandValue","label":"Brand Value"},{"name":"countryOfOrigin","label":"Country of Origin"},{"name":"foundedYear","label":"Founded Year"},{"name":"website","label":"Website"},{"name":"active","label":"Active"},{"name":"products","label":"Products"},{"name":"manufacturers","label":"Manufacturers"},{"name":"suppliers","label":"Suppliers"}]',
@@ -159,9 +175,9 @@ abstract class BrandControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(BrandVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -180,7 +196,7 @@ abstract class BrandControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($brand);
 
-        $form = $this->createForm(BrandFormType::class, $brand);
+        $form = $this->createForm(BrandType::class, $brand);
 
         return $this->render('brand/_form_modal.html.twig', [
             'form' => $form,
@@ -205,7 +221,7 @@ abstract class BrandControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($brand);
 
-        $form = $this->createForm(BrandFormType::class, $brand);
+        $form = $this->createForm(BrandType::class, $brand);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -255,7 +271,7 @@ abstract class BrandControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(BrandVoter::EDIT, $brand);
 
-        $form = $this->createForm(BrandFormType::class, $brand);
+        $form = $this->createForm(BrandType::class, $brand);
 
         return $this->render('brand/_form_modal.html.twig', [
             'form' => $form,
@@ -275,7 +291,7 @@ abstract class BrandControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(BrandVoter::EDIT, $brand);
 
-        $form = $this->createForm(BrandFormType::class, $brand);
+        $form = $this->createForm(BrandType::class, $brand);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

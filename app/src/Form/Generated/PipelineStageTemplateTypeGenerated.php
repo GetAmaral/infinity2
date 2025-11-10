@@ -14,8 +14,11 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use App\Entity\PipelineTemplate;
+use App\Enum\PipelineStageType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -102,22 +105,27 @@ abstract class PipelineStageTemplateTypeGenerated extends AbstractType
             'html5' => true,
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('pipelineTemplate', EntityType::class, [
             'label' => 'Pipeline Template',
             'required' => true,
-            'class' => PipelineTemplate::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\PipelineTemplate::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
-        $builder->add('tasks', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('tasks', CollectionType::class, [
             'label' => 'Tasks',
             'required' => false,
-            'entry_type' => App\Form\TaskTemplateType::class,
+            'entry_type' => \App\Form\TaskTemplateType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -130,6 +138,7 @@ abstract class PipelineStageTemplateTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('final', CheckboxType::class, [
             'label' => 'Final Stage',
@@ -144,11 +153,10 @@ abstract class PipelineStageTemplateTypeGenerated extends AbstractType
             'label' => 'Stage Type',
             'required' => true,
             'help' => 'Type of stage: active (in progress), won (successful close), lost (unsuccessful close)',
-            'class' => App\Enum\PipelineStageType::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
+            'class' => \App\Enum\PipelineStageType::class,
         ]);
 
         $builder->add('automationRules', TextareaType::class, [
@@ -185,6 +193,7 @@ abstract class PipelineStageTemplateTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PipelineStageTemplate::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -34,7 +34,7 @@ final class LostReasonController extends LostReasonControllerGenerated
      * API endpoint for searching lostReasa
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'lostreason_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'lostreason_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

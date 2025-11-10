@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\ProfileTemplate;
 use App\Repository\ProfileTemplateRepository;
 use App\Security\Voter\ProfileTemplateVoter;
-use App\Form\ProfileTemplateFormType;
+use App\Form\ProfileTemplateType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,10 +81,13 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
         return [
             'id' => $entity->getId()->toString(),
             'name' => $entity->getName(),
-            'grantedRoles' => ($grantedRolesRel = $entity->getGrantedRoles()) ? [
-                'id' => $grantedRolesRel->getId()->toString(),
-                'display' => (string) $grantedRolesRel,
-            ] : null,
+            'grantedRoles' => ($grantedRolesRel = $entity->getGrantedRoles()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $grantedRolesRel->toArray()
+            ) : [],
         ];
     }
 
@@ -104,7 +107,7 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
 
         return $this->render('profiletemplate/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'profileTemplate',
+            'entity_name' => 'profiletemplate',
             'entity_name_plural' => 'profileTemplates',
             'page_icon' => 'bi-person-lines-fill',
             'default_view' => $savedView,
@@ -114,9 +117,16 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => ProfileTemplateVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"grantedRoles","label":"GrantedRoles","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGrantedRoles","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"grantedRoles","label":"GrantedRoles"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"grantedRoles","label":"GrantedRoles","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGrantedRoles"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"grantedRoles","label":"GrantedRoles","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGrantedRoles","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"grantedRoles","label":"GrantedRoles"}]',
@@ -134,9 +144,9 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProfileTemplateVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -155,7 +165,7 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($profileTemplate);
 
-        $form = $this->createForm(ProfileTemplateFormType::class, $profileTemplate);
+        $form = $this->createForm(ProfileTemplateType::class, $profileTemplate);
 
         return $this->render('profiletemplate/_form_modal.html.twig', [
             'form' => $form,
@@ -180,7 +190,7 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($profileTemplate);
 
-        $form = $this->createForm(ProfileTemplateFormType::class, $profileTemplate);
+        $form = $this->createForm(ProfileTemplateType::class, $profileTemplate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -230,7 +240,7 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProfileTemplateVoter::EDIT, $profileTemplate);
 
-        $form = $this->createForm(ProfileTemplateFormType::class, $profileTemplate);
+        $form = $this->createForm(ProfileTemplateType::class, $profileTemplate);
 
         return $this->render('profiletemplate/_form_modal.html.twig', [
             'form' => $form,
@@ -250,7 +260,7 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProfileTemplateVoter::EDIT, $profileTemplate);
 
-        $form = $this->createForm(ProfileTemplateFormType::class, $profileTemplate);
+        $form = $this->createForm(ProfileTemplateType::class, $profileTemplate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

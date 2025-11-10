@@ -16,6 +16,9 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use App\Entity\Calendar;
+use App\Entity\Event;
+use App\Enum\HolidayTypeEnum;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -94,15 +97,17 @@ abstract class HolidayTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('calendar', EntityType::class, [
             'label' => 'Calendar',
             'required' => false,
-            'class' => Calendar::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Calendar::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('region', TextType::class, [
             'label' => 'Region',
@@ -121,20 +126,22 @@ abstract class HolidayTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('event', EntityType::class, [
             'label' => 'Event',
             'required' => false,
-            'class' => Event::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Event::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('holidayType', EnumType::class, [
             'label' => 'Holiday Type',
             'required' => false,
-            'class' => App\Enum\HolidaytypeEnum::class,
+            'class' => \App\Enum\HolidayTypeEnum::class,
             'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -204,6 +211,7 @@ abstract class HolidayTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Holiday::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

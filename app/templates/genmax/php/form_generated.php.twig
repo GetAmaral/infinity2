@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace {{ generatedNamespace }};
 
 use App\Entity\{{ entityName }};
+{% autoescape false %}
 {% for import in formTypeImports %}
 use {{ import }};
 {% endfor %}
+{% endautoescape %}
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -28,6 +30,13 @@ abstract class {{ entityName }}TypeGenerated extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 {% for field in formFields %}
+{% if field.isParentBackReference %}
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+{% elseif field.type == 'CollectionType' %}
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+{% endif %}
         $builder->add('{{ field.name }}', {{ field.type|raw }}::class, [
 {% for key, value in field.options %}
 {% if key == 'attr' or key == 'label_attr' or key == 'row_attr' %}
@@ -54,8 +63,10 @@ abstract class {{ entityName }}TypeGenerated extends AbstractType
             '{{ key }}' => false,
 {% elseif value is same as(null) %}
             '{{ key }}' => null,
-{% elseif key == 'class' or key == 'entry_type' %}
-            '{{ key }}' => {{ value|replace({'\\\\': '\\'}) }}::class,
+{% elseif key == 'class' %}
+            '{{ key }}' => \{{ value|replace({'\\\\': '\\'}) }}::class,
+{% elseif key == 'entry_type' %}
+            '{{ key }}' => \{{ value|replace({'\\\\': '\\'}) }}::class,
 {% elseif value is iterable %}
             '{{ key }}' => [
 {% for arrKey, arrValue in value %}
@@ -67,6 +78,9 @@ abstract class {{ entityName }}TypeGenerated extends AbstractType
 {% endif %}
 {% endfor %}
         ]);
+{% if field.isParentBackReference or field.type == 'CollectionType' %}
+        }
+{% endif %}
 
 {% endfor %}
     }
@@ -75,6 +89,7 @@ abstract class {{ entityName }}TypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => {{ entityName|raw }}::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

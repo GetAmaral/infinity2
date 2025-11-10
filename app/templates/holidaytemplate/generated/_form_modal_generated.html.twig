@@ -1,0 +1,49 @@
+{% extends '_base_modal.html.twig' %}
+
+{# Configure modal appearance and behavior #}
+{% set entity_type = 'holidaytemplate' %}
+{% set icon = 'calendar-x' %}
+{% set form_action = (is_edit and holidayTemplate.id) ? path('holidaytemplate_edit', {id: holidayTemplate.id}) : path('holidaytemplate_new') %}
+{% set title_create = 'holidaytemplate.modal.create.title'|trans({}, 'holidaytemplate') %}
+{% set title_edit = 'holidaytemplate.modal.edit.title'|trans({}, 'holidaytemplate') %}
+{% set subtitle_create = 'holidaytemplate.modal.create.subtitle'|trans({}, 'holidaytemplate') %}
+{% set subtitle_edit = 'holidaytemplate.modal.edit.subtitle'|trans({}, 'holidaytemplate') %}
+{% set submit_key = is_edit ? 'button.save.changes' : 'holidaytemplate.button.create.holidaytemplate' %}
+{% set submit_domain = is_edit ? 'messages' : 'holidaytemplate' %}
+{% set entity = holidayTemplate %}
+
+{# Form fields - auto-render all fields #}
+{% block modal_body %}
+    {# Render all form fields automatically #}
+    {% for child in form.children %}
+        {% if child.vars.name not in ['_token'] %}
+            <div class="form-group-modern">
+                {% if child.vars.block_prefixes[1] == 'checkbox' %}
+                    {# Checkbox/Switch styling #}
+                    <div class="form-check form-switch">
+                        {{ form_widget(child, {
+                            'attr': {
+                                'class': 'form-check-input',
+                                'style': 'cursor: pointer;'
+                            }
+                        }) }}
+                        <label class="form-check-label" for="{{ child.vars.id }}" style="color: var(--luminai-text-primary); cursor: pointer; margin-left: 0.5rem;">
+                            {{ form_label(child) }}
+                        </label>
+                    </div>
+                {% else %}
+                    {# Regular field styling #}
+                    <label class="form-label-modern">{{ form_label(child) }}</label>
+                    {{ form_widget(child, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (child.vars.errors|length > 0 ? ' input-error' : '')
+                        }
+                    }) }}
+                {% endif %}
+                {{ form_errors(child) }}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    {{ form_widget(form._token) }}
+{% endblock %}

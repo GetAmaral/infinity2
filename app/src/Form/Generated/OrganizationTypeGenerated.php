@@ -11,8 +11,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use App\Entity\City;
+use App\Entity\Module;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -32,15 +35,6 @@ abstract class OrganizationTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('logoPath', TextType::class, [
-            'label' => 'Logo Path',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter logo path',
-            ],
-        ]);
-
         $builder->add('name', TextType::class, [
             'label' => 'Name',
             'required' => true,
@@ -50,12 +44,12 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('logoPathDark', TextType::class, [
-            'label' => 'Logo Path Dark',
+        $builder->add('logoPath', TextType::class, [
+            'label' => 'Logo Path',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
-                'placeholder' => 'Enter logo path dark',
+                'placeholder' => 'Enter logo path',
             ],
         ]);
 
@@ -65,6 +59,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter description',
+            ],
+        ]);
+
+        $builder->add('logoPathDark', TextType::class, [
+            'label' => 'Logo Path Dark',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter logo path dark',
             ],
         ]);
 
@@ -112,12 +115,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('agents', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('agents', CollectionType::class, [
             'label' => 'Agents',
             'required' => false,
-            'entry_type' => App\Form\AgentType::class,
+            'entry_type' => \App\Form\AgentType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -130,13 +136,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('products', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('products', CollectionType::class, [
             'label' => 'Products',
             'required' => false,
-            'entry_type' => App\Form\ProductType::class,
+            'entry_type' => \App\Form\ProductType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -149,13 +159,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('billingFrequencies', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('billingFrequencies', CollectionType::class, [
             'label' => 'BillingFrequencies',
             'required' => false,
-            'entry_type' => App\Form\BillingFrequencyType::class,
+            'entry_type' => \App\Form\BillingFrequencyType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -168,6 +182,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('branding', TextareaType::class, [
             'label' => 'Branding',
@@ -178,12 +193,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('brands', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('brands', CollectionType::class, [
             'label' => 'Brands',
             'required' => false,
-            'entry_type' => App\Form\BrandType::class,
+            'entry_type' => \App\Form\BrandType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -196,6 +214,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('businessPhone', TextType::class, [
             'label' => 'BusinessPhone',
@@ -215,12 +234,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('calendars', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('calendars', CollectionType::class, [
             'label' => 'Calendars',
             'required' => false,
-            'entry_type' => App\Form\CalendarType::class,
+            'entry_type' => \App\Form\CalendarType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -233,13 +255,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('campaigns', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('campaigns', CollectionType::class, [
             'label' => 'Campaigns',
             'required' => false,
-            'entry_type' => App\Form\CampaignType::class,
+            'entry_type' => \App\Form\CampaignType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -252,6 +278,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('celPhone', TextType::class, [
             'label' => 'CelPhone',
@@ -265,19 +292,21 @@ abstract class OrganizationTypeGenerated extends AbstractType
         $builder->add('city', EntityType::class, [
             'label' => 'City',
             'required' => false,
-            'class' => City::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\City::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('companies', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('companies', CollectionType::class, [
             'label' => 'Companies',
             'required' => false,
-            'entry_type' => App\Form\CompanyType::class,
+            'entry_type' => \App\Form\CompanyType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -290,6 +319,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('companySize', IntegerType::class, [
             'label' => 'CompanySize',
@@ -299,12 +329,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('competitors', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('competitors', CollectionType::class, [
             'label' => 'Competitors',
             'required' => false,
-            'entry_type' => App\Form\CompetitorType::class,
+            'entry_type' => \App\Form\CompetitorType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -317,6 +350,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('contactName', TextType::class, [
             'label' => 'ContactName',
@@ -327,12 +361,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('contacts', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('contacts', CollectionType::class, [
             'label' => 'Contacts',
             'required' => false,
-            'entry_type' => App\Form\ContactType::class,
+            'entry_type' => \App\Form\ContactType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -345,13 +382,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('courses', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('courses', CollectionType::class, [
             'label' => 'Courses',
             'required' => false,
-            'entry_type' => App\Form\CourseType::class,
+            'entry_type' => \App\Form\CourseType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -364,6 +405,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('currency', TextType::class, [
             'label' => 'Currency',
@@ -374,12 +416,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('dealStages', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('dealStages', CollectionType::class, [
             'label' => 'DealStages',
             'required' => false,
-            'entry_type' => App\Form\DealStageType::class,
+            'entry_type' => \App\Form\DealStageType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -392,13 +437,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('deals', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('deals', CollectionType::class, [
             'label' => 'Deals',
             'required' => false,
-            'entry_type' => App\Form\DealType::class,
+            'entry_type' => \App\Form\DealType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -411,13 +460,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('eventCategories', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('eventCategories', CollectionType::class, [
             'label' => 'EventCategories',
             'required' => false,
-            'entry_type' => App\Form\EventCategoryType::class,
+            'entry_type' => \App\Form\EventCategoryType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -430,13 +483,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('eventResourceBookings', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('eventResourceBookings', CollectionType::class, [
             'label' => 'EventResourceBookings',
             'required' => false,
-            'entry_type' => App\Form\EventResourceBookingType::class,
+            'entry_type' => \App\Form\EventResourceBookingType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -449,13 +506,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('eventResourceTypes', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('eventResourceTypes', CollectionType::class, [
             'label' => 'EventResourceTypes',
             'required' => false,
-            'entry_type' => App\Form\EventResourceTypeType::class,
+            'entry_type' => \App\Form\EventResourceTypeType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -468,13 +529,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('eventResources', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('eventResources', CollectionType::class, [
             'label' => 'EventResources',
             'required' => false,
-            'entry_type' => App\Form\EventResourceType::class,
+            'entry_type' => \App\Form\EventResourceType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -487,13 +552,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('events', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('events', CollectionType::class, [
             'label' => 'Events',
             'required' => false,
-            'entry_type' => App\Form\EventType::class,
+            'entry_type' => \App\Form\EventType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -506,6 +575,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('featureFlags', TextareaType::class, [
             'label' => 'FeatureFlags',
@@ -516,12 +586,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('flags', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('flags', CollectionType::class, [
             'label' => 'Flags',
             'required' => false,
-            'entry_type' => App\Form\FlagType::class,
+            'entry_type' => \App\Form\FlagType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -534,6 +607,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('geo', TextType::class, [
             'label' => 'Geo',
@@ -544,12 +618,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('holidays', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('holidays', CollectionType::class, [
             'label' => 'Holidays',
             'required' => false,
-            'entry_type' => App\Form\HolidayType::class,
+            'entry_type' => \App\Form\HolidayType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -562,6 +639,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('integrationConfig', TextareaType::class, [
             'label' => 'IntegrationConfig',
@@ -572,12 +650,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('leadSources', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('leadSources', CollectionType::class, [
             'label' => 'LeadSources',
             'required' => false,
-            'entry_type' => App\Form\LeadSourceType::class,
+            'entry_type' => \App\Form\LeadSourceType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -590,12 +671,12 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('modules', EntityType::class, [
             'label' => 'Modules',
             'required' => false,
-            'class' => Module::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Module::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -611,12 +692,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('notificationTypes', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('notificationTypes', CollectionType::class, [
             'label' => 'NotificationTypes',
             'required' => false,
-            'entry_type' => App\Form\NotificationTypeType::class,
+            'entry_type' => \App\Form\NotificationTypeType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -629,13 +713,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('pipelineStages', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('pipelineStages', CollectionType::class, [
             'label' => 'PipelineStages',
             'required' => false,
-            'entry_type' => App\Form\PipelineStageType::class,
+            'entry_type' => \App\Form\PipelineStageType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -648,13 +736,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('pipelines', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('pipelines', CollectionType::class, [
             'label' => 'Pipelines',
             'required' => false,
-            'entry_type' => App\Form\PipelineType::class,
+            'entry_type' => \App\Form\PipelineType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -667,6 +759,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('postalCode', TextType::class, [
             'label' => 'PostalCode',
@@ -677,12 +770,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('productBatches', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('productBatches', CollectionType::class, [
             'label' => 'ProductBatches',
             'required' => false,
-            'entry_type' => App\Form\ProductBatchType::class,
+            'entry_type' => \App\Form\ProductBatchType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -695,13 +791,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('productCategories', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('productCategories', CollectionType::class, [
             'label' => 'ProductCategories',
             'required' => false,
-            'entry_type' => App\Form\ProductCategoryType::class,
+            'entry_type' => \App\Form\ProductCategoryType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -714,13 +814,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('productLines', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('productLines', CollectionType::class, [
             'label' => 'ProductLines',
             'required' => false,
-            'entry_type' => App\Form\ProductLineType::class,
+            'entry_type' => \App\Form\ProductLineType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -733,13 +837,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('profiles', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('profiles', CollectionType::class, [
             'label' => 'Profiles',
             'required' => false,
-            'entry_type' => App\Form\ProfileType::class,
+            'entry_type' => \App\Form\ProfileType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -752,6 +860,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('securityConfig', TextareaType::class, [
             'label' => 'SecurityConfig',
@@ -771,12 +880,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('socialMedias', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('socialMedias', CollectionType::class, [
             'label' => 'SocialMedias',
             'required' => false,
-            'entry_type' => App\Form\SocialMediaType::class,
+            'entry_type' => \App\Form\SocialMediaType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -789,6 +901,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('status', IntegerType::class, [
             'label' => 'Status',
@@ -798,12 +911,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('tags', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('tags', CollectionType::class, [
             'label' => 'Tags',
             'required' => false,
-            'entry_type' => App\Form\TagType::class,
+            'entry_type' => \App\Form\TagType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -816,13 +932,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('talkMessages', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('talkMessages', CollectionType::class, [
             'label' => 'TalkMessages',
             'required' => false,
-            'entry_type' => App\Form\TalkMessageType::class,
+            'entry_type' => \App\Form\TalkMessageType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -835,13 +955,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('talkTypes', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('talkTypes', CollectionType::class, [
             'label' => 'TalkTypes',
             'required' => false,
-            'entry_type' => App\Form\TalkTypeType::class,
+            'entry_type' => \App\Form\TalkTypeType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -854,13 +978,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('talks', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('talks', CollectionType::class, [
             'label' => 'Talks',
             'required' => false,
-            'entry_type' => App\Form\TalkType::class,
+            'entry_type' => \App\Form\TalkType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -873,13 +1001,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('taskTypes', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('taskTypes', CollectionType::class, [
             'label' => 'TaskTypes',
             'required' => false,
-            'entry_type' => App\Form\TaskTypeType::class,
+            'entry_type' => \App\Form\TaskTypeType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -892,13 +1024,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('tasks', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('tasks', CollectionType::class, [
             'label' => 'Tasks',
             'required' => false,
-            'entry_type' => App\Form\TaskType::class,
+            'entry_type' => \App\Form\TaskType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -911,13 +1047,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('taxCategories', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('taxCategories', CollectionType::class, [
             'label' => 'TaxCategories',
             'required' => false,
-            'entry_type' => App\Form\TaxCategoryType::class,
+            'entry_type' => \App\Form\TaxCategoryType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -930,6 +1070,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('timeZone', TextType::class, [
             'label' => 'TimeZone',
@@ -949,12 +1090,15 @@ abstract class OrganizationTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('users', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('users', CollectionType::class, [
             'label' => 'Users',
             'required' => false,
-            'entry_type' => App\Form\UserType::class,
+            'entry_type' => \App\Form\UserType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -967,13 +1111,17 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('workingHours', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('workingHours', CollectionType::class, [
             'label' => 'WorkingHours',
             'required' => false,
-            'entry_type' => App\Form\WorkingHourType::class,
+            'entry_type' => \App\Form\WorkingHourType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -986,6 +1134,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
     }
 
@@ -993,6 +1142,7 @@ abstract class OrganizationTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Organization::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

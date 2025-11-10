@@ -164,7 +164,7 @@ class TreeFlowProcessor implements ProcessorInterface
      * Process steps collection
      *
      * @param TreeFlow $entity
-     * @param array $itemsData Array of StepInput or arrays with @id
+     * @param array $itemsData Array of Step items or arrays with @id
      * @param string $strategy 'create_only', 'update_only', or 'create_and_update'
      * @param bool $orphanRemoval Remove items not in input array
      */

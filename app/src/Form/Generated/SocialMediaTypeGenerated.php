@@ -10,6 +10,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Campaign;
+use App\Entity\Company;
+use App\Entity\Contact;
+use App\Entity\SocialMediaType;
+use App\Entity\User;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -50,39 +55,41 @@ abstract class SocialMediaTypeGenerated extends AbstractType
         $builder->add('campaigns', EntityType::class, [
             'label' => 'Campaigns',
             'required' => false,
-            'class' => Campaign::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Campaign::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('company', EntityType::class, [
             'label' => 'Company',
             'required' => false,
-            'class' => Company::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Company::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('contact', EntityType::class, [
             'label' => 'Contact',
             'required' => false,
-            'class' => Contact::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Contact::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('socialMediaType', EntityType::class, [
             'label' => 'SocialMediaType',
             'required' => false,
-            'class' => SocialMediaType::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\SocialMediaType::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -97,15 +104,17 @@ abstract class SocialMediaTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('user', EntityType::class, [
             'label' => 'User',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
     }
 
@@ -113,6 +122,7 @@ abstract class SocialMediaTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => SocialMedia::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

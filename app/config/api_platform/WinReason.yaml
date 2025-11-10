@@ -110,9 +110,6 @@ resources:
       color:
         description: "Hex color code for visual representation in charts and UI elements (e.g., #28a745 for green)"
         example: "#28a745"
-      tags:
-        description: "Array of tags for flexible categorization and filtering (e.g., [\"enterprise\", \"technical\", \"strategic\"])"
-        example: "[\"enterprise\", \"technical\", \"roi-focused\"]"
       active:
         description: "Whether this win reason is currently active and available for selection in deals"
         example: "true"
@@ -120,6 +117,9 @@ resources:
         filters:
           - type: OrderFilter
           - type: BooleanFilter
+      tags:
+        description: "Array of tags for flexible categorization and filtering (e.g., [\"enterprise\", \"technical\", \"strategic\"])"
+        example: "[\"enterprise\", \"technical\", \"roi-focused\"]"
       notes:
         description: "Internal notes for sales team about when and how to use this win reason effectively"
         example: "Use this reason when customer specifically mentions our analytics capabilities as decision factor. Common in enterprise deals where data-driven insights are critical."

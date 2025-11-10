@@ -34,7 +34,7 @@ final class EventResourceTypeController extends EventResourceTypeControllerGener
      * API endpoint for searching eventResourceTypes
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'eventresourcetype_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'eventresourcetype_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

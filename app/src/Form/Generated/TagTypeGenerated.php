@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use App\Entity\Deal;
+use App\Entity\Product;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -61,8 +63,7 @@ abstract class TagTypeGenerated extends AbstractType
         $builder->add('deals', EntityType::class, [
             'label' => 'Deals',
             'required' => false,
-            'class' => Deal::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Deal::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -72,8 +73,7 @@ abstract class TagTypeGenerated extends AbstractType
         $builder->add('products', EntityType::class, [
             'label' => 'Products',
             'required' => false,
-            'class' => Product::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Product::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -94,6 +94,7 @@ abstract class TagTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Tag::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

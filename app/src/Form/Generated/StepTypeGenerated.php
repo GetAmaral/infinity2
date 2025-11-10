@@ -8,11 +8,13 @@ use App\Entity\Step;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use App\Entity\TreeFlow;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -32,22 +34,24 @@ abstract class StepTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('treeFlow', EntityType::class, [
+            'label' => 'TreeFlow',
+            'required' => true,
+            'class' => \App\Entity\TreeFlow::class,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+        }
+
         $builder->add('name', TextType::class, [
             'label' => 'Name',
             'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter name',
-            ],
-        ]);
-
-        $builder->add('treeFlow', EntityType::class, [
-            'label' => 'TreeFlow',
-            'required' => true,
-            'class' => TreeFlow::class,
-            'choice_label' => '__toString',
-            'attr' => [
-                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -68,15 +72,6 @@ abstract class StepTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('prompt', TextareaType::class, [
-            'label' => 'Prompt',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter prompt',
-            ],
-        ]);
-
         $builder->add('viewOrder', IntegerType::class, [
             'label' => 'ViewOrder',
             'required' => true,
@@ -85,12 +80,36 @@ abstract class StepTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('incomingConnections', CollectionType::class, [
+            'label' => 'Incoming Connections',
+            'required' => false,
+            'entry_type' => \App\Form\StepConnectionType::class,
+            'entry_options' => [
+                'label' => false,
+                'exclude_parent' => true,
+            ],
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+            'constraints' => [
+                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
+            ],
+        ]);
+        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Step::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

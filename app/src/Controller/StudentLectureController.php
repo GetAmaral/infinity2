@@ -34,7 +34,7 @@ final class StudentLectureController extends StudentLectureControllerGenerated
      * API endpoint for searching studentLectures
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'studentlecture_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'studentlecture_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

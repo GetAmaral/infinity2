@@ -102,7 +102,7 @@ final class NavigationConfig extends NavigationConfigGenerated
         $adminItems = [
             'admin_section_divider' => [
                 'divider_before' => true,
-                'section_title' => 'nav.admin.section',
+                'section_title' => 'nav.section.admin',
                 'role' => 'ROLE_ADMIN',
             ],
             'admin_audit' => [

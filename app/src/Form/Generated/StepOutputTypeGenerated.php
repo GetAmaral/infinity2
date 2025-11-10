@@ -8,9 +8,10 @@ use App\Entity\StepOutput;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use App\Entity\Step;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -30,16 +31,6 @@ abstract class StepOutputTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('step', EntityType::class, [
-            'label' => 'Step',
-            'required' => true,
-            'class' => Step::class,
-            'choice_label' => '__toString',
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('name', TextType::class, [
             'label' => 'Name',
             'required' => true,
@@ -49,21 +40,24 @@ abstract class StepOutputTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('description', TextareaType::class, [
-            'label' => 'Description',
-            'required' => false,
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('step', EntityType::class, [
+            'label' => 'Step',
+            'required' => true,
+            'class' => \App\Entity\Step::class,
             'attr' => [
                 'class' => 'form-input-modern',
-                'placeholder' => 'Enter description',
             ],
         ]);
+        }
 
-        $builder->add('conditional', TextareaType::class, [
-            'label' => 'Conditional',
+        $builder->add('condition', TextareaType::class, [
+            'label' => 'Condition',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
-                'placeholder' => 'Enter conditional',
+                'placeholder' => 'Enter condition',
             ],
         ]);
 
@@ -73,6 +67,7 @@ abstract class StepOutputTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => StepOutput::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

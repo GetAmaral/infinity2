@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Profile;
 use App\Repository\ProfileRepository;
 use App\Security\Voter\ProfileVoter;
-use App\Form\ProfileFormType;
+use App\Form\ProfileType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,14 +86,20 @@ abstract class ProfileControllerGenerated extends BaseApiController
             ] : null,
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
-            'grantedRoles' => ($grantedRolesRel = $entity->getGrantedRoles()) ? [
-                'id' => $grantedRolesRel->getId()->toString(),
-                'display' => (string) $grantedRolesRel,
-            ] : null,
-            'users' => ($usersRel = $entity->getUsers()) ? [
-                'id' => $usersRel->getId()->toString(),
-                'display' => (string) $usersRel,
-            ] : null,
+            'grantedRoles' => ($grantedRolesRel = $entity->getGrantedRoles()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $grantedRolesRel->toArray()
+            ) : [],
+            'users' => ($usersRel = $entity->getUsers()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $usersRel->toArray()
+            ) : [],
         ];
     }
 
@@ -123,9 +129,16 @@ abstract class ProfileControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => ProfileVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"grantedRoles","label":"GrantedRoles","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGrantedRoles","isRelationship":true},{"name":"users","label":"Users","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsers","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"grantedRoles","label":"GrantedRoles"},{"name":"users","label":"Users"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"grantedRoles","label":"GrantedRoles","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGrantedRoles"},{"name":"users","label":"Users","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsers"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"grantedRoles","label":"GrantedRoles","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGrantedRoles","isRelationship":true},{"name":"users","label":"Users","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsers","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"grantedRoles","label":"GrantedRoles"},{"name":"users","label":"Users"}]',
@@ -143,9 +156,9 @@ abstract class ProfileControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProfileVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -164,7 +177,7 @@ abstract class ProfileControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($profile);
 
-        $form = $this->createForm(ProfileFormType::class, $profile);
+        $form = $this->createForm(ProfileType::class, $profile);
 
         return $this->render('profile/_form_modal.html.twig', [
             'form' => $form,
@@ -189,7 +202,7 @@ abstract class ProfileControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($profile);
 
-        $form = $this->createForm(ProfileFormType::class, $profile);
+        $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -239,7 +252,7 @@ abstract class ProfileControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProfileVoter::EDIT, $profile);
 
-        $form = $this->createForm(ProfileFormType::class, $profile);
+        $form = $this->createForm(ProfileType::class, $profile);
 
         return $this->render('profile/_form_modal.html.twig', [
             'form' => $form,
@@ -259,7 +272,7 @@ abstract class ProfileControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProfileVoter::EDIT, $profile);
 
-        $form = $this->createForm(ProfileFormType::class, $profile);
+        $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -34,7 +34,7 @@ final class CalendarExternalLinkController extends CalendarExternalLinkControlle
      * API endpoint for searching calendarExternalLinks
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'calendarexternallink_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'calendarexternallink_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

@@ -16,9 +16,15 @@ use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use App\Entity\User;
+use App\Entity\City;
+use App\Entity\Campaign;
+use App\Entity\Company;
+use App\Entity\Deal;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -38,21 +44,21 @@ abstract class ContactTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('firstName', TextType::class, [
-            'label' => 'First Name',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter first name',
-            ],
-        ]);
-
         $builder->add('name', TextType::class, [
             'label' => 'Name',
             'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter name',
+            ],
+        ]);
+
+        $builder->add('firstName', TextType::class, [
+            'label' => 'First Name',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter first name',
             ],
         ]);
 
@@ -65,15 +71,17 @@ abstract class ContactTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('accountManager', EntityType::class, [
             'label' => 'AccountManager',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('website', UrlType::class, [
             'label' => 'Website',
@@ -86,8 +94,7 @@ abstract class ContactTypeGenerated extends AbstractType
         $builder->add('accountTeam', EntityType::class, [
             'label' => 'AccountTeam',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -115,8 +122,7 @@ abstract class ContactTypeGenerated extends AbstractType
         $builder->add('billingCity', EntityType::class, [
             'label' => 'BillingCity',
             'required' => false,
-            'class' => City::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\City::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -133,8 +139,7 @@ abstract class ContactTypeGenerated extends AbstractType
         $builder->add('campaigns', EntityType::class, [
             'label' => 'Campaigns',
             'required' => false,
-            'class' => Campaign::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Campaign::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -144,33 +149,23 @@ abstract class ContactTypeGenerated extends AbstractType
         $builder->add('city', EntityType::class, [
             'label' => 'City',
             'required' => false,
-            'class' => City::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\City::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('company', EntityType::class, [
             'label' => 'Company',
             'required' => true,
-            'class' => Company::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Company::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
-
-        $builder->add('deals', EntityType::class, [
-            'label' => 'Deals',
-            'required' => false,
-            'class' => Deal::class,
-            'choice_label' => '__toString',
-            'multiple' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
+        }
 
         $builder->add('mobilePhone', TelType::class, [
             'label' => 'Mobile Phone',
@@ -180,9 +175,11 @@ abstract class ContactTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('linkedinUrl', UrlType::class, [
-            'label' => 'LinkedIn URL',
+        $builder->add('deals', EntityType::class, [
+            'label' => 'Deals',
             'required' => false,
+            'class' => \App\Entity\Deal::class,
+            'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -197,6 +194,22 @@ abstract class ContactTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('linkedinUrl', UrlType::class, [
+            'label' => 'LinkedIn URL',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('emailOptOut', CheckboxType::class, [
+            'label' => 'Email Opt-Out',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
         $builder->add('department', TextType::class, [
             'label' => 'Department',
             'required' => false,
@@ -206,8 +219,8 @@ abstract class ContactTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('emailOptOut', CheckboxType::class, [
-            'label' => 'Email Opt-Out',
+        $builder->add('doNotCall', CheckboxType::class, [
+            'label' => 'Do Not Call',
             'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -220,14 +233,6 @@ abstract class ContactTypeGenerated extends AbstractType
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter lead source',
-            ],
-        ]);
-
-        $builder->add('doNotCall', CheckboxType::class, [
-            'label' => 'Do Not Call',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -256,12 +261,15 @@ abstract class ContactTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('eventAttendances', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('eventAttendances', CollectionType::class, [
             'label' => 'EventAttendances',
             'required' => false,
-            'entry_type' => App\Form\EventAttendeeType::class,
+            'entry_type' => \App\Form\EventAttendeeType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -274,6 +282,7 @@ abstract class ContactTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('firstTalkDate', DateTimeType::class, [
             'label' => 'FirstTalkDate',
@@ -361,12 +370,15 @@ abstract class ContactTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('primaryDeals', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('primaryDeals', CollectionType::class, [
             'label' => 'PrimaryDeals',
             'required' => false,
-            'entry_type' => App\Form\DealType::class,
+            'entry_type' => \App\Form\DealType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -379,6 +391,7 @@ abstract class ContactTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('profilePictureUrl', TextType::class, [
             'label' => 'ProfilePictureUrl',
@@ -405,12 +418,15 @@ abstract class ContactTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('socialMedias', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('socialMedias', CollectionType::class, [
             'label' => 'SocialMedias',
             'required' => false,
-            'entry_type' => App\Form\SocialMediaType::class,
+            'entry_type' => \App\Form\SocialMediaType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -423,6 +439,7 @@ abstract class ContactTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('status', IntegerType::class, [
             'label' => 'Status',
@@ -432,12 +449,15 @@ abstract class ContactTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('talks', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('talks', CollectionType::class, [
             'label' => 'Talks',
             'required' => false,
-            'entry_type' => App\Form\TalkType::class,
+            'entry_type' => \App\Form\TalkType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -450,13 +470,17 @@ abstract class ContactTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('tasks', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('tasks', CollectionType::class, [
             'label' => 'Tasks',
             'required' => false,
-            'entry_type' => App\Form\TaskType::class,
+            'entry_type' => \App\Form\TaskType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -469,6 +493,7 @@ abstract class ContactTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
     }
 
@@ -476,6 +501,7 @@ abstract class ContactTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Contact::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

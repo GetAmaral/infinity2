@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\NotificationTypeTemplate;
 use App\Repository\NotificationTypeTemplateRepository;
 use App\Security\Voter\NotificationTypeTemplateVoter;
-use App\Form\NotificationTypeTemplateFormType;
+use App\Form\NotificationTypeTemplateType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,7 +101,7 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
 
         return $this->render('notificationtypetemplate/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'notificationTypeTemplate',
+            'entity_name' => 'notificationtypetemplate',
             'entity_name_plural' => 'notificationTypeTemplates',
             'page_icon' => 'bi-bell-slash',
             'default_view' => $savedView,
@@ -111,9 +111,16 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => NotificationTypeTemplateVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"}]',
@@ -131,9 +138,9 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
     {
         $this->denyAccessUnlessGranted(NotificationTypeTemplateVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -152,7 +159,7 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
         // Initialize with custom logic if needed
         $this->initializeNewEntity($notificationTypeTemplate);
 
-        $form = $this->createForm(NotificationTypeTemplateFormType::class, $notificationTypeTemplate);
+        $form = $this->createForm(NotificationTypeTemplateType::class, $notificationTypeTemplate);
 
         return $this->render('notificationtypetemplate/_form_modal.html.twig', [
             'form' => $form,
@@ -177,7 +184,7 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
         // Initialize with custom logic if needed
         $this->initializeNewEntity($notificationTypeTemplate);
 
-        $form = $this->createForm(NotificationTypeTemplateFormType::class, $notificationTypeTemplate);
+        $form = $this->createForm(NotificationTypeTemplateType::class, $notificationTypeTemplate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -227,7 +234,7 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
     {
         $this->denyAccessUnlessGranted(NotificationTypeTemplateVoter::EDIT, $notificationTypeTemplate);
 
-        $form = $this->createForm(NotificationTypeTemplateFormType::class, $notificationTypeTemplate);
+        $form = $this->createForm(NotificationTypeTemplateType::class, $notificationTypeTemplate);
 
         return $this->render('notificationtypetemplate/_form_modal.html.twig', [
             'form' => $form,
@@ -247,7 +254,7 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
     {
         $this->denyAccessUnlessGranted(NotificationTypeTemplateVoter::EDIT, $notificationTypeTemplate);
 
-        $form = $this->createForm(NotificationTypeTemplateFormType::class, $notificationTypeTemplate);
+        $form = $this->createForm(NotificationTypeTemplateType::class, $notificationTypeTemplate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

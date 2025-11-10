@@ -16,13 +16,13 @@ use App\Entity\Calendar;
 use App\Entity\Campaign;
 use App\Entity\Contact;
 use App\Entity\Deal;
-use App\Entity\CalendarExternalLink;
 use App\Entity\Role;
+use App\Entity\CalendarExternalLink;
 use App\Entity\EventResourceBooking;
 use App\Entity\EventAttendee;
 use App\Entity\Company;
-use App\Entity\Event;
 use App\Entity\User;
+use App\Entity\Event;
 use App\Entity\Course;
 use App\Entity\Profile;
 use App\Entity\SocialMedia;
@@ -95,13 +95,9 @@ abstract class UserGenerated extends EntityBase
     #[Assert\Length(max: 255)]
     protected string $email;
 
-    #[Groups(['user:read'])]
-    #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'owner', fetch: 'LAZY')]
-    protected Collection $ownedDeals;
-
-    #[Groups(['user:read'])]
-    #[ORM\OneToMany(targetEntity: CalendarExternalLink::class, mappedBy: 'user', fetch: 'LAZY')]
-    protected Collection $calendarExternalLinks;
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $emailVerifiedAt = null;
 
     #[Groups(['user:read'])]
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users', fetch: 'LAZY')]
@@ -109,12 +105,16 @@ abstract class UserGenerated extends EntityBase
     protected Collection $grantedRoles;
 
     #[Groups(['user:read'])]
+    #[ORM\OneToMany(targetEntity: CalendarExternalLink::class, mappedBy: 'user', fetch: 'LAZY')]
+    protected Collection $calendarExternalLinks;
+
+    #[Groups(['user:read'])]
     #[ORM\OneToMany(targetEntity: EventResourceBooking::class, mappedBy: 'bookedBy', fetch: 'LAZY')]
     protected Collection $resourceBookings;
 
-    #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?\DateTimeImmutable $emailVerifiedAt = null;
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'owner', fetch: 'LAZY')]
+    protected Collection $ownedDeals;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'user', fetch: 'LAZY')]
@@ -137,12 +137,12 @@ abstract class UserGenerated extends EntityBase
     protected ?string $verificationToken = null;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'integer')]
-    protected int $failedLoginAttempts = 0;
-
-    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $apiToken = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'integer')]
+    protected int $failedLoginAttempts = 0;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
@@ -152,13 +152,13 @@ abstract class UserGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $openAiApiKey = null;
 
-    #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $gender = null;
-
     #[Groups(['user:read', 'audit:read'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastLoginAt = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $gender = null;
 
     #[Groups(['audit:read'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
@@ -301,12 +301,12 @@ abstract class UserGenerated extends EntityBase
     protected ?string $dateFormat = 'Y-m-d';
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer', fetch: 'LAZY')]
-    protected Collection $organizedEvents;
-
-    #[Groups(['user:read', 'user:write'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $manager = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer', fetch: 'LAZY')]
+    protected Collection $organizedEvents;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
@@ -328,26 +328,26 @@ abstract class UserGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $agentType = null;
 
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'owner', fetch: 'LAZY')]
+    protected Collection $ownedCourses;
+
     #[Groups(['audit:read'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $deletedAt = null;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'owner', fetch: 'LAZY')]
-    protected Collection $ownedCourses;
-
-    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $avatar = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $title = null;
 
     #[Groups(['user:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $password;
-
-    #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    protected ?string $title = null;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
@@ -406,12 +406,12 @@ abstract class UserGenerated extends EntityBase
     protected ?string $twitterHandle = null;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $address = null;
-
-    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $profilePictureUrl = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $address = null;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
@@ -438,12 +438,12 @@ abstract class UserGenerated extends EntityBase
     protected ?string $officeLocation = null;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\ManyToMany(targetEntity: Profile::class, mappedBy: 'users', fetch: 'LAZY')]
-    protected Collection $profiles;
-
-    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $employeeId = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\ManyToMany(targetEntity: Profile::class, mappedBy: 'users', fetch: 'LAZY')]
+    protected Collection $profiles;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'date_immutable', nullable: true)]
@@ -505,13 +505,13 @@ abstract class UserGenerated extends EntityBase
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $tags = null;
 
-    #[Groups(['user:read', 'user:write'])]
-    #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'student', fetch: 'LAZY')]
-    protected Collection $studentCourses;
-
     #[Groups(['user:read'])]
     #[ORM\Column(type: 'integer')]
     protected int $loginCount = 0;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'student', fetch: 'LAZY')]
+    protected Collection $studentCourses;
 
     #[Groups(['user:read', 'audit:read'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -546,12 +546,12 @@ abstract class UserGenerated extends EntityBase
     protected ?string $statusMessage = null;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'boolean')]
-    protected bool $locked = false;
-
-    #[Groups(['user:read', 'user:write'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user', fetch: 'LAZY')]
     protected Collection $tasks;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $locked = false;
 
     #[Groups(['audit:read'])]
     #[ORM\Column(type: 'text', nullable: true)]
@@ -578,10 +578,10 @@ abstract class UserGenerated extends EntityBase
         $this->campaigns = new ArrayCollection();
         $this->contacts = new ArrayCollection();
         $this->deals = new ArrayCollection();
-        $this->ownedDeals = new ArrayCollection();
-        $this->calendarExternalLinks = new ArrayCollection();
         $this->grantedRoles = new ArrayCollection();
+        $this->calendarExternalLinks = new ArrayCollection();
         $this->resourceBookings = new ArrayCollection();
+        $this->ownedDeals = new ArrayCollection();
         $this->eventAttendances = new ArrayCollection();
         $this->managedCampaigns = new ArrayCollection();
         $this->ownedCampaigns = new ArrayCollection();
@@ -809,29 +809,35 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    /**
-     * @return Collection<int, Deal>
-     */
-    public function getOwnedDeals(): Collection
-    {
-        return $this->ownedDeals;
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
+        return $this->emailVerifiedAt;
     }
 
-    public function addOwnedDeal(Deal $ownedDeal): self
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
     {
-        if (!$this->ownedDeals->contains($ownedDeal)) {
-            $this->ownedDeals->add($ownedDeal);
-            $ownedDeal->setOwner($this);
+        $this->emailVerifiedAt = $emailVerifiedAt;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Role>
+     */
+    public function getGrantedRoles(): Collection
+    {
+        return $this->grantedRoles;
+    }
+
+    public function addGrantedRole(Role $grantedRole): self
+    {
+        if (!$this->grantedRoles->contains($grantedRole)) {
+            $this->grantedRoles->add($grantedRole);
         }
         return $this;
     }
 
-    public function removeOwnedDeal(Deal $ownedDeal): self
+    public function removeGrantedRole(Role $grantedRole): self
     {
-        if ($this->ownedDeals->removeElement($ownedDeal)) {
-            if ($ownedDeal->getOwner() === $this) {
-                $ownedDeal->setOwner(null);
-            }
+        if ($this->grantedRoles->removeElement($grantedRole)) {
         }
         return $this;
     }
@@ -864,29 +870,6 @@ abstract class UserGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, Role>
-     */
-    public function getGrantedRoles(): Collection
-    {
-        return $this->grantedRoles;
-    }
-
-    public function addGrantedRole(Role $grantedRole): self
-    {
-        if (!$this->grantedRoles->contains($grantedRole)) {
-            $this->grantedRoles->add($grantedRole);
-        }
-        return $this;
-    }
-
-    public function removeGrantedRole(Role $grantedRole): self
-    {
-        if ($this->grantedRoles->removeElement($grantedRole)) {
-        }
-        return $this;
-    }
-
-    /**
      * @return Collection<int, EventResourceBooking>
      */
     public function getResourceBookings(): Collection
@@ -913,13 +896,30 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
-        return $this->emailVerifiedAt;
+    /**
+     * @return Collection<int, Deal>
+     */
+    public function getOwnedDeals(): Collection
+    {
+        return $this->ownedDeals;
     }
 
-    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
+    public function addOwnedDeal(Deal $ownedDeal): self
     {
-        $this->emailVerifiedAt = $emailVerifiedAt;
+        if (!$this->ownedDeals->contains($ownedDeal)) {
+            $this->ownedDeals->add($ownedDeal);
+            $ownedDeal->setOwner($this);
+        }
+        return $this;
+    }
+
+    public function removeOwnedDeal(Deal $ownedDeal): self
+    {
+        if ($this->ownedDeals->removeElement($ownedDeal)) {
+            if ($ownedDeal->getOwner() === $this) {
+                $ownedDeal->setOwner(null);
+            }
+        }
         return $this;
     }
 
@@ -1000,16 +1000,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getFailedLoginAttempts(): int    {
-        return $this->failedLoginAttempts;
-    }
-
-    public function setFailedLoginAttempts(int $failedLoginAttempts): self
-    {
-        $this->failedLoginAttempts = $failedLoginAttempts;
-        return $this;
-    }
-
     public function getApiToken(): ?string    {
         return $this->apiToken;
     }
@@ -1017,6 +1007,16 @@ abstract class UserGenerated extends EntityBase
     public function setApiToken(?string $apiToken): self
     {
         $this->apiToken = $apiToken;
+        return $this;
+    }
+
+    public function getFailedLoginAttempts(): int    {
+        return $this->failedLoginAttempts;
+    }
+
+    public function setFailedLoginAttempts(int $failedLoginAttempts): self
+    {
+        $this->failedLoginAttempts = $failedLoginAttempts;
         return $this;
     }
 
@@ -1040,16 +1040,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getGender(): ?int    {
-        return $this->gender;
-    }
-
-    public function setGender(?int $gender): self
-    {
-        $this->gender = $gender;
-        return $this;
-    }
-
     public function getLastLoginAt(): ?\DateTimeImmutable    {
         return $this->lastLoginAt;
     }
@@ -1057,6 +1047,16 @@ abstract class UserGenerated extends EntityBase
     public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
     {
         $this->lastLoginAt = $lastLoginAt;
+        return $this;
+    }
+
+    public function getGender(): ?int    {
+        return $this->gender;
+    }
+
+    public function setGender(?int $gender): self
+    {
+        $this->gender = $gender;
         return $this;
     }
 
@@ -1525,6 +1525,17 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getManager(): ?User
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?User $manager): self
+    {
+        $this->manager = $manager;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Event>
      */
@@ -1549,17 +1560,6 @@ abstract class UserGenerated extends EntityBase
                 $organizedEvent->setOrganizer(null);
             }
         }
-        return $this;
-    }
-
-    public function getManager(): ?User
-    {
-        return $this->manager;
-    }
-
-    public function setManager(?User $manager): self
-    {
-        $this->manager = $manager;
         return $this;
     }
 
@@ -1618,16 +1618,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Course>
      */
@@ -1655,6 +1645,16 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getDeletedAt(): ?\DateTimeImmutable    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+        return $this;
+    }
+
     public function getAvatar(): ?string    {
         return $this->avatar;
     }
@@ -1665,16 +1665,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getPassword(): string    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-        return $this;
-    }
-
     public function getTitle(): ?string    {
         return $this->title;
     }
@@ -1682,6 +1672,16 @@ abstract class UserGenerated extends EntityBase
     public function setTitle(?string $title): self
     {
         $this->title = $title;
+        return $this;
+    }
+
+    public function getPassword(): string    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
         return $this;
     }
 
@@ -1825,16 +1825,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getAddress(): ?string    {
-        return $this->address;
-    }
-
-    public function setAddress(?string $address): self
-    {
-        $this->address = $address;
-        return $this;
-    }
-
     public function getProfilePictureUrl(): ?string    {
         return $this->profilePictureUrl;
     }
@@ -1842,6 +1832,16 @@ abstract class UserGenerated extends EntityBase
     public function setProfilePictureUrl(?string $profilePictureUrl): self
     {
         $this->profilePictureUrl = $profilePictureUrl;
+        return $this;
+    }
+
+    public function getAddress(): ?string    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
         return $this;
     }
 
@@ -1905,6 +1905,16 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getEmployeeId(): ?string    {
+        return $this->employeeId;
+    }
+
+    public function setEmployeeId(?string $employeeId): self
+    {
+        $this->employeeId = $employeeId;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Profile>
      */
@@ -1929,16 +1939,6 @@ abstract class UserGenerated extends EntityBase
                 $profile->setUsers(null);
             }
         }
-        return $this;
-    }
-
-    public function getEmployeeId(): ?string    {
-        return $this->employeeId;
-    }
-
-    public function setEmployeeId(?string $employeeId): self
-    {
-        $this->employeeId = $employeeId;
         return $this;
     }
 
@@ -2109,6 +2109,16 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getLoginCount(): int    {
+        return $this->loginCount;
+    }
+
+    public function setLoginCount(int $loginCount): self
+    {
+        $this->loginCount = $loginCount;
+        return $this;
+    }
+
     /**
      * @return Collection<int, StudentCourse>
      */
@@ -2133,16 +2143,6 @@ abstract class UserGenerated extends EntityBase
                 $studentCours->setStudent(null);
             }
         }
-        return $this;
-    }
-
-    public function getLoginCount(): int    {
-        return $this->loginCount;
-    }
-
-    public function setLoginCount(int $loginCount): self
-    {
-        $this->loginCount = $loginCount;
         return $this;
     }
 
@@ -2248,21 +2248,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getLocked(): bool    {
-        return $this->locked;
-    }
-
-    public function setLocked(bool $locked): self
-    {
-        $this->locked = $locked;
-        return $this;
-    }
-
-    public function isLocked(): bool
-    {
-        return $this->locked === true;
-    }
-
     /**
      * @return Collection<int, Task>
      */
@@ -2288,6 +2273,21 @@ abstract class UserGenerated extends EntityBase
             }
         }
         return $this;
+    }
+
+    public function getLocked(): bool    {
+        return $this->locked;
+    }
+
+    public function setLocked(bool $locked): self
+    {
+        $this->locked = $locked;
+        return $this;
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->locked === true;
     }
 
     public function getLockedReason(): ?string    {

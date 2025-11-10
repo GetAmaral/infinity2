@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
@@ -52,21 +52,15 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('icon', TextType::class, [
-            'label' => 'Icon',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter icon',
-            ],
-        ]);
-
-        $builder->add('notifications', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('notifications', CollectionType::class, [
             'label' => 'Notifications',
             'required' => false,
-            'entry_type' => App\Form\NotificationType::class,
+            'entry_type' => \App\Form\NotificationType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -77,6 +71,16 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
             ],
             'constraints' => [
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
+            ],
+        ]);
+        }
+
+        $builder->add('icon', TextType::class, [
+            'label' => 'Icon',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter icon',
             ],
         ]);
 
@@ -107,8 +111,6 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
         $builder->add('priority', ChoiceType::class, [
             'label' => 'Priority',
             'required' => true,
-            'class' => App\Enum\PriorityEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -170,8 +172,6 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
         $builder->add('frequency', ChoiceType::class, [
             'label' => 'Frequency',
             'required' => true,
-            'class' => App\Enum\FrequencyEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -256,6 +256,7 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => NotificationType::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

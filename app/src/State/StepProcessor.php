@@ -14,9 +14,9 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\TreeFlow;
-use App\Entity\StepIteration;
+use App\Entity\StepAction;
 use App\Entity\StepOutput;
-use App\Entity\StepInput;
+use App\Entity\StepConnection;
 
 /**
  * Step State Processor
@@ -101,10 +101,6 @@ class StepProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('objective', $requestData)) {
             $entity->setObjective($data->objective);
         }
-        // prompt
-        if (!$isPatch || array_key_exists('prompt', $requestData)) {
-            $entity->setPrompt($data->prompt);
-        }
         // viewOrder
         if (!$isPatch || array_key_exists('viewOrder', $requestData)) {
             $entity->setViewOrder($data->viewOrder);
@@ -139,11 +135,11 @@ class StepProcessor implements ProcessorInterface
             }
         }
 
-        // questions: OneToMany with nested DTO support
-        if (!empty($data->questions)) {
-            $this->processQuestionsCollection(
+        // actions: OneToMany with nested DTO support
+        if (!empty($data->actions)) {
+            $this->processActionsCollection(
                 $entity,
-                $data->questions,
+                $data->actions,
                 'create_and_update'
             );
         }
@@ -153,15 +149,6 @@ class StepProcessor implements ProcessorInterface
             $this->processOutputsCollection(
                 $entity,
                 $data->outputs,
-                'create_and_update'
-            );
-        }
-
-        // inputs: OneToMany with nested DTO support
-        if (!empty($data->inputs)) {
-            $this->processInputsCollection(
-                $entity,
-                $data->inputs,
                 'create_and_update'
             );
         }
@@ -186,20 +173,20 @@ class StepProcessor implements ProcessorInterface
     }
 
     /**
-     * Process questions collection
+     * Process actions collection
      *
      * @param Step $entity
-     * @param array $itemsData Array of StepIterationInput or arrays with @id
+     * @param array $itemsData Array of StepActionInput or arrays with @id
      * @param string $strategy 'create_only', 'update_only', or 'create_and_update'
      * @param bool $orphanRemoval Remove items not in input array
      */
-    private function processQuestionsCollection(
+    private function processActionsCollection(
         Step $entity,
         array $itemsData,
         string $strategy = 'create_and_update',
         bool $orphanRemoval = false
     ): void {
-        $existingItems = $entity->getQuestions()->toArray();
+        $existingItems = $entity->getActions()->toArray();
         $processedIds = [];
 
         foreach ($itemsData as $itemData) {
@@ -209,16 +196,16 @@ class StepProcessor implements ProcessorInterface
             if ($itemId) {
                 // UPDATE existing item
                 if ($strategy === 'create_only') {
-                    throw new BadRequestHttpException('Cannot update questions: create_only strategy');
+                    throw new BadRequestHttpException('Cannot update actions: create_only strategy');
                 }
 
                 if (is_string($itemId)) {
                     $itemId = $this->extractIdFromIri($itemId);
                 }
 
-                $item = $this->entityManager->getRepository(StepIteration::class)->find($itemId);
+                $item = $this->entityManager->getRepository(StepAction::class)->find($itemId);
                 if (!$item) {
-                    throw new BadRequestHttpException('StepIteration not found: ' . $itemId);
+                    throw new BadRequestHttpException('StepAction not found: ' . $itemId);
                 }
 
                 // Update item properties from DTO array
@@ -228,10 +215,10 @@ class StepProcessor implements ProcessorInterface
             } else {
                 // CREATE new item
                 if ($strategy === 'update_only') {
-                    throw new BadRequestHttpException('Cannot create questions: update_only strategy');
+                    throw new BadRequestHttpException('Cannot create actions: update_only strategy');
                 }
 
-                $item = new StepIteration();
+                $item = new StepAction();
 
                 // Set properties from DTO array
                 $this->mapArrayToEntity($itemData, $item);
@@ -239,7 +226,7 @@ class StepProcessor implements ProcessorInterface
                 // Set parent relationship (step)
                 $item->setStep($entity);
 
-                $entity->addQuestion($item);
+                $entity->addAction($item);
                 $this->entityManager->persist($item);
             }
         }
@@ -248,7 +235,7 @@ class StepProcessor implements ProcessorInterface
         if ($orphanRemoval) {
             foreach ($existingItems as $existingItem) {
                 if (!in_array($existingItem->getId()->toString(), $processedIds, true)) {
-                    $entity->removeQuestion($existingItem);
+                    $entity->removeAction($existingItem);
                     $this->entityManager->remove($existingItem);
                 }
             }
@@ -319,76 +306,6 @@ class StepProcessor implements ProcessorInterface
             foreach ($existingItems as $existingItem) {
                 if (!in_array($existingItem->getId()->toString(), $processedIds, true)) {
                     $entity->removeOutput($existingItem);
-                    $this->entityManager->remove($existingItem);
-                }
-            }
-        }
-    }
-
-    /**
-     * Process inputs collection
-     *
-     * @param Step $entity
-     * @param array $itemsData Array of StepInputInput or arrays with @id
-     * @param string $strategy 'create_only', 'update_only', or 'create_and_update'
-     * @param bool $orphanRemoval Remove items not in input array
-     */
-    private function processInputsCollection(
-        Step $entity,
-        array $itemsData,
-        string $strategy = 'create_and_update',
-        bool $orphanRemoval = false
-    ): void {
-        $existingItems = $entity->getInputs()->toArray();
-        $processedIds = [];
-
-        foreach ($itemsData as $itemData) {
-            // Check if this is an update (has @id) or create (no @id)
-            $itemId = $itemData['@id'] ?? $itemData['id'] ?? null;
-
-            if ($itemId) {
-                // UPDATE existing item
-                if ($strategy === 'create_only') {
-                    throw new BadRequestHttpException('Cannot update inputs: create_only strategy');
-                }
-
-                if (is_string($itemId)) {
-                    $itemId = $this->extractIdFromIri($itemId);
-                }
-
-                $item = $this->entityManager->getRepository(StepInput::class)->find($itemId);
-                if (!$item) {
-                    throw new BadRequestHttpException('StepInput not found: ' . $itemId);
-                }
-
-                // Update item properties from DTO array
-                $this->mapArrayToEntity($itemData, $item);
-
-                $processedIds[] = $item->getId()->toString();
-            } else {
-                // CREATE new item
-                if ($strategy === 'update_only') {
-                    throw new BadRequestHttpException('Cannot create inputs: update_only strategy');
-                }
-
-                $item = new StepInput();
-
-                // Set properties from DTO array
-                $this->mapArrayToEntity($itemData, $item);
-
-                // Set parent relationship (step)
-                $item->setStep($entity);
-
-                $entity->addInput($item);
-                $this->entityManager->persist($item);
-            }
-        }
-
-        // Handle orphan removal
-        if ($orphanRemoval) {
-            foreach ($existingItems as $existingItem) {
-                if (!in_array($existingItem->getId()->toString(), $processedIds, true)) {
-                    $entity->removeInput($existingItem);
                     $this->entityManager->remove($existingItem);
                 }
             }

@@ -34,7 +34,7 @@ final class TimeZoneController extends TimeZoneControllerGenerated
      * API endpoint for searching timeZones
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'timezone_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'timezone_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

@@ -47,10 +47,10 @@ abstract class DealTypeInputDtoGenerated
     public bool $default = false;
 
     #[Groups(['dealtype:write'])]
-    public int $sortOrder = 0;
+    public bool $active = true;
 
     #[Groups(['dealtype:write'])]
-    public bool $active = true;
+    public int $sortOrder = 0;
 
     #[Groups(['dealtype:write'])]
     public ?int $expectedDuration = null;
@@ -101,16 +101,6 @@ abstract class DealTypeInputDtoGenerated
         return $this;
     }
 
-    public function getDeals(): ?string    {
-        return $this->deals;
-    }
-
-    public function setDeals(?string $deals): self
-    {
-        $this->deals = $deals;
-        return $this;
-    }
-
     public function getColor(): string    {
         return $this->color;
     }
@@ -118,6 +108,16 @@ abstract class DealTypeInputDtoGenerated
     public function setColor(string $color): self
     {
         $this->color = $color;
+        return $this;
+    }
+
+    public function getDeals(): ?string    {
+        return $this->deals;
+    }
+
+    public function setDeals(?string $deals): self
+    {
+        $this->deals = $deals;
         return $this;
     }
 
@@ -141,16 +141,6 @@ abstract class DealTypeInputDtoGenerated
         return $this;
     }
 
-    public function getSortOrder(): int    {
-        return $this->sortOrder;
-    }
-
-    public function setSortOrder(int $sortOrder): self
-    {
-        $this->sortOrder = $sortOrder;
-        return $this;
-    }
-
     public function getActive(): bool    {
         return $this->active;
     }
@@ -158,6 +148,16 @@ abstract class DealTypeInputDtoGenerated
     public function setActive(bool $active): self
     {
         $this->active = $active;
+        return $this;
+    }
+
+    public function getSortOrder(): int    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(int $sortOrder): self
+    {
+        $this->sortOrder = $sortOrder;
         return $this;
     }
 

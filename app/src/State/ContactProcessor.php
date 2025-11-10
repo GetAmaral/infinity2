@@ -91,13 +91,13 @@ class ContactProcessor implements ProcessorInterface
         $requestData = $context['request']->toArray() ?? [];
 
         // Map scalar properties from DTO to Entity
-        // firstName
-        if (!$isPatch || array_key_exists('firstName', $requestData)) {
-            $entity->setFirstName($data->firstName);
-        }
         // name
         if (!$isPatch || array_key_exists('name', $requestData)) {
             $entity->setName($data->name);
+        }
+        // firstName
+        if (!$isPatch || array_key_exists('firstName', $requestData)) {
+            $entity->setFirstName($data->firstName);
         }
         // lastName
         if (!$isPatch || array_key_exists('lastName', $requestData)) {
@@ -123,29 +123,29 @@ class ContactProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('mobilePhone', $requestData)) {
             $entity->setMobilePhone($data->mobilePhone);
         }
-        // linkedinUrl
-        if (!$isPatch || array_key_exists('linkedinUrl', $requestData)) {
-            $entity->setLinkedinUrl($data->linkedinUrl);
-        }
         // title
         if (!$isPatch || array_key_exists('title', $requestData)) {
             $entity->setTitle($data->title);
         }
-        // department
-        if (!$isPatch || array_key_exists('department', $requestData)) {
-            $entity->setDepartment($data->department);
+        // linkedinUrl
+        if (!$isPatch || array_key_exists('linkedinUrl', $requestData)) {
+            $entity->setLinkedinUrl($data->linkedinUrl);
         }
         // emailOptOut
         if (!$isPatch || array_key_exists('emailOptOut', $requestData)) {
             $entity->setEmailOptOut($data->emailOptOut);
         }
-        // leadSource
-        if (!$isPatch || array_key_exists('leadSource', $requestData)) {
-            $entity->setLeadSource($data->leadSource);
+        // department
+        if (!$isPatch || array_key_exists('department', $requestData)) {
+            $entity->setDepartment($data->department);
         }
         // doNotCall
         if (!$isPatch || array_key_exists('doNotCall', $requestData)) {
             $entity->setDoNotCall($data->doNotCall);
+        }
+        // leadSource
+        if (!$isPatch || array_key_exists('leadSource', $requestData)) {
+            $entity->setLeadSource($data->leadSource);
         }
         // preferredContactMethod
         if (!$isPatch || array_key_exists('preferredContactMethod', $requestData)) {

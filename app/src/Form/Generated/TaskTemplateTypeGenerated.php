@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\PipelineStageTemplate;
+use App\Entity\TaskType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -101,15 +103,17 @@ abstract class TaskTemplateTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('pipelineStageTemplate', EntityType::class, [
             'label' => 'PipelineStageTemplate',
             'required' => false,
-            'class' => PipelineStageTemplate::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\PipelineStageTemplate::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('priority', IntegerType::class, [
             'label' => 'Priority',
@@ -119,15 +123,17 @@ abstract class TaskTemplateTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('type', EntityType::class, [
             'label' => 'Type',
             'required' => false,
-            'class' => TaskType::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\TaskType::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
     }
 
@@ -135,6 +141,7 @@ abstract class TaskTemplateTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => TaskTemplate::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

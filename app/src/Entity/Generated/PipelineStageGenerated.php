@@ -40,12 +40,12 @@ abstract class PipelineStageGenerated extends EntityBase
     protected ?string $description = null;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\OneToMany(targetEntity: DealStage::class, mappedBy: 'pipelineStage', fetch: 'LAZY')]
-    protected Collection $dealStages;
-
-    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $probability;
+
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
+    #[ORM\OneToMany(targetEntity: DealStage::class, mappedBy: 'pipelineStage', fetch: 'LAZY')]
+    protected Collection $dealStages;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(name: 'final_prop', type: 'boolean')]
@@ -57,11 +57,11 @@ abstract class PipelineStageGenerated extends EntityBase
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'boolean')]
-    protected bool $active = true;
+    protected bool $lost = false;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'boolean')]
-    protected bool $lost = false;
+    protected bool $active = true;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'string', length: 7)]
@@ -129,6 +129,16 @@ abstract class PipelineStageGenerated extends EntityBase
         return $this;
     }
 
+    public function getProbability(): int    {
+        return $this->probability;
+    }
+
+    public function setProbability(int $probability): self
+    {
+        $this->probability = $probability;
+        return $this;
+    }
+
     /**
      * @return Collection<int, DealStage>
      */
@@ -153,16 +163,6 @@ abstract class PipelineStageGenerated extends EntityBase
                 $dealStage->setPipelineStage(null);
             }
         }
-        return $this;
-    }
-
-    public function getProbability(): int    {
-        return $this->probability;
-    }
-
-    public function setProbability(int $probability): self
-    {
-        $this->probability = $probability;
         return $this;
     }
 
@@ -196,21 +196,6 @@ abstract class PipelineStageGenerated extends EntityBase
         return $this->won === true;
     }
 
-    public function getActive(): bool    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->active === true;
-    }
-
     public function getLost(): bool    {
         return $this->lost;
     }
@@ -224,6 +209,21 @@ abstract class PipelineStageGenerated extends EntityBase
     public function isLost(): bool
     {
         return $this->lost === true;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active === true;
     }
 
     public function getColor(): string    {

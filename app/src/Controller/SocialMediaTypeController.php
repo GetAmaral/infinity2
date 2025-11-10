@@ -34,7 +34,7 @@ final class SocialMediaTypeController extends SocialMediaTypeControllerGenerated
      * API endpoint for searching socialMediaTypes
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'socialmediatype_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'socialmediatype_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

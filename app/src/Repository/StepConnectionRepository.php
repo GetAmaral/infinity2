@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Step;
 use App\Entity\StepConnection;
-use App\Entity\StepInput;
 use App\Entity\StepOutput;
 use App\Repository\Generated\StepConnectionRepositoryGenerated;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,15 +21,15 @@ class StepConnectionRepository extends StepConnectionRepositoryGenerated
     }
 
     /**
-     * Check if a connection already exists between an output and input
+     * Check if a connection already exists between an output and step
      */
-    public function connectionExists(StepOutput $output, StepInput $input): bool
+    public function connectionExists(StepOutput $output, Step $targetStep): bool
     {
         $result = $this->createQueryBuilder('c')
             ->where('c.sourceOutput = :output')
-            ->andWhere('c.targetInput = :input')
+            ->andWhere('c.targetStep = :targetStep')
             ->setParameter('output', $output)
-            ->setParameter('input', $input)
+            ->setParameter('targetStep', $targetStep)
             ->getQuery()
             ->getOneOrNullResult();
 

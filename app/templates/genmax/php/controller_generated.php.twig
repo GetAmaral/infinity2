@@ -84,10 +84,20 @@ abstract class {{ entityName }}ControllerGenerated extends {{ baseControllerClas
             'id' => $entity->getId()->toString(),
 {% for property in serializableProperties %}
 {% if property.isRelationship %}
+{% if property.isCollection %}
+            '{{ property.name }}' => (${{ property.name }}Rel = $entity->{{ property.getter }}()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                ${{ property.name }}Rel->toArray()
+            ) : [],
+{% else %}
             '{{ property.name }}' => (${{ property.name }}Rel = $entity->{{ property.getter }}()) ? [
                 'id' => ${{ property.name }}Rel->getId()->toString(),
                 'display' => (string) ${{ property.name }}Rel,
             ] : null,
+{% endif %}
 {% elseif property.serialization %}
             '{{ property.name }}' => $entity->{{ property.getter }}(){{ property.serialization|raw }},
 {% else %}
@@ -114,7 +124,7 @@ abstract class {{ entityName }}ControllerGenerated extends {{ baseControllerClas
 
         return $this->render('{{ routePrefix }}/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => '{{ entityVariable }}',
+            'entity_name' => '{{ routePrefix }}',
             'entity_name_plural' => '{{ entityPluralVariable }}',
             'page_icon' => '{{ pageIcon }}',
             'default_view' => $savedView,
@@ -124,6 +134,13 @@ abstract class {{ entityName }}ControllerGenerated extends {{ baseControllerClas
             'enable_filters' => {{ hasFilterableProperties ? 'true' : 'false' }},
             'enable_sorting' => {{ hasSortableProperties ? 'true' : 'false' }},
             'enable_create_button' => {{ operations.new ? 'true' : 'false' }},
+            'create_permission' => {{ voterClass }}::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('{{ listProperties|json_encode|raw }}', true),
+            'searchableFields' => json_decode('{{ searchableFields|json_encode|raw }}', true),
+            'filterableFields' => json_decode('{{ filterableFields|json_encode|raw }}', true),
+            'sortableFields' => json_decode('{{ sortableFields|json_encode|raw }}', true),
 
             // Property metadata for client-side rendering (as JSON strings)
             'list_fields' => '{{ listProperties|json_encode|raw }}',
@@ -146,9 +163,9 @@ abstract class {{ entityName }}ControllerGenerated extends {{ baseControllerClas
     {
         $this->denyAccessUnlessGranted({{ voterClass }}::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 {% endif %}
 

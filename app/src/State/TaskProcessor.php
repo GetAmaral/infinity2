@@ -136,13 +136,13 @@ class TaskProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('priority', $requestData)) {
             $entity->setPriority($data->priority);
         }
-        // scheduledDate
-        if (!$isPatch || array_key_exists('scheduledDate', $requestData)) {
-            $entity->setScheduledDate($data->scheduledDate);
-        }
         // completed
         if (!$isPatch || array_key_exists('completed', $requestData)) {
             $entity->setCompleted($data->completed);
+        }
+        // scheduledDate
+        if (!$isPatch || array_key_exists('scheduledDate', $requestData)) {
+            $entity->setScheduledDate($data->scheduledDate);
         }
         // reminderDate
         if (!$isPatch || array_key_exists('reminderDate', $requestData)) {
@@ -172,13 +172,13 @@ class TaskProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('emailSubject', $requestData)) {
             $entity->setEmailSubject($data->emailSubject);
         }
-        // taskStatus
-        if (!$isPatch || array_key_exists('taskStatus', $requestData)) {
-            $entity->setTaskStatus($data->taskStatus);
-        }
         // phoneNumber
         if (!$isPatch || array_key_exists('phoneNumber', $requestData)) {
             $entity->setPhoneNumber($data->phoneNumber);
+        }
+        // taskStatus
+        if (!$isPatch || array_key_exists('taskStatus', $requestData)) {
+            $entity->setTaskStatus($data->taskStatus);
         }
         // meetingUrl
         if (!$isPatch || array_key_exists('meetingUrl', $requestData)) {

@@ -13,8 +13,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Organization;
 use App\Entity\Company;
 use App\Entity\PipelineStage;
-use App\Entity\Pipeline;
 use App\Entity\DealType;
+use App\Entity\Pipeline;
 use App\Entity\DealCategory;
 use App\Entity\Product;
 use App\Entity\User;
@@ -72,12 +72,12 @@ abstract class DealGenerated extends EntityBase
     protected ?string $probability = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\ManyToOne(targetEntity: Pipeline::class, inversedBy: 'deals')]
-    protected ?Pipeline $pipeline = null;
-
-    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: DealType::class, inversedBy: 'deals')]
     protected ?DealType $dealType = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\ManyToOne(targetEntity: Pipeline::class, inversedBy: 'deals')]
+    protected ?Pipeline $pipeline = null;
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -138,13 +138,13 @@ abstract class DealGenerated extends EntityBase
     protected ?\DateTimeImmutable $expectedClosureDate = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTimeImmutable $closureDate = null;
-
-    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'deals', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'deal_products')]
     protected Collection $products;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    protected ?\DateTimeImmutable $closureDate = null;
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -330,17 +330,6 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getPipeline(): ?Pipeline
-    {
-        return $this->pipeline;
-    }
-
-    public function setPipeline(?Pipeline $pipeline): self
-    {
-        $this->pipeline = $pipeline;
-        return $this;
-    }
-
     public function getDealType(): ?DealType
     {
         return $this->dealType;
@@ -349,6 +338,17 @@ abstract class DealGenerated extends EntityBase
     public function setDealType(?DealType $dealType): self
     {
         $this->dealType = $dealType;
+        return $this;
+    }
+
+    public function getPipeline(): ?Pipeline
+    {
+        return $this->pipeline;
+    }
+
+    public function setPipeline(?Pipeline $pipeline): self
+    {
+        $this->pipeline = $pipeline;
         return $this;
     }
 
@@ -493,16 +493,6 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getClosureDate(): ?\DateTimeImmutable    {
-        return $this->closureDate;
-    }
-
-    public function setClosureDate(?\DateTimeImmutable $closureDate): self
-    {
-        $this->closureDate = $closureDate;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Product>
      */
@@ -523,6 +513,16 @@ abstract class DealGenerated extends EntityBase
     {
         if ($this->products->removeElement($product)) {
         }
+        return $this;
+    }
+
+    public function getClosureDate(): ?\DateTimeImmutable    {
+        return $this->closureDate;
+    }
+
+    public function setClosureDate(?\DateTimeImmutable $closureDate): self
+    {
+        $this->closureDate = $closureDate;
         return $this;
     }
 

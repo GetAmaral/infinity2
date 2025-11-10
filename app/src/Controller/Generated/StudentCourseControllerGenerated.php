@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\StudentCourse;
 use App\Repository\StudentCourseRepository;
 use App\Security\Voter\StudentCourseVoter;
-use App\Form\StudentCourseFormType;
+use App\Form\StudentCourseType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,10 +102,13 @@ abstract class StudentCourseControllerGenerated extends BaseApiController
                 'id' => $currentLectureRel->getId()->toString(),
                 'display' => (string) $currentLectureRel,
             ] : null,
-            'studentLectures' => ($studentLecturesRel = $entity->getStudentLectures()) ? [
-                'id' => $studentLecturesRel->getId()->toString(),
-                'display' => (string) $studentLecturesRel,
-            ] : null,
+            'studentLectures' => ($studentLecturesRel = $entity->getStudentLectures()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $studentLecturesRel->toArray()
+            ) : [],
             'active' => $entity->getActive(),
         ];
     }
@@ -126,7 +129,7 @@ abstract class StudentCourseControllerGenerated extends BaseApiController
 
         return $this->render('studentcourse/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'studentCourse',
+            'entity_name' => 'studentcourse',
             'entity_name_plural' => 'studentCourses',
             'page_icon' => 'bi-mortarboard',
             'default_view' => $savedView,
@@ -136,9 +139,16 @@ abstract class StudentCourseControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => StudentCourseVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"progressPercentage","label":"ProgressPercentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProgressPercentage","isRelationship":false},{"name":"student","label":"Student","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudent","isRelationship":true},{"name":"course","label":"Course","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCourse","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"student","label":"Student","type":"string"},{"name":"course","label":"Course","type":"string"},{"name":"currentLecture","label":"CurrentLecture","type":"string"},{"name":"studentLectures","label":"StudentLectures","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"enrolledAt","label":"EnrolledAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"startDate","label":"StartDate","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastDate","label":"LastDate","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"progressSeconds","label":"ProgressSeconds","type":"float","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"progressPercentage","label":"ProgressPercentage","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completedAt","label":"CompletedAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"student","label":"Student","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"course","label":"Course","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"currentLecture","label":"CurrentLecture","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"studentLectures","label":"StudentLectures","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"enrolledAt","label":"EnrolledAt"},{"name":"startDate","label":"StartDate"},{"name":"lastDate","label":"LastDate"},{"name":"progressSeconds","label":"ProgressSeconds"},{"name":"progressPercentage","label":"ProgressPercentage"},{"name":"completedAt","label":"CompletedAt"},{"name":"student","label":"Student"},{"name":"course","label":"Course"},{"name":"currentLecture","label":"CurrentLecture"},{"name":"studentLectures","label":"StudentLectures"},{"name":"active","label":"Active"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"progressPercentage","label":"ProgressPercentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProgressPercentage"},{"name":"student","label":"Student","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudent"},{"name":"course","label":"Course","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCourse"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"}]',
+            'list_fields' => '[{"name":"progressPercentage","label":"ProgressPercentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProgressPercentage","isRelationship":false},{"name":"student","label":"Student","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudent","isRelationship":true},{"name":"course","label":"Course","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCourse","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false}]',
             'searchable_fields' => '[{"name":"student","label":"Student","type":"string"},{"name":"course","label":"Course","type":"string"},{"name":"currentLecture","label":"CurrentLecture","type":"string"},{"name":"studentLectures","label":"StudentLectures","type":"string"}]',
             'filterable_fields' => '[{"name":"enrolledAt","label":"EnrolledAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"startDate","label":"StartDate","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastDate","label":"LastDate","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"progressSeconds","label":"ProgressSeconds","type":"float","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"progressPercentage","label":"ProgressPercentage","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completedAt","label":"CompletedAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"student","label":"Student","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"course","label":"Course","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"currentLecture","label":"CurrentLecture","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"studentLectures","label":"StudentLectures","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"enrolledAt","label":"EnrolledAt"},{"name":"startDate","label":"StartDate"},{"name":"lastDate","label":"LastDate"},{"name":"progressSeconds","label":"ProgressSeconds"},{"name":"progressPercentage","label":"ProgressPercentage"},{"name":"completedAt","label":"CompletedAt"},{"name":"student","label":"Student"},{"name":"course","label":"Course"},{"name":"currentLecture","label":"CurrentLecture"},{"name":"studentLectures","label":"StudentLectures"},{"name":"active","label":"Active"}]',
@@ -156,9 +166,9 @@ abstract class StudentCourseControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(StudentCourseVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -177,7 +187,7 @@ abstract class StudentCourseControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($studentCourse);
 
-        $form = $this->createForm(StudentCourseFormType::class, $studentCourse);
+        $form = $this->createForm(StudentCourseType::class, $studentCourse);
 
         return $this->render('studentcourse/_form_modal.html.twig', [
             'form' => $form,
@@ -202,7 +212,7 @@ abstract class StudentCourseControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($studentCourse);
 
-        $form = $this->createForm(StudentCourseFormType::class, $studentCourse);
+        $form = $this->createForm(StudentCourseType::class, $studentCourse);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -252,7 +262,7 @@ abstract class StudentCourseControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(StudentCourseVoter::EDIT, $studentCourse);
 
-        $form = $this->createForm(StudentCourseFormType::class, $studentCourse);
+        $form = $this->createForm(StudentCourseType::class, $studentCourse);
 
         return $this->render('studentcourse/_form_modal.html.twig', [
             'form' => $form,
@@ -272,7 +282,7 @@ abstract class StudentCourseControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(StudentCourseVoter::EDIT, $studentCourse);
 
-        $form = $this->createForm(StudentCourseFormType::class, $studentCourse);
+        $form = $this->createForm(StudentCourseType::class, $studentCourse);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

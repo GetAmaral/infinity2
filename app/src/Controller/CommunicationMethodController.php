@@ -34,7 +34,7 @@ final class CommunicationMethodController extends CommunicationMethodControllerG
      * API endpoint for searching communicationMethods
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'communicationmethod_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'communicationmethod_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

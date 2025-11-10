@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\TaskType;
 use App\Repository\TaskTypeRepository;
 use App\Security\Voter\TaskTypeVoter;
-use App\Form\TaskTypeFormType;
+use App\Form\TaskTypeType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,14 +86,20 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
             ] : null,
             'name' => $entity->getName(),
             'taskFunction' => $entity->getTaskFunction(),
-            'taskTemplates' => ($taskTemplatesRel = $entity->getTaskTemplates()) ? [
-                'id' => $taskTemplatesRel->getId()->toString(),
-                'display' => (string) $taskTemplatesRel,
-            ] : null,
-            'tasks' => ($tasksRel = $entity->getTasks()) ? [
-                'id' => $tasksRel->getId()->toString(),
-                'display' => (string) $tasksRel,
-            ] : null,
+            'taskTemplates' => ($taskTemplatesRel = $entity->getTaskTemplates()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $taskTemplatesRel->toArray()
+            ) : [],
+            'tasks' => ($tasksRel = $entity->getTasks()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $tasksRel->toArray()
+            ) : [],
         ];
     }
 
@@ -113,7 +119,7 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
 
         return $this->render('tasktype/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'taskType',
+            'entity_name' => 'tasktype',
             'entity_name_plural' => 'taskTypes',
             'page_icon' => 'bi-list-check',
             'default_view' => $savedView,
@@ -123,9 +129,16 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => TaskTypeVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"taskFunction","label":"TaskFunction","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskFunction","isRelationship":false},{"name":"taskTemplates","label":"TaskTemplates","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskTemplates","isRelationship":true},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"taskFunction","label":"TaskFunction"},{"name":"taskTemplates","label":"TaskTemplates"},{"name":"tasks","label":"Tasks"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"taskFunction","label":"TaskFunction","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskFunction"},{"name":"taskTemplates","label":"TaskTemplates","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskTemplates"},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"taskFunction","label":"TaskFunction","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskFunction","isRelationship":false},{"name":"taskTemplates","label":"TaskTemplates","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskTemplates","isRelationship":true},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"taskFunction","label":"TaskFunction"},{"name":"taskTemplates","label":"TaskTemplates"},{"name":"tasks","label":"Tasks"}]',
@@ -143,9 +156,9 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaskTypeVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -164,7 +177,7 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($taskType);
 
-        $form = $this->createForm(TaskTypeFormType::class, $taskType);
+        $form = $this->createForm(TaskTypeType::class, $taskType);
 
         return $this->render('tasktype/_form_modal.html.twig', [
             'form' => $form,
@@ -189,7 +202,7 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($taskType);
 
-        $form = $this->createForm(TaskTypeFormType::class, $taskType);
+        $form = $this->createForm(TaskTypeType::class, $taskType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -239,7 +252,7 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaskTypeVoter::EDIT, $taskType);
 
-        $form = $this->createForm(TaskTypeFormType::class, $taskType);
+        $form = $this->createForm(TaskTypeType::class, $taskType);
 
         return $this->render('tasktype/_form_modal.html.twig', [
             'form' => $form,
@@ -259,7 +272,7 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaskTypeVoter::EDIT, $taskType);
 
-        $form = $this->createForm(TaskTypeFormType::class, $taskType);
+        $form = $this->createForm(TaskTypeType::class, $taskType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -30,16 +30,18 @@
      data-crud-modal-target="overlay"
      data-action="click->crud-modal#backdropClick">
 
-    {{ form_start(form, {
-        'action': form_action,
-        'attr': {
-            'class': 'modal-form',
-            'data-controller': 'form-navigation',
-            'data-crud-modal-target': 'form',
-            'data-action': 'submit->crud-modal#submit',
-            'enctype': enctype|default(null)
-        }
-    }) }}
+    {# DEBUG: is_edit={{ is_edit }}, entity_type={{ entity_type }}, form_action={{ form_action }} #}
+    <form name="{{ form.vars.name }}"
+          method="post"
+          action="{{ form_action }}"
+          class="modal-form"
+          data-controller="form-navigation"
+          data-crud-modal-target="form"
+          data-action="submit->crud-modal#submit"
+          data-entity-type="{{ entity_type }}"
+          data-turbo="true"
+          data-turbo-action="replace"
+          {% if enctype|default(null) %}enctype="{{ enctype }}"{% endif %}>
 
     <div class="modal-dialog-centered modal-{{ entity_type }}" data-action="click->crud-modal#stopPropagation">
         <div class="modal-content-box">
@@ -101,5 +103,5 @@
         </div>
     </div>
 
-    {{ form_end(form, {'render_rest': false}) }}
+    </form>
 </div>

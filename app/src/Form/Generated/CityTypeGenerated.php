@@ -13,6 +13,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use App\Entity\Country;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -53,8 +55,7 @@ abstract class CityTypeGenerated extends AbstractType
         $builder->add('country', EntityType::class, [
             'label' => 'Country',
             'required' => false,
-            'class' => Country::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Country::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -118,12 +119,15 @@ abstract class CityTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('eventResources', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('eventResources', CollectionType::class, [
             'label' => 'EventResources',
             'required' => false,
-            'entry_type' => App\Form\EventResourceType::class,
+            'entry_type' => \App\Form\EventResourceType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -136,13 +140,17 @@ abstract class CityTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('holidayTemplates', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('holidayTemplates', CollectionType::class, [
             'label' => 'HolidayTemplates',
             'required' => false,
-            'entry_type' => App\Form\HolidayTemplateType::class,
+            'entry_type' => \App\Form\HolidayTemplateType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -155,6 +163,7 @@ abstract class CityTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
     }
 
@@ -162,6 +171,7 @@ abstract class CityTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => City::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -130,16 +130,6 @@ abstract class NotificationTypeInputDtoGenerated
         return $this;
     }
 
-    public function getIcon(): string    {
-        return $this->icon;
-    }
-
-    public function setIcon(string $icon): self
-    {
-        $this->icon = $icon;
-        return $this;
-    }
-
     public function getNotifications(): ?string    {
         return $this->notifications;
     }
@@ -147,6 +137,16 @@ abstract class NotificationTypeInputDtoGenerated
     public function setNotifications(?string $notifications): self
     {
         $this->notifications = $notifications;
+        return $this;
+    }
+
+    public function getIcon(): string    {
+        return $this->icon;
+    }
+
+    public function setIcon(string $icon): self
+    {
+        $this->icon = $icon;
         return $this;
     }
 

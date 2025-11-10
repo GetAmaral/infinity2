@@ -53,6 +53,7 @@ abstract class EventResourceTypeTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => EventResourceType::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

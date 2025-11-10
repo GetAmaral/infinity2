@@ -33,7 +33,6 @@
         async init(isTurboNavigation = false) {
             // If already loaded, return existing preferences
             if (this.loaded && this.preferences) {
-                console.log('✅ Preferences already loaded');
                 return this.preferences;
             }
 
@@ -47,7 +46,6 @@
                 try {
                     if (isTurboNavigation) {
                         // Turbo navigation: Load from localStorage ONLY
-                        console.log('🔄 Turbo navigation: Loading from localStorage');
                         this.loadFromLocalStorage();
                         this.applyPreferences();
                     } else {
@@ -58,17 +56,14 @@
 
                         if (isPublicPage) {
                             // Skip database load on public pages, use localStorage only
-                            console.log('📂 Public page: Loading from localStorage only');
                             this.loadFromLocalStorage();
                             this.isAuthenticated = false;
                         } else {
                             // Full page load: Try database first, fallback to localStorage
-                            console.log('📥 Full page load: Loading from database');
                             const dbLoaded = await this.loadFromDatabase();
 
                             if (!dbLoaded) {
                                 // Fallback to localStorage
-                                console.log('📂 Database load failed, using localStorage');
                                 this.loadFromLocalStorage();
                             }
                         }
@@ -77,7 +72,6 @@
                     }
 
                     this.loaded = true;
-                    console.log('✅ Preferences loaded:', this.preferences);
                     return this.preferences;
 
                 } catch (error) {
@@ -134,11 +128,9 @@
                 // Save to localStorage for future Turbo navigations
                 this.saveToLocalStorage();
 
-                console.log('✅ Loaded from database:', this.preferences);
                 return true;
 
             } catch (error) {
-                console.warn('⚠️ Database load failed:', error);
                 this.isAuthenticated = false;
                 return false;
             }
@@ -152,13 +144,10 @@
                 const stored = localStorage.getItem('luminai_preferences');
                 if (stored) {
                     this.preferences = JSON.parse(stored);
-                    console.log('✅ Loaded from localStorage');
                 } else {
                     this.preferences = this.getDefaultPreferences();
-                    console.log('📝 Using default preferences');
                 }
             } catch (error) {
-                console.warn('⚠️ localStorage parse failed:', error);
                 this.preferences = this.getDefaultPreferences();
             }
         }

@@ -34,7 +34,7 @@ final class AttachmentController extends AttachmentControllerGenerated
      * API endpoint for searching attachments
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'attachment_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'attachment_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

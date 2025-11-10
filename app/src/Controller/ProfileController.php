@@ -34,7 +34,7 @@ final class ProfileController extends ProfileControllerGenerated
      * API endpoint for searching profiles
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'profile_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'profile_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

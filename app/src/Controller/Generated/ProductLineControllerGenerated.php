@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\ProductLine;
 use App\Repository\ProductLineRepository;
 use App\Security\Voter\ProductLineVoter;
-use App\Form\ProductLineFormType;
+use App\Form\ProductLineType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,10 +87,13 @@ abstract class ProductLineControllerGenerated extends BaseApiController
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
             'active' => $entity->getActive(),
-            'products' => ($productsRel = $entity->getProducts()) ? [
-                'id' => $productsRel->getId()->toString(),
-                'display' => (string) $productsRel,
-            ] : null,
+            'products' => ($productsRel = $entity->getProducts()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $productsRel->toArray()
+            ) : [],
         ];
     }
 
@@ -110,7 +113,7 @@ abstract class ProductLineControllerGenerated extends BaseApiController
 
         return $this->render('productline/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'productLine',
+            'entity_name' => 'productline',
             'entity_name_plural' => 'productLines',
             'page_icon' => 'bi-diagram-3',
             'default_view' => $savedView,
@@ -120,9 +123,16 @@ abstract class ProductLineControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => ProductLineVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"active","label":"Active"},{"name":"products","label":"Products"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"active","label":"Active"},{"name":"products","label":"Products"}]',
@@ -140,9 +150,9 @@ abstract class ProductLineControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductLineVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -161,7 +171,7 @@ abstract class ProductLineControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($productLine);
 
-        $form = $this->createForm(ProductLineFormType::class, $productLine);
+        $form = $this->createForm(ProductLineType::class, $productLine);
 
         return $this->render('productline/_form_modal.html.twig', [
             'form' => $form,
@@ -186,7 +196,7 @@ abstract class ProductLineControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($productLine);
 
-        $form = $this->createForm(ProductLineFormType::class, $productLine);
+        $form = $this->createForm(ProductLineType::class, $productLine);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -236,7 +246,7 @@ abstract class ProductLineControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductLineVoter::EDIT, $productLine);
 
-        $form = $this->createForm(ProductLineFormType::class, $productLine);
+        $form = $this->createForm(ProductLineType::class, $productLine);
 
         return $this->render('productline/_form_modal.html.twig', [
             'form' => $form,
@@ -256,7 +266,7 @@ abstract class ProductLineControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductLineVoter::EDIT, $productLine);
 
-        $form = $this->createForm(ProductLineFormType::class, $productLine);
+        $form = $this->createForm(ProductLineType::class, $productLine);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

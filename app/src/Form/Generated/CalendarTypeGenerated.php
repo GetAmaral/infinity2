@@ -9,11 +9,15 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use App\Entity\User;
+use App\Entity\CalendarType;
+use App\Entity\CalendarExternalLink;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -42,22 +46,31 @@ abstract class CalendarTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('user', EntityType::class, [
+            'label' => 'User',
+            'required' => false,
+            'class' => \App\Entity\User::class,
+            'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
+                'class' => 'form-input-modern',
+            ],
+        ]);
+        }
+
         $builder->add('description', TextareaType::class, [
             'label' => 'Description',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter description',
-            ],
-        ]);
-
-        $builder->add('user', EntityType::class, [
-            'label' => 'User',
-            'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
-            'attr' => [
-                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -103,44 +116,70 @@ abstract class CalendarTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('calendarType', EntityType::class, [
             'label' => 'CalendarType',
             'required' => false,
-            'class' => CalendarType::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\CalendarType::class,
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'CalendarType',
+                'data-relation-select-route-value' => 'calendar_type_api_search',
+                'data-relation-select-add-route-value' => 'calendar_type_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select calendartype',
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
-        $builder->add('events', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('events', CollectionType::class, [
             'label' => 'Events',
             'required' => false,
-            'entry_type' => App\Form\EventType::class,
+            'entry_type' => \App\Form\EventType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
             ],
             'constraints' => [
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('externalLink', EntityType::class, [
             'label' => 'ExternalLink',
             'required' => false,
-            'class' => CalendarExternalLink::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\CalendarExternalLink::class,
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'CalendarExternalLink',
+                'data-relation-select-route-value' => 'calendar_external_link_api_search',
+                'data-relation-select-add-route-value' => 'calendar_external_link_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select calendarexternallink',
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('externalApiKey', TextType::class, [
             'label' => 'ExternalApiKey',
@@ -151,43 +190,59 @@ abstract class CalendarTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('workingHours', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('workingHours', CollectionType::class, [
             'label' => 'WorkingHours',
             'required' => false,
-            'entry_type' => App\Form\WorkingHourType::class,
+            'entry_type' => \App\Form\WorkingHourType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
             ],
             'constraints' => [
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('holidays', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('holidays', CollectionType::class, [
             'label' => 'Holidays',
             'required' => false,
-            'entry_type' => App\Form\HolidayType::class,
+            'entry_type' => \App\Form\HolidayType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
             ],
             'constraints' => [
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('default', CheckboxType::class, [
             'label' => 'Default Calendar',
@@ -263,6 +318,7 @@ abstract class CalendarTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Calendar::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

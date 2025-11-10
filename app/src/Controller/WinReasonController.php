@@ -34,7 +34,7 @@ final class WinReasonController extends WinReasonControllerGenerated
      * API endpoint for searching winReasa
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'winreason_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'winreason_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -118,12 +118,15 @@ abstract class PipelineTemplateTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('stages', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('stages', CollectionType::class, [
             'label' => 'Stages',
             'required' => false,
-            'entry_type' => App\Form\PipelineStageTemplateType::class,
+            'entry_type' => \App\Form\PipelineStageTemplateType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -136,6 +139,7 @@ abstract class PipelineTemplateTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('tags', TextareaType::class, [
             'label' => 'Tags',
@@ -160,6 +164,7 @@ abstract class PipelineTemplateTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PipelineTemplate::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

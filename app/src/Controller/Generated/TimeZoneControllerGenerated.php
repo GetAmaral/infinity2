@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\TimeZone;
 use App\Repository\TimeZoneRepository;
 use App\Security\Voter\TimeZoneVoter;
-use App\Form\TimeZoneFormType;
+use App\Form\TimeZoneType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,10 +82,13 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
             'id' => $entity->getId()->toString(),
             'name' => $entity->getName(),
             'offsetMinutes' => $entity->getOffsetMinutes(),
-            'workingHours' => ($workingHoursRel = $entity->getWorkingHours()) ? [
-                'id' => $workingHoursRel->getId()->toString(),
-                'display' => (string) $workingHoursRel,
-            ] : null,
+            'workingHours' => ($workingHoursRel = $entity->getWorkingHours()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $workingHoursRel->toArray()
+            ) : [],
         ];
     }
 
@@ -105,7 +108,7 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
 
         return $this->render('timezone/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'timeZone',
+            'entity_name' => 'timezone',
             'entity_name_plural' => 'timeZones',
             'page_icon' => 'bi-clock-history',
             'default_view' => $savedView,
@@ -115,9 +118,16 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => TimeZoneVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"offsetMinutes","label":"OffsetMinutes","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOffsetMinutes","isRelationship":false},{"name":"workingHours","label":"WorkingHours","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWorkingHours","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"offsetMinutes","label":"OffsetMinutes"},{"name":"workingHours","label":"WorkingHours"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"offsetMinutes","label":"OffsetMinutes","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOffsetMinutes"},{"name":"workingHours","label":"WorkingHours","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWorkingHours"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"offsetMinutes","label":"OffsetMinutes","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOffsetMinutes","isRelationship":false},{"name":"workingHours","label":"WorkingHours","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWorkingHours","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"offsetMinutes","label":"OffsetMinutes"},{"name":"workingHours","label":"WorkingHours"}]',
@@ -135,9 +145,9 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TimeZoneVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -156,7 +166,7 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($timeZone);
 
-        $form = $this->createForm(TimeZoneFormType::class, $timeZone);
+        $form = $this->createForm(TimeZoneType::class, $timeZone);
 
         return $this->render('timezone/_form_modal.html.twig', [
             'form' => $form,
@@ -181,7 +191,7 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($timeZone);
 
-        $form = $this->createForm(TimeZoneFormType::class, $timeZone);
+        $form = $this->createForm(TimeZoneType::class, $timeZone);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -231,7 +241,7 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TimeZoneVoter::EDIT, $timeZone);
 
-        $form = $this->createForm(TimeZoneFormType::class, $timeZone);
+        $form = $this->createForm(TimeZoneType::class, $timeZone);
 
         return $this->render('timezone/_form_modal.html.twig', [
             'form' => $form,
@@ -251,7 +261,7 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TimeZoneVoter::EDIT, $timeZone);
 
-        $form = $this->createForm(TimeZoneFormType::class, $timeZone);
+        $form = $this->createForm(TimeZoneType::class, $timeZone);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

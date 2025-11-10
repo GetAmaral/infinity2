@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\SocialMediaType;
 use App\Repository\SocialMediaTypeRepository;
 use App\Security\Voter\SocialMediaTypeVoter;
-use App\Form\SocialMediaTypeFormType;
+use App\Form\SocialMediaTypeType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,7 +102,7 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
 
         return $this->render('socialmediatype/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'socialMediaType',
+            'entity_name' => 'socialmediatype',
             'entity_name_plural' => 'socialMediaTypes',
             'page_icon' => 'bi-share-fill',
             'default_view' => $savedView,
@@ -112,9 +112,16 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => SocialMediaTypeVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"iconUrl","label":"IconUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIconUrl","isRelationship":false},{"name":"url","label":"Url","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"iconUrl","label":"IconUrl","type":"string"},{"name":"url","label":"Url","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"iconUrl","label":"IconUrl"},{"name":"url","label":"Url"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"iconUrl","label":"IconUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIconUrl"},{"name":"url","label":"Url","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"iconUrl","label":"IconUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIconUrl","isRelationship":false},{"name":"url","label":"Url","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"iconUrl","label":"IconUrl","type":"string"},{"name":"url","label":"Url","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"iconUrl","label":"IconUrl"},{"name":"url","label":"Url"}]',
@@ -132,9 +139,9 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(SocialMediaTypeVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -153,7 +160,7 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($socialMediaType);
 
-        $form = $this->createForm(SocialMediaTypeFormType::class, $socialMediaType);
+        $form = $this->createForm(SocialMediaTypeType::class, $socialMediaType);
 
         return $this->render('socialmediatype/_form_modal.html.twig', [
             'form' => $form,
@@ -178,7 +185,7 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($socialMediaType);
 
-        $form = $this->createForm(SocialMediaTypeFormType::class, $socialMediaType);
+        $form = $this->createForm(SocialMediaTypeType::class, $socialMediaType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -228,7 +235,7 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(SocialMediaTypeVoter::EDIT, $socialMediaType);
 
-        $form = $this->createForm(SocialMediaTypeFormType::class, $socialMediaType);
+        $form = $this->createForm(SocialMediaTypeType::class, $socialMediaType);
 
         return $this->render('socialmediatype/_form_modal.html.twig', [
             'form' => $form,
@@ -248,7 +255,7 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(SocialMediaTypeVoter::EDIT, $socialMediaType);
 
-        $form = $this->createForm(SocialMediaTypeFormType::class, $socialMediaType);
+        $form = $this->createForm(SocialMediaTypeType::class, $socialMediaType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -33,21 +33,21 @@ abstract class PipelineStageOutputDtoGenerated
 
     public ?string $description = null;
 
+    public int $probability;
+
     /**
      * dealStages collection
      * @var DealStageOutputDto[]
      */
     public array $dealStages = [];
 
-    public int $probability;
-
     public bool $final;
 
     public bool $won;
 
-    public bool $active;
-
     public bool $lost;
+
+    public bool $active;
 
     public string $color;
 
@@ -124,16 +124,6 @@ abstract class PipelineStageOutputDtoGenerated
         return $this;
     }
 
-    public function getDealStages(): array    {
-        return $this->dealStages;
-    }
-
-    public function setDealStages(array $dealStages): self
-    {
-        $this->dealStages = $dealStages;
-        return $this;
-    }
-
     public function getProbability(): int    {
         return $this->probability;
     }
@@ -141,6 +131,16 @@ abstract class PipelineStageOutputDtoGenerated
     public function setProbability(int $probability): self
     {
         $this->probability = $probability;
+        return $this;
+    }
+
+    public function getDealStages(): array    {
+        return $this->dealStages;
+    }
+
+    public function setDealStages(array $dealStages): self
+    {
+        $this->dealStages = $dealStages;
         return $this;
     }
 
@@ -164,16 +164,6 @@ abstract class PipelineStageOutputDtoGenerated
         return $this;
     }
 
-    public function getActive(): bool    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
     public function getLost(): bool    {
         return $this->lost;
     }
@@ -181,6 +171,16 @@ abstract class PipelineStageOutputDtoGenerated
     public function setLost(bool $lost): self
     {
         $this->lost = $lost;
+        return $this;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
         return $this;
     }
 

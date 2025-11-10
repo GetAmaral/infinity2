@@ -99,12 +99,12 @@ abstract class TaskGenerated extends EntityBase
     protected ?int $priority = null;
 
     #[Groups(['task:read', 'task:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTimeImmutable $scheduledDate = null;
-
-    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $completed = false;
+
+    #[Groups(['task:read', 'task:write'])]
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    protected ?\DateTimeImmutable $scheduledDate = null;
 
     #[Groups(['task:read', 'task:write'])]
     #[ORM\ManyToOne(targetEntity: Company::class)]
@@ -142,14 +142,14 @@ abstract class TaskGenerated extends EntityBase
     protected ?string $emailSubject = null;
 
     #[Groups(['task:read', 'task:write'])]
-    #[ORM\Column(type: 'string', length: 20)]
-    #[Assert\Length(max: 20)]
-    protected string $taskStatus;
-
-    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Assert\Length(max: 50)]
     protected ?string $phoneNumber = null;
+
+    #[Groups(['task:read', 'task:write'])]
+    #[ORM\Column(type: 'string', length: 20)]
+    #[Assert\Length(max: 20)]
+    protected string $taskStatus;
 
     #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
@@ -353,16 +353,6 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getScheduledDate(): ?\DateTimeImmutable    {
-        return $this->scheduledDate;
-    }
-
-    public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
-    {
-        $this->scheduledDate = $scheduledDate;
-        return $this;
-    }
-
     public function getCompleted(): bool    {
         return $this->completed;
     }
@@ -376,6 +366,16 @@ abstract class TaskGenerated extends EntityBase
     public function isCompleted(): bool
     {
         return $this->completed === true;
+    }
+
+    public function getScheduledDate(): ?\DateTimeImmutable    {
+        return $this->scheduledDate;
+    }
+
+    public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
+    {
+        $this->scheduledDate = $scheduledDate;
+        return $this;
     }
 
     public function getCompany(): ?Company
@@ -474,16 +474,6 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getTaskStatus(): string    {
-        return $this->taskStatus;
-    }
-
-    public function setTaskStatus(string $taskStatus): self
-    {
-        $this->taskStatus = $taskStatus;
-        return $this;
-    }
-
     public function getPhoneNumber(): ?string    {
         return $this->phoneNumber;
     }
@@ -491,6 +481,16 @@ abstract class TaskGenerated extends EntityBase
     public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
+        return $this;
+    }
+
+    public function getTaskStatus(): string    {
+        return $this->taskStatus;
+    }
+
+    public function setTaskStatus(string $taskStatus): self
+    {
+        $this->taskStatus = $taskStatus;
         return $this;
     }
 

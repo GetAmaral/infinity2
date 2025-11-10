@@ -34,7 +34,7 @@ final class PipelineController extends PipelineControllerGenerated
      * API endpoint for searching pipelines
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'pipeline_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'pipeline_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

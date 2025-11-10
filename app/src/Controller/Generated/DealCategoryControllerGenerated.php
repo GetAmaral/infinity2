@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\DealCategory;
 use App\Repository\DealCategoryRepository;
 use App\Security\Voter\DealCategoryVoter;
-use App\Form\DealCategoryFormType;
+use App\Form\DealCategoryType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,14 +94,20 @@ abstract class DealCategoryControllerGenerated extends BaseApiController
                 'id' => $parentCategoryRel->getId()->toString(),
                 'display' => (string) $parentCategoryRel,
             ] : null,
-            'subcategories' => ($subcategoriesRel = $entity->getSubcategories()) ? [
-                'id' => $subcategoriesRel->getId()->toString(),
-                'display' => (string) $subcategoriesRel,
-            ] : null,
-            'deals' => ($dealsRel = $entity->getDeals()) ? [
-                'id' => $dealsRel->getId()->toString(),
-                'display' => (string) $dealsRel,
-            ] : null,
+            'subcategories' => ($subcategoriesRel = $entity->getSubcategories()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $subcategoriesRel->toArray()
+            ) : [],
+            'deals' => ($dealsRel = $entity->getDeals()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealsRel->toArray()
+            ) : [],
             'active' => $entity->getActive(),
             'group' => $entity->getGroup(),
         ];
@@ -123,7 +129,7 @@ abstract class DealCategoryControllerGenerated extends BaseApiController
 
         return $this->render('dealcategory/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'dealCategory',
+            'entity_name' => 'dealcategory',
             'entity_name_plural' => 'ries',
             'page_icon' => 'bi-tag',
             'default_view' => $savedView,
@@ -133,9 +139,16 @@ abstract class DealCategoryControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => DealCategoryVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"default","label":"Default Category","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"displayOrder","label":"Display Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDisplayOrder","isRelationship":false},{"name":"parentCategory","label":"Parent Category","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getParentCategory","isRelationship":true},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"group","label":"Group","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGroup","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"group","label":"Group","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"default","label":"Default Category","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"color","label":"Color"},{"name":"icon","label":"Icon"},{"name":"description","label":"Description"},{"name":"default","label":"Default Category"},{"name":"displayOrder","label":"Display Order"},{"name":"parentCategory","label":"Parent Category"},{"name":"deals","label":"Deals"},{"name":"active","label":"Active"},{"name":"group","label":"Group"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"default","label":"Default Category","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault"},{"name":"displayOrder","label":"Display Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDisplayOrder"},{"name":"parentCategory","label":"Parent Category","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getParentCategory"},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"group","label":"Group","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGroup"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"default","label":"Default Category","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"displayOrder","label":"Display Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDisplayOrder","isRelationship":false},{"name":"parentCategory","label":"Parent Category","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getParentCategory","isRelationship":true},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"group","label":"Group","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGroup","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"group","label":"Group","type":"string"}]',
             'filterable_fields' => '[{"name":"default","label":"Default Category","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"color","label":"Color"},{"name":"icon","label":"Icon"},{"name":"description","label":"Description"},{"name":"default","label":"Default Category"},{"name":"displayOrder","label":"Display Order"},{"name":"parentCategory","label":"Parent Category"},{"name":"deals","label":"Deals"},{"name":"active","label":"Active"},{"name":"group","label":"Group"}]',
@@ -153,9 +166,9 @@ abstract class DealCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(DealCategoryVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -174,7 +187,7 @@ abstract class DealCategoryControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($dealCategory);
 
-        $form = $this->createForm(DealCategoryFormType::class, $dealCategory);
+        $form = $this->createForm(DealCategoryType::class, $dealCategory);
 
         return $this->render('dealcategory/_form_modal.html.twig', [
             'form' => $form,
@@ -199,7 +212,7 @@ abstract class DealCategoryControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($dealCategory);
 
-        $form = $this->createForm(DealCategoryFormType::class, $dealCategory);
+        $form = $this->createForm(DealCategoryType::class, $dealCategory);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -249,7 +262,7 @@ abstract class DealCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(DealCategoryVoter::EDIT, $dealCategory);
 
-        $form = $this->createForm(DealCategoryFormType::class, $dealCategory);
+        $form = $this->createForm(DealCategoryType::class, $dealCategory);
 
         return $this->render('dealcategory/_form_modal.html.twig', [
             'form' => $form,
@@ -269,7 +282,7 @@ abstract class DealCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(DealCategoryVoter::EDIT, $dealCategory);
 
-        $form = $this->createForm(DealCategoryFormType::class, $dealCategory);
+        $form = $this->createForm(DealCategoryType::class, $dealCategory);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -17,6 +17,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use App\Entity\Deal;
+use App\Entity\PipelineStage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -90,15 +92,17 @@ abstract class DealStageTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('deal', EntityType::class, [
             'label' => 'Deal',
             'required' => false,
-            'class' => Deal::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Deal::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('endedAt', DateTimeType::class, [
             'label' => 'Ended At',
@@ -125,15 +129,17 @@ abstract class DealStageTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('pipelineStage', EntityType::class, [
             'label' => 'Pipeline Stage',
             'required' => false,
-            'class' => PipelineStage::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\PipelineStage::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('startedAt', DateTimeType::class, [
             'label' => 'Started At',
@@ -149,6 +155,7 @@ abstract class DealStageTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => DealStage::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

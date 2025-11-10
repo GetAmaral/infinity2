@@ -21,10 +21,10 @@ use App\Entity\EventCategory;
 use App\Entity\Attachment;
 use App\Entity\Reminder;
 use App\Entity\EventResourceBooking;
-use App\Entity\WorkingHour;
 use App\Entity\Notification;
-use App\Entity\MeetingData;
 use App\Entity\Holiday;
+use App\Entity\WorkingHour;
+use App\Entity\MeetingData;
 use App\Entity\Contact;
 use App\Entity\Company;
 use App\Entity\Deal;
@@ -100,13 +100,13 @@ class EventProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('name', $requestData)) {
             $entity->setName($data->name);
         }
-        // startTime
-        if (!$isPatch || array_key_exists('startTime', $requestData)) {
-            $entity->setStartTime($data->startTime);
-        }
         // description
         if (!$isPatch || array_key_exists('description', $requestData)) {
             $entity->setDescription($data->description);
+        }
+        // startTime
+        if (!$isPatch || array_key_exists('startTime', $requestData)) {
+            $entity->setStartTime($data->startTime);
         }
         // endTime
         if (!$isPatch || array_key_exists('endTime', $requestData)) {

@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -57,12 +57,15 @@ abstract class TalkTypeTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('talks', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('talks', CollectionType::class, [
             'label' => 'Talks',
             'required' => false,
-            'entry_type' => App\Form\TalkType::class,
+            'entry_type' => \App\Form\TalkType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -75,6 +78,7 @@ abstract class TalkTypeTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
     }
 
@@ -82,6 +86,7 @@ abstract class TalkTypeTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => TalkType::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

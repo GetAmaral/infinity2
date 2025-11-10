@@ -47,15 +47,15 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
-      firstName:
-        description: "First Name (text field)"
-        example: "Sample longer text value"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       name:
         description: "The brand name"
         example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      firstName:
+        description: "First Name (text field)"
+        example: "Sample longer text value"
         # Advanced filters
         filters:
           - type: OrderFilter
@@ -122,32 +122,26 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      mobilePhone:
+        description: "Mobile Phone (text field)"
+        example: "Sample text"
       deals:
         description: "Deals"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
-      mobilePhone:
-        description: "Mobile Phone (text field)"
-        example: "Sample text"
-      linkedinUrl:
-        description: "LinkedIn URL (text field)"
-        example: "Sample longer text value"
       title:
         description: "Job Title (text field)"
         example: "Sample longer text value"
-      department:
-        description: "Department (text field)"
+      linkedinUrl:
+        description: "LinkedIn URL (text field)"
         example: "Sample longer text value"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       emailOptOut:
         description: "Email Opt-Out (yes\/no)"
         example: "true"
-      leadSource:
-        description: "Lead Source (text field)"
+      department:
+        description: "Department (text field)"
         example: "Sample longer text value"
         # Advanced filters
         filters:
@@ -155,6 +149,12 @@ resources:
       doNotCall:
         description: "Do Not Call (yes\/no)"
         example: "true"
+      leadSource:
+        description: "Lead Source (text field)"
+        example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       preferredContactMethod:
         description: "Preferred Contact Method (text field)"
         example: "Sample longer text value"

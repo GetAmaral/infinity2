@@ -34,7 +34,7 @@ final class CalendarController extends CalendarControllerGenerated
      * API endpoint for searching calendars
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'calendar_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'calendar_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

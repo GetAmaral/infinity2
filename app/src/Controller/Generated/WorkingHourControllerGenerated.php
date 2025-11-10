@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\WorkingHour;
 use App\Repository\WorkingHourRepository;
 use App\Security\Voter\WorkingHourVoter;
-use App\Form\WorkingHourFormType;
+use App\Form\WorkingHourType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -121,7 +121,7 @@ abstract class WorkingHourControllerGenerated extends BaseApiController
 
         return $this->render('workinghour/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'workingHour',
+            'entity_name' => 'workinghour',
             'entity_name_plural' => 'workingHours',
             'page_icon' => 'bi-clock',
             'default_view' => $savedView,
@@ -131,9 +131,16 @@ abstract class WorkingHourControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => WorkingHourVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"calendar","label":"Calendar","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendar","isRelationship":true},{"name":"dayOfWeek","label":"DayOfWeek","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDayOfWeek","isRelationship":false},{"name":"endTime","label":"EndTime","type":"time","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEndTime","isRelationship":false},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"minimalMinutesEventDuration","label":"MinimalMinutesEventDuration","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMinimalMinutesEventDuration","isRelationship":false},{"name":"notes","label":"Notes","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotes","isRelationship":false},{"name":"startTime","label":"StartTime","type":"time","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStartTime","isRelationship":false},{"name":"timeZone","label":"TimeZone","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimeZone","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"description","label":"Description","type":"string"},{"name":"notes","label":"Notes","type":"text"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"description","label":"Description"},{"name":"calendar","label":"Calendar"},{"name":"dayOfWeek","label":"DayOfWeek"},{"name":"endTime","label":"EndTime"},{"name":"event","label":"Event"},{"name":"minimalMinutesEventDuration","label":"MinimalMinutesEventDuration"},{"name":"notes","label":"Notes"},{"name":"startTime","label":"StartTime"},{"name":"timeZone","label":"TimeZone"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"calendar","label":"Calendar","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendar"},{"name":"dayOfWeek","label":"DayOfWeek","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDayOfWeek"},{"name":"endTime","label":"EndTime","type":"time","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEndTime"},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent"},{"name":"minimalMinutesEventDuration","label":"MinimalMinutesEventDuration","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMinimalMinutesEventDuration"},{"name":"notes","label":"Notes","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotes"},{"name":"startTime","label":"StartTime","type":"time","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStartTime"},{"name":"timeZone","label":"TimeZone","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimeZone"}]',
+            'list_fields' => '[{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"calendar","label":"Calendar","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendar","isRelationship":true},{"name":"dayOfWeek","label":"DayOfWeek","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDayOfWeek","isRelationship":false},{"name":"endTime","label":"EndTime","type":"time","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEndTime","isRelationship":false},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"minimalMinutesEventDuration","label":"MinimalMinutesEventDuration","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMinimalMinutesEventDuration","isRelationship":false},{"name":"notes","label":"Notes","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotes","isRelationship":false},{"name":"startTime","label":"StartTime","type":"time","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStartTime","isRelationship":false},{"name":"timeZone","label":"TimeZone","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimeZone","isRelationship":true}]',
             'searchable_fields' => '[{"name":"description","label":"Description","type":"string"},{"name":"notes","label":"Notes","type":"text"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"description","label":"Description"},{"name":"calendar","label":"Calendar"},{"name":"dayOfWeek","label":"DayOfWeek"},{"name":"endTime","label":"EndTime"},{"name":"event","label":"Event"},{"name":"minimalMinutesEventDuration","label":"MinimalMinutesEventDuration"},{"name":"notes","label":"Notes"},{"name":"startTime","label":"StartTime"},{"name":"timeZone","label":"TimeZone"}]',
@@ -151,9 +158,9 @@ abstract class WorkingHourControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(WorkingHourVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -172,7 +179,7 @@ abstract class WorkingHourControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($workingHour);
 
-        $form = $this->createForm(WorkingHourFormType::class, $workingHour);
+        $form = $this->createForm(WorkingHourType::class, $workingHour);
 
         return $this->render('workinghour/_form_modal.html.twig', [
             'form' => $form,
@@ -197,7 +204,7 @@ abstract class WorkingHourControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($workingHour);
 
-        $form = $this->createForm(WorkingHourFormType::class, $workingHour);
+        $form = $this->createForm(WorkingHourType::class, $workingHour);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -247,7 +254,7 @@ abstract class WorkingHourControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(WorkingHourVoter::EDIT, $workingHour);
 
-        $form = $this->createForm(WorkingHourFormType::class, $workingHour);
+        $form = $this->createForm(WorkingHourType::class, $workingHour);
 
         return $this->render('workinghour/_form_modal.html.twig', [
             'form' => $form,
@@ -267,7 +274,7 @@ abstract class WorkingHourControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(WorkingHourVoter::EDIT, $workingHour);
 
-        $form = $this->createForm(WorkingHourFormType::class, $workingHour);
+        $form = $this->createForm(WorkingHourType::class, $workingHour);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

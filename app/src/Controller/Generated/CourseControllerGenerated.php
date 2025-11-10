@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Course;
 use App\Repository\CourseRepository;
 use App\Security\Voter\CourseVoter;
-use App\Form\CourseFormType;
+use App\Form\CourseType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,19 +87,25 @@ abstract class CourseControllerGenerated extends BaseApiController
             'releaseDate' => $entity->getReleaseDate()?->format('M d, Y'),
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
-            'modules' => ($modulesRel = $entity->getModules()) ? [
-                'id' => $modulesRel->getId()->toString(),
-                'display' => (string) $modulesRel,
-            ] : null,
+            'modules' => ($modulesRel = $entity->getModules()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $modulesRel->toArray()
+            ) : [],
             'active' => $entity->getActive(),
             'owner' => ($ownerRel = $entity->getOwner()) ? [
                 'id' => $ownerRel->getId()->toString(),
                 'display' => (string) $ownerRel,
             ] : null,
-            'studentCourses' => ($studentCoursesRel = $entity->getStudentCourses()) ? [
-                'id' => $studentCoursesRel->getId()->toString(),
-                'display' => (string) $studentCoursesRel,
-            ] : null,
+            'studentCourses' => ($studentCoursesRel = $entity->getStudentCourses()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $studentCoursesRel->toArray()
+            ) : [],
             'totalLengthSeconds' => $entity->getTotalLengthSeconds(),
         ];
     }
@@ -130,9 +136,16 @@ abstract class CourseControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => CourseVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"modules","label":"Modules","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getModules","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"owner","label":"Owner","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOwner","isRelationship":true},{"name":"studentCourses","label":"Student Courses","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudentCourses","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"modules","label":"Modules"},{"name":"active","label":"Active"},{"name":"owner","label":"Owner"},{"name":"studentCourses","label":"Student Courses"},{"name":"totalLengthSeconds","label":"Total Length Seconds"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"modules","label":"Modules","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getModules"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"owner","label":"Owner","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOwner"},{"name":"studentCourses","label":"Student Courses","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudentCourses"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"modules","label":"Modules","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getModules","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"owner","label":"Owner","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOwner","isRelationship":true},{"name":"studentCourses","label":"Student Courses","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudentCourses","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"modules","label":"Modules"},{"name":"active","label":"Active"},{"name":"owner","label":"Owner"},{"name":"studentCourses","label":"Student Courses"},{"name":"totalLengthSeconds","label":"Total Length Seconds"}]',
@@ -150,9 +163,9 @@ abstract class CourseControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CourseVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -171,7 +184,7 @@ abstract class CourseControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($course);
 
-        $form = $this->createForm(CourseFormType::class, $course);
+        $form = $this->createForm(CourseType::class, $course);
 
         return $this->render('course/_form_modal.html.twig', [
             'form' => $form,
@@ -196,7 +209,7 @@ abstract class CourseControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($course);
 
-        $form = $this->createForm(CourseFormType::class, $course);
+        $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -246,7 +259,7 @@ abstract class CourseControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
 
-        $form = $this->createForm(CourseFormType::class, $course);
+        $form = $this->createForm(CourseType::class, $course);
 
         return $this->render('course/_form_modal.html.twig', [
             'form' => $form,
@@ -266,7 +279,7 @@ abstract class CourseControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
 
-        $form = $this->createForm(CourseFormType::class, $course);
+        $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

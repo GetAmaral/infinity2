@@ -15,6 +15,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use App\Entity\User;
+use App\Entity\AgentType;
+use App\Entity\Talk;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -94,25 +97,29 @@ abstract class AgentTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('user', EntityType::class, [
             'label' => 'User',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('agentType', EntityType::class, [
             'label' => 'AgentType',
             'required' => false,
-            'class' => AgentType::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\AgentType::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('commissionRate', NumberType::class, [
             'label' => 'Commission Rate',
@@ -242,8 +249,7 @@ abstract class AgentTypeGenerated extends AbstractType
         $builder->add('talks', EntityType::class, [
             'label' => 'Talks',
             'required' => false,
-            'class' => Talk::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Talk::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -256,6 +262,7 @@ abstract class AgentTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Agent::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

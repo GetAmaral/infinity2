@@ -3,10 +3,8 @@
 // ============================================
 import * as Turbo from '@hotwired/turbo';
 
-console.log('🚀 Turbo Drive enabled');
-
 // Turbo configuration
-Turbo.setProgressBarDelay(100); // Show progress bar after 100ms
+Turbo.config.drive.progressBarDelay = 100; // Show progress bar after 100ms
 
 // ============================================
 // REST OF EXISTING IMPORTS
@@ -18,6 +16,7 @@ import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import 'tom-select/dist/css/tom-select.bootstrap5.css';
 import './styles/app.css';
 import './styles/public.css';
+import './styles/components/_sidebar.css';
 import './delete-handler.js';
 import './fewshot-handler.js';
 
@@ -27,17 +26,14 @@ window.bootstrap = bootstrap;
 // Start Stimulus application with automatic controller registration
 const app = startStimulusApp();
 
-// Disable verbose Stimulus debug logs in console
+// Disable verbose Stimulus debug logs (enable only for debugging)
 app.debug = false;
 
 // Initialize Bootstrap tooltips and auto-close dropdowns
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎯 Dropdown auto-close handler initialized');
-
     // Initialize all Bootstrap tooltips
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-    console.log(`💡 Initialized ${tooltipList.length} Bootstrap tooltips`);
 
     // When a dropdown is about to be shown, close all other card dropdowns
     document.addEventListener('show.bs.dropdown', function(event) {

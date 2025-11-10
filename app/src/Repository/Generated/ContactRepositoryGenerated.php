@@ -43,7 +43,7 @@ abstract class ContactRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'firstName',            'name',            'lastName',            'address',            'billingAddress',            'title',            'department',            'leadSource',            'document',            'email',            'geo',            'neighborhood',            'nickname',            'notes',            'origin',            'phone',            'postalCode',            'profilePictureUrl',        ];
+        return [            'name',            'firstName',            'lastName',            'address',            'billingAddress',            'title',            'department',            'leadSource',            'document',            'email',            'geo',            'neighborhood',            'nickname',            'notes',            'origin',            'phone',            'postalCode',            'profilePictureUrl',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class ContactRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'firstName' => 'firstName',            'name' => 'name',            'lastName' => 'lastName',            'accountManager' => 'accountManager',            'accountTeam' => 'accountTeam',            'address' => 'address',            'billingAddress' => 'billingAddress',            'billingCity' => 'billingCity',            'birthDate' => 'birthDate',            'campaigns' => 'campaigns',            'city' => 'city',            'company' => 'company',            'deals' => 'deals',            'department' => 'department',            'leadSource' => 'leadSource',            'lastContactDate' => 'lastContactDate',            'document' => 'document',            'email' => 'email',            'eventAttendances' => 'eventAttendances',            'firstTalkDate' => 'firstTalkDate',            'gender' => 'gender',            'geo' => 'geo',            'lastTalkDate' => 'lastTalkDate',            'neighborhood' => 'neighborhood',            'nickname' => 'nickname',            'notes' => 'notes',            'origin' => 'origin',            'phone' => 'phone',            'postalCode' => 'postalCode',            'primaryDeals' => 'primaryDeals',            'profilePictureUrl' => 'profilePictureUrl',            'ranking' => 'ranking',            'score' => 'score',            'socialMedias' => 'socialMedias',            'status' => 'status',            'talks' => 'talks',            'tasks' => 'tasks',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'firstName' => 'firstName',            'lastName' => 'lastName',            'accountManager' => 'accountManager',            'accountTeam' => 'accountTeam',            'address' => 'address',            'billingAddress' => 'billingAddress',            'billingCity' => 'billingCity',            'birthDate' => 'birthDate',            'campaigns' => 'campaigns',            'city' => 'city',            'company' => 'company',            'deals' => 'deals',            'department' => 'department',            'leadSource' => 'leadSource',            'lastContactDate' => 'lastContactDate',            'document' => 'document',            'email' => 'email',            'eventAttendances' => 'eventAttendances',            'firstTalkDate' => 'firstTalkDate',            'gender' => 'gender',            'geo' => 'geo',            'lastTalkDate' => 'lastTalkDate',            'neighborhood' => 'neighborhood',            'nickname' => 'nickname',            'notes' => 'notes',            'origin' => 'origin',            'phone' => 'phone',            'postalCode' => 'postalCode',            'primaryDeals' => 'primaryDeals',            'profilePictureUrl' => 'profilePictureUrl',            'ranking' => 'ranking',            'score' => 'score',            'socialMedias' => 'socialMedias',            'status' => 'status',            'talks' => 'talks',            'tasks' => 'tasks',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -115,8 +115,8 @@ abstract class ContactRepositoryGenerated extends BaseRepository
         return [
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
-            'firstName' => $entity->getFirstName(),
             'name' => $entity->getName(),
+            'firstName' => $entity->getFirstName(),
             'lastName' => $entity->getLastName(),
             'accountManager' => $entity->getAccountManager()?->getId()?->toString() ?? '',
             'accountManagerName' => $entity->getAccountManager()?->getName() ?? '',
@@ -132,10 +132,10 @@ abstract class ContactRepositoryGenerated extends BaseRepository
             'cityName' => $entity->getCity()?->getName() ?? '',
             'company' => $entity->getCompany()?->getId()?->toString() ?? '',
             'companyName' => $entity->getCompany()?->getName() ?? '',
-            'dealsCount' => $entity->getDeals()->count(),
             'mobilePhone' => $entity->getMobilePhone(),
-            'linkedinUrl' => $entity->getLinkedinUrl(),
+            'dealsCount' => $entity->getDeals()->count(),
             'title' => $entity->getTitle(),
+            'linkedinUrl' => $entity->getLinkedinUrl(),
             'department' => $entity->getDepartment(),
             'leadSource' => $entity->getLeadSource(),
             'preferredContactMethod' => $entity->getPreferredContactMethod(),

@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\TalkTypeTemplate;
 use App\Repository\TalkTypeTemplateRepository;
 use App\Security\Voter\TalkTypeTemplateVoter;
-use App\Form\TalkTypeTemplateFormType;
+use App\Form\TalkTypeTemplateType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,7 +102,7 @@ abstract class TalkTypeTemplateControllerGenerated extends BaseApiController
 
         return $this->render('talktypetemplate/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'talkTypeTemplate',
+            'entity_name' => 'talktypetemplate',
             'entity_name_plural' => 'talkTypeTemplates',
             'page_icon' => 'bi-chat-left-fill',
             'default_view' => $savedView,
@@ -112,9 +112,16 @@ abstract class TalkTypeTemplateControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => TalkTypeTemplateVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"iconUrl","label":"IconUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIconUrl","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"iconUrl","label":"IconUrl","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"iconUrl","label":"IconUrl"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"iconUrl","label":"IconUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIconUrl"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"iconUrl","label":"IconUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIconUrl","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"iconUrl","label":"IconUrl","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"iconUrl","label":"IconUrl"}]',
@@ -132,9 +139,9 @@ abstract class TalkTypeTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TalkTypeTemplateVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -153,7 +160,7 @@ abstract class TalkTypeTemplateControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($talkTypeTemplate);
 
-        $form = $this->createForm(TalkTypeTemplateFormType::class, $talkTypeTemplate);
+        $form = $this->createForm(TalkTypeTemplateType::class, $talkTypeTemplate);
 
         return $this->render('talktypetemplate/_form_modal.html.twig', [
             'form' => $form,
@@ -178,7 +185,7 @@ abstract class TalkTypeTemplateControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($talkTypeTemplate);
 
-        $form = $this->createForm(TalkTypeTemplateFormType::class, $talkTypeTemplate);
+        $form = $this->createForm(TalkTypeTemplateType::class, $talkTypeTemplate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -228,7 +235,7 @@ abstract class TalkTypeTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TalkTypeTemplateVoter::EDIT, $talkTypeTemplate);
 
-        $form = $this->createForm(TalkTypeTemplateFormType::class, $talkTypeTemplate);
+        $form = $this->createForm(TalkTypeTemplateType::class, $talkTypeTemplate);
 
         return $this->render('talktypetemplate/_form_modal.html.twig', [
             'form' => $form,
@@ -248,7 +255,7 @@ abstract class TalkTypeTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TalkTypeTemplateVoter::EDIT, $talkTypeTemplate);
 
-        $form = $this->createForm(TalkTypeTemplateFormType::class, $talkTypeTemplate);
+        $form = $this->createForm(TalkTypeTemplateType::class, $talkTypeTemplate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -27,13 +27,13 @@ abstract class BillingFrequencyOutputDtoGenerated
      */
     public string|OrganizationOutputDto $organization;
 
-    public string $name;
-
     public string $value;
 
-    public ?string $description = null;
+    public string $name;
 
     public ?string $displayName = null;
+
+    public ?string $description = null;
 
     public string $intervalType;
 
@@ -82,16 +82,6 @@ abstract class BillingFrequencyOutputDtoGenerated
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getValue(): string    {
         return $this->value;
     }
@@ -102,13 +92,13 @@ abstract class BillingFrequencyOutputDtoGenerated
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
+    public function getName(): string    {
+        return $this->name;
     }
 
-    public function setDescription(?string $description): self
+    public function setName(string $name): self
     {
-        $this->description = $description;
+        $this->name = $name;
         return $this;
     }
 
@@ -119,6 +109,16 @@ abstract class BillingFrequencyOutputDtoGenerated
     public function setDisplayName(?string $displayName): self
     {
         $this->displayName = $displayName;
+        return $this;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 

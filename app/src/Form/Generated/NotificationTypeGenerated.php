@@ -13,6 +13,13 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use App\Entity\User;
+use App\Entity\EventAttendee;
+use App\Entity\CommunicationMethod;
+use App\Entity\Event;
+use App\Entity\Reminder;
+use App\Entity\TalkMessage;
+use App\Entity\NotificationType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -44,8 +51,7 @@ abstract class NotificationTypeGenerated extends AbstractType
         $builder->add('recipient', EntityType::class, [
             'label' => 'Recipient',
             'required' => true,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -54,8 +60,7 @@ abstract class NotificationTypeGenerated extends AbstractType
         $builder->add('sender', EntityType::class, [
             'label' => 'Sender',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -79,35 +84,41 @@ abstract class NotificationTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('attendee', EntityType::class, [
             'label' => 'Attendee',
             'required' => false,
-            'class' => EventAttendee::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\EventAttendee::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('communicationMethod', EntityType::class, [
             'label' => 'CommunicationMethod',
             'required' => false,
-            'class' => CommunicationMethod::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\CommunicationMethod::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('event', EntityType::class, [
             'label' => 'Event',
             'required' => false,
-            'class' => Event::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Event::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('message', TextareaType::class, [
             'label' => 'Message',
@@ -126,15 +137,17 @@ abstract class NotificationTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('reminder', EntityType::class, [
             'label' => 'Reminder',
             'required' => false,
-            'class' => Reminder::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Reminder::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('sentAt', DateTimeType::class, [
             'label' => 'SentAt',
@@ -147,22 +160,23 @@ abstract class NotificationTypeGenerated extends AbstractType
         $builder->add('talkMessage', EntityType::class, [
             'label' => 'TalkMessage',
             'required' => false,
-            'class' => TalkMessage::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\TalkMessage::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('type', EntityType::class, [
             'label' => 'Type',
             'required' => false,
-            'class' => NotificationType::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\NotificationType::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
     }
 
@@ -170,6 +184,7 @@ abstract class NotificationTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Notification::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

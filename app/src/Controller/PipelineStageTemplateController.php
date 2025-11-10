@@ -34,7 +34,7 @@ final class PipelineStageTemplateController extends PipelineStageTemplateControl
      * API endpoint for searching pipelineStageTemplates
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'pipelinestagetemplate_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'pipelinestagetemplate_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

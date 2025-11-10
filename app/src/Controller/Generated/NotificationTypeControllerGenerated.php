@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\NotificationType;
 use App\Repository\NotificationTypeRepository;
 use App\Security\Voter\NotificationTypeVoter;
-use App\Form\NotificationTypeFormType;
+use App\Form\NotificationTypeType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,11 +86,14 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
             ] : null,
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
+            'notifications' => ($notificationsRel = $entity->getNotifications()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $notificationsRel->toArray()
+            ) : [],
             'icon' => $entity->getIcon(),
-            'notifications' => ($notificationsRel = $entity->getNotifications()) ? [
-                'id' => $notificationsRel->getId()->toString(),
-                'display' => (string) $notificationsRel,
-            ] : null,
             'active' => $entity->getActive(),
             'default' => $entity->getDefault(),
             'channels' => $entity->getChannels(),
@@ -130,7 +133,7 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
 
         return $this->render('notificationtype/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'notificationType',
+            'entity_name' => 'notificationtype',
             'entity_name_plural' => 'notificationTypes',
             'page_icon' => 'bi-bell-fill',
             'default_view' => $savedView,
@@ -140,9 +143,16 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => NotificationTypeVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"notifications","label":"Notifications","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotifications","isRelationship":true},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"channels","label":"Channels","type":"json","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getChannels","isRelationship":false},{"name":"priority","label":"Priority","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"frequency","label":"Frequency","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFrequency","isRelationship":false},{"name":"tags","label":"Tags","type":"json","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTags","isRelationship":false},{"name":"requiresAction","label":"Requires Action","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresAction","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"emailSubject","label":"Email Subject","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"name","label":"Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"priority","label":"Priority","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"notifications","label":"Notifications"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon"},{"name":"notifications","label":"Notifications","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotifications"},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"default","label":"Default","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault"},{"name":"channels","label":"Channels","type":"json","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getChannels"},{"name":"priority","label":"Priority","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority"},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"frequency","label":"Frequency","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFrequency"},{"name":"tags","label":"Tags","type":"json","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTags"},{"name":"requiresAction","label":"Requires Action","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresAction"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"notifications","label":"Notifications","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotifications","isRelationship":true},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"channels","label":"Channels","type":"json","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getChannels","isRelationship":false},{"name":"priority","label":"Priority","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"frequency","label":"Frequency","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFrequency","isRelationship":false},{"name":"tags","label":"Tags","type":"json","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTags","isRelationship":false},{"name":"requiresAction","label":"Requires Action","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresAction","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"emailSubject","label":"Email Subject","type":"string"}]',
             'filterable_fields' => '[{"name":"name","label":"Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"priority","label":"Priority","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"notifications","label":"Notifications"}]',
@@ -160,9 +170,9 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(NotificationTypeVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -181,7 +191,7 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($notificationType);
 
-        $form = $this->createForm(NotificationTypeFormType::class, $notificationType);
+        $form = $this->createForm(NotificationTypeType::class, $notificationType);
 
         return $this->render('notificationtype/_form_modal.html.twig', [
             'form' => $form,
@@ -206,7 +216,7 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($notificationType);
 
-        $form = $this->createForm(NotificationTypeFormType::class, $notificationType);
+        $form = $this->createForm(NotificationTypeType::class, $notificationType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -256,7 +266,7 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(NotificationTypeVoter::EDIT, $notificationType);
 
-        $form = $this->createForm(NotificationTypeFormType::class, $notificationType);
+        $form = $this->createForm(NotificationTypeType::class, $notificationType);
 
         return $this->render('notificationtype/_form_modal.html.twig', [
             'form' => $form,
@@ -276,7 +286,7 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(NotificationTypeVoter::EDIT, $notificationType);
 
-        $form = $this->createForm(NotificationTypeFormType::class, $notificationType);
+        $form = $this->createForm(NotificationTypeType::class, $notificationType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -43,7 +43,7 @@ abstract class CourseLectureOutputDtoGenerated
 
     public int $viewOrder;
 
-    public int $lengthSeconds;
+    public ?int $lengthSeconds = null;
 
     /**
      * courseModule reference
@@ -71,9 +71,9 @@ abstract class CourseLectureOutputDtoGenerated
 
     public bool $active;
 
-    public bool $published;
+    public ?bool $published = null;
 
-    public bool $free;
+    public ?bool $free = null;
 
     public ?\DateTimeImmutable $publishedAt = null;
 
@@ -109,7 +109,7 @@ abstract class CourseLectureOutputDtoGenerated
 
     public ?int $ratingCount = null;
 
-    public int $durationSeconds;
+    public ?int $durationSeconds = null;
 
     public ?string $difficultyLevel = null;
 
@@ -238,11 +238,11 @@ abstract class CourseLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getLengthSeconds(): int    {
+    public function getLengthSeconds(): ?int    {
         return $this->lengthSeconds;
     }
 
-    public function setLengthSeconds(int $lengthSeconds): self
+    public function setLengthSeconds(?int $lengthSeconds): self
     {
         $this->lengthSeconds = $lengthSeconds;
         return $this;
@@ -298,21 +298,21 @@ abstract class CourseLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getPublished(): bool    {
+    public function getPublished(): ?bool    {
         return $this->published;
     }
 
-    public function setPublished(bool $published): self
+    public function setPublished(?bool $published): self
     {
         $this->published = $published;
         return $this;
     }
 
-    public function getFree(): bool    {
+    public function getFree(): ?bool    {
         return $this->free;
     }
 
-    public function setFree(bool $free): self
+    public function setFree(?bool $free): self
     {
         $this->free = $free;
         return $this;
@@ -488,11 +488,11 @@ abstract class CourseLectureOutputDtoGenerated
         return $this;
     }
 
-    public function getDurationSeconds(): int    {
+    public function getDurationSeconds(): ?int    {
         return $this->durationSeconds;
     }
 
-    public function setDurationSeconds(int $durationSeconds): self
+    public function setDurationSeconds(?int $durationSeconds): self
     {
         $this->durationSeconds = $durationSeconds;
         return $this;

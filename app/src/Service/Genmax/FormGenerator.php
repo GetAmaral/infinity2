@@ -192,11 +192,15 @@ class FormGenerator
                 continue;
             }
 
+            // Mark fields that are parent back-references (for conditional rendering)
+            $isParentBackReference = $property->getRelationshipType() === 'ManyToOne' && $property->getInversedBy();
+
             $fields[] = [
                 'name' => $property->getPropertyName(),
                 'label' => $property->getPropertyLabel(),
                 'type' => $this->determineFormType($property),
                 'options' => $this->buildFormOptions($property, $entity),
+                'isParentBackReference' => $isParentBackReference,
             ];
         }
 
@@ -268,8 +272,15 @@ class FormGenerator
         }
 
         // Enum-specific options
-        if ($property->isEnum() && $property->getEnumClass()) {
-            $options['class'] = $property->getEnumClass();
+        if ($property->isEnum()) {
+            // Get enum class name: use explicit class if set, otherwise auto-generate from property name
+            $enumClass = $property->getEnumClass();
+            if (!$enumClass) {
+                // Auto-generate enum class name using GenmaxExtension for proper naming
+                $enumClassName = $this->genmaxExtension->getEnumClassName($property->getPropertyName());
+                $enumClass = 'App\\Enum\\' . $enumClassName;
+            }
+            $options['class'] = $enumClass;
             $options['choice_label'] = 'getLabel';
         }
 
@@ -289,7 +300,8 @@ class FormGenerator
             );
         }
 
-        $options['attr'] = $attr;
+        // Merge with existing attr (preserves data attributes from buildRelationshipOptions)
+        $options['attr'] = array_merge($options['attr'] ?? [], $attr);
 
         // Label attributes
         if ($labelAttr = $property->getFormLabelAttr()) {
@@ -324,9 +336,15 @@ class FormGenerator
         $targetEntityName = basename(str_replace('\\', '/', $targetEntity));
         $entityRoute = $this->genmaxExtension->toSnakeCase($targetEntityName);
 
+        // Convert short entity names to fully qualified class names
+        $targetEntityClass = $targetEntity;
+        if (!str_contains($targetEntityClass, '\\')) {
+            $targetEntityClass = "App\\Entity\\{$targetEntityClass}";
+        }
+
         $options = [
-            'class' => $targetEntity,
-            'choice_label' => '__toString',  // ALWAYS use __toString()
+            'class' => $targetEntityClass,
+            // Don't set choice_label - Symfony will automatically use __toString() if available
         ];
 
         // ManyToOne / ManyToMany / OneToOne
@@ -370,7 +388,10 @@ class FormGenerator
         if ($relationshipType === 'OneToMany') {
             $options = [
                 'entry_type' => "App\\Form\\{$targetEntityName}Type",
-                'entry_options' => ['label' => false],
+                'entry_options' => [
+                    'label' => false,
+                    'exclude_parent' => true,  // Exclude parent back-reference to prevent circular references
+                ],
                 'allow_add' => $property->isCollectionAllowAdd(),
                 'allow_delete' => $property->isCollectionAllowDelete(),
                 'by_reference' => false,
@@ -413,8 +434,27 @@ class FormGenerator
 
         // Collect all form types used
         $types = [];
+        $entityClasses = [];
+        $formTypeClasses = [];
+        $enumClasses = [];
+
         foreach ($this->getFormFields($entity) as $field) {
             $types[$field['type']] = true;
+
+            // Collect entity classes from EntityType fields
+            if ($field['type'] === 'EntityType' && isset($field['options']['class'])) {
+                $entityClasses[] = $field['options']['class'];
+            }
+
+            // Collect form types from CollectionType/OneToMany fields
+            if (isset($field['options']['entry_type'])) {
+                $formTypeClasses[] = $field['options']['entry_type'];
+            }
+
+            // Collect enum classes from EnumType fields
+            if ($field['type'] === 'EnumType' && isset($field['options']['class'])) {
+                $enumClasses[] = $field['options']['class'];
+            }
         }
 
         // Add form type imports
@@ -423,13 +463,56 @@ class FormGenerator
                 $imports[] = 'Symfony\Bridge\Doctrine\Form\Type\EntityType';
             } elseif ($type === 'CollectionType') {
                 $imports[] = 'Symfony\Component\Form\Extension\Core\Type\CollectionType';
-                $imports[] = 'Symfony\Component\Validator\Constraints\Count';
             } elseif ($type === 'EnumType') {
                 $imports[] = 'Symfony\Component\Form\Extension\Core\Type\EnumType';
             } else {
                 $imports[] = "Symfony\\Component\\Form\\Extension\\Core\\Type\\{$type}";
             }
         }
+
+        // Add entity class imports (for EntityType relationships)
+        foreach (array_unique($entityClasses) as $entityClass) {
+            // Convert short entity names to full class names
+            if (!str_contains($entityClass, '\\')) {
+                // Assume entities are in App\Entity namespace
+                $entityClass = "App\\Entity\\{$entityClass}";
+            }
+
+            // Skip the main entity (already imported at top of file)
+            $mainEntityClass = "App\\Entity\\{$entity->getEntityName()}";
+            if ($entityClass === $mainEntityClass) {
+                continue;
+            }
+
+            $imports[] = $entityClass;
+        }
+
+        // Add form type imports (for CollectionType/OneToMany relationships)
+        // Note: These are already in the format App\Form\EntityType
+        foreach (array_unique($formTypeClasses) as $formTypeClass) {
+            // Skip if not a fully qualified class name
+            if (!str_contains($formTypeClass, '\\')) {
+                continue;
+            }
+            // Don't add to imports - these will be referenced with full namespace
+        }
+
+        // Add enum class imports
+        foreach (array_unique($enumClasses) as $enumClass) {
+            // Convert short enum names to full class names
+            if (!str_contains($enumClass, '\\')) {
+                // Assume enums are in App\Enum namespace
+                $enumClass = "App\\Enum\\{$enumClass}";
+            }
+            $imports[] = $enumClass;
+        }
+
+        // Normalize backslashes - ensure only single backslashes
+        // (Twig's PHP autoescape doubles them, so we need to handle this)
+        $imports = array_map(function($import) {
+            // Replace any double (or more) backslashes with single backslash
+            return preg_replace('/\\\\+/', '\\', $import);
+        }, $imports);
 
         return array_unique($imports);
     }

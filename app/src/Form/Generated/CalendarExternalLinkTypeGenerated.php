@@ -9,12 +9,14 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\User;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -43,12 +45,15 @@ abstract class CalendarExternalLinkTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('calendars', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('calendars', CollectionType::class, [
             'label' => 'Calendars',
             'required' => false,
-            'entry_type' => App\Form\CalendarType::class,
+            'entry_type' => \App\Form\CalendarType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -61,12 +66,11 @@ abstract class CalendarExternalLinkTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('externalProvider', EnumType::class, [
             'label' => 'External Provider',
             'required' => true,
-            'class' => App\Enum\CalendarProviderEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -92,8 +96,6 @@ abstract class CalendarExternalLinkTypeGenerated extends AbstractType
         $builder->add('syncDirection', ChoiceType::class, [
             'label' => 'Sync Direction',
             'required' => true,
-            'class' => App\Enum\SyncdirectionEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -125,15 +127,17 @@ abstract class CalendarExternalLinkTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('user', EntityType::class, [
             'label' => 'User',
             'required' => true,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
     }
 
@@ -141,6 +145,7 @@ abstract class CalendarExternalLinkTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CalendarExternalLink::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -12,7 +12,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Entity\Contact;
+use App\Entity\Event;
+use App\Entity\User;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -58,15 +62,17 @@ abstract class EventAttendeeTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('contact', EntityType::class, [
             'label' => 'Contact',
             'required' => false,
-            'class' => Contact::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Contact::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('email', TextType::class, [
             'label' => 'Email',
@@ -77,22 +83,27 @@ abstract class EventAttendeeTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('event', EntityType::class, [
             'label' => 'Event',
             'required' => true,
-            'class' => Event::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Event::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
-        $builder->add('notifications', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('notifications', CollectionType::class, [
             'label' => 'Notifications',
             'required' => false,
-            'entry_type' => App\Form\NotificationType::class,
+            'entry_type' => \App\Form\NotificationType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -105,6 +116,7 @@ abstract class EventAttendeeTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('optional', CheckboxType::class, [
             'label' => 'Optional',
@@ -131,15 +143,17 @@ abstract class EventAttendeeTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('user', EntityType::class, [
             'label' => 'User',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
     }
 
@@ -147,6 +161,7 @@ abstract class EventAttendeeTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => EventAttendee::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -40,12 +40,12 @@ abstract class NotificationTypeGenerated extends EntityBase
     protected ?string $description = null;
 
     #[Groups(['notificationtype:read', 'notificationtype:write'])]
-    #[ORM\Column(type: 'string', length: 50)]
-    protected string $icon = 'bi-bell-fill';
-
-    #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'type', fetch: 'LAZY')]
     protected Collection $notifications;
+
+    #[Groups(['notificationtype:read', 'notificationtype:write'])]
+    #[ORM\Column(type: 'string', length: 50)]
+    protected string $icon = 'bi-bell-fill';
 
     #[Groups(['notificationtype:read', 'notificationtype:write'])]
     #[ORM\Column(type: 'boolean')]
@@ -165,16 +165,6 @@ abstract class NotificationTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getIcon(): string    {
-        return $this->icon;
-    }
-
-    public function setIcon(string $icon): self
-    {
-        $this->icon = $icon;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Notification>
      */
@@ -199,6 +189,16 @@ abstract class NotificationTypeGenerated extends EntityBase
                 $notification->setType(null);
             }
         }
+        return $this;
+    }
+
+    public function getIcon(): string    {
+        return $this->icon;
+    }
+
+    public function setIcon(string $icon): self
+    {
+        $this->icon = $icon;
         return $this;
     }
 

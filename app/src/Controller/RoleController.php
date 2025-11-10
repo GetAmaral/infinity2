@@ -34,7 +34,7 @@ final class RoleController extends RoleControllerGenerated
      * API endpoint for searching roles
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'role_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'role_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

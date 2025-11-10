@@ -6,7 +6,7 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Uid\Uuid;
 use App\Dto\StepOutputOutputDto;
-use App\Dto\StepInputOutputDto;
+use App\Dto\StepOutputDto;
 
 /**
  * StepConnection Output DTO (Generated Base Class)
@@ -28,10 +28,10 @@ abstract class StepConnectionOutputDtoGenerated
     public string|StepOutputOutputDto $sourceOutput;
 
     /**
-     * targetInput reference
-     * Can be: IRI string or nested StepInputOutput object
+     * targetStep reference
+     * Can be: IRI string or nested StepOutput object
      */
-    public string|StepInputOutputDto $targetInput;
+    public string|StepOutputDto $targetStep;
 
     public ?\DateTimeImmutable $createdAt = null;
 
@@ -60,13 +60,13 @@ abstract class StepConnectionOutputDtoGenerated
         return $this;
     }
 
-    public function getTargetInput(): string|StepInputOutputDto    {
-        return $this->targetInput;
+    public function getTargetStep(): string|StepOutputDto    {
+        return $this->targetStep;
     }
 
-    public function setTargetInput(string|StepInputOutputDto $targetInput): self
+    public function setTargetStep(string|StepOutputDto $targetStep): self
     {
-        $this->targetInput = $targetInput;
+        $this->targetStep = $targetStep;
         return $this;
     }
 

@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\EventResourceType;
 use App\Repository\EventResourceTypeRepository;
 use App\Security\Voter\EventResourceTypeVoter;
-use App\Form\EventResourceTypeFormType;
+use App\Form\EventResourceTypeType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -105,7 +105,7 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
 
         return $this->render('eventresourcetype/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'eventResourceType',
+            'entity_name' => 'eventresourcetype',
             'entity_name_plural' => 'eventResourceTypes',
             'page_icon' => 'bi-building-gear',
             'default_view' => $savedView,
@@ -115,9 +115,16 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => EventResourceTypeVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"organization","label":"Organization","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOrganization","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"organization","label":"Organization"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"organization","label":"Organization","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOrganization"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"organization","label":"Organization","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOrganization","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"organization","label":"Organization"}]',
@@ -135,9 +142,9 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventResourceTypeVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -156,7 +163,7 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($eventResourceType);
 
-        $form = $this->createForm(EventResourceTypeFormType::class, $eventResourceType);
+        $form = $this->createForm(EventResourceTypeType::class, $eventResourceType);
 
         return $this->render('eventresourcetype/_form_modal.html.twig', [
             'form' => $form,
@@ -181,7 +188,7 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($eventResourceType);
 
-        $form = $this->createForm(EventResourceTypeFormType::class, $eventResourceType);
+        $form = $this->createForm(EventResourceTypeType::class, $eventResourceType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -231,7 +238,7 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventResourceTypeVoter::EDIT, $eventResourceType);
 
-        $form = $this->createForm(EventResourceTypeFormType::class, $eventResourceType);
+        $form = $this->createForm(EventResourceTypeType::class, $eventResourceType);
 
         return $this->render('eventresourcetype/_form_modal.html.twig', [
             'form' => $form,
@@ -251,7 +258,7 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventResourceTypeVoter::EDIT, $eventResourceType);
 
-        $form = $this->createForm(EventResourceTypeFormType::class, $eventResourceType);
+        $form = $this->createForm(EventResourceTypeType::class, $eventResourceType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -27,13 +27,13 @@ abstract class MeetingDataOutputDtoGenerated
      */
     public string|OrganizationOutputDto $organization;
 
+    public string $title;
+
     /**
      * event reference
      * Can be: IRI string or nested EventOutput object
      */
     public string|EventOutputDto|null $event = null;
-
-    public string $title;
 
     public string $meetingType;
 
@@ -75,9 +75,9 @@ abstract class MeetingDataOutputDtoGenerated
 
     public ?string $organizer = null;
 
-    public ?array $tags = null;
-
     public ?string $platform = null;
+
+    public ?array $tags = null;
 
     public bool $confidential;
 
@@ -118,16 +118,6 @@ abstract class MeetingDataOutputDtoGenerated
         return $this;
     }
 
-    public function getEvent(): string|EventOutputDto|null    {
-        return $this->event;
-    }
-
-    public function setEvent(string|EventOutputDto|null $event): self
-    {
-        $this->event = $event;
-        return $this;
-    }
-
     public function getTitle(): string    {
         return $this->title;
     }
@@ -135,6 +125,16 @@ abstract class MeetingDataOutputDtoGenerated
     public function setTitle(string $title): self
     {
         $this->title = $title;
+        return $this;
+    }
+
+    public function getEvent(): string|EventOutputDto|null    {
+        return $this->event;
+    }
+
+    public function setEvent(string|EventOutputDto|null $event): self
+    {
+        $this->event = $event;
         return $this;
     }
 
@@ -338,16 +338,6 @@ abstract class MeetingDataOutputDtoGenerated
         return $this;
     }
 
-    public function getTags(): ?array    {
-        return $this->tags;
-    }
-
-    public function setTags(?array $tags): self
-    {
-        $this->tags = $tags;
-        return $this;
-    }
-
     public function getPlatform(): ?string    {
         return $this->platform;
     }
@@ -355,6 +345,16 @@ abstract class MeetingDataOutputDtoGenerated
     public function setPlatform(?string $platform): self
     {
         $this->platform = $platform;
+        return $this;
+    }
+
+    public function getTags(): ?array    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): self
+    {
+        $this->tags = $tags;
         return $this;
     }
 

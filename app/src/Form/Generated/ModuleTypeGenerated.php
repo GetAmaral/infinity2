@@ -70,6 +70,7 @@ abstract class ModuleTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Module::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

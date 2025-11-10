@@ -11,9 +11,9 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\TreeFlow;
-use App\Entity\StepIteration;
+use App\Entity\StepAction;
 use App\Entity\StepOutput;
-use App\Entity\StepInput;
+use App\Entity\StepConnection;
 
 /**
  * Step Entity (Generated Base Class)
@@ -29,14 +29,14 @@ use App\Entity\StepInput;
 abstract class StepGenerated extends EntityBase
 {
     #[Groups(['step:read', 'step:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Length(max: 255)]
-    protected string $name;
-
-    #[Groups(['step:read', 'step:write'])]
     #[ORM\ManyToOne(targetEntity: TreeFlow::class, inversedBy: 'steps')]
     #[ORM\JoinColumn(nullable: false)]
     protected TreeFlow $treeFlow;
+
+    #[Groups(['step:read', 'step:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
+    protected string $name;
 
     #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(name: 'first_prop', type: 'boolean')]
@@ -52,10 +52,6 @@ abstract class StepGenerated extends EntityBase
     protected ?string $objective = null;
 
     #[Groups(['step:read', 'step:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $prompt = null;
-
-    #[Groups(['step:read', 'step:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $viewOrder = 1;
 
@@ -68,34 +64,24 @@ abstract class StepGenerated extends EntityBase
     protected ?int $positionY = null;
 
     #[Groups(['step:read'])]
-    #[ORM\OneToMany(targetEntity: StepIteration::class, mappedBy: 'step', orphanRemoval: true, fetch: 'LAZY')]
-    protected Collection $questions;
+    #[ORM\OneToMany(targetEntity: StepAction::class, mappedBy: 'step', orphanRemoval: true, fetch: 'LAZY')]
+    protected Collection $actions;
 
     #[Groups(['step:read'])]
     #[ORM\OneToMany(targetEntity: StepOutput::class, mappedBy: 'step', orphanRemoval: true, fetch: 'LAZY')]
     protected Collection $outputs;
 
     #[Groups(['step:read'])]
-    #[ORM\OneToMany(targetEntity: StepInput::class, mappedBy: 'step', orphanRemoval: true, fetch: 'LAZY')]
-    protected Collection $inputs;
+    #[ORM\OneToMany(targetEntity: StepConnection::class, mappedBy: 'targetStep', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+    protected Collection $incomingConnections;
 
 
     public function __construct()
     {
         parent::__construct();
-        $this->questions = new ArrayCollection();
+        $this->actions = new ArrayCollection();
         $this->outputs = new ArrayCollection();
-        $this->inputs = new ArrayCollection();
-    }
-
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
+        $this->incomingConnections = new ArrayCollection();
     }
 
     public function getTreeFlow(): TreeFlow
@@ -106,6 +92,16 @@ abstract class StepGenerated extends EntityBase
     public function setTreeFlow(TreeFlow $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -144,16 +140,6 @@ abstract class StepGenerated extends EntityBase
         return $this;
     }
 
-    public function getPrompt(): ?string    {
-        return $this->prompt;
-    }
-
-    public function setPrompt(?string $prompt): self
-    {
-        $this->prompt = $prompt;
-        return $this;
-    }
-
     public function getViewOrder(): int    {
         return $this->viewOrder;
     }
@@ -185,27 +171,27 @@ abstract class StepGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, StepIteration>
+     * @return Collection<int, StepAction>
      */
-    public function getQuestions(): Collection
+    public function getActions(): Collection
     {
-        return $this->questions;
+        return $this->actions;
     }
 
-    public function addQuestion(StepIteration $question): self
+    public function addAction(StepAction $action): self
     {
-        if (!$this->questions->contains($question)) {
-            $this->questions->add($question);
-            $question->setStep($this);
+        if (!$this->actions->contains($action)) {
+            $this->actions->add($action);
+            $action->setStep($this);
         }
         return $this;
     }
 
-    public function removeQuestion(StepIteration $question): self
+    public function removeAction(StepAction $action): self
     {
-        if ($this->questions->removeElement($question)) {
-            if ($question->getStep() === $this) {
-                $question->setStep(null);
+        if ($this->actions->removeElement($action)) {
+            if ($action->getStep() === $this) {
+                $action->setStep(null);
             }
         }
         return $this;
@@ -239,27 +225,27 @@ abstract class StepGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, StepInput>
+     * @return Collection<int, StepConnection>
      */
-    public function getInputs(): Collection
+    public function getIncomingConnections(): Collection
     {
-        return $this->inputs;
+        return $this->incomingConnections;
     }
 
-    public function addInput(StepInput $input): self
+    public function addIncomingConnection(StepConnection $incomingConnection): self
     {
-        if (!$this->inputs->contains($input)) {
-            $this->inputs->add($input);
-            $input->setStep($this);
+        if (!$this->incomingConnections->contains($incomingConnection)) {
+            $this->incomingConnections->add($incomingConnection);
+            $incomingConnection->setTargetStep($this);
         }
         return $this;
     }
 
-    public function removeInput(StepInput $input): self
+    public function removeIncomingConnection(StepConnection $incomingConnection): self
     {
-        if ($this->inputs->removeElement($input)) {
-            if ($input->getStep() === $this) {
-                $input->setStep(null);
+        if ($this->incomingConnections->removeElement($incomingConnection)) {
+            if ($incomingConnection->getTargetStep() === $this) {
+                $incomingConnection->setTargetStep(null);
             }
         }
         return $this;

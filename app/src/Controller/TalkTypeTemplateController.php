@@ -34,7 +34,7 @@ final class TalkTypeTemplateController extends TalkTypeTemplateControllerGenerat
      * API endpoint for searching talkTypeTemplates
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'talktypetemplate_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'talktypetemplate_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

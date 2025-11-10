@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -34,15 +34,6 @@ abstract class BillingFrequencyTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('name', TextType::class, [
-            'label' => 'Name',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter name',
-            ],
-        ]);
-
         $builder->add('value', TextType::class, [
             'label' => 'Value',
             'required' => true,
@@ -52,12 +43,12 @@ abstract class BillingFrequencyTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('description', TextareaType::class, [
-            'label' => 'Description',
-            'required' => false,
+        $builder->add('name', TextType::class, [
+            'label' => 'Name',
+            'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
-                'placeholder' => 'Enter description',
+                'placeholder' => 'Enter name',
             ],
         ]);
 
@@ -70,11 +61,18 @@ abstract class BillingFrequencyTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('description', TextareaType::class, [
+            'label' => 'Description',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter description',
+            ],
+        ]);
+
         $builder->add('intervalType', ChoiceType::class, [
             'label' => 'Interval Type',
             'required' => true,
-            'class' => App\Enum\IntervaltypeEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -127,12 +125,15 @@ abstract class BillingFrequencyTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('products', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('products', CollectionType::class, [
             'label' => 'Products',
             'required' => false,
-            'entry_type' => App\Form\ProductType::class,
+            'entry_type' => \App\Form\ProductType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -145,6 +146,7 @@ abstract class BillingFrequencyTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
     }
 
@@ -152,6 +154,7 @@ abstract class BillingFrequencyTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => BillingFrequency::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

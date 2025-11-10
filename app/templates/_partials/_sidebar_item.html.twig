@@ -1,0 +1,27 @@
+{# templates/_partials/_sidebar_item.html.twig #}
+
+{% set is_active = app.request.attributes.get('_route') == item.route %}
+
+<a
+    href="{{ path(item.route) }}"
+    class="sidebar-item {% if is_active %}active{% endif %}"
+    data-menu-key="{{ item.key }}"
+    data-sidebar-favorites-target="item"
+    {% if is_active %}style="background: rgba(99, 102, 241, 0.15); border-left: 3px solid var(--luminai-accent); font-weight: 600; color: var(--luminai-accent);"{% endif %}
+>
+    <i class="{{ item.icon }} sidebar-icon" style="font-size: 1.25rem; width: 24px; text-align: center; {% if is_active %}color: var(--luminai-accent);{% else %}color: var(--luminai-text);{% endif %} transition: color 0.15s ease;"></i>
+    <span class="sidebar-label" style="flex: 1; font-size: 0.875rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.3s ease, visibility 0.3s ease;">{{ item.label|trans({}, item.translation_domain|default('messages')) }}</span>
+
+    {% if show_favorite_btn|default(false) %}
+        <button
+            type="button"
+            class="favorite-btn {% if is_favorite|default(false) %}is-favorite{% endif %}"
+            data-menu-key="{{ item.key }}"
+            data-action="click->sidebar-favorites#toggle"
+            title="{{ (is_favorite|default(false) ? 'sidebar.unfavorite' : 'sidebar.favorite')|trans }}"
+            style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer; {% if is_favorite|default(false) %}opacity: 1;{% else %}opacity: 0;{% endif %} transition: all 0.15s ease; padding: 0;"
+        >
+            <i class="{% if is_favorite|default(false) %}bi-star-fill{% else %}bi-star{% endif %}" style="font-size: 0.875rem; {% if is_favorite|default(false) %}color: #fbbf24;{% else %}color: var(--luminai-text-muted);{% endif %} transition: color 0.15s ease;"></i>
+        </button>
+    {% endif %}
+</a>

@@ -33,6 +33,7 @@ abstract class AuditLogTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => AuditLog::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -70,10 +70,10 @@ abstract class WinReasonInputDtoGenerated
     public string $color = '#0dcaf0';
 
     #[Groups(['winreason:write'])]
-    public ?array $tags = null;
+    public bool $active = true;
 
     #[Groups(['winreason:write'])]
-    public bool $active = true;
+    public ?array $tags = null;
 
     #[Assert\Length(max: 2000)]
     #[Groups(['winreason:write'])]
@@ -205,16 +205,6 @@ abstract class WinReasonInputDtoGenerated
         return $this;
     }
 
-    public function getTags(): ?array    {
-        return $this->tags;
-    }
-
-    public function setTags(?array $tags): self
-    {
-        $this->tags = $tags;
-        return $this;
-    }
-
     public function getActive(): bool    {
         return $this->active;
     }
@@ -222,6 +212,16 @@ abstract class WinReasonInputDtoGenerated
     public function setActive(bool $active): self
     {
         $this->active = $active;
+        return $this;
+    }
+
+    public function getTags(): ?array    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): self
+    {
+        $this->tags = $tags;
         return $this;
     }
 

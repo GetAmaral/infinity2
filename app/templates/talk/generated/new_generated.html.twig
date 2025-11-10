@@ -1,5 +1,24 @@
-{% set talk = talk ?? null %}
-{% include 'genmax/twig/form_generated.html.twig' with {
-    'talk': talk,
-    'form': form
-} %}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'action.create'|trans }} {{ 'talk.singular'|trans({}, 'talk') }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
+                    <h2>
+                        <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'talk.singular'|trans({}, 'talk') }}
+                    </h2>
+                </div>
+
+                {% include 'talk/generated/form_generated.html.twig' with {
+                    'talk': talk,
+                    'form': form
+                } %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

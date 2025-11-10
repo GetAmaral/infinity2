@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\CommunicationMethod;
 use App\Repository\CommunicationMethodRepository;
 use App\Security\Voter\CommunicationMethodVoter;
-use App\Form\CommunicationMethodFormType;
+use App\Form\CommunicationMethodType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,15 +82,21 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
             'id' => $entity->getId()->toString(),
             'name' => $entity->getName(),
             'function' => $entity->getFunction(),
-            'notifications' => ($notificationsRel = $entity->getNotifications()) ? [
-                'id' => $notificationsRel->getId()->toString(),
-                'display' => (string) $notificationsRel,
-            ] : null,
+            'notifications' => ($notificationsRel = $entity->getNotifications()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $notificationsRel->toArray()
+            ) : [],
             'property' => $entity->getProperty(),
-            'reminders' => ($remindersRel = $entity->getReminders()) ? [
-                'id' => $remindersRel->getId()->toString(),
-                'display' => (string) $remindersRel,
-            ] : null,
+            'reminders' => ($remindersRel = $entity->getReminders()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $remindersRel->toArray()
+            ) : [],
         ];
     }
 
@@ -110,7 +116,7 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
 
         return $this->render('communicationmethod/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'communicationMethod',
+            'entity_name' => 'communicationmethod',
             'entity_name_plural' => 'communicationMethods',
             'page_icon' => 'bi-chat-dots',
             'default_view' => $savedView,
@@ -120,9 +126,16 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => CommunicationMethodVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"function","label":"Function","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFunction","isRelationship":false},{"name":"notifications","label":"Notifications","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotifications","isRelationship":true},{"name":"property","label":"Property","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProperty","isRelationship":false},{"name":"reminders","label":"Reminders","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminders","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"function","label":"Function","type":"string"},{"name":"property","label":"Property","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"function","label":"Function"},{"name":"notifications","label":"Notifications"},{"name":"property","label":"Property"},{"name":"reminders","label":"Reminders"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"function","label":"Function","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFunction"},{"name":"notifications","label":"Notifications","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotifications"},{"name":"property","label":"Property","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProperty"},{"name":"reminders","label":"Reminders","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminders"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"function","label":"Function","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFunction","isRelationship":false},{"name":"notifications","label":"Notifications","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotifications","isRelationship":true},{"name":"property","label":"Property","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProperty","isRelationship":false},{"name":"reminders","label":"Reminders","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminders","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"function","label":"Function","type":"string"},{"name":"property","label":"Property","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"function","label":"Function"},{"name":"notifications","label":"Notifications"},{"name":"property","label":"Property"},{"name":"reminders","label":"Reminders"}]',
@@ -140,9 +153,9 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CommunicationMethodVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -161,7 +174,7 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($communicationMethod);
 
-        $form = $this->createForm(CommunicationMethodFormType::class, $communicationMethod);
+        $form = $this->createForm(CommunicationMethodType::class, $communicationMethod);
 
         return $this->render('communicationmethod/_form_modal.html.twig', [
             'form' => $form,
@@ -186,7 +199,7 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($communicationMethod);
 
-        $form = $this->createForm(CommunicationMethodFormType::class, $communicationMethod);
+        $form = $this->createForm(CommunicationMethodType::class, $communicationMethod);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -236,7 +249,7 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CommunicationMethodVoter::EDIT, $communicationMethod);
 
-        $form = $this->createForm(CommunicationMethodFormType::class, $communicationMethod);
+        $form = $this->createForm(CommunicationMethodType::class, $communicationMethod);
 
         return $this->render('communicationmethod/_form_modal.html.twig', [
             'form' => $form,
@@ -256,7 +269,7 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CommunicationMethodVoter::EDIT, $communicationMethod);
 
-        $form = $this->createForm(CommunicationMethodFormType::class, $communicationMethod);
+        $form = $this->createForm(CommunicationMethodType::class, $communicationMethod);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

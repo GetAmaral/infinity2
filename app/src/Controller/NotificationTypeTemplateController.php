@@ -34,7 +34,7 @@ final class NotificationTypeTemplateController extends NotificationTypeTemplateC
      * API endpoint for searching notificationTypeTemplates
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'notificationtypetemplate_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'notificationtypetemplate_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

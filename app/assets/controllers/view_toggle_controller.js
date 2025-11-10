@@ -24,6 +24,8 @@ export default class extends Controller {
     ];
 
     static values = {
+        entityName: { type: String, default: "" },
+        entityNamePlural: { type: String, default: "" },
         default: { type: String, default: "grid" },
         filterAll: { type: String, default: "All" },
         filterYes: { type: String, default: "Yes" },
@@ -31,11 +33,12 @@ export default class extends Controller {
     };
 
     connect() {
-        this.entityName = this.getEntityNameFromPage();
+        this.entityName = this.entityNameValue || this.getEntityNameFromPage();
+        this.entityNamePlural = this.entityNamePluralValue || (this.entityName + 's');
         this.isActive = true; // Track if this instance is active
         this.instanceId = Math.random().toString(36).substr(2, 9); // Unique ID for debugging
 
-        console.log(`🔌 Controller CONNECT: ${this.entityName} [${this.instanceId}]`);
+        console.log(`🔌 Controller CONNECT: ${this.entityName} (plural: ${this.entityNamePlural}) [${this.instanceId}]`);
 
         // Use global flag per entity to prevent duplicate initialization across Turbo navigations
         if (!window.__viewToggleInitialized) {
@@ -258,16 +261,18 @@ export default class extends Controller {
                 }
             });
 
-            const url = `/${this.entityName.replace(/s$/, '')}/api/search?${params}`;
+            const url = `/${this.entityName}/api/search?${params}`;
             console.log(`📡 Fetching URL: ${url} [${this.instanceId}]`);
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                credentials: 'same-origin'
+            });
 
             if (!response.ok) {
                 throw new Error(`API returned ${response.status}`);
             }
 
             const data = await response.json();
-            const items = data[this.entityName] || [];
+            const items = data[this.entityNamePlural] || [];
 
             if (data.pagination) {
                 this.currentPage = data.pagination.page;

@@ -6,6 +6,7 @@ namespace App\Form;
 
 use App\Entity\CourseLecture;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -61,7 +62,7 @@ class CourseLectureFormType extends AbstractType
             ->add('videoFile', VichFileType::class, [
                 'label' => 'course.lecture.form.video_file',
                 'translation_domain' => 'course',
-                'required' => !$isEdit,
+                'required' => false, // Video is optional - some lectures can be text-only
                 'allow_delete' => false,
                 'download_uri' => false,
                 'attr' => [
@@ -99,6 +100,23 @@ class CourseLectureFormType extends AbstractType
                 'constraints' => [
                     new Assert\PositiveOrZero(message: 'course.lecture.validation.view_order_positive'),
                 ],
+            ])
+            ->add('active', CheckboxType::class, [
+                'label' => 'common.form.active',
+                'required' => false,
+                'data' => true, // Default to true
+                'attr' => [
+                    'class' => 'form-check-input',
+                ],
+            ])
+            ->add('free', CheckboxType::class, [
+                'label' => 'course.lecture.form.free',
+                'translation_domain' => 'course',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-check-input',
+                ],
+                'help' => 'course.lecture.form.free_help',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => $isEdit ? 'button.update_lecture' : 'button.create_lecture',

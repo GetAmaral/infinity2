@@ -13,6 +13,7 @@ use App\Repository\OrganizationRepository;
 use App\Repository\CourseRepository;
 use App\Repository\StudentCourseRepository;
 use App\Service\ListPreferencesService;
+use App\Service\EntityMetadataService;
 use App\MultiTenant\TenantContext;
 use App\Security\Voter\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,6 +36,7 @@ final class UserController extends BaseApiController
         private readonly CourseRepository $courseRepository,
         private readonly StudentCourseRepository $studentCourseRepository,
         private readonly ListPreferencesService $listPreferencesService,
+        private readonly EntityMetadataService $entityMetadataService,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         private readonly TenantContext $tenantContext
@@ -49,20 +51,24 @@ final class UserController extends BaseApiController
         $preferences = $this->listPreferencesService->getEntityPreferences('users');
         $savedView = $preferences['view'] ?? 'grid';
 
-        return $this->render('user/index.html.twig', [
+        // Get field metadata from database
+        $metadata = $this->entityMetadataService->getIndexMetadata('User');
+
+        return $this->render('user/index.html.twig', array_merge([
             // Generic entity list variables for base template
             'entities' => [], // Empty - JS will load via API
             'entity_name' => 'user',
             'entity_name_plural' => 'users',
-            'page_icon' => 'bi bi-people',
+            'page_icon' => 'bi-people',
             'default_view' => $savedView, // Use saved preference
             'enable_search' => true,
             'enable_filters' => true,
+            'enable_sorting' => true,
             'enable_create_button' => true,
 
             // Backward compatibility: keep old variable name
             'users' => [], // Empty - JS will load via API
-        ]);
+        ], $metadata));
     }
 
     #[Route('/new', name: 'user_new', methods: ['GET', 'POST'])]
@@ -152,10 +158,14 @@ final class UserController extends BaseApiController
                 ->getResult();
         }
 
+        // Get field metadata for show view
+        $showProperties = $this->entityMetadataService->getShowProperties('User');
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
             'isStudent' => $isStudent,
             'availableCourses' => $availableCourses,
+            'showProperties' => $showProperties,
         ]);
     }
 

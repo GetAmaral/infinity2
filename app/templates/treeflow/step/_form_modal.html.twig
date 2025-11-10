@@ -52,18 +52,6 @@
         {{ form_errors(form.objective) }}
     </div>
 
-    <div class="form-group-modern">
-        <label class="form-label-modern">{{ form_label(form.prompt) }}</label>
-        {{ form_widget(form.prompt, {
-            'attr': {
-                'class': 'form-input-modern' ~ (form.prompt.vars.errors|length > 0 ? ' input-error' : ''),
-                'placeholder': 'step.form.prompt.placeholder'|trans({}, 'treeflow'),
-                'rows': 5
-            }
-        }) }}
-        {{ form_errors(form.prompt) }}
-    </div>
-
     {{ form_widget(form._token) }}
 
     {# Hidden fields for continuation context #}

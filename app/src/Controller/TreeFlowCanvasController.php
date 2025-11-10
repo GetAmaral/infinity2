@@ -6,10 +6,8 @@ namespace App\Controller;
 
 use App\Entity\Step;
 use App\Entity\StepConnection;
-use App\Entity\StepInput;
 use App\Entity\StepOutput;
 use App\Entity\TreeFlow;
-use App\Repository\StepInputRepository;
 use App\Repository\StepOutputRepository;
 use App\Repository\StepRepository;
 use App\Security\Voter\TreeFlowVoter;
@@ -38,7 +36,6 @@ final class TreeFlowCanvasController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly StepRepository $stepRepository,
         private readonly StepOutputRepository $outputRepository,
-        private readonly StepInputRepository $inputRepository,
         private readonly StepConnectionValidator $validator,
     ) {
     }
@@ -57,18 +54,17 @@ final class TreeFlowCanvasController extends AbstractController
         $connections = $this->entityManager->getRepository(StepConnection::class)
             ->createQueryBuilder('c')
             ->join('c.sourceOutput', 'so')
-            ->join('c.targetInput', 'ti')
+            ->join('c.targetStep', 'ts')
             ->join('so.step', 'ss')
-            ->join('ti.step', 'ts')
             ->where('ss.treeFlow = :treeflow OR ts.treeFlow = :treeflow')
             ->setParameter('treeflow', $treeFlow)
-            ->addSelect('so', 'ti', 'ss', 'ts')
+            ->addSelect('so', 'ts', 'ss')
             ->getQuery()
             ->getResult();
 
         error_log("[LIST CONNECTIONS] Found " . count($connections) . " connections");
         foreach ($connections as $connection) {
-            error_log("[LIST CONNECTIONS] - {$connection->getId()}: {$connection->getSourceOutput()->getName()} -> {$connection->getTargetInput()->getName()}");
+            error_log("[LIST CONNECTIONS] - {$connection->getId()}: {$connection->getSourceOutput()->getName()} -> {$connection->getTargetStep()->getName()}");
         }
 
         $connectionsData = [];
@@ -81,12 +77,9 @@ final class TreeFlowCanvasController extends AbstractController
                     'stepId' => $connection->getSourceOutput()->getStep()->getId()?->toString(),
                     'stepName' => $connection->getSourceOutput()->getStep()->getName(),
                 ],
-                'targetInput' => [
-                    'id' => $connection->getTargetInput()->getId()?->toString(),
-                    'name' => $connection->getTargetInput()->getName(),
-                    'stepId' => $connection->getTargetInput()->getStep()->getId()?->toString(),
-                    'stepName' => $connection->getTargetInput()->getStep()->getName(),
-                    'type' => $connection->getTargetInput()->getType()->value,
+                'targetStep' => [
+                    'id' => $connection->getTargetStep()->getId()?->toString(),
+                    'name' => $connection->getTargetStep()->getName(),
                 ],
             ];
         }
@@ -209,7 +202,7 @@ final class TreeFlowCanvasController extends AbstractController
     }
 
     /**
-     * Create connection between output and input
+     * Create connection between output and step
      * POST /treeflow/{id}/connection
      */
     #[Route('/{id}/connection', name: 'treeflow_connection_create', methods: ['POST'])]
@@ -219,12 +212,12 @@ final class TreeFlowCanvasController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        error_log("[CREATE CONNECTION] Request received - outputId: " . ($data['outputId'] ?? 'null') . ", inputId: " . ($data['inputId'] ?? 'null'));
+        error_log("[CREATE CONNECTION] Request received - outputId: " . ($data['outputId'] ?? 'null') . ", targetStepId: " . ($data['targetStepId'] ?? 'null'));
 
-        if (!isset($data['outputId']) || !isset($data['inputId'])) {
+        if (!isset($data['outputId']) || !isset($data['targetStepId'])) {
             return $this->json([
                 'success' => false,
-                'error' => 'Missing outputId or inputId',
+                'error' => 'Missing outputId or targetStepId',
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -237,26 +230,26 @@ final class TreeFlowCanvasController extends AbstractController
             ->getQuery()
             ->getOneOrNullResult();
 
-        $input = $this->inputRepository->find($data['inputId']);
+        $targetStep = $this->stepRepository->find($data['targetStepId']);
 
-        if (!$output || !$input) {
+        if (!$output || !$targetStep) {
             return $this->json([
                 'success' => false,
-                'error' => 'Output or Input not found',
+                'error' => 'Output or Target Step not found',
             ], Response::HTTP_NOT_FOUND);
         }
 
         // Verify both belong to the same treeflow
         if ($output->getStep()->getTreeFlow()->getId() !== $treeFlow->getId() ||
-            $input->getStep()->getTreeFlow()->getId() !== $treeFlow->getId()) {
+            $targetStep->getTreeFlow()->getId() !== $treeFlow->getId()) {
             return $this->json([
                 'success' => false,
-                'error' => 'Output and Input must belong to the same TreeFlow',
+                'error' => 'Output and Target Step must belong to the same TreeFlow',
             ], Response::HTTP_BAD_REQUEST);
         }
 
         // Validate connection
-        $validation = $this->validator->validate($output, $input);
+        $validation = $this->validator->validate($output, $targetStep);
         if (!$validation['valid']) {
             return $this->json([
                 'success' => false,
@@ -267,13 +260,7 @@ final class TreeFlowCanvasController extends AbstractController
         // Create connection
         $connection = new StepConnection();
         $connection->setSourceOutput($output);
-        $connection->setTargetInput($input);
-
-        // Set organization from user
-        $user = $this->getUser();
-        if ($user && $user->getOrganization()) {
-            $connection->setOrganization($user->getOrganization());
-        }
+        $connection->setTargetStep($targetStep);
 
         $this->entityManager->persist($connection);
         $this->entityManager->flush();
@@ -290,12 +277,9 @@ final class TreeFlowCanvasController extends AbstractController
                     'stepId' => $output->getStep()->getId()?->toString(),
                     'stepName' => $output->getStep()->getName(),
                 ],
-                'targetInput' => [
-                    'id' => $input->getId()?->toString(),
-                    'name' => $input->getName(),
-                    'stepId' => $input->getStep()->getId()?->toString(),
-                    'stepName' => $input->getStep()->getName(),
-                    'type' => $input->getType()->value,
+                'targetStep' => [
+                    'id' => $targetStep->getId()?->toString(),
+                    'name' => $targetStep->getName(),
                 ],
             ],
         ]);
@@ -329,7 +313,7 @@ final class TreeFlowCanvasController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        error_log("[DELETE] BEFORE DELETE - Deleting connection: {$connectionId} ({$connection->getSourceOutput()->getName()} -> {$connection->getTargetInput()->getName()})");
+        error_log("[DELETE] BEFORE DELETE - Deleting connection: {$connectionId} ({$connection->getSourceOutput()->getName()} -> {$connection->getTargetStep()->getName()})");
 
         $this->entityManager->remove($connection);
 
@@ -394,67 +378,6 @@ final class TreeFlowCanvasController extends AbstractController
         ]);
     }
 
-    /**
-     * Auto-create input for a step when dragging connection to empty step
-     * POST /treeflow/{id}/step/{stepId}/input/auto
-     */
-    #[Route('/{id}/step/{stepId}/input/auto', name: 'treeflow_input_auto_create', methods: ['POST'])]
-    public function autoCreateInput(
-        #[MapEntity(id: 'id')] TreeFlow $treeFlow,
-        #[MapEntity(id: 'stepId')] Step $step,
-        Request $request,
-        TranslatorInterface $translator
-    ): JsonResponse
-    {
-        $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
-
-        // Verify step belongs to treeflow
-        if ($step->getTreeFlow()->getId() !== $treeFlow->getId()) {
-            return $this->json([
-                'success' => false,
-                'error' => 'Step does not belong to this TreeFlow',
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        $data = json_decode($request->getContent(), true);
-
-        // Check if we have a translation key (continuation feature) or smart name generation (drag-drop feature)
-        if (isset($data['name']) && isset($data['translationDomain'])) {
-            // Use translation key (from continuation feature)
-            $inputName = $translator->trans(
-                $data['name'],
-                [],
-                $data['translationDomain']
-            );
-        } else {
-            // Generate smart input name (from drag-drop feature)
-            $inputName = $this->generateInputName(
-                $data['outputName'] ?? null,
-                $data['sourceStepName'] ?? null
-            );
-        }
-
-        // Create new input with type ANY
-        $input = new StepInput();
-        $input->setStep($step);
-        $input->setName($inputName);
-        $input->setType(\App\Enum\InputType::ANY);
-
-        // Organization is inherited from Step (no need to set explicitly)
-
-        $this->entityManager->persist($input);
-        $this->entityManager->flush();
-
-        return $this->json([
-            'success' => true,
-            'input' => [
-                'id' => $input->getId()?->toString(),
-                'name' => $input->getName(),
-                'type' => $input->getType()->value,
-                'stepId' => $step->getId()?->toString(),
-            ],
-        ]);
-    }
 
     /**
      * Create step via continuation line (n8n pattern)
@@ -522,30 +445,12 @@ final class TreeFlowCanvasController extends AbstractController
 
         $this->entityManager->persist($newStep);
 
-        // Create default input on new step
-        $inputName = $this->generateInputName(
-            $sourceOutput->getName(),
-            $sourceStep->getName()
-        );
-
-        $newInput = new StepInput();
-        $newInput->setStep($newStep);
-        $newInput->setName($inputName);
-        $newInput->setType(\App\Enum\InputType::ANY);
-
-        $this->entityManager->persist($newInput);
-
         // Create connection
         $connection = new StepConnection();
         $connection->setSourceOutput($sourceOutput);
-        $connection->setTargetInput($newInput);
+        $connection->setTargetStep($newStep);
 
-        $user = $this->getUser();
-        if ($user && $user->getOrganization()) {
-            $connection->setOrganization($user->getOrganization());
-        }
-
-        error_log("[CREATE CONNECTION VIA CONTINUATION] Creating connection: {$sourceOutput->getName()} -> {$newInput->getName()}");
+        error_log("[CREATE CONNECTION VIA CONTINUATION] Creating connection: {$sourceOutput->getName()} -> {$newStep->getName()}");
 
         $this->entityManager->persist($connection);
 
@@ -561,13 +466,6 @@ final class TreeFlowCanvasController extends AbstractController
                 'objective' => $newStep->getObjective(),
                 'positionX' => $newStep->getPositionX(),
                 'positionY' => $newStep->getPositionY(),
-                'inputs' => [
-                    [
-                        'id' => $newInput->getId()?->toString(),
-                        'name' => $newInput->getName(),
-                        'type' => $newInput->getType()->value,
-                    ]
-                ],
                 'outputs' => [],
             ],
             'connection' => [
@@ -578,12 +476,9 @@ final class TreeFlowCanvasController extends AbstractController
                     'stepId' => $sourceStep->getId()?->toString(),
                     'stepName' => $sourceStep->getName(),
                 ],
-                'targetInput' => [
-                    'id' => $newInput->getId()?->toString(),
-                    'name' => $newInput->getName(),
-                    'stepId' => $newStep->getId()?->toString(),
-                    'stepName' => $newStep->getName(),
-                    'type' => $newInput->getType()->value,
+                'targetStep' => [
+                    'id' => $newStep->getId()?->toString(),
+                    'name' => $newStep->getName(),
                 ],
             ],
         ];
@@ -600,22 +495,4 @@ final class TreeFlowCanvasController extends AbstractController
         return $this->json($response);
     }
 
-    /**
-     * Generate smart input name based on output information
-     */
-    private function generateInputName(?string $outputName, ?string $sourceStepName): string
-    {
-        // Priority 1: Use output name if meaningful
-        if ($outputName && !in_array(strtolower($outputName), ['output', 'default', 'out', 'result'])) {
-            return 'On ' . $outputName;
-        }
-
-        // Priority 2: Use source step name
-        if ($sourceStepName) {
-            return 'From ' . $sourceStepName;
-        }
-
-        // Fallback
-        return 'New Input';
-    }
 }

@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping\Cache;
  * TreeFlow - AI Agent Guidance System
  *
  * A TreeFlow represents a complete workflow for AI agent guidance,
- * containing steps with questions, few-shot examples, and conditional routing.
+ * containing steps with actions, few-shot examples, and conditional routing.
  */
 #[ORM\Entity(repositoryClass: TreeFlowRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -61,7 +61,7 @@ class TreeFlow extends TreeFlowGenerated
     /**
      * Convert the entire TreeFlow structure to JSON array
      *
-     * @return array TreeFlow structure with steps, questions, inputs, outputs, and connections
+     * @return array TreeFlow structure with steps, actions, inputs, outputs, and connections
      */
     public function convertToJson(): array
     {
@@ -72,24 +72,13 @@ class TreeFlow extends TreeFlowGenerated
         $order = 1;
 
         foreach ($orderedSteps as $step) {
-            // Build questions array
-            $questions = [];
-            foreach ($step->getQuestions() as $question) {
-                $questions[$question->getSlug()] = [
-                    'objective' => $question->getObjective(),
-                    'prompt' => $question->getPrompt(),
-                    'importance' => $question->getImportance(),
-                    'fewShotPositive' => $question->getFewShotPositive() ?? [],
-                    'fewShotNegative' => $question->getFewShotNegative() ?? [],
-                ];
-            }
-
-            // Build inputs array
-            $inputs = [];
-            foreach ($step->getInputs() as $input) {
-                $inputs[$input->getSlug() ?? 'input-' . $input->getId()] = [
-                    'type' => $input->getType(),
-                    'prompt' => $input->getPrompt(),
+            // Build actions array
+            $actions = [];
+            foreach ($step->getActions() as $action) {
+                $actions[$action->getSlug()] = [
+                    'prompt' => $action->getPrompt(),
+                    'importance' => $action->getImportance(),
+                    'fewShot' => $action->getFewShot() ?? [],
                 ];
             }
 
@@ -97,20 +86,15 @@ class TreeFlow extends TreeFlowGenerated
             $outputs = [];
             foreach ($step->getOutputs() as $output) {
                 $outputData = [
-                    'prompt' => $output->getDescription(),
-                    'conditional' => $output->getConditional(),
+                    'condition' => $output->getCondition(),
                 ];
 
                 // Check if output has a connection
                 if ($output->hasConnection()) {
                     $connection = $output->getConnection();
-                    $targetInput = $connection->getTargetInput();
-                    $targetStep = $targetInput->getStep();
+                    $targetStep = $connection->getTargetStep();
 
-                    $outputData['connectTo'] = [
-                        'stepSlug' => $targetStep->getSlug(),
-                        'inputSlug' => $targetInput->getSlug() ?? 'input-' . $targetInput->getId(),
-                    ];
+                    $outputData['connectTo'] = $targetStep->getSlug();
                 }
 
                 $outputs[$output->getSlug() ?? 'output-' . $output->getId()] = $outputData;
@@ -120,9 +104,7 @@ class TreeFlow extends TreeFlowGenerated
             $steps[$step->getSlug()] = [
                 'order' => $order,
                 'objective' => $step->getObjective(),
-                'prompt' => $step->getPrompt(),
-                'questions' => $questions,
-                'inputs' => $inputs,
+                'actions' => $actions,
                 'outputs' => $outputs,
             ];
 
@@ -140,7 +122,7 @@ class TreeFlow extends TreeFlowGenerated
      * Convert TreeFlow to TalkFlow template structure
      *
      * Creates an empty template with step metadata and empty fields for:
-     * - Question answers (to be filled by Talk processor)
+     * - Action answers (to be filled by Talk processor)
      * - Output selections (which path was taken)
      * - Step completion status and timestamps
      *
@@ -155,10 +137,10 @@ class TreeFlow extends TreeFlowGenerated
         $order = 1;
 
         foreach ($orderedSteps as $step) {
-            // Build questions array with empty answer fields
-            $questions = [];
-            foreach ($step->getQuestions() as $question) {
-                $questions[$question->getSlug()] = ''; // Empty - to be filled by Talk processor
+            // Build actions array with empty answer fields
+            $actions = [];
+            foreach ($step->getActions() as $action) {
+                $actions[$action->getSlug()] = ''; // Empty - to be filled by Talk processor
             }
 
             // Build outputs array with empty selection fields
@@ -173,7 +155,7 @@ class TreeFlow extends TreeFlowGenerated
                 'completed' => false,
                 'timestamp' => null,
                 'selectedOutput' => null, // Will store which output was actually taken
-                'questions' => $questions,
+                'actions' => $actions,
                 'outputs' => $outputs,
             ];
 
@@ -230,8 +212,7 @@ class TreeFlow extends TreeFlowGenerated
             foreach ($step->getOutputs() as $output) {
                 if ($output->hasConnection()) {
                     $connection = $output->getConnection();
-                    $targetInput = $connection->getTargetInput();
-                    $targetStep = $targetInput->getStep();
+                    $targetStep = $connection->getTargetStep();
                     $targetStepId = $targetStep->getId()->toRfc4122();
 
                     // Add to queue if not yet visited

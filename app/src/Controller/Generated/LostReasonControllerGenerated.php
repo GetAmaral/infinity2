@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\LostReason;
 use App\Repository\LostReasonRepository;
 use App\Security\Voter\LostReasonVoter;
-use App\Form\LostReasonFormType;
+use App\Form\LostReasonType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,11 +86,14 @@ abstract class LostReasonControllerGenerated extends BaseApiController
             ] : null,
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
+            'deals' => ($dealsRel = $entity->getDeals()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealsRel->toArray()
+            ) : [],
             'category' => $entity->getCategory(),
-            'deals' => ($dealsRel = $entity->getDeals()) ? [
-                'id' => $dealsRel->getId()->toString(),
-                'display' => (string) $dealsRel,
-            ] : null,
             'active' => $entity->getActive(),
             'default' => $entity->getDefault(),
             'sortOrder' => $entity->getSortOrder(),
@@ -122,7 +125,7 @@ abstract class LostReasonControllerGenerated extends BaseApiController
 
         return $this->render('lostreason/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'lostReason',
+            'entity_name' => 'lostreason',
             'entity_name_plural' => 'lostReasa',
             'page_icon' => 'bi-x-circle',
             'default_view' => $savedView,
@@ -132,12 +135,19 @@ abstract class LostReasonControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => LostReasonVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresNotes","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"critical","label":"Critical","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCritical","isRelationship":false},{"name":"impact","label":"Impact","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getImpact","isRelationship":false},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinBackPotential","isRelationship":false},{"name":"actionable","label":"Actionable","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActionable","isRelationship":false},{"name":"internal","label":"Internal Only","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getInternal","isRelationship":false},{"name":"competitorName","label":"Competitor Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitorName","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"category","label":"Category","type":"string"},{"name":"impact","label":"Impact","type":"string"},{"name":"competitorName","label":"Competitor Name","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sortOrder","label":"Sort Order","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"critical","label":"Critical","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"impact","label":"Impact","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"actionable","label":"Actionable","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"internal","label":"Internal Only","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"deals","label":"Deals"},{"name":"category","label":"Category"},{"name":"active","label":"Active"},{"name":"sortOrder","label":"Sort Order"},{"name":"impact","label":"Impact"},{"name":"winBackPotential","label":"Win-Back Potential"},{"name":"competitorName","label":"Competitor Name"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory"},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"default","label":"Default","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault"},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder"},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresNotes"},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"critical","label":"Critical","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCritical"},{"name":"impact","label":"Impact","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getImpact"},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinBackPotential"},{"name":"actionable","label":"Actionable","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActionable"},{"name":"internal","label":"Internal Only","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getInternal"},{"name":"competitorName","label":"Competitor Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitorName"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresNotes","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"critical","label":"Critical","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCritical","isRelationship":false},{"name":"impact","label":"Impact","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getImpact","isRelationship":false},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinBackPotential","isRelationship":false},{"name":"actionable","label":"Actionable","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActionable","isRelationship":false},{"name":"internal","label":"Internal Only","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getInternal","isRelationship":false},{"name":"competitorName","label":"Competitor Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitorName","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"category","label":"Category","type":"string"},{"name":"impact","label":"Impact","type":"string"},{"name":"competitorName","label":"Competitor Name","type":"string"}]',
             'filterable_fields' => '[{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sortOrder","label":"Sort Order","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"critical","label":"Critical","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"impact","label":"Impact","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"actionable","label":"Actionable","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"internal","label":"Internal Only","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
-            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"category","label":"Category"},{"name":"deals","label":"Deals"},{"name":"active","label":"Active"},{"name":"sortOrder","label":"Sort Order"},{"name":"impact","label":"Impact"},{"name":"winBackPotential","label":"Win-Back Potential"},{"name":"competitorName","label":"Competitor Name"}]',
+            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"deals","label":"Deals"},{"name":"category","label":"Category"},{"name":"active","label":"Active"},{"name":"sortOrder","label":"Sort Order"},{"name":"impact","label":"Impact"},{"name":"winBackPotential","label":"Win-Back Potential"},{"name":"competitorName","label":"Competitor Name"}]',
         ]);
     }
 
@@ -152,9 +162,9 @@ abstract class LostReasonControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(LostReasonVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -173,7 +183,7 @@ abstract class LostReasonControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($lostReason);
 
-        $form = $this->createForm(LostReasonFormType::class, $lostReason);
+        $form = $this->createForm(LostReasonType::class, $lostReason);
 
         return $this->render('lostreason/_form_modal.html.twig', [
             'form' => $form,
@@ -198,7 +208,7 @@ abstract class LostReasonControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($lostReason);
 
-        $form = $this->createForm(LostReasonFormType::class, $lostReason);
+        $form = $this->createForm(LostReasonType::class, $lostReason);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -248,7 +258,7 @@ abstract class LostReasonControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(LostReasonVoter::EDIT, $lostReason);
 
-        $form = $this->createForm(LostReasonFormType::class, $lostReason);
+        $form = $this->createForm(LostReasonType::class, $lostReason);
 
         return $this->render('lostreason/_form_modal.html.twig', [
             'form' => $form,
@@ -268,7 +278,7 @@ abstract class LostReasonControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(LostReasonVoter::EDIT, $lostReason);
 
-        $form = $this->createForm(LostReasonFormType::class, $lostReason);
+        $form = $this->createForm(LostReasonType::class, $lostReason);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

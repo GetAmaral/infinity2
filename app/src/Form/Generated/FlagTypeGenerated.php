@@ -47,8 +47,6 @@ abstract class FlagTypeGenerated extends AbstractType
             'label' => 'Category',
             'required' => true,
             'help' => 'Categorize this flag for better organization',
-            'class' => App\Enum\CategoryEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -85,8 +83,6 @@ abstract class FlagTypeGenerated extends AbstractType
             'label' => 'Entity Type',
             'required' => true,
             'help' => 'What type of entity is being flagged',
-            'class' => App\Enum\EntitytypeEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -96,8 +92,6 @@ abstract class FlagTypeGenerated extends AbstractType
             'label' => 'Priority',
             'required' => true,
             'help' => 'Business priority: 1=Low, 2=Medium, 3=High, 4=Urgent',
-            'class' => App\Enum\PriorityEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -145,6 +139,7 @@ abstract class FlagTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Flag::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

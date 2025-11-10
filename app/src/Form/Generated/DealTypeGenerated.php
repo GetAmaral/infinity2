@@ -15,6 +15,21 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use App\Entity\Company;
+use App\Entity\PipelineStage;
+use App\Entity\DealType;
+use App\Entity\Pipeline;
+use App\Entity\DealCategory;
+use App\Entity\Product;
+use App\Entity\User;
+use App\Entity\Contact;
+use App\Entity\LeadSource;
+use App\Entity\Campaign;
+use App\Entity\Competitor;
+use App\Entity\Tag;
+use App\Entity\LostReason;
+use App\Entity\WinReason;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -52,21 +67,21 @@ abstract class DealTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('company', EntityType::class, [
             'label' => 'Company',
             'required' => true,
-            'class' => Company::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Company::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('dealStatus', ChoiceType::class, [
             'label' => 'DealStatus',
             'required' => true,
-            'class' => App\Enum\DealstatusEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -79,15 +94,17 @@ abstract class DealTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('currentStage', EntityType::class, [
             'label' => 'CurrentStage',
             'required' => true,
-            'class' => PipelineStage::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\PipelineStage::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('probability', NumberType::class, [
             'label' => 'Probability',
@@ -97,32 +114,34 @@ abstract class DealTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('dealType', EntityType::class, [
+            'label' => 'DealType',
+            'required' => false,
+            'class' => \App\Entity\DealType::class,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+        }
+
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('pipeline', EntityType::class, [
             'label' => 'Pipeline',
             'required' => false,
             'help' => 'Sales pipeline this deal belongs to',
-            'class' => Pipeline::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Pipeline::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
-
-        $builder->add('dealType', EntityType::class, [
-            'label' => 'DealType',
-            'required' => false,
-            'class' => DealType::class,
-            'choice_label' => '__toString',
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
+        }
 
         $builder->add('priority', ChoiceType::class, [
             'label' => 'Priority',
             'required' => false,
-            'class' => App\Enum\PriorityEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -134,15 +153,17 @@ abstract class DealTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('category', EntityType::class, [
             'label' => 'Category',
             'required' => false,
-            'class' => DealCategory::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\DealCategory::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('dealNumber', TextType::class, [
             'label' => 'DealNumber',
@@ -252,20 +273,19 @@ abstract class DealTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('closureDate', DateTimeType::class, [
-            'label' => 'ClosureDate',
+        $builder->add('products', EntityType::class, [
+            'label' => 'Products',
             'required' => false,
+            'class' => \App\Entity\Product::class,
+            'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('products', EntityType::class, [
-            'label' => 'Products',
+        $builder->add('closureDate', DateTimeType::class, [
+            'label' => 'ClosureDate',
             'required' => false,
-            'class' => Product::class,
-            'choice_label' => '__toString',
-            'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -312,78 +332,86 @@ abstract class DealTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('manager', EntityType::class, [
             'label' => 'Manager',
             'required' => true,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('team', EntityType::class, [
             'label' => 'Team',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('owner', EntityType::class, [
             'label' => 'Deal Owner',
             'required' => true,
             'help' => 'Person who owns this deal',
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('primaryContact', EntityType::class, [
             'label' => 'PrimaryContact',
             'required' => false,
-            'class' => Contact::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Contact::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('contacts', EntityType::class, [
             'label' => 'Contacts',
             'required' => false,
-            'class' => Contact::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Contact::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('leadSource', EntityType::class, [
             'label' => 'LeadSource',
             'required' => false,
-            'class' => LeadSource::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\LeadSource::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('campaign', EntityType::class, [
             'label' => 'Campaign',
             'required' => false,
-            'class' => Campaign::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Campaign::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('sourceDetails', TextType::class, [
             'label' => 'SourceDetails',
@@ -403,12 +431,15 @@ abstract class DealTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('dealStages', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('dealStages', CollectionType::class, [
             'label' => 'DealStages',
             'required' => false,
-            'entry_type' => App\Form\DealStageType::class,
+            'entry_type' => \App\Form\DealStageType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -421,13 +452,17 @@ abstract class DealTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('talks', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('talks', CollectionType::class, [
             'label' => 'Talks',
             'required' => false,
-            'entry_type' => App\Form\TalkType::class,
+            'entry_type' => \App\Form\TalkType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -440,13 +475,17 @@ abstract class DealTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('tasks', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('tasks', CollectionType::class, [
             'label' => 'Tasks',
             'required' => false,
-            'entry_type' => App\Form\TaskType::class,
+            'entry_type' => \App\Form\TaskType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -459,12 +498,12 @@ abstract class DealTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('competitors', EntityType::class, [
             'label' => 'Competitors',
             'required' => false,
-            'class' => Competitor::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Competitor::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -474,8 +513,7 @@ abstract class DealTypeGenerated extends AbstractType
         $builder->add('tags', EntityType::class, [
             'label' => 'Tags',
             'required' => false,
-            'class' => Tag::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Tag::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -491,25 +529,29 @@ abstract class DealTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('lostReason', EntityType::class, [
             'label' => 'LostReason',
             'required' => false,
-            'class' => LostReason::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\LostReason::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('winReason', EntityType::class, [
             'label' => 'WinReason',
             'required' => false,
-            'class' => WinReason::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\WinReason::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('actualClosureDate', DateTimeType::class, [
             'label' => 'Actual Closure Date',
@@ -525,6 +567,7 @@ abstract class DealTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Deal::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

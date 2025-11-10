@@ -34,7 +34,7 @@ final class MeetingDataController extends MeetingDataControllerGenerated
      * API endpoint for searching meetingDatas
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'meetingdata_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'meetingdata_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

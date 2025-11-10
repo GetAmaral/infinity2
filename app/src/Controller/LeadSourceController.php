@@ -34,7 +34,7 @@ final class LeadSourceController extends LeadSourceControllerGenerated
      * API endpoint for searching leadSources
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'leadsource_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'leadsource_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

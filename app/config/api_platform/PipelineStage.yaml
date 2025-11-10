@@ -53,15 +53,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      dealStages:
-        description: "Collection of deal stage transitions associated with this pipeline stage"
-        example: "[{\"id\": \"0199cadd-635e-76d8-98fe-38d61ab9751f\", \"dealId\": \"...\", \"enteredAt\": \"2025-01-15T10:30:00Z\"}]"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       probability:
         description: "Win probability percentage (0-100) indicating likelihood of closing deals at this stage"
         example: "75"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      dealStages:
+        description: "Collection of deal stage transitions associated with this pipeline stage"
+        example: "[{\"id\": \"0199cadd-635e-76d8-98fe-38d61ab9751f\", \"dealId\": \"...\", \"enteredAt\": \"2025-01-15T10:30:00Z\"}]"
         # Advanced filters
         filters:
           - type: OrderFilter
@@ -77,15 +77,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      active:
-        description: "Whether this stage is currently active and available for use"
-        example: "true"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       lost:
         description: "Whether this is a Lost stage indicating unsuccessful deal closure"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      active:
+        description: "Whether this stage is currently active and available for use"
+        example: "true"
         # Advanced filters
         filters:
           - type: OrderFilter

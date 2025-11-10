@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\ProductCategory;
 use App\Repository\ProductCategoryRepository;
 use App\Security\Voter\ProductCategoryVoter;
-use App\Form\ProductCategoryFormType;
+use App\Form\ProductCategoryType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,14 +90,20 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
                 'id' => $parentCategoryRel->getId()->toString(),
                 'display' => (string) $parentCategoryRel,
             ] : null,
-            'subcategories' => ($subcategoriesRel = $entity->getSubcategories()) ? [
-                'id' => $subcategoriesRel->getId()->toString(),
-                'display' => (string) $subcategoriesRel,
-            ] : null,
-            'products' => ($productsRel = $entity->getProducts()) ? [
-                'id' => $productsRel->getId()->toString(),
-                'display' => (string) $productsRel,
-            ] : null,
+            'subcategories' => ($subcategoriesRel = $entity->getSubcategories()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $subcategoriesRel->toArray()
+            ) : [],
+            'products' => ($productsRel = $entity->getProducts()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $productsRel->toArray()
+            ) : [],
         ];
     }
 
@@ -117,7 +123,7 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
 
         return $this->render('productcategory/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'productCategory',
+            'entity_name' => 'productcategory',
             'entity_name_plural' => 'ries',
             'page_icon' => 'bi-boxes',
             'default_view' => $savedView,
@@ -127,9 +133,16 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => ProductCategoryVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"parentCategory","label":"ParentCategory","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getParentCategory","isRelationship":true},{"name":"subcategories","label":"Subcategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSubcategories","isRelationship":true},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"parentCategory","label":"ParentCategory"},{"name":"subcategories","label":"Subcategories"},{"name":"products","label":"Products"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"parentCategory","label":"ParentCategory","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getParentCategory"},{"name":"subcategories","label":"Subcategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSubcategories"},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"parentCategory","label":"ParentCategory","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getParentCategory","isRelationship":true},{"name":"subcategories","label":"Subcategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSubcategories","isRelationship":true},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"parentCategory","label":"ParentCategory"},{"name":"subcategories","label":"Subcategories"},{"name":"products","label":"Products"}]',
@@ -147,9 +160,9 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductCategoryVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -168,7 +181,7 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($productCategory);
 
-        $form = $this->createForm(ProductCategoryFormType::class, $productCategory);
+        $form = $this->createForm(ProductCategoryType::class, $productCategory);
 
         return $this->render('productcategory/_form_modal.html.twig', [
             'form' => $form,
@@ -193,7 +206,7 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($productCategory);
 
-        $form = $this->createForm(ProductCategoryFormType::class, $productCategory);
+        $form = $this->createForm(ProductCategoryType::class, $productCategory);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -243,7 +256,7 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductCategoryVoter::EDIT, $productCategory);
 
-        $form = $this->createForm(ProductCategoryFormType::class, $productCategory);
+        $form = $this->createForm(ProductCategoryType::class, $productCategory);
 
         return $this->render('productcategory/_form_modal.html.twig', [
             'form' => $form,
@@ -263,7 +276,7 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductCategoryVoter::EDIT, $productCategory);
 
-        $form = $this->createForm(ProductCategoryFormType::class, $productCategory);
+        $form = $this->createForm(ProductCategoryType::class, $productCategory);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

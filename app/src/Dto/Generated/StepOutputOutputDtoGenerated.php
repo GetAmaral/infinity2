@@ -21,19 +21,17 @@ abstract class StepOutputOutputDtoGenerated
 {
     public ?Uuid $id = null;
 
+    public string $name;
+
     /**
      * step reference
      * Can be: IRI string or nested StepOutput object
      */
     public string|StepOutputDto $step;
 
-    public string $name;
-
-    public ?string $description = null;
-
     public ?string $slug = null;
 
-    public ?string $conditional = null;
+    public ?string $condition = null;
 
     /**
      * connection reference
@@ -58,16 +56,6 @@ abstract class StepOutputOutputDtoGenerated
     }
 
 
-    public function getStep(): string|StepOutputDto    {
-        return $this->step;
-    }
-
-    public function setStep(string|StepOutputDto $step): self
-    {
-        $this->step = $step;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -78,13 +66,13 @@ abstract class StepOutputOutputDtoGenerated
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
+    public function getStep(): string|StepOutputDto    {
+        return $this->step;
     }
 
-    public function setDescription(?string $description): self
+    public function setStep(string|StepOutputDto $step): self
     {
-        $this->description = $description;
+        $this->step = $step;
         return $this;
     }
 
@@ -98,13 +86,13 @@ abstract class StepOutputOutputDtoGenerated
         return $this;
     }
 
-    public function getConditional(): ?string    {
-        return $this->conditional;
+    public function getCondition(): ?string    {
+        return $this->condition;
     }
 
-    public function setConditional(?string $conditional): self
+    public function setCondition(?string $condition): self
     {
-        $this->conditional = $conditional;
+        $this->condition = $condition;
         return $this;
     }
 

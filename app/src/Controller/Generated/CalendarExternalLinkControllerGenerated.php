@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\CalendarExternalLink;
 use App\Repository\CalendarExternalLinkRepository;
 use App\Security\Voter\CalendarExternalLinkVoter;
-use App\Form\CalendarExternalLinkFormType;
+use App\Form\CalendarExternalLinkType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,10 +81,13 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
         return [
             'id' => $entity->getId()->toString(),
             'name' => $entity->getName(),
-            'calendars' => ($calendarsRel = $entity->getCalendars()) ? [
-                'id' => $calendarsRel->getId()->toString(),
-                'display' => (string) $calendarsRel,
-            ] : null,
+            'calendars' => ($calendarsRel = $entity->getCalendars()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $calendarsRel->toArray()
+            ) : [],
             'externalProvider' => $entity->getExternalProvider(),
             'active' => $entity->getActive(),
             'externalId' => $entity->getExternalId(),
@@ -127,7 +130,7 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
 
         return $this->render('calendarexternallink/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'calendarExternalLink',
+            'entity_name' => 'calendarexternallink',
             'entity_name_plural' => 'calendarExternalLinks',
             'page_icon' => 'bi-link-45deg',
             'default_view' => $savedView,
@@ -137,9 +140,16 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => CalendarExternalLinkVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Connection Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"calendars","label":"Calendars","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendars","isRelationship":true},{"name":"externalProvider","label":"External Provider","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalProvider","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"lastSyncedAt","label":"Last Synced At","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getLastSyncedAt","isRelationship":false},{"name":"syncDirection","label":"Sync Direction","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSyncDirection","isRelationship":false},{"name":"user","label":"User","type":"","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Connection Name","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"name","label":"Connection Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"externalProvider","label":"External Provider","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"externalId","label":"External Provider ID","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"tokenExpiresAt","label":"Token Expires At","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"lastSyncedAt","label":"Last Synced At","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"webhookExpiresAt","label":"Webhook Expires At","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"syncDirection","label":"Sync Direction","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastErrorAt","label":"Last Error At","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"user","label":"User","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Connection Name"},{"name":"calendars","label":"Calendars"},{"name":"url","label":"Calendar URL"},{"name":"lastSyncedAt","label":"Last Synced At"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Connection Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"calendars","label":"Calendars","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendars"},{"name":"externalProvider","label":"External Provider","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalProvider"},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"lastSyncedAt","label":"Last Synced At","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getLastSyncedAt"},{"name":"syncDirection","label":"Sync Direction","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSyncDirection"},{"name":"user","label":"User","type":"","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser"}]',
+            'list_fields' => '[{"name":"name","label":"Connection Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"calendars","label":"Calendars","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendars","isRelationship":true},{"name":"externalProvider","label":"External Provider","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalProvider","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"lastSyncedAt","label":"Last Synced At","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getLastSyncedAt","isRelationship":false},{"name":"syncDirection","label":"Sync Direction","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSyncDirection","isRelationship":false},{"name":"user","label":"User","type":"","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Connection Name","type":"string"}]',
             'filterable_fields' => '[{"name":"name","label":"Connection Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"externalProvider","label":"External Provider","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"externalId","label":"External Provider ID","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"tokenExpiresAt","label":"Token Expires At","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"lastSyncedAt","label":"Last Synced At","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"webhookExpiresAt","label":"Webhook Expires At","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"syncDirection","label":"Sync Direction","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastErrorAt","label":"Last Error At","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"user","label":"User","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Connection Name"},{"name":"calendars","label":"Calendars"},{"name":"url","label":"Calendar URL"},{"name":"lastSyncedAt","label":"Last Synced At"}]',
@@ -157,9 +167,9 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CalendarExternalLinkVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -178,7 +188,7 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($calendarExternalLink);
 
-        $form = $this->createForm(CalendarExternalLinkFormType::class, $calendarExternalLink);
+        $form = $this->createForm(CalendarExternalLinkType::class, $calendarExternalLink);
 
         return $this->render('calendarexternallink/_form_modal.html.twig', [
             'form' => $form,
@@ -203,7 +213,7 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($calendarExternalLink);
 
-        $form = $this->createForm(CalendarExternalLinkFormType::class, $calendarExternalLink);
+        $form = $this->createForm(CalendarExternalLinkType::class, $calendarExternalLink);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -253,7 +263,7 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CalendarExternalLinkVoter::EDIT, $calendarExternalLink);
 
-        $form = $this->createForm(CalendarExternalLinkFormType::class, $calendarExternalLink);
+        $form = $this->createForm(CalendarExternalLinkType::class, $calendarExternalLink);
 
         return $this->render('calendarexternallink/_form_modal.html.twig', [
             'form' => $form,
@@ -273,7 +283,7 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CalendarExternalLinkVoter::EDIT, $calendarExternalLink);
 
-        $form = $this->createForm(CalendarExternalLinkFormType::class, $calendarExternalLink);
+        $form = $this->createForm(CalendarExternalLinkType::class, $calendarExternalLink);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

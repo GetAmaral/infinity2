@@ -80,14 +80,14 @@ resources:
       probability:
         description: "Probability (decimal value)"
         example: "99.99"
-      pipeline:
-        description: "Pipeline"
+      dealType:
+        description: "DealType"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
-      dealType:
-        description: "DealType"
+      pipeline:
+        description: "Pipeline"
         example: "sample value"
         # Advanced filters
         filters:
@@ -176,15 +176,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      closureDate:
-        description: "ClosureDate (date and time)"
-        example: "2025-01-15T10:30:00Z"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       products:
         description: "Products associated..."
         example: "[{\"@id\": \"\/api\/products\/123\"}]"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      closureDate:
+        description: "ClosureDate (date and time)"
+        example: "2025-01-15T10:30:00Z"
         # Advanced filters
         filters:
           - type: OrderFilter

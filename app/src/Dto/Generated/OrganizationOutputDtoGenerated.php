@@ -12,21 +12,21 @@ use App\Dto\BillingFrequencyOutputDto;
 use App\Dto\BrandOutputDto;
 use App\Dto\CalendarOutputDto;
 use App\Dto\CampaignOutputDto;
+use App\Dto\NotificationOutputDto;
+use App\Dto\AttachmentOutputDto;
+use App\Dto\CalendarTypeOutputDto;
+use App\Dto\CityOutputDto;
 use App\Dto\PipelineStageTemplateOutputDto;
+use App\Dto\TreeFlowOutputDto;
+use App\Dto\MeetingDataOutputDto;
+use App\Dto\LostReasonOutputDto;
+use App\Dto\EventAttendeeOutputDto;
+use App\Dto\DealTypeOutputDto;
+use App\Dto\DealCategoryOutputDto;
 use App\Dto\TaskTemplateOutputDto;
 use App\Dto\ReminderOutputDto;
 use App\Dto\PipelineTemplateOutputDto;
 use App\Dto\WinReasonOutputDto;
-use App\Dto\TreeFlowOutputDto;
-use App\Dto\CityOutputDto;
-use App\Dto\CalendarTypeOutputDto;
-use App\Dto\AttachmentOutputDto;
-use App\Dto\DealCategoryOutputDto;
-use App\Dto\DealTypeOutputDto;
-use App\Dto\EventAttendeeOutputDto;
-use App\Dto\LostReasonOutputDto;
-use App\Dto\MeetingDataOutputDto;
-use App\Dto\NotificationOutputDto;
 use App\Dto\CompanyOutputDto;
 use App\Dto\CompetitorOutputDto;
 use App\Dto\ContactOutputDto;
@@ -73,13 +73,13 @@ abstract class OrganizationOutputDtoGenerated
 {
     public ?Uuid $id = null;
 
-    public ?string $logoPath = null;
-
     public string $name;
 
-    public ?string $logoPathDark = null;
+    public ?string $logoPath = null;
 
     public ?string $description = null;
+
+    public ?string $logoPathDark = null;
 
     /**
      * studentCourses collection
@@ -140,10 +140,72 @@ abstract class OrganizationOutputDtoGenerated
     public array $campaigns = [];
 
     /**
+     * notifications collection
+     * @var NotificationOutputDto[]
+     */
+    public array $notifications = [];
+
+    public ?string $celPhone = null;
+
+    /**
+     * attachments collection
+     * @var AttachmentOutputDto[]
+     */
+    public array $attachments = [];
+
+    /**
+     * calendarTypes collection
+     * @var CalendarTypeOutputDto[]
+     */
+    public array $calendarTypes = [];
+
+    /**
+     * cities collection
+     * @var CityOutputDto[]
+     */
+    public array $cities = [];
+
+    /**
      * pipelineStageTemplates collection
      * @var PipelineStageTemplateOutputDto[]
      */
     public array $pipelineStageTemplates = [];
+
+    /**
+     * treeFlows collection
+     * @var TreeFlowOutputDto[]
+     */
+    public array $treeFlows = [];
+
+    /**
+     * meetingDatas collection
+     * @var MeetingDataOutputDto[]
+     */
+    public array $meetingDatas = [];
+
+    /**
+     * lostReasons collection
+     * @var LostReasonOutputDto[]
+     */
+    public array $lostReasons = [];
+
+    /**
+     * eventAttendees collection
+     * @var EventAttendeeOutputDto[]
+     */
+    public array $eventAttendees = [];
+
+    /**
+     * dealTypes collection
+     * @var DealTypeOutputDto[]
+     */
+    public array $dealTypes = [];
+
+    /**
+     * dealCategories collection
+     * @var DealCategoryOutputDto[]
+     */
+    public array $dealCategories = [];
 
     /**
      * taskTemplates collection
@@ -157,8 +219,6 @@ abstract class OrganizationOutputDtoGenerated
      */
     public array $reminders = [];
 
-    public ?string $celPhone = null;
-
     /**
      * pipelineTemplates collection
      * @var PipelineTemplateOutputDto[]
@@ -170,66 +230,6 @@ abstract class OrganizationOutputDtoGenerated
      * @var WinReasonOutputDto[]
      */
     public array $winReasons = [];
-
-    /**
-     * treeFlows collection
-     * @var TreeFlowOutputDto[]
-     */
-    public array $treeFlows = [];
-
-    /**
-     * cities collection
-     * @var CityOutputDto[]
-     */
-    public array $cities = [];
-
-    /**
-     * calendarTypes collection
-     * @var CalendarTypeOutputDto[]
-     */
-    public array $calendarTypes = [];
-
-    /**
-     * attachments collection
-     * @var AttachmentOutputDto[]
-     */
-    public array $attachments = [];
-
-    /**
-     * dealCategories collection
-     * @var DealCategoryOutputDto[]
-     */
-    public array $dealCategories = [];
-
-    /**
-     * dealTypes collection
-     * @var DealTypeOutputDto[]
-     */
-    public array $dealTypes = [];
-
-    /**
-     * eventAttendees collection
-     * @var EventAttendeeOutputDto[]
-     */
-    public array $eventAttendees = [];
-
-    /**
-     * lostReasons collection
-     * @var LostReasonOutputDto[]
-     */
-    public array $lostReasons = [];
-
-    /**
-     * meetingDatas collection
-     * @var MeetingDataOutputDto[]
-     */
-    public array $meetingDatas = [];
-
-    /**
-     * notifications collection
-     * @var NotificationOutputDto[]
-     */
-    public array $notifications = [];
 
     /**
      * city reference
@@ -472,16 +472,6 @@ abstract class OrganizationOutputDtoGenerated
     }
 
 
-    public function getLogoPath(): ?string    {
-        return $this->logoPath;
-    }
-
-    public function setLogoPath(?string $logoPath): self
-    {
-        $this->logoPath = $logoPath;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -492,13 +482,13 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getLogoPathDark(): ?string    {
-        return $this->logoPathDark;
+    public function getLogoPath(): ?string    {
+        return $this->logoPath;
     }
 
-    public function setLogoPathDark(?string $logoPathDark): self
+    public function setLogoPath(?string $logoPath): self
     {
-        $this->logoPathDark = $logoPathDark;
+        $this->logoPath = $logoPath;
         return $this;
     }
 
@@ -509,6 +499,16 @@ abstract class OrganizationOutputDtoGenerated
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getLogoPathDark(): ?string    {
+        return $this->logoPathDark;
+    }
+
+    public function setLogoPathDark(?string $logoPathDark): self
+    {
+        $this->logoPathDark = $logoPathDark;
         return $this;
     }
 
@@ -662,6 +662,56 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
+    public function getNotifications(): array    {
+        return $this->notifications;
+    }
+
+    public function setNotifications(array $notifications): self
+    {
+        $this->notifications = $notifications;
+        return $this;
+    }
+
+    public function getCelPhone(): ?string    {
+        return $this->celPhone;
+    }
+
+    public function setCelPhone(?string $celPhone): self
+    {
+        $this->celPhone = $celPhone;
+        return $this;
+    }
+
+    public function getAttachments(): array    {
+        return $this->attachments;
+    }
+
+    public function setAttachments(array $attachments): self
+    {
+        $this->attachments = $attachments;
+        return $this;
+    }
+
+    public function getCalendarTypes(): array    {
+        return $this->calendarTypes;
+    }
+
+    public function setCalendarTypes(array $calendarTypes): self
+    {
+        $this->calendarTypes = $calendarTypes;
+        return $this;
+    }
+
+    public function getCities(): array    {
+        return $this->cities;
+    }
+
+    public function setCities(array $cities): self
+    {
+        $this->cities = $cities;
+        return $this;
+    }
+
     public function getPipelineStageTemplates(): array    {
         return $this->pipelineStageTemplates;
     }
@@ -669,6 +719,66 @@ abstract class OrganizationOutputDtoGenerated
     public function setPipelineStageTemplates(array $pipelineStageTemplates): self
     {
         $this->pipelineStageTemplates = $pipelineStageTemplates;
+        return $this;
+    }
+
+    public function getTreeFlows(): array    {
+        return $this->treeFlows;
+    }
+
+    public function setTreeFlows(array $treeFlows): self
+    {
+        $this->treeFlows = $treeFlows;
+        return $this;
+    }
+
+    public function getMeetingDatas(): array    {
+        return $this->meetingDatas;
+    }
+
+    public function setMeetingDatas(array $meetingDatas): self
+    {
+        $this->meetingDatas = $meetingDatas;
+        return $this;
+    }
+
+    public function getLostReasons(): array    {
+        return $this->lostReasons;
+    }
+
+    public function setLostReasons(array $lostReasons): self
+    {
+        $this->lostReasons = $lostReasons;
+        return $this;
+    }
+
+    public function getEventAttendees(): array    {
+        return $this->eventAttendees;
+    }
+
+    public function setEventAttendees(array $eventAttendees): self
+    {
+        $this->eventAttendees = $eventAttendees;
+        return $this;
+    }
+
+    public function getDealTypes(): array    {
+        return $this->dealTypes;
+    }
+
+    public function setDealTypes(array $dealTypes): self
+    {
+        $this->dealTypes = $dealTypes;
+        return $this;
+    }
+
+    public function getDealCategories(): array    {
+        return $this->dealCategories;
+    }
+
+    public function setDealCategories(array $dealCategories): self
+    {
+        $this->dealCategories = $dealCategories;
         return $this;
     }
 
@@ -692,16 +802,6 @@ abstract class OrganizationOutputDtoGenerated
         return $this;
     }
 
-    public function getCelPhone(): ?string    {
-        return $this->celPhone;
-    }
-
-    public function setCelPhone(?string $celPhone): self
-    {
-        $this->celPhone = $celPhone;
-        return $this;
-    }
-
     public function getPipelineTemplates(): array    {
         return $this->pipelineTemplates;
     }
@@ -719,106 +819,6 @@ abstract class OrganizationOutputDtoGenerated
     public function setWinReasons(array $winReasons): self
     {
         $this->winReasons = $winReasons;
-        return $this;
-    }
-
-    public function getTreeFlows(): array    {
-        return $this->treeFlows;
-    }
-
-    public function setTreeFlows(array $treeFlows): self
-    {
-        $this->treeFlows = $treeFlows;
-        return $this;
-    }
-
-    public function getCities(): array    {
-        return $this->cities;
-    }
-
-    public function setCities(array $cities): self
-    {
-        $this->cities = $cities;
-        return $this;
-    }
-
-    public function getCalendarTypes(): array    {
-        return $this->calendarTypes;
-    }
-
-    public function setCalendarTypes(array $calendarTypes): self
-    {
-        $this->calendarTypes = $calendarTypes;
-        return $this;
-    }
-
-    public function getAttachments(): array    {
-        return $this->attachments;
-    }
-
-    public function setAttachments(array $attachments): self
-    {
-        $this->attachments = $attachments;
-        return $this;
-    }
-
-    public function getDealCategories(): array    {
-        return $this->dealCategories;
-    }
-
-    public function setDealCategories(array $dealCategories): self
-    {
-        $this->dealCategories = $dealCategories;
-        return $this;
-    }
-
-    public function getDealTypes(): array    {
-        return $this->dealTypes;
-    }
-
-    public function setDealTypes(array $dealTypes): self
-    {
-        $this->dealTypes = $dealTypes;
-        return $this;
-    }
-
-    public function getEventAttendees(): array    {
-        return $this->eventAttendees;
-    }
-
-    public function setEventAttendees(array $eventAttendees): self
-    {
-        $this->eventAttendees = $eventAttendees;
-        return $this;
-    }
-
-    public function getLostReasons(): array    {
-        return $this->lostReasons;
-    }
-
-    public function setLostReasons(array $lostReasons): self
-    {
-        $this->lostReasons = $lostReasons;
-        return $this;
-    }
-
-    public function getMeetingDatas(): array    {
-        return $this->meetingDatas;
-    }
-
-    public function setMeetingDatas(array $meetingDatas): self
-    {
-        $this->meetingDatas = $meetingDatas;
-        return $this;
-    }
-
-    public function getNotifications(): array    {
-        return $this->notifications;
-    }
-
-    public function setNotifications(array $notifications): self
-    {
-        $this->notifications = $notifications;
         return $this;
     }
 

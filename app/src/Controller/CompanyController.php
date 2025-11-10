@@ -34,7 +34,7 @@ final class CompanyController extends CompanyControllerGenerated
      * API endpoint for searching nies
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'company_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'company_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

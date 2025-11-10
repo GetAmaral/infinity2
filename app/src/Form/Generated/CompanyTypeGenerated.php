@@ -15,6 +15,12 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use App\Entity\User;
+use App\Entity\City;
+use App\Entity\Campaign;
+use App\Entity\Brand;
+use App\Entity\Product;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -61,15 +67,17 @@ abstract class CompanyTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('accountManager', EntityType::class, [
             'label' => 'AccountManager',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('website', TextType::class, [
             'label' => 'Website',
@@ -110,19 +118,7 @@ abstract class CompanyTypeGenerated extends AbstractType
         $builder->add('shippingCity', EntityType::class, [
             'label' => 'Shipping City',
             'required' => false,
-            'class' => City::class,
-            'choice_label' => '__toString',
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('campaigns', EntityType::class, [
-            'label' => 'Campaigns',
-            'required' => false,
-            'class' => Campaign::class,
-            'choice_label' => '__toString',
-            'multiple' => true,
+            'class' => \App\Entity\City::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -134,6 +130,16 @@ abstract class CompanyTypeGenerated extends AbstractType
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter shipping postal code',
+            ],
+        ]);
+
+        $builder->add('campaigns', EntityType::class, [
+            'label' => 'Campaigns',
+            'required' => false,
+            'class' => \App\Entity\Campaign::class,
+            'multiple' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -166,8 +172,7 @@ abstract class CompanyTypeGenerated extends AbstractType
         $builder->add('parentCompany', EntityType::class, [
             'label' => 'Parent Company',
             'required' => false,
-            'class' => Company::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Company::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -216,22 +221,21 @@ abstract class CompanyTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('city', EntityType::class, [
+            'label' => 'City',
+            'required' => false,
+            'class' => \App\Entity\City::class,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
         $builder->add('fiscalYearEnd', TextType::class, [
             'label' => 'Fiscal Year End',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter fiscal year end',
-            ],
-        ]);
-
-        $builder->add('city', EntityType::class, [
-            'label' => 'City',
-            'required' => false,
-            'class' => City::class,
-            'choice_label' => '__toString',
-            'attr' => [
-                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -331,12 +335,15 @@ abstract class CompanyTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('contacts', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('contacts', CollectionType::class, [
             'label' => 'Contacts',
             'required' => false,
-            'entry_type' => App\Form\ContactType::class,
+            'entry_type' => \App\Form\ContactType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -349,6 +356,7 @@ abstract class CompanyTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('coordinates', TextType::class, [
             'label' => 'Geo',
@@ -359,12 +367,15 @@ abstract class CompanyTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('deals', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('deals', CollectionType::class, [
             'label' => 'Deals',
             'required' => false,
-            'entry_type' => App\Form\DealType::class,
+            'entry_type' => \App\Form\DealType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -377,6 +388,7 @@ abstract class CompanyTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('email', TextType::class, [
             'label' => 'Email',
@@ -390,8 +402,7 @@ abstract class CompanyTypeGenerated extends AbstractType
         $builder->add('manufacturedBrands', EntityType::class, [
             'label' => 'ManufacturedBrands',
             'required' => false,
-            'class' => Brand::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Brand::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -401,8 +412,7 @@ abstract class CompanyTypeGenerated extends AbstractType
         $builder->add('manufacturedProducts', EntityType::class, [
             'label' => 'ManufacturedProducts',
             'required' => false,
-            'class' => Product::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Product::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -454,12 +464,15 @@ abstract class CompanyTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('socialMedias', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('socialMedias', CollectionType::class, [
             'label' => 'SocialMedias',
             'required' => false,
-            'entry_type' => App\Form\SocialMediaType::class,
+            'entry_type' => \App\Form\SocialMediaType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -472,6 +485,7 @@ abstract class CompanyTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('status', IntegerType::class, [
             'label' => 'Status',
@@ -484,8 +498,7 @@ abstract class CompanyTypeGenerated extends AbstractType
         $builder->add('suppliedBrands', EntityType::class, [
             'label' => 'SuppliedBrands',
             'required' => false,
-            'class' => Brand::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Brand::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -495,8 +508,7 @@ abstract class CompanyTypeGenerated extends AbstractType
         $builder->add('suppliedProducts', EntityType::class, [
             'label' => 'SuppliedProducts',
             'required' => false,
-            'class' => Product::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Product::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -520,6 +532,59 @@ abstract class CompanyTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('leadStatus', TextType::class, [
+            'label' => 'Lead Status',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter lead status',
+            ],
+        ]);
+
+        $builder->add('companyDomain', TextType::class, [
+            'label' => 'Company Domain',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter company domain',
+            ],
+        ]);
+
+        $builder->add('shippingStateProvince', TextType::class, [
+            'label' => 'Shipping State/Province',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter shipping state/province',
+            ],
+        ]);
+
+        $builder->add('tags', TextareaType::class, [
+            'label' => 'Tags',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter tags',
+            ],
+        ]);
+
+        $builder->add('public', CheckboxType::class, [
+            'label' => 'Public Company',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('lifecycleStage', TextType::class, [
+            'label' => 'Lifecycle Stage',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter lifecycle stage',
+            ],
+        ]);
+
         $builder->add('timeZone', TextType::class, [
             'label' => 'Time Zone',
             'required' => true,
@@ -538,65 +603,13 @@ abstract class CompanyTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('tags', TextareaType::class, [
-            'label' => 'Tags',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter tags',
-            ],
-        ]);
-
-        $builder->add('lifecycleStage', TextType::class, [
-            'label' => 'Lifecycle Stage',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter lifecycle stage',
-            ],
-        ]);
-
-        $builder->add('companyDomain', TextType::class, [
-            'label' => 'Company Domain',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter company domain',
-            ],
-        ]);
-
-        $builder->add('leadStatus', TextType::class, [
-            'label' => 'Lead Status',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter lead status',
-            ],
-        ]);
-
-        $builder->add('public', CheckboxType::class, [
-            'label' => 'Public Company',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('shippingStateProvince', TextType::class, [
-            'label' => 'Shipping State/Province',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter shipping state/province',
-            ],
-        ]);
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Company::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

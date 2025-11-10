@@ -34,7 +34,7 @@ final class AuditLogController extends AuditLogControllerGenerated
      * API endpoint for searching auditLogs
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'auditlog_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'auditlog_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

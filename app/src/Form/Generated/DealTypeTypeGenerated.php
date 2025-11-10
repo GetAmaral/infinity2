@@ -11,8 +11,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -57,19 +57,29 @@ abstract class DealTypeTypeGenerated extends AbstractType
             'label' => 'Category',
             'required' => false,
             'help' => 'Business category: New Business, Expansion, Renewal, or Other',
-            'class' => App\Enum\CategoryEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('deals', EntityType::class, [
+        $builder->add('color', ColorType::class, [
+            'label' => 'Color',
+            'required' => true,
+            'help' => 'Hex color code for visual identification in the UI (e.g., #6366f1)',
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('deals', CollectionType::class, [
             'label' => 'Deals',
             'required' => false,
-            'entry_type' => App\Form\DealType::class,
+            'entry_type' => \App\Form\DealType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -82,15 +92,7 @@ abstract class DealTypeTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
-
-        $builder->add('color', ColorType::class, [
-            'label' => 'Color',
-            'required' => true,
-            'help' => 'Hex color code for visual identification in the UI (e.g., #6366f1)',
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
+        }
 
         $builder->add('icon', TextType::class, [
             'label' => 'Icon',
@@ -111,19 +113,19 @@ abstract class DealTypeTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('sortOrder', IntegerType::class, [
-            'label' => 'Sort Order',
+        $builder->add('active', CheckboxType::class, [
+            'label' => 'Active',
             'required' => true,
-            'help' => 'Display order in lists and dropdowns (lower numbers appear first)',
+            'help' => 'Whether this deal type is currently available for selection',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('active', CheckboxType::class, [
-            'label' => 'Active',
+        $builder->add('sortOrder', IntegerType::class, [
+            'label' => 'Sort Order',
             'required' => true,
-            'help' => 'Whether this deal type is currently available for selection',
+            'help' => 'Display order in lists and dropdowns (lower numbers appear first)',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -153,6 +155,7 @@ abstract class DealTypeTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => DealType::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

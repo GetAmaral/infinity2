@@ -43,10 +43,10 @@ abstract class PipelineStageInputDtoGenerated
     public bool $won = false;
 
     #[Groups(['pipelinestage:write'])]
-    public bool $active = true;
+    public bool $lost = false;
 
     #[Groups(['pipelinestage:write'])]
-    public bool $lost = false;
+    public bool $active = true;
 
     #[Groups(['pipelinestage:write'])]
     public string $color = '#0dcaf0';
@@ -104,16 +104,6 @@ abstract class PipelineStageInputDtoGenerated
         return $this;
     }
 
-    public function getDealStages(): ?string    {
-        return $this->dealStages;
-    }
-
-    public function setDealStages(?string $dealStages): self
-    {
-        $this->dealStages = $dealStages;
-        return $this;
-    }
-
     public function getProbability(): int    {
         return $this->probability;
     }
@@ -121,6 +111,16 @@ abstract class PipelineStageInputDtoGenerated
     public function setProbability(int $probability): self
     {
         $this->probability = $probability;
+        return $this;
+    }
+
+    public function getDealStages(): ?string    {
+        return $this->dealStages;
+    }
+
+    public function setDealStages(?string $dealStages): self
+    {
+        $this->dealStages = $dealStages;
         return $this;
     }
 
@@ -144,16 +144,6 @@ abstract class PipelineStageInputDtoGenerated
         return $this;
     }
 
-    public function getActive(): bool    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
     public function getLost(): bool    {
         return $this->lost;
     }
@@ -161,6 +151,16 @@ abstract class PipelineStageInputDtoGenerated
     public function setLost(bool $lost): self
     {
         $this->lost = $lost;
+        return $this;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
         return $this;
     }
 

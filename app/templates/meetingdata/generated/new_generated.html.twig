@@ -1,5 +1,24 @@
-{% set meetingData = meetingData ?? null %}
-{% include 'genmax/twig/form_generated.html.twig' with {
-    'meetingData': meetingData,
-    'form': form
-} %}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'action.create'|trans }} {{ 'meetingdata.singular'|trans({}, 'meetingdata') }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="luminai-card p-4">
+                <div class="mb-4">
+                    <h2>
+                        <i class="bi bi-plus-circle me-2"></i>{{ 'action.create'|trans }} {{ 'meetingdata.singular'|trans({}, 'meetingdata') }}
+                    </h2>
+                </div>
+
+                {% include 'meetingdata/generated/form_generated.html.twig' with {
+                    'meetingData': meetingData,
+                    'form': form
+                } %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

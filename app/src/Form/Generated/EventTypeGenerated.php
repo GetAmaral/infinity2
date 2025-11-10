@@ -9,12 +9,18 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use App\Entity\Calendar;
+use App\Entity\User;
+use App\Entity\EventCategory;
+use App\Entity\Contact;
+use App\Entity\Company;
+use App\Entity\Deal;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -43,20 +49,20 @@ abstract class EventTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('startTime', DateTimeType::class, [
-            'label' => 'Event Start Date/Time',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('description', TextareaType::class, [
             'label' => 'Event Details/Body',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter event details/body',
+            ],
+        ]);
+
+        $builder->add('startTime', DateTimeType::class, [
+            'label' => 'Event Start Date/Time',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -94,32 +100,39 @@ abstract class EventTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('calendar', EntityType::class, [
             'label' => 'Parent Calendar',
             'required' => false,
-            'class' => Calendar::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Calendar::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('organizer', EntityType::class, [
             'label' => 'Event Creator/Organizer',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
-        $builder->add('attendees', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('attendees', CollectionType::class, [
             'label' => 'Event Attendees',
             'required' => false,
-            'entry_type' => App\Form\EventAttendeeType::class,
+            'entry_type' => \App\Form\EventAttendeeType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -132,24 +145,27 @@ abstract class EventTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('categories', EntityType::class, [
             'label' => 'Event Categories',
             'required' => false,
-            'class' => EventCategory::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\EventCategory::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('attachments', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('attachments', CollectionType::class, [
             'label' => 'Event Attachments',
             'required' => false,
-            'entry_type' => App\Form\AttachmentType::class,
+            'entry_type' => \App\Form\AttachmentType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -162,13 +178,17 @@ abstract class EventTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('reminders', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('reminders', CollectionType::class, [
             'label' => 'Event Reminders',
             'required' => false,
-            'entry_type' => App\Form\ReminderType::class,
+            'entry_type' => \App\Form\ReminderType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -181,13 +201,17 @@ abstract class EventTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
-        $builder->add('resourceBookings', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('resourceBookings', CollectionType::class, [
             'label' => 'Room/Equipment Bookings',
             'required' => false,
-            'entry_type' => App\Form\EventResourceBookingType::class,
+            'entry_type' => \App\Form\EventResourceBookingType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -200,23 +224,29 @@ abstract class EventTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('parentEvent', EntityType::class, [
             'label' => 'Parent for Recurring Event Instances',
             'required' => false,
-            'class' => Event::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Event::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
-        $builder->add('childrenEvents', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('childrenEvents', CollectionType::class, [
             'label' => 'Child Recurring Instances',
             'required' => false,
-            'entry_type' => App\Form\EventType::class,
+            'entry_type' => \App\Form\EventType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -229,6 +259,7 @@ abstract class EventTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('originalStartTime', DateTimeType::class, [
             'label' => 'Original Start for Modified Recurring Instances',
@@ -282,53 +313,48 @@ abstract class EventTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('status', EnumType::class, [
+        $builder->add('status', TextType::class, [
             'label' => 'Event Lifecycle Status',
             'required' => true,
-            'class' => App\Enum\StatusEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter event lifecycle status',
             ],
         ]);
 
-        $builder->add('showAs', EnumType::class, [
+        $builder->add('showAs', TextType::class, [
             'label' => 'Free/Busy Status',
             'required' => true,
-            'class' => App\Enum\ShowasEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter free/busy status',
             ],
         ]);
 
-        $builder->add('eventType', EnumType::class, [
+        $builder->add('eventType', TextType::class, [
             'label' => 'Event Type/Category',
             'required' => false,
-            'class' => App\Enum\EventtypeEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter event type/category',
             ],
         ]);
 
-        $builder->add('importance', EnumType::class, [
+        $builder->add('importance', TextType::class, [
             'label' => 'Event Importance/Priority',
             'required' => true,
-            'class' => App\Enum\ImportanceEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter event importance/priority',
             ],
         ]);
 
-        $builder->add('sensitivity', EnumType::class, [
+        $builder->add('sensitivity', TextType::class, [
             'label' => 'Confidentiality Level',
             'required' => true,
-            'class' => App\Enum\SensitivityEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter confidentiality level',
             ],
         ]);
 
@@ -402,13 +428,12 @@ abstract class EventTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('onlineMeetingProvider', EnumType::class, [
+        $builder->add('onlineMeetingProvider', TextType::class, [
             'label' => 'Meeting Provider',
             'required' => false,
-            'class' => App\Enum\OnlinemeetingproviderEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter meeting provider',
             ],
         ]);
 
@@ -472,13 +497,12 @@ abstract class EventTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('responseStatus', EnumType::class, [
+        $builder->add('responseStatus', TextType::class, [
             'label' => 'Organizer Response Status',
             'required' => false,
-            'class' => App\Enum\ResponsestatusEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter organizer response status',
             ],
         ]);
 
@@ -530,13 +554,12 @@ abstract class EventTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('transparency', EnumType::class, [
+        $builder->add('transparency', TextType::class, [
             'label' => 'Calendar Transparency',
             'required' => true,
-            'class' => App\Enum\TransparencyEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter calendar transparency',
             ],
         ]);
 
@@ -557,13 +580,12 @@ abstract class EventTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('externalCalendarProvider', EnumType::class, [
+        $builder->add('externalCalendarProvider', TextType::class, [
             'label' => 'External Calendar Provider',
             'required' => false,
-            'class' => App\Enum\ExternalcalendarproviderEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter external calendar provider',
             ],
         ]);
 
@@ -614,8 +636,7 @@ abstract class EventTypeGenerated extends AbstractType
         $builder->add('assignedTo', EntityType::class, [
             'label' => 'Assigned To User',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -624,8 +645,7 @@ abstract class EventTypeGenerated extends AbstractType
         $builder->add('contact', EntityType::class, [
             'label' => 'Related Contact',
             'required' => false,
-            'class' => Contact::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Contact::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -634,8 +654,7 @@ abstract class EventTypeGenerated extends AbstractType
         $builder->add('company', EntityType::class, [
             'label' => 'Related Company',
             'required' => false,
-            'class' => Company::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Company::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -644,8 +663,7 @@ abstract class EventTypeGenerated extends AbstractType
         $builder->add('deal', EntityType::class, [
             'label' => 'Related Deal',
             'required' => false,
-            'class' => Deal::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Deal::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -657,6 +675,7 @@ abstract class EventTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

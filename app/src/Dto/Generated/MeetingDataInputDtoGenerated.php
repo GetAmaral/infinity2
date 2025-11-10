@@ -29,16 +29,16 @@ abstract class MeetingDataInputDtoGenerated
     #[Groups(['meetingdata:write'])]
     public ?string $organization = null;
 
+    #[Assert\Length(max: 255)]
+    #[Groups(['meetingdata:write'])]
+    public string $title;
+
     /**
      * event reference
      * Must be: IRI string (e.g., "/api/events/uuid")
      */
     #[Groups(['meetingdata:write'])]
     public ?string $event = null;
-
-    #[Assert\Length(max: 255)]
-    #[Groups(['meetingdata:write'])]
-    public string $title;
 
     #[Groups(['meetingdata:write'])]
     public string $meetingType;
@@ -103,10 +103,10 @@ abstract class MeetingDataInputDtoGenerated
     public ?string $organizer = null;
 
     #[Groups(['meetingdata:write'])]
-    public ?array $tags = null;
+    public ?string $platform = null;
 
     #[Groups(['meetingdata:write'])]
-    public ?string $platform = null;
+    public ?array $tags = null;
 
     #[Groups(['meetingdata:write'])]
     public bool $confidential = false;
@@ -142,16 +142,6 @@ abstract class MeetingDataInputDtoGenerated
         return $this;
     }
 
-    public function getEvent(): ?string    {
-        return $this->event;
-    }
-
-    public function setEvent(?string $event): self
-    {
-        $this->event = $event;
-        return $this;
-    }
-
     public function getTitle(): string    {
         return $this->title;
     }
@@ -159,6 +149,16 @@ abstract class MeetingDataInputDtoGenerated
     public function setTitle(string $title): self
     {
         $this->title = $title;
+        return $this;
+    }
+
+    public function getEvent(): ?string    {
+        return $this->event;
+    }
+
+    public function setEvent(?string $event): self
+    {
+        $this->event = $event;
         return $this;
     }
 
@@ -362,16 +362,6 @@ abstract class MeetingDataInputDtoGenerated
         return $this;
     }
 
-    public function getTags(): ?array    {
-        return $this->tags;
-    }
-
-    public function setTags(?array $tags): self
-    {
-        $this->tags = $tags;
-        return $this;
-    }
-
     public function getPlatform(): ?string    {
         return $this->platform;
     }
@@ -379,6 +369,16 @@ abstract class MeetingDataInputDtoGenerated
     public function setPlatform(?string $platform): self
     {
         $this->platform = $platform;
+        return $this;
+    }
+
+    public function getTags(): ?array    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): self
+    {
+        $this->tags = $tags;
         return $this;
     }
 

@@ -58,9 +58,9 @@
 {% else %}
                         <p class="text-muted mb-2" style="font-size: 0.85rem;">
 {% if property.isRelationship %}
-                            <i class="bi bi-{{ property.icon }} me-1"></i><span data-bind="{{ property.name }}.display" data-bind-text></span>
+                            <i class="bi bi-{{ property.icon|default('circle') }} me-1"></i><span data-bind="{{ property.name }}.display" data-bind-text></span>
 {% else %}
-                            <i class="bi bi-{{ property.icon }} me-1"></i><span data-bind="{{ property.name }}" data-bind-text></span>
+                            <i class="bi bi-{{ property.icon|default('circle') }} me-1"></i><span data-bind="{{ property.name }}" data-bind-text></span>
 {% endif %}
                         </p>
 {% endif %}
@@ -108,7 +108,7 @@
                         <h6 class="mb-0 text-white" data-bind="{{ property.name }}" data-bind-text></h6>
 {% elseif property.isRelationship %}
                         <span class="badge bg-info">
-                            <i class="bi bi-{{ property.icon }} me-1"></i><span data-bind="{{ property.name }}.display" data-bind-text></span>
+                            <i class="bi bi-{{ property.icon|default('circle') }} me-1"></i><span data-bind="{{ property.name }}.display" data-bind-text></span>
                         </span>
 {% elseif property.type == 'boolean' %}
                         <span class="badge bg-success" data-bind-if="{{ property.name }}"><i class="bi bi-check-circle-fill"></i></span>

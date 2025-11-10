@@ -1,5 +1,9 @@
-{% set agentType = agentType ?? null %}
-{% include 'genmax/twig/form_generated.html.twig' with {
-    'agentType': agentType,
-    'form': form
-} %}
+{# Extension template for AgentType new page #}
+{# This template extends the generated one. Override specific blocks to customize. #}
+{# Generated template: agenttype/generated/new_generated.html.twig #}
+
+{% extends 'agenttype/generated/new_generated.html.twig' %}
+
+{# Uncomment to customize specific blocks: #}
+{# {% block page_icon %}<i class="bi bi-custom-icon text-neon fs-2 me-3"></i>{% endblock %} #}
+{# {% block grid_view_item_template %}...custom grid layout...{% endblock %} #}

@@ -55,8 +55,6 @@ abstract class WinReasonTypeGenerated extends AbstractType
         $builder->add('category', EnumType::class, [
             'label' => 'Category',
             'required' => true,
-            'class' => App\Enum\WinReasonCategoryEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -103,8 +101,6 @@ abstract class WinReasonTypeGenerated extends AbstractType
             'label' => 'Deal Value Impact',
             'required' => false,
             'help' => 'Select how much this win reason typically influences deal size',
-            'class' => App\Enum\DealValueImpactEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -119,6 +115,14 @@ abstract class WinReasonTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('active', CheckboxType::class, [
+            'label' => 'Active',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
         $builder->add('tags', TextType::class, [
             'label' => 'Tags',
             'required' => false,
@@ -126,14 +130,6 @@ abstract class WinReasonTypeGenerated extends AbstractType
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter tags',
-            ],
-        ]);
-
-        $builder->add('active', CheckboxType::class, [
-            'label' => 'Active',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -162,6 +158,7 @@ abstract class WinReasonTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => WinReason::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -31,13 +31,13 @@ abstract class NotificationTypeOutputDtoGenerated
 
     public ?string $description = null;
 
-    public string $icon;
-
     /**
      * notifications collection
      * @var NotificationOutputDto[]
      */
     public array $notifications = [];
+
+    public string $icon;
 
     public bool $active;
 
@@ -126,16 +126,6 @@ abstract class NotificationTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getIcon(): string    {
-        return $this->icon;
-    }
-
-    public function setIcon(string $icon): self
-    {
-        $this->icon = $icon;
-        return $this;
-    }
-
     public function getNotifications(): array    {
         return $this->notifications;
     }
@@ -143,6 +133,16 @@ abstract class NotificationTypeOutputDtoGenerated
     public function setNotifications(array $notifications): self
     {
         $this->notifications = $notifications;
+        return $this;
+    }
+
+    public function getIcon(): string    {
+        return $this->icon;
+    }
+
+    public function setIcon(string $icon): self
+    {
+        $this->icon = $icon;
         return $this;
     }
 

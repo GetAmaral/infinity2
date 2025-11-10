@@ -12,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use App\Entity\Calendar;
+use App\Entity\Event;
+use App\Entity\TimeZone;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -40,15 +43,17 @@ abstract class WorkingHourTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('calendar', EntityType::class, [
             'label' => 'Calendar',
             'required' => false,
-            'class' => Calendar::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Calendar::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('dayOfWeek', IntegerType::class, [
             'label' => 'DayOfWeek',
@@ -67,15 +72,17 @@ abstract class WorkingHourTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('event', EntityType::class, [
             'label' => 'Event',
             'required' => false,
-            'class' => Event::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Event::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('minimalMinutesEventDuration', IntegerType::class, [
             'label' => 'MinimalMinutesEventDuration',
@@ -103,15 +110,17 @@ abstract class WorkingHourTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('timeZone', EntityType::class, [
             'label' => 'TimeZone',
             'required' => true,
-            'class' => TimeZone::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\TimeZone::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
     }
 
@@ -119,6 +128,7 @@ abstract class WorkingHourTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => WorkingHour::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

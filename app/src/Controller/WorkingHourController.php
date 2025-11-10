@@ -34,7 +34,7 @@ final class WorkingHourController extends WorkingHourControllerGenerated
      * API endpoint for searching workingHours
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'workinghour_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'workinghour_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

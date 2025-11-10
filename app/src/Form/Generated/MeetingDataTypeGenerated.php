@@ -8,13 +8,14 @@ use App\Entity\MeetingData;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Entity\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -34,17 +35,6 @@ abstract class MeetingDataTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('event', EntityType::class, [
-            'label' => 'Event',
-            'required' => false,
-            'help' => 'Link this meeting to a calendar event',
-            'class' => Event::class,
-            'choice_label' => '__toString',
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('title', TextType::class, [
             'label' => 'Meeting Title',
             'required' => true,
@@ -55,12 +45,23 @@ abstract class MeetingDataTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('event', EntityType::class, [
+            'label' => 'Event',
+            'required' => false,
+            'help' => 'Link this meeting to a calendar event',
+            'class' => \App\Entity\Event::class,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+        }
+
         $builder->add('meetingType', ChoiceType::class, [
             'label' => 'Meeting Type',
             'required' => true,
             'help' => 'Select the type of meeting',
-            'class' => App\Enum\MeetingtypeEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -70,8 +71,6 @@ abstract class MeetingDataTypeGenerated extends AbstractType
             'label' => 'Status',
             'required' => true,
             'help' => 'Current status of the meeting',
-            'class' => App\Enum\StatusEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -222,6 +221,15 @@ abstract class MeetingDataTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('platform', ChoiceType::class, [
+            'label' => 'Platform',
+            'required' => false,
+            'help' => 'Virtual meeting platform used',
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
         $builder->add('tags', TextType::class, [
             'label' => 'Tags',
             'required' => false,
@@ -229,17 +237,6 @@ abstract class MeetingDataTypeGenerated extends AbstractType
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter tags',
-            ],
-        ]);
-
-        $builder->add('platform', ChoiceType::class, [
-            'label' => 'Platform',
-            'required' => false,
-            'help' => 'Virtual meeting platform used',
-            'class' => App\Enum\PlatformEnum::class,
-            'choice_label' => 'getLabel',
-            'attr' => [
-                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -307,6 +304,7 @@ abstract class MeetingDataTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => MeetingData::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

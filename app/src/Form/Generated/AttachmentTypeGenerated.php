@@ -11,6 +11,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Entity\Event;
+use App\Entity\Product;
+use App\Entity\TalkMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -30,15 +33,17 @@ abstract class AttachmentTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('event', EntityType::class, [
             'label' => 'Event',
             'required' => false,
-            'class' => Event::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Event::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('fileSize', IntegerType::class, [
             'label' => 'FileSize',
@@ -66,25 +71,29 @@ abstract class AttachmentTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('product', EntityType::class, [
             'label' => 'Product',
             'required' => false,
-            'class' => Product::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Product::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('talkMessage', EntityType::class, [
             'label' => 'TalkMessage',
             'required' => false,
-            'class' => TalkMessage::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\TalkMessage::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('url', TextType::class, [
             'label' => 'Url',
@@ -101,6 +110,7 @@ abstract class AttachmentTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Attachment::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

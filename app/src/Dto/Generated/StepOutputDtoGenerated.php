@@ -6,9 +6,9 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Uid\Uuid;
 use App\Dto\TreeFlowOutputDto;
-use App\Dto\StepIterationOutputDto;
+use App\Dto\StepActionOutputDto;
 use App\Dto\StepOutputOutputDto;
-use App\Dto\StepInputOutputDto;
+use App\Dto\StepConnectionOutputDto;
 
 /**
  * Step Output DTO (Generated Base Class)
@@ -23,21 +23,19 @@ abstract class StepOutputDtoGenerated
 {
     public ?Uuid $id = null;
 
-    public string $name;
-
     /**
      * treeFlow reference
      * Can be: IRI string or nested TreeFlowOutput object
      */
     public string|TreeFlowOutputDto $treeFlow;
 
+    public string $name;
+
     public bool $first;
 
     public string $slug;
 
     public ?string $objective = null;
-
-    public ?string $prompt = null;
 
     public int $viewOrder;
 
@@ -46,10 +44,10 @@ abstract class StepOutputDtoGenerated
     public ?int $positionY = null;
 
     /**
-     * questions collection
-     * @var StepIterationOutputDto[]
+     * actions collection
+     * @var StepActionOutputDto[]
      */
-    public array $questions = [];
+    public array $actions = [];
 
     /**
      * outputs collection
@@ -58,10 +56,10 @@ abstract class StepOutputDtoGenerated
     public array $outputs = [];
 
     /**
-     * inputs collection
-     * @var StepInputOutputDto[]
+     * incomingConnections collection
+     * @var StepConnectionOutputDto[]
      */
-    public array $inputs = [];
+    public array $incomingConnections = [];
 
     public ?\DateTimeImmutable $createdAt = null;
 
@@ -80,16 +78,6 @@ abstract class StepOutputDtoGenerated
     }
 
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getTreeFlow(): string|TreeFlowOutputDto    {
         return $this->treeFlow;
     }
@@ -97,6 +85,16 @@ abstract class StepOutputDtoGenerated
     public function setTreeFlow(string|TreeFlowOutputDto $treeFlow): self
     {
         $this->treeFlow = $treeFlow;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -130,16 +128,6 @@ abstract class StepOutputDtoGenerated
         return $this;
     }
 
-    public function getPrompt(): ?string    {
-        return $this->prompt;
-    }
-
-    public function setPrompt(?string $prompt): self
-    {
-        $this->prompt = $prompt;
-        return $this;
-    }
-
     public function getViewOrder(): int    {
         return $this->viewOrder;
     }
@@ -170,13 +158,13 @@ abstract class StepOutputDtoGenerated
         return $this;
     }
 
-    public function getQuestions(): array    {
-        return $this->questions;
+    public function getActions(): array    {
+        return $this->actions;
     }
 
-    public function setQuestions(array $questions): self
+    public function setActions(array $actions): self
     {
-        $this->questions = $questions;
+        $this->actions = $actions;
         return $this;
     }
 
@@ -190,13 +178,13 @@ abstract class StepOutputDtoGenerated
         return $this;
     }
 
-    public function getInputs(): array    {
-        return $this->inputs;
+    public function getIncomingConnections(): array    {
+        return $this->incomingConnections;
     }
 
-    public function setInputs(array $inputs): self
+    public function setIncomingConnections(array $incomingConnections): self
     {
-        $this->inputs = $inputs;
+        $this->incomingConnections = $incomingConnections;
         return $this;
     }
 

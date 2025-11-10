@@ -1,0 +1,127 @@
+{# Shared sidebar content for both desktop sidebar and mobile offcanvas #}
+{% set controller_name = is_mobile|default(false) ? 'mobile-sidebar' : 'sidebar' %}
+{% set target_name = is_mobile|default(false) ? 'mobile-sidebar' : 'sidebar' %}
+
+{# Search Bar #}
+<div
+    class="sidebar-search"
+    data-controller="sidebar-search"
+    style="padding: 1rem 1rem 0.75rem 1rem; border-bottom: 1px solid var(--luminai-border); position: relative; flex-shrink: 0;"
+>
+    <i class="bi bi-search sidebar-search-icon" style="position: absolute; left: 1.75rem; top: 50%; transform: translateY(-50%); color: var(--luminai-text-muted); pointer-events: none;"></i>
+    <input
+        type="text"
+        class="sidebar-search-input"
+        data-sidebar-search-target="input"
+        data-action="input->sidebar-search#search"
+        placeholder="{{ 'sidebar.search.placeholder'|trans }} (Ctrl+K)"
+        style="width: 100%; padding: 0.625rem 0.875rem 0.625rem 2.5rem; background: var(--luminai-input-bg); border: 1px solid var(--luminai-border); border-radius: 0.5rem; color: var(--luminai-text); font-size: 0.875rem; transition: opacity 0.3s ease, visibility 0.3s ease;"
+    >
+
+    {# Search Results Dropdown #}
+    <div
+        class="sidebar-search-results"
+        data-sidebar-search-target="results"
+        style="position: absolute; top: calc(100% + 0.5rem); left: 1rem; right: 1rem; background: var(--luminai-card-bg); border: 1px solid var(--luminai-border); border-radius: 0.5rem; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); max-height: 400px; overflow-y: auto; z-index: 1001; display: none;"
+    >
+        {# Populated by Stimulus controller #}
+    </div>
+</div>
+
+{# Sidebar Content #}
+<div
+    class="sidebar-content"
+    data-controller="sidebar-favorites"
+    data-sidebar-favorites-favorites-url-value="/api/sidebar/favorites"
+    style="flex: 1; overflow-y: auto; overflow-x: hidden; padding: 0.5rem;"
+>
+    {# Favorites Section #}
+    {% set favorites = get_sidebar_favorites() %}
+    {% if favorites is not empty %}
+    <div class="favorites-section">
+        <div class="favorites-title" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--luminai-text-muted);">
+            <i class="bi bi-star-fill" style="color: #fbbf24;"></i>
+            <span class="sidebar-label" style="transition: opacity 0.3s ease, visibility 0.3s ease;">{{ 'sidebar.favorites'|trans }}</span>
+        </div>
+        <div
+            class="favorites-list"
+            data-sidebar-favorites-target="list"
+            data-sortable="true"
+            style="display: flex; flex-direction: column; gap: 0.25rem; padding: 0 0.5rem;"
+        >
+            {% for item in favorites %}
+                {{ include('_partials/_sidebar_item.html.twig', {
+                    item: item,
+                    is_favorite: true,
+                    show_favorite_btn: true
+                }) }}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {# Manual Items (Home, Student Courses) #}
+    <div class="sidebar-section manual-items">
+        {{ include('_partials/_sidebar_item.html.twig', {
+            item: {
+                'key': 'home',
+                'label': 'nav.home'|trans,
+                'route': 'app_home',
+                'icon': 'bi-house'
+            },
+            show_favorite_btn: false
+        }) }}
+
+        {% if is_granted('ROLE_STUDENT') %}
+            {{ include('_partials/_sidebar_item.html.twig', {
+                item: {
+                    'key': 'student_courses',
+                    'label': 'nav.my.courses'|trans,
+                    'route': 'student_courses',
+                    'icon': 'bi-mortarboard'
+                },
+                show_favorite_btn: false
+            }) }}
+        {% endif %}
+    </div>
+
+    {# Generated Sections from NavigationConfig #}
+    {% set menu = get_main_menu() %}
+    {% set grouped_menu = menu|group_by_section %}
+
+    {% for section_key, section_items in grouped_menu %}
+        <div
+            class="sidebar-section"
+            data-section="{{ section_key }}"
+            data-{{ target_name }}-target="section"
+            data-open="false"
+        >
+            {# Section Header #}
+            <div
+                class="section-header"
+                data-action="click->{{ controller_name }}#toggleSection"
+                style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; cursor: pointer; border-radius: 0.5rem; transition: all 0.15s ease; user-select: none;"
+            >
+                <div class="section-toggle" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-chevron-right" style="font-size: 0.875rem; color: var(--luminai-text-muted); transition: transform 0.2s ease;"></i>
+                </div>
+                <span class="section-title" style="flex: 1; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--luminai-text-muted); transition: opacity 0.3s ease, visibility 0.3s ease;">{{ ('nav.section.' ~ section_key)|trans }}</span>
+            </div>
+
+            {# Section Items - START CLOSED #}
+            <div class="section-content" style="max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease-out, opacity 0.2s ease-out; padding-left: 0.5rem;">
+                <div class="section-items" style="display: flex; flex-direction: column; gap: 0.25rem; padding-top: 0.5rem;">
+                    {% for item_key, item in section_items %}
+                        {% if is_menu_item_visible(item) %}
+                            {{ include('_partials/_sidebar_item.html.twig', {
+                                item: item|merge({'key': item_key}),
+                                is_favorite: item_key in favorites|map(i => i.key),
+                                show_favorite_btn: true
+                            }) }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>

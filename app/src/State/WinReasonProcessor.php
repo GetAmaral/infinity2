@@ -127,13 +127,13 @@ class WinReasonProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('color', $requestData)) {
             $entity->setColor($data->color);
         }
-        // tags
-        if (!$isPatch || array_key_exists('tags', $requestData)) {
-            $entity->setTags($data->tags);
-        }
         // active
         if (!$isPatch || array_key_exists('active', $requestData)) {
             $entity->setActive($data->active);
+        }
+        // tags
+        if (!$isPatch || array_key_exists('tags', $requestData)) {
+            $entity->setTags($data->tags);
         }
         // notes
         if (!$isPatch || array_key_exists('notes', $requestData)) {

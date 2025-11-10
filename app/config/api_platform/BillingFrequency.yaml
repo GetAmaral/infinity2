@@ -48,27 +48,27 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
-      name:
-        description: "The brand name"
-        example: "Nike"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       value:
         description: "Unique code identifier for the billing frequency (e.g., \"monthly\", \"quarterly\", \"annual\"). Lowercase, underscore-separated."
         example: "monthly"
         # Advanced filters
         filters:
           - type: OrderFilter
-      description:
-        description: "..."
-        example: "..."
+      name:
+        description: "The brand name"
+        example: "Nike"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       displayName:
         description: "Optional custom display name (e.g., \"Every 3 months\" instead of \"Quarterly\")"
         example: "Every 3 months"
         # Advanced filters
         filters:
           - type: OrderFilter
+      description:
+        description: "..."
+        example: "..."
       intervalType:
         description: "Time unit for billing interval (day, week, month, year)"
         example: "month"

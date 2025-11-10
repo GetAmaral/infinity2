@@ -4,12 +4,15 @@ export default class extends Controller {
     static targets = ["overlay", "form", "submitButton"];
 
     connect() {
+        console.log('🔵 CRUD Modal Controller connected');
+
         // Prevent body scroll
         document.body.style.overflow = 'hidden';
 
         // Track if form has been modified
         this.formModified = false;
         this.initialFormData = null;
+        this.formSubmittedSuccessfully = false;
 
         // Capture initial form state after a short delay
         setTimeout(() => {
@@ -23,11 +26,24 @@ export default class extends Controller {
         // ESC key handler
         this.boundHandleEscape = this.handleEscape.bind(this);
         document.addEventListener('keydown', this.boundHandleEscape);
+
+        // Turbo event handlers for form submission
+        this.boundTurboSubmitEnd = this.handleTurboSubmitEnd.bind(this);
+        this.boundTurboBeforeStreamRender = this.handleTurboBeforeStreamRender.bind(this);
+        this.boundTurboBeforeVisit = this.handleTurboBeforeVisit.bind(this);
+
+        document.addEventListener('turbo:submit-end', this.boundTurboSubmitEnd);
+        document.addEventListener('turbo:before-stream-render', this.boundTurboBeforeStreamRender);
+        document.addEventListener('turbo:before-visit', this.boundTurboBeforeVisit);
     }
 
     disconnect() {
+        console.log('🔴 CRUD Modal Controller disconnected');
         document.body.style.overflow = '';
         document.removeEventListener('keydown', this.boundHandleEscape);
+        document.removeEventListener('turbo:submit-end', this.boundTurboSubmitEnd);
+        document.removeEventListener('turbo:before-stream-render', this.boundTurboBeforeStreamRender);
+        document.removeEventListener('turbo:before-visit', this.boundTurboBeforeVisit);
     }
 
     /**
@@ -127,6 +143,15 @@ export default class extends Controller {
     }
 
     async submit(event) {
+        // Check if form uses Turbo - if yes, let Turbo handle it
+        if (this.formTarget.dataset.turbo === 'true') {
+            // Mark as not modified since we're submitting
+            this.formModified = false;
+
+            // Let Turbo handle the submission - don't prevent default
+            return;
+        }
+
         event.preventDefault();
 
         // Mark as not modified since we're submitting
@@ -148,20 +173,34 @@ export default class extends Controller {
                 body: formData,
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
-                }
+                },
+                redirect: 'follow'
             });
 
-            if (response.redirected) {
-                // Success - navigate to the redirected URL
-                if (typeof Turbo !== 'undefined') {
-                    Turbo.visit(response.url);
-                } else {
-                    window.location.href = response.url;
-                }
-                return;
+            const html = await response.text();
+
+            // Try to parse as JSON first
+            let jsonResponse = null;
+            try {
+                jsonResponse = JSON.parse(html);
+            } catch (e) {
+                // Not JSON, continue with HTML handling
             }
 
-            const html = await response.text();
+            // If JSON response with success
+            if (jsonResponse && jsonResponse.success) {
+                // Dispatch success event for canvas to listen to
+                window.dispatchEvent(new CustomEvent('modal:success', {
+                    detail: {
+                        type: this.formTarget.dataset.entityType || 'entity',
+                        response: jsonResponse
+                    }
+                }));
+
+                // Close the modal
+                this.forceClose();
+                return;
+            }
 
             // Check for validation errors
             if (html.includes('input-error') || html.includes('invalid-feedback')) {
@@ -181,12 +220,11 @@ export default class extends Controller {
                 // Mark as modified again since save failed
                 this.formModified = true;
             } else if (response.ok) {
-                // Success - redirect to index
-                if (typeof Turbo !== 'undefined') {
-                    Turbo.visit('/organization');
-                } else {
-                    window.location.href = '/organization';
-                }
+                // Success - dispatch event and close
+                window.dispatchEvent(new CustomEvent('modal:success', {
+                    detail: { type: 'generic' }
+                }));
+                this.forceClose();
             }
         } catch (error) {
             console.error('Form submission error:', error);
@@ -336,5 +374,94 @@ export default class extends Controller {
 
         // Close the modal
         this.forceClose();
+    }
+
+    /**
+     * Handle Turbo form submission end
+     */
+    handleTurboSubmitEnd(event) {
+        // Check if this is our form
+        if (event.detail.formSubmission.formElement !== this.formTarget) {
+            return;
+        }
+
+        console.log('📥 Form submission ended', event.detail);
+
+        const fetchResponse = event.detail.fetchResponse;
+
+        // Check if response is a redirect (successful save)
+        if (fetchResponse && fetchResponse.response.redirected) {
+            console.log('✅ Form saved successfully - Turbo will handle redirect');
+
+            // Set flag so turbo:before-visit knows to save scroll
+            this.formSubmittedSuccessfully = true;
+
+            // Form saved successfully and server sent redirect
+            // Mark form as clean and close modal - Turbo will handle the navigation
+            this.formModified = false;
+            this.forceClose();
+            return;
+        }
+
+        // Check if response is a Turbo Stream
+        if (fetchResponse) {
+            const contentType = fetchResponse.response.headers.get('Content-Type');
+
+            // If it's a Turbo Stream response, mark form as clean
+            // The modal will be closed in handleTurboBeforeStreamRender
+            if (contentType && contentType.includes('turbo-stream')) {
+                this.formModified = false;
+                return;
+            }
+        }
+
+        // If submission was successful but not a stream (could be a re-render with errors)
+        if (event.detail.success) {
+            this.formModified = false;
+        }
+    }
+
+    /**
+     * Handle Turbo stream render - just close the modal, let stream process
+     */
+    handleTurboBeforeStreamRender(event) {
+        // Check if it's a refresh action
+        const streamElement = event.target;
+        console.log('Turbo stream detected:', streamElement.getAttribute('action'));
+
+        if (streamElement.getAttribute('action') === 'refresh') {
+            console.log('Refresh stream detected - closing modal');
+            // Close modal but DON'T prevent the stream from rendering
+            // The stream will still execute after this
+            this.formModified = false;
+            this.forceClose();
+        }
+    }
+
+    /**
+     * Handle Turbo before visit - intercept to save scroll position
+     */
+    handleTurboBeforeVisit(event) {
+        // Only save scroll if this visit is from our form submission
+        if (this.formSubmittedSuccessfully) {
+            console.log('🚀 Turbo visit starting after form submit - saving scroll');
+            this.saveScrollPosition();
+
+            // Reset flag
+            this.formSubmittedSuccessfully = false;
+        }
+    }
+
+    /**
+     * Save current scroll position to restore after Turbo navigation
+     */
+    saveScrollPosition() {
+        const scrollY = window.scrollY || window.pageYOffset;
+        const scrollX = window.scrollX || window.pageXOffset;
+
+        sessionStorage.setItem('modalSaveScrollY', scrollY.toString());
+        sessionStorage.setItem('modalSaveScrollX', scrollX.toString());
+
+        console.log(`📍 Scroll position saved: x=${scrollX}, y=${scrollY}`);
     }
 }

@@ -24,19 +24,15 @@ use App\Entity\StepConnection;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepOutputGenerated extends EntityBase
 {
-    #[Groups(['output:read'])]
-    #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'outputs')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected Step $step;
-
     #[Groups(['output:read', 'output:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $name;
 
-    #[Groups(['output:read', 'output:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
+    #[Groups(['output:read'])]
+    #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'outputs')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Step $step;
 
     #[Groups(['output:read', 'output:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -45,7 +41,7 @@ abstract class StepOutputGenerated extends EntityBase
 
     #[Groups(['output:read', 'output:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $conditional = null;
+    protected ?string $condition = null;
 
     #[Groups(['output:read'])]
     #[ORM\OneToOne(targetEntity: StepConnection::class, mappedBy: 'sourceOutput')]
@@ -55,6 +51,16 @@ abstract class StepOutputGenerated extends EntityBase
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
     }
 
     public function getStep(): Step
@@ -68,26 +74,6 @@ abstract class StepOutputGenerated extends EntityBase
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getDescription(): ?string    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
     public function getSlug(): ?string    {
         return $this->slug;
     }
@@ -98,13 +84,13 @@ abstract class StepOutputGenerated extends EntityBase
         return $this;
     }
 
-    public function getConditional(): ?string    {
-        return $this->conditional;
+    public function getCondition(): ?string    {
+        return $this->condition;
     }
 
-    public function setConditional(?string $conditional): self
+    public function setCondition(?string $condition): self
     {
-        $this->conditional = $conditional;
+        $this->condition = $condition;
         return $this;
     }
 

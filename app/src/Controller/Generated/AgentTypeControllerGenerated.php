@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\AgentType;
 use App\Repository\AgentTypeRepository;
 use App\Security\Voter\AgentTypeVoter;
-use App\Form\AgentTypeFormType;
+use App\Form\AgentTypeType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,10 +82,13 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
             'id' => $entity->getId()->toString(),
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
-            'agents' => ($agentsRel = $entity->getAgents()) ? [
-                'id' => $agentsRel->getId()->toString(),
-                'display' => (string) $agentsRel,
-            ] : null,
+            'agents' => ($agentsRel = $entity->getAgents()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $agentsRel->toArray()
+            ) : [],
             'active' => $entity->getActive(),
             'code' => $entity->getCode(),
             'color' => $entity->getColor(),
@@ -112,7 +115,7 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
 
         return $this->render('agenttype/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'agentType',
+            'entity_name' => 'agenttype',
             'entity_name_plural' => 'agentTypes',
             'page_icon' => 'bi-person-badge',
             'default_view' => $savedView,
@@ -122,9 +125,16 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => AgentTypeVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"agents","label":"Agents","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAgents","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"code","label":"Code","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCode","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"defaultPrompt","label":"DefaultPrompt","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefaultPrompt","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"code","label":"Code","type":"string"},{"name":"color","label":"Color","type":"string"},{"name":"defaultPrompt","label":"DefaultPrompt","type":"text"},{"name":"icon","label":"Icon","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"active","label":"Active"},{"name":"code","label":"Code"},{"name":"color","label":"Color"},{"name":"default","label":"Default"},{"name":"defaultPrompt","label":"DefaultPrompt"},{"name":"icon","label":"Icon"},{"name":"sortOrder","label":"Sort Order"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"agents","label":"Agents","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAgents"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"code","label":"Code","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCode"},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault"},{"name":"defaultPrompt","label":"DefaultPrompt","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefaultPrompt"},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon"},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"agents","label":"Agents","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAgents","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"code","label":"Code","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCode","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"defaultPrompt","label":"DefaultPrompt","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefaultPrompt","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"code","label":"Code","type":"string"},{"name":"color","label":"Color","type":"string"},{"name":"defaultPrompt","label":"DefaultPrompt","type":"text"},{"name":"icon","label":"Icon","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"active","label":"Active"},{"name":"code","label":"Code"},{"name":"color","label":"Color"},{"name":"default","label":"Default"},{"name":"defaultPrompt","label":"DefaultPrompt"},{"name":"icon","label":"Icon"},{"name":"sortOrder","label":"Sort Order"}]',
@@ -142,9 +152,9 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AgentTypeVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -163,7 +173,7 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($agentType);
 
-        $form = $this->createForm(AgentTypeFormType::class, $agentType);
+        $form = $this->createForm(AgentTypeType::class, $agentType);
 
         return $this->render('agenttype/_form_modal.html.twig', [
             'form' => $form,
@@ -188,7 +198,7 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($agentType);
 
-        $form = $this->createForm(AgentTypeFormType::class, $agentType);
+        $form = $this->createForm(AgentTypeType::class, $agentType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -238,7 +248,7 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AgentTypeVoter::EDIT, $agentType);
 
-        $form = $this->createForm(AgentTypeFormType::class, $agentType);
+        $form = $this->createForm(AgentTypeType::class, $agentType);
 
         return $this->render('agenttype/_form_modal.html.twig', [
             'form' => $form,
@@ -258,7 +268,7 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AgentTypeVoter::EDIT, $agentType);
 
-        $form = $this->createForm(AgentTypeFormType::class, $agentType);
+        $form = $this->createForm(AgentTypeType::class, $agentType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

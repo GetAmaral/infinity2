@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\WinReason;
 use App\Repository\WinReasonRepository;
 use App\Security\Voter\WinReasonVoter;
-use App\Form\WinReasonFormType;
+use App\Form\WinReasonType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -95,14 +95,17 @@ abstract class WinReasonControllerGenerated extends BaseApiController
             'primaryCompetitor' => $entity->getPrimaryCompetitor(),
             'dealValueImpact' => $entity->getDealValueImpact(),
             'color' => $entity->getColor(),
-            'tags' => $entity->getTags(),
             'active' => $entity->getActive(),
+            'tags' => $entity->getTags(),
             'notes' => $entity->getNotes(),
             'requiresApproval' => $entity->getRequiresApproval(),
-            'deals' => ($dealsRel = $entity->getDeals()) ? [
-                'id' => $dealsRel->getId()->toString(),
-                'display' => (string) $dealsRel,
-            ] : null,
+            'deals' => ($dealsRel = $entity->getDeals()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealsRel->toArray()
+            ) : [],
         ];
     }
 
@@ -122,7 +125,7 @@ abstract class WinReasonControllerGenerated extends BaseApiController
 
         return $this->render('winreason/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'winReason',
+            'entity_name' => 'winreason',
             'entity_name_plural' => 'winReasa',
             'page_icon' => 'bi-trophy',
             'default_view' => $savedView,
@@ -132,9 +135,16 @@ abstract class WinReasonControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => WinReasonVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Reason Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"impactScore","label":"Impact Score","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getImpactScore","isRelationship":false},{"name":"usageCount","label":"Usage Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getUsageCount","isRelationship":false},{"name":"lastUsedAt","label":"Last Used At","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getLastUsedAt","isRelationship":false},{"name":"competitorRelated","label":"Competitor Related","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitorRelated","isRelationship":false},{"name":"dealValueImpact","label":"Deal Value Impact","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDealValueImpact","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresApproval","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Reason Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"category","label":"Category","type":"string"},{"name":"primaryCompetitor","label":"Primary Competitor","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"impactScore","label":"Impact Score","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"usageCount","label":"Usage Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"lastUsedAt","label":"Last Used At","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"competitorRelated","label":"Competitor Related","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"primaryCompetitor","label":"Primary Competitor","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"dealValueImpact","label":"Deal Value Impact","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Reason Name"},{"name":"description","label":"Description"},{"name":"category","label":"Category"},{"name":"sortOrder","label":"Sort Order"},{"name":"impactScore","label":"Impact Score"},{"name":"usageCount","label":"Usage Count"},{"name":"lastUsedAt","label":"Last Used At"},{"name":"active","label":"Active"},{"name":"deals","label":"Deals"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Reason Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory"},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder"},{"name":"impactScore","label":"Impact Score","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getImpactScore"},{"name":"usageCount","label":"Usage Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getUsageCount"},{"name":"lastUsedAt","label":"Last Used At","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getLastUsedAt"},{"name":"competitorRelated","label":"Competitor Related","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitorRelated"},{"name":"dealValueImpact","label":"Deal Value Impact","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDealValueImpact"},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresApproval"}]',
+            'list_fields' => '[{"name":"name","label":"Reason Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"impactScore","label":"Impact Score","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getImpactScore","isRelationship":false},{"name":"usageCount","label":"Usage Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getUsageCount","isRelationship":false},{"name":"lastUsedAt","label":"Last Used At","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getLastUsedAt","isRelationship":false},{"name":"competitorRelated","label":"Competitor Related","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitorRelated","isRelationship":false},{"name":"dealValueImpact","label":"Deal Value Impact","type":"string","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDealValueImpact","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresApproval","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Reason Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"category","label":"Category","type":"string"},{"name":"primaryCompetitor","label":"Primary Competitor","type":"string"}]',
             'filterable_fields' => '[{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"impactScore","label":"Impact Score","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"usageCount","label":"Usage Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"lastUsedAt","label":"Last Used At","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"competitorRelated","label":"Competitor Related","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"primaryCompetitor","label":"Primary Competitor","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"dealValueImpact","label":"Deal Value Impact","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Reason Name"},{"name":"description","label":"Description"},{"name":"category","label":"Category"},{"name":"sortOrder","label":"Sort Order"},{"name":"impactScore","label":"Impact Score"},{"name":"usageCount","label":"Usage Count"},{"name":"lastUsedAt","label":"Last Used At"},{"name":"active","label":"Active"},{"name":"deals","label":"Deals"}]',
@@ -152,9 +162,9 @@ abstract class WinReasonControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(WinReasonVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -173,7 +183,7 @@ abstract class WinReasonControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($winReason);
 
-        $form = $this->createForm(WinReasonFormType::class, $winReason);
+        $form = $this->createForm(WinReasonType::class, $winReason);
 
         return $this->render('winreason/_form_modal.html.twig', [
             'form' => $form,
@@ -198,7 +208,7 @@ abstract class WinReasonControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($winReason);
 
-        $form = $this->createForm(WinReasonFormType::class, $winReason);
+        $form = $this->createForm(WinReasonType::class, $winReason);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -248,7 +258,7 @@ abstract class WinReasonControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(WinReasonVoter::EDIT, $winReason);
 
-        $form = $this->createForm(WinReasonFormType::class, $winReason);
+        $form = $this->createForm(WinReasonType::class, $winReason);
 
         return $this->render('winreason/_form_modal.html.twig', [
             'form' => $form,
@@ -268,7 +278,7 @@ abstract class WinReasonControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(WinReasonVoter::EDIT, $winReason);
 
-        $form = $this->createForm(WinReasonFormType::class, $winReason);
+        $form = $this->createForm(WinReasonType::class, $winReason);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -5,43 +5,42 @@
 
 class FewShotHandler {
     constructor() {
-        console.log('FewShotHandler initialized');
         this.setupEventListeners();
     }
 
     setupEventListeners() {
         // Use event delegation for dynamically loaded modals
+        // Use capture phase to ensure events are caught before Bootstrap tooltip
         document.addEventListener('click', (e) => {
             // Handle add button clicks
-            if (e.target.classList.contains('fewshot-add') || e.target.closest('.fewshot-add')) {
+            const addButton = e.target.closest('.fewshot-add');
+            if (addButton) {
                 e.preventDefault();
-                const button = e.target.classList.contains('fewshot-add') ? e.target : e.target.closest('.fewshot-add');
-                this.addFewShotItem(button);
+                e.stopPropagation();
+                this.addFewShotItem(addButton);
                 return;
             }
 
             // Handle remove button clicks
-            if (e.target.classList.contains('fewshot-remove-btn-permanent') || e.target.closest('.fewshot-remove-btn-permanent')) {
+            const removeButton = e.target.closest('.fewshot-remove-btn-permanent');
+            if (removeButton) {
                 e.preventDefault();
-                const button = e.target.classList.contains('fewshot-remove-btn-permanent') ? e.target : e.target.closest('.fewshot-remove-btn-permanent');
-                this.removeFewShotItem(button);
+                e.stopPropagation();
+                this.removeFewShotItem(removeButton);
                 return;
             }
-        });
+        }, true);
     }
 
     addFewShotItem(button) {
         const container = button.closest('.fewshot-collection-container');
         if (!container) {
-            console.error('Few-shot container not found');
             return;
         }
 
         const itemsContainer = container.querySelector('.fewshot-items');
         const prototype = container.getAttribute('data-prototype');
         let index = parseInt(container.getAttribute('data-index')) || 0;
-
-        console.log('Adding few-shot item with index:', index);
 
         // Create new item with position relative for absolute button positioning
         const newItem = document.createElement('div');
@@ -84,7 +83,6 @@ class FewShotHandler {
         const item = button.closest('.fewshot-item');
         if (item) {
             item.remove();
-            console.log('Few-shot item removed');
         }
     }
 }

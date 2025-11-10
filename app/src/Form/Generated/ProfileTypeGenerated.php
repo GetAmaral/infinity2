@@ -10,6 +10,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Role;
+use App\Entity\User;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -50,8 +52,7 @@ abstract class ProfileTypeGenerated extends AbstractType
         $builder->add('grantedRoles', EntityType::class, [
             'label' => 'GrantedRoles',
             'required' => false,
-            'class' => Role::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Role::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -61,8 +62,7 @@ abstract class ProfileTypeGenerated extends AbstractType
         $builder->add('users', EntityType::class, [
             'label' => 'Users',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -75,6 +75,7 @@ abstract class ProfileTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Profile::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -47,15 +47,15 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
-      event:
-        description: "The associated calendar event for this meeting"
-        example: "\/api\/events\/0199cadd-0000-7000-0000-000000000001"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       title:
         description: "The title or subject of the meeting"
         example: "Q1 Planning Meeting"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      event:
+        description: "The associated calendar event for this meeting"
+        example: "\/api\/events\/0199cadd-0000-7000-0000-000000000001"
         # Advanced filters
         filters:
           - type: OrderFilter
@@ -146,15 +146,15 @@ resources:
       organizer:
         description: "The person who organized or facilitated the meeting"
         example: "John Doe"
-      tags:
-        description: "Array of tags for categorization and search"
-        example: "[\"budget\", \"planning\", \"quarterly\"]"
       platform:
         description: "The virtual meeting platform or service used"
         example: "zoom"
         # Advanced filters
         filters:
           - type: OrderFilter
+      tags:
+        description: "Array of tags for categorization and search"
+        example: "[\"budget\", \"planning\", \"quarterly\"]"
       confidential:
         description: "Whether the meeting content is confidential"
         example: "false"

@@ -65,10 +65,10 @@ abstract class UserInputDtoGenerated
     public ?string $verificationToken = null;
 
     #[Groups(['user:write'])]
-    public int $failedLoginAttempts = 0;
+    public ?string $apiToken = null;
 
     #[Groups(['user:write'])]
-    public ?string $apiToken = null;
+    public int $failedLoginAttempts = 0;
 
     #[Groups(['user:write'])]
     public ?\DateTimeImmutable $apiTokenExpiresAt = null;
@@ -77,10 +77,10 @@ abstract class UserInputDtoGenerated
     public ?string $openAiApiKey = null;
 
     #[Groups(['user:write'])]
-    public ?int $gender = null;
+    public ?\DateTimeImmutable $lastLoginAt = null;
 
     #[Groups(['user:write'])]
-    public ?\DateTimeImmutable $lastLoginAt = null;
+    public ?int $gender = null;
 
     #[Groups(['user:write'])]
     public ?\DateTimeImmutable $lockedUntil = null;
@@ -200,12 +200,12 @@ abstract class UserInputDtoGenerated
     #[Groups(['user:write'])]
     public ?string $avatar = null;
 
+    #[Groups(['user:write'])]
+    public ?string $title = null;
+
     #[Assert\Length(max: 255)]
     #[Groups(['user:write'])]
     public string $password;
-
-    #[Groups(['user:write'])]
-    public ?string $title = null;
 
     #[Groups(['user:write'])]
     public ?string $firstName = null;
@@ -250,10 +250,10 @@ abstract class UserInputDtoGenerated
     public ?string $twitterHandle = null;
 
     #[Groups(['user:write'])]
-    public ?string $address = null;
+    public ?string $profilePictureUrl = null;
 
     #[Groups(['user:write'])]
-    public ?string $profilePictureUrl = null;
+    public ?string $address = null;
 
     #[Groups(['user:write'])]
     public ?string $city = null;
@@ -477,23 +477,13 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getOwnedDeals(): ?string    {
-        return $this->ownedDeals;
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
+        return $this->emailVerifiedAt;
     }
 
-    public function setOwnedDeals(?string $ownedDeals): self
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
     {
-        $this->ownedDeals = $ownedDeals;
-        return $this;
-    }
-
-    public function getCalendarExternalLinks(): ?string    {
-        return $this->calendarExternalLinks;
-    }
-
-    public function setCalendarExternalLinks(?string $calendarExternalLinks): self
-    {
-        $this->calendarExternalLinks = $calendarExternalLinks;
+        $this->emailVerifiedAt = $emailVerifiedAt;
         return $this;
     }
 
@@ -507,6 +497,16 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
+    public function getCalendarExternalLinks(): ?string    {
+        return $this->calendarExternalLinks;
+    }
+
+    public function setCalendarExternalLinks(?string $calendarExternalLinks): self
+    {
+        $this->calendarExternalLinks = $calendarExternalLinks;
+        return $this;
+    }
+
     public function getResourceBookings(): ?string    {
         return $this->resourceBookings;
     }
@@ -517,13 +517,13 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
-        return $this->emailVerifiedAt;
+    public function getOwnedDeals(): ?string    {
+        return $this->ownedDeals;
     }
 
-    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
+    public function setOwnedDeals(?string $ownedDeals): self
     {
-        $this->emailVerifiedAt = $emailVerifiedAt;
+        $this->ownedDeals = $ownedDeals;
         return $this;
     }
 
@@ -577,16 +577,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getFailedLoginAttempts(): int    {
-        return $this->failedLoginAttempts;
-    }
-
-    public function setFailedLoginAttempts(int $failedLoginAttempts): self
-    {
-        $this->failedLoginAttempts = $failedLoginAttempts;
-        return $this;
-    }
-
     public function getApiToken(): ?string    {
         return $this->apiToken;
     }
@@ -594,6 +584,16 @@ abstract class UserInputDtoGenerated
     public function setApiToken(?string $apiToken): self
     {
         $this->apiToken = $apiToken;
+        return $this;
+    }
+
+    public function getFailedLoginAttempts(): int    {
+        return $this->failedLoginAttempts;
+    }
+
+    public function setFailedLoginAttempts(int $failedLoginAttempts): self
+    {
+        $this->failedLoginAttempts = $failedLoginAttempts;
         return $this;
     }
 
@@ -617,16 +617,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getGender(): ?int    {
-        return $this->gender;
-    }
-
-    public function setGender(?int $gender): self
-    {
-        $this->gender = $gender;
-        return $this;
-    }
-
     public function getLastLoginAt(): ?\DateTimeImmutable    {
         return $this->lastLoginAt;
     }
@@ -634,6 +624,16 @@ abstract class UserInputDtoGenerated
     public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
     {
         $this->lastLoginAt = $lastLoginAt;
+        return $this;
+    }
+
+    public function getGender(): ?int    {
+        return $this->gender;
+    }
+
+    public function setGender(?int $gender): self
+    {
+        $this->gender = $gender;
         return $this;
     }
 
@@ -987,16 +987,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getOrganizedEvents(): ?string    {
-        return $this->organizedEvents;
-    }
-
-    public function setOrganizedEvents(?string $organizedEvents): self
-    {
-        $this->organizedEvents = $organizedEvents;
-        return $this;
-    }
-
     public function getManager(): ?string    {
         return $this->manager;
     }
@@ -1004,6 +994,16 @@ abstract class UserInputDtoGenerated
     public function setManager(?string $manager): self
     {
         $this->manager = $manager;
+        return $this;
+    }
+
+    public function getOrganizedEvents(): ?string    {
+        return $this->organizedEvents;
+    }
+
+    public function setOrganizedEvents(?string $organizedEvents): self
+    {
+        $this->organizedEvents = $organizedEvents;
         return $this;
     }
 
@@ -1057,16 +1057,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-        return $this;
-    }
-
     public function getOwnedCourses(): ?string    {
         return $this->ownedCourses;
     }
@@ -1074,6 +1064,16 @@ abstract class UserInputDtoGenerated
     public function setOwnedCourses(?string $ownedCourses): self
     {
         $this->ownedCourses = $ownedCourses;
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
         return $this;
     }
 
@@ -1087,16 +1087,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getPassword(): string    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-        return $this;
-    }
-
     public function getTitle(): ?string    {
         return $this->title;
     }
@@ -1104,6 +1094,16 @@ abstract class UserInputDtoGenerated
     public function setTitle(?string $title): self
     {
         $this->title = $title;
+        return $this;
+    }
+
+    public function getPassword(): string    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
         return $this;
     }
 
@@ -1247,16 +1247,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getAddress(): ?string    {
-        return $this->address;
-    }
-
-    public function setAddress(?string $address): self
-    {
-        $this->address = $address;
-        return $this;
-    }
-
     public function getProfilePictureUrl(): ?string    {
         return $this->profilePictureUrl;
     }
@@ -1264,6 +1254,16 @@ abstract class UserInputDtoGenerated
     public function setProfilePictureUrl(?string $profilePictureUrl): self
     {
         $this->profilePictureUrl = $profilePictureUrl;
+        return $this;
+    }
+
+    public function getAddress(): ?string    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
         return $this;
     }
 
@@ -1327,16 +1327,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getProfiles(): ?string    {
-        return $this->profiles;
-    }
-
-    public function setProfiles(?string $profiles): self
-    {
-        $this->profiles = $profiles;
-        return $this;
-    }
-
     public function getEmployeeId(): ?string    {
         return $this->employeeId;
     }
@@ -1344,6 +1334,16 @@ abstract class UserInputDtoGenerated
     public function setEmployeeId(?string $employeeId): self
     {
         $this->employeeId = $employeeId;
+        return $this;
+    }
+
+    public function getProfiles(): ?string    {
+        return $this->profiles;
+    }
+
+    public function setProfiles(?string $profiles): self
+    {
+        $this->profiles = $profiles;
         return $this;
     }
 
@@ -1497,16 +1497,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getStudentCourses(): ?string    {
-        return $this->studentCourses;
-    }
-
-    public function setStudentCourses(?string $studentCourses): self
-    {
-        $this->studentCourses = $studentCourses;
-        return $this;
-    }
-
     public function getLoginCount(): int    {
         return $this->loginCount;
     }
@@ -1514,6 +1504,16 @@ abstract class UserInputDtoGenerated
     public function setLoginCount(int $loginCount): self
     {
         $this->loginCount = $loginCount;
+        return $this;
+    }
+
+    public function getStudentCourses(): ?string    {
+        return $this->studentCourses;
+    }
+
+    public function setStudentCourses(?string $studentCourses): self
+    {
+        $this->studentCourses = $studentCourses;
         return $this;
     }
 
@@ -1597,16 +1597,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getLocked(): bool    {
-        return $this->locked;
-    }
-
-    public function setLocked(bool $locked): self
-    {
-        $this->locked = $locked;
-        return $this;
-    }
-
     public function getTasks(): ?string    {
         return $this->tasks;
     }
@@ -1614,6 +1604,16 @@ abstract class UserInputDtoGenerated
     public function setTasks(?string $tasks): self
     {
         $this->tasks = $tasks;
+        return $this;
+    }
+
+    public function getLocked(): bool    {
+        return $this->locked;
+    }
+
+    public function setLocked(bool $locked): self
+    {
+        $this->locked = $locked;
         return $this;
     }
 

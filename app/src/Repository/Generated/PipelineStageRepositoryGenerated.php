@@ -54,7 +54,7 @@ abstract class PipelineStageRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'description' => 'description',            'dealStages' => 'dealStages',            'probability' => 'probability',            'final' => 'final',            'won' => 'won',            'active' => 'active',            'lost' => 'lost',            'deals' => 'deals',            'displayOrder' => 'displayOrder',            'migrationCriteria' => 'migrationCriteria',            'next' => 'next',            'pipeline' => 'pipeline',            'previous' => 'previous',            'stageName' => 'stageName',            'tasks' => 'tasks',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'description' => 'description',            'probability' => 'probability',            'dealStages' => 'dealStages',            'final' => 'final',            'won' => 'won',            'lost' => 'lost',            'active' => 'active',            'deals' => 'deals',            'displayOrder' => 'displayOrder',            'migrationCriteria' => 'migrationCriteria',            'next' => 'next',            'pipeline' => 'pipeline',            'previous' => 'previous',            'stageName' => 'stageName',            'tasks' => 'tasks',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class PipelineStageRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'probability' => 'probability',            'final' => 'final',            'won' => 'won',            'active' => 'active',            'lost' => 'lost',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'probability' => 'probability',            'final' => 'final',            'won' => 'won',            'lost' => 'lost',            'active' => 'active',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class PipelineStageRepositoryGenerated extends BaseRepository
      */
     protected function getBooleanFilterFields(): array
     {
-        return [            'final',            'won',            'active',            'lost',        ];
+        return [            'final',            'won',            'lost',            'active',        ];
     }
 
     /**

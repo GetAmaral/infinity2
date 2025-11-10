@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Organization;
 use App\Repository\OrganizationRepository;
 use App\Security\Voter\OrganizationVoter;
-use App\Form\OrganizationFormType;
+use App\Form\OrganizationType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,252 +80,414 @@ abstract class OrganizationControllerGenerated extends BaseApiController
 
         return [
             'id' => $entity->getId()->toString(),
-            'logoPath' => $entity->getLogoPath(),
             'name' => $entity->getName(),
-            'logoPathDark' => $entity->getLogoPathDark(),
+            'logoPath' => $entity->getLogoPath(),
             'description' => $entity->getDescription(),
-            'studentCourses' => ($studentCoursesRel = $entity->getStudentCourses()) ? [
-                'id' => $studentCoursesRel->getId()->toString(),
-                'display' => (string) $studentCoursesRel,
-            ] : null,
+            'logoPathDark' => $entity->getLogoPathDark(),
+            'studentCourses' => ($studentCoursesRel = $entity->getStudentCourses()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $studentCoursesRel->toArray()
+            ) : [],
             'logoUrl' => $entity->getLogoUrl(),
             'industry' => $entity->getIndustry(),
             'address' => $entity->getAddress(),
             'website' => $entity->getWebsite(),
             'active' => $entity->getActive(),
-            'agents' => ($agentsRel = $entity->getAgents()) ? [
-                'id' => $agentsRel->getId()->toString(),
-                'display' => (string) $agentsRel,
-            ] : null,
-            'products' => ($productsRel = $entity->getProducts()) ? [
-                'id' => $productsRel->getId()->toString(),
-                'display' => (string) $productsRel,
-            ] : null,
-            'billingFrequencies' => ($billingFrequenciesRel = $entity->getBillingFrequencies()) ? [
-                'id' => $billingFrequenciesRel->getId()->toString(),
-                'display' => (string) $billingFrequenciesRel,
-            ] : null,
+            'agents' => ($agentsRel = $entity->getAgents()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $agentsRel->toArray()
+            ) : [],
+            'products' => ($productsRel = $entity->getProducts()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $productsRel->toArray()
+            ) : [],
+            'billingFrequencies' => ($billingFrequenciesRel = $entity->getBillingFrequencies()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $billingFrequenciesRel->toArray()
+            ) : [],
             'branding' => $entity->getBranding(),
-            'brands' => ($brandsRel = $entity->getBrands()) ? [
-                'id' => $brandsRel->getId()->toString(),
-                'display' => (string) $brandsRel,
-            ] : null,
+            'brands' => ($brandsRel = $entity->getBrands()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $brandsRel->toArray()
+            ) : [],
             'businessPhone' => $entity->getBusinessPhone(),
             'businessSettings' => $entity->getBusinessSettings(),
-            'calendars' => ($calendarsRel = $entity->getCalendars()) ? [
-                'id' => $calendarsRel->getId()->toString(),
-                'display' => (string) $calendarsRel,
-            ] : null,
-            'campaigns' => ($campaignsRel = $entity->getCampaigns()) ? [
-                'id' => $campaignsRel->getId()->toString(),
-                'display' => (string) $campaignsRel,
-            ] : null,
-            'pipelineStageTemplates' => ($pipelineStageTemplatesRel = $entity->getPipelineStageTemplates()) ? [
-                'id' => $pipelineStageTemplatesRel->getId()->toString(),
-                'display' => (string) $pipelineStageTemplatesRel,
-            ] : null,
-            'taskTemplates' => ($taskTemplatesRel = $entity->getTaskTemplates()) ? [
-                'id' => $taskTemplatesRel->getId()->toString(),
-                'display' => (string) $taskTemplatesRel,
-            ] : null,
-            'reminders' => ($remindersRel = $entity->getReminders()) ? [
-                'id' => $remindersRel->getId()->toString(),
-                'display' => (string) $remindersRel,
-            ] : null,
+            'calendars' => ($calendarsRel = $entity->getCalendars()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $calendarsRel->toArray()
+            ) : [],
+            'campaigns' => ($campaignsRel = $entity->getCampaigns()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $campaignsRel->toArray()
+            ) : [],
+            'notifications' => ($notificationsRel = $entity->getNotifications()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $notificationsRel->toArray()
+            ) : [],
             'celPhone' => $entity->getCelPhone(),
-            'pipelineTemplates' => ($pipelineTemplatesRel = $entity->getPipelineTemplates()) ? [
-                'id' => $pipelineTemplatesRel->getId()->toString(),
-                'display' => (string) $pipelineTemplatesRel,
-            ] : null,
-            'winReasons' => ($winReasonsRel = $entity->getWinReasons()) ? [
-                'id' => $winReasonsRel->getId()->toString(),
-                'display' => (string) $winReasonsRel,
-            ] : null,
-            'treeFlows' => ($treeFlowsRel = $entity->getTreeFlows()) ? [
-                'id' => $treeFlowsRel->getId()->toString(),
-                'display' => (string) $treeFlowsRel,
-            ] : null,
-            'cities' => ($citiesRel = $entity->getCities()) ? [
-                'id' => $citiesRel->getId()->toString(),
-                'display' => (string) $citiesRel,
-            ] : null,
-            'calendarTypes' => ($calendarTypesRel = $entity->getCalendarTypes()) ? [
-                'id' => $calendarTypesRel->getId()->toString(),
-                'display' => (string) $calendarTypesRel,
-            ] : null,
-            'attachments' => ($attachmentsRel = $entity->getAttachments()) ? [
-                'id' => $attachmentsRel->getId()->toString(),
-                'display' => (string) $attachmentsRel,
-            ] : null,
-            'dealCategories' => ($dealCategoriesRel = $entity->getDealCategories()) ? [
-                'id' => $dealCategoriesRel->getId()->toString(),
-                'display' => (string) $dealCategoriesRel,
-            ] : null,
-            'dealTypes' => ($dealTypesRel = $entity->getDealTypes()) ? [
-                'id' => $dealTypesRel->getId()->toString(),
-                'display' => (string) $dealTypesRel,
-            ] : null,
-            'eventAttendees' => ($eventAttendeesRel = $entity->getEventAttendees()) ? [
-                'id' => $eventAttendeesRel->getId()->toString(),
-                'display' => (string) $eventAttendeesRel,
-            ] : null,
-            'lostReasons' => ($lostReasonsRel = $entity->getLostReasons()) ? [
-                'id' => $lostReasonsRel->getId()->toString(),
-                'display' => (string) $lostReasonsRel,
-            ] : null,
-            'meetingDatas' => ($meetingDatasRel = $entity->getMeetingDatas()) ? [
-                'id' => $meetingDatasRel->getId()->toString(),
-                'display' => (string) $meetingDatasRel,
-            ] : null,
-            'notifications' => ($notificationsRel = $entity->getNotifications()) ? [
-                'id' => $notificationsRel->getId()->toString(),
-                'display' => (string) $notificationsRel,
-            ] : null,
+            'attachments' => ($attachmentsRel = $entity->getAttachments()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $attachmentsRel->toArray()
+            ) : [],
+            'calendarTypes' => ($calendarTypesRel = $entity->getCalendarTypes()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $calendarTypesRel->toArray()
+            ) : [],
+            'cities' => ($citiesRel = $entity->getCities()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $citiesRel->toArray()
+            ) : [],
+            'pipelineStageTemplates' => ($pipelineStageTemplatesRel = $entity->getPipelineStageTemplates()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $pipelineStageTemplatesRel->toArray()
+            ) : [],
+            'treeFlows' => ($treeFlowsRel = $entity->getTreeFlows()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $treeFlowsRel->toArray()
+            ) : [],
+            'meetingDatas' => ($meetingDatasRel = $entity->getMeetingDatas()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $meetingDatasRel->toArray()
+            ) : [],
+            'lostReasons' => ($lostReasonsRel = $entity->getLostReasons()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $lostReasonsRel->toArray()
+            ) : [],
+            'eventAttendees' => ($eventAttendeesRel = $entity->getEventAttendees()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $eventAttendeesRel->toArray()
+            ) : [],
+            'dealTypes' => ($dealTypesRel = $entity->getDealTypes()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealTypesRel->toArray()
+            ) : [],
+            'dealCategories' => ($dealCategoriesRel = $entity->getDealCategories()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealCategoriesRel->toArray()
+            ) : [],
+            'taskTemplates' => ($taskTemplatesRel = $entity->getTaskTemplates()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $taskTemplatesRel->toArray()
+            ) : [],
+            'reminders' => ($remindersRel = $entity->getReminders()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $remindersRel->toArray()
+            ) : [],
+            'pipelineTemplates' => ($pipelineTemplatesRel = $entity->getPipelineTemplates()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $pipelineTemplatesRel->toArray()
+            ) : [],
+            'winReasons' => ($winReasonsRel = $entity->getWinReasons()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $winReasonsRel->toArray()
+            ) : [],
             'city' => ($cityRel = $entity->getCity()) ? [
                 'id' => $cityRel->getId()->toString(),
                 'display' => (string) $cityRel,
             ] : null,
-            'companies' => ($companiesRel = $entity->getCompanies()) ? [
-                'id' => $companiesRel->getId()->toString(),
-                'display' => (string) $companiesRel,
-            ] : null,
+            'companies' => ($companiesRel = $entity->getCompanies()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $companiesRel->toArray()
+            ) : [],
             'companySize' => $entity->getCompanySize(),
-            'competitors' => ($competitorsRel = $entity->getCompetitors()) ? [
-                'id' => $competitorsRel->getId()->toString(),
-                'display' => (string) $competitorsRel,
-            ] : null,
+            'competitors' => ($competitorsRel = $entity->getCompetitors()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $competitorsRel->toArray()
+            ) : [],
             'contactName' => $entity->getContactName(),
-            'contacts' => ($contactsRel = $entity->getContacts()) ? [
-                'id' => $contactsRel->getId()->toString(),
-                'display' => (string) $contactsRel,
-            ] : null,
-            'courses' => ($coursesRel = $entity->getCourses()) ? [
-                'id' => $coursesRel->getId()->toString(),
-                'display' => (string) $coursesRel,
-            ] : null,
+            'contacts' => ($contactsRel = $entity->getContacts()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $contactsRel->toArray()
+            ) : [],
+            'courses' => ($coursesRel = $entity->getCourses()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $coursesRel->toArray()
+            ) : [],
             'currency' => $entity->getCurrency(),
-            'dealStages' => ($dealStagesRel = $entity->getDealStages()) ? [
-                'id' => $dealStagesRel->getId()->toString(),
-                'display' => (string) $dealStagesRel,
-            ] : null,
-            'deals' => ($dealsRel = $entity->getDeals()) ? [
-                'id' => $dealsRel->getId()->toString(),
-                'display' => (string) $dealsRel,
-            ] : null,
-            'eventCategories' => ($eventCategoriesRel = $entity->getEventCategories()) ? [
-                'id' => $eventCategoriesRel->getId()->toString(),
-                'display' => (string) $eventCategoriesRel,
-            ] : null,
-            'eventResourceBookings' => ($eventResourceBookingsRel = $entity->getEventResourceBookings()) ? [
-                'id' => $eventResourceBookingsRel->getId()->toString(),
-                'display' => (string) $eventResourceBookingsRel,
-            ] : null,
-            'eventResourceTypes' => ($eventResourceTypesRel = $entity->getEventResourceTypes()) ? [
-                'id' => $eventResourceTypesRel->getId()->toString(),
-                'display' => (string) $eventResourceTypesRel,
-            ] : null,
-            'eventResources' => ($eventResourcesRel = $entity->getEventResources()) ? [
-                'id' => $eventResourcesRel->getId()->toString(),
-                'display' => (string) $eventResourcesRel,
-            ] : null,
-            'events' => ($eventsRel = $entity->getEvents()) ? [
-                'id' => $eventsRel->getId()->toString(),
-                'display' => (string) $eventsRel,
-            ] : null,
+            'dealStages' => ($dealStagesRel = $entity->getDealStages()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealStagesRel->toArray()
+            ) : [],
+            'deals' => ($dealsRel = $entity->getDeals()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealsRel->toArray()
+            ) : [],
+            'eventCategories' => ($eventCategoriesRel = $entity->getEventCategories()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $eventCategoriesRel->toArray()
+            ) : [],
+            'eventResourceBookings' => ($eventResourceBookingsRel = $entity->getEventResourceBookings()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $eventResourceBookingsRel->toArray()
+            ) : [],
+            'eventResourceTypes' => ($eventResourceTypesRel = $entity->getEventResourceTypes()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $eventResourceTypesRel->toArray()
+            ) : [],
+            'eventResources' => ($eventResourcesRel = $entity->getEventResources()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $eventResourcesRel->toArray()
+            ) : [],
+            'events' => ($eventsRel = $entity->getEvents()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $eventsRel->toArray()
+            ) : [],
             'featureFlags' => $entity->getFeatureFlags(),
-            'flags' => ($flagsRel = $entity->getFlags()) ? [
-                'id' => $flagsRel->getId()->toString(),
-                'display' => (string) $flagsRel,
-            ] : null,
+            'flags' => ($flagsRel = $entity->getFlags()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $flagsRel->toArray()
+            ) : [],
             'geo' => $entity->getGeo(),
-            'holidays' => ($holidaysRel = $entity->getHolidays()) ? [
-                'id' => $holidaysRel->getId()->toString(),
-                'display' => (string) $holidaysRel,
-            ] : null,
+            'holidays' => ($holidaysRel = $entity->getHolidays()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $holidaysRel->toArray()
+            ) : [],
             'integrationConfig' => $entity->getIntegrationConfig(),
-            'leadSources' => ($leadSourcesRel = $entity->getLeadSources()) ? [
-                'id' => $leadSourcesRel->getId()->toString(),
-                'display' => (string) $leadSourcesRel,
-            ] : null,
-            'modules' => ($modulesRel = $entity->getModules()) ? [
-                'id' => $modulesRel->getId()->toString(),
-                'display' => (string) $modulesRel,
-            ] : null,
+            'leadSources' => ($leadSourcesRel = $entity->getLeadSources()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $leadSourcesRel->toArray()
+            ) : [],
+            'modules' => ($modulesRel = $entity->getModules()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $modulesRel->toArray()
+            ) : [],
             'navConfig' => $entity->getNavConfig(),
-            'notificationTypes' => ($notificationTypesRel = $entity->getNotificationTypes()) ? [
-                'id' => $notificationTypesRel->getId()->toString(),
-                'display' => (string) $notificationTypesRel,
-            ] : null,
-            'pipelineStages' => ($pipelineStagesRel = $entity->getPipelineStages()) ? [
-                'id' => $pipelineStagesRel->getId()->toString(),
-                'display' => (string) $pipelineStagesRel,
-            ] : null,
-            'pipelines' => ($pipelinesRel = $entity->getPipelines()) ? [
-                'id' => $pipelinesRel->getId()->toString(),
-                'display' => (string) $pipelinesRel,
-            ] : null,
+            'notificationTypes' => ($notificationTypesRel = $entity->getNotificationTypes()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $notificationTypesRel->toArray()
+            ) : [],
+            'pipelineStages' => ($pipelineStagesRel = $entity->getPipelineStages()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $pipelineStagesRel->toArray()
+            ) : [],
+            'pipelines' => ($pipelinesRel = $entity->getPipelines()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $pipelinesRel->toArray()
+            ) : [],
             'postalCode' => $entity->getPostalCode(),
-            'productBatches' => ($productBatchesRel = $entity->getProductBatches()) ? [
-                'id' => $productBatchesRel->getId()->toString(),
-                'display' => (string) $productBatchesRel,
-            ] : null,
-            'productCategories' => ($productCategoriesRel = $entity->getProductCategories()) ? [
-                'id' => $productCategoriesRel->getId()->toString(),
-                'display' => (string) $productCategoriesRel,
-            ] : null,
-            'productLines' => ($productLinesRel = $entity->getProductLines()) ? [
-                'id' => $productLinesRel->getId()->toString(),
-                'display' => (string) $productLinesRel,
-            ] : null,
-            'profiles' => ($profilesRel = $entity->getProfiles()) ? [
-                'id' => $profilesRel->getId()->toString(),
-                'display' => (string) $profilesRel,
-            ] : null,
+            'productBatches' => ($productBatchesRel = $entity->getProductBatches()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $productBatchesRel->toArray()
+            ) : [],
+            'productCategories' => ($productCategoriesRel = $entity->getProductCategories()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $productCategoriesRel->toArray()
+            ) : [],
+            'productLines' => ($productLinesRel = $entity->getProductLines()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $productLinesRel->toArray()
+            ) : [],
+            'profiles' => ($profilesRel = $entity->getProfiles()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $profilesRel->toArray()
+            ) : [],
             'securityConfig' => $entity->getSecurityConfig(),
             'slug' => $entity->getSlug(),
-            'socialMedias' => ($socialMediasRel = $entity->getSocialMedias()) ? [
-                'id' => $socialMediasRel->getId()->toString(),
-                'display' => (string) $socialMediasRel,
-            ] : null,
+            'socialMedias' => ($socialMediasRel = $entity->getSocialMedias()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $socialMediasRel->toArray()
+            ) : [],
             'status' => $entity->getStatus(),
-            'tags' => ($tagsRel = $entity->getTags()) ? [
-                'id' => $tagsRel->getId()->toString(),
-                'display' => (string) $tagsRel,
-            ] : null,
-            'talkMessages' => ($talkMessagesRel = $entity->getTalkMessages()) ? [
-                'id' => $talkMessagesRel->getId()->toString(),
-                'display' => (string) $talkMessagesRel,
-            ] : null,
-            'talkTypes' => ($talkTypesRel = $entity->getTalkTypes()) ? [
-                'id' => $talkTypesRel->getId()->toString(),
-                'display' => (string) $talkTypesRel,
-            ] : null,
-            'talks' => ($talksRel = $entity->getTalks()) ? [
-                'id' => $talksRel->getId()->toString(),
-                'display' => (string) $talksRel,
-            ] : null,
-            'taskTypes' => ($taskTypesRel = $entity->getTaskTypes()) ? [
-                'id' => $taskTypesRel->getId()->toString(),
-                'display' => (string) $taskTypesRel,
-            ] : null,
-            'tasks' => ($tasksRel = $entity->getTasks()) ? [
-                'id' => $tasksRel->getId()->toString(),
-                'display' => (string) $tasksRel,
-            ] : null,
-            'taxCategories' => ($taxCategoriesRel = $entity->getTaxCategories()) ? [
-                'id' => $taxCategoriesRel->getId()->toString(),
-                'display' => (string) $taxCategoriesRel,
-            ] : null,
+            'tags' => ($tagsRel = $entity->getTags()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $tagsRel->toArray()
+            ) : [],
+            'talkMessages' => ($talkMessagesRel = $entity->getTalkMessages()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $talkMessagesRel->toArray()
+            ) : [],
+            'talkTypes' => ($talkTypesRel = $entity->getTalkTypes()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $talkTypesRel->toArray()
+            ) : [],
+            'talks' => ($talksRel = $entity->getTalks()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $talksRel->toArray()
+            ) : [],
+            'taskTypes' => ($taskTypesRel = $entity->getTaskTypes()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $taskTypesRel->toArray()
+            ) : [],
+            'tasks' => ($tasksRel = $entity->getTasks()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $tasksRel->toArray()
+            ) : [],
+            'taxCategories' => ($taxCategoriesRel = $entity->getTaxCategories()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $taxCategoriesRel->toArray()
+            ) : [],
             'timeZone' => $entity->getTimeZone(),
             'uiPreferences' => $entity->getUiPreferences(),
-            'users' => ($usersRel = $entity->getUsers()) ? [
-                'id' => $usersRel->getId()->toString(),
-                'display' => (string) $usersRel,
-            ] : null,
-            'workingHours' => ($workingHoursRel = $entity->getWorkingHours()) ? [
-                'id' => $workingHoursRel->getId()->toString(),
-                'display' => (string) $workingHoursRel,
-            ] : null,
+            'users' => ($usersRel = $entity->getUsers()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $usersRel->toArray()
+            ) : [],
+            'workingHours' => ($workingHoursRel = $entity->getWorkingHours()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $workingHoursRel->toArray()
+            ) : [],
         ];
     }
 
@@ -355,9 +517,16 @@ abstract class OrganizationControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => OrganizationVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"logoUrl","label":"LogoUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLogoUrl","isRelationship":false},{"name":"industry","label":"Industry","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIndustry","isRelationship":false},{"name":"address","label":"Address","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAddress","isRelationship":false},{"name":"website","label":"Website","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWebsite","isRelationship":false},{"name":"active","label":"Is Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"agents","label":"Agents","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAgents","isRelationship":true},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts","isRelationship":true},{"name":"billingFrequencies","label":"BillingFrequencies","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBillingFrequencies","isRelationship":true},{"name":"branding","label":"Branding","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBranding","isRelationship":false},{"name":"brands","label":"Brands","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBrands","isRelationship":true},{"name":"businessPhone","label":"BusinessPhone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBusinessPhone","isRelationship":false},{"name":"businessSettings","label":"BusinessSettings","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBusinessSettings","isRelationship":false},{"name":"calendars","label":"Calendars","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendars","isRelationship":true},{"name":"campaigns","label":"Campaigns","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCampaigns","isRelationship":true},{"name":"celPhone","label":"CelPhone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCelPhone","isRelationship":false},{"name":"city","label":"City","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCity","isRelationship":true},{"name":"companies","label":"Companies","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompanies","isRelationship":true},{"name":"companySize","label":"CompanySize","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompanySize","isRelationship":false},{"name":"competitors","label":"Competitors","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitors","isRelationship":true},{"name":"contactName","label":"ContactName","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContactName","isRelationship":false},{"name":"contacts","label":"Contacts","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContacts","isRelationship":true},{"name":"courses","label":"Courses","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCourses","isRelationship":true},{"name":"currency","label":"Currency","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCurrency","isRelationship":false},{"name":"dealStages","label":"DealStages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDealStages","isRelationship":true},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"eventCategories","label":"EventCategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventCategories","isRelationship":true},{"name":"eventResourceBookings","label":"EventResourceBookings","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResourceBookings","isRelationship":true},{"name":"eventResourceTypes","label":"EventResourceTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResourceTypes","isRelationship":true},{"name":"eventResources","label":"EventResources","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResources","isRelationship":true},{"name":"events","label":"Events","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvents","isRelationship":true},{"name":"featureFlags","label":"FeatureFlags","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFeatureFlags","isRelationship":false},{"name":"flags","label":"Flags","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFlags","isRelationship":true},{"name":"geo","label":"Geo","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGeo","isRelationship":false},{"name":"holidays","label":"Holidays","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidays","isRelationship":true},{"name":"integrationConfig","label":"IntegrationConfig","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIntegrationConfig","isRelationship":false},{"name":"leadSources","label":"LeadSources","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLeadSources","isRelationship":true},{"name":"modules","label":"Modules","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getModules","isRelationship":true},{"name":"navConfig","label":"NavConfig","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNavConfig","isRelationship":false},{"name":"notificationTypes","label":"NotificationTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotificationTypes","isRelationship":true},{"name":"pipelineStages","label":"PipelineStages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineStages","isRelationship":true},{"name":"pipelines","label":"Pipelines","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelines","isRelationship":true},{"name":"postalCode","label":"PostalCode","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPostalCode","isRelationship":false},{"name":"productBatches","label":"ProductBatches","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProductBatches","isRelationship":true},{"name":"productCategories","label":"ProductCategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProductCategories","isRelationship":true},{"name":"productLines","label":"ProductLines","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProductLines","isRelationship":true},{"name":"profiles","label":"Profiles","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProfiles","isRelationship":true},{"name":"securityConfig","label":"SecurityConfig","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSecurityConfig","isRelationship":false},{"name":"slug","label":"Slug","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSlug","isRelationship":false},{"name":"socialMedias","label":"SocialMedias","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSocialMedias","isRelationship":true},{"name":"status","label":"Status","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStatus","isRelationship":false},{"name":"tags","label":"Tags","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTags","isRelationship":true},{"name":"talkMessages","label":"TalkMessages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkMessages","isRelationship":true},{"name":"talkTypes","label":"TalkTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkTypes","isRelationship":true},{"name":"talks","label":"Talks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalks","isRelationship":true},{"name":"taskTypes","label":"TaskTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskTypes","isRelationship":true},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks","isRelationship":true},{"name":"taxCategories","label":"TaxCategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaxCategories","isRelationship":true},{"name":"timeZone","label":"TimeZone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimeZone","isRelationship":false},{"name":"uiPreferences","label":"UiPreferences","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUiPreferences","isRelationship":false},{"name":"users","label":"Users","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsers","isRelationship":true},{"name":"workingHours","label":"WorkingHours","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWorkingHours","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"logoUrl","label":"LogoUrl","type":"string"},{"name":"industry","label":"Industry","type":"string"},{"name":"address","label":"Address","type":"string"},{"name":"website","label":"Website","type":"string"},{"name":"businessPhone","label":"BusinessPhone","type":"string"},{"name":"celPhone","label":"CelPhone","type":"string"},{"name":"contactName","label":"ContactName","type":"string"},{"name":"currency","label":"Currency","type":"string"},{"name":"geo","label":"Geo","type":"string"},{"name":"postalCode","label":"PostalCode","type":"string"},{"name":"slug","label":"Slug","type":"string"},{"name":"timeZone","label":"TimeZone","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"logoUrl","label":"LogoUrl"},{"name":"industry","label":"Industry"},{"name":"address","label":"Address"},{"name":"website","label":"Website"},{"name":"agents","label":"Agents"},{"name":"products","label":"Products"},{"name":"billingFrequencies","label":"BillingFrequencies"},{"name":"branding","label":"Branding"},{"name":"brands","label":"Brands"},{"name":"businessPhone","label":"BusinessPhone"},{"name":"businessSettings","label":"BusinessSettings"},{"name":"calendars","label":"Calendars"},{"name":"campaigns","label":"Campaigns"},{"name":"celPhone","label":"CelPhone"},{"name":"city","label":"City"},{"name":"companies","label":"Companies"},{"name":"companySize","label":"CompanySize"},{"name":"competitors","label":"Competitors"},{"name":"contactName","label":"ContactName"},{"name":"contacts","label":"Contacts"},{"name":"courses","label":"Courses"},{"name":"currency","label":"Currency"},{"name":"dealStages","label":"DealStages"},{"name":"deals","label":"Deals"},{"name":"eventCategories","label":"EventCategories"},{"name":"eventResourceBookings","label":"EventResourceBookings"},{"name":"eventResourceTypes","label":"EventResourceTypes"},{"name":"eventResources","label":"EventResources"},{"name":"events","label":"Events"},{"name":"featureFlags","label":"FeatureFlags"},{"name":"flags","label":"Flags"},{"name":"geo","label":"Geo"},{"name":"holidays","label":"Holidays"},{"name":"integrationConfig","label":"IntegrationConfig"},{"name":"leadSources","label":"LeadSources"},{"name":"modules","label":"Modules"},{"name":"navConfig","label":"NavConfig"},{"name":"notificationTypes","label":"NotificationTypes"},{"name":"pipelineStages","label":"PipelineStages"},{"name":"pipelines","label":"Pipelines"},{"name":"postalCode","label":"PostalCode"},{"name":"productBatches","label":"ProductBatches"},{"name":"productCategories","label":"ProductCategories"},{"name":"productLines","label":"ProductLines"},{"name":"profiles","label":"Profiles"},{"name":"securityConfig","label":"SecurityConfig"},{"name":"slug","label":"Slug"},{"name":"socialMedias","label":"SocialMedias"},{"name":"status","label":"Status"},{"name":"tags","label":"Tags"},{"name":"talkMessages","label":"TalkMessages"},{"name":"talkTypes","label":"TalkTypes"},{"name":"talks","label":"Talks"},{"name":"taskTypes","label":"TaskTypes"},{"name":"tasks","label":"Tasks"},{"name":"taxCategories","label":"TaxCategories"},{"name":"timeZone","label":"TimeZone"},{"name":"uiPreferences","label":"UiPreferences"},{"name":"users","label":"Users"},{"name":"workingHours","label":"WorkingHours"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"logoUrl","label":"LogoUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLogoUrl"},{"name":"industry","label":"Industry","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIndustry"},{"name":"address","label":"Address","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAddress"},{"name":"website","label":"Website","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWebsite"},{"name":"active","label":"Is Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"agents","label":"Agents","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAgents"},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts"},{"name":"billingFrequencies","label":"BillingFrequencies","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBillingFrequencies"},{"name":"branding","label":"Branding","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBranding"},{"name":"brands","label":"Brands","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBrands"},{"name":"businessPhone","label":"BusinessPhone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBusinessPhone"},{"name":"businessSettings","label":"BusinessSettings","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBusinessSettings"},{"name":"calendars","label":"Calendars","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendars"},{"name":"campaigns","label":"Campaigns","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCampaigns"},{"name":"celPhone","label":"CelPhone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCelPhone"},{"name":"city","label":"City","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCity"},{"name":"companies","label":"Companies","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompanies"},{"name":"companySize","label":"CompanySize","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompanySize"},{"name":"competitors","label":"Competitors","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitors"},{"name":"contactName","label":"ContactName","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContactName"},{"name":"contacts","label":"Contacts","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContacts"},{"name":"courses","label":"Courses","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCourses"},{"name":"currency","label":"Currency","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCurrency"},{"name":"dealStages","label":"DealStages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDealStages"},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals"},{"name":"eventCategories","label":"EventCategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventCategories"},{"name":"eventResourceBookings","label":"EventResourceBookings","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResourceBookings"},{"name":"eventResourceTypes","label":"EventResourceTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResourceTypes"},{"name":"eventResources","label":"EventResources","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResources"},{"name":"events","label":"Events","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvents"},{"name":"featureFlags","label":"FeatureFlags","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFeatureFlags"},{"name":"flags","label":"Flags","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFlags"},{"name":"geo","label":"Geo","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGeo"},{"name":"holidays","label":"Holidays","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidays"},{"name":"integrationConfig","label":"IntegrationConfig","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIntegrationConfig"},{"name":"leadSources","label":"LeadSources","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLeadSources"},{"name":"modules","label":"Modules","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getModules"},{"name":"navConfig","label":"NavConfig","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNavConfig"},{"name":"notificationTypes","label":"NotificationTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotificationTypes"},{"name":"pipelineStages","label":"PipelineStages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineStages"},{"name":"pipelines","label":"Pipelines","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelines"},{"name":"postalCode","label":"PostalCode","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPostalCode"},{"name":"productBatches","label":"ProductBatches","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProductBatches"},{"name":"productCategories","label":"ProductCategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProductCategories"},{"name":"productLines","label":"ProductLines","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProductLines"},{"name":"profiles","label":"Profiles","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProfiles"},{"name":"securityConfig","label":"SecurityConfig","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSecurityConfig"},{"name":"slug","label":"Slug","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSlug"},{"name":"socialMedias","label":"SocialMedias","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSocialMedias"},{"name":"status","label":"Status","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStatus"},{"name":"tags","label":"Tags","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTags"},{"name":"talkMessages","label":"TalkMessages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkMessages"},{"name":"talkTypes","label":"TalkTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkTypes"},{"name":"talks","label":"Talks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalks"},{"name":"taskTypes","label":"TaskTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskTypes"},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks"},{"name":"taxCategories","label":"TaxCategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaxCategories"},{"name":"timeZone","label":"TimeZone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimeZone"},{"name":"uiPreferences","label":"UiPreferences","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUiPreferences"},{"name":"users","label":"Users","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsers"},{"name":"workingHours","label":"WorkingHours","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWorkingHours"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"logoUrl","label":"LogoUrl","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLogoUrl","isRelationship":false},{"name":"industry","label":"Industry","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIndustry","isRelationship":false},{"name":"address","label":"Address","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAddress","isRelationship":false},{"name":"website","label":"Website","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWebsite","isRelationship":false},{"name":"active","label":"Is Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"agents","label":"Agents","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAgents","isRelationship":true},{"name":"products","label":"Products","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProducts","isRelationship":true},{"name":"billingFrequencies","label":"BillingFrequencies","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBillingFrequencies","isRelationship":true},{"name":"branding","label":"Branding","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBranding","isRelationship":false},{"name":"brands","label":"Brands","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBrands","isRelationship":true},{"name":"businessPhone","label":"BusinessPhone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBusinessPhone","isRelationship":false},{"name":"businessSettings","label":"BusinessSettings","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBusinessSettings","isRelationship":false},{"name":"calendars","label":"Calendars","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendars","isRelationship":true},{"name":"campaigns","label":"Campaigns","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCampaigns","isRelationship":true},{"name":"celPhone","label":"CelPhone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCelPhone","isRelationship":false},{"name":"city","label":"City","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCity","isRelationship":true},{"name":"companies","label":"Companies","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompanies","isRelationship":true},{"name":"companySize","label":"CompanySize","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompanySize","isRelationship":false},{"name":"competitors","label":"Competitors","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitors","isRelationship":true},{"name":"contactName","label":"ContactName","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContactName","isRelationship":false},{"name":"contacts","label":"Contacts","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContacts","isRelationship":true},{"name":"courses","label":"Courses","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCourses","isRelationship":true},{"name":"currency","label":"Currency","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCurrency","isRelationship":false},{"name":"dealStages","label":"DealStages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDealStages","isRelationship":true},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"eventCategories","label":"EventCategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventCategories","isRelationship":true},{"name":"eventResourceBookings","label":"EventResourceBookings","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResourceBookings","isRelationship":true},{"name":"eventResourceTypes","label":"EventResourceTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResourceTypes","isRelationship":true},{"name":"eventResources","label":"EventResources","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventResources","isRelationship":true},{"name":"events","label":"Events","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvents","isRelationship":true},{"name":"featureFlags","label":"FeatureFlags","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFeatureFlags","isRelationship":false},{"name":"flags","label":"Flags","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFlags","isRelationship":true},{"name":"geo","label":"Geo","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGeo","isRelationship":false},{"name":"holidays","label":"Holidays","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidays","isRelationship":true},{"name":"integrationConfig","label":"IntegrationConfig","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIntegrationConfig","isRelationship":false},{"name":"leadSources","label":"LeadSources","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLeadSources","isRelationship":true},{"name":"modules","label":"Modules","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getModules","isRelationship":true},{"name":"navConfig","label":"NavConfig","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNavConfig","isRelationship":false},{"name":"notificationTypes","label":"NotificationTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotificationTypes","isRelationship":true},{"name":"pipelineStages","label":"PipelineStages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineStages","isRelationship":true},{"name":"pipelines","label":"Pipelines","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelines","isRelationship":true},{"name":"postalCode","label":"PostalCode","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPostalCode","isRelationship":false},{"name":"productBatches","label":"ProductBatches","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProductBatches","isRelationship":true},{"name":"productCategories","label":"ProductCategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProductCategories","isRelationship":true},{"name":"productLines","label":"ProductLines","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProductLines","isRelationship":true},{"name":"profiles","label":"Profiles","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getProfiles","isRelationship":true},{"name":"securityConfig","label":"SecurityConfig","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSecurityConfig","isRelationship":false},{"name":"slug","label":"Slug","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSlug","isRelationship":false},{"name":"socialMedias","label":"SocialMedias","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSocialMedias","isRelationship":true},{"name":"status","label":"Status","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStatus","isRelationship":false},{"name":"tags","label":"Tags","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTags","isRelationship":true},{"name":"talkMessages","label":"TalkMessages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkMessages","isRelationship":true},{"name":"talkTypes","label":"TalkTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkTypes","isRelationship":true},{"name":"talks","label":"Talks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalks","isRelationship":true},{"name":"taskTypes","label":"TaskTypes","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskTypes","isRelationship":true},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks","isRelationship":true},{"name":"taxCategories","label":"TaxCategories","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaxCategories","isRelationship":true},{"name":"timeZone","label":"TimeZone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimeZone","isRelationship":false},{"name":"uiPreferences","label":"UiPreferences","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUiPreferences","isRelationship":false},{"name":"users","label":"Users","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsers","isRelationship":true},{"name":"workingHours","label":"WorkingHours","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWorkingHours","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"logoUrl","label":"LogoUrl","type":"string"},{"name":"industry","label":"Industry","type":"string"},{"name":"address","label":"Address","type":"string"},{"name":"website","label":"Website","type":"string"},{"name":"businessPhone","label":"BusinessPhone","type":"string"},{"name":"celPhone","label":"CelPhone","type":"string"},{"name":"contactName","label":"ContactName","type":"string"},{"name":"currency","label":"Currency","type":"string"},{"name":"geo","label":"Geo","type":"string"},{"name":"postalCode","label":"PostalCode","type":"string"},{"name":"slug","label":"Slug","type":"string"},{"name":"timeZone","label":"TimeZone","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"logoUrl","label":"LogoUrl"},{"name":"industry","label":"Industry"},{"name":"address","label":"Address"},{"name":"website","label":"Website"},{"name":"agents","label":"Agents"},{"name":"products","label":"Products"},{"name":"billingFrequencies","label":"BillingFrequencies"},{"name":"branding","label":"Branding"},{"name":"brands","label":"Brands"},{"name":"businessPhone","label":"BusinessPhone"},{"name":"businessSettings","label":"BusinessSettings"},{"name":"calendars","label":"Calendars"},{"name":"campaigns","label":"Campaigns"},{"name":"celPhone","label":"CelPhone"},{"name":"city","label":"City"},{"name":"companies","label":"Companies"},{"name":"companySize","label":"CompanySize"},{"name":"competitors","label":"Competitors"},{"name":"contactName","label":"ContactName"},{"name":"contacts","label":"Contacts"},{"name":"courses","label":"Courses"},{"name":"currency","label":"Currency"},{"name":"dealStages","label":"DealStages"},{"name":"deals","label":"Deals"},{"name":"eventCategories","label":"EventCategories"},{"name":"eventResourceBookings","label":"EventResourceBookings"},{"name":"eventResourceTypes","label":"EventResourceTypes"},{"name":"eventResources","label":"EventResources"},{"name":"events","label":"Events"},{"name":"featureFlags","label":"FeatureFlags"},{"name":"flags","label":"Flags"},{"name":"geo","label":"Geo"},{"name":"holidays","label":"Holidays"},{"name":"integrationConfig","label":"IntegrationConfig"},{"name":"leadSources","label":"LeadSources"},{"name":"modules","label":"Modules"},{"name":"navConfig","label":"NavConfig"},{"name":"notificationTypes","label":"NotificationTypes"},{"name":"pipelineStages","label":"PipelineStages"},{"name":"pipelines","label":"Pipelines"},{"name":"postalCode","label":"PostalCode"},{"name":"productBatches","label":"ProductBatches"},{"name":"productCategories","label":"ProductCategories"},{"name":"productLines","label":"ProductLines"},{"name":"profiles","label":"Profiles"},{"name":"securityConfig","label":"SecurityConfig"},{"name":"slug","label":"Slug"},{"name":"socialMedias","label":"SocialMedias"},{"name":"status","label":"Status"},{"name":"tags","label":"Tags"},{"name":"talkMessages","label":"TalkMessages"},{"name":"talkTypes","label":"TalkTypes"},{"name":"talks","label":"Talks"},{"name":"taskTypes","label":"TaskTypes"},{"name":"tasks","label":"Tasks"},{"name":"taxCategories","label":"TaxCategories"},{"name":"timeZone","label":"TimeZone"},{"name":"uiPreferences","label":"UiPreferences"},{"name":"users","label":"Users"},{"name":"workingHours","label":"WorkingHours"}]',
@@ -375,9 +544,9 @@ abstract class OrganizationControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(OrganizationVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -396,7 +565,7 @@ abstract class OrganizationControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($organization);
 
-        $form = $this->createForm(OrganizationFormType::class, $organization);
+        $form = $this->createForm(OrganizationType::class, $organization);
 
         return $this->render('organization/_form_modal.html.twig', [
             'form' => $form,
@@ -421,7 +590,7 @@ abstract class OrganizationControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($organization);
 
-        $form = $this->createForm(OrganizationFormType::class, $organization);
+        $form = $this->createForm(OrganizationType::class, $organization);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -471,7 +640,7 @@ abstract class OrganizationControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(OrganizationVoter::EDIT, $organization);
 
-        $form = $this->createForm(OrganizationFormType::class, $organization);
+        $form = $this->createForm(OrganizationType::class, $organization);
 
         return $this->render('organization/_form_modal.html.twig', [
             'form' => $form,
@@ -491,7 +660,7 @@ abstract class OrganizationControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(OrganizationVoter::EDIT, $organization);
 
-        $form = $this->createForm(OrganizationFormType::class, $organization);
+        $form = $this->createForm(OrganizationType::class, $organization);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -34,7 +34,7 @@ final class ModuleController extends ModuleControllerGenerated
      * API endpoint for searching modules
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'module_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'module_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

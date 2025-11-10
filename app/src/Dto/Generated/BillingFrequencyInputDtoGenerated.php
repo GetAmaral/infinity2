@@ -29,16 +29,16 @@ abstract class BillingFrequencyInputDtoGenerated
     public ?string $organization = null;
 
     #[Groups(['billingfrequency:write'])]
-    public string $name;
-
-    #[Groups(['billingfrequency:write'])]
     public string $value;
 
     #[Groups(['billingfrequency:write'])]
-    public ?string $description = null;
+    public string $name;
 
     #[Groups(['billingfrequency:write'])]
     public ?string $displayName = null;
+
+    #[Groups(['billingfrequency:write'])]
+    public ?string $description = null;
 
     #[Groups(['billingfrequency:write'])]
     public string $intervalType;
@@ -74,16 +74,6 @@ abstract class BillingFrequencyInputDtoGenerated
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getValue(): string    {
         return $this->value;
     }
@@ -94,13 +84,13 @@ abstract class BillingFrequencyInputDtoGenerated
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
+    public function getName(): string    {
+        return $this->name;
     }
 
-    public function setDescription(?string $description): self
+    public function setName(string $name): self
     {
-        $this->description = $description;
+        $this->name = $name;
         return $this;
     }
 
@@ -111,6 +101,16 @@ abstract class BillingFrequencyInputDtoGenerated
     public function setDisplayName(?string $displayName): self
     {
         $this->displayName = $displayName;
+        return $this;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 

@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\SocialMedia;
 use App\Repository\SocialMediaRepository;
 use App\Security\Voter\SocialMediaVoter;
-use App\Form\SocialMediaFormType;
+use App\Form\SocialMediaType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,10 +86,13 @@ abstract class SocialMediaControllerGenerated extends BaseApiController
             ] : null,
             'name' => $entity->getName(),
             'apiKey' => $entity->getApiKey(),
-            'campaigns' => ($campaignsRel = $entity->getCampaigns()) ? [
-                'id' => $campaignsRel->getId()->toString(),
-                'display' => (string) $campaignsRel,
-            ] : null,
+            'campaigns' => ($campaignsRel = $entity->getCampaigns()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $campaignsRel->toArray()
+            ) : [],
             'company' => ($companyRel = $entity->getCompany()) ? [
                 'id' => $companyRel->getId()->toString(),
                 'display' => (string) $companyRel,
@@ -126,7 +129,7 @@ abstract class SocialMediaControllerGenerated extends BaseApiController
 
         return $this->render('socialmedia/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'socialMedia',
+            'entity_name' => 'socialmedia',
             'entity_name_plural' => 'socialMedias',
             'page_icon' => 'bi-share',
             'default_view' => $savedView,
@@ -136,9 +139,16 @@ abstract class SocialMediaControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => SocialMediaVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"apiKey","label":"ApiKey","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getApiKey","isRelationship":false},{"name":"campaigns","label":"Campaigns","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCampaigns","isRelationship":true},{"name":"company","label":"Company","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany","isRelationship":true},{"name":"contact","label":"Contact","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact","isRelationship":true},{"name":"socialMediaType","label":"SocialMediaType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSocialMediaType","isRelationship":true},{"name":"url","label":"Url","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl","isRelationship":false},{"name":"user","label":"User","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"apiKey","label":"ApiKey","type":"string"},{"name":"url","label":"Url","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"apiKey","label":"ApiKey"},{"name":"campaigns","label":"Campaigns"},{"name":"company","label":"Company"},{"name":"contact","label":"Contact"},{"name":"socialMediaType","label":"SocialMediaType"},{"name":"url","label":"Url"},{"name":"user","label":"User"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"apiKey","label":"ApiKey","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getApiKey"},{"name":"campaigns","label":"Campaigns","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCampaigns"},{"name":"company","label":"Company","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany"},{"name":"contact","label":"Contact","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact"},{"name":"socialMediaType","label":"SocialMediaType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSocialMediaType"},{"name":"url","label":"Url","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl"},{"name":"user","label":"User","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"apiKey","label":"ApiKey","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getApiKey","isRelationship":false},{"name":"campaigns","label":"Campaigns","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCampaigns","isRelationship":true},{"name":"company","label":"Company","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany","isRelationship":true},{"name":"contact","label":"Contact","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact","isRelationship":true},{"name":"socialMediaType","label":"SocialMediaType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSocialMediaType","isRelationship":true},{"name":"url","label":"Url","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl","isRelationship":false},{"name":"user","label":"User","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"apiKey","label":"ApiKey","type":"string"},{"name":"url","label":"Url","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"apiKey","label":"ApiKey"},{"name":"campaigns","label":"Campaigns"},{"name":"company","label":"Company"},{"name":"contact","label":"Contact"},{"name":"socialMediaType","label":"SocialMediaType"},{"name":"url","label":"Url"},{"name":"user","label":"User"}]',
@@ -156,9 +166,9 @@ abstract class SocialMediaControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(SocialMediaVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -177,7 +187,7 @@ abstract class SocialMediaControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($socialMedia);
 
-        $form = $this->createForm(SocialMediaFormType::class, $socialMedia);
+        $form = $this->createForm(SocialMediaType::class, $socialMedia);
 
         return $this->render('socialmedia/_form_modal.html.twig', [
             'form' => $form,
@@ -202,7 +212,7 @@ abstract class SocialMediaControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($socialMedia);
 
-        $form = $this->createForm(SocialMediaFormType::class, $socialMedia);
+        $form = $this->createForm(SocialMediaType::class, $socialMedia);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -252,7 +262,7 @@ abstract class SocialMediaControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(SocialMediaVoter::EDIT, $socialMedia);
 
-        $form = $this->createForm(SocialMediaFormType::class, $socialMedia);
+        $form = $this->createForm(SocialMediaType::class, $socialMedia);
 
         return $this->render('socialmedia/_form_modal.html.twig', [
             'form' => $form,
@@ -272,7 +282,7 @@ abstract class SocialMediaControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(SocialMediaVoter::EDIT, $socialMedia);
 
-        $form = $this->createForm(SocialMediaFormType::class, $socialMedia);
+        $form = $this->createForm(SocialMediaType::class, $socialMedia);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

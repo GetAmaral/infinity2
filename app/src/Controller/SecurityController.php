@@ -115,6 +115,29 @@ class SecurityController extends AbstractController
             $organization = $user->getOrganization();
             $orgSlug = $organization->getSlug();
 
+            // Check if user has admin/super_admin roles
+            $userRoles = $user->getRoles();
+            $isAdmin = in_array('ROLE_ADMIN', $userRoles, true) ||
+                      in_array('ROLE_SUPER_ADMIN', $userRoles, true) ||
+                      in_array('ROLE_ORGANIZATION_ADMIN', $userRoles, true);
+
+            // Admin users can login at root domain - don't force redirect
+            if ($isAdmin && strpos($request->getHost(), '.') === false) {
+                $logger->info('Admin user lookup at root domain - allowing root login', [
+                    'email' => $email,
+                    'organization_slug' => $orgSlug,
+                    'roles' => $userRoles,
+                    'ip' => $clientIp,
+                ]);
+
+                // Return "not_found" to trigger password field display at root domain
+                return new JsonResponse([
+                    'error' => 'admin_root_login',
+                    'message' => 'Admin account detected. Please enter your password to login.',
+                    'isAdmin' => true,
+                ], 200); // Return 200 to avoid error styling
+            }
+
             // Get base domain from environment configuration
             $baseDomain = $_ENV['APP_BASE_DOMAIN'] ?? 'localhost';
             $scheme = $request->getScheme();

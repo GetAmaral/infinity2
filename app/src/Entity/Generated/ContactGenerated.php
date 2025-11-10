@@ -40,13 +40,13 @@ abstract class ContactGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $name;
+
+    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\Length(max: 100)]
     protected string $firstName;
-
-    #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $name;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100)]
@@ -97,26 +97,21 @@ abstract class ContactGenerated extends EntityBase
     protected Company $company;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'contacts', fetch: 'LAZY')]
-    protected Collection $deals;
-
-    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 25, nullable: true)]
     protected ?string $mobilePhone = null;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Assert\Length(max: 255)]
-    protected ?string $linkedinUrl = null;
+    #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'contacts', fetch: 'LAZY')]
+    protected Collection $deals;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 150, nullable: true)]
     protected ?string $title = null;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
-    protected ?string $department = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
+    protected ?string $linkedinUrl = null;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'boolean')]
@@ -125,11 +120,16 @@ abstract class ContactGenerated extends EntityBase
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Assert\Length(max: 100)]
-    protected ?string $leadSource = null;
+    protected ?string $department = null;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $doNotCall;
+
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    protected ?string $leadSource = null;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -249,16 +249,6 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getFirstName(): string    {
-        return $this->firstName;
-    }
-
-    public function setFirstName(string $firstName): self
-    {
-        $this->firstName = $firstName;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -266,6 +256,16 @@ abstract class ContactGenerated extends EntityBase
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getFirstName(): string    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
         return $this;
     }
 
@@ -413,6 +413,16 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
+    public function getMobilePhone(): ?string    {
+        return $this->mobilePhone;
+    }
+
+    public function setMobilePhone(?string $mobilePhone): self
+    {
+        $this->mobilePhone = $mobilePhone;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Deal>
      */
@@ -440,26 +450,6 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getMobilePhone(): ?string    {
-        return $this->mobilePhone;
-    }
-
-    public function setMobilePhone(?string $mobilePhone): self
-    {
-        $this->mobilePhone = $mobilePhone;
-        return $this;
-    }
-
-    public function getLinkedinUrl(): ?string    {
-        return $this->linkedinUrl;
-    }
-
-    public function setLinkedinUrl(?string $linkedinUrl): self
-    {
-        $this->linkedinUrl = $linkedinUrl;
-        return $this;
-    }
-
     public function getTitle(): ?string    {
         return $this->title;
     }
@@ -470,13 +460,13 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getDepartment(): ?string    {
-        return $this->department;
+    public function getLinkedinUrl(): ?string    {
+        return $this->linkedinUrl;
     }
 
-    public function setDepartment(?string $department): self
+    public function setLinkedinUrl(?string $linkedinUrl): self
     {
-        $this->department = $department;
+        $this->linkedinUrl = $linkedinUrl;
         return $this;
     }
 
@@ -495,13 +485,13 @@ abstract class ContactGenerated extends EntityBase
         return $this->emailOptOut === true;
     }
 
-    public function getLeadSource(): ?string    {
-        return $this->leadSource;
+    public function getDepartment(): ?string    {
+        return $this->department;
     }
 
-    public function setLeadSource(?string $leadSource): self
+    public function setDepartment(?string $department): self
     {
-        $this->leadSource = $leadSource;
+        $this->department = $department;
         return $this;
     }
 
@@ -518,6 +508,16 @@ abstract class ContactGenerated extends EntityBase
     public function isDoNotCall(): bool
     {
         return $this->doNotCall === true;
+    }
+
+    public function getLeadSource(): ?string    {
+        return $this->leadSource;
+    }
+
+    public function setLeadSource(?string $leadSource): self
+    {
+        $this->leadSource = $leadSource;
+        return $this;
     }
 
     public function getPreferredContactMethod(): ?string    {

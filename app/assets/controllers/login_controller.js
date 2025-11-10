@@ -101,10 +101,24 @@ export default class extends Controller {
                 // Organization not found or error
                 console.warn('⚠️ Organization lookup failed:', data.message);
 
-                if (data.error === 'not_found') {
+                if (data.error === 'not_found' || data.error === 'admin_root_login') {
                     // Show password field for root domain login (admins)
                     this.showPasswordField();
-                    this.showError('No organization found. If you are an admin, please enter your password.');
+
+                    if (data.error === 'admin_root_login') {
+                        // Admin user - show success message instead of error
+                        if (this.hasLoadingMessageTarget) {
+                            this.loadingMessageTarget.innerHTML = `
+                                <div class="alert alert-info border-0">
+                                    <i class="bi bi-shield-check me-2"></i>
+                                    ${data.message}
+                                </div>
+                            `;
+                            this.loadingMessageTarget.classList.remove('d-none');
+                        }
+                    } else {
+                        this.showError('No organization found. If you are an admin, please enter your password.');
+                    }
                 } else {
                     this.showError(data.message || 'An error occurred. Please try again.');
                 }

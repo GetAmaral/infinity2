@@ -96,10 +96,10 @@ abstract class TaskInputDtoGenerated
     public ?int $priority = null;
 
     #[Groups(['task:write'])]
-    public ?\DateTimeImmutable $scheduledDate = null;
+    public bool $completed = false;
 
     #[Groups(['task:write'])]
-    public bool $completed = false;
+    public ?\DateTimeImmutable $scheduledDate = null;
 
     /**
      * company reference
@@ -132,13 +132,13 @@ abstract class TaskInputDtoGenerated
     #[Groups(['task:write'])]
     public ?string $emailSubject = null;
 
-    #[Assert\Length(max: 20)]
-    #[Groups(['task:write'])]
-    public string $taskStatus;
-
     #[Assert\Length(max: 50)]
     #[Groups(['task:write'])]
     public ?string $phoneNumber = null;
+
+    #[Assert\Length(max: 20)]
+    #[Groups(['task:write'])]
+    public string $taskStatus;
 
     #[Assert\Length(max: 500)]
     #[Groups(['task:write'])]
@@ -328,16 +328,6 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getScheduledDate(): ?\DateTimeImmutable    {
-        return $this->scheduledDate;
-    }
-
-    public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
-    {
-        $this->scheduledDate = $scheduledDate;
-        return $this;
-    }
-
     public function getCompleted(): bool    {
         return $this->completed;
     }
@@ -345,6 +335,16 @@ abstract class TaskInputDtoGenerated
     public function setCompleted(bool $completed): self
     {
         $this->completed = $completed;
+        return $this;
+    }
+
+    public function getScheduledDate(): ?\DateTimeImmutable    {
+        return $this->scheduledDate;
+    }
+
+    public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
+    {
+        $this->scheduledDate = $scheduledDate;
         return $this;
     }
 
@@ -428,16 +428,6 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getTaskStatus(): string    {
-        return $this->taskStatus;
-    }
-
-    public function setTaskStatus(string $taskStatus): self
-    {
-        $this->taskStatus = $taskStatus;
-        return $this;
-    }
-
     public function getPhoneNumber(): ?string    {
         return $this->phoneNumber;
     }
@@ -445,6 +435,16 @@ abstract class TaskInputDtoGenerated
     public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
+        return $this;
+    }
+
+    public function getTaskStatus(): string    {
+        return $this->taskStatus;
+    }
+
+    public function setTaskStatus(string $taskStatus): self
+    {
+        $this->taskStatus = $taskStatus;
         return $this;
     }
 

@@ -34,7 +34,7 @@ final class FlagController extends FlagControllerGenerated
      * API endpoint for searching flags
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'flag_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'flag_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

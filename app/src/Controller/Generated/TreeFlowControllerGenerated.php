@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\TreeFlow;
 use App\Repository\TreeFlowRepository;
 use App\Security\Voter\TreeFlowVoter;
-use App\Form\TreeFlowFormType;
+use App\Form\TreeFlowType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,10 +90,13 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
             'canvasViewState' => $entity->getCanvasViewState(),
             'jsonStructure' => $entity->getJsonStructure(),
             'talkFlow' => $entity->getTalkFlow(),
-            'steps' => ($stepsRel = $entity->getSteps()) ? [
-                'id' => $stepsRel->getId()->toString(),
-                'display' => (string) $stepsRel,
-            ] : null,
+            'steps' => ($stepsRel = $entity->getSteps()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $stepsRel->toArray()
+            ) : [],
             'active' => $entity->getActive(),
         ];
     }
@@ -114,7 +117,7 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
 
         return $this->render('treeflow/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'treeFlow',
+            'entity_name' => 'treeflow',
             'entity_name_plural' => 'treeFlows',
             'page_icon' => 'bi-diagram-3',
             'default_view' => $savedView,
@@ -124,9 +127,16 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => TreeFlowVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"slug","label":"Slug","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSlug","isRelationship":false},{"name":"version","label":"Version","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVersion","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"slug","label":"Slug","type":"string"},{"name":"steps","label":"Steps","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"name","label":"Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"slug","label":"Slug","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"version","label":"Version","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"canvasViewState","label":"CanvasViewState","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"jsonStructure","label":"JsonStructure","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"talkFlow","label":"TalkFlow","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"steps","label":"Steps","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"slug","label":"Slug"},{"name":"version","label":"Version"},{"name":"canvasViewState","label":"CanvasViewState"},{"name":"jsonStructure","label":"JsonStructure"},{"name":"talkFlow","label":"TalkFlow"},{"name":"steps","label":"Steps"},{"name":"active","label":"Active"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"slug","label":"Slug","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSlug"},{"name":"version","label":"Version","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVersion"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"slug","label":"Slug","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSlug","isRelationship":false},{"name":"version","label":"Version","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVersion","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"slug","label":"Slug","type":"string"},{"name":"steps","label":"Steps","type":"string"}]',
             'filterable_fields' => '[{"name":"name","label":"Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"slug","label":"Slug","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"version","label":"Version","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"canvasViewState","label":"CanvasViewState","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"jsonStructure","label":"JsonStructure","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"talkFlow","label":"TalkFlow","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"steps","label":"Steps","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"slug","label":"Slug"},{"name":"version","label":"Version"},{"name":"canvasViewState","label":"CanvasViewState"},{"name":"jsonStructure","label":"JsonStructure"},{"name":"talkFlow","label":"TalkFlow"},{"name":"steps","label":"Steps"},{"name":"active","label":"Active"}]',
@@ -144,9 +154,9 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TreeFlowVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -165,7 +175,7 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($treeFlow);
 
-        $form = $this->createForm(TreeFlowFormType::class, $treeFlow);
+        $form = $this->createForm(TreeFlowType::class, $treeFlow);
 
         return $this->render('treeflow/_form_modal.html.twig', [
             'form' => $form,
@@ -190,7 +200,7 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($treeFlow);
 
-        $form = $this->createForm(TreeFlowFormType::class, $treeFlow);
+        $form = $this->createForm(TreeFlowType::class, $treeFlow);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -240,7 +250,7 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
 
-        $form = $this->createForm(TreeFlowFormType::class, $treeFlow);
+        $form = $this->createForm(TreeFlowType::class, $treeFlow);
 
         return $this->render('treeflow/_form_modal.html.twig', [
             'form' => $form,
@@ -260,7 +270,7 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
 
-        $form = $this->createForm(TreeFlowFormType::class, $treeFlow);
+        $form = $this->createForm(TreeFlowType::class, $treeFlow);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

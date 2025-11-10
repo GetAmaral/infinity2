@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Calendar;
 use App\Repository\CalendarRepository;
 use App\Security\Voter\CalendarVoter;
-use App\Form\CalendarFormType;
+use App\Form\CalendarType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -85,11 +85,11 @@ abstract class CalendarControllerGenerated extends BaseApiController
                 'display' => (string) $organizationRel,
             ] : null,
             'name' => $entity->getName(),
-            'description' => $entity->getDescription(),
             'user' => ($userRel = $entity->getUser()) ? [
                 'id' => $userRel->getId()->toString(),
                 'display' => (string) $userRel,
             ] : null,
+            'description' => $entity->getDescription(),
             'timeZone' => $entity->getTimeZone(),
             'color' => $entity->getColor(),
             'primary' => $entity->getPrimary(),
@@ -99,23 +99,32 @@ abstract class CalendarControllerGenerated extends BaseApiController
                 'id' => $calendarTypeRel->getId()->toString(),
                 'display' => (string) $calendarTypeRel,
             ] : null,
-            'events' => ($eventsRel = $entity->getEvents()) ? [
-                'id' => $eventsRel->getId()->toString(),
-                'display' => (string) $eventsRel,
-            ] : null,
+            'events' => ($eventsRel = $entity->getEvents()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $eventsRel->toArray()
+            ) : [],
             'externalLink' => ($externalLinkRel = $entity->getExternalLink()) ? [
                 'id' => $externalLinkRel->getId()->toString(),
                 'display' => (string) $externalLinkRel,
             ] : null,
             'externalApiKey' => $entity->getExternalApiKey(),
-            'workingHours' => ($workingHoursRel = $entity->getWorkingHours()) ? [
-                'id' => $workingHoursRel->getId()->toString(),
-                'display' => (string) $workingHoursRel,
-            ] : null,
-            'holidays' => ($holidaysRel = $entity->getHolidays()) ? [
-                'id' => $holidaysRel->getId()->toString(),
-                'display' => (string) $holidaysRel,
-            ] : null,
+            'workingHours' => ($workingHoursRel = $entity->getWorkingHours()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $workingHoursRel->toArray()
+            ) : [],
+            'holidays' => ($holidaysRel = $entity->getHolidays()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $holidaysRel->toArray()
+            ) : [],
             'default' => $entity->getDefault(),
             'active' => $entity->getActive(),
             'public' => $entity->getPublic(),
@@ -154,12 +163,19 @@ abstract class CalendarControllerGenerated extends BaseApiController
             'enable_filters' => true,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => CalendarVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"user","label":"User","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"timeZone","label":"TimeZone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimeZone","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"primary","label":"Primary","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPrimary","isRelationship":false},{"name":"visible","label":"Visible","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVisible","isRelationship":false},{"name":"accessRole","label":"AccessRole","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAccessRole","isRelationship":false},{"name":"calendarType","label":"CalendarType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendarType","isRelationship":true},{"name":"events","label":"Events","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvents","isRelationship":true},{"name":"externalLink","label":"ExternalLink","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalLink","isRelationship":true},{"name":"externalApiKey","label":"ExternalApiKey","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalApiKey","isRelationship":false},{"name":"workingHours","label":"WorkingHours","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWorkingHours","isRelationship":true},{"name":"holidays","label":"Holidays","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidays","isRelationship":true},{"name":"default","label":"Default Calendar","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"public","label":"Public","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPublic","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"externalId","label":"External ID","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalId","isRelationship":false},{"name":"lastSyncedAt","label":"Last Synced At","type":"datetime_immutable","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLastSyncedAt","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"timeZone","label":"TimeZone","type":"string"},{"name":"color","label":"Color","type":"string"},{"name":"accessRole","label":"AccessRole","type":"string"},{"name":"externalApiKey","label":"ExternalApiKey","type":"string"},{"name":"externalId","label":"External ID","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"default","label":"Default Calendar","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"public","label":"Public","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sortOrder","label":"Sort Order","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"externalId","label":"External ID","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastSyncedAt","label":"Last Synced At","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"user","label":"User"},{"name":"description","label":"Description"},{"name":"timeZone","label":"TimeZone"},{"name":"color","label":"Color"},{"name":"primary","label":"Primary"},{"name":"visible","label":"Visible"},{"name":"accessRole","label":"AccessRole"},{"name":"calendarType","label":"CalendarType"},{"name":"events","label":"Events"},{"name":"externalLink","label":"ExternalLink"},{"name":"externalApiKey","label":"ExternalApiKey"},{"name":"workingHours","label":"WorkingHours"},{"name":"holidays","label":"Holidays"},{"name":"default","label":"Default Calendar"},{"name":"active","label":"Active"},{"name":"public","label":"Public"},{"name":"sortOrder","label":"Sort Order"},{"name":"externalId","label":"External ID"},{"name":"lastSyncedAt","label":"Last Synced At"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"user","label":"User","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser"},{"name":"timeZone","label":"TimeZone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimeZone"},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor"},{"name":"primary","label":"Primary","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPrimary"},{"name":"visible","label":"Visible","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVisible"},{"name":"accessRole","label":"AccessRole","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAccessRole"},{"name":"calendarType","label":"CalendarType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendarType"},{"name":"events","label":"Events","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvents"},{"name":"externalLink","label":"ExternalLink","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalLink"},{"name":"externalApiKey","label":"ExternalApiKey","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalApiKey"},{"name":"workingHours","label":"WorkingHours","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWorkingHours"},{"name":"holidays","label":"Holidays","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidays"},{"name":"default","label":"Default Calendar","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"public","label":"Public","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPublic"},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon"},{"name":"externalId","label":"External ID","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalId"},{"name":"lastSyncedAt","label":"Last Synced At","type":"datetime_immutable","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLastSyncedAt"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"user","label":"User","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"timeZone","label":"TimeZone","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTimeZone","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"primary","label":"Primary","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPrimary","isRelationship":false},{"name":"visible","label":"Visible","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVisible","isRelationship":false},{"name":"accessRole","label":"AccessRole","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAccessRole","isRelationship":false},{"name":"calendarType","label":"CalendarType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendarType","isRelationship":true},{"name":"events","label":"Events","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvents","isRelationship":true},{"name":"externalLink","label":"ExternalLink","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalLink","isRelationship":true},{"name":"externalApiKey","label":"ExternalApiKey","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalApiKey","isRelationship":false},{"name":"workingHours","label":"WorkingHours","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWorkingHours","isRelationship":true},{"name":"holidays","label":"Holidays","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidays","isRelationship":true},{"name":"default","label":"Default Calendar","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"public","label":"Public","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPublic","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"externalId","label":"External ID","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExternalId","isRelationship":false},{"name":"lastSyncedAt","label":"Last Synced At","type":"datetime_immutable","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLastSyncedAt","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"timeZone","label":"TimeZone","type":"string"},{"name":"color","label":"Color","type":"string"},{"name":"accessRole","label":"AccessRole","type":"string"},{"name":"externalApiKey","label":"ExternalApiKey","type":"string"},{"name":"externalId","label":"External ID","type":"string"}]',
             'filterable_fields' => '[{"name":"default","label":"Default Calendar","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"public","label":"Public","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sortOrder","label":"Sort Order","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"externalId","label":"External ID","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastSyncedAt","label":"Last Synced At","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
-            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"user","label":"User"},{"name":"timeZone","label":"TimeZone"},{"name":"color","label":"Color"},{"name":"primary","label":"Primary"},{"name":"visible","label":"Visible"},{"name":"accessRole","label":"AccessRole"},{"name":"calendarType","label":"CalendarType"},{"name":"events","label":"Events"},{"name":"externalLink","label":"ExternalLink"},{"name":"externalApiKey","label":"ExternalApiKey"},{"name":"workingHours","label":"WorkingHours"},{"name":"holidays","label":"Holidays"},{"name":"default","label":"Default Calendar"},{"name":"active","label":"Active"},{"name":"public","label":"Public"},{"name":"sortOrder","label":"Sort Order"},{"name":"externalId","label":"External ID"},{"name":"lastSyncedAt","label":"Last Synced At"}]',
+            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"user","label":"User"},{"name":"description","label":"Description"},{"name":"timeZone","label":"TimeZone"},{"name":"color","label":"Color"},{"name":"primary","label":"Primary"},{"name":"visible","label":"Visible"},{"name":"accessRole","label":"AccessRole"},{"name":"calendarType","label":"CalendarType"},{"name":"events","label":"Events"},{"name":"externalLink","label":"ExternalLink"},{"name":"externalApiKey","label":"ExternalApiKey"},{"name":"workingHours","label":"WorkingHours"},{"name":"holidays","label":"Holidays"},{"name":"default","label":"Default Calendar"},{"name":"active","label":"Active"},{"name":"public","label":"Public"},{"name":"sortOrder","label":"Sort Order"},{"name":"externalId","label":"External ID"},{"name":"lastSyncedAt","label":"Last Synced At"}]',
         ]);
     }
 
@@ -174,9 +190,9 @@ abstract class CalendarControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CalendarVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -195,7 +211,7 @@ abstract class CalendarControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($calendar);
 
-        $form = $this->createForm(CalendarFormType::class, $calendar);
+        $form = $this->createForm(CalendarType::class, $calendar);
 
         return $this->render('calendar/_form_modal.html.twig', [
             'form' => $form,
@@ -220,7 +236,7 @@ abstract class CalendarControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($calendar);
 
-        $form = $this->createForm(CalendarFormType::class, $calendar);
+        $form = $this->createForm(CalendarType::class, $calendar);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -270,7 +286,7 @@ abstract class CalendarControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CalendarVoter::EDIT, $calendar);
 
-        $form = $this->createForm(CalendarFormType::class, $calendar);
+        $form = $this->createForm(CalendarType::class, $calendar);
 
         return $this->render('calendar/_form_modal.html.twig', [
             'form' => $form,
@@ -290,7 +306,7 @@ abstract class CalendarControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CalendarVoter::EDIT, $calendar);
 
-        $form = $this->createForm(CalendarFormType::class, $calendar);
+        $form = $this->createForm(CalendarType::class, $calendar);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

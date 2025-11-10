@@ -107,13 +107,13 @@ class DealTypeProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('default', $requestData)) {
             $entity->setDefault($data->default);
         }
-        // sortOrder
-        if (!$isPatch || array_key_exists('sortOrder', $requestData)) {
-            $entity->setSortOrder($data->sortOrder);
-        }
         // active
         if (!$isPatch || array_key_exists('active', $requestData)) {
             $entity->setActive($data->active);
+        }
+        // sortOrder
+        if (!$isPatch || array_key_exists('sortOrder', $requestData)) {
+            $entity->setSortOrder($data->sortOrder);
         }
         // expectedDuration
         if (!$isPatch || array_key_exists('expectedDuration', $requestData)) {

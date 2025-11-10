@@ -43,7 +43,7 @@ abstract class BillingFrequencyRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'name',            'value',            'description',            'displayName',        ];
+        return [            'value',            'name',            'displayName',            'description',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class BillingFrequencyRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'value' => 'value',            'displayName' => 'displayName',            'intervalType' => 'intervalType',            'intervalCount' => 'intervalCount',            'daysInCycle' => 'daysInCycle',            'discountPercentage' => 'discountPercentage',            'default' => 'default',            'sortOrder' => 'sortOrder',            'active' => 'active',            'products' => 'products',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'value' => 'value',            'name' => 'name',            'displayName' => 'displayName',            'intervalType' => 'intervalType',            'intervalCount' => 'intervalCount',            'daysInCycle' => 'daysInCycle',            'discountPercentage' => 'discountPercentage',            'default' => 'default',            'sortOrder' => 'sortOrder',            'active' => 'active',            'products' => 'products',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -115,10 +115,10 @@ abstract class BillingFrequencyRepositoryGenerated extends BaseRepository
         return [
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
-            'name' => $entity->getName(),
             'value' => $entity->getValue(),
-            'description' => $entity->getDescription(),
+            'name' => $entity->getName(),
             'displayName' => $entity->getDisplayName(),
+            'description' => $entity->getDescription(),
             'intervalType' => $entity->getIntervalType(),
             'productsCount' => $entity->getProducts()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),

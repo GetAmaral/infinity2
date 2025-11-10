@@ -1,5 +1,9 @@
-{% set workingHour = workingHour ?? null %}
-{% include 'genmax/twig/form_generated.html.twig' with {
-    'workingHour': workingHour,
-    'form': form
-} %}
+{# Extension template for WorkingHour new page #}
+{# This template extends the generated one. Override specific blocks to customize. #}
+{# Generated template: workinghour/generated/new_generated.html.twig #}
+
+{% extends 'workinghour/generated/new_generated.html.twig' %}
+
+{# Uncomment to customize specific blocks: #}
+{# {% block page_icon %}<i class="bi bi-custom-icon text-neon fs-2 me-3"></i>{% endblock %} #}
+{# {% block grid_view_item_template %}...custom grid layout...{% endblock %} #}

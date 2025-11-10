@@ -12,8 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * StepOutput - Defines a possible exit from a Step
  *
  * Outputs define conditional routing to next steps:
- * - Name and description for documentation
- * - Conditional expression (regex, keywords, or custom logic)
+ * - Name for identification
+ * - Condition expression (regex, keywords, or custom logic)
  * - Destination step to route to when condition matches
  *
  * Extends generated base class - only add custom business logic here
@@ -42,11 +42,11 @@ class StepOutput extends StepOutputGenerated
     }
 
     /**
-     * Check if this output has a conditional
+     * Check if this output has a condition
      */
-    public function hasConditional(): bool
+    public function hasCondition(): bool
     {
-        return !empty($this->conditional);
+        return !empty($this->condition);
     }
 
     /**

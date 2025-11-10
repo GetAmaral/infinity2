@@ -34,7 +34,7 @@ final class BillingFrequencyController extends BillingFrequencyControllerGenerat
      * API endpoint for searching cies
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'billingfrequency_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'billingfrequency_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

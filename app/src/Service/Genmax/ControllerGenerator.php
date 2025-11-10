@@ -190,7 +190,7 @@ class ControllerGenerator
             'entityPluralVariable' => $entityPluralVariable,
             'routePrefix' => $routePrefix,
             'voterClass' => $entityName . 'Voter',
-            'formTypeClass' => $entityName . 'FormType',
+            'formTypeClass' => $entityName . 'Type',
             'repositoryClass' => $entityName . 'Repository',
             'translationDomain' => $routePrefix,
             'pageIcon' => $entity->getIcon(),
@@ -246,12 +246,14 @@ class ControllerGenerator
 
             $propertyType = $property->getPropertyType();
 
+            $relationshipType = $property->getRelationshipType();
             $properties[] = [
                 'name' => $propertyName,
                 'type' => $propertyType,
                 'getter' => $this->genmaxExtension->getGetterName($propertyName),
                 'serialization' => $this->getSerializationLogic($property),
-                'isRelationship' => $property->getRelationshipType() !== null,
+                'isRelationship' => $relationshipType !== null,
+                'isCollection' => in_array($relationshipType, ['OneToMany', 'ManyToMany'], true),
                 'nullable' => $property->isNullable(),
             ];
         }
@@ -346,6 +348,7 @@ class ControllerGenerator
 
                 // Display
                 'getter' => $this->genmaxExtension->getGetterName($propertyName),
+                'isRelationship' => $property->getRelationshipType() !== null,
             ];
         }
 

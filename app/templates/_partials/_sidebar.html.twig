@@ -1,0 +1,125 @@
+{# templates/_partials/_sidebar.html.twig #}
+
+<style>
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    color: var(--luminai-text);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease;
+    position: relative;
+}
+.sidebar-item:hover {
+    background: var(--luminai-hover-bg) !important;
+}
+.sidebar-item:hover .favorite-btn {
+    opacity: 1 !important;
+}
+.section-header:hover {
+    background: var(--luminai-hover-bg) !important;
+}
+.sidebar-toggle-btn {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    background: transparent;
+    border: 1px solid var(--luminai-border);
+    border-radius: 0.5rem;
+    color: var(--luminai-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.sidebar-toggle-btn:hover {
+    background: var(--luminai-hover-bg) !important;
+    border-color: var(--luminai-accent) !important;
+}
+.sidebar-search-input:focus {
+    border-color: var(--luminai-accent) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+}
+.sidebar-search-results.visible {
+    display: block !important;
+}
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--luminai-text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--luminai-border);
+    transition: background 0.15s ease;
+}
+.search-result-item:last-child {
+    border-bottom: none;
+}
+.search-result-item:hover {
+    background: var(--luminai-hover-bg);
+}
+.search-result-label {
+    flex: 1;
+    font-size: 0.875rem;
+}
+.search-result-section {
+    font-size: 0.75rem;
+    color: var(--luminai-text-muted);
+}
+.sortable-ghost {
+    opacity: 0.4;
+}
+.sortable-chosen {
+    background: var(--luminai-hover-bg) !important;
+}
+.sortable-drag {
+    cursor: grabbing !important;
+}
+
+/* Collapsed sidebar styles - thin line with no content visible */
+.app-sidebar.collapsed,
+.app-sidebar[style*="flex: 0 0 4px"],
+.app-sidebar[style*="flex-basis: 4px"] {
+    background: transparent !important;
+    border-right: 1px solid var(--luminai-border) !important;
+}
+
+.app-sidebar.collapsed *,
+.app-sidebar[style*="flex: 0 0 4px"] *,
+.app-sidebar[style*="flex-basis: 4px"] * {
+    display: none !important;
+}
+
+/* Hover effect on collapsed sidebar to indicate it can be expanded */
+.app-sidebar.collapsed:hover,
+.app-sidebar[style*="flex: 0 0 4px"]:hover,
+.app-sidebar[style*="flex-basis: 4px"]:hover {
+    cursor: pointer;
+    border-right-color: var(--luminai-accent) !important;
+    border-right-width: 2px !important;
+}
+
+/* Mobile responsive styles - hide desktop sidebar, show offcanvas instead */
+@media (max-width: 991.98px) {
+    .app-sidebar {
+        display: none !important;
+    }
+}
+</style>
+
+<aside
+    id="sidebar"
+    class="app-sidebar"
+    data-controller="sidebar"
+    data-sidebar-state-url-value="/api/sidebar/state"
+    data-action="click->sidebar#expandIfCollapsed"
+    data-turbo-permanent
+    style="flex: 0 0 260px; background: var(--luminai-card-bg); border-right: 1px solid var(--luminai-border); display: flex; flex-direction: column; overflow: hidden; transition: flex-basis 0.3s ease;"
+>
+    {# Use shared sidebar content (desktop) #}
+    {{ include('_partials/_sidebar_content.html.twig', {'is_mobile': false}) }}
+</aside>

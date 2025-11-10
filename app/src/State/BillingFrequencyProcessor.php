@@ -83,21 +83,21 @@ class BillingFrequencyProcessor implements ProcessorInterface
         $requestData = $context['request']->toArray() ?? [];
 
         // Map scalar properties from DTO to Entity
-        // name
-        if (!$isPatch || array_key_exists('name', $requestData)) {
-            $entity->setName($data->name);
-        }
         // value
         if (!$isPatch || array_key_exists('value', $requestData)) {
             $entity->setValue($data->value);
         }
-        // description
-        if (!$isPatch || array_key_exists('description', $requestData)) {
-            $entity->setDescription($data->description);
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
         }
         // displayName
         if (!$isPatch || array_key_exists('displayName', $requestData)) {
             $entity->setDisplayName($data->displayName);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
         }
         // intervalType
         if (!$isPatch || array_key_exists('intervalType', $requestData)) {

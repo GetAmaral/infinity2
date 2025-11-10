@@ -11,14 +11,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use App\Entity\User;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -64,13 +63,12 @@ abstract class PipelineTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('pipelineType', EnumType::class, [
+        $builder->add('pipelineType', TextType::class, [
             'label' => 'Pipeline Type',
             'required' => true,
-            'class' => App\Enum\PipelinetypeEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter pipeline type',
             ],
         ]);
 
@@ -82,22 +80,27 @@ abstract class PipelineTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('owner', EntityType::class, [
             'label' => 'Owner',
             'required' => false,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
-        $builder->add('stages', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('stages', CollectionType::class, [
             'label' => 'Stages',
             'required' => false,
-            'entry_type' => App\Form\PipelineStageType::class,
+            'entry_type' => \App\Form\PipelineStageType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -110,6 +113,7 @@ abstract class PipelineTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('displayOrder', IntegerType::class, [
             'label' => 'Display Order',
@@ -163,13 +167,12 @@ abstract class PipelineTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('currency', EnumType::class, [
+        $builder->add('currency', TextType::class, [
             'label' => 'Currency',
             'required' => true,
-            'class' => App\Enum\CurrencyEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter currency',
             ],
         ]);
 
@@ -239,12 +242,15 @@ abstract class PipelineTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
         $builder->add('deals', CollectionType::class, [
             'label' => 'Deals',
             'required' => false,
-            'entry_type' => App\Form\DealType::class,
+            'entry_type' => \App\Form\DealType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -257,6 +263,7 @@ abstract class PipelineTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
         $builder->add('archivedAt', DateTimeType::class, [
             'label' => 'Archived At',
@@ -272,6 +279,7 @@ abstract class PipelineTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Pipeline::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

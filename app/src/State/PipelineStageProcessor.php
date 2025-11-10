@@ -102,13 +102,13 @@ class PipelineStageProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('won', $requestData)) {
             $entity->setWon($data->won);
         }
-        // active
-        if (!$isPatch || array_key_exists('active', $requestData)) {
-            $entity->setActive($data->active);
-        }
         // lost
         if (!$isPatch || array_key_exists('lost', $requestData)) {
             $entity->setLost($data->lost);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
         }
         // color
         if (!$isPatch || array_key_exists('color', $requestData)) {

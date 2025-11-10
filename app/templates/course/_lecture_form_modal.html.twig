@@ -72,5 +72,39 @@
         {{ form_errors(form.viewOrder) }}
     </div>
 
+    <div class="form-group-modern">
+        <div class="form-check form-switch">
+            {{ form_widget(form.active, {
+                'attr': {
+                    'class': 'form-check-input'
+                }
+            }) }}
+            <label class="form-check-label" for="{{ form.active.vars.id }}">
+                {{ form_label(form.active) }}
+            </label>
+        </div>
+        {{ form_errors(form.active) }}
+    </div>
+
+    <div class="form-group-modern">
+        <div class="form-check form-switch">
+            {{ form_widget(form.free, {
+                'attr': {
+                    'class': 'form-check-input'
+                }
+            }) }}
+            <label class="form-check-label" for="{{ form.free.vars.id }}">
+                {{ form_label(form.free) }}
+            </label>
+        </div>
+        {{ form_errors(form.free) }}
+        {% if form.free.vars.help %}
+            <small class="form-text text-muted mt-1 d-block">
+                <i class="bi bi-info-circle me-1"></i>
+                {{ form.free.vars.help|trans({}, 'course') }}
+            </small>
+        {% endif %}
+    </div>
+
     {{ form_widget(form._token) }}
 {% endblock %}

@@ -11,8 +11,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\User;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -58,12 +60,15 @@ abstract class CourseTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('modules', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('modules', CollectionType::class, [
             'label' => 'Modules',
             'required' => false,
-            'entry_type' => App\Form\CourseModuleType::class,
+            'entry_type' => \App\Form\CourseModuleType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -77,6 +82,7 @@ abstract class CourseTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['max' => 50]),
             ],
         ]);
+        }
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
@@ -86,22 +92,27 @@ abstract class CourseTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('owner', EntityType::class, [
             'label' => 'Owner',
             'required' => true,
-            'class' => User::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\User::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
-        $builder->add('studentCourses', EntityType::class, [
+        // Exclude nested collections when form is used inside another collection
+        if (empty($options['exclude_parent'])) {
+        $builder->add('studentCourses', CollectionType::class, [
             'label' => 'Student Courses',
             'required' => false,
-            'entry_type' => App\Form\StudentCourseType::class,
+            'entry_type' => \App\Form\StudentCourseType::class,
             'entry_options' => [
                 'label' => false,
+                'exclude_parent' => true,
             ],
             'allow_add' => true,
             'allow_delete' => true,
@@ -114,6 +125,7 @@ abstract class CourseTypeGenerated extends AbstractType
                 new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
+        }
 
     }
 
@@ -121,6 +133,7 @@ abstract class CourseTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Course::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

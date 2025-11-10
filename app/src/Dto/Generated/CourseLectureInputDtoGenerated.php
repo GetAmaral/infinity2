@@ -58,7 +58,7 @@ abstract class CourseLectureInputDtoGenerated
     public int $viewOrder = 0;
 
     #[Groups(['course_lecture:write'])]
-    public int $lengthSeconds = 0;
+    public ?int $lengthSeconds = 0;
 
     /**
      * courseModule reference
@@ -80,10 +80,10 @@ abstract class CourseLectureInputDtoGenerated
     public bool $active;
 
     #[Groups(['course_lecture:write'])]
-    public bool $published;
+    public ?bool $published = null;
 
     #[Groups(['course_lecture:write'])]
-    public bool $free;
+    public ?bool $free = null;
 
     #[Groups(['course_lecture:write'])]
     public ?\DateTimeImmutable $publishedAt = null;
@@ -137,7 +137,7 @@ abstract class CourseLectureInputDtoGenerated
     public ?int $ratingCount = null;
 
     #[Groups(['course_lecture:write'])]
-    public int $durationSeconds;
+    public ?int $durationSeconds = null;
 
     #[Groups(['course_lecture:write'])]
     public ?string $difficultyLevel = null;
@@ -257,11 +257,11 @@ abstract class CourseLectureInputDtoGenerated
         return $this;
     }
 
-    public function getLengthSeconds(): int    {
+    public function getLengthSeconds(): ?int    {
         return $this->lengthSeconds;
     }
 
-    public function setLengthSeconds(int $lengthSeconds): self
+    public function setLengthSeconds(?int $lengthSeconds): self
     {
         $this->lengthSeconds = $lengthSeconds;
         return $this;
@@ -317,21 +317,21 @@ abstract class CourseLectureInputDtoGenerated
         return $this;
     }
 
-    public function getPublished(): bool    {
+    public function getPublished(): ?bool    {
         return $this->published;
     }
 
-    public function setPublished(bool $published): self
+    public function setPublished(?bool $published): self
     {
         $this->published = $published;
         return $this;
     }
 
-    public function getFree(): bool    {
+    public function getFree(): ?bool    {
         return $this->free;
     }
 
-    public function setFree(bool $free): self
+    public function setFree(?bool $free): self
     {
         $this->free = $free;
         return $this;
@@ -507,11 +507,11 @@ abstract class CourseLectureInputDtoGenerated
         return $this;
     }
 
-    public function getDurationSeconds(): int    {
+    public function getDurationSeconds(): ?int    {
         return $this->durationSeconds;
     }
 
-    public function setDurationSeconds(int $durationSeconds): self
+    public function setDurationSeconds(?int $durationSeconds): self
     {
         $this->durationSeconds = $durationSeconds;
         return $this;

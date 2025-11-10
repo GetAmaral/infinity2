@@ -34,7 +34,7 @@ final class NotificationTypeController extends NotificationTypeControllerGenerat
      * API endpoint for searching notificationTypes
      * Used by list page for dynamic data loading
      */
-    #[Route('/search', name: 'notificationtype_search', methods: ['GET'])]
+    #[Route('/api/search', name: 'notificationtype_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
         return $this->apiSearchAction($request);

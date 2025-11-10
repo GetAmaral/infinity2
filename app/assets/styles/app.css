@@ -31,6 +31,35 @@
     --luminai-search-bg: var(--luminai-dark-surface);
     --luminai-search-border: rgba(255, 255, 255, 0.2);
     --luminai-search-text: #ffffff;
+
+    /* Sidebar variables */
+    --luminai-border: rgba(255, 255, 255, 0.1);
+    --luminai-text: #ffffff;
+    --luminai-hover-bg: rgba(255, 255, 255, 0.08);
+    --luminai-accent: #6366f1;
+}
+
+/* Light Theme - CSS Variable Overrides */
+[data-theme="light"] {
+    --luminai-text: #1a1a1a;
+    --luminai-text-primary: #1a1a1a;
+    --luminai-text-secondary: #4a5568;
+    --luminai-text-muted: #6b7280;
+    --luminai-card-bg: rgba(255, 255, 255, 0.9);
+    --luminai-border: rgba(0, 0, 0, 0.1);
+    --luminai-border-color: rgba(0, 0, 0, 0.1);
+    --luminai-hover-bg: rgba(0, 0, 0, 0.05);
+    --luminai-overlay-bg: rgba(255, 255, 255, 0.95);
+    --luminai-shadow: rgba(0, 0, 0, 0.1);
+    --luminai-modal-header-bg: linear-gradient(135deg, rgba(109, 40, 217, 0.05) 0%, rgba(167, 139, 250, 0.05) 100%);
+    --luminai-modal-footer-bg: rgba(0, 0, 0, 0.03);
+    --luminai-input-bg: rgba(0, 0, 0, 0.02);
+    --luminai-input-focus-bg: rgba(0, 0, 0, 0.04);
+    --luminai-btn-secondary-bg: rgba(0, 0, 0, 0.08);
+    --luminai-btn-secondary-hover: rgba(0, 0, 0, 0.15);
+    --luminai-search-bg: #ffffff;
+    --luminai-search-border: rgba(0, 0, 0, 0.2);
+    --luminai-search-text: #1a1a1a;
 }
 
 /* Dark Theme - Make text-muted more visible */
@@ -1533,4 +1562,40 @@ textarea.form-input-modern {
 
 [data-theme="light"] .form-input-modern:disabled {
     background-color: #f3f4f6;
+}
+
+/* ============================================
+   SIDEBAR OVERRIDES (Plain CSS for critical functionality)
+   ============================================ */
+
+/* Collapsed sidebar state */
+.sidebar-container.collapsed {
+    width: 60px !important;
+}
+
+.sidebar-container.collapsed .sidebar-label,
+.sidebar-container.collapsed .sidebar-search-input,
+.sidebar-container.collapsed .favorites-title,
+.sidebar-container.collapsed .section-title {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.sidebar-container.collapsed .sidebar-toggle-text {
+    display: none;
+}
+
+.sidebar-container.collapsed .sidebar-item {
+    justify-content: center;
+    padding: 0.75rem;
+}
+
+/* Section expanded state */
+.sidebar-section.expanded .section-toggle i {
+    transform: rotate(90deg);
+}
+
+.sidebar-section.expanded .section-content {
+    max-height: 1000px;
+    opacity: 1;
 }

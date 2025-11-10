@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Controller\Base\BaseApiController;
-use App\Entity\StepIteration;
+use App\Entity\StepAction;
 use App\Entity\Step;
-use App\Entity\StepInput;
 use App\Entity\StepOutput;
 use App\Entity\TreeFlow;
 use App\Form\TreeFlowFormType;
@@ -52,6 +51,19 @@ final class TreeFlowController extends BaseApiController
             'enable_search' => true,
             'enable_filters' => true,
             'enable_create_button' => true,
+            'create_permission' => TreeFlowVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"getter":"getName","isRelationship":false,"icon":"diagram-3"},{"name":"version","label":"Version","type":"integer","sortable":true,"searchable":false,"filterable":false,"getter":"getVersion","isRelationship":false,"icon":"sort-numeric-down"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"getter":"isActive","isRelationship":false,"icon":"check-circle"}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"active","label":"Active","type":"boolean"}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"version","label":"Version"},{"name":"active","label":"Active"},{"name":"createdAt","label":"Created At"},{"name":"updatedAt","label":"Updated At"}]', true),
+
+            // Property metadata for client-side rendering (as JSON strings)
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"getter":"getName","isRelationship":false,"icon":"diagram-3"},{"name":"version","label":"Version","type":"integer","sortable":true,"searchable":false,"filterable":false,"getter":"getVersion","isRelationship":false,"icon":"sort-numeric-down"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"getter":"isActive","isRelationship":false,"icon":"check-circle"}]',
+            'searchable_fields' => '[{"name":"name","label":"Name","type":"string"}]',
+            'filterable_fields' => '[{"name":"active","label":"Active","type":"boolean"}]',
+            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"version","label":"Version"},{"name":"active","label":"Active"},{"name":"createdAt","label":"Created At"},{"name":"updatedAt","label":"Updated At"}]',
 
             // Backward compatibility
             'treeflows' => [],
@@ -94,14 +106,14 @@ final class TreeFlowController extends BaseApiController
         // Handle modal/AJAX requests
         if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
             return $this->render('treeflow/_form_modal.html.twig', [
-                'treeflow' => $treeFlow,
+                'treeFlow' => $treeFlow,
                 'form' => $form,
                 'is_edit' => false,
             ]);
         }
 
         return $this->render('treeflow/new.html.twig', [
-            'treeflow' => $treeFlow,
+            'treeFlow' => $treeFlow,
             'form' => $form,
         ]);
     }
@@ -115,10 +127,9 @@ final class TreeFlowController extends BaseApiController
             ->where('t.id = :id')
             ->setParameter('id', $id)
             ->leftJoin('t.steps', 's')
-            ->leftJoin('s.questions', 'q')
+            ->leftJoin('s.actions', 'q')
             ->leftJoin('s.outputs', 'o')
-            ->leftJoin('s.inputs', 'i')
-            ->addSelect('s', 'q', 'o', 'i')
+            ->addSelect('s', 'q', 'o')
             ->orderBy('s.viewOrder', 'ASC')
             ->addOrderBy('q.viewOrder', 'ASC')
             ->getQuery()
@@ -134,22 +145,13 @@ final class TreeFlowController extends BaseApiController
         if ($request->isXmlHttpRequest() && $request->headers->get('Accept') === 'application/json') {
             $stepsData = [];
             foreach ($treeFlow->getSteps() as $step) {
-                $questionsData = [];
-                foreach ($step->getQuestions() as $question) {
-                    $questionsData[] = [
-                        'id' => $question->getId()?->toString(),
-                        'questionText' => $question->getName(),
-                        'text' => $question->getName(),
-                        'viewOrder' => $question->getViewOrder(),
-                    ];
-                }
-
-                $inputsData = [];
-                foreach ($step->getInputs() as $input) {
-                    $inputsData[] = [
-                        'id' => $input->getId()?->toString(),
-                        'name' => $input->getName(),
-                        'type' => $input->getType()?->value,
+                $actionsData = [];
+                foreach ($step->getActions() as $action) {
+                    $actionsData[] = [
+                        'id' => $action->getId()?->toString(),
+                        'actionText' => $action->getName(),
+                        'text' => $action->getName(),
+                        'viewOrder' => $action->getViewOrder(),
                     ];
                 }
 
@@ -162,8 +164,8 @@ final class TreeFlowController extends BaseApiController
                 foreach ($outputs as $output) {
                     // Get destination step from connection
                     $destinationStepId = null;
-                    if ($output->getConnection() && $output->getConnection()->getTargetInput()) {
-                        $destinationStepId = $output->getConnection()->getTargetInput()->getStep()->getId()?->toString();
+                    if ($output->getConnection() && $output->getConnection()->getTargetStep()) {
+                        $destinationStepId = $output->getConnection()->getTargetStep()->getId()?->toString();
                     }
 
                     $outputsData[] = [
@@ -179,8 +181,7 @@ final class TreeFlowController extends BaseApiController
                     'first' => $step->isFirst(),
                     'positionX' => $step->getPositionX(),
                     'positionY' => $step->getPositionY(),
-                    'questions' => $questionsData,
-                    'inputs' => $inputsData,
+                    'actions' => $actionsData,
                     'outputs' => $outputsData,
                 ];
             }
@@ -192,7 +193,8 @@ final class TreeFlowController extends BaseApiController
         }
 
         return $this->render('treeflow/show.html.twig', [
-            'treeflow' => $treeFlow,
+            'treeFlow' => $treeFlow,
+            'showProperties' => json_decode('[{"name":"name","label":"field.name","type":"string","getter":"getName","icon":"diagram-3","isRelationship":false},{"name":"slug","label":"field.slug","type":"string","getter":"getSlug","icon":"link-45deg","isRelationship":false},{"name":"version","label":"field.version","type":"integer","getter":"getVersion","icon":"sort-numeric-down","isRelationship":false},{"name":"active","label":"field.active","type":"boolean","getter":"isActive","icon":"check-circle","isRelationship":false}]', true),
         ]);
     }
 
@@ -223,14 +225,14 @@ final class TreeFlowController extends BaseApiController
         // Handle modal/AJAX requests
         if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
             return $this->render('treeflow/_form_modal.html.twig', [
-                'treeflow' => $treeFlow,
+                'treeFlow' => $treeFlow,
                 'form' => $form,
                 'is_edit' => true,
             ]);
         }
 
         return $this->render('treeflow/edit.html.twig', [
-            'treeflow' => $treeFlow,
+            'treeFlow' => $treeFlow,
             'form' => $form,
         ]);
     }
@@ -313,24 +315,21 @@ final class TreeFlowController extends BaseApiController
                     'slug' => $step->getSlug(),
                     'first' => $step->isFirst(),
                     'objective' => $step->getObjective(),
-                    'prompt' => $step->getPrompt(),
 
-                    // Questions with FewShot JSONB arrays
-                    'questions' => array_map(function(StepIteration $q) {
+                    // Actions with FewShot JSONB arrays
+                    'actions' => array_map(function(StepAction $q) {
                         return [
                             'id' => $q->getId()?->toString(),
                             'name' => $q->getName(),
                             'slug' => $q->getSlug(),
                             'prompt' => $q->getPrompt(),
-                            'objective' => $q->getObjective(),
                             'importance' => $q->getImportance(),
                             'viewOrder' => $q->getViewOrder(),
 
-                            // FewShot Examples (JSONB arrays)
-                            'fewShotPositive' => $q->getFewShotPositive() ?? [],
-                            'fewShotNegative' => $q->getFewShotNegative() ?? [],
+                            // FewShot Examples (JSONB array)
+                            'fewShot' => $q->getFewShot() ?? [],
                         ];
-                    }, $step->getQuestions()->toArray()),
+                    }, $step->getActions()->toArray()),
 
                     // Outputs
                     'outputs' => array_map(function(StepOutput $out) {
@@ -338,21 +337,9 @@ final class TreeFlowController extends BaseApiController
                             'id' => $out->getId()?->toString(),
                             'name' => $out->getName(),
                             'slug' => $out->getSlug(),
-                            'description' => $out->getDescription(),
-                            'conditional' => $out->getConditional(),
+                            'condition' => $out->getCondition(),
                         ];
                     }, $step->getOutputs()->toArray()),
-
-                    // Inputs
-                    'inputs' => array_map(function(StepInput $in) {
-                        return [
-                            'id' => $in->getId()?->toString(),
-                            'name' => $in->getName(),
-                            'slug' => $in->getSlug(),
-                            'type' => $in->getType(),
-                            'prompt' => $in->getPrompt(),
-                        ];
-                    }, $step->getInputs()->toArray()),
                 ];
             }, $entity->getSteps()->toArray()),
         ];

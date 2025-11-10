@@ -1,6 +1,6 @@
 {% import '_macros/organization_logo.html.twig' as org_logo %}
 <!DOCTYPE html>
-<html>
+<html style="overflow: hidden; height: 100%;">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{{ 'branding.luminai.crm'|trans }}{% endblock %}</title>
@@ -26,12 +26,39 @@
     <!-- Preference Manager - Load FIRST before any other scripts -->
     <script src="/preference-manager.js" data-turbo-eval="false"></script>
 </head>
-<body {% if app.user %}data-controller="session-monitor fullscreen-textarea" data-session-monitor-lifetime-value="3600" data-session-monitor-status-url-value="{{ path('api_session_status') }}" data-session-monitor-keepalive-url-value="{{ path('api_session_keepalive') }}"{% else %}data-controller="fullscreen-textarea"{% endif %}>
+<body {% if app.user %}data-controller="session-monitor fullscreen-textarea scroll-restoration" data-session-monitor-lifetime-value="3600" data-session-monitor-status-url-value="{{ path('api_session_status') }}" data-session-monitor-keepalive-url-value="{{ path('api_session_keepalive') }}"{% else %}data-controller="fullscreen-textarea scroll-restoration"{% endif %} style="{% if app.user %}overflow: hidden; height: 100vh; margin: 0;{% endif %}">
     <nav class="navbar luminai-navbar">
-        <div class="container">
+        <div class="container-fluid">
             <!-- Dual-Brand Layout: Platform (subtle) + Organization (prominent) -->
             <div class="navbar-brand d-flex align-items-center gap-0">
                 {% if app.user %}
+                    <!-- Sidebar Toggle Button (Desktop: JS toggle, Mobile: Offcanvas) -->
+                    <button
+                        type="button"
+                        class="sidebar-toggle-navbar-btn d-none d-lg-block"
+                        onclick="if (window.sidebarController) { window.sidebarController.toggle(); }"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-title="{{ 'sidebar.toggle.tooltip'|trans }}"
+                        style="background: transparent; border: none; padding: 0.5rem; margin-right: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 0.375rem; transition: background 0.15s ease;"
+                        onmouseover="this.style.background='var(--luminai-hover-bg)'"
+                        onmouseout="this.style.background='transparent'"
+                    >
+                        <i class="bi bi-list" style="font-size: 1.5rem; color: var(--luminai-text);"></i>
+                    </button>
+                    <!-- Mobile Sidebar Toggle Button (Triggers Offcanvas) -->
+                    <button
+                        type="button"
+                        class="sidebar-toggle-navbar-btn d-lg-none"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#mobileSidebarOffcanvas"
+                        aria-controls="mobileSidebarOffcanvas"
+                        style="background: transparent; border: none; padding: 0.5rem; margin-right: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 0.375rem; transition: background 0.15s ease;"
+                        onmouseover="this.style.background='var(--luminai-hover-bg)'"
+                        onmouseout="this.style.background='transparent'"
+                    >
+                        <i class="bi bi-list" style="font-size: 1.5rem; color: var(--luminai-text);"></i>
+                    </button>
                     <!-- Platform Branding (Subtle) -->
                     <a href="{{ path('app_dashboard') }}" class="platform-brand d-flex align-items-center text-decoration-none">
                         <img src="/luminai_logo_sm_dark.png" alt="Luminai" height="24" class="logo-dark-theme me-2">
@@ -147,17 +174,6 @@
                         <li><a class="dropdown-item" href="{{ path('app_login') }}">{{ 'nav.login'|trans({}, 'public') }}</a></li>
                     </ul>
                 </div>
-                {% else %}
-                {# Authenticated Navigation #}
-                <!-- Hamburger Menu Button -->
-                <div class="dropdown">
-                    <button class="nav-link text-white d-flex align-items-center navbar-menu-btn" type="button" id="navDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'nav.toggle.navigation'|trans }}">
-                        <i class="bi bi-list fs-4"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navDropdown" style="background: var(--luminai-dark-surface); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 200px;">
-                        {{ render_main_menu()|raw }}
-                    </ul>
-                </div>
                 {% endif %}
 
                 <!-- User Profile (Authenticated Users Only) -->
@@ -202,21 +218,59 @@
         </div>
     </nav>
 
-    <main class="container">
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success border-0 rounded-3" style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3) !important; color: #22c55e;">
-                <i class="bi bi-check-circle me-2"></i>{{ message|trans }}
+    {% if app.user %}
+        {# Mobile Offcanvas Sidebar (Bootstrap Component) #}
+        <div
+            class="offcanvas offcanvas-start d-lg-none"
+            tabindex="-1"
+            id="mobileSidebarOffcanvas"
+            aria-labelledby="mobileSidebarLabel"
+            data-bs-backdrop="true"
+            data-bs-scroll="false"
+            data-controller="mobile-sidebar"
+            data-action="shown.bs.offcanvas->mobile-sidebar#updateActiveItem"
+            style="width: 280px; background: var(--luminai-card-bg); border-right: 1px solid var(--luminai-border);"
+        >
+            <div class="offcanvas-header" style="border-bottom: 1px solid var(--luminai-border); padding: 1rem;">
+                <h5 class="offcanvas-title" id="mobileSidebarLabel" style="color: var(--luminai-text); font-weight: 600;">{{ 'sidebar.menu'|trans }}</h5>
+                <button type="button" class="btn-close btn-close-themed" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-        {% endfor %}
-
-        {% for message in app.flashes('error') %}
-            <div class="alert alert-danger border-0 rounded-3" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3) !important; color: #ef4444;">
-                <i class="bi bi-exclamation-triangle me-2"></i>{{ message|trans }}
+            <div class="offcanvas-body" style="padding: 0; overflow-y: auto; display: flex; flex-direction: column;">
+                {# Include the same sidebar content with mobile flag #}
+                {% include '_partials/_sidebar_content.html.twig' with {'is_mobile': true} %}
             </div>
-        {% endfor %}
+        </div>
+    {% endif %}
 
-        {% block body %}{% endblock %}
-    </main>
+    {% if app.user %}
+        {# Flexbox wrapper for sidebar + main content #}
+        <div class="app-wrapper" style="display: flex; height: calc(100vh - 56px); overflow: hidden;">
+            {# Sidebar (non-scrolling) #}
+            {{ include('_partials/_sidebar.html.twig') }}
+
+            {# Main content (scrollable) #}
+            <main class="app-main" style="flex: 1; overflow-y: auto; overflow-x: hidden; padding: 2rem;">
+    {% else %}
+        {# Public pages: regular container #}
+        <main class="container">
+    {% endif %}
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success border-0 rounded-3" style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3) !important; color: #22c55e;">
+                        <i class="bi bi-check-circle me-2"></i>{{ message|trans }}
+                    </div>
+                {% endfor %}
+
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger border-0 rounded-3" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3) !important; color: #ef4444;">
+                        <i class="bi bi-exclamation-triangle me-2"></i>{{ message|trans }}
+                    </div>
+                {% endfor %}
+
+                {% block body %}{% endblock %}
+            </main>
+    {% if app.user %}
+        </div>
+    {% endif %}
 
 
     <!-- Global Modal Container -->
@@ -504,6 +558,53 @@
                 }
             });
 
+            // ============================================
+            // SCROLL POSITION PRESERVATION FOR MODAL SAVES
+            // ============================================
+            let savedScrollPosition = null;
+            let isModalFormSubmission = false;
+
+            // Listen for modal form submissions
+            document.addEventListener('turbo:submit-end', (event) => {
+                const form = event.detail.formSubmission?.formElement;
+                if (form && form.closest('[data-controller*="crud-modal"]')) {
+                    // This is a modal form submission
+                    const response = event.detail.fetchResponse;
+                    if (response && response.response.redirected) {
+                        // Find the scrollable container (.app-main for authenticated users)
+                        const scrollContainer = document.querySelector('.app-main') || window;
+                        const scrollTop = scrollContainer === window ? window.scrollY : scrollContainer.scrollTop;
+                        const scrollLeft = scrollContainer === window ? window.scrollX : scrollContainer.scrollLeft;
+
+                        // Successful submission with redirect - save scroll position
+                        savedScrollPosition = { x: scrollLeft, y: scrollTop, container: scrollContainer === window ? 'window' : '.app-main' };
+                        isModalFormSubmission = true;
+                        console.log('📍 Modal form saved - preserving scroll:', savedScrollPosition);
+                    }
+                }
+            });
+
+            // Restore scroll position after Turbo renders the page
+            document.addEventListener('turbo:render', () => {
+                if (isModalFormSubmission && savedScrollPosition) {
+                    requestAnimationFrame(() => {
+                        // Find the scrollable container again (it's been re-rendered)
+                        const scrollContainer = document.querySelector('.app-main') || window;
+
+                        if (scrollContainer === window) {
+                            window.scrollTo(savedScrollPosition.x, savedScrollPosition.y);
+                        } else {
+                            scrollContainer.scrollTop = savedScrollPosition.y;
+                            scrollContainer.scrollLeft = savedScrollPosition.x;
+                        }
+
+                        console.log('📍 Scroll position restored:', savedScrollPosition);
+                        savedScrollPosition = null;
+                        isModalFormSubmission = false;
+                    });
+                }
+            });
+
             // Initialize theme on page load
             document.addEventListener('DOMContentLoaded', async () => {
                 // Initialize PreferenceManager (full page load)
@@ -519,7 +620,6 @@
                     // Debounce: only execute if no other turbo:load fired in the last 50ms
                     clearTimeout(turboLoadTimeout);
                     turboLoadTimeout = setTimeout(async () => {
-                        console.log('🔄 Turbo navigation - loading preferences from localStorage');
                         await window.PreferenceManager.init(true);
                     }, 50);
                 });
@@ -986,6 +1086,44 @@
                 height: 26px;
             }
         }
+
+        /* ========================================
+           MOBILE OFFCANVAS SIDEBAR
+           ======================================== */
+
+        /* Themed close button for offcanvas */
+        .btn-close-themed {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        [data-theme="light"] .btn-close-themed {
+            filter: none;
+        }
+
+        /* Offcanvas backdrop */
+        .offcanvas-backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="light"] .offcanvas-backdrop {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
     </style>
+
+    <script>
+        // Close mobile offcanvas when clicking a sidebar menu item
+        document.addEventListener('click', function(e) {
+            const menuItem = e.target.closest('.sidebar-item');
+            if (menuItem && window.innerWidth < 992) {
+                const offcanvas = document.getElementById('mobileSidebarOffcanvas');
+                if (offcanvas && typeof bootstrap !== 'undefined') {
+                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+                    if (bsOffcanvas) {
+                        bsOffcanvas.hide();
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Product;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -227,15 +228,17 @@ abstract class ProductBatchTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
         $builder->add('product', EntityType::class, [
             'label' => 'Product',
             'required' => false,
-            'class' => Product::class,
-            'choice_label' => '__toString',
+            'class' => \App\Entity\Product::class,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
+        }
 
         $builder->add('reservedQuantity', IntegerType::class, [
             'label' => 'ReservedQuantity',
@@ -259,6 +262,7 @@ abstract class ProductBatchTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ProductBatch::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

@@ -57,8 +57,6 @@ abstract class LostReasonTypeGenerated extends AbstractType
             'label' => 'Category',
             'required' => true,
             'help' => 'Select the primary category for this lost reason to enable better analysis and reporting',
-            'class' => App\Enum\CategoryEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -122,8 +120,6 @@ abstract class LostReasonTypeGenerated extends AbstractType
             'label' => 'Impact',
             'required' => false,
             'help' => 'Impact level helps prioritize which lost reasons need strategic attention',
-            'class' => App\Enum\ImpactEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -133,8 +129,6 @@ abstract class LostReasonTypeGenerated extends AbstractType
             'label' => 'Win-Back Potential',
             'required' => false,
             'help' => 'Win-back potential helps identify which lost deals should be nurtured for future opportunities',
-            'class' => App\Enum\WinbackpotentialEnum::class,
-            'choice_label' => 'getLabel',
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -184,6 +178,7 @@ abstract class LostReasonTypeGenerated extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => LostReason::class,
+            'exclude_parent' => false,  // Set to true to exclude parent back-refs and nested collections (prevents circular refs)
         ]);
     }
 }

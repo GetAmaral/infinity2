@@ -1,0 +1,49 @@
+{% extends '_base_modal.html.twig' %}
+
+{# Configure modal appearance and behavior #}
+{% set entity_type = 'deal' %}
+{% set icon = 'currency-dollar' %}
+{% set form_action = (is_edit and deal.id) ? path('deal_edit', {id: deal.id}) : path('deal_new') %}
+{% set title_create = 'deal.modal.create.title'|trans({}, 'deal') %}
+{% set title_edit = 'deal.modal.edit.title'|trans({}, 'deal') %}
+{% set subtitle_create = 'deal.modal.create.subtitle'|trans({}, 'deal') %}
+{% set subtitle_edit = 'deal.modal.edit.subtitle'|trans({}, 'deal') %}
+{% set submit_key = is_edit ? 'button.save.changes' : 'deal.button.create.deal' %}
+{% set submit_domain = is_edit ? 'messages' : 'deal' %}
+{% set entity = deal %}
+
+{# Form fields - auto-render all fields #}
+{% block modal_body %}
+    {# Render all form fields automatically #}
+    {% for child in form.children %}
+        {% if child.vars.name not in ['_token'] %}
+            <div class="form-group-modern">
+                {% if child.vars.block_prefixes[1] == 'checkbox' %}
+                    {# Checkbox/Switch styling #}
+                    <div class="form-check form-switch">
+                        {{ form_widget(child, {
+                            'attr': {
+                                'class': 'form-check-input',
+                                'style': 'cursor: pointer;'
+                            }
+                        }) }}
+                        <label class="form-check-label" for="{{ child.vars.id }}" style="color: var(--luminai-text-primary); cursor: pointer; margin-left: 0.5rem;">
+                            {{ form_label(child) }}
+                        </label>
+                    </div>
+                {% else %}
+                    {# Regular field styling #}
+                    <label class="form-label-modern">{{ form_label(child) }}</label>
+                    {{ form_widget(child, {
+                        'attr': {
+                            'class': 'form-input-modern' ~ (child.vars.errors|length > 0 ? ' input-error' : '')
+                        }
+                    }) }}
+                {% endif %}
+                {{ form_errors(child) }}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    {{ form_widget(form._token) }}
+{% endblock %}

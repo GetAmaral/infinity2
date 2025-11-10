@@ -31,12 +31,12 @@ abstract class ContactInputDtoGenerated
     #[Groups(['contact:write'])]
     public ?string $organization = null;
 
+    #[Groups(['contact:write'])]
+    public string $name;
+
     #[Assert\Length(max: 100)]
     #[Groups(['contact:write'])]
     public string $firstName;
-
-    #[Groups(['contact:write'])]
-    public string $name;
 
     #[Assert\Length(max: 100)]
     #[Groups(['contact:write'])]
@@ -87,26 +87,26 @@ abstract class ContactInputDtoGenerated
     #[Groups(['contact:write'])]
     public ?string $mobilePhone = null;
 
-    #[Assert\Length(max: 255)]
-    #[Groups(['contact:write'])]
-    public ?string $linkedinUrl = null;
-
     #[Groups(['contact:write'])]
     public ?string $title = null;
 
-    #[Assert\Length(max: 100)]
+    #[Assert\Length(max: 255)]
     #[Groups(['contact:write'])]
-    public ?string $department = null;
+    public ?string $linkedinUrl = null;
 
     #[Groups(['contact:write'])]
     public bool $emailOptOut;
 
     #[Assert\Length(max: 100)]
     #[Groups(['contact:write'])]
-    public ?string $leadSource = null;
+    public ?string $department = null;
 
     #[Groups(['contact:write'])]
     public bool $doNotCall;
+
+    #[Assert\Length(max: 100)]
+    #[Groups(['contact:write'])]
+    public ?string $leadSource = null;
 
     #[Groups(['contact:write'])]
     public ?string $preferredContactMethod = null;
@@ -176,16 +176,6 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getFirstName(): string    {
-        return $this->firstName;
-    }
-
-    public function setFirstName(string $firstName): self
-    {
-        $this->firstName = $firstName;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -193,6 +183,16 @@ abstract class ContactInputDtoGenerated
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getFirstName(): string    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
         return $this;
     }
 
@@ -306,16 +306,6 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getDeals(): ?string    {
-        return $this->deals;
-    }
-
-    public function setDeals(?string $deals): self
-    {
-        $this->deals = $deals;
-        return $this;
-    }
-
     public function getMobilePhone(): ?string    {
         return $this->mobilePhone;
     }
@@ -326,13 +316,13 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getLinkedinUrl(): ?string    {
-        return $this->linkedinUrl;
+    public function getDeals(): ?string    {
+        return $this->deals;
     }
 
-    public function setLinkedinUrl(?string $linkedinUrl): self
+    public function setDeals(?string $deals): self
     {
-        $this->linkedinUrl = $linkedinUrl;
+        $this->deals = $deals;
         return $this;
     }
 
@@ -346,13 +336,13 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getDepartment(): ?string    {
-        return $this->department;
+    public function getLinkedinUrl(): ?string    {
+        return $this->linkedinUrl;
     }
 
-    public function setDepartment(?string $department): self
+    public function setLinkedinUrl(?string $linkedinUrl): self
     {
-        $this->department = $department;
+        $this->linkedinUrl = $linkedinUrl;
         return $this;
     }
 
@@ -366,13 +356,13 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getLeadSource(): ?string    {
-        return $this->leadSource;
+    public function getDepartment(): ?string    {
+        return $this->department;
     }
 
-    public function setLeadSource(?string $leadSource): self
+    public function setDepartment(?string $department): self
     {
-        $this->leadSource = $leadSource;
+        $this->department = $department;
         return $this;
     }
 
@@ -383,6 +373,16 @@ abstract class ContactInputDtoGenerated
     public function setDoNotCall(bool $doNotCall): self
     {
         $this->doNotCall = $doNotCall;
+        return $this;
+    }
+
+    public function getLeadSource(): ?string    {
+        return $this->leadSource;
+    }
+
+    public function setLeadSource(?string $leadSource): self
+    {
+        $this->leadSource = $leadSource;
         return $this;
     }
 

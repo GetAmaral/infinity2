@@ -53,15 +53,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      description:
-        description: "..."
-        example: "..."
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       user:
         description: "User"
         example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      description:
+        description: "..."
+        example: "..."
         # Advanced filters
         filters:
           - type: OrderFilter

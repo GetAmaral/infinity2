@@ -30,24 +30,15 @@ class StepOutputFormType extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
-            ->add('description', TextareaType::class, [
-                'label' => 'output.form.description',
+            ->add('condition', TextareaType::class, [
+                'label' => 'output.form.condition',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',
                     'rows' => 3,
-                    'placeholder' => 'output.form.description_placeholder',
+                    'placeholder' => 'output.form.condition_placeholder',
                 ],
-            ])
-            ->add('conditional', TextareaType::class, [
-                'label' => 'output.form.conditional',
-                'required' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'rows' => 3,
-                    'placeholder' => 'output.form.conditional_placeholder',
-                ],
-                'help' => 'output.form.conditional_help',
+                'help' => 'output.form.condition_help',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => $isEdit ? 'button.update' : 'button.create',
@@ -62,9 +53,11 @@ class StepOutputFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => StepOutput::class,
             'is_edit' => false,
+            'available_steps' => [],
             'translation_domain' => 'treeflow',
         ]);
 
         $resolver->setAllowedTypes('is_edit', 'bool');
+        $resolver->setAllowedTypes('available_steps', 'array');
     }
 }

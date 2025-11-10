@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\TaskTemplate;
 use App\Repository\TaskTemplateRepository;
 use App\Security\Voter\TaskTemplateVoter;
-use App\Form\TaskTemplateFormType;
+use App\Form\TaskTemplateType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -120,7 +120,7 @@ abstract class TaskTemplateControllerGenerated extends BaseApiController
 
         return $this->render('tasktemplate/index.html.twig', [
             'entities' => [],  // Loaded via API
-            'entity_name' => 'taskTemplate',
+            'entity_name' => 'tasktemplate',
             'entity_name_plural' => 'taskTemplates',
             'page_icon' => 'bi-clipboard-check',
             'default_view' => $savedView,
@@ -130,9 +130,16 @@ abstract class TaskTemplateControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => TaskTemplateVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"command","label":"Command","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCommand","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"durationMinutes","label":"DurationMinutes","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDurationMinutes","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"periodicityInterval","label":"PeriodicityInterval","type":"float","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPeriodicityInterval","isRelationship":false},{"name":"periodicityTimeframe","label":"PeriodicityTimeframe","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPeriodicityTimeframe","isRelationship":false},{"name":"pipelineStageTemplate","label":"PipelineStageTemplate","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineStageTemplate","isRelationship":true},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"type","label":"Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType","isRelationship":true}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"command","label":"Command","type":"text"},{"name":"location","label":"Location","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"command","label":"Command"},{"name":"active","label":"Active"},{"name":"durationMinutes","label":"DurationMinutes"},{"name":"location","label":"Location"},{"name":"periodicityInterval","label":"PeriodicityInterval"},{"name":"periodicityTimeframe","label":"PeriodicityTimeframe"},{"name":"pipelineStageTemplate","label":"PipelineStageTemplate"},{"name":"priority","label":"Priority"},{"name":"type","label":"Type"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"command","label":"Command","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCommand"},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive"},{"name":"durationMinutes","label":"DurationMinutes","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDurationMinutes"},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation"},{"name":"periodicityInterval","label":"PeriodicityInterval","type":"float","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPeriodicityInterval"},{"name":"periodicityTimeframe","label":"PeriodicityTimeframe","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPeriodicityTimeframe"},{"name":"pipelineStageTemplate","label":"PipelineStageTemplate","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineStageTemplate"},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority"},{"name":"type","label":"Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"command","label":"Command","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCommand","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"durationMinutes","label":"DurationMinutes","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDurationMinutes","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"periodicityInterval","label":"PeriodicityInterval","type":"float","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPeriodicityInterval","isRelationship":false},{"name":"periodicityTimeframe","label":"PeriodicityTimeframe","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPeriodicityTimeframe","isRelationship":false},{"name":"pipelineStageTemplate","label":"PipelineStageTemplate","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineStageTemplate","isRelationship":true},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"type","label":"Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"command","label":"Command","type":"text"},{"name":"location","label":"Location","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"command","label":"Command"},{"name":"active","label":"Active"},{"name":"durationMinutes","label":"DurationMinutes"},{"name":"location","label":"Location"},{"name":"periodicityInterval","label":"PeriodicityInterval"},{"name":"periodicityTimeframe","label":"PeriodicityTimeframe"},{"name":"pipelineStageTemplate","label":"PipelineStageTemplate"},{"name":"priority","label":"Priority"},{"name":"type","label":"Type"}]',
@@ -150,9 +157,9 @@ abstract class TaskTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaskTemplateVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -171,7 +178,7 @@ abstract class TaskTemplateControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($taskTemplate);
 
-        $form = $this->createForm(TaskTemplateFormType::class, $taskTemplate);
+        $form = $this->createForm(TaskTemplateType::class, $taskTemplate);
 
         return $this->render('tasktemplate/_form_modal.html.twig', [
             'form' => $form,
@@ -196,7 +203,7 @@ abstract class TaskTemplateControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($taskTemplate);
 
-        $form = $this->createForm(TaskTemplateFormType::class, $taskTemplate);
+        $form = $this->createForm(TaskTemplateType::class, $taskTemplate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -246,7 +253,7 @@ abstract class TaskTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaskTemplateVoter::EDIT, $taskTemplate);
 
-        $form = $this->createForm(TaskTemplateFormType::class, $taskTemplate);
+        $form = $this->createForm(TaskTemplateType::class, $taskTemplate);
 
         return $this->render('tasktemplate/_form_modal.html.twig', [
             'form' => $form,
@@ -266,7 +273,7 @@ abstract class TaskTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaskTemplateVoter::EDIT, $taskTemplate);
 
-        $form = $this->createForm(TaskTemplateFormType::class, $taskTemplate);
+        $form = $this->createForm(TaskTemplateType::class, $taskTemplate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

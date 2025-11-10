@@ -8,7 +8,7 @@ use App\Controller\Base\BaseApiController;
 use App\Entity\Module;
 use App\Repository\ModuleRepository;
 use App\Security\Voter\ModuleVoter;
-use App\Form\ModuleFormType;
+use App\Form\ModuleType;
 use App\Service\ListPreferencesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -113,9 +113,16 @@ abstract class ModuleControllerGenerated extends BaseApiController
             'enable_filters' => false,
             'enable_sorting' => true,
             'enable_create_button' => true,
+            'create_permission' => ModuleVoter::CREATE,
+
+            // Property metadata for Twig templates (as PHP arrays)
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"enabled","label":"Enabled","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEnabled","isRelationship":false},{"name":"version","label":"Version","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVersion","isRelationship":false}]', true),
+            'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"string"},{"name":"version","label":"Version","type":"string"}]', true),
+            'filterableFields' => json_decode('[]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"enabled","label":"Enabled"},{"name":"version","label":"Version"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName"},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription"},{"name":"enabled","label":"Enabled","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEnabled"},{"name":"version","label":"Version","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVersion"}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"enabled","label":"Enabled","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEnabled","isRelationship":false},{"name":"version","label":"Version","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getVersion","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"string"},{"name":"version","label":"Version","type":"string"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"enabled","label":"Enabled"},{"name":"version","label":"Version"}]',
@@ -133,9 +140,9 @@ abstract class ModuleControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ModuleVoter::LIST);
 
-        // This method uses the BaseApiController's handleSearchRequest
-        // which integrates with API Platform's GetCollection operation
-        return $this->handleSearchRequest($request);
+        // Delegate to parent BaseApiController which handles
+        // search, filtering, sorting, and pagination
+        return parent::apiSearchAction($request);
     }
 
     // ====================================
@@ -154,7 +161,7 @@ abstract class ModuleControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($module);
 
-        $form = $this->createForm(ModuleFormType::class, $module);
+        $form = $this->createForm(ModuleType::class, $module);
 
         return $this->render('module/_form_modal.html.twig', [
             'form' => $form,
@@ -179,7 +186,7 @@ abstract class ModuleControllerGenerated extends BaseApiController
         // Initialize with custom logic if needed
         $this->initializeNewEntity($module);
 
-        $form = $this->createForm(ModuleFormType::class, $module);
+        $form = $this->createForm(ModuleType::class, $module);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -229,7 +236,7 @@ abstract class ModuleControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ModuleVoter::EDIT, $module);
 
-        $form = $this->createForm(ModuleFormType::class, $module);
+        $form = $this->createForm(ModuleType::class, $module);
 
         return $this->render('module/_form_modal.html.twig', [
             'form' => $form,
@@ -249,7 +256,7 @@ abstract class ModuleControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ModuleVoter::EDIT, $module);
 
-        $form = $this->createForm(ModuleFormType::class, $module);
+        $form = $this->createForm(ModuleType::class, $module);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
