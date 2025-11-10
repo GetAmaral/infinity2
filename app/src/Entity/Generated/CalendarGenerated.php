@@ -42,12 +42,12 @@ abstract class CalendarGenerated extends EntityBase
     protected string $name;
 
     #[Groups(['calendar:read', 'calendar:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
-
-    #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'calendars')]
     protected ?User $user = null;
+
+    #[Groups(['calendar:read', 'calendar:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $description = null;
 
     #[Groups(['calendar:read', 'calendar:write'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -162,16 +162,6 @@ abstract class CalendarGenerated extends EntityBase
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -180,6 +170,16 @@ abstract class CalendarGenerated extends EntityBase
     public function setUser(?User $user): self
     {
         $this->user = $user;
+        return $this;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 
