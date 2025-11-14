@@ -72,7 +72,7 @@ abstract class NotificationGenerated extends EntityBase
     protected bool $archived;
 
     #[Groups(['notification:read', 'notification:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $readAt = null;
 
     #[Groups(['notification:read', 'notification:write'])]
@@ -96,7 +96,7 @@ abstract class NotificationGenerated extends EntityBase
     protected ?Reminder $reminder = null;
 
     #[Groups(['notification:read', 'notification:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $sentAt = null;
 
     #[Groups(['notification:read', 'notification:write'])]

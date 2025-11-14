@@ -47,11 +47,11 @@ abstract class MeetingDataGenerated extends EntityBase
     protected string $status;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime_immutable')]
     protected \DateTimeImmutable $startTime;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $endTime = null;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
@@ -76,12 +76,12 @@ abstract class MeetingDataGenerated extends EntityBase
     protected ?string $minutes = null;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
-    #[ORM\Column(type: 'json', nullable: true)]
-    protected ?array $attendees = null;
-
-    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $meetingId = null;
+
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $attendees = null;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
@@ -112,7 +112,7 @@ abstract class MeetingDataGenerated extends EntityBase
     protected ?string $recordingSize = null;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $nextMeetingDate = null;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
@@ -121,12 +121,12 @@ abstract class MeetingDataGenerated extends EntityBase
     protected ?string $organizer = null;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected ?string $platform = null;
-
-    #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $tags = null;
+
+    #[Groups(['meetingdata:read', 'meetingdata:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $platform = null;
 
     #[Groups(['meetingdata:read', 'meetingdata:write'])]
     #[ORM\Column(type: 'boolean')]
@@ -283,16 +283,6 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getAttendees(): ?array    {
-        return $this->attendees;
-    }
-
-    public function setAttendees(?array $attendees): self
-    {
-        $this->attendees = $attendees;
-        return $this;
-    }
-
     public function getMeetingId(): ?string    {
         return $this->meetingId;
     }
@@ -300,6 +290,16 @@ abstract class MeetingDataGenerated extends EntityBase
     public function setMeetingId(?string $meetingId): self
     {
         $this->meetingId = $meetingId;
+        return $this;
+    }
+
+    public function getAttendees(): ?array    {
+        return $this->attendees;
+    }
+
+    public function setAttendees(?array $attendees): self
+    {
+        $this->attendees = $attendees;
         return $this;
     }
 
@@ -398,16 +398,6 @@ abstract class MeetingDataGenerated extends EntityBase
         return $this;
     }
 
-    public function getPlatform(): ?string    {
-        return $this->platform;
-    }
-
-    public function setPlatform(?string $platform): self
-    {
-        $this->platform = $platform;
-        return $this;
-    }
-
     public function getTags(): ?array    {
         return $this->tags;
     }
@@ -415,6 +405,16 @@ abstract class MeetingDataGenerated extends EntityBase
     public function setTags(?array $tags): self
     {
         $this->tags = $tags;
+        return $this;
+    }
+
+    public function getPlatform(): ?string    {
+        return $this->platform;
+    }
+
+    public function setPlatform(?string $platform): self
+    {
+        $this->platform = $platform;
         return $this;
     }
 

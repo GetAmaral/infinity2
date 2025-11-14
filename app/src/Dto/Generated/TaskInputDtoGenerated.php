@@ -132,13 +132,13 @@ abstract class TaskInputDtoGenerated
     #[Groups(['task:write'])]
     public ?string $emailSubject = null;
 
-    #[Assert\Length(max: 50)]
-    #[Groups(['task:write'])]
-    public ?string $phoneNumber = null;
-
     #[Assert\Length(max: 20)]
     #[Groups(['task:write'])]
     public string $taskStatus;
+
+    #[Assert\Length(max: 50)]
+    #[Groups(['task:write'])]
+    public ?string $phoneNumber = null;
 
     #[Assert\Length(max: 500)]
     #[Groups(['task:write'])]
@@ -428,16 +428,6 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getPhoneNumber(): ?string    {
-        return $this->phoneNumber;
-    }
-
-    public function setPhoneNumber(?string $phoneNumber): self
-    {
-        $this->phoneNumber = $phoneNumber;
-        return $this;
-    }
-
     public function getTaskStatus(): string    {
         return $this->taskStatus;
     }
@@ -445,6 +435,16 @@ abstract class TaskInputDtoGenerated
     public function setTaskStatus(string $taskStatus): self
     {
         $this->taskStatus = $taskStatus;
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): self
+    {
+        $this->phoneNumber = $phoneNumber;
         return $this;
     }
 

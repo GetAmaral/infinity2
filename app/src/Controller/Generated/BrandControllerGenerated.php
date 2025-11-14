@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Brand;
+use App\MultiTenant\TenantContext;
 use App\Repository\BrandRepository;
 use App\Security\Voter\BrandVoter;
 use App\Form\BrandType;
@@ -36,6 +37,7 @@ abstract class BrandControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -224,31 +226,60 @@ abstract class BrandControllerGenerated extends BaseApiController
         $form = $this->createForm(BrandType::class, $brand);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($brand);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $brand->setOrganization($organization);
+                error_log('✅ BrandController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($brand);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($brand);
 
-                // After create hook
-                $this->afterCreate($brand);
+                    $this->entityManager->persist($brand);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'brand.flash.created_successfully',
-                    ['%name%' => (string) $brand],
-                    'brand'
-                ));
+                    // After create hook
+                    $this->afterCreate($brand);
 
-                return $this->redirectToRoute('brand_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'brand.flash.created_successfully',
+                        ['%name%' => (string) $brand],
+                        'brand'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'brand.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'brand'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $brand;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Brand',
+                            'entityId' => $brand->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('brand_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'brand.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'brand'
+                    ));
+                }
             }
         }
 
@@ -291,33 +322,43 @@ abstract class BrandControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(BrandVoter::EDIT, $brand);
 
+        // Store original organization to preserve it
+        $originalOrganization = $brand->getOrganization();
+
         $form = $this->createForm(BrandType::class, $brand);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($brand);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $brand->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($brand);
 
-                // After update hook
-                $this->afterUpdate($brand);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'brand.flash.updated_successfully',
-                    ['%name%' => (string) $brand],
-                    'brand'
-                ));
+                    // After update hook
+                    $this->afterUpdate($brand);
 
-                return $this->redirectToRoute('brand_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'brand.flash.updated_successfully',
+                        ['%name%' => (string) $brand],
+                        'brand'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'brand.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'brand'
-                ));
+                    return $this->redirectToRoute('brand_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'brand.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'brand'
+                    ));
+                }
             }
         }
 
@@ -386,9 +427,22 @@ abstract class BrandControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(BrandVoter::VIEW, $brand);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($brand);
+
         return $this->render('brand/show.html.twig', [
             'brand' => $brand,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in BrandController to customize displayed properties
+     */
+    protected function buildShowProperties(Brand $brand): array
+    {
+        return [];
     }
 
     // ====================================
@@ -399,12 +453,22 @@ abstract class BrandControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Brand $brand): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $brand->setOrganization($organization);
+            error_log('✅ BrandController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ BrandController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

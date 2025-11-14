@@ -101,16 +101,6 @@ abstract class DealTypeInputDtoGenerated
         return $this;
     }
 
-    public function getColor(): string    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): self
-    {
-        $this->color = $color;
-        return $this;
-    }
-
     public function getDeals(): ?string    {
         return $this->deals;
     }
@@ -118,6 +108,16 @@ abstract class DealTypeInputDtoGenerated
     public function setDeals(?string $deals): self
     {
         $this->deals = $deals;
+        return $this;
+    }
+
+    public function getColor(): string    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
         return $this;
     }
 

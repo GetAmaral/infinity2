@@ -114,7 +114,7 @@ abstract class CampaignGenerated extends EntityBase
     protected ?string $emailAddress = null;
 
     #[Groups(['campaign:read', 'campaign:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $endDate = null;
 
     #[Groups(['campaign:read', 'campaign:write'])]
@@ -179,7 +179,7 @@ abstract class CampaignGenerated extends EntityBase
     protected ?int $plannedDuration = null;
 
     #[Groups(['campaign:read', 'campaign:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $plannedEndDate = null;
 
     #[Groups(['campaign:read', 'campaign:write'])]
@@ -187,7 +187,7 @@ abstract class CampaignGenerated extends EntityBase
     protected ?string $plannedReturn = null;
 
     #[Groups(['campaign:read', 'campaign:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $plannedStartDate = null;
 
     #[Groups(['campaign:read', 'campaign:write'])]
@@ -200,7 +200,7 @@ abstract class CampaignGenerated extends EntityBase
     protected Collection $socialMedias;
 
     #[Groups(['campaign:read', 'campaign:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $startDate = null;
 
     #[Groups(['campaign:read', 'campaign:write'])]

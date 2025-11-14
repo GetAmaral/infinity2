@@ -71,29 +71,58 @@
         {{ form_errors(form.importance) }}
     </div>
 
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.viewOrder) }}</label>
+        {{ form_widget(form.viewOrder, {
+            'attr': {
+                'class': 'form-input-modern' ~ (form.viewOrder.vars.errors|length > 0 ? ' input-error' : ''),
+                'placeholder': 'action.form.vieworder.placeholder'|trans({}, 'treeflow')
+            }
+        }) }}
+        <small class="text-muted mt-1 d-block">{{ 'action.form.vieworder.help'|trans({}, 'treeflow') }}</small>
+        {{ form_errors(form.viewOrder) }}
+    </div>
+
     {# Few-Shot Examples #}
     <div class="form-group-modern">
         <label class="form-label-modern">{{ form_label(form.fewShot) }}</label>
-        <small class="text-muted d-block mb-2">{{ 'action.form.fewshot.help'|trans({}, 'treeflow') }}</small>
-        <div class="fewshot-collection-container" data-collection="fewshot" data-index="{{ form.fewShot|length }}" data-prototype="{{ form_widget(form.fewShot.vars.prototype)|e('html_attr') }}">
-            <div class="fewshot-items">
-                {% for item in form.fewShot %}
-                    <div class="fewshot-item mb-2" style="position: relative;">
-                        {{ form_widget(item, {'attr': {'class': 'form-input-modern fewshot-entry'}}) }}
-                        <button type="button" class="fewshot-remove-btn-permanent"
-                                title="{{ 'button.remove'|trans({}, 'messages') }}"
-                                data-bs-toggle="tooltip">
-                            <i class="bi bi-trash"></i>
+        <small class="text-muted d-block mb-3">{{ 'action.form.fewshot.help'|trans({}, 'treeflow') }}</small>
+
+        <div data-controller="collection" data-collection-prototype-name-value="{{ form.fewShot.vars.prototype.vars.name }}">
+            <div data-prototype="{{ form_widget(form.fewShot.vars.prototype)|e('html_attr') }}">
+                {% for exampleForm in form.fewShot %}
+                    <div class="fewshot-item mb-3 p-3 border rounded" data-collection-target="item" data-index="{{ loop.index0 }}">
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <label class="form-label fw-bold text-primary">
+                                    <i class="bi bi-person"></i> {{ form_label(exampleForm.user) }}
+                                </label>
+                                {{ form_widget(exampleForm.user) }}
+                                {{ form_errors(exampleForm.user) }}
+                            </div>
+                            <div class="col-12 mb-2">
+                                <label class="form-label fw-bold text-success">
+                                    <i class="bi bi-robot"></i> {{ form_label(exampleForm.assistant) }}
+                                </label>
+                                {{ form_widget(exampleForm.assistant) }}
+                                {{ form_errors(exampleForm.assistant) }}
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-danger mt-2" data-action="click->collection#removeItem">
+                            <i class="bi bi-trash"></i> Remove Example
                         </button>
                     </div>
                 {% endfor %}
             </div>
-            <button type="button" class="btn btn-sm luminai-btn-success fewshot-add mt-2"
-                    title="{{ 'action.button.add.example'|trans({}, 'treeflow') }}"
-                    data-bs-toggle="tooltip">
-                <i class="bi bi-plus-circle"></i>
+
+            <button type="button" class="btn btn-sm infinity-btn-primary add-item-btn" data-action="click->collection#addItem">
+                <i class="bi bi-plus-circle"></i> Add Example
             </button>
         </div>
+
+        <small class="text-muted d-block mt-2">
+            <i class="bi bi-info-circle"></i> Add conversation examples to guide the AI's responses
+        </small>
         {{ form_errors(form.fewShot) }}
     </div>
 

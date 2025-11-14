@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Competitor;
+use App\MultiTenant\TenantContext;
 use App\Repository\CompetitorRepository;
 use App\Security\Voter\CompetitorVoter;
 use App\Form\CompetitorType;
@@ -36,6 +37,7 @@ abstract class CompetitorControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -218,31 +220,60 @@ abstract class CompetitorControllerGenerated extends BaseApiController
         $form = $this->createForm(CompetitorType::class, $competitor);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($competitor);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $competitor->setOrganization($organization);
+                error_log('✅ CompetitorController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($competitor);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($competitor);
 
-                // After create hook
-                $this->afterCreate($competitor);
+                    $this->entityManager->persist($competitor);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'competitor.flash.created_successfully',
-                    ['%name%' => (string) $competitor],
-                    'competitor'
-                ));
+                    // After create hook
+                    $this->afterCreate($competitor);
 
-                return $this->redirectToRoute('competitor_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'competitor.flash.created_successfully',
+                        ['%name%' => (string) $competitor],
+                        'competitor'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'competitor.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'competitor'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $competitor;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Competitor',
+                            'entityId' => $competitor->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('competitor_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'competitor.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'competitor'
+                    ));
+                }
             }
         }
 
@@ -285,33 +316,43 @@ abstract class CompetitorControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CompetitorVoter::EDIT, $competitor);
 
+        // Store original organization to preserve it
+        $originalOrganization = $competitor->getOrganization();
+
         $form = $this->createForm(CompetitorType::class, $competitor);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($competitor);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $competitor->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($competitor);
 
-                // After update hook
-                $this->afterUpdate($competitor);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'competitor.flash.updated_successfully',
-                    ['%name%' => (string) $competitor],
-                    'competitor'
-                ));
+                    // After update hook
+                    $this->afterUpdate($competitor);
 
-                return $this->redirectToRoute('competitor_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'competitor.flash.updated_successfully',
+                        ['%name%' => (string) $competitor],
+                        'competitor'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'competitor.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'competitor'
-                ));
+                    return $this->redirectToRoute('competitor_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'competitor.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'competitor'
+                    ));
+                }
             }
         }
 
@@ -380,9 +421,22 @@ abstract class CompetitorControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CompetitorVoter::VIEW, $competitor);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($competitor);
+
         return $this->render('competitor/show.html.twig', [
             'competitor' => $competitor,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in CompetitorController to customize displayed properties
+     */
+    protected function buildShowProperties(Competitor $competitor): array
+    {
+        return [];
     }
 
     // ====================================
@@ -393,12 +447,22 @@ abstract class CompetitorControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Competitor $competitor): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $competitor->setOrganization($organization);
+            error_log('✅ CompetitorController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ CompetitorController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

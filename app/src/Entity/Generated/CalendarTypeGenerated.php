@@ -40,12 +40,12 @@ abstract class CalendarTypeGenerated extends EntityBase
     protected ?string $description = null;
 
     #[Groups(['calendartype:read', 'calendartype:write'])]
-    #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'calendarType', fetch: 'LAZY')]
-    protected Collection $calendars;
-
-    #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'string', length: 7)]
     protected string $color = '#0dcaf0';
+
+    #[Groups(['calendartype:read', 'calendartype:write'])]
+    #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'calendarType', fetch: 'LAZY')]
+    protected Collection $calendars;
 
     #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'string', length: 50)]
@@ -65,23 +65,23 @@ abstract class CalendarTypeGenerated extends EntityBase
 
     #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'string', length: 20)]
-    protected string $access_level = 'owner_only';
+    protected string $accessLevel = 'owner_only';
 
     #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'integer')]
-    protected int $sort_order = 100;
+    protected int $sortOrder = 100;
 
     #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'boolean')]
-    protected bool $allow_sharing = true;
+    protected bool $allowSharing = true;
 
     #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'boolean')]
-    protected bool $require_approval = false;
+    protected bool $requireApproval = false;
 
     #[Groups(['calendartype:read', 'calendartype:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $max_calendars_per_user = null;
+    protected ?int $maxCalendarsPerUser = null;
 
 
     public function __construct()
@@ -121,6 +121,16 @@ abstract class CalendarTypeGenerated extends EntityBase
         return $this;
     }
 
+    public function getColor(): string    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Calendar>
      */
@@ -145,16 +155,6 @@ abstract class CalendarTypeGenerated extends EntityBase
                 $calendar->setCalendarType(null);
             }
         }
-        return $this;
-    }
-
-    public function getColor(): string    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): self
-    {
-        $this->color = $color;
         return $this;
     }
 
@@ -208,63 +208,63 @@ abstract class CalendarTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getAccess_level(): string    {
-        return $this->access_level;
+    public function getAccessLevel(): string    {
+        return $this->accessLevel;
     }
 
-    public function setAccess_level(string $access_level): self
+    public function setAccessLevel(string $accessLevel): self
     {
-        $this->access_level = $access_level;
+        $this->accessLevel = $accessLevel;
         return $this;
     }
 
-    public function getSort_order(): int    {
-        return $this->sort_order;
+    public function getSortOrder(): int    {
+        return $this->sortOrder;
     }
 
-    public function setSort_order(int $sort_order): self
+    public function setSortOrder(int $sortOrder): self
     {
-        $this->sort_order = $sort_order;
+        $this->sortOrder = $sortOrder;
         return $this;
     }
 
-    public function getAllow_sharing(): bool    {
-        return $this->allow_sharing;
+    public function getAllowSharing(): bool    {
+        return $this->allowSharing;
     }
 
-    public function setAllow_sharing(bool $allow_sharing): self
+    public function setAllowSharing(bool $allowSharing): self
     {
-        $this->allow_sharing = $allow_sharing;
+        $this->allowSharing = $allowSharing;
         return $this;
     }
 
-    public function isAllow_sharing(): bool
+    public function isAllowSharing(): bool
     {
-        return $this->allow_sharing === true;
+        return $this->allowSharing === true;
     }
 
-    public function getRequire_approval(): bool    {
-        return $this->require_approval;
+    public function getRequireApproval(): bool    {
+        return $this->requireApproval;
     }
 
-    public function setRequire_approval(bool $require_approval): self
+    public function setRequireApproval(bool $requireApproval): self
     {
-        $this->require_approval = $require_approval;
+        $this->requireApproval = $requireApproval;
         return $this;
     }
 
-    public function isRequire_approval(): bool
+    public function isRequireApproval(): bool
     {
-        return $this->require_approval === true;
+        return $this->requireApproval === true;
     }
 
-    public function getMax_calendars_per_user(): ?int    {
-        return $this->max_calendars_per_user;
+    public function getMaxCalendarsPerUser(): ?int    {
+        return $this->maxCalendarsPerUser;
     }
 
-    public function setMax_calendars_per_user(?int $max_calendars_per_user): self
+    public function setMaxCalendarsPerUser(?int $maxCalendarsPerUser): self
     {
-        $this->max_calendars_per_user = $max_calendars_per_user;
+        $this->maxCalendarsPerUser = $maxCalendarsPerUser;
         return $this;
     }
 

@@ -52,7 +52,30 @@ abstract class MeetingDataTypeGenerated extends AbstractType
             'required' => false,
             'help' => 'Link this meeting to a calendar event',
             'class' => \App\Entity\Event::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Event',
+                'data-relation-select-route-value' => 'event_api_search',
+                'data-relation-select-add-route-value' => 'event_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select event',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -143,16 +166,6 @@ abstract class MeetingDataTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('attendees', TextareaType::class, [
-            'label' => 'Attendees',
-            'required' => false,
-            'help' => 'List of meeting attendees with attendance status',
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter attendees',
-            ],
-        ]);
-
         $builder->add('meetingId', TextType::class, [
             'label' => 'Meeting ID',
             'required' => false,
@@ -160,6 +173,16 @@ abstract class MeetingDataTypeGenerated extends AbstractType
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter meeting id',
+            ],
+        ]);
+
+        $builder->add('attendees', TextareaType::class, [
+            'label' => 'Attendees',
+            'required' => false,
+            'help' => 'List of meeting attendees with attendance status',
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter attendees',
             ],
         ]);
 
@@ -195,7 +218,7 @@ abstract class MeetingDataTypeGenerated extends AbstractType
 
         $builder->add('recordingAvailable', CheckboxType::class, [
             'label' => 'Recording Available',
-            'required' => true,
+            'required' => false,
             'help' => 'Indicates if a recording of the meeting is available',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -221,15 +244,6 @@ abstract class MeetingDataTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('platform', ChoiceType::class, [
-            'label' => 'Platform',
-            'required' => false,
-            'help' => 'Virtual meeting platform used',
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('tags', TextType::class, [
             'label' => 'Tags',
             'required' => false,
@@ -240,9 +254,18 @@ abstract class MeetingDataTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('platform', ChoiceType::class, [
+            'label' => 'Platform',
+            'required' => false,
+            'help' => 'Virtual meeting platform used',
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
         $builder->add('confidential', CheckboxType::class, [
             'label' => 'Confidential',
-            'required' => true,
+            'required' => false,
             'help' => 'Mark this meeting as confidential',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -251,7 +274,7 @@ abstract class MeetingDataTypeGenerated extends AbstractType
 
         $builder->add('recurring', CheckboxType::class, [
             'label' => 'Recurring',
-            'required' => true,
+            'required' => false,
             'help' => 'Is this a recurring meeting?',
             'attr' => [
                 'class' => 'form-input-modern',

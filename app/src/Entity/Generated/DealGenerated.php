@@ -134,8 +134,12 @@ abstract class DealGenerated extends EntityBase
     protected ?string $commissionAmount = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $expectedClosureDate = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $closureDate = null;
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'deals', fetch: 'LAZY')]
@@ -143,19 +147,15 @@ abstract class DealGenerated extends EntityBase
     protected Collection $products;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTimeImmutable $closureDate = null;
-
-    #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $initialDate = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastActivityDate = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $nextFollowUp = null;
 
     #[Groups(['deal:read', 'deal:write'])]
@@ -171,14 +171,14 @@ abstract class DealGenerated extends EntityBase
     protected ?User $manager = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'deals', fetch: 'LAZY')]
-    #[ORM\JoinTable(name: 'deal_team')]
-    protected Collection $team;
-
-    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedDeals')]
     #[ORM\JoinColumn(nullable: false)]
     protected User $owner;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'deals', fetch: 'LAZY')]
+    #[ORM\JoinTable(name: 'deal_team')]
+    protected Collection $team;
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'primaryDeals')]
@@ -240,7 +240,7 @@ abstract class DealGenerated extends EntityBase
     protected ?WinReason $winReason = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $actualClosureDate = null;
 
 
@@ -493,6 +493,16 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
+    public function getClosureDate(): ?\DateTimeImmutable    {
+        return $this->closureDate;
+    }
+
+    public function setClosureDate(?\DateTimeImmutable $closureDate): self
+    {
+        $this->closureDate = $closureDate;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Product>
      */
@@ -513,16 +523,6 @@ abstract class DealGenerated extends EntityBase
     {
         if ($this->products->removeElement($product)) {
         }
-        return $this;
-    }
-
-    public function getClosureDate(): ?\DateTimeImmutable    {
-        return $this->closureDate;
-    }
-
-    public function setClosureDate(?\DateTimeImmutable $closureDate): self
-    {
-        $this->closureDate = $closureDate;
         return $this;
     }
 
@@ -587,6 +587,17 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
+    public function getOwner(): User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(User $owner): self
+    {
+        $this->owner = $owner;
+        return $this;
+    }
+
     /**
      * @return Collection<int, User>
      */
@@ -607,17 +618,6 @@ abstract class DealGenerated extends EntityBase
     {
         if ($this->team->removeElement($team)) {
         }
-        return $this;
-    }
-
-    public function getOwner(): User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(User $owner): self
-    {
-        $this->owner = $owner;
         return $this;
     }
 

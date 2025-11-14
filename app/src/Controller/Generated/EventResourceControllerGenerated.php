@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\EventResource;
+use App\MultiTenant\TenantContext;
 use App\Repository\EventResourceRepository;
 use App\Security\Voter\EventResourceVoter;
 use App\Form\EventResourceType;
@@ -36,6 +37,7 @@ abstract class EventResourceControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -88,15 +90,15 @@ abstract class EventResourceControllerGenerated extends BaseApiController
             'description' => $entity->getDescription(),
             'availabilitySchedule' => $entity->getAvailabilitySchedule(),
             'available' => $entity->getAvailable(),
-            'active' => $entity->getActive(),
             'bookable' => $entity->getBookable(),
+            'active' => $entity->getActive(),
             'timezone' => $entity->getTimezone(),
             'requiresApproval' => $entity->getRequiresApproval(),
             'autoConfirm' => $entity->getAutoConfirm(),
             'minimumBookingDuration' => $entity->getMinimumBookingDuration(),
             'maximumBookingDuration' => $entity->getMaximumBookingDuration(),
-            'pricePerHour' => $entity->getPricePerHour(),
             'bookingRules' => $entity->getBookingRules(),
+            'pricePerHour' => $entity->getPricePerHour(),
             'pricePerDay' => $entity->getPricePerDay(),
             'imageUrl' => $entity->getImageUrl(),
             'thumbnailUrl' => $entity->getThumbnailUrl(),
@@ -152,16 +154,16 @@ abstract class EventResourceControllerGenerated extends BaseApiController
             'create_permission' => EventResourceVoter::CREATE,
 
             // Property metadata for Twig templates (as PHP arrays)
-            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"availabilitySchedule","label":"AvailabilitySchedule","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailabilitySchedule","isRelationship":false},{"name":"available","label":"Available","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailable","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"bookable","label":"Bookable","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBookable","isRelationship":false},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresApproval","isRelationship":false},{"name":"autoConfirm","label":"Auto Confirm","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAutoConfirm","isRelationship":false},{"name":"pricePerHour","label":"Price Per Hour","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPricePerHour","isRelationship":false},{"name":"bookingRules","label":"BookingRules","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBookingRules","isRelationship":false},{"name":"pricePerDay","label":"Price Per Day","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPricePerDay","isRelationship":false},{"name":"capacity","label":"Capacity","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCapacity","isRelationship":false},{"name":"city","label":"City","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCity","isRelationship":true},{"name":"equipment","label":"Equipment","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEquipment","isRelationship":false},{"name":"eventBookings","label":"EventBookings","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventBookings","isRelationship":true},{"name":"geoCoordinates","label":"Geo Coordinates","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGeoCoordinates","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"type","label":"Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType","isRelationship":true}]', true),
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"availabilitySchedule","label":"AvailabilitySchedule","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailabilitySchedule","isRelationship":false},{"name":"available","label":"Available","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailable","isRelationship":false},{"name":"bookable","label":"Bookable","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBookable","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresApproval","isRelationship":false},{"name":"autoConfirm","label":"Auto Confirm","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAutoConfirm","isRelationship":false},{"name":"bookingRules","label":"BookingRules","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBookingRules","isRelationship":false},{"name":"pricePerHour","label":"Price Per Hour","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPricePerHour","isRelationship":false},{"name":"pricePerDay","label":"Price Per Day","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPricePerDay","isRelationship":false},{"name":"capacity","label":"Capacity","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCapacity","isRelationship":false},{"name":"city","label":"City","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCity","isRelationship":true},{"name":"equipment","label":"Equipment","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEquipment","isRelationship":false},{"name":"eventBookings","label":"EventBookings","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventBookings","isRelationship":true},{"name":"geoCoordinates","label":"Geo Coordinates","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGeoCoordinates","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"type","label":"Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType","isRelationship":true}]', true),
             'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"geoCoordinates","label":"Geo Coordinates","type":"string"},{"name":"location","label":"Location","type":"string"}]', true),
             'filterableFields' => json_decode('[{"name":"available","label":"Available","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"bookable","label":"Bookable","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"autoConfirm","label":"Auto Confirm","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
-            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"availabilitySchedule","label":"AvailabilitySchedule"},{"name":"available","label":"Available"},{"name":"active","label":"Active"},{"name":"bookable","label":"Bookable"},{"name":"requiresApproval","label":"Requires Approval"},{"name":"autoConfirm","label":"Auto Confirm"},{"name":"pricePerHour","label":"Price Per Hour"},{"name":"bookingRules","label":"BookingRules"},{"name":"pricePerDay","label":"Price Per Day"},{"name":"capacity","label":"Capacity"},{"name":"city","label":"City"},{"name":"equipment","label":"Equipment"},{"name":"eventBookings","label":"EventBookings"},{"name":"geoCoordinates","label":"Geo Coordinates"},{"name":"location","label":"Location"},{"name":"type","label":"Type"}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"availabilitySchedule","label":"AvailabilitySchedule"},{"name":"available","label":"Available"},{"name":"bookable","label":"Bookable"},{"name":"active","label":"Active"},{"name":"requiresApproval","label":"Requires Approval"},{"name":"autoConfirm","label":"Auto Confirm"},{"name":"bookingRules","label":"BookingRules"},{"name":"pricePerHour","label":"Price Per Hour"},{"name":"pricePerDay","label":"Price Per Day"},{"name":"capacity","label":"Capacity"},{"name":"city","label":"City"},{"name":"equipment","label":"Equipment"},{"name":"eventBookings","label":"EventBookings"},{"name":"geoCoordinates","label":"Geo Coordinates"},{"name":"location","label":"Location"},{"name":"type","label":"Type"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"availabilitySchedule","label":"AvailabilitySchedule","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailabilitySchedule","isRelationship":false},{"name":"available","label":"Available","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailable","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"bookable","label":"Bookable","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBookable","isRelationship":false},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresApproval","isRelationship":false},{"name":"autoConfirm","label":"Auto Confirm","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAutoConfirm","isRelationship":false},{"name":"pricePerHour","label":"Price Per Hour","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPricePerHour","isRelationship":false},{"name":"bookingRules","label":"BookingRules","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBookingRules","isRelationship":false},{"name":"pricePerDay","label":"Price Per Day","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPricePerDay","isRelationship":false},{"name":"capacity","label":"Capacity","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCapacity","isRelationship":false},{"name":"city","label":"City","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCity","isRelationship":true},{"name":"equipment","label":"Equipment","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEquipment","isRelationship":false},{"name":"eventBookings","label":"EventBookings","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventBookings","isRelationship":true},{"name":"geoCoordinates","label":"Geo Coordinates","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGeoCoordinates","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"type","label":"Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType","isRelationship":true}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"availabilitySchedule","label":"AvailabilitySchedule","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailabilitySchedule","isRelationship":false},{"name":"available","label":"Available","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailable","isRelationship":false},{"name":"bookable","label":"Bookable","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBookable","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresApproval","isRelationship":false},{"name":"autoConfirm","label":"Auto Confirm","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAutoConfirm","isRelationship":false},{"name":"bookingRules","label":"BookingRules","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBookingRules","isRelationship":false},{"name":"pricePerHour","label":"Price Per Hour","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPricePerHour","isRelationship":false},{"name":"pricePerDay","label":"Price Per Day","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPricePerDay","isRelationship":false},{"name":"capacity","label":"Capacity","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCapacity","isRelationship":false},{"name":"city","label":"City","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCity","isRelationship":true},{"name":"equipment","label":"Equipment","type":"json","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEquipment","isRelationship":false},{"name":"eventBookings","label":"EventBookings","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEventBookings","isRelationship":true},{"name":"geoCoordinates","label":"Geo Coordinates","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getGeoCoordinates","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"type","label":"Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"geoCoordinates","label":"Geo Coordinates","type":"string"},{"name":"location","label":"Location","type":"string"}]',
             'filterable_fields' => '[{"name":"available","label":"Available","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"bookable","label":"Bookable","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"requiresApproval","label":"Requires Approval","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"autoConfirm","label":"Auto Confirm","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
-            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"availabilitySchedule","label":"AvailabilitySchedule"},{"name":"available","label":"Available"},{"name":"active","label":"Active"},{"name":"bookable","label":"Bookable"},{"name":"requiresApproval","label":"Requires Approval"},{"name":"autoConfirm","label":"Auto Confirm"},{"name":"pricePerHour","label":"Price Per Hour"},{"name":"bookingRules","label":"BookingRules"},{"name":"pricePerDay","label":"Price Per Day"},{"name":"capacity","label":"Capacity"},{"name":"city","label":"City"},{"name":"equipment","label":"Equipment"},{"name":"eventBookings","label":"EventBookings"},{"name":"geoCoordinates","label":"Geo Coordinates"},{"name":"location","label":"Location"},{"name":"type","label":"Type"}]',
+            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"availabilitySchedule","label":"AvailabilitySchedule"},{"name":"available","label":"Available"},{"name":"bookable","label":"Bookable"},{"name":"active","label":"Active"},{"name":"requiresApproval","label":"Requires Approval"},{"name":"autoConfirm","label":"Auto Confirm"},{"name":"bookingRules","label":"BookingRules"},{"name":"pricePerHour","label":"Price Per Hour"},{"name":"pricePerDay","label":"Price Per Day"},{"name":"capacity","label":"Capacity"},{"name":"city","label":"City"},{"name":"equipment","label":"Equipment"},{"name":"eventBookings","label":"EventBookings"},{"name":"geoCoordinates","label":"Geo Coordinates"},{"name":"location","label":"Location"},{"name":"type","label":"Type"}]',
         ]);
     }
 
@@ -225,31 +227,60 @@ abstract class EventResourceControllerGenerated extends BaseApiController
         $form = $this->createForm(EventResourceType::class, $eventResource);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($eventResource);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $eventResource->setOrganization($organization);
+                error_log('✅ EventResourceController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($eventResource);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($eventResource);
 
-                // After create hook
-                $this->afterCreate($eventResource);
+                    $this->entityManager->persist($eventResource);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'eventresource.flash.created_successfully',
-                    ['%name%' => (string) $eventResource],
-                    'eventresource'
-                ));
+                    // After create hook
+                    $this->afterCreate($eventResource);
 
-                return $this->redirectToRoute('eventresource_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'eventresource.flash.created_successfully',
+                        ['%name%' => (string) $eventResource],
+                        'eventresource'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'eventresource.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'eventresource'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $eventResource;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'EventResource',
+                            'entityId' => $eventResource->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('eventresource_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'eventresource.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'eventresource'
+                    ));
+                }
             }
         }
 
@@ -292,33 +323,43 @@ abstract class EventResourceControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventResourceVoter::EDIT, $eventResource);
 
+        // Store original organization to preserve it
+        $originalOrganization = $eventResource->getOrganization();
+
         $form = $this->createForm(EventResourceType::class, $eventResource);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($eventResource);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $eventResource->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($eventResource);
 
-                // After update hook
-                $this->afterUpdate($eventResource);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'eventresource.flash.updated_successfully',
-                    ['%name%' => (string) $eventResource],
-                    'eventresource'
-                ));
+                    // After update hook
+                    $this->afterUpdate($eventResource);
 
-                return $this->redirectToRoute('eventresource_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'eventresource.flash.updated_successfully',
+                        ['%name%' => (string) $eventResource],
+                        'eventresource'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'eventresource.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'eventresource'
-                ));
+                    return $this->redirectToRoute('eventresource_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'eventresource.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'eventresource'
+                    ));
+                }
             }
         }
 
@@ -387,9 +428,22 @@ abstract class EventResourceControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventResourceVoter::VIEW, $eventResource);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($eventResource);
+
         return $this->render('eventresource/show.html.twig', [
             'eventResource' => $eventResource,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in EventResourceController to customize displayed properties
+     */
+    protected function buildShowProperties(EventResource $eventResource): array
+    {
+        return [];
     }
 
     // ====================================
@@ -400,12 +454,22 @@ abstract class EventResourceControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(EventResource $eventResource): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $eventResource->setOrganization($organization);
+            error_log('✅ EventResourceController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ EventResourceController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

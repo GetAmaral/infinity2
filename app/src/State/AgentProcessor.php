@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\Organization;
+use App\Entity\TreeFlow;
 use App\Entity\User;
 use App\Entity\AgentType;
 use App\Entity\Talk;
@@ -85,6 +86,42 @@ class AgentProcessor implements ProcessorInterface
         $requestData = $context['request']->toArray() ?? [];
 
         // Map scalar properties from DTO to Entity
+        // whatsappInstanceName
+        if (!$isPatch || array_key_exists('whatsappInstanceName', $requestData)) {
+            $entity->setWhatsappInstanceName($data->whatsappInstanceName);
+        }
+        // whatsappPhone
+        if (!$isPatch || array_key_exists('whatsappPhone', $requestData)) {
+            $entity->setWhatsappPhone($data->whatsappPhone);
+        }
+        // whatsappServerUrl
+        if (!$isPatch || array_key_exists('whatsappServerUrl', $requestData)) {
+            $entity->setWhatsappServerUrl($data->whatsappServerUrl);
+        }
+        // whatsappApiKey
+        if (!$isPatch || array_key_exists('whatsappApiKey', $requestData)) {
+            $entity->setWhatsappApiKey($data->whatsappApiKey);
+        }
+        // whatsappActive
+        if (!$isPatch || array_key_exists('whatsappActive', $requestData)) {
+            $entity->setWhatsappActive($data->whatsappActive);
+        }
+        // whatsappStatus
+        if (!$isPatch || array_key_exists('whatsappStatus', $requestData)) {
+            $entity->setWhatsappStatus($data->whatsappStatus);
+        }
+        // whatsappWebhookToken
+        if (!$isPatch || array_key_exists('whatsappWebhookToken', $requestData)) {
+            $entity->setWhatsappWebhookToken($data->whatsappWebhookToken);
+        }
+        // whatsappLastConnectedAt
+        if (!$isPatch || array_key_exists('whatsappLastConnectedAt', $requestData)) {
+            $entity->setWhatsappLastConnectedAt($data->whatsappLastConnectedAt);
+        }
+        // whatsappMetadata
+        if (!$isPatch || array_key_exists('whatsappMetadata', $requestData)) {
+            $entity->setWhatsappMetadata($data->whatsappMetadata);
+        }
         // name
         if (!$isPatch || array_key_exists('name', $requestData)) {
             $entity->setName($data->name);
@@ -190,6 +227,24 @@ class AgentProcessor implements ProcessorInterface
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
+                }
+            }
+        }
+
+        // treeFlow: ManyToOne
+        if (!$isPatch || array_key_exists('treeFlow', $requestData)) {
+            if ($data->treeFlow !== null) {
+                if (is_string($data->treeFlow)) {
+                    // IRI format: "/api/tree_flows/{id}"
+                    $treeFlowId = $this->extractIdFromIri($data->treeFlow);
+                    $treeFlow = $this->entityManager->getRepository(TreeFlow::class)->find($treeFlowId);
+                    if (!$treeFlow) {
+                        throw new BadRequestHttpException('TreeFlow not found: ' . $treeFlowId);
+                    }
+                    $entity->setTreeFlow($treeFlow);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested treeFlow creation not supported. Use IRI format.');
                 }
             }
         }

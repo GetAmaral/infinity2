@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\TaskType;
+use App\MultiTenant\TenantContext;
 use App\Repository\TaskTypeRepository;
 use App\Security\Voter\TaskTypeVoter;
 use App\Form\TaskTypeType;
@@ -36,6 +37,7 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -205,31 +207,60 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
         $form = $this->createForm(TaskTypeType::class, $taskType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($taskType);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $taskType->setOrganization($organization);
+                error_log('✅ TaskTypeController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($taskType);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($taskType);
 
-                // After create hook
-                $this->afterCreate($taskType);
+                    $this->entityManager->persist($taskType);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'tasktype.flash.created_successfully',
-                    ['%name%' => (string) $taskType],
-                    'tasktype'
-                ));
+                    // After create hook
+                    $this->afterCreate($taskType);
 
-                return $this->redirectToRoute('tasktype_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'tasktype.flash.created_successfully',
+                        ['%name%' => (string) $taskType],
+                        'tasktype'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'tasktype.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'tasktype'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $taskType;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'TaskType',
+                            'entityId' => $taskType->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('tasktype_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'tasktype.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'tasktype'
+                    ));
+                }
             }
         }
 
@@ -272,33 +303,43 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaskTypeVoter::EDIT, $taskType);
 
+        // Store original organization to preserve it
+        $originalOrganization = $taskType->getOrganization();
+
         $form = $this->createForm(TaskTypeType::class, $taskType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($taskType);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $taskType->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($taskType);
 
-                // After update hook
-                $this->afterUpdate($taskType);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'tasktype.flash.updated_successfully',
-                    ['%name%' => (string) $taskType],
-                    'tasktype'
-                ));
+                    // After update hook
+                    $this->afterUpdate($taskType);
 
-                return $this->redirectToRoute('tasktype_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'tasktype.flash.updated_successfully',
+                        ['%name%' => (string) $taskType],
+                        'tasktype'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'tasktype.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'tasktype'
-                ));
+                    return $this->redirectToRoute('tasktype_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'tasktype.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'tasktype'
+                    ));
+                }
             }
         }
 
@@ -367,9 +408,22 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaskTypeVoter::VIEW, $taskType);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($taskType);
+
         return $this->render('tasktype/show.html.twig', [
             'taskType' => $taskType,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in TaskTypeController to customize displayed properties
+     */
+    protected function buildShowProperties(TaskType $taskType): array
+    {
+        return [];
     }
 
     // ====================================
@@ -380,12 +434,22 @@ abstract class TaskTypeControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(TaskType $taskType): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $taskType->setOrganization($organization);
+            error_log('✅ TaskTypeController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ TaskTypeController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

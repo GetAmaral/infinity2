@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Event;
+use App\MultiTenant\TenantContext;
 use App\Repository\EventRepository;
 use App\Security\Voter\EventVoter;
 use App\Form\EventType;
@@ -36,6 +37,7 @@ abstract class EventControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -150,19 +152,12 @@ abstract class EventControllerGenerated extends BaseApiController
             'conferenceData' => $entity->getConferenceData(),
             'extendedProperties' => $entity->getExtendedProperties(),
             'source' => $entity->getSource(),
-            'notifications' => ($notificationsRel = $entity->getNotifications()) ? array_map(
+            'meetingDatas' => ($meetingDatasRel = $entity->getMeetingDatas()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
                     'display' => (string) $item,
                 ],
-                $notificationsRel->toArray()
-            ) : [],
-            'holidays' => ($holidaysRel = $entity->getHolidays()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $holidaysRel->toArray()
+                $meetingDatasRel->toArray()
             ) : [],
             'workingHours' => ($workingHoursRel = $entity->getWorkingHours()) ? array_map(
                 fn($item) => [
@@ -171,12 +166,19 @@ abstract class EventControllerGenerated extends BaseApiController
                 ],
                 $workingHoursRel->toArray()
             ) : [],
-            'meetingDatas' => ($meetingDatasRel = $entity->getMeetingDatas()) ? array_map(
+            'holidays' => ($holidaysRel = $entity->getHolidays()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
                     'display' => (string) $item,
                 ],
-                $meetingDatasRel->toArray()
+                $holidaysRel->toArray()
+            ) : [],
+            'notifications' => ($notificationsRel = $entity->getNotifications()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $notificationsRel->toArray()
             ) : [],
             'subject' => $entity->getSubject(),
             'status' => $entity->getStatus(),
@@ -337,31 +339,60 @@ abstract class EventControllerGenerated extends BaseApiController
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($event);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $event->setOrganization($organization);
+                error_log('✅ EventController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($event);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($event);
 
-                // After create hook
-                $this->afterCreate($event);
+                    $this->entityManager->persist($event);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'event.flash.created_successfully',
-                    ['%name%' => (string) $event],
-                    'event'
-                ));
+                    // After create hook
+                    $this->afterCreate($event);
 
-                return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'event.flash.created_successfully',
+                        ['%name%' => (string) $event],
+                        'event'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'event.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'event'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $event;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Event',
+                            'entityId' => $event->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'event.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'event'
+                    ));
+                }
             }
         }
 
@@ -404,33 +435,43 @@ abstract class EventControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventVoter::EDIT, $event);
 
+        // Store original organization to preserve it
+        $originalOrganization = $event->getOrganization();
+
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($event);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $event->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($event);
 
-                // After update hook
-                $this->afterUpdate($event);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'event.flash.updated_successfully',
-                    ['%name%' => (string) $event],
-                    'event'
-                ));
+                    // After update hook
+                    $this->afterUpdate($event);
 
-                return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'event.flash.updated_successfully',
+                        ['%name%' => (string) $event],
+                        'event'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'event.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'event'
-                ));
+                    return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'event.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'event'
+                    ));
+                }
             }
         }
 
@@ -499,9 +540,22 @@ abstract class EventControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventVoter::VIEW, $event);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($event);
+
         return $this->render('event/show.html.twig', [
             'event' => $event,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in EventController to customize displayed properties
+     */
+    protected function buildShowProperties(Event $event): array
+    {
+        return [];
     }
 
     // ====================================
@@ -512,12 +566,22 @@ abstract class EventControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Event $event): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $event->setOrganization($organization);
+            error_log('✅ EventController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ EventController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

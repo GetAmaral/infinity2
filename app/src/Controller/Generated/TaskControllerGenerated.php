@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Task;
+use App\MultiTenant\TenantContext;
 use App\Repository\TaskRepository;
 use App\Security\Voter\TaskVoter;
 use App\Form\TaskType;
@@ -36,6 +37,7 @@ abstract class TaskControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -121,8 +123,8 @@ abstract class TaskControllerGenerated extends BaseApiController
             'overdue' => $entity->getOverdue(),
             'queue' => $entity->getQueue(),
             'emailSubject' => $entity->getEmailSubject(),
-            'phoneNumber' => $entity->getPhoneNumber(),
             'taskStatus' => $entity->getTaskStatus(),
+            'phoneNumber' => $entity->getPhoneNumber(),
             'meetingUrl' => $entity->getMeetingUrl(),
             'outcome' => $entity->getOutcome(),
             'notes' => $entity->getNotes(),
@@ -166,13 +168,13 @@ abstract class TaskControllerGenerated extends BaseApiController
             'create_permission' => TaskVoter::CREATE,
 
             // Property metadata for Twig templates (as PHP arrays)
-            'listProperties' => json_decode('[{"name":"name","label":"Subject","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"startDate","label":"Start Date","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStartDate","isRelationship":false},{"name":"completionPercentage","label":"Completion %","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletionPercentage","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"archived","label":"Archived","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getArchived","isRelationship":false},{"name":"command","label":"Command","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCommand","isRelationship":false},{"name":"completedDate","label":"Completed Date","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletedDate","isRelationship":false},{"name":"contact","label":"Contact","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact","isRelationship":true},{"name":"deal","label":"Deal","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeal","isRelationship":true},{"name":"durationMinutes","label":"Duration Minutes","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDurationMinutes","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"pipelineStage","label":"Pipeline Stage","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineStage","isRelationship":true},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"completed","label":"Completed","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompleted","isRelationship":false},{"name":"scheduledDate","label":"Due Date","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getScheduledDate","isRelationship":false},{"name":"company","label":"Company","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany","isRelationship":true},{"name":"reminderDate","label":"Reminder Date","type":"datetime","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminderDate","isRelationship":false},{"name":"reminder","label":"Reminder","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminder","isRelationship":false},{"name":"recurring","label":"Recurring","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurring","isRelationship":false},{"name":"recurrenceRule","label":"Recurrence Rule","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurrenceRule","isRelationship":false},{"name":"overdue","label":"Overdue","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOverdue","isRelationship":false},{"name":"queue","label":"Queue","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getQueue","isRelationship":false},{"name":"emailSubject","label":"Email Subject","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEmailSubject","isRelationship":false},{"name":"phoneNumber","label":"Phone Number","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPhoneNumber","isRelationship":false},{"name":"taskStatus","label":"Status","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskStatus","isRelationship":false},{"name":"meetingUrl","label":"Meeting URL","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMeetingUrl","isRelationship":false},{"name":"outcome","label":"Outcome","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOutcome","isRelationship":false},{"name":"notes","label":"Notes","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotes","isRelationship":false},{"name":"type","label":"Task Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType","isRelationship":true},{"name":"user","label":"Assigned To","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true}]', true),
+            'listProperties' => json_decode('[{"name":"name","label":"Subject","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"startDate","label":"Start Date","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStartDate","isRelationship":false},{"name":"completionPercentage","label":"Completion %","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletionPercentage","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"archived","label":"Archived","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getArchived","isRelationship":false},{"name":"command","label":"Command","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCommand","isRelationship":false},{"name":"completedDate","label":"Completed Date","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletedDate","isRelationship":false},{"name":"contact","label":"Contact","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact","isRelationship":true},{"name":"deal","label":"Deal","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeal","isRelationship":true},{"name":"durationMinutes","label":"Duration Minutes","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDurationMinutes","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"pipelineStage","label":"Pipeline Stage","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineStage","isRelationship":true},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"completed","label":"Completed","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompleted","isRelationship":false},{"name":"scheduledDate","label":"Due Date","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getScheduledDate","isRelationship":false},{"name":"company","label":"Company","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany","isRelationship":true},{"name":"reminderDate","label":"Reminder Date","type":"datetime","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminderDate","isRelationship":false},{"name":"reminder","label":"Reminder","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminder","isRelationship":false},{"name":"recurring","label":"Recurring","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurring","isRelationship":false},{"name":"recurrenceRule","label":"Recurrence Rule","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurrenceRule","isRelationship":false},{"name":"overdue","label":"Overdue","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOverdue","isRelationship":false},{"name":"queue","label":"Queue","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getQueue","isRelationship":false},{"name":"emailSubject","label":"Email Subject","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEmailSubject","isRelationship":false},{"name":"taskStatus","label":"Status","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskStatus","isRelationship":false},{"name":"phoneNumber","label":"Phone Number","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPhoneNumber","isRelationship":false},{"name":"meetingUrl","label":"Meeting URL","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMeetingUrl","isRelationship":false},{"name":"outcome","label":"Outcome","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOutcome","isRelationship":false},{"name":"notes","label":"Notes","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotes","isRelationship":false},{"name":"type","label":"Task Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType","isRelationship":true},{"name":"user","label":"Assigned To","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true}]', true),
             'searchableFields' => json_decode('[{"name":"name","label":"Subject","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"command","label":"Command","type":"text"},{"name":"location","label":"Location","type":"string"}]', true),
             'filterableFields' => json_decode('[{"name":"startDate","label":"Start Date","type":"datetime","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completionPercentage","label":"Completion %","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
             'sortableFields' => json_decode('[{"name":"name","label":"Subject"},{"name":"description","label":"Description"},{"name":"startDate","label":"Start Date"},{"name":"completionPercentage","label":"Completion %"},{"name":"category","label":"Category"},{"name":"archived","label":"Archived"},{"name":"command","label":"Command"},{"name":"completedDate","label":"Completed Date"},{"name":"contact","label":"Contact"},{"name":"deal","label":"Deal"},{"name":"durationMinutes","label":"Duration Minutes"},{"name":"location","label":"Location"},{"name":"pipelineStage","label":"Pipeline Stage"},{"name":"priority","label":"Priority"},{"name":"scheduledDate","label":"Due Date"},{"name":"taskStatus","label":"Status"},{"name":"type","label":"Task Type"},{"name":"user","label":"Assigned To"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Subject","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"startDate","label":"Start Date","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStartDate","isRelationship":false},{"name":"completionPercentage","label":"Completion %","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletionPercentage","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"archived","label":"Archived","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getArchived","isRelationship":false},{"name":"command","label":"Command","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCommand","isRelationship":false},{"name":"completedDate","label":"Completed Date","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletedDate","isRelationship":false},{"name":"contact","label":"Contact","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact","isRelationship":true},{"name":"deal","label":"Deal","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeal","isRelationship":true},{"name":"durationMinutes","label":"Duration Minutes","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDurationMinutes","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"pipelineStage","label":"Pipeline Stage","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineStage","isRelationship":true},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"completed","label":"Completed","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompleted","isRelationship":false},{"name":"scheduledDate","label":"Due Date","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getScheduledDate","isRelationship":false},{"name":"company","label":"Company","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany","isRelationship":true},{"name":"reminderDate","label":"Reminder Date","type":"datetime","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminderDate","isRelationship":false},{"name":"reminder","label":"Reminder","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminder","isRelationship":false},{"name":"recurring","label":"Recurring","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurring","isRelationship":false},{"name":"recurrenceRule","label":"Recurrence Rule","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurrenceRule","isRelationship":false},{"name":"overdue","label":"Overdue","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOverdue","isRelationship":false},{"name":"queue","label":"Queue","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getQueue","isRelationship":false},{"name":"emailSubject","label":"Email Subject","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEmailSubject","isRelationship":false},{"name":"phoneNumber","label":"Phone Number","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPhoneNumber","isRelationship":false},{"name":"taskStatus","label":"Status","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskStatus","isRelationship":false},{"name":"meetingUrl","label":"Meeting URL","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMeetingUrl","isRelationship":false},{"name":"outcome","label":"Outcome","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOutcome","isRelationship":false},{"name":"notes","label":"Notes","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotes","isRelationship":false},{"name":"type","label":"Task Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType","isRelationship":true},{"name":"user","label":"Assigned To","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true}]',
+            'list_fields' => '[{"name":"name","label":"Subject","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"startDate","label":"Start Date","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStartDate","isRelationship":false},{"name":"completionPercentage","label":"Completion %","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletionPercentage","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"archived","label":"Archived","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getArchived","isRelationship":false},{"name":"command","label":"Command","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCommand","isRelationship":false},{"name":"completedDate","label":"Completed Date","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletedDate","isRelationship":false},{"name":"contact","label":"Contact","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact","isRelationship":true},{"name":"deal","label":"Deal","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeal","isRelationship":true},{"name":"durationMinutes","label":"Duration Minutes","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDurationMinutes","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"pipelineStage","label":"Pipeline Stage","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineStage","isRelationship":true},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"completed","label":"Completed","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompleted","isRelationship":false},{"name":"scheduledDate","label":"Due Date","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getScheduledDate","isRelationship":false},{"name":"company","label":"Company","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany","isRelationship":true},{"name":"reminderDate","label":"Reminder Date","type":"datetime","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminderDate","isRelationship":false},{"name":"reminder","label":"Reminder","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getReminder","isRelationship":false},{"name":"recurring","label":"Recurring","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurring","isRelationship":false},{"name":"recurrenceRule","label":"Recurrence Rule","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurrenceRule","isRelationship":false},{"name":"overdue","label":"Overdue","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOverdue","isRelationship":false},{"name":"queue","label":"Queue","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getQueue","isRelationship":false},{"name":"emailSubject","label":"Email Subject","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEmailSubject","isRelationship":false},{"name":"taskStatus","label":"Status","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTaskStatus","isRelationship":false},{"name":"phoneNumber","label":"Phone Number","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPhoneNumber","isRelationship":false},{"name":"meetingUrl","label":"Meeting URL","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMeetingUrl","isRelationship":false},{"name":"outcome","label":"Outcome","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOutcome","isRelationship":false},{"name":"notes","label":"Notes","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getNotes","isRelationship":false},{"name":"type","label":"Task Type","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getType","isRelationship":true},{"name":"user","label":"Assigned To","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUser","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Subject","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"command","label":"Command","type":"text"},{"name":"location","label":"Location","type":"string"}]',
             'filterable_fields' => '[{"name":"startDate","label":"Start Date","type":"datetime","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completionPercentage","label":"Completion %","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Subject"},{"name":"description","label":"Description"},{"name":"startDate","label":"Start Date"},{"name":"completionPercentage","label":"Completion %"},{"name":"category","label":"Category"},{"name":"archived","label":"Archived"},{"name":"command","label":"Command"},{"name":"completedDate","label":"Completed Date"},{"name":"contact","label":"Contact"},{"name":"deal","label":"Deal"},{"name":"durationMinutes","label":"Duration Minutes"},{"name":"location","label":"Location"},{"name":"pipelineStage","label":"Pipeline Stage"},{"name":"priority","label":"Priority"},{"name":"scheduledDate","label":"Due Date"},{"name":"taskStatus","label":"Status"},{"name":"type","label":"Task Type"},{"name":"user","label":"Assigned To"}]',
@@ -239,31 +241,60 @@ abstract class TaskControllerGenerated extends BaseApiController
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($task);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $task->setOrganization($organization);
+                error_log('✅ TaskController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($task);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($task);
 
-                // After create hook
-                $this->afterCreate($task);
+                    $this->entityManager->persist($task);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'task.flash.created_successfully',
-                    ['%name%' => (string) $task],
-                    'task'
-                ));
+                    // After create hook
+                    $this->afterCreate($task);
 
-                return $this->redirectToRoute('task_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'task.flash.created_successfully',
+                        ['%name%' => (string) $task],
+                        'task'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'task.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'task'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $task;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Task',
+                            'entityId' => $task->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('task_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'task.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'task'
+                    ));
+                }
             }
         }
 
@@ -306,33 +337,43 @@ abstract class TaskControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaskVoter::EDIT, $task);
 
+        // Store original organization to preserve it
+        $originalOrganization = $task->getOrganization();
+
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($task);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $task->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($task);
 
-                // After update hook
-                $this->afterUpdate($task);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'task.flash.updated_successfully',
-                    ['%name%' => (string) $task],
-                    'task'
-                ));
+                    // After update hook
+                    $this->afterUpdate($task);
 
-                return $this->redirectToRoute('task_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'task.flash.updated_successfully',
+                        ['%name%' => (string) $task],
+                        'task'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'task.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'task'
-                ));
+                    return $this->redirectToRoute('task_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'task.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'task'
+                    ));
+                }
             }
         }
 
@@ -401,9 +442,22 @@ abstract class TaskControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaskVoter::VIEW, $task);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($task);
+
         return $this->render('task/show.html.twig', [
             'task' => $task,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in TaskController to customize displayed properties
+     */
+    protected function buildShowProperties(Task $task): array
+    {
+        return [];
     }
 
     // ====================================
@@ -414,12 +468,22 @@ abstract class TaskControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Task $task): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $task->setOrganization($organization);
+            error_log('✅ TaskController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ TaskController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

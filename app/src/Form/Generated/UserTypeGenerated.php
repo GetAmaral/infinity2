@@ -66,10 +66,11 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -114,10 +115,11 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -127,7 +129,30 @@ abstract class UserTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Campaign::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Campaign',
+                'data-relation-select-route-value' => 'campaign_api_search',
+                'data-relation-select-add-route-value' => 'campaign_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more campaign',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -146,7 +171,30 @@ abstract class UserTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Contact::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Contact',
+                'data-relation-select-route-value' => 'contact_api_search',
+                'data-relation-select-add-route-value' => 'contact_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more contact',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -156,7 +204,30 @@ abstract class UserTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Deal::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Deal',
+                'data-relation-select-route-value' => 'deal_api_search',
+                'data-relation-select-add-route-value' => 'deal_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more deal',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -178,6 +249,14 @@ abstract class UserTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('verified', CheckboxType::class, [
+            'label' => 'Verified',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
         // Exclude nested collections when form is used inside another collection
         if (empty($options['exclude_parent'])) {
         $builder->add('eventAttendances', CollectionType::class, [
@@ -193,25 +272,18 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
 
-        $builder->add('verified', CheckboxType::class, [
-            'label' => 'Verified',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('termsSigned', CheckboxType::class, [
             'label' => 'Terms Signed',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -262,7 +334,7 @@ abstract class UserTypeGenerated extends AbstractType
 
         $builder->add('twoFactorEnabled', CheckboxType::class, [
             'label' => 'Two Factor Enabled',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -278,7 +350,7 @@ abstract class UserTypeGenerated extends AbstractType
 
         $builder->add('passkeyEnabled', CheckboxType::class, [
             'label' => 'Passkey Enabled',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -299,10 +371,11 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -322,10 +395,11 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -345,10 +419,11 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -368,10 +443,11 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -400,10 +476,11 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -482,7 +559,7 @@ abstract class UserTypeGenerated extends AbstractType
 
         $builder->add('emailNotificationsEnabled', CheckboxType::class, [
             'label' => 'Email Notifications Enabled',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -490,7 +567,7 @@ abstract class UserTypeGenerated extends AbstractType
 
         $builder->add('smsNotificationsEnabled', CheckboxType::class, [
             'label' => 'SMS Notifications Enabled',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -498,7 +575,7 @@ abstract class UserTypeGenerated extends AbstractType
 
         $builder->add('calendarSyncEnabled', CheckboxType::class, [
             'label' => 'Calendar Sync Enabled',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -535,7 +612,30 @@ abstract class UserTypeGenerated extends AbstractType
             'label' => 'Manager',
             'required' => false,
             'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -555,10 +655,11 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -590,7 +691,7 @@ abstract class UserTypeGenerated extends AbstractType
 
         $builder->add('agent', CheckboxType::class, [
             'label' => 'Agent',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -620,10 +721,11 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -852,22 +954,45 @@ abstract class UserTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('profiles', EntityType::class, [
+            'label' => 'Profiles',
+            'required' => false,
+            'class' => \App\Entity\Profile::class,
+            'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
+            'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Profile',
+                'data-relation-select-route-value' => 'profile_api_search',
+                'data-relation-select-add-route-value' => 'profile_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more profile',
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
         $builder->add('employeeId', TextType::class, [
             'label' => 'Employee ID',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter employee id',
-            ],
-        ]);
-
-        $builder->add('profiles', EntityType::class, [
-            'label' => 'Profiles',
-            'required' => false,
-            'class' => \App\Entity\Profile::class,
-            'multiple' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -957,10 +1082,11 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -1034,18 +1160,52 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
 
         $builder->add('visible', CheckboxType::class, [
             'label' => 'Visible',
-            'required' => true,
+            'required' => false,
             'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('talks', EntityType::class, [
+            'label' => 'Talks',
+            'required' => false,
+            'class' => \App\Entity\Talk::class,
+            'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
+            'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Talk',
+                'data-relation-select-route-value' => 'talk_api_search',
+                'data-relation-select-add-route-value' => 'talk_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more talk',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -1056,16 +1216,6 @@ abstract class UserTypeGenerated extends AbstractType
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter status',
-            ],
-        ]);
-
-        $builder->add('talks', EntityType::class, [
-            'label' => 'Talks',
-            'required' => false,
-            'class' => \App\Entity\Talk::class,
-            'multiple' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -1093,17 +1243,18 @@ abstract class UserTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
 
         $builder->add('locked', CheckboxType::class, [
             'label' => 'Locked',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],

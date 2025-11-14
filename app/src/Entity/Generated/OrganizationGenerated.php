@@ -17,21 +17,21 @@ use App\Entity\BillingFrequency;
 use App\Entity\Brand;
 use App\Entity\Calendar;
 use App\Entity\Campaign;
-use App\Entity\Notification;
-use App\Entity\Attachment;
-use App\Entity\CalendarType;
-use App\Entity\City;
-use App\Entity\PipelineStageTemplate;
 use App\Entity\TreeFlow;
-use App\Entity\MeetingData;
-use App\Entity\LostReason;
-use App\Entity\EventAttendee;
-use App\Entity\DealType;
-use App\Entity\DealCategory;
-use App\Entity\TaskTemplate;
-use App\Entity\Reminder;
-use App\Entity\PipelineTemplate;
+use App\Entity\Attachment;
+use App\Entity\City;
+use App\Entity\CalendarType;
 use App\Entity\WinReason;
+use App\Entity\PipelineTemplate;
+use App\Entity\Reminder;
+use App\Entity\TaskTemplate;
+use App\Entity\DealCategory;
+use App\Entity\DealType;
+use App\Entity\EventAttendee;
+use App\Entity\LostReason;
+use App\Entity\MeetingData;
+use App\Entity\Notification;
+use App\Entity\PipelineStageTemplate;
 use App\Entity\Company;
 use App\Entity\Competitor;
 use App\Entity\Contact;
@@ -88,13 +88,13 @@ abstract class OrganizationGenerated extends EntityBase
     protected ?string $logoPath = null;
 
     #[Groups(['organization:read', 'organization:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
-
-    #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
     protected ?string $logoPathDark = null;
+
+    #[Groups(['organization:read', 'organization:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $description = null;
 
     #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'organization', fetch: 'LAZY')]
@@ -158,8 +158,8 @@ abstract class OrganizationGenerated extends EntityBase
     protected Collection $campaigns;
 
     #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $notifications;
+    #[ORM\OneToMany(targetEntity: TreeFlow::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $treeFlows;
 
     #[Groups(['organization:read', 'organization:write'])]
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
@@ -171,56 +171,56 @@ abstract class OrganizationGenerated extends EntityBase
     protected Collection $attachments;
 
     #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: CalendarType::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $calendarTypes;
-
-    #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $cities;
 
     #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: PipelineStageTemplate::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $pipelineStageTemplates;
+    #[ORM\OneToMany(targetEntity: CalendarType::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $calendarTypes;
 
     #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: TreeFlow::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $treeFlows;
-
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: MeetingData::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $meetingDatas;
-
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: LostReason::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $lostReasons;
-
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $eventAttendees;
-
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: DealType::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $dealTypes;
-
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: DealCategory::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $dealCategories;
-
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: TaskTemplate::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $taskTemplates;
-
-    #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: Reminder::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $reminders;
+    #[ORM\OneToMany(targetEntity: WinReason::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $winReasons;
 
     #[Groups(['organization:read'])]
     #[ORM\OneToMany(targetEntity: PipelineTemplate::class, mappedBy: 'organization', fetch: 'LAZY')]
     protected Collection $pipelineTemplates;
 
     #[Groups(['organization:read'])]
-    #[ORM\OneToMany(targetEntity: WinReason::class, mappedBy: 'organization', fetch: 'LAZY')]
-    protected Collection $winReasons;
+    #[ORM\OneToMany(targetEntity: Reminder::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $reminders;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: TaskTemplate::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $taskTemplates;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: DealCategory::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $dealCategories;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: DealType::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $dealTypes;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $eventAttendees;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: LostReason::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $lostReasons;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: MeetingData::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $meetingDatas;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $notifications;
+
+    #[Groups(['organization:read'])]
+    #[ORM\OneToMany(targetEntity: PipelineStageTemplate::class, mappedBy: 'organization', fetch: 'LAZY')]
+    protected Collection $pipelineStageTemplates;
 
     #[Groups(['organization:read', 'organization:write'])]
     #[ORM\ManyToOne(targetEntity: City::class)]
@@ -419,21 +419,21 @@ abstract class OrganizationGenerated extends EntityBase
         $this->brands = new ArrayCollection();
         $this->calendars = new ArrayCollection();
         $this->campaigns = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
-        $this->attachments = new ArrayCollection();
-        $this->calendarTypes = new ArrayCollection();
-        $this->cities = new ArrayCollection();
-        $this->pipelineStageTemplates = new ArrayCollection();
         $this->treeFlows = new ArrayCollection();
-        $this->meetingDatas = new ArrayCollection();
-        $this->lostReasons = new ArrayCollection();
-        $this->eventAttendees = new ArrayCollection();
-        $this->dealTypes = new ArrayCollection();
-        $this->dealCategories = new ArrayCollection();
-        $this->taskTemplates = new ArrayCollection();
-        $this->reminders = new ArrayCollection();
-        $this->pipelineTemplates = new ArrayCollection();
+        $this->attachments = new ArrayCollection();
+        $this->cities = new ArrayCollection();
+        $this->calendarTypes = new ArrayCollection();
         $this->winReasons = new ArrayCollection();
+        $this->pipelineTemplates = new ArrayCollection();
+        $this->reminders = new ArrayCollection();
+        $this->taskTemplates = new ArrayCollection();
+        $this->dealCategories = new ArrayCollection();
+        $this->dealTypes = new ArrayCollection();
+        $this->eventAttendees = new ArrayCollection();
+        $this->lostReasons = new ArrayCollection();
+        $this->meetingDatas = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+        $this->pipelineStageTemplates = new ArrayCollection();
         $this->companies = new ArrayCollection();
         $this->competitors = new ArrayCollection();
         $this->contacts = new ArrayCollection();
@@ -488,16 +488,6 @@ abstract class OrganizationGenerated extends EntityBase
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
     public function getLogoPathDark(): ?string    {
         return $this->logoPathDark;
     }
@@ -505,6 +495,16 @@ abstract class OrganizationGenerated extends EntityBase
     public function setLogoPathDark(?string $logoPathDark): self
     {
         $this->logoPathDark = $logoPathDark;
+        return $this;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 
@@ -783,27 +783,27 @@ abstract class OrganizationGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, Notification>
+     * @return Collection<int, TreeFlow>
      */
-    public function getNotifications(): Collection
+    public function getTreeFlows(): Collection
     {
-        return $this->notifications;
+        return $this->treeFlows;
     }
 
-    public function addNotification(Notification $notification): self
+    public function addTreeFlow(TreeFlow $treeFlow): self
     {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications->add($notification);
-            $notification->setOrganization($this);
+        if (!$this->treeFlows->contains($treeFlow)) {
+            $this->treeFlows->add($treeFlow);
+            $treeFlow->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeNotification(Notification $notification): self
+    public function removeTreeFlow(TreeFlow $treeFlow): self
     {
-        if ($this->notifications->removeElement($notification)) {
-            if ($notification->getOrganization() === $this) {
-                $notification->setOrganization(null);
+        if ($this->treeFlows->removeElement($treeFlow)) {
+            if ($treeFlow->getOrganization() === $this) {
+                $treeFlow->setOrganization(null);
             }
         }
         return $this;
@@ -847,33 +847,6 @@ abstract class OrganizationGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, CalendarType>
-     */
-    public function getCalendarTypes(): Collection
-    {
-        return $this->calendarTypes;
-    }
-
-    public function addCalendarType(CalendarType $calendarType): self
-    {
-        if (!$this->calendarTypes->contains($calendarType)) {
-            $this->calendarTypes->add($calendarType);
-            $calendarType->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeCalendarType(CalendarType $calendarType): self
-    {
-        if ($this->calendarTypes->removeElement($calendarType)) {
-            if ($calendarType->getOrganization() === $this) {
-                $calendarType->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * @return Collection<int, City>
      */
     public function getCities(): Collection
@@ -901,243 +874,54 @@ abstract class OrganizationGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, PipelineStageTemplate>
+     * @return Collection<int, CalendarType>
      */
-    public function getPipelineStageTemplates(): Collection
+    public function getCalendarTypes(): Collection
     {
-        return $this->pipelineStageTemplates;
+        return $this->calendarTypes;
     }
 
-    public function addPipelineStageTemplate(PipelineStageTemplate $pipelineStageTemplate): self
+    public function addCalendarType(CalendarType $calendarType): self
     {
-        if (!$this->pipelineStageTemplates->contains($pipelineStageTemplate)) {
-            $this->pipelineStageTemplates->add($pipelineStageTemplate);
-            $pipelineStageTemplate->setOrganization($this);
+        if (!$this->calendarTypes->contains($calendarType)) {
+            $this->calendarTypes->add($calendarType);
+            $calendarType->setOrganization($this);
         }
         return $this;
     }
 
-    public function removePipelineStageTemplate(PipelineStageTemplate $pipelineStageTemplate): self
+    public function removeCalendarType(CalendarType $calendarType): self
     {
-        if ($this->pipelineStageTemplates->removeElement($pipelineStageTemplate)) {
-            if ($pipelineStageTemplate->getOrganization() === $this) {
-                $pipelineStageTemplate->setOrganization(null);
+        if ($this->calendarTypes->removeElement($calendarType)) {
+            if ($calendarType->getOrganization() === $this) {
+                $calendarType->setOrganization(null);
             }
         }
         return $this;
     }
 
     /**
-     * @return Collection<int, TreeFlow>
+     * @return Collection<int, WinReason>
      */
-    public function getTreeFlows(): Collection
+    public function getWinReasons(): Collection
     {
-        return $this->treeFlows;
+        return $this->winReasons;
     }
 
-    public function addTreeFlow(TreeFlow $treeFlow): self
+    public function addWinReason(WinReason $winReason): self
     {
-        if (!$this->treeFlows->contains($treeFlow)) {
-            $this->treeFlows->add($treeFlow);
-            $treeFlow->setOrganization($this);
+        if (!$this->winReasons->contains($winReason)) {
+            $this->winReasons->add($winReason);
+            $winReason->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeTreeFlow(TreeFlow $treeFlow): self
+    public function removeWinReason(WinReason $winReason): self
     {
-        if ($this->treeFlows->removeElement($treeFlow)) {
-            if ($treeFlow->getOrganization() === $this) {
-                $treeFlow->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, MeetingData>
-     */
-    public function getMeetingDatas(): Collection
-    {
-        return $this->meetingDatas;
-    }
-
-    public function addMeetingData(MeetingData $meetingData): self
-    {
-        if (!$this->meetingDatas->contains($meetingData)) {
-            $this->meetingDatas->add($meetingData);
-            $meetingData->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeMeetingData(MeetingData $meetingData): self
-    {
-        if ($this->meetingDatas->removeElement($meetingData)) {
-            if ($meetingData->getOrganization() === $this) {
-                $meetingData->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, LostReason>
-     */
-    public function getLostReasons(): Collection
-    {
-        return $this->lostReasons;
-    }
-
-    public function addLostReason(LostReason $lostReason): self
-    {
-        if (!$this->lostReasons->contains($lostReason)) {
-            $this->lostReasons->add($lostReason);
-            $lostReason->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeLostReason(LostReason $lostReason): self
-    {
-        if ($this->lostReasons->removeElement($lostReason)) {
-            if ($lostReason->getOrganization() === $this) {
-                $lostReason->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, EventAttendee>
-     */
-    public function getEventAttendees(): Collection
-    {
-        return $this->eventAttendees;
-    }
-
-    public function addEventAttendee(EventAttendee $eventAttendee): self
-    {
-        if (!$this->eventAttendees->contains($eventAttendee)) {
-            $this->eventAttendees->add($eventAttendee);
-            $eventAttendee->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeEventAttendee(EventAttendee $eventAttendee): self
-    {
-        if ($this->eventAttendees->removeElement($eventAttendee)) {
-            if ($eventAttendee->getOrganization() === $this) {
-                $eventAttendee->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DealType>
-     */
-    public function getDealTypes(): Collection
-    {
-        return $this->dealTypes;
-    }
-
-    public function addDealType(DealType $dealType): self
-    {
-        if (!$this->dealTypes->contains($dealType)) {
-            $this->dealTypes->add($dealType);
-            $dealType->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeDealType(DealType $dealType): self
-    {
-        if ($this->dealTypes->removeElement($dealType)) {
-            if ($dealType->getOrganization() === $this) {
-                $dealType->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DealCategory>
-     */
-    public function getDealCategories(): Collection
-    {
-        return $this->dealCategories;
-    }
-
-    public function addDealCategory(DealCategory $dealCategory): self
-    {
-        if (!$this->dealCategories->contains($dealCategory)) {
-            $this->dealCategories->add($dealCategory);
-            $dealCategory->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeDealCategory(DealCategory $dealCategory): self
-    {
-        if ($this->dealCategories->removeElement($dealCategory)) {
-            if ($dealCategory->getOrganization() === $this) {
-                $dealCategory->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, TaskTemplate>
-     */
-    public function getTaskTemplates(): Collection
-    {
-        return $this->taskTemplates;
-    }
-
-    public function addTaskTemplate(TaskTemplate $taskTemplate): self
-    {
-        if (!$this->taskTemplates->contains($taskTemplate)) {
-            $this->taskTemplates->add($taskTemplate);
-            $taskTemplate->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeTaskTemplate(TaskTemplate $taskTemplate): self
-    {
-        if ($this->taskTemplates->removeElement($taskTemplate)) {
-            if ($taskTemplate->getOrganization() === $this) {
-                $taskTemplate->setOrganization(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Reminder>
-     */
-    public function getReminders(): Collection
-    {
-        return $this->reminders;
-    }
-
-    public function addReminder(Reminder $reminder): self
-    {
-        if (!$this->reminders->contains($reminder)) {
-            $this->reminders->add($reminder);
-            $reminder->setOrganization($this);
-        }
-        return $this;
-    }
-
-    public function removeReminder(Reminder $reminder): self
-    {
-        if ($this->reminders->removeElement($reminder)) {
-            if ($reminder->getOrganization() === $this) {
-                $reminder->setOrganization(null);
+        if ($this->winReasons->removeElement($winReason)) {
+            if ($winReason->getOrganization() === $this) {
+                $winReason->setOrganization(null);
             }
         }
         return $this;
@@ -1171,27 +955,243 @@ abstract class OrganizationGenerated extends EntityBase
     }
 
     /**
-     * @return Collection<int, WinReason>
+     * @return Collection<int, Reminder>
      */
-    public function getWinReasons(): Collection
+    public function getReminders(): Collection
     {
-        return $this->winReasons;
+        return $this->reminders;
     }
 
-    public function addWinReason(WinReason $winReason): self
+    public function addReminder(Reminder $reminder): self
     {
-        if (!$this->winReasons->contains($winReason)) {
-            $this->winReasons->add($winReason);
-            $winReason->setOrganization($this);
+        if (!$this->reminders->contains($reminder)) {
+            $this->reminders->add($reminder);
+            $reminder->setOrganization($this);
         }
         return $this;
     }
 
-    public function removeWinReason(WinReason $winReason): self
+    public function removeReminder(Reminder $reminder): self
     {
-        if ($this->winReasons->removeElement($winReason)) {
-            if ($winReason->getOrganization() === $this) {
-                $winReason->setOrganization(null);
+        if ($this->reminders->removeElement($reminder)) {
+            if ($reminder->getOrganization() === $this) {
+                $reminder->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TaskTemplate>
+     */
+    public function getTaskTemplates(): Collection
+    {
+        return $this->taskTemplates;
+    }
+
+    public function addTaskTemplate(TaskTemplate $taskTemplate): self
+    {
+        if (!$this->taskTemplates->contains($taskTemplate)) {
+            $this->taskTemplates->add($taskTemplate);
+            $taskTemplate->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeTaskTemplate(TaskTemplate $taskTemplate): self
+    {
+        if ($this->taskTemplates->removeElement($taskTemplate)) {
+            if ($taskTemplate->getOrganization() === $this) {
+                $taskTemplate->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DealCategory>
+     */
+    public function getDealCategories(): Collection
+    {
+        return $this->dealCategories;
+    }
+
+    public function addDealCategory(DealCategory $dealCategory): self
+    {
+        if (!$this->dealCategories->contains($dealCategory)) {
+            $this->dealCategories->add($dealCategory);
+            $dealCategory->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeDealCategory(DealCategory $dealCategory): self
+    {
+        if ($this->dealCategories->removeElement($dealCategory)) {
+            if ($dealCategory->getOrganization() === $this) {
+                $dealCategory->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DealType>
+     */
+    public function getDealTypes(): Collection
+    {
+        return $this->dealTypes;
+    }
+
+    public function addDealType(DealType $dealType): self
+    {
+        if (!$this->dealTypes->contains($dealType)) {
+            $this->dealTypes->add($dealType);
+            $dealType->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeDealType(DealType $dealType): self
+    {
+        if ($this->dealTypes->removeElement($dealType)) {
+            if ($dealType->getOrganization() === $this) {
+                $dealType->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventAttendee>
+     */
+    public function getEventAttendees(): Collection
+    {
+        return $this->eventAttendees;
+    }
+
+    public function addEventAttendee(EventAttendee $eventAttendee): self
+    {
+        if (!$this->eventAttendees->contains($eventAttendee)) {
+            $this->eventAttendees->add($eventAttendee);
+            $eventAttendee->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeEventAttendee(EventAttendee $eventAttendee): self
+    {
+        if ($this->eventAttendees->removeElement($eventAttendee)) {
+            if ($eventAttendee->getOrganization() === $this) {
+                $eventAttendee->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LostReason>
+     */
+    public function getLostReasons(): Collection
+    {
+        return $this->lostReasons;
+    }
+
+    public function addLostReason(LostReason $lostReason): self
+    {
+        if (!$this->lostReasons->contains($lostReason)) {
+            $this->lostReasons->add($lostReason);
+            $lostReason->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeLostReason(LostReason $lostReason): self
+    {
+        if ($this->lostReasons->removeElement($lostReason)) {
+            if ($lostReason->getOrganization() === $this) {
+                $lostReason->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MeetingData>
+     */
+    public function getMeetingDatas(): Collection
+    {
+        return $this->meetingDatas;
+    }
+
+    public function addMeetingData(MeetingData $meetingData): self
+    {
+        if (!$this->meetingDatas->contains($meetingData)) {
+            $this->meetingDatas->add($meetingData);
+            $meetingData->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeMeetingData(MeetingData $meetingData): self
+    {
+        if ($this->meetingDatas->removeElement($meetingData)) {
+            if ($meetingData->getOrganization() === $this) {
+                $meetingData->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getOrganization() === $this) {
+                $notification->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PipelineStageTemplate>
+     */
+    public function getPipelineStageTemplates(): Collection
+    {
+        return $this->pipelineStageTemplates;
+    }
+
+    public function addPipelineStageTemplate(PipelineStageTemplate $pipelineStageTemplate): self
+    {
+        if (!$this->pipelineStageTemplates->contains($pipelineStageTemplate)) {
+            $this->pipelineStageTemplates->add($pipelineStageTemplate);
+            $pipelineStageTemplate->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removePipelineStageTemplate(PipelineStageTemplate $pipelineStageTemplate): self
+    {
+        if ($this->pipelineStageTemplates->removeElement($pipelineStageTemplate)) {
+            if ($pipelineStageTemplate->getOrganization() === $this) {
+                $pipelineStageTemplate->setOrganization(null);
             }
         }
         return $this;

@@ -32,12 +32,12 @@ abstract class PipelineTemplateGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $name;
-
-    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(name: 'default_prop', type: 'boolean')]
     protected bool $default = false;
+
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $name;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
@@ -56,12 +56,12 @@ abstract class PipelineTemplateGenerated extends EntityBase
     protected ?int $estimatedDuration = null;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    protected ?string $industry = null;
-
-    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $stageCount;
+
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $industry = null;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
@@ -109,16 +109,6 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getDefault(): bool    {
         return $this->default;
     }
@@ -132,6 +122,16 @@ abstract class PipelineTemplateGenerated extends EntityBase
     public function isDefault(): bool
     {
         return $this->default === true;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
     }
 
     public function getDescription(): ?string    {
@@ -179,16 +179,6 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getIndustry(): ?string    {
-        return $this->industry;
-    }
-
-    public function setIndustry(?string $industry): self
-    {
-        $this->industry = $industry;
-        return $this;
-    }
-
     public function getStageCount(): int    {
         return $this->stageCount;
     }
@@ -196,6 +186,16 @@ abstract class PipelineTemplateGenerated extends EntityBase
     public function setStageCount(int $stageCount): self
     {
         $this->stageCount = $stageCount;
+        return $this;
+    }
+
+    public function getIndustry(): ?string    {
+        return $this->industry;
+    }
+
+    public function setIndustry(?string $industry): self
+    {
+        $this->industry = $industry;
         return $this;
     }
 

@@ -92,13 +92,13 @@ class PipelineStageTemplateProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('description', $requestData)) {
             $entity->setDescription($data->description);
         }
-        // probability
-        if (!$isPatch || array_key_exists('probability', $requestData)) {
-            $entity->setProbability($data->probability);
-        }
         // order
         if (!$isPatch || array_key_exists('order', $requestData)) {
             $entity->setOrder($data->order);
+        }
+        // probability
+        if (!$isPatch || array_key_exists('probability', $requestData)) {
+            $entity->setProbability($data->probability);
         }
         // active
         if (!$isPatch || array_key_exists('active', $requestData)) {

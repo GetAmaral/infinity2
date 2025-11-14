@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Organization;
+use App\MultiTenant\TenantContext;
 use App\Repository\OrganizationRepository;
 use App\Security\Voter\OrganizationVoter;
 use App\Form\OrganizationType;
@@ -36,6 +37,7 @@ abstract class OrganizationControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -82,8 +84,8 @@ abstract class OrganizationControllerGenerated extends BaseApiController
             'id' => $entity->getId()->toString(),
             'name' => $entity->getName(),
             'logoPath' => $entity->getLogoPath(),
-            'description' => $entity->getDescription(),
             'logoPathDark' => $entity->getLogoPathDark(),
+            'description' => $entity->getDescription(),
             'studentCourses' => ($studentCoursesRel = $entity->getStudentCourses()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
@@ -141,12 +143,12 @@ abstract class OrganizationControllerGenerated extends BaseApiController
                 ],
                 $campaignsRel->toArray()
             ) : [],
-            'notifications' => ($notificationsRel = $entity->getNotifications()) ? array_map(
+            'treeFlows' => ($treeFlowsRel = $entity->getTreeFlows()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
                     'display' => (string) $item,
                 ],
-                $notificationsRel->toArray()
+                $treeFlowsRel->toArray()
             ) : [],
             'celPhone' => $entity->getCelPhone(),
             'attachments' => ($attachmentsRel = $entity->getAttachments()) ? array_map(
@@ -156,13 +158,6 @@ abstract class OrganizationControllerGenerated extends BaseApiController
                 ],
                 $attachmentsRel->toArray()
             ) : [],
-            'calendarTypes' => ($calendarTypesRel = $entity->getCalendarTypes()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $calendarTypesRel->toArray()
-            ) : [],
             'cities' => ($citiesRel = $entity->getCities()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
@@ -170,68 +165,19 @@ abstract class OrganizationControllerGenerated extends BaseApiController
                 ],
                 $citiesRel->toArray()
             ) : [],
-            'pipelineStageTemplates' => ($pipelineStageTemplatesRel = $entity->getPipelineStageTemplates()) ? array_map(
+            'calendarTypes' => ($calendarTypesRel = $entity->getCalendarTypes()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
                     'display' => (string) $item,
                 ],
-                $pipelineStageTemplatesRel->toArray()
+                $calendarTypesRel->toArray()
             ) : [],
-            'treeFlows' => ($treeFlowsRel = $entity->getTreeFlows()) ? array_map(
+            'winReasons' => ($winReasonsRel = $entity->getWinReasons()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
                     'display' => (string) $item,
                 ],
-                $treeFlowsRel->toArray()
-            ) : [],
-            'meetingDatas' => ($meetingDatasRel = $entity->getMeetingDatas()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $meetingDatasRel->toArray()
-            ) : [],
-            'lostReasons' => ($lostReasonsRel = $entity->getLostReasons()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $lostReasonsRel->toArray()
-            ) : [],
-            'eventAttendees' => ($eventAttendeesRel = $entity->getEventAttendees()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $eventAttendeesRel->toArray()
-            ) : [],
-            'dealTypes' => ($dealTypesRel = $entity->getDealTypes()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $dealTypesRel->toArray()
-            ) : [],
-            'dealCategories' => ($dealCategoriesRel = $entity->getDealCategories()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $dealCategoriesRel->toArray()
-            ) : [],
-            'taskTemplates' => ($taskTemplatesRel = $entity->getTaskTemplates()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $taskTemplatesRel->toArray()
-            ) : [],
-            'reminders' => ($remindersRel = $entity->getReminders()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $remindersRel->toArray()
+                $winReasonsRel->toArray()
             ) : [],
             'pipelineTemplates' => ($pipelineTemplatesRel = $entity->getPipelineTemplates()) ? array_map(
                 fn($item) => [
@@ -240,12 +186,68 @@ abstract class OrganizationControllerGenerated extends BaseApiController
                 ],
                 $pipelineTemplatesRel->toArray()
             ) : [],
-            'winReasons' => ($winReasonsRel = $entity->getWinReasons()) ? array_map(
+            'reminders' => ($remindersRel = $entity->getReminders()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
                     'display' => (string) $item,
                 ],
-                $winReasonsRel->toArray()
+                $remindersRel->toArray()
+            ) : [],
+            'taskTemplates' => ($taskTemplatesRel = $entity->getTaskTemplates()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $taskTemplatesRel->toArray()
+            ) : [],
+            'dealCategories' => ($dealCategoriesRel = $entity->getDealCategories()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealCategoriesRel->toArray()
+            ) : [],
+            'dealTypes' => ($dealTypesRel = $entity->getDealTypes()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $dealTypesRel->toArray()
+            ) : [],
+            'eventAttendees' => ($eventAttendeesRel = $entity->getEventAttendees()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $eventAttendeesRel->toArray()
+            ) : [],
+            'lostReasons' => ($lostReasonsRel = $entity->getLostReasons()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $lostReasonsRel->toArray()
+            ) : [],
+            'meetingDatas' => ($meetingDatasRel = $entity->getMeetingDatas()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $meetingDatasRel->toArray()
+            ) : [],
+            'notifications' => ($notificationsRel = $entity->getNotifications()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $notificationsRel->toArray()
+            ) : [],
+            'pipelineStageTemplates' => ($pipelineStageTemplatesRel = $entity->getPipelineStageTemplates()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $pipelineStageTemplatesRel->toArray()
             ) : [],
             'city' => ($cityRel = $entity->getCity()) ? [
                 'id' => $cityRel->getId()->toString(),
@@ -593,31 +595,60 @@ abstract class OrganizationControllerGenerated extends BaseApiController
         $form = $this->createForm(OrganizationType::class, $organization);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($organization);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $organization->setOrganization($organization);
+                error_log('✅ OrganizationController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($organization);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($organization);
 
-                // After create hook
-                $this->afterCreate($organization);
+                    $this->entityManager->persist($organization);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'organization.flash.created_successfully',
-                    ['%name%' => (string) $organization],
-                    'organization'
-                ));
+                    // After create hook
+                    $this->afterCreate($organization);
 
-                return $this->redirectToRoute('organization_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'organization.flash.created_successfully',
+                        ['%name%' => (string) $organization],
+                        'organization'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'organization.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'organization'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $organization;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Organization',
+                            'entityId' => $organization->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('organization_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'organization.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'organization'
+                    ));
+                }
             }
         }
 
@@ -660,33 +691,43 @@ abstract class OrganizationControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(OrganizationVoter::EDIT, $organization);
 
+        // Store original organization to preserve it
+        $originalOrganization = $organization->getOrganization();
+
         $form = $this->createForm(OrganizationType::class, $organization);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($organization);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $organization->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($organization);
 
-                // After update hook
-                $this->afterUpdate($organization);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'organization.flash.updated_successfully',
-                    ['%name%' => (string) $organization],
-                    'organization'
-                ));
+                    // After update hook
+                    $this->afterUpdate($organization);
 
-                return $this->redirectToRoute('organization_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'organization.flash.updated_successfully',
+                        ['%name%' => (string) $organization],
+                        'organization'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'organization.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'organization'
-                ));
+                    return $this->redirectToRoute('organization_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'organization.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'organization'
+                    ));
+                }
             }
         }
 
@@ -755,9 +796,22 @@ abstract class OrganizationControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(OrganizationVoter::VIEW, $organization);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($organization);
+
         return $this->render('organization/show.html.twig', [
             'organization' => $organization,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in OrganizationController to customize displayed properties
+     */
+    protected function buildShowProperties(Organization $organization): array
+    {
+        return [];
     }
 
     // ====================================
@@ -768,12 +822,22 @@ abstract class OrganizationControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Organization $organization): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $organization->setOrganization($organization);
+            error_log('✅ OrganizationController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ OrganizationController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

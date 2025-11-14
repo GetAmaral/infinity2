@@ -108,9 +108,26 @@ final class TenantEntityProcessor implements ProcessorInterface
         // Get tenant from TenantContext (single source of truth!)
         $tenant = $this->tenantContext->getTenant();
 
+        // Fallback: If no subdomain tenant, try to get organization from current user
         if (!$tenant) {
-            // No tenant in context - this might be:
-            // - Root domain admin access
+            $user = $this->security->getUser();
+            if ($user instanceof \App\Entity\User) {
+                $tenant = $user->getOrganization();
+
+                if ($tenant) {
+                    $this->logger->info('Using user organization as tenant (no subdomain)', [
+                        'entity_class' => get_class($entity),
+                        'user_id' => $user->getId()->toRfc4122(),
+                        'org_id' => $tenant->getId()->toRfc4122(),
+                        'source' => $source,
+                    ]);
+                }
+            }
+        }
+
+        if (!$tenant) {
+            // No tenant in context and no user organization - this might be:
+            // - Unauthenticated access
             // - Public page access
             // - CLI command without tenant context
             $this->logger->warning('Entity created without tenant context', [

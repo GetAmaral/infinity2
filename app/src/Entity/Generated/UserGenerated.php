@@ -95,10 +95,6 @@ abstract class UserGenerated extends EntityBase
     #[Assert\Length(max: 255)]
     protected string $email;
 
-    #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?\DateTimeImmutable $emailVerifiedAt = null;
-
     #[Groups(['user:read'])]
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'user_table_grantedRoles')]
@@ -117,12 +113,16 @@ abstract class UserGenerated extends EntityBase
     protected Collection $ownedDeals;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'user', fetch: 'LAZY')]
-    protected Collection $eventAttendances;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $emailVerifiedAt = null;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $verified = false;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'user', fetch: 'LAZY')]
+    protected Collection $eventAttendances;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'boolean')]
@@ -152,13 +152,13 @@ abstract class UserGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $openAiApiKey = null;
 
-    #[Groups(['user:read', 'audit:read'])]
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected ?\DateTimeImmutable $lastLoginAt = null;
-
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $gender = null;
+
+    #[Groups(['user:read', 'audit:read'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $lastLoginAt = null;
 
     #[Groups(['audit:read'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
@@ -438,12 +438,12 @@ abstract class UserGenerated extends EntityBase
     protected ?string $officeLocation = null;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    protected ?string $employeeId = null;
-
-    #[Groups(['user:read', 'user:write'])]
     #[ORM\ManyToMany(targetEntity: Profile::class, mappedBy: 'users', fetch: 'LAZY')]
     protected Collection $profiles;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected ?string $employeeId = null;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'date_immutable', nullable: true)]
@@ -534,12 +534,12 @@ abstract class UserGenerated extends EntityBase
     protected ?\DateTimeImmutable $lastActivityAt = null;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    protected ?string $status = null;
-
-    #[Groups(['user:read', 'user:write'])]
     #[ORM\ManyToMany(targetEntity: Talk::class, mappedBy: 'users', fetch: 'LAZY')]
     protected Collection $talks;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    protected ?string $status = null;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
@@ -809,16 +809,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
-        return $this->emailVerifiedAt;
-    }
-
-    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
-    {
-        $this->emailVerifiedAt = $emailVerifiedAt;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Role>
      */
@@ -923,6 +913,31 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
+        return $this->emailVerifiedAt;
+    }
+
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
+    {
+        $this->emailVerifiedAt = $emailVerifiedAt;
+        return $this;
+    }
+
+    public function getVerified(): bool    {
+        return $this->verified;
+    }
+
+    public function setVerified(bool $verified): self
+    {
+        $this->verified = $verified;
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->verified === true;
+    }
+
     /**
      * @return Collection<int, EventAttendee>
      */
@@ -948,21 +963,6 @@ abstract class UserGenerated extends EntityBase
             }
         }
         return $this;
-    }
-
-    public function getVerified(): bool    {
-        return $this->verified;
-    }
-
-    public function setVerified(bool $verified): self
-    {
-        $this->verified = $verified;
-        return $this;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->verified === true;
     }
 
     public function getTermsSigned(): bool    {
@@ -1040,16 +1040,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getLastLoginAt(): ?\DateTimeImmutable    {
-        return $this->lastLoginAt;
-    }
-
-    public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
-    {
-        $this->lastLoginAt = $lastLoginAt;
-        return $this;
-    }
-
     public function getGender(): ?int    {
         return $this->gender;
     }
@@ -1057,6 +1047,16 @@ abstract class UserGenerated extends EntityBase
     public function setGender(?int $gender): self
     {
         $this->gender = $gender;
+        return $this;
+    }
+
+    public function getLastLoginAt(): ?\DateTimeImmutable    {
+        return $this->lastLoginAt;
+    }
+
+    public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
+    {
+        $this->lastLoginAt = $lastLoginAt;
         return $this;
     }
 
@@ -1905,16 +1905,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getEmployeeId(): ?string    {
-        return $this->employeeId;
-    }
-
-    public function setEmployeeId(?string $employeeId): self
-    {
-        $this->employeeId = $employeeId;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Profile>
      */
@@ -1939,6 +1929,16 @@ abstract class UserGenerated extends EntityBase
                 $profile->setUsers(null);
             }
         }
+        return $this;
+    }
+
+    public function getEmployeeId(): ?string    {
+        return $this->employeeId;
+    }
+
+    public function setEmployeeId(?string $employeeId): self
+    {
+        $this->employeeId = $employeeId;
         return $this;
     }
 
@@ -2201,16 +2201,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getStatus(): ?string    {
-        return $this->status;
-    }
-
-    public function setStatus(?string $status): self
-    {
-        $this->status = $status;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Talk>
      */
@@ -2235,6 +2225,16 @@ abstract class UserGenerated extends EntityBase
                 $talk->setUsers(null);
             }
         }
+        return $this;
+    }
+
+    public function getStatus(): ?string    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
         return $this;
     }
 

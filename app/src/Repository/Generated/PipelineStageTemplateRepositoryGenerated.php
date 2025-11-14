@@ -54,7 +54,7 @@ abstract class PipelineStageTemplateRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'description' => 'description',            'probability' => 'probability',            'order' => 'order',            'active' => 'active',            'rottingDays' => 'rottingDays',            'pipelineTemplate' => 'pipelineTemplate',            'tasks' => 'tasks',            'final' => 'final',            'stageType' => 'stageType',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'description' => 'description',            'order' => 'order',            'probability' => 'probability',            'active' => 'active',            'rottingDays' => 'rottingDays',            'pipelineTemplate' => 'pipelineTemplate',            'final' => 'final',            'tasks' => 'tasks',            'stageType' => 'stageType',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**

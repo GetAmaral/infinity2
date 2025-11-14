@@ -51,7 +51,7 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
 {% else %}
     #[Groups(['{{ entityNameLower }}:read', '{{ entityNameLower }}:write'])]
 {% endif %}
-    #[ORM\Column({% if isReservedKeyword(property.getPropertyName()) %}name: '{{ getSafeColumnName(property.getPropertyName()) }}', {% endif %}type: '{{ property.getPropertyType() }}'{% if property.getLength() %}, length: {{ property.getLength() }}{% endif %}{% if property.getPrecision() %}, precision: {{ property.getPrecision() }}{% endif %}{% if property.getScale() %}, scale: {{ property.getScale() }}{% endif %}{% if property.isNullable() %}, nullable: true{% endif %}{% if property.isUnique() %}, unique: true{% endif %})]
+    #[ORM\Column({% if isReservedKeyword(property.getPropertyName()) %}name: '{{ getSafeColumnName(property.getPropertyName()) }}', {% endif %}type: '{% if property.getPropertyType() == 'datetime' %}datetime_immutable{% elseif property.getPropertyType() == 'date' %}date_immutable{% else %}{{ property.getPropertyType() }}{% endif %}'{% if property.getLength() %}, length: {{ property.getLength() }}{% endif %}{% if property.getPrecision() %}, precision: {{ property.getPrecision() }}{% endif %}{% if property.getScale() %}, scale: {{ property.getScale() }}{% endif %}{% if property.isNullable() %}, nullable: true{% endif %}{% if property.isUnique() %}, unique: true{% endif %})]
 {% if property.getValidationRules() and property.getValidationRules() is iterable %}
 {% for rule in property.getValidationRules() %}
 {% if rule.constraint is defined and rule.constraint is not empty %}
@@ -89,6 +89,14 @@ abstract class {{ entity.getEntityName() }}Generated extends EntityBase
     #[ORM\{{ property.getRelationshipType() }}(targetEntity: {{ getClassName(property.getTargetEntity()) }}::class{% if property.getMappedBy() %}, mappedBy: '{{ property.getMappedBy() }}'{% elseif property.getInversedBy() %}, inversedBy: '{{ property.getInversedBy() }}'{% endif %})]
 {% if not property.isNullable() %}
     #[ORM\JoinColumn(nullable: false)]
+{% endif %}
+{% if property.getValidationRules() and property.getValidationRules() is iterable %}
+{% for rule in property.getValidationRules() %}
+{% if rule.constraint is defined and rule.constraint is not empty %}
+{% set ruleOptions = rule.options is defined ? rule.options : (rule|filter((v, k) => k != 'constraint')) %}
+    #[Assert\{{ rule.constraint }}{% if ruleOptions is not empty %}({% for paramKey, paramValue in ruleOptions %}{{ paramKey }}: {% if paramValue is iterable %}[{% for item in paramValue %}'{{ item }}'{% if not loop.last %}, {% endif %}{% endfor %}]{% elseif paramValue is same as(true) %}true{% elseif paramValue is same as(false) %}false{% elseif paramValue is null %}null{% elseif paramValue matches '/^[0-9.]+$/' %}{{ paramValue }}{% else %}'{{ paramValue }}'{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}){% endif %}]
+{% endif %}
+{% endfor %}
 {% endif %}
     protected {% if property.isNullable() %}?{% endif %}{{ getClassName(property.getTargetEntity()) }} ${{ property.getPropertyName() }}{% if property.isNullable() %} = null{% endif %};
 

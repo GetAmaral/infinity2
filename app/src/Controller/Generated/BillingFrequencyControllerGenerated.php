@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\BillingFrequency;
+use App\MultiTenant\TenantContext;
 use App\Repository\BillingFrequencyRepository;
 use App\Security\Voter\BillingFrequencyVoter;
 use App\Form\BillingFrequencyType;
@@ -36,6 +37,7 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -207,31 +209,60 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
         $form = $this->createForm(BillingFrequencyType::class, $billingFrequency);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($billingFrequency);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $billingFrequency->setOrganization($organization);
+                error_log('✅ BillingFrequencyController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($billingFrequency);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($billingFrequency);
 
-                // After create hook
-                $this->afterCreate($billingFrequency);
+                    $this->entityManager->persist($billingFrequency);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'billingfrequency.flash.created_successfully',
-                    ['%name%' => (string) $billingFrequency],
-                    'billingfrequency'
-                ));
+                    // After create hook
+                    $this->afterCreate($billingFrequency);
 
-                return $this->redirectToRoute('billingfrequency_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'billingfrequency.flash.created_successfully',
+                        ['%name%' => (string) $billingFrequency],
+                        'billingfrequency'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'billingfrequency.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'billingfrequency'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $billingFrequency;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'BillingFrequency',
+                            'entityId' => $billingFrequency->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('billingfrequency_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'billingfrequency.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'billingfrequency'
+                    ));
+                }
             }
         }
 
@@ -274,33 +305,43 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(BillingFrequencyVoter::EDIT, $billingFrequency);
 
+        // Store original organization to preserve it
+        $originalOrganization = $billingFrequency->getOrganization();
+
         $form = $this->createForm(BillingFrequencyType::class, $billingFrequency);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($billingFrequency);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $billingFrequency->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($billingFrequency);
 
-                // After update hook
-                $this->afterUpdate($billingFrequency);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'billingfrequency.flash.updated_successfully',
-                    ['%name%' => (string) $billingFrequency],
-                    'billingfrequency'
-                ));
+                    // After update hook
+                    $this->afterUpdate($billingFrequency);
 
-                return $this->redirectToRoute('billingfrequency_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'billingfrequency.flash.updated_successfully',
+                        ['%name%' => (string) $billingFrequency],
+                        'billingfrequency'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'billingfrequency.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'billingfrequency'
-                ));
+                    return $this->redirectToRoute('billingfrequency_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'billingfrequency.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'billingfrequency'
+                    ));
+                }
             }
         }
 
@@ -369,9 +410,22 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(BillingFrequencyVoter::VIEW, $billingFrequency);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($billingFrequency);
+
         return $this->render('billingfrequency/show.html.twig', [
             'billingFrequency' => $billingFrequency,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in BillingFrequencyController to customize displayed properties
+     */
+    protected function buildShowProperties(BillingFrequency $billingFrequency): array
+    {
+        return [];
     }
 
     // ====================================
@@ -382,12 +436,22 @@ abstract class BillingFrequencyControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(BillingFrequency $billingFrequency): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $billingFrequency->setOrganization($organization);
+            error_log('✅ BillingFrequencyController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ BillingFrequencyController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

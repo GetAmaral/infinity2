@@ -61,7 +61,7 @@ abstract class WinReasonGenerated extends EntityBase
     protected int $usageCount = 0;
 
     #[Groups(['winreason:read', 'winreason:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastUsedAt = null;
 
     #[Groups(['winreason:read', 'winreason:write'])]

@@ -54,7 +54,7 @@ abstract class CalendarRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'user' => 'user',            'description' => 'description',            'timeZone' => 'timeZone',            'color' => 'color',            'primary' => 'primary',            'visible' => 'visible',            'accessRole' => 'accessRole',            'calendarType' => 'calendarType',            'events' => 'events',            'externalLink' => 'externalLink',            'externalApiKey' => 'externalApiKey',            'workingHours' => 'workingHours',            'holidays' => 'holidays',            'default' => 'default',            'active' => 'active',            'public' => 'public',            'sortOrder' => 'sortOrder',            'externalId' => 'externalId',            'lastSyncedAt' => 'lastSyncedAt',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'description' => 'description',            'user' => 'user',            'timeZone' => 'timeZone',            'color' => 'color',            'primary' => 'primary',            'visible' => 'visible',            'accessRole' => 'accessRole',            'calendarType' => 'calendarType',            'events' => 'events',            'externalLink' => 'externalLink',            'externalApiKey' => 'externalApiKey',            'workingHours' => 'workingHours',            'holidays' => 'holidays',            'default' => 'default',            'active' => 'active',            'public' => 'public',            'sortOrder' => 'sortOrder',            'externalId' => 'externalId',            'lastSyncedAt' => 'lastSyncedAt',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -116,9 +116,9 @@ abstract class CalendarRepositoryGenerated extends BaseRepository
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
             'name' => $entity->getName(),
+            'description' => $entity->getDescription(),
             'user' => $entity->getUser()?->getId()?->toString() ?? '',
             'userName' => $entity->getUser()?->getName() ?? '',
-            'description' => $entity->getDescription(),
             'timeZone' => $entity->getTimeZone(),
             'color' => $entity->getColor(),
             'accessRole' => $entity->getAccessRole(),

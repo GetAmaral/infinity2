@@ -6,10 +6,10 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Uid\Uuid;
 use App\Dto\OrganizationOutputDto;
-use App\Dto\CompanyOutputDto;
-use App\Dto\ContactOutputDto;
-use App\Dto\DealOutputDto;
 use App\Dto\TalkTypeOutputDto;
+use App\Dto\ContactOutputDto;
+use App\Dto\CompanyOutputDto;
+use App\Dto\DealOutputDto;
 use App\Dto\UserOutputDto;
 use App\Dto\AgentOutputDto;
 use App\Dto\CampaignOutputDto;
@@ -34,15 +34,19 @@ abstract class TalkOutputDtoGenerated
      */
     public string|OrganizationOutputDto $organization;
 
+    public ?array $talkFlow = null;
+
     public string $subject;
+
+    /**
+     * talkType reference
+     * Can be: IRI string or nested TalkTypeOutput object
+     */
+    public string|TalkTypeOutputDto $talkType;
 
     public ?string $summary = null;
 
-    /**
-     * company reference
-     * Can be: IRI string or nested CompanyOutput object
-     */
-    public string|CompanyOutputDto|null $company = null;
+    public int $messageCount;
 
     /**
      * contact reference
@@ -51,20 +55,44 @@ abstract class TalkOutputDtoGenerated
     public string|ContactOutputDto|null $contact = null;
 
     /**
+     * company reference
+     * Can be: IRI string or nested CompanyOutput object
+     */
+    public string|CompanyOutputDto|null $company = null;
+
+    /**
      * deal reference
      * Can be: IRI string or nested DealOutput object
      */
     public string|DealOutputDto|null $deal = null;
 
     /**
-     * talkType reference
-     * Can be: IRI string or nested TalkTypeOutput object
+     * users collection
+     * @var UserOutputDto[]
      */
-    public string|TalkTypeOutputDto $talkType;
+    public array $users = [];
 
-    public int $channel;
+    /**
+     * agents collection
+     * @var AgentOutputDto[]
+     */
+    public array $agents = [];
+
+    /**
+     * owner reference
+     * Can be: IRI string or nested UserOutput object
+     */
+    public string|UserOutputDto $owner;
+
+    /**
+     * assignedTo reference
+     * Can be: IRI string or nested UserOutput object
+     */
+    public string|UserOutputDto|null $assignedTo = null;
 
     public int $status;
+
+    public int $channel;
 
     public ?int $priority = null;
 
@@ -80,31 +108,13 @@ abstract class TalkOutputDtoGenerated
 
     public ?int $durationSeconds = null;
 
-    public ?string $recordingUrl = null;
+    public bool $paused;
 
-    /**
-     * users collection
-     * @var UserOutputDto[]
-     */
-    public array $users = [];
+    public ?\DateTimeImmutable $pausedAt = null;
 
-    /**
-     * owner reference
-     * Can be: IRI string or nested UserOutput object
-     */
-    public string|UserOutputDto $owner;
+    public ?string $pausedReason = null;
 
-    /**
-     * assignedTo reference
-     * Can be: IRI string or nested UserOutput object
-     */
-    public string|UserOutputDto|null $assignedTo = null;
-
-    /**
-     * agents collection
-     * @var AgentOutputDto[]
-     */
-    public array $agents = [];
+    public ?\DateTimeImmutable $resumedAt = null;
 
     /**
      * campaigns collection
@@ -112,17 +122,17 @@ abstract class TalkOutputDtoGenerated
      */
     public array $campaigns = [];
 
+    public ?string $recordingUrl = null;
+
+    public bool $archived;
+
+    public bool $internal;
+
     /**
      * messages collection
      * @var TalkMessageOutputDto[]
      */
     public array $messages = [];
-
-    public int $messageCount;
-
-    public bool $archived;
-
-    public bool $internal;
 
     public ?array $tags = null;
 
@@ -153,6 +163,16 @@ abstract class TalkOutputDtoGenerated
         return $this;
     }
 
+    public function getTalkFlow(): ?array    {
+        return $this->talkFlow;
+    }
+
+    public function setTalkFlow(?array $talkFlow): self
+    {
+        $this->talkFlow = $talkFlow;
+        return $this;
+    }
+
     public function getSubject(): string    {
         return $this->subject;
     }
@@ -160,46 +180,6 @@ abstract class TalkOutputDtoGenerated
     public function setSubject(string $subject): self
     {
         $this->subject = $subject;
-        return $this;
-    }
-
-    public function getSummary(): ?string    {
-        return $this->summary;
-    }
-
-    public function setSummary(?string $summary): self
-    {
-        $this->summary = $summary;
-        return $this;
-    }
-
-    public function getCompany(): string|CompanyOutputDto|null    {
-        return $this->company;
-    }
-
-    public function setCompany(string|CompanyOutputDto|null $company): self
-    {
-        $this->company = $company;
-        return $this;
-    }
-
-    public function getContact(): string|ContactOutputDto|null    {
-        return $this->contact;
-    }
-
-    public function setContact(string|ContactOutputDto|null $contact): self
-    {
-        $this->contact = $contact;
-        return $this;
-    }
-
-    public function getDeal(): string|DealOutputDto|null    {
-        return $this->deal;
-    }
-
-    public function setDeal(string|DealOutputDto|null $deal): self
-    {
-        $this->deal = $deal;
         return $this;
     }
 
@@ -213,13 +193,93 @@ abstract class TalkOutputDtoGenerated
         return $this;
     }
 
-    public function getChannel(): int    {
-        return $this->channel;
+    public function getSummary(): ?string    {
+        return $this->summary;
     }
 
-    public function setChannel(int $channel): self
+    public function setSummary(?string $summary): self
     {
-        $this->channel = $channel;
+        $this->summary = $summary;
+        return $this;
+    }
+
+    public function getMessageCount(): int    {
+        return $this->messageCount;
+    }
+
+    public function setMessageCount(int $messageCount): self
+    {
+        $this->messageCount = $messageCount;
+        return $this;
+    }
+
+    public function getContact(): string|ContactOutputDto|null    {
+        return $this->contact;
+    }
+
+    public function setContact(string|ContactOutputDto|null $contact): self
+    {
+        $this->contact = $contact;
+        return $this;
+    }
+
+    public function getCompany(): string|CompanyOutputDto|null    {
+        return $this->company;
+    }
+
+    public function setCompany(string|CompanyOutputDto|null $company): self
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    public function getDeal(): string|DealOutputDto|null    {
+        return $this->deal;
+    }
+
+    public function setDeal(string|DealOutputDto|null $deal): self
+    {
+        $this->deal = $deal;
+        return $this;
+    }
+
+    public function getUsers(): array    {
+        return $this->users;
+    }
+
+    public function setUsers(array $users): self
+    {
+        $this->users = $users;
+        return $this;
+    }
+
+    public function getAgents(): array    {
+        return $this->agents;
+    }
+
+    public function setAgents(array $agents): self
+    {
+        $this->agents = $agents;
+        return $this;
+    }
+
+    public function getOwner(): string|UserOutputDto    {
+        return $this->owner;
+    }
+
+    public function setOwner(string|UserOutputDto $owner): self
+    {
+        $this->owner = $owner;
+        return $this;
+    }
+
+    public function getAssignedTo(): string|UserOutputDto|null    {
+        return $this->assignedTo;
+    }
+
+    public function setAssignedTo(string|UserOutputDto|null $assignedTo): self
+    {
+        $this->assignedTo = $assignedTo;
         return $this;
     }
 
@@ -230,6 +290,16 @@ abstract class TalkOutputDtoGenerated
     public function setStatus(int $status): self
     {
         $this->status = $status;
+        return $this;
+    }
+
+    public function getChannel(): int    {
+        return $this->channel;
+    }
+
+    public function setChannel(int $channel): self
+    {
+        $this->channel = $channel;
         return $this;
     }
 
@@ -303,53 +373,43 @@ abstract class TalkOutputDtoGenerated
         return $this;
     }
 
-    public function getRecordingUrl(): ?string    {
-        return $this->recordingUrl;
+    public function getPaused(): bool    {
+        return $this->paused;
     }
 
-    public function setRecordingUrl(?string $recordingUrl): self
+    public function setPaused(bool $paused): self
     {
-        $this->recordingUrl = $recordingUrl;
+        $this->paused = $paused;
         return $this;
     }
 
-    public function getUsers(): array    {
-        return $this->users;
+    public function getPausedAt(): ?\DateTimeImmutable    {
+        return $this->pausedAt;
     }
 
-    public function setUsers(array $users): self
+    public function setPausedAt(?\DateTimeImmutable $pausedAt): self
     {
-        $this->users = $users;
+        $this->pausedAt = $pausedAt;
         return $this;
     }
 
-    public function getOwner(): string|UserOutputDto    {
-        return $this->owner;
+    public function getPausedReason(): ?string    {
+        return $this->pausedReason;
     }
 
-    public function setOwner(string|UserOutputDto $owner): self
+    public function setPausedReason(?string $pausedReason): self
     {
-        $this->owner = $owner;
+        $this->pausedReason = $pausedReason;
         return $this;
     }
 
-    public function getAssignedTo(): string|UserOutputDto|null    {
-        return $this->assignedTo;
+    public function getResumedAt(): ?\DateTimeImmutable    {
+        return $this->resumedAt;
     }
 
-    public function setAssignedTo(string|UserOutputDto|null $assignedTo): self
+    public function setResumedAt(?\DateTimeImmutable $resumedAt): self
     {
-        $this->assignedTo = $assignedTo;
-        return $this;
-    }
-
-    public function getAgents(): array    {
-        return $this->agents;
-    }
-
-    public function setAgents(array $agents): self
-    {
-        $this->agents = $agents;
+        $this->resumedAt = $resumedAt;
         return $this;
     }
 
@@ -363,23 +423,13 @@ abstract class TalkOutputDtoGenerated
         return $this;
     }
 
-    public function getMessages(): array    {
-        return $this->messages;
+    public function getRecordingUrl(): ?string    {
+        return $this->recordingUrl;
     }
 
-    public function setMessages(array $messages): self
+    public function setRecordingUrl(?string $recordingUrl): self
     {
-        $this->messages = $messages;
-        return $this;
-    }
-
-    public function getMessageCount(): int    {
-        return $this->messageCount;
-    }
-
-    public function setMessageCount(int $messageCount): self
-    {
-        $this->messageCount = $messageCount;
+        $this->recordingUrl = $recordingUrl;
         return $this;
     }
 
@@ -400,6 +450,16 @@ abstract class TalkOutputDtoGenerated
     public function setInternal(bool $internal): self
     {
         $this->internal = $internal;
+        return $this;
+    }
+
+    public function getMessages(): array    {
+        return $this->messages;
+    }
+
+    public function setMessages(array $messages): self
+    {
+        $this->messages = $messages;
         return $this;
     }
 

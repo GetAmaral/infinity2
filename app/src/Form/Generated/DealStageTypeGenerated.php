@@ -85,7 +85,7 @@ abstract class DealStageTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'help' => 'Whether this stage record is currently active',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -98,7 +98,30 @@ abstract class DealStageTypeGenerated extends AbstractType
             'label' => 'Deal',
             'required' => false,
             'class' => \App\Entity\Deal::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Deal',
+                'data-relation-select-route-value' => 'deal_api_search',
+                'data-relation-select-add-route-value' => 'deal_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select deal',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -135,7 +158,30 @@ abstract class DealStageTypeGenerated extends AbstractType
             'label' => 'Pipeline Stage',
             'required' => false,
             'class' => \App\Entity\PipelineStage::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'PipelineStage',
+                'data-relation-select-route-value' => 'pipeline_stage_api_search',
+                'data-relation-select-add-route-value' => 'pipeline_stage_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select pipelinestage',
                 'class' => 'form-input-modern',
             ],
         ]);

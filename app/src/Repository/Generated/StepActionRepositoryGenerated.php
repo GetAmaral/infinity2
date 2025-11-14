@@ -43,7 +43,7 @@ abstract class StepActionRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'name',            'step',            'slug',            'prompt',        ];
+        return [            'step',            'name',            'slug',            'prompt',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class StepActionRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'step' => 'step',            'slug' => 'slug',            'prompt' => 'prompt',            'importance' => 'importance',            'viewOrder' => 'viewOrder',            'fewShot' => 'fewShot',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'step' => 'step',            'name' => 'name',            'slug' => 'slug',            'prompt' => 'prompt',            'importance' => 'importance',            'viewOrder' => 'viewOrder',            'fewShot' => 'fewShot',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -113,8 +113,8 @@ abstract class StepActionRepositoryGenerated extends BaseRepository
         assert($entity instanceof StepAction);
 
         return [
-            'name' => $entity->getName(),
             'step' => $entity->getStep(),
+            'name' => $entity->getName(),
             'slug' => $entity->getSlug(),
             'prompt' => $entity->getPrompt(),
             'createdAt' => $entity->getCreatedAt()->format('c'),

@@ -62,10 +62,11 @@ abstract class TimeZoneTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }

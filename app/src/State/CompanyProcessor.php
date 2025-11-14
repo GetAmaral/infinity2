@@ -191,13 +191,13 @@ class CompanyProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('country', $requestData)) {
             $entity->setCountry($data->country);
         }
-        // shippingCountry
-        if (!$isPatch || array_key_exists('shippingCountry', $requestData)) {
-            $entity->setShippingCountry($data->shippingCountry);
-        }
         // companySize
         if (!$isPatch || array_key_exists('companySize', $requestData)) {
             $entity->setCompanySize($data->companySize);
+        }
+        // shippingCountry
+        if (!$isPatch || array_key_exists('shippingCountry', $requestData)) {
+            $entity->setShippingCountry($data->shippingCountry);
         }
         // fax
         if (!$isPatch || array_key_exists('fax', $requestData)) {
@@ -239,9 +239,17 @@ class CompanyProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('taxId', $requestData)) {
             $entity->setTaxId($data->taxId);
         }
-        // nextActivityDate
-        if (!$isPatch || array_key_exists('nextActivityDate', $requestData)) {
-            $entity->setNextActivityDate($data->nextActivityDate);
+        // timeZone
+        if (!$isPatch || array_key_exists('timeZone', $requestData)) {
+            $entity->setTimeZone($data->timeZone);
+        }
+        // tags
+        if (!$isPatch || array_key_exists('tags', $requestData)) {
+            $entity->setTags($data->tags);
+        }
+        // public
+        if (!$isPatch || array_key_exists('public', $requestData)) {
+            $entity->setPublic($data->public);
         }
         // leadStatus
         if (!$isPatch || array_key_exists('leadStatus', $requestData)) {
@@ -251,41 +259,33 @@ class CompanyProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('companyDomain', $requestData)) {
             $entity->setCompanyDomain($data->companyDomain);
         }
-        // numberOfAssociatedContacts
-        if (!$isPatch || array_key_exists('numberOfAssociatedContacts', $requestData)) {
-            $entity->setNumberOfAssociatedContacts($data->numberOfAssociatedContacts);
+        // stateProvince
+        if (!$isPatch || array_key_exists('stateProvince', $requestData)) {
+            $entity->setStateProvince($data->stateProvince);
         }
         // shippingStateProvince
         if (!$isPatch || array_key_exists('shippingStateProvince', $requestData)) {
             $entity->setShippingStateProvince($data->shippingStateProvince);
         }
-        // tags
-        if (!$isPatch || array_key_exists('tags', $requestData)) {
-            $entity->setTags($data->tags);
+        // numberOfAssociatedDeals
+        if (!$isPatch || array_key_exists('numberOfAssociatedDeals', $requestData)) {
+            $entity->setNumberOfAssociatedDeals($data->numberOfAssociatedDeals);
         }
         // lastActivityDate
         if (!$isPatch || array_key_exists('lastActivityDate', $requestData)) {
             $entity->setLastActivityDate($data->lastActivityDate);
         }
-        // public
-        if (!$isPatch || array_key_exists('public', $requestData)) {
-            $entity->setPublic($data->public);
+        // nextActivityDate
+        if (!$isPatch || array_key_exists('nextActivityDate', $requestData)) {
+            $entity->setNextActivityDate($data->nextActivityDate);
         }
         // lifecycleStage
         if (!$isPatch || array_key_exists('lifecycleStage', $requestData)) {
             $entity->setLifecycleStage($data->lifecycleStage);
         }
-        // timeZone
-        if (!$isPatch || array_key_exists('timeZone', $requestData)) {
-            $entity->setTimeZone($data->timeZone);
-        }
-        // stateProvince
-        if (!$isPatch || array_key_exists('stateProvince', $requestData)) {
-            $entity->setStateProvince($data->stateProvince);
-        }
-        // numberOfAssociatedDeals
-        if (!$isPatch || array_key_exists('numberOfAssociatedDeals', $requestData)) {
-            $entity->setNumberOfAssociatedDeals($data->numberOfAssociatedDeals);
+        // numberOfAssociatedContacts
+        if (!$isPatch || array_key_exists('numberOfAssociatedContacts', $requestData)) {
+            $entity->setNumberOfAssociatedContacts($data->numberOfAssociatedContacts);
         }
 
         // Map relationship properties

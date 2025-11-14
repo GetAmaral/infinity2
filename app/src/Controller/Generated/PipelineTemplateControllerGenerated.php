@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\PipelineTemplate;
+use App\MultiTenant\TenantContext;
 use App\Repository\PipelineTemplateRepository;
 use App\Security\Voter\PipelineTemplateVoter;
 use App\Form\PipelineTemplateType;
@@ -36,6 +37,7 @@ abstract class PipelineTemplateControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -84,14 +86,14 @@ abstract class PipelineTemplateControllerGenerated extends BaseApiController
                 'id' => $organizationRel->getId()->toString(),
                 'display' => (string) $organizationRel,
             ] : null,
-            'name' => $entity->getName(),
             'default' => $entity->getDefault(),
+            'name' => $entity->getName(),
             'description' => $entity->getDescription(),
             'public' => $entity->getPublic(),
             'templateCategory' => $entity->getTemplateCategory(),
             'estimatedDuration' => $entity->getEstimatedDuration(),
-            'industry' => $entity->getIndustry(),
             'stageCount' => $entity->getStageCount(),
+            'industry' => $entity->getIndustry(),
             'targetDealSize' => $entity->getTargetDealSize(),
             'color' => $entity->getColor(),
             'icon' => $entity->getIcon(),
@@ -137,16 +139,16 @@ abstract class PipelineTemplateControllerGenerated extends BaseApiController
             'create_permission' => PipelineTemplateVoter::CREATE,
 
             // Property metadata for Twig templates (as PHP arrays)
-            'listProperties' => json_decode('[{"name":"name","label":"Template Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"default","label":"Default Template","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"public","label":"Public Template","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPublic","isRelationship":false},{"name":"templateCategory","label":"Template Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTemplateCategory","isRelationship":false},{"name":"estimatedDuration","label":"Estimated Duration (days)","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEstimatedDuration","isRelationship":false},{"name":"industry","label":"Industry","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIndustry","isRelationship":false},{"name":"stageCount","label":"Number of Stages","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageCount","isRelationship":false},{"name":"targetDealSize","label":"Target Deal Size","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTargetDealSize","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"usageCount","label":"Usage Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsageCount","isRelationship":false},{"name":"stages","label":"Stages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStages","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false}]', true),
+            'listProperties' => json_decode('[{"name":"default","label":"Default Template","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"name","label":"Template Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"public","label":"Public Template","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPublic","isRelationship":false},{"name":"templateCategory","label":"Template Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTemplateCategory","isRelationship":false},{"name":"estimatedDuration","label":"Estimated Duration (days)","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEstimatedDuration","isRelationship":false},{"name":"stageCount","label":"Number of Stages","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageCount","isRelationship":false},{"name":"industry","label":"Industry","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIndustry","isRelationship":false},{"name":"targetDealSize","label":"Target Deal Size","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTargetDealSize","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"usageCount","label":"Usage Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsageCount","isRelationship":false},{"name":"stages","label":"Stages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStages","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false}]', true),
             'searchableFields' => json_decode('[{"name":"name","label":"Template Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"templateCategory","label":"Template Category","type":"string"},{"name":"industry","label":"Industry","type":"string"},{"name":"icon","label":"Icon","type":"string"}]', true),
-            'filterableFields' => json_decode('[{"name":"default","label":"Default Template","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"public","label":"Public Template","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"templateCategory","label":"Template Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"estimatedDuration","label":"Estimated Duration (days)","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"industry","label":"Industry","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"stageCount","label":"Number of Stages","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"targetDealSize","label":"Target Deal Size","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"usageCount","label":"Usage Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
-            'sortableFields' => json_decode('[{"name":"name","label":"Template Name"},{"name":"default","label":"Default Template"},{"name":"description","label":"Description"},{"name":"public","label":"Public Template"},{"name":"templateCategory","label":"Template Category"},{"name":"estimatedDuration","label":"Estimated Duration (days)"},{"name":"industry","label":"Industry"},{"name":"stageCount","label":"Number of Stages"},{"name":"targetDealSize","label":"Target Deal Size"},{"name":"usageCount","label":"Usage Count"},{"name":"stages","label":"Stages"},{"name":"active","label":"Active"}]', true),
+            'filterableFields' => json_decode('[{"name":"default","label":"Default Template","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"public","label":"Public Template","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"templateCategory","label":"Template Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"estimatedDuration","label":"Estimated Duration (days)","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"stageCount","label":"Number of Stages","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"industry","label":"Industry","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"targetDealSize","label":"Target Deal Size","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"usageCount","label":"Usage Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"default","label":"Default Template"},{"name":"name","label":"Template Name"},{"name":"description","label":"Description"},{"name":"public","label":"Public Template"},{"name":"templateCategory","label":"Template Category"},{"name":"estimatedDuration","label":"Estimated Duration (days)"},{"name":"stageCount","label":"Number of Stages"},{"name":"industry","label":"Industry"},{"name":"targetDealSize","label":"Target Deal Size"},{"name":"usageCount","label":"Usage Count"},{"name":"stages","label":"Stages"},{"name":"active","label":"Active"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Template Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"default","label":"Default Template","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"public","label":"Public Template","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPublic","isRelationship":false},{"name":"templateCategory","label":"Template Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTemplateCategory","isRelationship":false},{"name":"estimatedDuration","label":"Estimated Duration (days)","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEstimatedDuration","isRelationship":false},{"name":"industry","label":"Industry","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIndustry","isRelationship":false},{"name":"stageCount","label":"Number of Stages","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageCount","isRelationship":false},{"name":"targetDealSize","label":"Target Deal Size","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTargetDealSize","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"usageCount","label":"Usage Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsageCount","isRelationship":false},{"name":"stages","label":"Stages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStages","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false}]',
+            'list_fields' => '[{"name":"default","label":"Default Template","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"name","label":"Template Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"public","label":"Public Template","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPublic","isRelationship":false},{"name":"templateCategory","label":"Template Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTemplateCategory","isRelationship":false},{"name":"estimatedDuration","label":"Estimated Duration (days)","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEstimatedDuration","isRelationship":false},{"name":"stageCount","label":"Number of Stages","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageCount","isRelationship":false},{"name":"industry","label":"Industry","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIndustry","isRelationship":false},{"name":"targetDealSize","label":"Target Deal Size","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTargetDealSize","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"usageCount","label":"Usage Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsageCount","isRelationship":false},{"name":"stages","label":"Stages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStages","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Template Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"templateCategory","label":"Template Category","type":"string"},{"name":"industry","label":"Industry","type":"string"},{"name":"icon","label":"Icon","type":"string"}]',
-            'filterable_fields' => '[{"name":"default","label":"Default Template","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"public","label":"Public Template","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"templateCategory","label":"Template Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"estimatedDuration","label":"Estimated Duration (days)","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"industry","label":"Industry","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"stageCount","label":"Number of Stages","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"targetDealSize","label":"Target Deal Size","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"usageCount","label":"Usage Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
-            'sortable_fields' => '[{"name":"name","label":"Template Name"},{"name":"default","label":"Default Template"},{"name":"description","label":"Description"},{"name":"public","label":"Public Template"},{"name":"templateCategory","label":"Template Category"},{"name":"estimatedDuration","label":"Estimated Duration (days)"},{"name":"industry","label":"Industry"},{"name":"stageCount","label":"Number of Stages"},{"name":"targetDealSize","label":"Target Deal Size"},{"name":"usageCount","label":"Usage Count"},{"name":"stages","label":"Stages"},{"name":"active","label":"Active"}]',
+            'filterable_fields' => '[{"name":"default","label":"Default Template","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"public","label":"Public Template","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"templateCategory","label":"Template Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"estimatedDuration","label":"Estimated Duration (days)","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"stageCount","label":"Number of Stages","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"industry","label":"Industry","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"targetDealSize","label":"Target Deal Size","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"usageCount","label":"Usage Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
+            'sortable_fields' => '[{"name":"default","label":"Default Template"},{"name":"name","label":"Template Name"},{"name":"description","label":"Description"},{"name":"public","label":"Public Template"},{"name":"templateCategory","label":"Template Category"},{"name":"estimatedDuration","label":"Estimated Duration (days)"},{"name":"stageCount","label":"Number of Stages"},{"name":"industry","label":"Industry"},{"name":"targetDealSize","label":"Target Deal Size"},{"name":"usageCount","label":"Usage Count"},{"name":"stages","label":"Stages"},{"name":"active","label":"Active"}]',
         ]);
     }
 
@@ -210,31 +212,60 @@ abstract class PipelineTemplateControllerGenerated extends BaseApiController
         $form = $this->createForm(PipelineTemplateType::class, $pipelineTemplate);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($pipelineTemplate);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $pipelineTemplate->setOrganization($organization);
+                error_log('✅ PipelineTemplateController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($pipelineTemplate);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($pipelineTemplate);
 
-                // After create hook
-                $this->afterCreate($pipelineTemplate);
+                    $this->entityManager->persist($pipelineTemplate);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'pipelinetemplate.flash.created_successfully',
-                    ['%name%' => (string) $pipelineTemplate],
-                    'pipelinetemplate'
-                ));
+                    // After create hook
+                    $this->afterCreate($pipelineTemplate);
 
-                return $this->redirectToRoute('pipelinetemplate_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'pipelinetemplate.flash.created_successfully',
+                        ['%name%' => (string) $pipelineTemplate],
+                        'pipelinetemplate'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'pipelinetemplate.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'pipelinetemplate'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $pipelineTemplate;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'PipelineTemplate',
+                            'entityId' => $pipelineTemplate->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('pipelinetemplate_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'pipelinetemplate.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'pipelinetemplate'
+                    ));
+                }
             }
         }
 
@@ -277,33 +308,43 @@ abstract class PipelineTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(PipelineTemplateVoter::EDIT, $pipelineTemplate);
 
+        // Store original organization to preserve it
+        $originalOrganization = $pipelineTemplate->getOrganization();
+
         $form = $this->createForm(PipelineTemplateType::class, $pipelineTemplate);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($pipelineTemplate);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $pipelineTemplate->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($pipelineTemplate);
 
-                // After update hook
-                $this->afterUpdate($pipelineTemplate);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'pipelinetemplate.flash.updated_successfully',
-                    ['%name%' => (string) $pipelineTemplate],
-                    'pipelinetemplate'
-                ));
+                    // After update hook
+                    $this->afterUpdate($pipelineTemplate);
 
-                return $this->redirectToRoute('pipelinetemplate_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'pipelinetemplate.flash.updated_successfully',
+                        ['%name%' => (string) $pipelineTemplate],
+                        'pipelinetemplate'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'pipelinetemplate.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'pipelinetemplate'
-                ));
+                    return $this->redirectToRoute('pipelinetemplate_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'pipelinetemplate.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'pipelinetemplate'
+                    ));
+                }
             }
         }
 
@@ -372,9 +413,22 @@ abstract class PipelineTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(PipelineTemplateVoter::VIEW, $pipelineTemplate);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($pipelineTemplate);
+
         return $this->render('pipelinetemplate/show.html.twig', [
             'pipelineTemplate' => $pipelineTemplate,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in PipelineTemplateController to customize displayed properties
+     */
+    protected function buildShowProperties(PipelineTemplate $pipelineTemplate): array
+    {
+        return [];
     }
 
     // ====================================
@@ -385,12 +439,22 @@ abstract class PipelineTemplateControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(PipelineTemplate $pipelineTemplate): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $pipelineTemplate->setOrganization($organization);
+            error_log('✅ PipelineTemplateController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ PipelineTemplateController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

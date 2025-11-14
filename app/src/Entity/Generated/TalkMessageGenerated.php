@@ -55,7 +55,7 @@ abstract class TalkMessageGenerated extends EntityBase
     protected ?Agent $fromAgent = null;
 
     #[Groups(['talkmessage:read', 'talkmessage:write'])]
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime_immutable')]
     protected \DateTimeImmutable $sentAt;
 
     #[Groups(['talkmessage:read', 'talkmessage:write'])]
@@ -75,7 +75,7 @@ abstract class TalkMessageGenerated extends EntityBase
     protected bool $read = false;
 
     #[Groups(['talkmessage:read', 'talkmessage:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $readAt = null;
 
     #[Groups(['talkmessage:read', 'talkmessage:write'])]
@@ -99,7 +99,7 @@ abstract class TalkMessageGenerated extends EntityBase
     protected string $direction = 'inbound';
 
     #[Groups(['talkmessage:read', 'talkmessage:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $deliveredAt = null;
 
     #[Groups(['talkmessage:read', 'talkmessage:write'])]
@@ -111,7 +111,7 @@ abstract class TalkMessageGenerated extends EntityBase
     protected bool $system = false;
 
     #[Groups(['talkmessage:read', 'talkmessage:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $editedAt = null;
 
     #[Groups(['talkmessage:read', 'talkmessage:write'])]

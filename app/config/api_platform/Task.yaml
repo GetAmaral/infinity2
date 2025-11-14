@@ -167,15 +167,15 @@ resources:
       emailSubject:
         description: "Email Subject (text field)"
         example: "Sample longer text value"
-      phoneNumber:
-        description: "Phone Number (text field)"
-        example: "Sample text"
       taskStatus:
         description: "Status (text field)"
         example: "Sample text"
         # Advanced filters
         filters:
           - type: OrderFilter
+      phoneNumber:
+        description: "Phone Number (text field)"
+        example: "Sample text"
       meetingUrl:
         description: "Meeting URL (text field)"
         example: "Sample longer text value"

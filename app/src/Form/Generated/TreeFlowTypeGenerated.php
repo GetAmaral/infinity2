@@ -40,7 +40,7 @@ abstract class TreeFlowTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],

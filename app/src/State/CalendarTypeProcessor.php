@@ -111,25 +111,25 @@ class CalendarTypeProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('visibility', $requestData)) {
             $entity->setVisibility($data->visibility);
         }
-        // access_level
-        if (!$isPatch || array_key_exists('access_level', $requestData)) {
-            $entity->setAccess_level($data->access_level);
+        // accessLevel
+        if (!$isPatch || array_key_exists('accessLevel', $requestData)) {
+            $entity->setAccessLevel($data->accessLevel);
         }
-        // sort_order
-        if (!$isPatch || array_key_exists('sort_order', $requestData)) {
-            $entity->setSort_order($data->sort_order);
+        // sortOrder
+        if (!$isPatch || array_key_exists('sortOrder', $requestData)) {
+            $entity->setSortOrder($data->sortOrder);
         }
-        // allow_sharing
-        if (!$isPatch || array_key_exists('allow_sharing', $requestData)) {
-            $entity->setAllow_sharing($data->allow_sharing);
+        // allowSharing
+        if (!$isPatch || array_key_exists('allowSharing', $requestData)) {
+            $entity->setAllowSharing($data->allowSharing);
         }
-        // require_approval
-        if (!$isPatch || array_key_exists('require_approval', $requestData)) {
-            $entity->setRequire_approval($data->require_approval);
+        // requireApproval
+        if (!$isPatch || array_key_exists('requireApproval', $requestData)) {
+            $entity->setRequireApproval($data->requireApproval);
         }
-        // max_calendars_per_user
-        if (!$isPatch || array_key_exists('max_calendars_per_user', $requestData)) {
-            $entity->setMax_calendars_per_user($data->max_calendars_per_user);
+        // maxCalendarsPerUser
+        if (!$isPatch || array_key_exists('maxCalendarsPerUser', $requestData)) {
+            $entity->setMaxCalendarsPerUser($data->maxCalendarsPerUser);
         }
 
         // Map relationship properties

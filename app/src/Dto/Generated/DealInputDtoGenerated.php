@@ -440,16 +440,6 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getProducts(): ?string    {
-        return $this->products;
-    }
-
-    public function setProducts(?string $products): self
-    {
-        $this->products = $products;
-        return $this;
-    }
-
     public function getClosureDate(): ?\DateTimeImmutable    {
         return $this->closureDate;
     }
@@ -457,6 +447,16 @@ abstract class DealInputDtoGenerated
     public function setClosureDate(?\DateTimeImmutable $closureDate): self
     {
         $this->closureDate = $closureDate;
+        return $this;
+    }
+
+    public function getProducts(): ?string    {
+        return $this->products;
+    }
+
+    public function setProducts(?string $products): self
+    {
+        $this->products = $products;
         return $this;
     }
 
@@ -520,16 +520,6 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getTeam(): ?string    {
-        return $this->team;
-    }
-
-    public function setTeam(?string $team): self
-    {
-        $this->team = $team;
-        return $this;
-    }
-
     public function getOwner(): ?string    {
         return $this->owner;
     }
@@ -537,6 +527,16 @@ abstract class DealInputDtoGenerated
     public function setOwner(?string $owner): self
     {
         $this->owner = $owner;
+        return $this;
+    }
+
+    public function getTeam(): ?string    {
+        return $this->team;
+    }
+
+    public function setTeam(?string $team): self
+    {
+        $this->team = $team;
         return $this;
     }
 

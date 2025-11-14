@@ -62,7 +62,7 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
     protected ?string $refreshToken = null;
 
     #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $tokenExpiresAt = null;
 
     #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
@@ -71,7 +71,7 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
     protected ?string $syncToken = null;
 
     #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastSyncedAt = null;
 
     #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
@@ -85,7 +85,7 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
     protected ?string $webhookChannelId = null;
 
     #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $webhookExpiresAt = null;
 
     #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
@@ -97,7 +97,7 @@ abstract class CalendarExternalLinkGenerated extends EntityBase
     protected ?string $lastErrorMessage = null;
 
     #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastErrorAt = null;
 
     #[Groups(['calendarexternallink:read', 'calendarexternallink:write'])]

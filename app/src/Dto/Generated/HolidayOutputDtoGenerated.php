@@ -32,9 +32,9 @@ abstract class HolidayOutputDtoGenerated
 
     public ?string $description = null;
 
-    public bool $recurring;
-
     public ?bool $blocksScheduling = null;
+
+    public bool $recurring;
 
     public bool $observed;
 
@@ -121,16 +121,6 @@ abstract class HolidayOutputDtoGenerated
         return $this;
     }
 
-    public function getRecurring(): bool    {
-        return $this->recurring;
-    }
-
-    public function setRecurring(bool $recurring): self
-    {
-        $this->recurring = $recurring;
-        return $this;
-    }
-
     public function getBlocksScheduling(): ?bool    {
         return $this->blocksScheduling;
     }
@@ -138,6 +128,16 @@ abstract class HolidayOutputDtoGenerated
     public function setBlocksScheduling(?bool $blocksScheduling): self
     {
         $this->blocksScheduling = $blocksScheduling;
+        return $this;
+    }
+
+    public function getRecurring(): bool    {
+        return $this->recurring;
+    }
+
+    public function setRecurring(bool $recurring): self
+    {
+        $this->recurring = $recurring;
         return $this;
     }
 

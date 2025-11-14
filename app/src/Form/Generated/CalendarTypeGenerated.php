@@ -9,8 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -46,12 +46,37 @@ abstract class CalendarTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('description', TextareaType::class, [
+            'label' => 'Description',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter description',
+            ],
+        ]);
+
         // Conditionally exclude parent back-reference to prevent circular references in collections
         if (empty($options['exclude_parent'])) {
         $builder->add('user', EntityType::class, [
             'label' => 'User',
             'required' => false,
             'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
                 'data-controller' => 'relation-select',
                 'data-relation-select-entity-value' => 'User',
@@ -64,15 +89,6 @@ abstract class CalendarTypeGenerated extends AbstractType
             ],
         ]);
         }
-
-        $builder->add('description', TextareaType::class, [
-            'label' => 'Description',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter description',
-            ],
-        ]);
 
         $builder->add('timeZone', TextType::class, [
             'label' => 'TimeZone',
@@ -122,6 +138,22 @@ abstract class CalendarTypeGenerated extends AbstractType
             'label' => 'CalendarType',
             'required' => false,
             'class' => \App\Entity\CalendarType::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
                 'data-controller' => 'relation-select',
                 'data-relation-select-entity-value' => 'CalendarType',
@@ -156,9 +188,6 @@ abstract class CalendarTypeGenerated extends AbstractType
                 'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
             ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
-            ],
         ]);
         }
 
@@ -168,6 +197,22 @@ abstract class CalendarTypeGenerated extends AbstractType
             'label' => 'ExternalLink',
             'required' => false,
             'class' => \App\Entity\CalendarExternalLink::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
                 'data-controller' => 'relation-select',
                 'data-relation-select-entity-value' => 'CalendarExternalLink',
@@ -211,9 +256,6 @@ abstract class CalendarTypeGenerated extends AbstractType
                 'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
             ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
-            ],
         ]);
         }
 
@@ -238,15 +280,12 @@ abstract class CalendarTypeGenerated extends AbstractType
                 'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
             ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
-            ],
         ]);
         }
 
         $builder->add('default', CheckboxType::class, [
             'label' => 'Default Calendar',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -254,7 +293,7 @@ abstract class CalendarTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -262,7 +301,7 @@ abstract class CalendarTypeGenerated extends AbstractType
 
         $builder->add('public', CheckboxType::class, [
             'label' => 'Public',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],

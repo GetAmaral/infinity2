@@ -83,13 +83,13 @@ abstract class CompanyGenerated extends EntityBase
     protected ?City $shippingCity = null;
 
     #[Groups(['company:read', 'company:write'])]
+    #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'companies', fetch: 'LAZY')]
+    protected Collection $campaigns;
+
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     #[Assert\Length(max: 20)]
     protected ?string $shippingPostalCode = null;
-
-    #[Groups(['company:read', 'company:write'])]
-    #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'companies', fetch: 'LAZY')]
-    protected Collection $campaigns;
 
     #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
@@ -120,7 +120,7 @@ abstract class CompanyGenerated extends EntityBase
     protected ?string $rating = null;
 
     #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $customerSince = null;
 
     #[Groups(['company:read', 'company:write'])]
@@ -180,13 +180,13 @@ abstract class CompanyGenerated extends EntityBase
     protected ?string $country = null;
 
     #[Groups(['company:read', 'company:write'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $companySize = null;
+
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Assert\Length(max: 100)]
     protected ?string $shippingCountry = null;
-
-    #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $companySize = null;
 
     #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
@@ -273,8 +273,17 @@ abstract class CompanyGenerated extends EntityBase
     protected ?string $taxId = null;
 
     #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
-    protected ?\DateTimeImmutable $nextActivityDate = null;
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $timeZone = 'UTC';
+
+    #[Groups(['company:read', 'company:write'])]
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
+    protected ?string $tags = null;
+
+    #[Groups(['company:read', 'company:write'])]
+    #[ORM\Column(name: 'public_prop', type: 'boolean', nullable: true)]
+    protected ?bool $public = null;
 
     #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
@@ -286,45 +295,36 @@ abstract class CompanyGenerated extends EntityBase
     #[Assert\Length(max: 255)]
     protected ?string $companyDomain = null;
 
-    #[Groups(['company:read'])]
-    #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $numberOfAssociatedContacts = null;
+    #[Groups(['company:read', 'company:write'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    protected ?string $stateProvince = null;
 
     #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Assert\Length(max: 100)]
     protected ?string $shippingStateProvince = null;
 
-    #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(type: 'string', length: 500, nullable: true)]
-    #[Assert\Length(max: 500)]
-    protected ?string $tags = null;
+    #[Groups(['company:read'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $numberOfAssociatedDeals = null;
 
     #[Groups(['company:read'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastActivityDate = null;
 
     #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(name: 'public_prop', type: 'boolean', nullable: true)]
-    protected ?bool $public = null;
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $nextActivityDate = null;
 
     #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Assert\Length(max: 50)]
     protected ?string $lifecycleStage = null;
 
-    #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $timeZone = 'UTC';
-
-    #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Assert\Length(max: 100)]
-    protected ?string $stateProvince = null;
-
     #[Groups(['company:read'])]
     #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $numberOfAssociatedDeals = null;
+    protected ?int $numberOfAssociatedContacts = null;
 
 
     public function __construct()
@@ -444,16 +444,6 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getShippingPostalCode(): ?string    {
-        return $this->shippingPostalCode;
-    }
-
-    public function setShippingPostalCode(?string $shippingPostalCode): self
-    {
-        $this->shippingPostalCode = $shippingPostalCode;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Campaign>
      */
@@ -478,6 +468,16 @@ abstract class CompanyGenerated extends EntityBase
                 $campaign->setCompanies(null);
             }
         }
+        return $this;
+    }
+
+    public function getShippingPostalCode(): ?string    {
+        return $this->shippingPostalCode;
+    }
+
+    public function setShippingPostalCode(?string $shippingPostalCode): self
+    {
+        $this->shippingPostalCode = $shippingPostalCode;
         return $this;
     }
 
@@ -683,16 +683,6 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getShippingCountry(): ?string    {
-        return $this->shippingCountry;
-    }
-
-    public function setShippingCountry(?string $shippingCountry): self
-    {
-        $this->shippingCountry = $shippingCountry;
-        return $this;
-    }
-
     public function getCompanySize(): ?int    {
         return $this->companySize;
     }
@@ -700,6 +690,16 @@ abstract class CompanyGenerated extends EntityBase
     public function setCompanySize(?int $companySize): self
     {
         $this->companySize = $companySize;
+        return $this;
+    }
+
+    public function getShippingCountry(): ?string    {
+        return $this->shippingCountry;
+    }
+
+    public function setShippingCountry(?string $shippingCountry): self
+    {
+        $this->shippingCountry = $shippingCountry;
         return $this;
     }
 
@@ -1003,14 +1003,39 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getNextActivityDate(): ?\DateTimeImmutable    {
-        return $this->nextActivityDate;
+    public function getTimeZone(): string    {
+        return $this->timeZone;
     }
 
-    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
+    public function setTimeZone(string $timeZone): self
     {
-        $this->nextActivityDate = $nextActivityDate;
+        $this->timeZone = $timeZone;
         return $this;
+    }
+
+    public function getTags(): ?string    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): self
+    {
+        $this->tags = $tags;
+        return $this;
+    }
+
+    public function getPublic(): ?bool    {
+        return $this->public;
+    }
+
+    public function setPublic(?bool $public): self
+    {
+        $this->public = $public;
+        return $this;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->public === true;
     }
 
     public function getLeadStatus(): ?string    {
@@ -1033,13 +1058,13 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getNumberOfAssociatedContacts(): ?int    {
-        return $this->numberOfAssociatedContacts;
+    public function getStateProvince(): ?string    {
+        return $this->stateProvince;
     }
 
-    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
+    public function setStateProvince(?string $stateProvince): self
     {
-        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
+        $this->stateProvince = $stateProvince;
         return $this;
     }
 
@@ -1053,13 +1078,13 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getTags(): ?string    {
-        return $this->tags;
+    public function getNumberOfAssociatedDeals(): ?int    {
+        return $this->numberOfAssociatedDeals;
     }
 
-    public function setTags(?string $tags): self
+    public function setNumberOfAssociatedDeals(?int $numberOfAssociatedDeals): self
     {
-        $this->tags = $tags;
+        $this->numberOfAssociatedDeals = $numberOfAssociatedDeals;
         return $this;
     }
 
@@ -1073,19 +1098,14 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getPublic(): ?bool    {
-        return $this->public;
+    public function getNextActivityDate(): ?\DateTimeImmutable    {
+        return $this->nextActivityDate;
     }
 
-    public function setPublic(?bool $public): self
+    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
     {
-        $this->public = $public;
+        $this->nextActivityDate = $nextActivityDate;
         return $this;
-    }
-
-    public function isPublic(): bool
-    {
-        return $this->public === true;
     }
 
     public function getLifecycleStage(): ?string    {
@@ -1098,33 +1118,13 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getTimeZone(): string    {
-        return $this->timeZone;
+    public function getNumberOfAssociatedContacts(): ?int    {
+        return $this->numberOfAssociatedContacts;
     }
 
-    public function setTimeZone(string $timeZone): self
+    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
     {
-        $this->timeZone = $timeZone;
-        return $this;
-    }
-
-    public function getStateProvince(): ?string    {
-        return $this->stateProvince;
-    }
-
-    public function setStateProvince(?string $stateProvince): self
-    {
-        $this->stateProvince = $stateProvince;
-        return $this;
-    }
-
-    public function getNumberOfAssociatedDeals(): ?int    {
-        return $this->numberOfAssociatedDeals;
-    }
-
-    public function setNumberOfAssociatedDeals(?int $numberOfAssociatedDeals): self
-    {
-        $this->numberOfAssociatedDeals = $numberOfAssociatedDeals;
+        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
         return $this;
     }
 

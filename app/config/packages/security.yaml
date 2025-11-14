@@ -32,6 +32,7 @@ security:
             provider: app_user_provider
             custom_authenticators:
                 - App\Security\LoginFormAuthenticator
+                - App\Security\ApiTokenAuthenticator
             logout:
                 path: app_logout
                 target: app_home
@@ -43,6 +44,7 @@ security:
             login_throttling:
                 max_attempts: 5
                 interval: '15 minutes'
+            entry_point: App\Security\LoginFormAuthenticator
 
     # Access control rules
     access_control:

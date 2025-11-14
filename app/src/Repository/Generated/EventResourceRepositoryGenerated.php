@@ -54,7 +54,7 @@ abstract class EventResourceRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'description' => 'description',            'availabilitySchedule' => 'availabilitySchedule',            'available' => 'available',            'active' => 'active',            'bookable' => 'bookable',            'requiresApproval' => 'requiresApproval',            'autoConfirm' => 'autoConfirm',            'pricePerHour' => 'pricePerHour',            'bookingRules' => 'bookingRules',            'pricePerDay' => 'pricePerDay',            'capacity' => 'capacity',            'city' => 'city',            'equipment' => 'equipment',            'eventBookings' => 'eventBookings',            'geoCoordinates' => 'geoCoordinates',            'location' => 'location',            'type' => 'type',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'description' => 'description',            'availabilitySchedule' => 'availabilitySchedule',            'available' => 'available',            'bookable' => 'bookable',            'active' => 'active',            'requiresApproval' => 'requiresApproval',            'autoConfirm' => 'autoConfirm',            'bookingRules' => 'bookingRules',            'pricePerHour' => 'pricePerHour',            'pricePerDay' => 'pricePerDay',            'capacity' => 'capacity',            'city' => 'city',            'equipment' => 'equipment',            'eventBookings' => 'eventBookings',            'geoCoordinates' => 'geoCoordinates',            'location' => 'location',            'type' => 'type',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class EventResourceRepositoryGenerated extends BaseRepository
      */
     protected function getBooleanFilterFields(): array
     {
-        return [            'available',            'active',            'bookable',            'requiresApproval',            'autoConfirm',        ];
+        return [            'available',            'bookable',            'active',            'requiresApproval',            'autoConfirm',        ];
     }
 
     /**

@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Profile;
+use App\MultiTenant\TenantContext;
 use App\Repository\ProfileRepository;
 use App\Security\Voter\ProfileVoter;
 use App\Form\ProfileType;
@@ -36,6 +37,7 @@ abstract class ProfileControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -205,31 +207,60 @@ abstract class ProfileControllerGenerated extends BaseApiController
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($profile);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $profile->setOrganization($organization);
+                error_log('✅ ProfileController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($profile);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($profile);
 
-                // After create hook
-                $this->afterCreate($profile);
+                    $this->entityManager->persist($profile);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'profile.flash.created_successfully',
-                    ['%name%' => (string) $profile],
-                    'profile'
-                ));
+                    // After create hook
+                    $this->afterCreate($profile);
 
-                return $this->redirectToRoute('profile_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'profile.flash.created_successfully',
+                        ['%name%' => (string) $profile],
+                        'profile'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'profile.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'profile'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $profile;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Profile',
+                            'entityId' => $profile->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('profile_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'profile.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'profile'
+                    ));
+                }
             }
         }
 
@@ -272,33 +303,43 @@ abstract class ProfileControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProfileVoter::EDIT, $profile);
 
+        // Store original organization to preserve it
+        $originalOrganization = $profile->getOrganization();
+
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($profile);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $profile->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($profile);
 
-                // After update hook
-                $this->afterUpdate($profile);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'profile.flash.updated_successfully',
-                    ['%name%' => (string) $profile],
-                    'profile'
-                ));
+                    // After update hook
+                    $this->afterUpdate($profile);
 
-                return $this->redirectToRoute('profile_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'profile.flash.updated_successfully',
+                        ['%name%' => (string) $profile],
+                        'profile'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'profile.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'profile'
-                ));
+                    return $this->redirectToRoute('profile_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'profile.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'profile'
+                    ));
+                }
             }
         }
 
@@ -367,9 +408,22 @@ abstract class ProfileControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProfileVoter::VIEW, $profile);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($profile);
+
         return $this->render('profile/show.html.twig', [
             'profile' => $profile,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in ProfileController to customize displayed properties
+     */
+    protected function buildShowProperties(Profile $profile): array
+    {
+        return [];
     }
 
     // ====================================
@@ -380,12 +434,22 @@ abstract class ProfileControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Profile $profile): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $profile->setOrganization($organization);
+            error_log('✅ ProfileController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ ProfileController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

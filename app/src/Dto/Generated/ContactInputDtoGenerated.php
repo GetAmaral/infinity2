@@ -101,12 +101,12 @@ abstract class ContactInputDtoGenerated
     #[Groups(['contact:write'])]
     public ?string $department = null;
 
-    #[Groups(['contact:write'])]
-    public bool $doNotCall;
-
     #[Assert\Length(max: 100)]
     #[Groups(['contact:write'])]
     public ?string $leadSource = null;
+
+    #[Groups(['contact:write'])]
+    public bool $doNotCall;
 
     #[Groups(['contact:write'])]
     public ?string $preferredContactMethod = null;
@@ -119,7 +119,7 @@ abstract class ContactInputDtoGenerated
     public ?string $document = null;
 
     #[Groups(['contact:write'])]
-    public string $email;
+    public ?string $email = null;
 
     #[Groups(['contact:write'])]
     public ?\DateTimeImmutable $firstTalkDate = null;
@@ -366,16 +366,6 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getDoNotCall(): bool    {
-        return $this->doNotCall;
-    }
-
-    public function setDoNotCall(bool $doNotCall): self
-    {
-        $this->doNotCall = $doNotCall;
-        return $this;
-    }
-
     public function getLeadSource(): ?string    {
         return $this->leadSource;
     }
@@ -383,6 +373,16 @@ abstract class ContactInputDtoGenerated
     public function setLeadSource(?string $leadSource): self
     {
         $this->leadSource = $leadSource;
+        return $this;
+    }
+
+    public function getDoNotCall(): bool    {
+        return $this->doNotCall;
+    }
+
+    public function setDoNotCall(bool $doNotCall): self
+    {
+        $this->doNotCall = $doNotCall;
         return $this;
     }
 
@@ -416,11 +416,11 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getEmail(): string    {
+    public function getEmail(): ?string    {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
         return $this;

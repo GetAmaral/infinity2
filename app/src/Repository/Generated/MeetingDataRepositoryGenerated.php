@@ -64,7 +64,7 @@ abstract class MeetingDataRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'title' => 'title',            'meetingType' => 'meetingType',            'status' => 'status',            'startTime' => 'startTime',            'endTime' => 'endTime',            'duration' => 'duration',            'recordingAvailable' => 'recordingAvailable',            'nextMeetingDate' => 'nextMeetingDate',            'platform' => 'platform',            'tags' => 'tags',            'confidential' => 'confidential',            'recurring' => 'recurring',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'title' => 'title',            'meetingType' => 'meetingType',            'status' => 'status',            'startTime' => 'startTime',            'endTime' => 'endTime',            'duration' => 'duration',            'recordingAvailable' => 'recordingAvailable',            'nextMeetingDate' => 'nextMeetingDate',            'tags' => 'tags',            'platform' => 'platform',            'confidential' => 'confidential',            'recurring' => 'recurring',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**

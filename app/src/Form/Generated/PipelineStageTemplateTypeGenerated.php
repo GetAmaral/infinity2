@@ -9,8 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -56,6 +56,14 @@ abstract class PipelineStageTemplateTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('order', IntegerType::class, [
+            'label' => 'Order',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
         $builder->add('probability', NumberType::class, [
             'label' => 'Probability (%)',
             'required' => true,
@@ -69,17 +77,9 @@ abstract class PipelineStageTemplateTypeGenerated extends AbstractType
             'html5' => true,
         ]);
 
-        $builder->add('order', IntegerType::class, [
-            'label' => 'Order',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'help' => 'Whether this stage template is currently active and available for use',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -111,11 +111,43 @@ abstract class PipelineStageTemplateTypeGenerated extends AbstractType
             'label' => 'Pipeline Template',
             'required' => true,
             'class' => \App\Entity\PipelineTemplate::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'PipelineTemplate',
+                'data-relation-select-route-value' => 'pipeline_template_api_search',
+                'data-relation-select-add-route-value' => 'pipeline_template_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select pipelinetemplate',
                 'class' => 'form-input-modern',
             ],
         ]);
         }
+
+        $builder->add('final', CheckboxType::class, [
+            'label' => 'Final Stage',
+            'required' => false,
+            'help' => 'Whether this is a final/terminal stage (e.g., Won, Lost, Abandoned)',
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
 
         // Exclude nested collections when form is used inside another collection
         if (empty($options['exclude_parent'])) {
@@ -132,22 +164,14 @@ abstract class PipelineStageTemplateTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
-
-        $builder->add('final', CheckboxType::class, [
-            'label' => 'Final Stage',
-            'required' => true,
-            'help' => 'Whether this is a final/terminal stage (e.g., Won, Lost, Abandoned)',
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
 
         $builder->add('stageType', EnumType::class, [
             'label' => 'Stage Type',

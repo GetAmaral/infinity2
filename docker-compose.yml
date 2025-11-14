@@ -28,6 +28,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      mercure:
+        condition: service_healthy
     environment:
       DATABASE_URL: ${DATABASE_URL}
       APP_ENV: ${APP_ENV}
@@ -36,10 +38,20 @@ services:
       FRANKENPHP_NUM_THREADS: ${FRANKENPHP_NUM_THREADS}
       SESSION_COOKIE_DOMAIN: ${SESSION_COOKIE_DOMAIN}
       REDIS_URL: ${REDIS_URL}
+      MERCURE_URL: ${MERCURE_URL}
+      MERCURE_PUBLIC_URL: ${MERCURE_PUBLIC_URL}
+      MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
     volumes:
       - ./app:/app
     ports:
       - "8000:8000"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
       interval: 30s
@@ -83,6 +95,24 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - luminai_network
+
+  mercure:
+    image: dunglas/mercure:latest
+    container_name: luminai_mercure
+    restart: unless-stopped
+    volumes:
+      - ./mercure/Caddyfile:/etc/caddy/Caddyfile:ro
+    command: /usr/bin/caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    ports:
+      - "3000:80"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://localhost:80/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     networks:
       - luminai_network
 

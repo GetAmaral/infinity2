@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\TaxCategory;
+use App\MultiTenant\TenantContext;
 use App\Repository\TaxCategoryRepository;
 use App\Security\Voter\TaxCategoryVoter;
 use App\Form\TaxCategoryType;
@@ -36,6 +37,7 @@ abstract class TaxCategoryControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -199,31 +201,60 @@ abstract class TaxCategoryControllerGenerated extends BaseApiController
         $form = $this->createForm(TaxCategoryType::class, $taxCategory);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($taxCategory);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $taxCategory->setOrganization($organization);
+                error_log('✅ TaxCategoryController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($taxCategory);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($taxCategory);
 
-                // After create hook
-                $this->afterCreate($taxCategory);
+                    $this->entityManager->persist($taxCategory);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'taxcategory.flash.created_successfully',
-                    ['%name%' => (string) $taxCategory],
-                    'taxcategory'
-                ));
+                    // After create hook
+                    $this->afterCreate($taxCategory);
 
-                return $this->redirectToRoute('taxcategory_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'taxcategory.flash.created_successfully',
+                        ['%name%' => (string) $taxCategory],
+                        'taxcategory'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'taxcategory.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'taxcategory'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $taxCategory;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'TaxCategory',
+                            'entityId' => $taxCategory->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('taxcategory_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'taxcategory.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'taxcategory'
+                    ));
+                }
             }
         }
 
@@ -266,33 +297,43 @@ abstract class TaxCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaxCategoryVoter::EDIT, $taxCategory);
 
+        // Store original organization to preserve it
+        $originalOrganization = $taxCategory->getOrganization();
+
         $form = $this->createForm(TaxCategoryType::class, $taxCategory);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($taxCategory);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $taxCategory->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($taxCategory);
 
-                // After update hook
-                $this->afterUpdate($taxCategory);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'taxcategory.flash.updated_successfully',
-                    ['%name%' => (string) $taxCategory],
-                    'taxcategory'
-                ));
+                    // After update hook
+                    $this->afterUpdate($taxCategory);
 
-                return $this->redirectToRoute('taxcategory_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'taxcategory.flash.updated_successfully',
+                        ['%name%' => (string) $taxCategory],
+                        'taxcategory'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'taxcategory.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'taxcategory'
-                ));
+                    return $this->redirectToRoute('taxcategory_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'taxcategory.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'taxcategory'
+                    ));
+                }
             }
         }
 
@@ -361,9 +402,22 @@ abstract class TaxCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TaxCategoryVoter::VIEW, $taxCategory);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($taxCategory);
+
         return $this->render('taxcategory/show.html.twig', [
             'taxCategory' => $taxCategory,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in TaxCategoryController to customize displayed properties
+     */
+    protected function buildShowProperties(TaxCategory $taxCategory): array
+    {
+        return [];
     }
 
     // ====================================
@@ -374,12 +428,22 @@ abstract class TaxCategoryControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(TaxCategory $taxCategory): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $taxCategory->setOrganization($organization);
+            error_log('✅ TaxCategoryController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ TaxCategoryController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

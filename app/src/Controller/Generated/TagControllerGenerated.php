@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Tag;
+use App\MultiTenant\TenantContext;
 use App\Repository\TagRepository;
 use App\Security\Voter\TagVoter;
 use App\Form\TagType;
@@ -36,6 +37,7 @@ abstract class TagControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -207,31 +209,60 @@ abstract class TagControllerGenerated extends BaseApiController
         $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($tag);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $tag->setOrganization($organization);
+                error_log('✅ TagController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($tag);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($tag);
 
-                // After create hook
-                $this->afterCreate($tag);
+                    $this->entityManager->persist($tag);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'tag.flash.created_successfully',
-                    ['%name%' => (string) $tag],
-                    'tag'
-                ));
+                    // After create hook
+                    $this->afterCreate($tag);
 
-                return $this->redirectToRoute('tag_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'tag.flash.created_successfully',
+                        ['%name%' => (string) $tag],
+                        'tag'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'tag.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'tag'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $tag;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Tag',
+                            'entityId' => $tag->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('tag_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'tag.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'tag'
+                    ));
+                }
             }
         }
 
@@ -274,33 +305,43 @@ abstract class TagControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TagVoter::EDIT, $tag);
 
+        // Store original organization to preserve it
+        $originalOrganization = $tag->getOrganization();
+
         $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($tag);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $tag->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($tag);
 
-                // After update hook
-                $this->afterUpdate($tag);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'tag.flash.updated_successfully',
-                    ['%name%' => (string) $tag],
-                    'tag'
-                ));
+                    // After update hook
+                    $this->afterUpdate($tag);
 
-                return $this->redirectToRoute('tag_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'tag.flash.updated_successfully',
+                        ['%name%' => (string) $tag],
+                        'tag'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'tag.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'tag'
-                ));
+                    return $this->redirectToRoute('tag_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'tag.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'tag'
+                    ));
+                }
             }
         }
 
@@ -369,9 +410,22 @@ abstract class TagControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TagVoter::VIEW, $tag);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($tag);
+
         return $this->render('tag/show.html.twig', [
             'tag' => $tag,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in TagController to customize displayed properties
+     */
+    protected function buildShowProperties(Tag $tag): array
+    {
+        return [];
     }
 
     // ====================================
@@ -382,12 +436,22 @@ abstract class TagControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Tag $tag): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $tag->setOrganization($organization);
+            error_log('✅ TagController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ TagController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

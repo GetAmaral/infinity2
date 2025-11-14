@@ -37,10 +37,10 @@ abstract class HolidayInputDtoGenerated
     public ?string $description = null;
 
     #[Groups(['holiday:write'])]
-    public bool $recurring;
+    public ?bool $blocksScheduling = null;
 
     #[Groups(['holiday:write'])]
-    public ?bool $blocksScheduling = null;
+    public bool $recurring;
 
     #[Groups(['holiday:write'])]
     public bool $observed;
@@ -128,16 +128,6 @@ abstract class HolidayInputDtoGenerated
         return $this;
     }
 
-    public function getRecurring(): bool    {
-        return $this->recurring;
-    }
-
-    public function setRecurring(bool $recurring): self
-    {
-        $this->recurring = $recurring;
-        return $this;
-    }
-
     public function getBlocksScheduling(): ?bool    {
         return $this->blocksScheduling;
     }
@@ -145,6 +135,16 @@ abstract class HolidayInputDtoGenerated
     public function setBlocksScheduling(?bool $blocksScheduling): self
     {
         $this->blocksScheduling = $blocksScheduling;
+        return $this;
+    }
+
+    public function getRecurring(): bool    {
+        return $this->recurring;
+    }
+
+    public function setRecurring(bool $recurring): self
+    {
+        $this->recurring = $recurring;
         return $this;
     }
 

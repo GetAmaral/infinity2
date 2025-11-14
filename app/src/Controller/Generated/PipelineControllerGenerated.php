@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Pipeline;
+use App\MultiTenant\TenantContext;
 use App\Repository\PipelineRepository;
 use App\Security\Voter\PipelineVoter;
 use App\Form\PipelineType;
@@ -36,6 +37,7 @@ abstract class PipelineControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -227,31 +229,60 @@ abstract class PipelineControllerGenerated extends BaseApiController
         $form = $this->createForm(PipelineType::class, $pipeline);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($pipeline);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $pipeline->setOrganization($organization);
+                error_log('✅ PipelineController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($pipeline);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($pipeline);
 
-                // After create hook
-                $this->afterCreate($pipeline);
+                    $this->entityManager->persist($pipeline);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'pipeline.flash.created_successfully',
-                    ['%name%' => (string) $pipeline],
-                    'pipeline'
-                ));
+                    // After create hook
+                    $this->afterCreate($pipeline);
 
-                return $this->redirectToRoute('pipeline_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'pipeline.flash.created_successfully',
+                        ['%name%' => (string) $pipeline],
+                        'pipeline'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'pipeline.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'pipeline'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $pipeline;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Pipeline',
+                            'entityId' => $pipeline->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('pipeline_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'pipeline.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'pipeline'
+                    ));
+                }
             }
         }
 
@@ -294,33 +325,43 @@ abstract class PipelineControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(PipelineVoter::EDIT, $pipeline);
 
+        // Store original organization to preserve it
+        $originalOrganization = $pipeline->getOrganization();
+
         $form = $this->createForm(PipelineType::class, $pipeline);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($pipeline);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $pipeline->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($pipeline);
 
-                // After update hook
-                $this->afterUpdate($pipeline);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'pipeline.flash.updated_successfully',
-                    ['%name%' => (string) $pipeline],
-                    'pipeline'
-                ));
+                    // After update hook
+                    $this->afterUpdate($pipeline);
 
-                return $this->redirectToRoute('pipeline_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'pipeline.flash.updated_successfully',
+                        ['%name%' => (string) $pipeline],
+                        'pipeline'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'pipeline.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'pipeline'
-                ));
+                    return $this->redirectToRoute('pipeline_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'pipeline.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'pipeline'
+                    ));
+                }
             }
         }
 
@@ -389,9 +430,22 @@ abstract class PipelineControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(PipelineVoter::VIEW, $pipeline);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($pipeline);
+
         return $this->render('pipeline/show.html.twig', [
             'pipeline' => $pipeline,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in PipelineController to customize displayed properties
+     */
+    protected function buildShowProperties(Pipeline $pipeline): array
+    {
+        return [];
     }
 
     // ====================================
@@ -402,12 +456,22 @@ abstract class PipelineControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Pipeline $pipeline): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $pipeline->setOrganization($organization);
+            error_log('✅ PipelineController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ PipelineController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

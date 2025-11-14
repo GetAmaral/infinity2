@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Agent;
+use App\MultiTenant\TenantContext;
 use App\Repository\AgentRepository;
 use App\Security\Voter\AgentVoter;
 use App\Form\AgentType;
@@ -36,6 +37,7 @@ abstract class AgentControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -83,6 +85,19 @@ abstract class AgentControllerGenerated extends BaseApiController
             'organization' => ($organizationRel = $entity->getOrganization()) ? [
                 'id' => $organizationRel->getId()->toString(),
                 'display' => (string) $organizationRel,
+            ] : null,
+            'whatsappInstanceName' => $entity->getWhatsappInstanceName(),
+            'whatsappPhone' => $entity->getWhatsappPhone(),
+            'whatsappServerUrl' => $entity->getWhatsappServerUrl(),
+            'whatsappApiKey' => $entity->getWhatsappApiKey(),
+            'whatsappActive' => $entity->getWhatsappActive(),
+            'whatsappStatus' => $entity->getWhatsappStatus(),
+            'whatsappWebhookToken' => $entity->getWhatsappWebhookToken(),
+            'whatsappLastConnectedAt' => $entity->getWhatsappLastConnectedAt()?->format('M d, Y'),
+            'whatsappMetadata' => $entity->getWhatsappMetadata(),
+            'treeFlow' => ($treeFlowRel = $entity->getTreeFlow()) ? [
+                'id' => $treeFlowRel->getId()->toString(),
+                'display' => (string) $treeFlowRel,
             ] : null,
             'name' => $entity->getName(),
             'phone' => $entity->getPhone(),
@@ -153,13 +168,13 @@ abstract class AgentControllerGenerated extends BaseApiController
             'create_permission' => AgentVoter::CREATE,
 
             // Property metadata for Twig templates (as PHP arrays)
-            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"phone","label":"Phone","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPhone","isRelationship":false},{"name":"title","label":"Job Title","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTitle","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"available","label":"Available","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailable","isRelationship":false},{"name":"territory","label":"Territory","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTerritory","isRelationship":false},{"name":"quota","label":"Sales Quota","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getQuota","isRelationship":false},{"name":"user","label":"User","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":true,"getter":"getUser","isRelationship":true},{"name":"agentType","label":"AgentType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":true,"getter":"getAgentType","isRelationship":true},{"name":"commissionRate","label":"Commission Rate","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCommissionRate","isRelationship":false},{"name":"startDate","label":"Start Date","type":"date","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getStartDate","isRelationship":false},{"name":"endDate","label":"End Date","type":"date","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getEndDate","isRelationship":false},{"name":"specialization","label":"Specialization","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSpecialization","isRelationship":false},{"name":"languages","label":"Languages","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLanguages","isRelationship":false},{"name":"certifications","label":"Certifications","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCertifications","isRelationship":false},{"name":"totalSales","label":"Total Sales","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getTotalSales","isRelationship":false},{"name":"currentMonthSales","label":"Current Month Sales","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCurrentMonthSales","isRelationship":false},{"name":"conversionRate","label":"Conversion Rate","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getConversionRate","isRelationship":false},{"name":"customerSatisfactionScore","label":"CSAT Score","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCustomerSatisfactionScore","isRelationship":false},{"name":"maxConcurrentCustomers","label":"Max Concurrent Customers","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getMaxConcurrentCustomers","isRelationship":false},{"name":"currentCustomerCount","label":"Current Customer Count","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCurrentCustomerCount","isRelationship":false},{"name":"averageResponseTime","label":"Avg Response Time","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getAverageResponseTime","isRelationship":false},{"name":"skills","label":"Skills","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSkills","isRelationship":false},{"name":"prompt","label":"AI Prompt","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPrompt","isRelationship":false},{"name":"talks","label":"Talks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalks","isRelationship":true}]', true),
+            'listProperties' => json_decode('[{"name":"whatsappInstanceName","label":"WhatsApp Instance Name","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappInstanceName","isRelationship":false},{"name":"whatsappPhone","label":"WhatsApp Phone","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappPhone","isRelationship":false},{"name":"whatsappServerUrl","label":"WhatsApp Server URL","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappServerUrl","isRelationship":false},{"name":"whatsappApiKey","label":"WhatsApp API Key","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappApiKey","isRelationship":false},{"name":"whatsappActive","label":"WhatsApp Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappActive","isRelationship":false},{"name":"whatsappStatus","label":"WhatsApp Status","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappStatus","isRelationship":false},{"name":"whatsappWebhookToken","label":"WhatsApp Webhook Token","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappWebhookToken","isRelationship":false},{"name":"whatsappLastConnectedAt","label":"WhatsApp Last Connected At","type":"datetime_immutable","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappLastConnectedAt","isRelationship":false},{"name":"whatsappMetadata","label":"WhatsApp Metadata","type":"json","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappMetadata","isRelationship":false},{"name":"treeFlow","label":"Tree Flow","type":"relation","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTreeFlow","isRelationship":true},{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"phone","label":"Phone","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPhone","isRelationship":false},{"name":"title","label":"Job Title","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTitle","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"available","label":"Available","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailable","isRelationship":false},{"name":"territory","label":"Territory","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTerritory","isRelationship":false},{"name":"quota","label":"Sales Quota","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getQuota","isRelationship":false},{"name":"user","label":"User","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":true,"getter":"getUser","isRelationship":true},{"name":"agentType","label":"AgentType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":true,"getter":"getAgentType","isRelationship":true},{"name":"commissionRate","label":"Commission Rate","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCommissionRate","isRelationship":false},{"name":"startDate","label":"Start Date","type":"date","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getStartDate","isRelationship":false},{"name":"endDate","label":"End Date","type":"date","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getEndDate","isRelationship":false},{"name":"specialization","label":"Specialization","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSpecialization","isRelationship":false},{"name":"languages","label":"Languages","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLanguages","isRelationship":false},{"name":"certifications","label":"Certifications","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCertifications","isRelationship":false},{"name":"totalSales","label":"Total Sales","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getTotalSales","isRelationship":false},{"name":"currentMonthSales","label":"Current Month Sales","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCurrentMonthSales","isRelationship":false},{"name":"conversionRate","label":"Conversion Rate","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getConversionRate","isRelationship":false},{"name":"customerSatisfactionScore","label":"CSAT Score","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCustomerSatisfactionScore","isRelationship":false},{"name":"maxConcurrentCustomers","label":"Max Concurrent Customers","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getMaxConcurrentCustomers","isRelationship":false},{"name":"currentCustomerCount","label":"Current Customer Count","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCurrentCustomerCount","isRelationship":false},{"name":"averageResponseTime","label":"Avg Response Time","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getAverageResponseTime","isRelationship":false},{"name":"skills","label":"Skills","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSkills","isRelationship":false},{"name":"prompt","label":"AI Prompt","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPrompt","isRelationship":false},{"name":"talks","label":"Talks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalks","isRelationship":true}]', true),
             'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"prompt","label":"AI Prompt","type":"text"}]', true),
             'filterableFields' => json_decode('[]', true),
             'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"user","label":"User"},{"name":"agentType","label":"AgentType"},{"name":"prompt","label":"AI Prompt"},{"name":"talks","label":"Talks"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"phone","label":"Phone","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPhone","isRelationship":false},{"name":"title","label":"Job Title","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTitle","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"available","label":"Available","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailable","isRelationship":false},{"name":"territory","label":"Territory","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTerritory","isRelationship":false},{"name":"quota","label":"Sales Quota","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getQuota","isRelationship":false},{"name":"user","label":"User","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":true,"getter":"getUser","isRelationship":true},{"name":"agentType","label":"AgentType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":true,"getter":"getAgentType","isRelationship":true},{"name":"commissionRate","label":"Commission Rate","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCommissionRate","isRelationship":false},{"name":"startDate","label":"Start Date","type":"date","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getStartDate","isRelationship":false},{"name":"endDate","label":"End Date","type":"date","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getEndDate","isRelationship":false},{"name":"specialization","label":"Specialization","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSpecialization","isRelationship":false},{"name":"languages","label":"Languages","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLanguages","isRelationship":false},{"name":"certifications","label":"Certifications","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCertifications","isRelationship":false},{"name":"totalSales","label":"Total Sales","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getTotalSales","isRelationship":false},{"name":"currentMonthSales","label":"Current Month Sales","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCurrentMonthSales","isRelationship":false},{"name":"conversionRate","label":"Conversion Rate","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getConversionRate","isRelationship":false},{"name":"customerSatisfactionScore","label":"CSAT Score","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCustomerSatisfactionScore","isRelationship":false},{"name":"maxConcurrentCustomers","label":"Max Concurrent Customers","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getMaxConcurrentCustomers","isRelationship":false},{"name":"currentCustomerCount","label":"Current Customer Count","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCurrentCustomerCount","isRelationship":false},{"name":"averageResponseTime","label":"Avg Response Time","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getAverageResponseTime","isRelationship":false},{"name":"skills","label":"Skills","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSkills","isRelationship":false},{"name":"prompt","label":"AI Prompt","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPrompt","isRelationship":false},{"name":"talks","label":"Talks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalks","isRelationship":true}]',
+            'list_fields' => '[{"name":"whatsappInstanceName","label":"WhatsApp Instance Name","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappInstanceName","isRelationship":false},{"name":"whatsappPhone","label":"WhatsApp Phone","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappPhone","isRelationship":false},{"name":"whatsappServerUrl","label":"WhatsApp Server URL","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappServerUrl","isRelationship":false},{"name":"whatsappApiKey","label":"WhatsApp API Key","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappApiKey","isRelationship":false},{"name":"whatsappActive","label":"WhatsApp Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappActive","isRelationship":false},{"name":"whatsappStatus","label":"WhatsApp Status","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappStatus","isRelationship":false},{"name":"whatsappWebhookToken","label":"WhatsApp Webhook Token","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappWebhookToken","isRelationship":false},{"name":"whatsappLastConnectedAt","label":"WhatsApp Last Connected At","type":"datetime_immutable","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappLastConnectedAt","isRelationship":false},{"name":"whatsappMetadata","label":"WhatsApp Metadata","type":"json","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWhatsappMetadata","isRelationship":false},{"name":"treeFlow","label":"Tree Flow","type":"relation","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTreeFlow","isRelationship":true},{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"phone","label":"Phone","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPhone","isRelationship":false},{"name":"title","label":"Job Title","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTitle","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"available","label":"Available","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAvailable","isRelationship":false},{"name":"territory","label":"Territory","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"exact","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTerritory","isRelationship":false},{"name":"quota","label":"Sales Quota","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getQuota","isRelationship":false},{"name":"user","label":"User","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":true,"getter":"getUser","isRelationship":true},{"name":"agentType","label":"AgentType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":true,"getter":"getAgentType","isRelationship":true},{"name":"commissionRate","label":"Commission Rate","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCommissionRate","isRelationship":false},{"name":"startDate","label":"Start Date","type":"date","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getStartDate","isRelationship":false},{"name":"endDate","label":"End Date","type":"date","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getEndDate","isRelationship":false},{"name":"specialization","label":"Specialization","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":"partial","filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSpecialization","isRelationship":false},{"name":"languages","label":"Languages","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLanguages","isRelationship":false},{"name":"certifications","label":"Certifications","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCertifications","isRelationship":false},{"name":"totalSales","label":"Total Sales","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getTotalSales","isRelationship":false},{"name":"currentMonthSales","label":"Current Month Sales","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCurrentMonthSales","isRelationship":false},{"name":"conversionRate","label":"Conversion Rate","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getConversionRate","isRelationship":false},{"name":"customerSatisfactionScore","label":"CSAT Score","type":"decimal","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCustomerSatisfactionScore","isRelationship":false},{"name":"maxConcurrentCustomers","label":"Max Concurrent Customers","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getMaxConcurrentCustomers","isRelationship":false},{"name":"currentCustomerCount","label":"Current Customer Count","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getCurrentCustomerCount","isRelationship":false},{"name":"averageResponseTime","label":"Avg Response Time","type":"integer","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getAverageResponseTime","isRelationship":false},{"name":"skills","label":"Skills","type":"text","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSkills","isRelationship":false},{"name":"prompt","label":"AI Prompt","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPrompt","isRelationship":false},{"name":"talks","label":"Talks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalks","isRelationship":true}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"prompt","label":"AI Prompt","type":"text"}]',
             'filterable_fields' => '[]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"user","label":"User"},{"name":"agentType","label":"AgentType"},{"name":"prompt","label":"AI Prompt"},{"name":"talks","label":"Talks"}]',
@@ -226,31 +241,60 @@ abstract class AgentControllerGenerated extends BaseApiController
         $form = $this->createForm(AgentType::class, $agent);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($agent);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $agent->setOrganization($organization);
+                error_log('✅ AgentController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($agent);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($agent);
 
-                // After create hook
-                $this->afterCreate($agent);
+                    $this->entityManager->persist($agent);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'agent.flash.created_successfully',
-                    ['%name%' => (string) $agent],
-                    'agent'
-                ));
+                    // After create hook
+                    $this->afterCreate($agent);
 
-                return $this->redirectToRoute('agent_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'agent.flash.created_successfully',
+                        ['%name%' => (string) $agent],
+                        'agent'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'agent.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'agent'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $agent;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Agent',
+                            'entityId' => $agent->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('agent_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'agent.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'agent'
+                    ));
+                }
             }
         }
 
@@ -293,33 +337,43 @@ abstract class AgentControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AgentVoter::EDIT, $agent);
 
+        // Store original organization to preserve it
+        $originalOrganization = $agent->getOrganization();
+
         $form = $this->createForm(AgentType::class, $agent);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($agent);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $agent->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($agent);
 
-                // After update hook
-                $this->afterUpdate($agent);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'agent.flash.updated_successfully',
-                    ['%name%' => (string) $agent],
-                    'agent'
-                ));
+                    // After update hook
+                    $this->afterUpdate($agent);
 
-                return $this->redirectToRoute('agent_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'agent.flash.updated_successfully',
+                        ['%name%' => (string) $agent],
+                        'agent'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'agent.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'agent'
-                ));
+                    return $this->redirectToRoute('agent_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'agent.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'agent'
+                    ));
+                }
             }
         }
 
@@ -388,9 +442,22 @@ abstract class AgentControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AgentVoter::VIEW, $agent);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($agent);
+
         return $this->render('agent/show.html.twig', [
             'agent' => $agent,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in AgentController to customize displayed properties
+     */
+    protected function buildShowProperties(Agent $agent): array
+    {
+        return [];
     }
 
     // ====================================
@@ -401,12 +468,22 @@ abstract class AgentControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Agent $agent): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $agent->setOrganization($organization);
+            error_log('✅ AgentController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ AgentController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

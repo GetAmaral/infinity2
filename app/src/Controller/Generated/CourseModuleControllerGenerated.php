@@ -202,31 +202,53 @@ abstract class CourseModuleControllerGenerated extends BaseApiController
         $form = $this->createForm(CourseModuleType::class, $courseModule);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($courseModule);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($courseModule);
 
-                $this->entityManager->persist($courseModule);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($courseModule);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($courseModule);
+                    // After create hook
+                    $this->afterCreate($courseModule);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'coursemodule.flash.created_successfully',
-                    ['%name%' => (string) $courseModule],
-                    'coursemodule'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'coursemodule.flash.created_successfully',
+                        ['%name%' => (string) $courseModule],
+                        'coursemodule'
+                    ));
 
-                return $this->redirectToRoute('coursemodule_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'coursemodule.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'coursemodule'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $courseModule;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'CourseModule',
+                            'entityId' => $courseModule->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('coursemodule_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'coursemodule.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'coursemodule'
+                    ));
+                }
             }
         }
 
@@ -272,30 +294,32 @@ abstract class CourseModuleControllerGenerated extends BaseApiController
         $form = $this->createForm(CourseModuleType::class, $courseModule);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($courseModule);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($courseModule);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($courseModule);
+                    // After update hook
+                    $this->afterUpdate($courseModule);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'coursemodule.flash.updated_successfully',
-                    ['%name%' => (string) $courseModule],
-                    'coursemodule'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'coursemodule.flash.updated_successfully',
+                        ['%name%' => (string) $courseModule],
+                        'coursemodule'
+                    ));
 
-                return $this->redirectToRoute('coursemodule_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('coursemodule_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'coursemodule.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'coursemodule'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'coursemodule.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'coursemodule'
+                    ));
+                }
             }
         }
 
@@ -364,9 +388,22 @@ abstract class CourseModuleControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CourseModuleVoter::VIEW, $courseModule);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($courseModule);
+
         return $this->render('coursemodule/show.html.twig', [
             'courseModule' => $courseModule,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in CourseModuleController to customize displayed properties
+     */
+    protected function buildShowProperties(CourseModule $courseModule): array
+    {
+        return [];
     }
 
     // ====================================
@@ -377,12 +414,10 @@ abstract class CourseModuleControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(CourseModule $courseModule): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

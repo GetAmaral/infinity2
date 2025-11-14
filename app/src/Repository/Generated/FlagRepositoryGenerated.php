@@ -43,7 +43,7 @@ abstract class FlagRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'name',            'category',            'description',            'color',            'icon',            'entityType',        ];
+        return [            'name',            'description',            'category',            'color',            'icon',            'entityType',        ];
     }
 
     /**
@@ -116,8 +116,8 @@ abstract class FlagRepositoryGenerated extends BaseRepository
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
             'name' => $entity->getName(),
-            'category' => $entity->getCategory(),
             'description' => $entity->getDescription(),
+            'category' => $entity->getCategory(),
             'color' => $entity->getColor(),
             'icon' => $entity->getIcon(),
             'entityType' => $entity->getEntityType(),

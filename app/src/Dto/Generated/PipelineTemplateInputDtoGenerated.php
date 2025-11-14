@@ -29,10 +29,10 @@ abstract class PipelineTemplateInputDtoGenerated
     public ?string $organization = null;
 
     #[Groups(['pipelinetemplate:write'])]
-    public string $name;
+    public bool $default = false;
 
     #[Groups(['pipelinetemplate:write'])]
-    public bool $default = false;
+    public string $name;
 
     #[Groups(['pipelinetemplate:write'])]
     public ?string $description = null;
@@ -47,10 +47,10 @@ abstract class PipelineTemplateInputDtoGenerated
     public ?int $estimatedDuration = null;
 
     #[Groups(['pipelinetemplate:write'])]
-    public ?string $industry = null;
+    public int $stageCount;
 
     #[Groups(['pipelinetemplate:write'])]
-    public int $stageCount;
+    public ?string $industry = null;
 
     #[Groups(['pipelinetemplate:write'])]
     public ?string $targetDealSize = null;
@@ -83,16 +83,6 @@ abstract class PipelineTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getDefault(): bool    {
         return $this->default;
     }
@@ -100,6 +90,16 @@ abstract class PipelineTemplateInputDtoGenerated
     public function setDefault(bool $default): self
     {
         $this->default = $default;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -143,16 +143,6 @@ abstract class PipelineTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getIndustry(): ?string    {
-        return $this->industry;
-    }
-
-    public function setIndustry(?string $industry): self
-    {
-        $this->industry = $industry;
-        return $this;
-    }
-
     public function getStageCount(): int    {
         return $this->stageCount;
     }
@@ -160,6 +150,16 @@ abstract class PipelineTemplateInputDtoGenerated
     public function setStageCount(int $stageCount): self
     {
         $this->stageCount = $stageCount;
+        return $this;
+    }
+
+    public function getIndustry(): ?string    {
+        return $this->industry;
+    }
+
+    public function setIndustry(?string $industry): self
+    {
+        $this->industry = $industry;
         return $this;
     }
 

@@ -87,8 +87,6 @@ abstract class UserOutputDtoGenerated
 
     public string $email;
 
-    public ?\DateTimeImmutable $emailVerifiedAt = null;
-
     /**
      * grantedRoles collection
      * @var RoleOutputDto[]
@@ -113,13 +111,15 @@ abstract class UserOutputDtoGenerated
      */
     public array $ownedDeals = [];
 
+    public ?\DateTimeImmutable $emailVerifiedAt = null;
+
+    public bool $verified;
+
     /**
      * eventAttendances collection
      * @var EventAttendeeOutputDto[]
      */
     public array $eventAttendances = [];
-
-    public bool $verified;
 
     public bool $termsSigned;
 
@@ -135,9 +135,9 @@ abstract class UserOutputDtoGenerated
 
     public ?string $openAiApiKey = null;
 
-    public ?\DateTimeImmutable $lastLoginAt = null;
-
     public ?int $gender = null;
+
+    public ?\DateTimeImmutable $lastLoginAt = null;
 
     public ?\DateTimeImmutable $lockedUntil = null;
 
@@ -309,13 +309,13 @@ abstract class UserOutputDtoGenerated
 
     public ?string $officeLocation = null;
 
-    public ?string $employeeId = null;
-
     /**
      * profiles collection
      * @var ProfileOutputDto[]
      */
     public array $profiles = [];
+
+    public ?string $employeeId = null;
 
     public ?\DateTimeImmutable $hireDate = null;
 
@@ -369,13 +369,13 @@ abstract class UserOutputDtoGenerated
 
     public ?\DateTimeImmutable $lastActivityAt = null;
 
-    public ?string $status = null;
-
     /**
      * talks collection
      * @var TalkOutputDto[]
      */
     public array $talks = [];
+
+    public ?string $status = null;
 
     public ?string $statusMessage = null;
 
@@ -536,16 +536,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
-        return $this->emailVerifiedAt;
-    }
-
-    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
-    {
-        $this->emailVerifiedAt = $emailVerifiedAt;
-        return $this;
-    }
-
     public function getGrantedRoles(): array    {
         return $this->grantedRoles;
     }
@@ -586,13 +576,13 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getEventAttendances(): array    {
-        return $this->eventAttendances;
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
+        return $this->emailVerifiedAt;
     }
 
-    public function setEventAttendances(array $eventAttendances): self
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
     {
-        $this->eventAttendances = $eventAttendances;
+        $this->emailVerifiedAt = $emailVerifiedAt;
         return $this;
     }
 
@@ -603,6 +593,16 @@ abstract class UserOutputDtoGenerated
     public function setVerified(bool $verified): self
     {
         $this->verified = $verified;
+        return $this;
+    }
+
+    public function getEventAttendances(): array    {
+        return $this->eventAttendances;
+    }
+
+    public function setEventAttendances(array $eventAttendances): self
+    {
+        $this->eventAttendances = $eventAttendances;
         return $this;
     }
 
@@ -676,16 +676,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getLastLoginAt(): ?\DateTimeImmutable    {
-        return $this->lastLoginAt;
-    }
-
-    public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
-    {
-        $this->lastLoginAt = $lastLoginAt;
-        return $this;
-    }
-
     public function getGender(): ?int    {
         return $this->gender;
     }
@@ -693,6 +683,16 @@ abstract class UserOutputDtoGenerated
     public function setGender(?int $gender): self
     {
         $this->gender = $gender;
+        return $this;
+    }
+
+    public function getLastLoginAt(): ?\DateTimeImmutable    {
+        return $this->lastLoginAt;
+    }
+
+    public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
+    {
+        $this->lastLoginAt = $lastLoginAt;
         return $this;
     }
 
@@ -1386,16 +1386,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getEmployeeId(): ?string    {
-        return $this->employeeId;
-    }
-
-    public function setEmployeeId(?string $employeeId): self
-    {
-        $this->employeeId = $employeeId;
-        return $this;
-    }
-
     public function getProfiles(): array    {
         return $this->profiles;
     }
@@ -1403,6 +1393,16 @@ abstract class UserOutputDtoGenerated
     public function setProfiles(array $profiles): self
     {
         $this->profiles = $profiles;
+        return $this;
+    }
+
+    public function getEmployeeId(): ?string    {
+        return $this->employeeId;
+    }
+
+    public function setEmployeeId(?string $employeeId): self
+    {
+        $this->employeeId = $employeeId;
         return $this;
     }
 
@@ -1626,16 +1626,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getStatus(): ?string    {
-        return $this->status;
-    }
-
-    public function setStatus(?string $status): self
-    {
-        $this->status = $status;
-        return $this;
-    }
-
     public function getTalks(): array    {
         return $this->talks;
     }
@@ -1643,6 +1633,16 @@ abstract class UserOutputDtoGenerated
     public function setTalks(array $talks): self
     {
         $this->talks = $talks;
+        return $this;
+    }
+
+    public function getStatus(): ?string    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
         return $this;
     }
 

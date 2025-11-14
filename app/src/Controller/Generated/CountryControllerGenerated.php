@@ -227,31 +227,53 @@ abstract class CountryControllerGenerated extends BaseApiController
         $form = $this->createForm(CountryType::class, $country);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($country);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($country);
 
-                $this->entityManager->persist($country);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($country);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($country);
+                    // After create hook
+                    $this->afterCreate($country);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'country.flash.created_successfully',
-                    ['%name%' => (string) $country],
-                    'country'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'country.flash.created_successfully',
+                        ['%name%' => (string) $country],
+                        'country'
+                    ));
 
-                return $this->redirectToRoute('country_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'country.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'country'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $country;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Country',
+                            'entityId' => $country->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('country_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'country.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'country'
+                    ));
+                }
             }
         }
 
@@ -297,30 +319,32 @@ abstract class CountryControllerGenerated extends BaseApiController
         $form = $this->createForm(CountryType::class, $country);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($country);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($country);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($country);
+                    // After update hook
+                    $this->afterUpdate($country);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'country.flash.updated_successfully',
-                    ['%name%' => (string) $country],
-                    'country'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'country.flash.updated_successfully',
+                        ['%name%' => (string) $country],
+                        'country'
+                    ));
 
-                return $this->redirectToRoute('country_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('country_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'country.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'country'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'country.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'country'
+                    ));
+                }
             }
         }
 
@@ -389,9 +413,22 @@ abstract class CountryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CountryVoter::VIEW, $country);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($country);
+
         return $this->render('country/show.html.twig', [
             'country' => $country,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in CountryController to customize displayed properties
+     */
+    protected function buildShowProperties(Country $country): array
+    {
+        return [];
     }
 
     // ====================================
@@ -402,12 +439,10 @@ abstract class CountryControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(Country $country): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

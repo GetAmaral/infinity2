@@ -59,16 +59,16 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      category:
+        description: "The category or classification of the lost reason (e.g., PRICING, COMPETITION, TIMING)"
+        example: "PRICING"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       deals:
         writable: false
         description: "Collection of deals that were lost for this reason"
         example: "[]"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
-      category:
-        description: "The category or classification of the lost reason (e.g., PRICING, COMPETITION, TIMING)"
-        example: "PRICING"
         # Advanced filters
         filters:
           - type: OrderFilter

@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\ProductCategory;
+use App\MultiTenant\TenantContext;
 use App\Repository\ProductCategoryRepository;
 use App\Security\Voter\ProductCategoryVoter;
 use App\Form\ProductCategoryType;
@@ -36,6 +37,7 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -209,31 +211,60 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
         $form = $this->createForm(ProductCategoryType::class, $productCategory);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($productCategory);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $productCategory->setOrganization($organization);
+                error_log('✅ ProductCategoryController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($productCategory);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($productCategory);
 
-                // After create hook
-                $this->afterCreate($productCategory);
+                    $this->entityManager->persist($productCategory);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'productcategory.flash.created_successfully',
-                    ['%name%' => (string) $productCategory],
-                    'productcategory'
-                ));
+                    // After create hook
+                    $this->afterCreate($productCategory);
 
-                return $this->redirectToRoute('productcategory_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'productcategory.flash.created_successfully',
+                        ['%name%' => (string) $productCategory],
+                        'productcategory'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'productcategory.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'productcategory'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $productCategory;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'ProductCategory',
+                            'entityId' => $productCategory->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('productcategory_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'productcategory.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'productcategory'
+                    ));
+                }
             }
         }
 
@@ -276,33 +307,43 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductCategoryVoter::EDIT, $productCategory);
 
+        // Store original organization to preserve it
+        $originalOrganization = $productCategory->getOrganization();
+
         $form = $this->createForm(ProductCategoryType::class, $productCategory);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($productCategory);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $productCategory->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($productCategory);
 
-                // After update hook
-                $this->afterUpdate($productCategory);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'productcategory.flash.updated_successfully',
-                    ['%name%' => (string) $productCategory],
-                    'productcategory'
-                ));
+                    // After update hook
+                    $this->afterUpdate($productCategory);
 
-                return $this->redirectToRoute('productcategory_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'productcategory.flash.updated_successfully',
+                        ['%name%' => (string) $productCategory],
+                        'productcategory'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'productcategory.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'productcategory'
-                ));
+                    return $this->redirectToRoute('productcategory_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'productcategory.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'productcategory'
+                    ));
+                }
             }
         }
 
@@ -371,9 +412,22 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductCategoryVoter::VIEW, $productCategory);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($productCategory);
+
         return $this->render('productcategory/show.html.twig', [
             'productCategory' => $productCategory,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in ProductCategoryController to customize displayed properties
+     */
+    protected function buildShowProperties(ProductCategory $productCategory): array
+    {
+        return [];
     }
 
     // ====================================
@@ -384,12 +438,22 @@ abstract class ProductCategoryControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(ProductCategory $productCategory): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $productCategory->setOrganization($organization);
+            error_log('✅ ProductCategoryController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ ProductCategoryController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

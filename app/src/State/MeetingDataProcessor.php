@@ -123,13 +123,13 @@ class MeetingDataProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('minutes', $requestData)) {
             $entity->setMinutes($data->minutes);
         }
-        // attendees
-        if (!$isPatch || array_key_exists('attendees', $requestData)) {
-            $entity->setAttendees($data->attendees);
-        }
         // meetingId
         if (!$isPatch || array_key_exists('meetingId', $requestData)) {
             $entity->setMeetingId($data->meetingId);
+        }
+        // attendees
+        if (!$isPatch || array_key_exists('attendees', $requestData)) {
+            $entity->setAttendees($data->attendees);
         }
         // absentees
         if (!$isPatch || array_key_exists('absentees', $requestData)) {
@@ -167,13 +167,13 @@ class MeetingDataProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('organizer', $requestData)) {
             $entity->setOrganizer($data->organizer);
         }
-        // platform
-        if (!$isPatch || array_key_exists('platform', $requestData)) {
-            $entity->setPlatform($data->platform);
-        }
         // tags
         if (!$isPatch || array_key_exists('tags', $requestData)) {
             $entity->setTags($data->tags);
+        }
+        // platform
+        if (!$isPatch || array_key_exists('platform', $requestData)) {
+            $entity->setPlatform($data->platform);
         }
         // confidential
         if (!$isPatch || array_key_exists('confidential', $requestData)) {

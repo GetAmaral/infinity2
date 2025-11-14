@@ -33,13 +33,13 @@ abstract class DealTypeOutputDtoGenerated
 
     public ?string $category = null;
 
-    public string $color;
-
     /**
      * deals collection
      * @var DealOutputDto[]
      */
     public array $deals = [];
+
+    public string $color;
 
     public string $icon;
 
@@ -110,16 +110,6 @@ abstract class DealTypeOutputDtoGenerated
         return $this;
     }
 
-    public function getColor(): string    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): self
-    {
-        $this->color = $color;
-        return $this;
-    }
-
     public function getDeals(): array    {
         return $this->deals;
     }
@@ -127,6 +117,16 @@ abstract class DealTypeOutputDtoGenerated
     public function setDeals(array $deals): self
     {
         $this->deals = $deals;
+        return $this;
+    }
+
+    public function getColor(): string    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
         return $this;
     }
 

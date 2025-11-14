@@ -202,31 +202,53 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
         $form = $this->createForm(CommunicationMethodType::class, $communicationMethod);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($communicationMethod);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($communicationMethod);
 
-                $this->entityManager->persist($communicationMethod);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($communicationMethod);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($communicationMethod);
+                    // After create hook
+                    $this->afterCreate($communicationMethod);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'communicationmethod.flash.created_successfully',
-                    ['%name%' => (string) $communicationMethod],
-                    'communicationmethod'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'communicationmethod.flash.created_successfully',
+                        ['%name%' => (string) $communicationMethod],
+                        'communicationmethod'
+                    ));
 
-                return $this->redirectToRoute('communicationmethod_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'communicationmethod.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'communicationmethod'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $communicationMethod;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'CommunicationMethod',
+                            'entityId' => $communicationMethod->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('communicationmethod_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'communicationmethod.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'communicationmethod'
+                    ));
+                }
             }
         }
 
@@ -272,30 +294,32 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
         $form = $this->createForm(CommunicationMethodType::class, $communicationMethod);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($communicationMethod);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($communicationMethod);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($communicationMethod);
+                    // After update hook
+                    $this->afterUpdate($communicationMethod);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'communicationmethod.flash.updated_successfully',
-                    ['%name%' => (string) $communicationMethod],
-                    'communicationmethod'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'communicationmethod.flash.updated_successfully',
+                        ['%name%' => (string) $communicationMethod],
+                        'communicationmethod'
+                    ));
 
-                return $this->redirectToRoute('communicationmethod_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('communicationmethod_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'communicationmethod.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'communicationmethod'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'communicationmethod.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'communicationmethod'
+                    ));
+                }
             }
         }
 
@@ -364,9 +388,22 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CommunicationMethodVoter::VIEW, $communicationMethod);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($communicationMethod);
+
         return $this->render('communicationmethod/show.html.twig', [
             'communicationMethod' => $communicationMethod,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in CommunicationMethodController to customize displayed properties
+     */
+    protected function buildShowProperties(CommunicationMethod $communicationMethod): array
+    {
+        return [];
     }
 
     // ====================================
@@ -377,12 +414,10 @@ abstract class CommunicationMethodControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(CommunicationMethod $communicationMethod): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

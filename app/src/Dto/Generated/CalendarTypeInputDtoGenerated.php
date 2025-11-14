@@ -50,19 +50,19 @@ abstract class CalendarTypeInputDtoGenerated
     public string $visibility = 'personal';
 
     #[Groups(['calendartype:write'])]
-    public string $access_level = 'owner_only';
+    public string $accessLevel = 'owner_only';
 
     #[Groups(['calendartype:write'])]
-    public int $sort_order = 100;
+    public int $sortOrder = 100;
 
     #[Groups(['calendartype:write'])]
-    public bool $allow_sharing = true;
+    public bool $allowSharing = true;
 
     #[Groups(['calendartype:write'])]
-    public bool $require_approval = false;
+    public bool $requireApproval = false;
 
     #[Groups(['calendartype:write'])]
-    public ?int $max_calendars_per_user = null;
+    public ?int $maxCalendarsPerUser = null;
 
 
     // Getters and Setters
@@ -97,16 +97,6 @@ abstract class CalendarTypeInputDtoGenerated
         return $this;
     }
 
-    public function getCalendars(): ?string    {
-        return $this->calendars;
-    }
-
-    public function setCalendars(?string $calendars): self
-    {
-        $this->calendars = $calendars;
-        return $this;
-    }
-
     public function getColor(): string    {
         return $this->color;
     }
@@ -114,6 +104,16 @@ abstract class CalendarTypeInputDtoGenerated
     public function setColor(string $color): self
     {
         $this->color = $color;
+        return $this;
+    }
+
+    public function getCalendars(): ?string    {
+        return $this->calendars;
+    }
+
+    public function setCalendars(?string $calendars): self
+    {
+        $this->calendars = $calendars;
         return $this;
     }
 
@@ -157,53 +157,53 @@ abstract class CalendarTypeInputDtoGenerated
         return $this;
     }
 
-    public function getAccess_level(): string    {
-        return $this->access_level;
+    public function getAccessLevel(): string    {
+        return $this->accessLevel;
     }
 
-    public function setAccess_level(string $access_level): self
+    public function setAccessLevel(string $accessLevel): self
     {
-        $this->access_level = $access_level;
+        $this->accessLevel = $accessLevel;
         return $this;
     }
 
-    public function getSort_order(): int    {
-        return $this->sort_order;
+    public function getSortOrder(): int    {
+        return $this->sortOrder;
     }
 
-    public function setSort_order(int $sort_order): self
+    public function setSortOrder(int $sortOrder): self
     {
-        $this->sort_order = $sort_order;
+        $this->sortOrder = $sortOrder;
         return $this;
     }
 
-    public function getAllow_sharing(): bool    {
-        return $this->allow_sharing;
+    public function getAllowSharing(): bool    {
+        return $this->allowSharing;
     }
 
-    public function setAllow_sharing(bool $allow_sharing): self
+    public function setAllowSharing(bool $allowSharing): self
     {
-        $this->allow_sharing = $allow_sharing;
+        $this->allowSharing = $allowSharing;
         return $this;
     }
 
-    public function getRequire_approval(): bool    {
-        return $this->require_approval;
+    public function getRequireApproval(): bool    {
+        return $this->requireApproval;
     }
 
-    public function setRequire_approval(bool $require_approval): self
+    public function setRequireApproval(bool $requireApproval): self
     {
-        $this->require_approval = $require_approval;
+        $this->requireApproval = $requireApproval;
         return $this;
     }
 
-    public function getMax_calendars_per_user(): ?int    {
-        return $this->max_calendars_per_user;
+    public function getMaxCalendarsPerUser(): ?int    {
+        return $this->maxCalendarsPerUser;
     }
 
-    public function setMax_calendars_per_user(?int $max_calendars_per_user): self
+    public function setMaxCalendarsPerUser(?int $maxCalendarsPerUser): self
     {
-        $this->max_calendars_per_user = $max_calendars_per_user;
+        $this->maxCalendarsPerUser = $maxCalendarsPerUser;
         return $this;
     }
 }

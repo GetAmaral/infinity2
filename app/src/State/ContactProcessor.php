@@ -139,13 +139,13 @@ class ContactProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('department', $requestData)) {
             $entity->setDepartment($data->department);
         }
-        // doNotCall
-        if (!$isPatch || array_key_exists('doNotCall', $requestData)) {
-            $entity->setDoNotCall($data->doNotCall);
-        }
         // leadSource
         if (!$isPatch || array_key_exists('leadSource', $requestData)) {
             $entity->setLeadSource($data->leadSource);
+        }
+        // doNotCall
+        if (!$isPatch || array_key_exists('doNotCall', $requestData)) {
+            $entity->setDoNotCall($data->doNotCall);
         }
         // preferredContactMethod
         if (!$isPatch || array_key_exists('preferredContactMethod', $requestData)) {

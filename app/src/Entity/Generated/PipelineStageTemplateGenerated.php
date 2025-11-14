@@ -41,12 +41,12 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
     protected ?string $description = null;
 
     #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
-    #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
-    protected string $probability = '0';
-
-    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(name: 'order_prop', type: 'integer')]
     protected int $order = 0;
+
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
+    #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
+    protected string $probability = '0';
 
     #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'boolean')]
@@ -66,12 +66,12 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
     protected PipelineTemplate $pipelineTemplate;
 
     #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
-    #[ORM\OneToMany(targetEntity: TaskTemplate::class, mappedBy: 'pipelineStageTemplate', fetch: 'LAZY')]
-    protected Collection $tasks;
-
-    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(name: 'final_prop', type: 'boolean')]
     protected bool $final;
+
+    #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
+    #[ORM\OneToMany(targetEntity: TaskTemplate::class, mappedBy: 'pipelineStageTemplate', fetch: 'LAZY')]
+    protected Collection $tasks;
 
     #[Groups(['pipelinestagetemplate:read', 'pipelinestagetemplate:write'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -127,16 +127,6 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
         return $this;
     }
 
-    public function getProbability(): string    {
-        return $this->probability;
-    }
-
-    public function setProbability(string $probability): self
-    {
-        $this->probability = $probability;
-        return $this;
-    }
-
     public function getOrder(): int    {
         return $this->order;
     }
@@ -144,6 +134,16 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
     public function setOrder(int $order): self
     {
         $this->order = $order;
+        return $this;
+    }
+
+    public function getProbability(): string    {
+        return $this->probability;
+    }
+
+    public function setProbability(string $probability): self
+    {
+        $this->probability = $probability;
         return $this;
     }
 
@@ -193,6 +193,21 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
         return $this;
     }
 
+    public function getFinal(): bool    {
+        return $this->final;
+    }
+
+    public function setFinal(bool $final): self
+    {
+        $this->final = $final;
+        return $this;
+    }
+
+    public function isFinal(): bool
+    {
+        return $this->final === true;
+    }
+
     /**
      * @return Collection<int, TaskTemplate>
      */
@@ -218,21 +233,6 @@ abstract class PipelineStageTemplateGenerated extends EntityBase
             }
         }
         return $this;
-    }
-
-    public function getFinal(): bool    {
-        return $this->final;
-    }
-
-    public function setFinal(bool $final): self
-    {
-        $this->final = $final;
-        return $this;
-    }
-
-    public function isFinal(): bool
-    {
-        return $this->final === true;
     }
 
     public function getStageType(): string    {

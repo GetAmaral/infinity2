@@ -32,7 +32,7 @@ abstract class EventResourceBookingGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime_immutable')]
     protected \DateTimeImmutable $startTime;
 
     #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
@@ -40,7 +40,7 @@ abstract class EventResourceBookingGenerated extends EntityBase
     protected ?User $bookedBy = null;
 
     #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime_immutable')]
     protected \DateTimeImmutable $endTime;
 
     #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]
@@ -64,11 +64,11 @@ abstract class EventResourceBookingGenerated extends EntityBase
     protected ?string $totalAmount = '0';
 
     #[Groups(['eventresourcebooking:read'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $confirmedAt = null;
 
     #[Groups(['eventresourcebooking:read'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $cancelledAt = null;
 
     #[Groups(['eventresourcebooking:read', 'eventresourcebooking:write'])]

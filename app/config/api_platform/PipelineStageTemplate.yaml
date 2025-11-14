@@ -59,6 +59,12 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      order:
+        description: "..."
+        example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       probability:
         description: "The probability percentage (0-100) that a deal in this stage will close successfully. Used for weighted pipeline forecasting."
         example: "75.50"
@@ -66,12 +72,6 @@ resources:
         filters:
           - type: OrderFilter
           - type: NumericFilter
-      order:
-        description: "..."
-        example: "..."
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       active:
         description: "Indicates whether this pipeline stage template is active and available for creating new pipeline instances"
         example: "true"
@@ -95,12 +95,6 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      tasks:
-        description: "..."
-        example: "..."
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       final:
         description: "Indicates if this is a final\/terminal stage where deals cannot progress further (e.g., Won, Lost, Closed)"
         example: "false"
@@ -108,6 +102,12 @@ resources:
         filters:
           - type: OrderFilter
           - type: BooleanFilter
+      tasks:
+        description: "..."
+        example: "..."
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       stageType:
         description: "Categorizes the stage type: \"active\" for in-progress stages, \"won\" for successful closes, \"lost\" for unsuccessful closes"
         example: "\"active\""

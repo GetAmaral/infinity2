@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
+use App\Dto\TreeFlowInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\AgentTypeInputDto;
 
@@ -29,6 +30,40 @@ abstract class AgentInputDtoGenerated
      */
     #[Groups(['agent:write'])]
     public ?string $organization = null;
+
+    #[Groups(['agent:write'])]
+    public ?string $whatsappInstanceName = null;
+
+    #[Groups(['agent:write'])]
+    public ?string $whatsappPhone = null;
+
+    #[Groups(['agent:write'])]
+    public ?string $whatsappServerUrl = null;
+
+    #[Groups(['agent:write'])]
+    public ?string $whatsappApiKey = null;
+
+    #[Groups(['agent:write'])]
+    public bool $whatsappActive;
+
+    #[Groups(['agent:write'])]
+    public ?string $whatsappStatus = null;
+
+    #[Groups(['agent:write'])]
+    public ?string $whatsappWebhookToken = null;
+
+    #[Groups(['agent:write'])]
+    public ?\DateTimeImmutable $whatsappLastConnectedAt = null;
+
+    #[Groups(['agent:write'])]
+    public ?array $whatsappMetadata = null;
+
+    /**
+     * treeFlow reference
+     * Must be: IRI string (e.g., "/api/tree_flows/uuid")
+     */
+    #[Groups(['agent:write'])]
+    public ?string $treeFlow = null;
 
     #[Groups(['agent:write'])]
     public string $name;
@@ -120,6 +155,106 @@ abstract class AgentInputDtoGenerated
     public function setOrganization(?string $organization): self
     {
         $this->organization = $organization;
+        return $this;
+    }
+
+    public function getWhatsappInstanceName(): ?string    {
+        return $this->whatsappInstanceName;
+    }
+
+    public function setWhatsappInstanceName(?string $whatsappInstanceName): self
+    {
+        $this->whatsappInstanceName = $whatsappInstanceName;
+        return $this;
+    }
+
+    public function getWhatsappPhone(): ?string    {
+        return $this->whatsappPhone;
+    }
+
+    public function setWhatsappPhone(?string $whatsappPhone): self
+    {
+        $this->whatsappPhone = $whatsappPhone;
+        return $this;
+    }
+
+    public function getWhatsappServerUrl(): ?string    {
+        return $this->whatsappServerUrl;
+    }
+
+    public function setWhatsappServerUrl(?string $whatsappServerUrl): self
+    {
+        $this->whatsappServerUrl = $whatsappServerUrl;
+        return $this;
+    }
+
+    public function getWhatsappApiKey(): ?string    {
+        return $this->whatsappApiKey;
+    }
+
+    public function setWhatsappApiKey(?string $whatsappApiKey): self
+    {
+        $this->whatsappApiKey = $whatsappApiKey;
+        return $this;
+    }
+
+    public function getWhatsappActive(): bool    {
+        return $this->whatsappActive;
+    }
+
+    public function setWhatsappActive(bool $whatsappActive): self
+    {
+        $this->whatsappActive = $whatsappActive;
+        return $this;
+    }
+
+    public function getWhatsappStatus(): ?string    {
+        return $this->whatsappStatus;
+    }
+
+    public function setWhatsappStatus(?string $whatsappStatus): self
+    {
+        $this->whatsappStatus = $whatsappStatus;
+        return $this;
+    }
+
+    public function getWhatsappWebhookToken(): ?string    {
+        return $this->whatsappWebhookToken;
+    }
+
+    public function setWhatsappWebhookToken(?string $whatsappWebhookToken): self
+    {
+        $this->whatsappWebhookToken = $whatsappWebhookToken;
+        return $this;
+    }
+
+    public function getWhatsappLastConnectedAt(): ?\DateTimeImmutable    {
+        return $this->whatsappLastConnectedAt;
+    }
+
+    public function setWhatsappLastConnectedAt(?\DateTimeImmutable $whatsappLastConnectedAt): self
+    {
+        $this->whatsappLastConnectedAt = $whatsappLastConnectedAt;
+        return $this;
+    }
+
+    public function getWhatsappMetadata(): ?array    {
+        return $this->whatsappMetadata;
+    }
+
+    public function setWhatsappMetadata(?array $whatsappMetadata): self
+    {
+        $this->whatsappMetadata = $whatsappMetadata;
+        return $this;
+    }
+
+    public function getTreeFlow(): ?string    {
+        return $this->treeFlow;
+    }
+
+    public function setTreeFlow(?string $treeFlow): self
+    {
+        $this->treeFlow = $treeFlow;
         return $this;
     }
 

@@ -80,7 +80,7 @@ abstract class WinReasonTypeGenerated extends AbstractType
 
         $builder->add('competitorRelated', CheckboxType::class, [
             'label' => 'Competitor Related',
-            'required' => true,
+            'required' => false,
             'help' => 'Check if this win reason involves outperforming a specific competitor',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -117,7 +117,7 @@ abstract class WinReasonTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -145,7 +145,7 @@ abstract class WinReasonTypeGenerated extends AbstractType
 
         $builder->add('requiresApproval', CheckboxType::class, [
             'label' => 'Requires Approval',
-            'required' => true,
+            'required' => false,
             'help' => 'Check if manager approval is needed when this win reason is selected',
             'attr' => [
                 'class' => 'form-input-modern',

@@ -35,15 +35,15 @@ abstract class CalendarInputDtoGenerated
     #[Groups(['calendar:write'])]
     public string $name;
 
+    #[Groups(['calendar:write'])]
+    public ?string $description = null;
+
     /**
      * user reference
      * Must be: IRI string (e.g., "/api/users/uuid")
      */
     #[Groups(['calendar:write'])]
     public ?string $user = null;
-
-    #[Groups(['calendar:write'])]
-    public ?string $description = null;
 
     #[Groups(['calendar:write'])]
     public string $timeZone = 'UTC';
@@ -130,16 +130,6 @@ abstract class CalendarInputDtoGenerated
         return $this;
     }
 
-    public function getUser(): ?string    {
-        return $this->user;
-    }
-
-    public function setUser(?string $user): self
-    {
-        $this->user = $user;
-        return $this;
-    }
-
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -147,6 +137,16 @@ abstract class CalendarInputDtoGenerated
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getUser(): ?string    {
+        return $this->user;
+    }
+
+    public function setUser(?string $user): self
+    {
+        $this->user = $user;
         return $this;
     }
 

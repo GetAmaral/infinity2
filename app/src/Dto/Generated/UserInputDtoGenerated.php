@@ -77,10 +77,10 @@ abstract class UserInputDtoGenerated
     public ?string $openAiApiKey = null;
 
     #[Groups(['user:write'])]
-    public ?\DateTimeImmutable $lastLoginAt = null;
+    public ?int $gender = null;
 
     #[Groups(['user:write'])]
-    public ?int $gender = null;
+    public ?\DateTimeImmutable $lastLoginAt = null;
 
     #[Groups(['user:write'])]
     public ?\DateTimeImmutable $lockedUntil = null;
@@ -477,16 +477,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
-        return $this->emailVerifiedAt;
-    }
-
-    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
-    {
-        $this->emailVerifiedAt = $emailVerifiedAt;
-        return $this;
-    }
-
     public function getGrantedRoles(): string    {
         return $this->grantedRoles;
     }
@@ -527,13 +517,13 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getEventAttendances(): ?string    {
-        return $this->eventAttendances;
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable    {
+        return $this->emailVerifiedAt;
     }
 
-    public function setEventAttendances(?string $eventAttendances): self
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): self
     {
-        $this->eventAttendances = $eventAttendances;
+        $this->emailVerifiedAt = $emailVerifiedAt;
         return $this;
     }
 
@@ -544,6 +534,16 @@ abstract class UserInputDtoGenerated
     public function setVerified(bool $verified): self
     {
         $this->verified = $verified;
+        return $this;
+    }
+
+    public function getEventAttendances(): ?string    {
+        return $this->eventAttendances;
+    }
+
+    public function setEventAttendances(?string $eventAttendances): self
+    {
+        $this->eventAttendances = $eventAttendances;
         return $this;
     }
 
@@ -617,16 +617,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getLastLoginAt(): ?\DateTimeImmutable    {
-        return $this->lastLoginAt;
-    }
-
-    public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
-    {
-        $this->lastLoginAt = $lastLoginAt;
-        return $this;
-    }
-
     public function getGender(): ?int    {
         return $this->gender;
     }
@@ -634,6 +624,16 @@ abstract class UserInputDtoGenerated
     public function setGender(?int $gender): self
     {
         $this->gender = $gender;
+        return $this;
+    }
+
+    public function getLastLoginAt(): ?\DateTimeImmutable    {
+        return $this->lastLoginAt;
+    }
+
+    public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
+    {
+        $this->lastLoginAt = $lastLoginAt;
         return $this;
     }
 
@@ -1327,16 +1327,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getEmployeeId(): ?string    {
-        return $this->employeeId;
-    }
-
-    public function setEmployeeId(?string $employeeId): self
-    {
-        $this->employeeId = $employeeId;
-        return $this;
-    }
-
     public function getProfiles(): ?string    {
         return $this->profiles;
     }
@@ -1344,6 +1334,16 @@ abstract class UserInputDtoGenerated
     public function setProfiles(?string $profiles): self
     {
         $this->profiles = $profiles;
+        return $this;
+    }
+
+    public function getEmployeeId(): ?string    {
+        return $this->employeeId;
+    }
+
+    public function setEmployeeId(?string $employeeId): self
+    {
+        $this->employeeId = $employeeId;
         return $this;
     }
 
@@ -1567,16 +1567,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getStatus(): ?string    {
-        return $this->status;
-    }
-
-    public function setStatus(?string $status): self
-    {
-        $this->status = $status;
-        return $this;
-    }
-
     public function getTalks(): ?string    {
         return $this->talks;
     }
@@ -1584,6 +1574,16 @@ abstract class UserInputDtoGenerated
     public function setTalks(?string $talks): self
     {
         $this->talks = $talks;
+        return $this;
+    }
+
+    public function getStatus(): ?string    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
         return $this;
     }
 

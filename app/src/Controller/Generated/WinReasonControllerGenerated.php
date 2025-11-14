@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\WinReason;
+use App\MultiTenant\TenantContext;
 use App\Repository\WinReasonRepository;
 use App\Security\Voter\WinReasonVoter;
 use App\Form\WinReasonType;
@@ -36,6 +37,7 @@ abstract class WinReasonControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -211,31 +213,60 @@ abstract class WinReasonControllerGenerated extends BaseApiController
         $form = $this->createForm(WinReasonType::class, $winReason);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($winReason);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $winReason->setOrganization($organization);
+                error_log('✅ WinReasonController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($winReason);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($winReason);
 
-                // After create hook
-                $this->afterCreate($winReason);
+                    $this->entityManager->persist($winReason);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'winreason.flash.created_successfully',
-                    ['%name%' => (string) $winReason],
-                    'winreason'
-                ));
+                    // After create hook
+                    $this->afterCreate($winReason);
 
-                return $this->redirectToRoute('winreason_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'winreason.flash.created_successfully',
+                        ['%name%' => (string) $winReason],
+                        'winreason'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'winreason.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'winreason'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $winReason;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'WinReason',
+                            'entityId' => $winReason->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('winreason_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'winreason.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'winreason'
+                    ));
+                }
             }
         }
 
@@ -278,33 +309,43 @@ abstract class WinReasonControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(WinReasonVoter::EDIT, $winReason);
 
+        // Store original organization to preserve it
+        $originalOrganization = $winReason->getOrganization();
+
         $form = $this->createForm(WinReasonType::class, $winReason);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($winReason);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $winReason->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($winReason);
 
-                // After update hook
-                $this->afterUpdate($winReason);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'winreason.flash.updated_successfully',
-                    ['%name%' => (string) $winReason],
-                    'winreason'
-                ));
+                    // After update hook
+                    $this->afterUpdate($winReason);
 
-                return $this->redirectToRoute('winreason_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'winreason.flash.updated_successfully',
+                        ['%name%' => (string) $winReason],
+                        'winreason'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'winreason.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'winreason'
-                ));
+                    return $this->redirectToRoute('winreason_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'winreason.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'winreason'
+                    ));
+                }
             }
         }
 
@@ -373,9 +414,22 @@ abstract class WinReasonControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(WinReasonVoter::VIEW, $winReason);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($winReason);
+
         return $this->render('winreason/show.html.twig', [
             'winReason' => $winReason,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in WinReasonController to customize displayed properties
+     */
+    protected function buildShowProperties(WinReason $winReason): array
+    {
+        return [];
     }
 
     // ====================================
@@ -386,12 +440,22 @@ abstract class WinReasonControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(WinReason $winReason): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $winReason->setOrganization($organization);
+            error_log('✅ WinReasonController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ WinReasonController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

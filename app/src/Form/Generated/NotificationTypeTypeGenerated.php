@@ -67,10 +67,11 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -86,7 +87,7 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -94,7 +95,7 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
 
         $builder->add('default', CheckboxType::class, [
             'label' => 'Default',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -179,7 +180,7 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
 
         $builder->add('retryEnabled', CheckboxType::class, [
             'label' => 'Retry Enabled',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -195,7 +196,7 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
 
         $builder->add('throttleEnabled', CheckboxType::class, [
             'label' => 'Throttle Enabled',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -228,7 +229,7 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
 
         $builder->add('userPreferenceAllowed', CheckboxType::class, [
             'label' => 'User Preference Allowed',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -236,7 +237,7 @@ abstract class NotificationTypeTypeGenerated extends AbstractType
 
         $builder->add('requiresAction', CheckboxType::class, [
             'label' => 'Requires Action',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],

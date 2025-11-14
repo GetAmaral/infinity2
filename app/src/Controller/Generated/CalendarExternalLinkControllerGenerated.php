@@ -216,31 +216,53 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
         $form = $this->createForm(CalendarExternalLinkType::class, $calendarExternalLink);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($calendarExternalLink);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($calendarExternalLink);
 
-                $this->entityManager->persist($calendarExternalLink);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($calendarExternalLink);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($calendarExternalLink);
+                    // After create hook
+                    $this->afterCreate($calendarExternalLink);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'calendarexternallink.flash.created_successfully',
-                    ['%name%' => (string) $calendarExternalLink],
-                    'calendarexternallink'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'calendarexternallink.flash.created_successfully',
+                        ['%name%' => (string) $calendarExternalLink],
+                        'calendarexternallink'
+                    ));
 
-                return $this->redirectToRoute('calendarexternallink_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'calendarexternallink.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'calendarexternallink'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $calendarExternalLink;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'CalendarExternalLink',
+                            'entityId' => $calendarExternalLink->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('calendarexternallink_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'calendarexternallink.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'calendarexternallink'
+                    ));
+                }
             }
         }
 
@@ -286,30 +308,32 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
         $form = $this->createForm(CalendarExternalLinkType::class, $calendarExternalLink);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($calendarExternalLink);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($calendarExternalLink);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($calendarExternalLink);
+                    // After update hook
+                    $this->afterUpdate($calendarExternalLink);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'calendarexternallink.flash.updated_successfully',
-                    ['%name%' => (string) $calendarExternalLink],
-                    'calendarexternallink'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'calendarexternallink.flash.updated_successfully',
+                        ['%name%' => (string) $calendarExternalLink],
+                        'calendarexternallink'
+                    ));
 
-                return $this->redirectToRoute('calendarexternallink_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('calendarexternallink_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'calendarexternallink.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'calendarexternallink'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'calendarexternallink.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'calendarexternallink'
+                    ));
+                }
             }
         }
 
@@ -378,9 +402,22 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CalendarExternalLinkVoter::VIEW, $calendarExternalLink);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($calendarExternalLink);
+
         return $this->render('calendarexternallink/show.html.twig', [
             'calendarExternalLink' => $calendarExternalLink,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in CalendarExternalLinkController to customize displayed properties
+     */
+    protected function buildShowProperties(CalendarExternalLink $calendarExternalLink): array
+    {
+        return [];
     }
 
     // ====================================
@@ -391,12 +428,10 @@ abstract class CalendarExternalLinkControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(CalendarExternalLink $calendarExternalLink): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

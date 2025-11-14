@@ -70,7 +70,7 @@ abstract class CalendarTypeTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -78,7 +78,7 @@ abstract class CalendarTypeTypeGenerated extends AbstractType
 
         $builder->add('default', CheckboxType::class, [
             'label' => 'Default',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -90,17 +90,29 @@ abstract class CalendarTypeTypeGenerated extends AbstractType
             'attr' => [
                 'class' => 'form-input-modern',
             ],
+            'choices' => [
+                'Personal' => 'personal',
+                'Public' => 'public',
+                'Private' => 'private',
+                'Organization' => 'organization',
+            ],
         ]);
 
-        $builder->add('access_level', ChoiceType::class, [
+        $builder->add('accessLevel', ChoiceType::class, [
             'label' => 'Access Level',
             'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
+            'choices' => [
+                'Owner Only' => 'owner_only',
+                'Read Only' => 'read_only',
+                'Read Write' => 'read_write',
+                'Full Access' => 'full_access',
+            ],
         ]);
 
-        $builder->add('sort_order', IntegerType::class, [
+        $builder->add('sortOrder', IntegerType::class, [
             'label' => 'Sort Order',
             'required' => true,
             'attr' => [
@@ -108,23 +120,23 @@ abstract class CalendarTypeTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('allow_sharing', CheckboxType::class, [
+        $builder->add('allowSharing', CheckboxType::class, [
             'label' => 'Allow Sharing',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('require_approval', CheckboxType::class, [
+        $builder->add('requireApproval', CheckboxType::class, [
             'label' => 'Require Approval',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('max_calendars_per_user', IntegerType::class, [
+        $builder->add('maxCalendarsPerUser', IntegerType::class, [
             'label' => 'Max Calendars Per User',
             'required' => false,
             'attr' => [

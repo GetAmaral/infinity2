@@ -14,7 +14,7 @@ final readonly class SearchCriteria
         public string $query = '',
         public int $page = 1,
         public int $limit = 10,
-        public string $sortBy = 'id',
+        public string $sortBy = '',
         public string $sortDir = 'asc',
         /** @var array<string, string> */
         public array $filters = [],
@@ -52,7 +52,7 @@ final readonly class SearchCriteria
             query: trim($params['q'] ?? ''),
             page: max(1, (int) ($params['page'] ?? 1)),
             limit: min(100, max(1, (int) ($params['limit'] ?? 10))),
-            sortBy: $params['sortBy'] ?? 'id',
+            sortBy: $params['sortBy'] ?? '',
             sortDir: in_array(strtolower($params['sortDir'] ?? 'asc'), ['asc', 'desc'])
                 ? strtolower($params['sortDir'])
                 : 'asc',

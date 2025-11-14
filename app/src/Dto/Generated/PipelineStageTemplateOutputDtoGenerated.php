@@ -32,9 +32,9 @@ abstract class PipelineStageTemplateOutputDtoGenerated
 
     public ?string $description = null;
 
-    public string $probability;
-
     public int $order;
+
+    public string $probability;
 
     public bool $active;
 
@@ -48,13 +48,13 @@ abstract class PipelineStageTemplateOutputDtoGenerated
      */
     public string|PipelineTemplateOutputDto $pipelineTemplate;
 
+    public bool $final;
+
     /**
      * tasks collection
      * @var TaskTemplateOutputDto[]
      */
     public array $tasks = [];
-
-    public bool $final;
 
     public string $stageType;
 
@@ -111,16 +111,6 @@ abstract class PipelineStageTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getProbability(): string    {
-        return $this->probability;
-    }
-
-    public function setProbability(string $probability): self
-    {
-        $this->probability = $probability;
-        return $this;
-    }
-
     public function getOrder(): int    {
         return $this->order;
     }
@@ -128,6 +118,16 @@ abstract class PipelineStageTemplateOutputDtoGenerated
     public function setOrder(int $order): self
     {
         $this->order = $order;
+        return $this;
+    }
+
+    public function getProbability(): string    {
+        return $this->probability;
+    }
+
+    public function setProbability(string $probability): self
+    {
+        $this->probability = $probability;
         return $this;
     }
 
@@ -171,16 +171,6 @@ abstract class PipelineStageTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getTasks(): array    {
-        return $this->tasks;
-    }
-
-    public function setTasks(array $tasks): self
-    {
-        $this->tasks = $tasks;
-        return $this;
-    }
-
     public function getFinal(): bool    {
         return $this->final;
     }
@@ -188,6 +178,16 @@ abstract class PipelineStageTemplateOutputDtoGenerated
     public function setFinal(bool $final): self
     {
         $this->final = $final;
+        return $this;
+    }
+
+    public function getTasks(): array    {
+        return $this->tasks;
+    }
+
+    public function setTasks(array $tasks): self
+    {
+        $this->tasks = $tasks;
         return $this;
     }
 

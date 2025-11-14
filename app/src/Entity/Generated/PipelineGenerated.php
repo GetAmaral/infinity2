@@ -124,7 +124,7 @@ abstract class PipelineGenerated extends EntityBase
     protected Collection $deals;
 
     #[Groups(['pipeline:read', 'pipeline:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $archivedAt = null;
 
 

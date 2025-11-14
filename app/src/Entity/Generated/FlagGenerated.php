@@ -33,13 +33,13 @@ abstract class FlagGenerated extends EntityBase
     protected string $name;
 
     #[Groups(['flag:read', 'flag:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $description = null;
+
+    #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'string', length: 50)]
     #[Assert\Length(max: 50)]
     protected string $category = 'custom';
-
-    #[Groups(['flag:read', 'flag:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
 
     #[Groups(['flag:read', 'flag:write'])]
     #[ORM\Column(type: 'string', length: 7, nullable: true)]
@@ -108,16 +108,6 @@ abstract class FlagGenerated extends EntityBase
         return $this;
     }
 
-    public function getCategory(): string    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
-        return $this;
-    }
-
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -125,6 +115,16 @@ abstract class FlagGenerated extends EntityBase
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getCategory(): string    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
         return $this;
     }
 

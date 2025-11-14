@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\TreeFlow;
+use App\MultiTenant\TenantContext;
 use App\Repository\TreeFlowRepository;
 use App\Security\Voter\TreeFlowVoter;
 use App\Form\TreeFlowType;
@@ -36,6 +37,7 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -203,31 +205,60 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
         $form = $this->createForm(TreeFlowType::class, $treeFlow);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($treeFlow);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $treeFlow->setOrganization($organization);
+                error_log('✅ TreeFlowController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($treeFlow);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($treeFlow);
 
-                // After create hook
-                $this->afterCreate($treeFlow);
+                    $this->entityManager->persist($treeFlow);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'treeflow.flash.created_successfully',
-                    ['%name%' => (string) $treeFlow],
-                    'treeflow'
-                ));
+                    // After create hook
+                    $this->afterCreate($treeFlow);
 
-                return $this->redirectToRoute('treeflow_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'treeflow.flash.created_successfully',
+                        ['%name%' => (string) $treeFlow],
+                        'treeflow'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'treeflow.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'treeflow'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $treeFlow;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'TreeFlow',
+                            'entityId' => $treeFlow->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('treeflow_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'treeflow.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'treeflow'
+                    ));
+                }
             }
         }
 
@@ -270,33 +301,43 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
 
+        // Store original organization to preserve it
+        $originalOrganization = $treeFlow->getOrganization();
+
         $form = $this->createForm(TreeFlowType::class, $treeFlow);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($treeFlow);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $treeFlow->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($treeFlow);
 
-                // After update hook
-                $this->afterUpdate($treeFlow);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'treeflow.flash.updated_successfully',
-                    ['%name%' => (string) $treeFlow],
-                    'treeflow'
-                ));
+                    // After update hook
+                    $this->afterUpdate($treeFlow);
 
-                return $this->redirectToRoute('treeflow_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'treeflow.flash.updated_successfully',
+                        ['%name%' => (string) $treeFlow],
+                        'treeflow'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'treeflow.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'treeflow'
-                ));
+                    return $this->redirectToRoute('treeflow_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'treeflow.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'treeflow'
+                    ));
+                }
             }
         }
 
@@ -365,9 +406,22 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TreeFlowVoter::VIEW, $treeFlow);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($treeFlow);
+
         return $this->render('treeflow/show.html.twig', [
             'treeFlow' => $treeFlow,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in TreeFlowController to customize displayed properties
+     */
+    protected function buildShowProperties(TreeFlow $treeFlow): array
+    {
+        return [];
     }
 
     // ====================================
@@ -378,12 +432,22 @@ abstract class TreeFlowControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(TreeFlow $treeFlow): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $treeFlow->setOrganization($organization);
+            error_log('✅ TreeFlowController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ TreeFlowController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

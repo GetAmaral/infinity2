@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\ProductLine;
+use App\MultiTenant\TenantContext;
 use App\Repository\ProductLineRepository;
 use App\Security\Voter\ProductLineVoter;
 use App\Form\ProductLineType;
@@ -36,6 +37,7 @@ abstract class ProductLineControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -199,31 +201,60 @@ abstract class ProductLineControllerGenerated extends BaseApiController
         $form = $this->createForm(ProductLineType::class, $productLine);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($productLine);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $productLine->setOrganization($organization);
+                error_log('✅ ProductLineController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($productLine);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($productLine);
 
-                // After create hook
-                $this->afterCreate($productLine);
+                    $this->entityManager->persist($productLine);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'productline.flash.created_successfully',
-                    ['%name%' => (string) $productLine],
-                    'productline'
-                ));
+                    // After create hook
+                    $this->afterCreate($productLine);
 
-                return $this->redirectToRoute('productline_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'productline.flash.created_successfully',
+                        ['%name%' => (string) $productLine],
+                        'productline'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'productline.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'productline'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $productLine;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'ProductLine',
+                            'entityId' => $productLine->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('productline_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'productline.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'productline'
+                    ));
+                }
             }
         }
 
@@ -266,33 +297,43 @@ abstract class ProductLineControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductLineVoter::EDIT, $productLine);
 
+        // Store original organization to preserve it
+        $originalOrganization = $productLine->getOrganization();
+
         $form = $this->createForm(ProductLineType::class, $productLine);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($productLine);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $productLine->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($productLine);
 
-                // After update hook
-                $this->afterUpdate($productLine);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'productline.flash.updated_successfully',
-                    ['%name%' => (string) $productLine],
-                    'productline'
-                ));
+                    // After update hook
+                    $this->afterUpdate($productLine);
 
-                return $this->redirectToRoute('productline_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'productline.flash.updated_successfully',
+                        ['%name%' => (string) $productLine],
+                        'productline'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'productline.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'productline'
-                ));
+                    return $this->redirectToRoute('productline_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'productline.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'productline'
+                    ));
+                }
             }
         }
 
@@ -361,9 +402,22 @@ abstract class ProductLineControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductLineVoter::VIEW, $productLine);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($productLine);
+
         return $this->render('productline/show.html.twig', [
             'productLine' => $productLine,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in ProductLineController to customize displayed properties
+     */
+    protected function buildShowProperties(ProductLine $productLine): array
+    {
+        return [];
     }
 
     // ====================================
@@ -374,12 +428,22 @@ abstract class ProductLineControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(ProductLine $productLine): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $productLine->setOrganization($organization);
+            error_log('✅ ProductLineController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ ProductLineController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

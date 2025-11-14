@@ -44,7 +44,7 @@ abstract class TaskGenerated extends EntityBase
     protected ?string $description = null;
 
     #[Groups(['task:read', 'task:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $startDate = null;
 
     #[Groups(['task:read', 'task:write'])]
@@ -69,7 +69,7 @@ abstract class TaskGenerated extends EntityBase
     protected ?string $command = null;
 
     #[Groups(['task:read', 'task:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $completedDate = null;
 
     #[Groups(['task:read', 'task:write'])]
@@ -103,7 +103,7 @@ abstract class TaskGenerated extends EntityBase
     protected bool $completed = false;
 
     #[Groups(['task:read', 'task:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $scheduledDate = null;
 
     #[Groups(['task:read', 'task:write'])]
@@ -111,7 +111,7 @@ abstract class TaskGenerated extends EntityBase
     protected ?Company $company = null;
 
     #[Groups(['task:read', 'task:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $reminderDate = null;
 
     #[Groups(['task:read', 'task:write'])]
@@ -142,14 +142,14 @@ abstract class TaskGenerated extends EntityBase
     protected ?string $emailSubject = null;
 
     #[Groups(['task:read', 'task:write'])]
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Assert\Length(max: 50)]
-    protected ?string $phoneNumber = null;
-
-    #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 20)]
     #[Assert\Length(max: 20)]
     protected string $taskStatus;
+
+    #[Groups(['task:read', 'task:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
+    protected ?string $phoneNumber = null;
 
     #[Groups(['task:read', 'task:write'])]
     #[ORM\Column(type: 'string', length: 500, nullable: true)]
@@ -474,16 +474,6 @@ abstract class TaskGenerated extends EntityBase
         return $this;
     }
 
-    public function getPhoneNumber(): ?string    {
-        return $this->phoneNumber;
-    }
-
-    public function setPhoneNumber(?string $phoneNumber): self
-    {
-        $this->phoneNumber = $phoneNumber;
-        return $this;
-    }
-
     public function getTaskStatus(): string    {
         return $this->taskStatus;
     }
@@ -491,6 +481,16 @@ abstract class TaskGenerated extends EntityBase
     public function setTaskStatus(string $taskStatus): self
     {
         $this->taskStatus = $taskStatus;
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): self
+    {
+        $this->phoneNumber = $phoneNumber;
         return $this;
     }
 

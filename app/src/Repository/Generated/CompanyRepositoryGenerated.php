@@ -43,7 +43,7 @@ abstract class CompanyRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'name',            'description',            'industry',            'website',            'billingAddress',            'legalName',            'shippingAddress',            'shippingPostalCode',            'companyType',            'accountSource',            'rating',            'paymentTerms',            'fiscalYearEnd',            'sicCode',            'naicsCode',            'ownership',            'tickerSymbol',            'linkedInUrl',            'country',            'shippingCountry',            'fax',            'coordinates',            'email',            'mobilePhone',            'notes',            'phone',            'postalCode',            'primaryContactName',            'taxId',            'companyDomain',            'tags',            'stateProvince',        ];
+        return [            'name',            'description',            'industry',            'website',            'billingAddress',            'legalName',            'shippingAddress',            'shippingPostalCode',            'companyType',            'accountSource',            'rating',            'paymentTerms',            'fiscalYearEnd',            'sicCode',            'naicsCode',            'ownership',            'tickerSymbol',            'linkedInUrl',            'country',            'shippingCountry',            'fax',            'coordinates',            'email',            'mobilePhone',            'notes',            'phone',            'postalCode',            'primaryContactName',            'taxId',            'tags',            'companyDomain',            'stateProvince',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class CompanyRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'industry' => 'industry',            'accountManager' => 'accountManager',            'website' => 'website',            'billingAddress' => 'billingAddress',            'legalName' => 'legalName',            'shippingAddress' => 'shippingAddress',            'shippingCity' => 'shippingCity',            'shippingPostalCode' => 'shippingPostalCode',            'campaigns' => 'campaigns',            'annualRevenue' => 'annualRevenue',            'currency' => 'currency',            'companyType' => 'companyType',            'parentCompany' => 'parentCompany',            'accountSource' => 'accountSource',            'rating' => 'rating',            'customerSince' => 'customerSince',            'paymentTerms' => 'paymentTerms',            'creditLimit' => 'creditLimit',            'city' => 'city',            'fiscalYearEnd' => 'fiscalYearEnd',            'sicCode' => 'sicCode',            'naicsCode' => 'naicsCode',            'ownership' => 'ownership',            'tickerSymbol' => 'tickerSymbol',            'doNotContact' => 'doNotContact',            'gdprConsent' => 'gdprConsent',            'country' => 'country',            'shippingCountry' => 'shippingCountry',            'companySize' => 'companySize',            'contacts' => 'contacts',            'coordinates' => 'coordinates',            'deals' => 'deals',            'email' => 'email',            'manufacturedBrands' => 'manufacturedBrands',            'manufacturedProducts' => 'manufacturedProducts',            'mobilePhone' => 'mobilePhone',            'phone' => 'phone',            'postalCode' => 'postalCode',            'primaryContactName' => 'primaryContactName',            'socialMedias' => 'socialMedias',            'status' => 'status',            'suppliedBrands' => 'suppliedBrands',            'suppliedProducts' => 'suppliedProducts',            'taxId' => 'taxId',            'nextActivityDate' => 'nextActivityDate',            'leadStatus' => 'leadStatus',            'companyDomain' => 'companyDomain',            'numberOfAssociatedContacts' => 'numberOfAssociatedContacts',            'lastActivityDate' => 'lastActivityDate',            'public' => 'public',            'lifecycleStage' => 'lifecycleStage',            'stateProvince' => 'stateProvince',            'numberOfAssociatedDeals' => 'numberOfAssociatedDeals',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'industry' => 'industry',            'accountManager' => 'accountManager',            'website' => 'website',            'billingAddress' => 'billingAddress',            'legalName' => 'legalName',            'shippingAddress' => 'shippingAddress',            'shippingCity' => 'shippingCity',            'campaigns' => 'campaigns',            'shippingPostalCode' => 'shippingPostalCode',            'annualRevenue' => 'annualRevenue',            'currency' => 'currency',            'companyType' => 'companyType',            'parentCompany' => 'parentCompany',            'accountSource' => 'accountSource',            'rating' => 'rating',            'customerSince' => 'customerSince',            'paymentTerms' => 'paymentTerms',            'creditLimit' => 'creditLimit',            'city' => 'city',            'fiscalYearEnd' => 'fiscalYearEnd',            'sicCode' => 'sicCode',            'naicsCode' => 'naicsCode',            'ownership' => 'ownership',            'tickerSymbol' => 'tickerSymbol',            'doNotContact' => 'doNotContact',            'gdprConsent' => 'gdprConsent',            'country' => 'country',            'companySize' => 'companySize',            'shippingCountry' => 'shippingCountry',            'contacts' => 'contacts',            'coordinates' => 'coordinates',            'deals' => 'deals',            'email' => 'email',            'manufacturedBrands' => 'manufacturedBrands',            'manufacturedProducts' => 'manufacturedProducts',            'mobilePhone' => 'mobilePhone',            'phone' => 'phone',            'postalCode' => 'postalCode',            'primaryContactName' => 'primaryContactName',            'socialMedias' => 'socialMedias',            'status' => 'status',            'suppliedBrands' => 'suppliedBrands',            'suppliedProducts' => 'suppliedProducts',            'taxId' => 'taxId',            'public' => 'public',            'leadStatus' => 'leadStatus',            'companyDomain' => 'companyDomain',            'stateProvince' => 'stateProvince',            'numberOfAssociatedDeals' => 'numberOfAssociatedDeals',            'lastActivityDate' => 'lastActivityDate',            'nextActivityDate' => 'nextActivityDate',            'lifecycleStage' => 'lifecycleStage',            'numberOfAssociatedContacts' => 'numberOfAssociatedContacts',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class CompanyRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'industry' => 'industry',            'website' => 'website',            'billingAddress' => 'billingAddress',            'shippingAddress' => 'shippingAddress',            'shippingPostalCode' => 'shippingPostalCode',            'annualRevenue' => 'annualRevenue',            'currency' => 'currency',            'companyType' => 'companyType',            'accountSource' => 'accountSource',            'rating' => 'rating',            'customerSince' => 'customerSince',            'paymentTerms' => 'paymentTerms',            'creditLimit' => 'creditLimit',            'fiscalYearEnd' => 'fiscalYearEnd',            'sicCode' => 'sicCode',            'naicsCode' => 'naicsCode',            'ownership' => 'ownership',            'tickerSymbol' => 'tickerSymbol',            'doNotContact' => 'doNotContact',            'gdprConsent' => 'gdprConsent',            'country' => 'country',            'shippingCountry' => 'shippingCountry',            'companySize' => 'companySize',            'postalCode' => 'postalCode',            'status' => 'status',            'taxId' => 'taxId',            'nextActivityDate' => 'nextActivityDate',            'leadStatus' => 'leadStatus',            'companyDomain' => 'companyDomain',            'numberOfAssociatedContacts' => 'numberOfAssociatedContacts',            'shippingStateProvince' => 'shippingStateProvince',            'lastActivityDate' => 'lastActivityDate',            'public' => 'public',            'lifecycleStage' => 'lifecycleStage',            'timeZone' => 'timeZone',            'stateProvince' => 'stateProvince',            'numberOfAssociatedDeals' => 'numberOfAssociatedDeals',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'industry' => 'industry',            'website' => 'website',            'billingAddress' => 'billingAddress',            'shippingAddress' => 'shippingAddress',            'shippingPostalCode' => 'shippingPostalCode',            'annualRevenue' => 'annualRevenue',            'currency' => 'currency',            'companyType' => 'companyType',            'accountSource' => 'accountSource',            'rating' => 'rating',            'customerSince' => 'customerSince',            'paymentTerms' => 'paymentTerms',            'creditLimit' => 'creditLimit',            'fiscalYearEnd' => 'fiscalYearEnd',            'sicCode' => 'sicCode',            'naicsCode' => 'naicsCode',            'ownership' => 'ownership',            'tickerSymbol' => 'tickerSymbol',            'doNotContact' => 'doNotContact',            'gdprConsent' => 'gdprConsent',            'country' => 'country',            'companySize' => 'companySize',            'shippingCountry' => 'shippingCountry',            'postalCode' => 'postalCode',            'status' => 'status',            'taxId' => 'taxId',            'timeZone' => 'timeZone',            'public' => 'public',            'leadStatus' => 'leadStatus',            'companyDomain' => 'companyDomain',            'stateProvince' => 'stateProvince',            'shippingStateProvince' => 'shippingStateProvince',            'numberOfAssociatedDeals' => 'numberOfAssociatedDeals',            'lastActivityDate' => 'lastActivityDate',            'nextActivityDate' => 'nextActivityDate',            'lifecycleStage' => 'lifecycleStage',            'numberOfAssociatedContacts' => 'numberOfAssociatedContacts',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -98,7 +98,7 @@ abstract class CompanyRepositoryGenerated extends BaseRepository
      */
     protected function getDateFilterFields(): array
     {
-        return [            'customerSince',            'nextActivityDate',            'lastActivityDate',            'createdAt',            'updatedAt',        ];
+        return [            'customerSince',            'lastActivityDate',            'nextActivityDate',            'createdAt',            'updatedAt',        ];
     }
 
     /**
@@ -126,8 +126,8 @@ abstract class CompanyRepositoryGenerated extends BaseRepository
             'shippingAddress' => $entity->getShippingAddress(),
             'shippingCity' => $entity->getShippingCity()?->getId()?->toString() ?? '',
             'shippingCityName' => $entity->getShippingCity()?->getName() ?? '',
-            'shippingPostalCode' => $entity->getShippingPostalCode(),
             'campaignsCount' => $entity->getCampaigns()->count(),
+            'shippingPostalCode' => $entity->getShippingPostalCode(),
             'currency' => $entity->getCurrency(),
             'companyType' => $entity->getCompanyType(),
             'parentCompany' => $entity->getParentCompany()?->getId()?->toString() ?? '',
@@ -163,15 +163,15 @@ abstract class CompanyRepositoryGenerated extends BaseRepository
             'suppliedBrandsCount' => $entity->getSuppliedBrands()->count(),
             'suppliedProductsCount' => $entity->getSuppliedProducts()->count(),
             'taxId' => $entity->getTaxId(),
-            'nextActivityDate' => $entity->getNextActivityDate()?->format('c'),
+            'timeZone' => $entity->getTimeZone(),
+            'tags' => $entity->getTags(),
             'leadStatus' => $entity->getLeadStatus(),
             'companyDomain' => $entity->getCompanyDomain(),
-            'shippingStateProvince' => $entity->getShippingStateProvince(),
-            'tags' => $entity->getTags(),
-            'lastActivityDate' => $entity->getLastActivityDate()?->format('c'),
-            'lifecycleStage' => $entity->getLifecycleStage(),
-            'timeZone' => $entity->getTimeZone(),
             'stateProvince' => $entity->getStateProvince(),
+            'shippingStateProvince' => $entity->getShippingStateProvince(),
+            'lastActivityDate' => $entity->getLastActivityDate()?->format('c'),
+            'nextActivityDate' => $entity->getNextActivityDate()?->format('c'),
+            'lifecycleStage' => $entity->getLifecycleStage(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];

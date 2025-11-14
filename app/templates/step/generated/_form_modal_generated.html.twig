@@ -1,5 +1,8 @@
 {% extends '_base_modal.html.twig' %}
 
+{# Apply custom form theme for error display #}
+{% form_theme form 'genmax/twig/form_theme.html.twig' %}
+
 {# Configure modal appearance and behavior #}
 {% set entity_type = 'step' %}
 {% set icon = 'signpost' %}
@@ -34,11 +37,55 @@
                 {% else %}
                     {# Regular field styling #}
                     <label class="form-label-modern">{{ form_label(child) }}</label>
-                    {{ form_widget(child, {
-                        'attr': {
-                            'class': 'form-input-modern' ~ (child.vars.errors|length > 0 ? ' input-error' : '')
-                        }
-                    }) }}
+
+                    {# Check if this is a relation select field (EntityType with relation-select controller) #}
+                    {% set isRelationSelect = child.vars.attr['data-controller'] is defined and 'relation-select' in child.vars.attr['data-controller'] %}
+
+                    {% if isRelationSelect %}
+                        {# Extract controller attributes for wrapper div #}
+                        {% set entityValue = child.vars.attr['data-relation-select-entity-value'] ?? '' %}
+                        {% set routeValue = child.vars.attr['data-relation-select-route-value'] ?? '' %}
+                        {% set addRouteValue = child.vars.attr['data-relation-select-add-route-value'] ?? '' %}
+                        {% set multipleValue = child.vars.attr['data-relation-select-multiple-value'] ?? 'false' %}
+
+                        {# Wrap both select and button in controller div #}
+                        <div data-controller="relation-select"
+                             data-relation-select-entity-value="{{ entityValue }}"
+                             data-relation-select-route-value="{{ routeValue }}"
+                             data-relation-select-multiple-value="{{ multipleValue }}"
+                             style="display: flex; gap: 0.5rem; align-items: start;">
+                            <div style="flex: 1;">
+                                {# Remove all data-controller and data-relation-select-* attributes from select element #}
+                                {% set cleanAttrs = {} %}
+                                {% for attrKey, attrValue in child.vars.attr %}
+                                    {% if attrKey not in ['data-controller', 'data-relation-select-entity-value', 'data-relation-select-route-value', 'data-relation-select-add-route-value', 'data-relation-select-multiple-value', 'data-relation-select-one-to-one-value'] %}
+                                        {% set cleanAttrs = cleanAttrs|merge({(attrKey): attrValue}) %}
+                                    {% endif %}
+                                {% endfor %}
+                                {{ form_widget(child, {
+                                    'attr': cleanAttrs|merge({
+                                        'class': 'form-input-modern' ~ (child.vars.errors|length > 0 ? ' input-error' : ''),
+                                        'data-relation-select-target': 'select'
+                                    })
+                                }) }}
+                            </div>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-primary"
+                                    style="margin-top: 0; padding: 0.5rem 0.75rem; border-radius: 6px; white-space: nowrap;"
+                                    data-relation-field="{{ child.vars.id }}"
+                                    data-add-route="{{ addRouteValue }}"
+                                    data-action="click->relation-select#openAddModal"
+                                    title="Create new {{ entityValue }}">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                    {% else %}
+                        {{ form_widget(child, {
+                            'attr': {
+                                'class': 'form-input-modern' ~ (child.vars.errors|length > 0 ? ' input-error' : '')
+                            }
+                        }) }}
+                    {% endif %}
                 {% endif %}
                 {{ form_errors(child) }}
             </div>

@@ -151,7 +151,7 @@ abstract class BrandTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -172,10 +172,11 @@ abstract class BrandTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -185,7 +186,30 @@ abstract class BrandTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Company::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Company',
+                'data-relation-select-route-value' => 'company_api_search',
+                'data-relation-select-add-route-value' => 'company_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more company',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -195,7 +219,30 @@ abstract class BrandTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Company::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Company',
+                'data-relation-select-route-value' => 'company_api_search',
+                'data-relation-select-add-route-value' => 'company_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more company',
                 'class' => 'form-input-modern',
             ],
         ]);

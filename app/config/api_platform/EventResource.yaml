@@ -71,14 +71,14 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      active:
-        description: "Whether the resource is currently active in the system"
+      bookable:
+        description: "Whether the resource can be booked online via API or user interface"
         example: "true"
         # Advanced filters
         filters:
           - type: OrderFilter
-      bookable:
-        description: "Whether the resource can be booked online via API or user interface"
+      active:
+        description: "Whether the resource is currently active in the system"
         example: "true"
         # Advanced filters
         filters:
@@ -104,15 +104,15 @@ resources:
       maximumBookingDuration:
         description: "Maximum booking duration in minutes (null = unlimited)"
         example: "480"
-      pricePerHour:
-        description: "Hourly rental cost for this resource"
-        example: "50.00"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       bookingRules:
         description: "Custom booking rules and restrictions for this resource"
         example: "{\"maxAdvanceBookingDays\": 90, \"bufferMinutes\": 15, \"allowWeekends\": true, \"allowedRoles\": [\"ROLE_EMPLOYEE\", \"ROLE_MANAGER\"]}"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      pricePerHour:
+        description: "Hourly rental cost for this resource"
+        example: "50.00"
         # Advanced filters
         filters:
           - type: OrderFilter

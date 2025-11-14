@@ -39,12 +39,12 @@ abstract class HolidayGenerated extends EntityBase
     protected ?string $description = null;
 
     #[Groups(['holiday:read', 'holiday:write'])]
-    #[ORM\Column(type: 'boolean')]
-    protected bool $recurring;
-
-    #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $blocksScheduling = null;
+
+    #[Groups(['holiday:read', 'holiday:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $recurring;
 
     #[Groups(['holiday:read', 'holiday:write'])]
     #[ORM\Column(type: 'boolean')]
@@ -79,7 +79,7 @@ abstract class HolidayGenerated extends EntityBase
     protected ?string $holidayType = null;
 
     #[Groups(['holiday:read', 'holiday:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $originalDate = null;
 
     #[Groups(['holiday:read', 'holiday:write'])]
@@ -87,7 +87,7 @@ abstract class HolidayGenerated extends EntityBase
     protected bool $affectsSLA = true;
 
     #[Groups(['holiday:read', 'holiday:write'])]
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'date_immutable')]
     protected \DateTimeImmutable $sentAt;
 
     #[Groups(['holiday:read', 'holiday:write'])]
@@ -143,21 +143,6 @@ abstract class HolidayGenerated extends EntityBase
         return $this;
     }
 
-    public function getRecurring(): bool    {
-        return $this->recurring;
-    }
-
-    public function setRecurring(bool $recurring): self
-    {
-        $this->recurring = $recurring;
-        return $this;
-    }
-
-    public function isRecurring(): bool
-    {
-        return $this->recurring === true;
-    }
-
     public function getBlocksScheduling(): ?bool    {
         return $this->blocksScheduling;
     }
@@ -171,6 +156,21 @@ abstract class HolidayGenerated extends EntityBase
     public function isBlocksScheduling(): bool
     {
         return $this->blocksScheduling === true;
+    }
+
+    public function getRecurring(): bool    {
+        return $this->recurring;
+    }
+
+    public function setRecurring(bool $recurring): self
+    {
+        $this->recurring = $recurring;
+        return $this;
+    }
+
+    public function isRecurring(): bool
+    {
+        return $this->recurring === true;
     }
 
     public function getObserved(): bool    {

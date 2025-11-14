@@ -189,31 +189,53 @@ abstract class ModuleControllerGenerated extends BaseApiController
         $form = $this->createForm(ModuleType::class, $module);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($module);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($module);
 
-                $this->entityManager->persist($module);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($module);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($module);
+                    // After create hook
+                    $this->afterCreate($module);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'module.flash.created_successfully',
-                    ['%name%' => (string) $module],
-                    'module'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'module.flash.created_successfully',
+                        ['%name%' => (string) $module],
+                        'module'
+                    ));
 
-                return $this->redirectToRoute('module_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'module.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'module'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $module;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Module',
+                            'entityId' => $module->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('module_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'module.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'module'
+                    ));
+                }
             }
         }
 
@@ -259,30 +281,32 @@ abstract class ModuleControllerGenerated extends BaseApiController
         $form = $this->createForm(ModuleType::class, $module);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($module);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($module);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($module);
+                    // After update hook
+                    $this->afterUpdate($module);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'module.flash.updated_successfully',
-                    ['%name%' => (string) $module],
-                    'module'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'module.flash.updated_successfully',
+                        ['%name%' => (string) $module],
+                        'module'
+                    ));
 
-                return $this->redirectToRoute('module_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('module_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'module.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'module'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'module.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'module'
+                    ));
+                }
             }
         }
 
@@ -351,9 +375,22 @@ abstract class ModuleControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ModuleVoter::VIEW, $module);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($module);
+
         return $this->render('module/show.html.twig', [
             'module' => $module,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in ModuleController to customize displayed properties
+     */
+    protected function buildShowProperties(Module $module): array
+    {
+        return [];
     }
 
     // ====================================
@@ -364,12 +401,10 @@ abstract class ModuleControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(Module $module): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

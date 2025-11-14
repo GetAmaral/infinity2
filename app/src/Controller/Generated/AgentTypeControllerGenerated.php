@@ -201,31 +201,53 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
         $form = $this->createForm(AgentTypeType::class, $agentType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($agentType);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($agentType);
 
-                $this->entityManager->persist($agentType);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($agentType);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($agentType);
+                    // After create hook
+                    $this->afterCreate($agentType);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'agenttype.flash.created_successfully',
-                    ['%name%' => (string) $agentType],
-                    'agenttype'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'agenttype.flash.created_successfully',
+                        ['%name%' => (string) $agentType],
+                        'agenttype'
+                    ));
 
-                return $this->redirectToRoute('agenttype_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'agenttype.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'agenttype'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $agentType;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'AgentType',
+                            'entityId' => $agentType->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('agenttype_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'agenttype.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'agenttype'
+                    ));
+                }
             }
         }
 
@@ -271,30 +293,32 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
         $form = $this->createForm(AgentTypeType::class, $agentType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($agentType);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($agentType);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($agentType);
+                    // After update hook
+                    $this->afterUpdate($agentType);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'agenttype.flash.updated_successfully',
-                    ['%name%' => (string) $agentType],
-                    'agenttype'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'agenttype.flash.updated_successfully',
+                        ['%name%' => (string) $agentType],
+                        'agenttype'
+                    ));
 
-                return $this->redirectToRoute('agenttype_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('agenttype_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'agenttype.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'agenttype'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'agenttype.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'agenttype'
+                    ));
+                }
             }
         }
 
@@ -363,9 +387,22 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AgentTypeVoter::VIEW, $agentType);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($agentType);
+
         return $this->render('agenttype/show.html.twig', [
             'agentType' => $agentType,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in AgentTypeController to customize displayed properties
+     */
+    protected function buildShowProperties(AgentType $agentType): array
+    {
+        return [];
     }
 
     // ====================================
@@ -376,12 +413,10 @@ abstract class AgentTypeControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(AgentType $agentType): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

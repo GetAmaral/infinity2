@@ -11,8 +11,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -62,15 +62,6 @@ abstract class DealTypeTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('color', ColorType::class, [
-            'label' => 'Color',
-            'required' => true,
-            'help' => 'Hex color code for visual identification in the UI (e.g., #6366f1)',
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         // Exclude nested collections when form is used inside another collection
         if (empty($options['exclude_parent'])) {
         $builder->add('deals', CollectionType::class, [
@@ -86,13 +77,23 @@ abstract class DealTypeTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
+
+        $builder->add('color', ColorType::class, [
+            'label' => 'Color',
+            'required' => true,
+            'help' => 'Hex color code for visual identification in the UI (e.g., #6366f1)',
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
 
         $builder->add('icon', TextType::class, [
             'label' => 'Icon',
@@ -106,7 +107,7 @@ abstract class DealTypeTypeGenerated extends AbstractType
 
         $builder->add('default', CheckboxType::class, [
             'label' => 'Default',
-            'required' => true,
+            'required' => false,
             'help' => 'Set as default deal type when creating new deals',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -115,7 +116,7 @@ abstract class DealTypeTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'help' => 'Whether this deal type is currently available for selection',
             'attr' => [
                 'class' => 'form-input-modern',

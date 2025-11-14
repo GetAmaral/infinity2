@@ -194,31 +194,53 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
         $form = $this->createForm(TimeZoneType::class, $timeZone);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($timeZone);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($timeZone);
 
-                $this->entityManager->persist($timeZone);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($timeZone);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($timeZone);
+                    // After create hook
+                    $this->afterCreate($timeZone);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'timezone.flash.created_successfully',
-                    ['%name%' => (string) $timeZone],
-                    'timezone'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'timezone.flash.created_successfully',
+                        ['%name%' => (string) $timeZone],
+                        'timezone'
+                    ));
 
-                return $this->redirectToRoute('timezone_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'timezone.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'timezone'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $timeZone;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'TimeZone',
+                            'entityId' => $timeZone->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('timezone_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'timezone.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'timezone'
+                    ));
+                }
             }
         }
 
@@ -264,30 +286,32 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
         $form = $this->createForm(TimeZoneType::class, $timeZone);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($timeZone);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($timeZone);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($timeZone);
+                    // After update hook
+                    $this->afterUpdate($timeZone);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'timezone.flash.updated_successfully',
-                    ['%name%' => (string) $timeZone],
-                    'timezone'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'timezone.flash.updated_successfully',
+                        ['%name%' => (string) $timeZone],
+                        'timezone'
+                    ));
 
-                return $this->redirectToRoute('timezone_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('timezone_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'timezone.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'timezone'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'timezone.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'timezone'
+                    ));
+                }
             }
         }
 
@@ -356,9 +380,22 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TimeZoneVoter::VIEW, $timeZone);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($timeZone);
+
         return $this->render('timezone/show.html.twig', [
             'timeZone' => $timeZone,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in TimeZoneController to customize displayed properties
+     */
+    protected function buildShowProperties(TimeZone $timeZone): array
+    {
+        return [];
     }
 
     // ====================================
@@ -369,12 +406,10 @@ abstract class TimeZoneControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(TimeZone $timeZone): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

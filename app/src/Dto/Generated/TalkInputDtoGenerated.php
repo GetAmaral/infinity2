@@ -8,10 +8,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
-use App\Dto\CompanyInputDto;
-use App\Dto\ContactInputDto;
-use App\Dto\DealInputDto;
 use App\Dto\TalkTypeInputDto;
+use App\Dto\ContactInputDto;
+use App\Dto\CompanyInputDto;
+use App\Dto\DealInputDto;
 use App\Dto\UserInputDto;
 
 /**
@@ -34,31 +34,10 @@ abstract class TalkInputDtoGenerated
     public ?string $organization = null;
 
     #[Groups(['talk:write'])]
+    public ?array $talkFlow = null;
+
+    #[Groups(['talk:write'])]
     public string $subject;
-
-    #[Groups(['talk:write'])]
-    public ?string $summary = null;
-
-    /**
-     * company reference
-     * Must be: IRI string (e.g., "/api/nies/uuid")
-     */
-    #[Groups(['talk:write'])]
-    public ?string $company = null;
-
-    /**
-     * contact reference
-     * Must be: IRI string (e.g., "/api/contacts/uuid")
-     */
-    #[Groups(['talk:write'])]
-    public ?string $contact = null;
-
-    /**
-     * deal reference
-     * Must be: IRI string (e.g., "/api/deals/uuid")
-     */
-    #[Groups(['talk:write'])]
-    public ?string $deal = null;
 
     /**
      * talkType reference
@@ -69,10 +48,53 @@ abstract class TalkInputDtoGenerated
     public ?string $talkType = null;
 
     #[Groups(['talk:write'])]
-    public int $channel = 0;
+    public ?string $summary = null;
+
+    #[Assert\Range(max: 150, min: 0)]
+    #[Groups(['talk:write'])]
+    public int $messageCount = 0;
+
+    /**
+     * contact reference
+     * Must be: IRI string (e.g., "/api/contacts/uuid")
+     */
+    #[Groups(['talk:write'])]
+    public ?string $contact = null;
+
+    /**
+     * company reference
+     * Must be: IRI string (e.g., "/api/nies/uuid")
+     */
+    #[Groups(['talk:write'])]
+    public ?string $company = null;
+
+    /**
+     * deal reference
+     * Must be: IRI string (e.g., "/api/deals/uuid")
+     */
+    #[Groups(['talk:write'])]
+    public ?string $deal = null;
+
+    /**
+     * owner reference
+     * Must be: IRI string (e.g., "/api/users/uuid")
+     * Auto-assigned by system if not provided
+     */
+    #[Groups(['talk:write'])]
+    public ?string $owner = null;
+
+    /**
+     * assignedTo reference
+     * Must be: IRI string (e.g., "/api/users/uuid")
+     */
+    #[Groups(['talk:write'])]
+    public ?string $assignedTo = null;
 
     #[Groups(['talk:write'])]
     public int $status = 0;
+
+    #[Groups(['talk:write'])]
+    public int $channel = 0;
 
     #[Assert\Range(max: 5, min: 1)]
     #[Groups(['talk:write'])]
@@ -98,26 +120,19 @@ abstract class TalkInputDtoGenerated
     public ?int $durationSeconds = null;
 
     #[Groups(['talk:write'])]
+    public bool $paused = false;
+
+    #[Groups(['talk:write'])]
+    public ?\DateTimeImmutable $pausedAt = null;
+
+    #[Groups(['talk:write'])]
+    public ?string $pausedReason = null;
+
+    #[Groups(['talk:write'])]
+    public ?\DateTimeImmutable $resumedAt = null;
+
+    #[Groups(['talk:write'])]
     public ?string $recordingUrl = null;
-
-    /**
-     * owner reference
-     * Must be: IRI string (e.g., "/api/users/uuid")
-     * Auto-assigned by system if not provided
-     */
-    #[Groups(['talk:write'])]
-    public ?string $owner = null;
-
-    /**
-     * assignedTo reference
-     * Must be: IRI string (e.g., "/api/users/uuid")
-     */
-    #[Groups(['talk:write'])]
-    public ?string $assignedTo = null;
-
-    #[Assert\Range(max: 150, min: 0)]
-    #[Groups(['talk:write'])]
-    public int $messageCount = 0;
 
     #[Groups(['talk:write'])]
     public bool $archived = false;
@@ -141,6 +156,16 @@ abstract class TalkInputDtoGenerated
         return $this;
     }
 
+    public function getTalkFlow(): ?array    {
+        return $this->talkFlow;
+    }
+
+    public function setTalkFlow(?array $talkFlow): self
+    {
+        $this->talkFlow = $talkFlow;
+        return $this;
+    }
+
     public function getSubject(): string    {
         return $this->subject;
     }
@@ -148,46 +173,6 @@ abstract class TalkInputDtoGenerated
     public function setSubject(string $subject): self
     {
         $this->subject = $subject;
-        return $this;
-    }
-
-    public function getSummary(): ?string    {
-        return $this->summary;
-    }
-
-    public function setSummary(?string $summary): self
-    {
-        $this->summary = $summary;
-        return $this;
-    }
-
-    public function getCompany(): ?string    {
-        return $this->company;
-    }
-
-    public function setCompany(?string $company): self
-    {
-        $this->company = $company;
-        return $this;
-    }
-
-    public function getContact(): ?string    {
-        return $this->contact;
-    }
-
-    public function setContact(?string $contact): self
-    {
-        $this->contact = $contact;
-        return $this;
-    }
-
-    public function getDeal(): ?string    {
-        return $this->deal;
-    }
-
-    public function setDeal(?string $deal): self
-    {
-        $this->deal = $deal;
         return $this;
     }
 
@@ -201,13 +186,93 @@ abstract class TalkInputDtoGenerated
         return $this;
     }
 
-    public function getChannel(): int    {
-        return $this->channel;
+    public function getSummary(): ?string    {
+        return $this->summary;
     }
 
-    public function setChannel(int $channel): self
+    public function setSummary(?string $summary): self
     {
-        $this->channel = $channel;
+        $this->summary = $summary;
+        return $this;
+    }
+
+    public function getMessageCount(): int    {
+        return $this->messageCount;
+    }
+
+    public function setMessageCount(int $messageCount): self
+    {
+        $this->messageCount = $messageCount;
+        return $this;
+    }
+
+    public function getContact(): ?string    {
+        return $this->contact;
+    }
+
+    public function setContact(?string $contact): self
+    {
+        $this->contact = $contact;
+        return $this;
+    }
+
+    public function getCompany(): ?string    {
+        return $this->company;
+    }
+
+    public function setCompany(?string $company): self
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    public function getDeal(): ?string    {
+        return $this->deal;
+    }
+
+    public function setDeal(?string $deal): self
+    {
+        $this->deal = $deal;
+        return $this;
+    }
+
+    public function getUsers(): ?string    {
+        return $this->users;
+    }
+
+    public function setUsers(?string $users): self
+    {
+        $this->users = $users;
+        return $this;
+    }
+
+    public function getAgents(): ?string    {
+        return $this->agents;
+    }
+
+    public function setAgents(?string $agents): self
+    {
+        $this->agents = $agents;
+        return $this;
+    }
+
+    public function getOwner(): ?string    {
+        return $this->owner;
+    }
+
+    public function setOwner(?string $owner): self
+    {
+        $this->owner = $owner;
+        return $this;
+    }
+
+    public function getAssignedTo(): ?string    {
+        return $this->assignedTo;
+    }
+
+    public function setAssignedTo(?string $assignedTo): self
+    {
+        $this->assignedTo = $assignedTo;
         return $this;
     }
 
@@ -218,6 +283,16 @@ abstract class TalkInputDtoGenerated
     public function setStatus(int $status): self
     {
         $this->status = $status;
+        return $this;
+    }
+
+    public function getChannel(): int    {
+        return $this->channel;
+    }
+
+    public function setChannel(int $channel): self
+    {
+        $this->channel = $channel;
         return $this;
     }
 
@@ -291,53 +366,43 @@ abstract class TalkInputDtoGenerated
         return $this;
     }
 
-    public function getRecordingUrl(): ?string    {
-        return $this->recordingUrl;
+    public function getPaused(): bool    {
+        return $this->paused;
     }
 
-    public function setRecordingUrl(?string $recordingUrl): self
+    public function setPaused(bool $paused): self
     {
-        $this->recordingUrl = $recordingUrl;
+        $this->paused = $paused;
         return $this;
     }
 
-    public function getUsers(): ?string    {
-        return $this->users;
+    public function getPausedAt(): ?\DateTimeImmutable    {
+        return $this->pausedAt;
     }
 
-    public function setUsers(?string $users): self
+    public function setPausedAt(?\DateTimeImmutable $pausedAt): self
     {
-        $this->users = $users;
+        $this->pausedAt = $pausedAt;
         return $this;
     }
 
-    public function getOwner(): ?string    {
-        return $this->owner;
+    public function getPausedReason(): ?string    {
+        return $this->pausedReason;
     }
 
-    public function setOwner(?string $owner): self
+    public function setPausedReason(?string $pausedReason): self
     {
-        $this->owner = $owner;
+        $this->pausedReason = $pausedReason;
         return $this;
     }
 
-    public function getAssignedTo(): ?string    {
-        return $this->assignedTo;
+    public function getResumedAt(): ?\DateTimeImmutable    {
+        return $this->resumedAt;
     }
 
-    public function setAssignedTo(?string $assignedTo): self
+    public function setResumedAt(?\DateTimeImmutable $resumedAt): self
     {
-        $this->assignedTo = $assignedTo;
-        return $this;
-    }
-
-    public function getAgents(): ?string    {
-        return $this->agents;
-    }
-
-    public function setAgents(?string $agents): self
-    {
-        $this->agents = $agents;
+        $this->resumedAt = $resumedAt;
         return $this;
     }
 
@@ -351,23 +416,13 @@ abstract class TalkInputDtoGenerated
         return $this;
     }
 
-    public function getMessages(): ?string    {
-        return $this->messages;
+    public function getRecordingUrl(): ?string    {
+        return $this->recordingUrl;
     }
 
-    public function setMessages(?string $messages): self
+    public function setRecordingUrl(?string $recordingUrl): self
     {
-        $this->messages = $messages;
-        return $this;
-    }
-
-    public function getMessageCount(): int    {
-        return $this->messageCount;
-    }
-
-    public function setMessageCount(int $messageCount): self
-    {
-        $this->messageCount = $messageCount;
+        $this->recordingUrl = $recordingUrl;
         return $this;
     }
 
@@ -388,6 +443,16 @@ abstract class TalkInputDtoGenerated
     public function setInternal(bool $internal): self
     {
         $this->internal = $internal;
+        return $this;
+    }
+
+    public function getMessages(): ?string    {
+        return $this->messages;
+    }
+
+    public function setMessages(?string $messages): self
+    {
+        $this->messages = $messages;
         return $this;
     }
 

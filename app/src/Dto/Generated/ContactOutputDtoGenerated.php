@@ -101,9 +101,9 @@ abstract class ContactOutputDtoGenerated
 
     public ?string $department = null;
 
-    public bool $doNotCall;
-
     public ?string $leadSource = null;
+
+    public bool $doNotCall;
 
     public ?string $preferredContactMethod = null;
 
@@ -111,7 +111,7 @@ abstract class ContactOutputDtoGenerated
 
     public ?string $document = null;
 
-    public string $email;
+    public ?string $email = null;
 
     /**
      * eventAttendances collection
@@ -388,16 +388,6 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getDoNotCall(): bool    {
-        return $this->doNotCall;
-    }
-
-    public function setDoNotCall(bool $doNotCall): self
-    {
-        $this->doNotCall = $doNotCall;
-        return $this;
-    }
-
     public function getLeadSource(): ?string    {
         return $this->leadSource;
     }
@@ -405,6 +395,16 @@ abstract class ContactOutputDtoGenerated
     public function setLeadSource(?string $leadSource): self
     {
         $this->leadSource = $leadSource;
+        return $this;
+    }
+
+    public function getDoNotCall(): bool    {
+        return $this->doNotCall;
+    }
+
+    public function setDoNotCall(bool $doNotCall): self
+    {
+        $this->doNotCall = $doNotCall;
         return $this;
     }
 
@@ -438,11 +438,11 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getEmail(): string    {
+    public function getEmail(): ?string    {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
         return $this;

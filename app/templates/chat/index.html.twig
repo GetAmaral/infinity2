@@ -1,0 +1,225 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat - {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="chat-container"
+     data-controller="chat"
+     data-chat-user-id-value="{{ app.user.id.toRfc4122 }}"
+     data-chat-current-talk-value="{{ currentTalk ? currentTalk.id.toRfc4122 : '' }}">
+
+    {# Left Sidebar - Talk List #}
+    <div class="chat-sidebar" data-chat-target="sidebar">
+        <div class="chat-header">
+            <h5 class="mb-0">
+                <i class="bi bi-chat-dots me-2"></i>Conversations
+            </h5>
+            <div class="d-flex gap-2">
+                {# Close button - only visible on mobile when sidebar is open #}
+                <button class="btn btn-sm btn-outline-secondary d-lg-none sidebar-close-btn"
+                        data-action="click->chat#toggleSidebar"
+                        title="Close">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary"
+                        data-action="click->chat#toggleNotifications"
+                        data-chat-target="notificationToggle"
+                        title="Enable desktop notifications">
+                    <i class="bi bi-bell"></i>
+                </button>
+                <button type="button"
+                        class="btn btn-sm btn-primary"
+                        data-controller="modal-opener"
+                        data-modal-opener-url-value="{{ path('talk_new') }}"
+                        data-action="click->modal-opener#open"
+                        title="Start new conversation">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-search">
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="search"
+                       class="form-control"
+                       placeholder="Search conversations..."
+                       data-chat-target="search"
+                       data-action="input->chat#searchTalks">
+            </div>
+        </div>
+
+        <div class="chat-filter-bar">
+            <button class="filter-btn active"
+                    data-filter="all"
+                    data-action="click->chat#filterTalks"
+                    title="Show all conversations from organization">
+                <i class="bi bi-building me-1"></i>
+                All from Org
+            </button>
+            <button class="filter-btn"
+                    data-filter="user"
+                    data-action="click->chat#filterTalks"
+                    title="Show only my conversations">
+                <i class="bi bi-person me-1"></i>
+                User Only
+            </button>
+        </div>
+
+        <div class="talk-list" data-chat-target="talkList">
+            {# Dynamically loaded via Stimulus #}
+            <div class="text-center p-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Main Chat Area #}
+    <div class="chat-main">
+        {# Mobile hamburger button - visible when no talk selected #}
+        <button class="chat-mobile-hamburger d-lg-none {{ currentTalk ? 'd-none' : '' }}"
+                data-action="click->chat#toggleSidebar"
+                title="Show conversations">
+            <i class="bi bi-list"></i>
+        </button>
+
+        {# Empty state (shown when no talk selected) #}
+        <div class="chat-empty {{ currentTalk ? 'd-none' : '' }}" data-chat-target="emptyState">
+            <i class="bi bi-chat-dots" style="font-size: 4rem; opacity: 0.3;"></i>
+            <p class="text-muted mt-3">Select a conversation to start chatting</p>
+        </div>
+
+        {# Talk header #}
+        <div class="chat-header-main {{ currentTalk ? '' : 'd-none' }}" data-chat-target="chatHeader">
+            <div class="d-flex align-items-center">
+                {# Mobile menu toggle button #}
+                <button class="btn btn-sm btn-outline-secondary d-lg-none me-2"
+                        data-action="click->chat#toggleSidebar"
+                        title="Show conversations">
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <div class="avatar me-3">
+                    <i class="bi bi-person-circle fs-2"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h6 class="mb-0 text-white" data-chat-target="talkSubject">
+                        {{ currentTalk ? currentTalk.subject : 'Talk Subject' }}
+                    </h6>
+                    <small class="text-muted" data-chat-target="talkParticipants">
+                        {% if currentTalk %}
+                            {% set participants = [] %}
+                            {% if currentTalk.contact %}
+                                {% set participants = participants|merge([currentTalk.contact]) %}
+                            {% endif %}
+                            {% if currentTalk.company %}
+                                {% set participants = participants|merge([currentTalk.company]) %}
+                            {% endif %}
+                            {% for user in currentTalk.users %}
+                                {% set participants = participants|merge([user]) %}
+                            {% endfor %}
+                            {{ participants|join(', ') ?: 'No participants' }}
+                        {% else %}
+                            Participants
+                        {% endif %}
+                    </small>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-secondary"
+                            data-action="click->chat#toggleMessageSearch"
+                            title="Search messages">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary"
+                            data-action="click->chat#toggleInfo"
+                            title="Talk info">
+                        <i class="bi bi-info-circle"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary"
+                            data-action="click->chat#refreshMessages"
+                            title="Refresh">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {# Message thread #}
+        <div class="message-thread {{ currentTalk ? '' : 'd-none' }}" data-chat-target="messageThread">
+            {# Messages loaded here via JS #}
+            <div class="text-center p-4" data-chat-target="messagesLoading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading messages...</span>
+                </div>
+            </div>
+        </div>
+
+        {# Message composer #}
+        <div class="message-composer {{ currentTalk ? '' : 'd-none' }}" data-chat-target="composer">
+            <div class="composer-actions">
+                <button class="btn btn-sm btn-link text-secondary"
+                        data-action="click->chat#attachFile"
+                        title="Attach file"
+                        type="button">
+                    <i class="bi bi-paperclip"></i>
+                </button>
+                <button class="btn btn-sm btn-link text-secondary"
+                        data-action="click->chat#openEmoji"
+                        title="Insert emoji"
+                        type="button">
+                    <i class="bi bi-emoji-smile"></i>
+                </button>
+            </div>
+
+            <textarea class="form-control composer-input"
+                      placeholder="Type a message..."
+                      data-chat-target="messageInput"
+                      data-action="keydown->chat#handleKeydown input->chat#handleInput"
+                      rows="1"></textarea>
+
+            <button class="btn btn-primary"
+                    data-action="click->chat#sendMessage"
+                    data-chat-target="sendButton"
+                    type="button">
+                <i class="bi bi-send"></i>
+            </button>
+
+            <input type="file"
+                   data-chat-target="fileInput"
+                   data-action="change->chat#handleFileSelect"
+                   multiple
+                   class="d-none"
+                   accept="image/*,.pdf,.doc,.docx,.xls,.xlsx">
+        </div>
+    </div>
+</div>
+
+{# Toast notifications #}
+<div class="toast-container position-fixed bottom-0 end-0 p-3" data-chat-target="toastContainer">
+    <div class="toast align-items-center text-white bg-primary border-0"
+         role="alert"
+         aria-live="assertive"
+         aria-atomic="true"
+         data-chat-target="toast">
+        <div class="d-flex">
+            <div class="toast-body" data-chat-target="toastBody">
+                Message sent successfully
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/chat.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

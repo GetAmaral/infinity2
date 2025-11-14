@@ -68,7 +68,7 @@ abstract class RoleTypeGenerated extends AbstractType
 
         $builder->add('systemRole', CheckboxType::class, [
             'label' => 'SystemRole',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],

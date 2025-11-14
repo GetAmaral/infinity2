@@ -23,15 +23,15 @@ use App\Entity\Step;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepActionGenerated extends EntityBase
 {
-    #[Groups(['action:read', 'action:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Length(max: 255)]
-    protected string $name;
-
     #[Groups(['action:read'])]
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'actions')]
     #[ORM\JoinColumn(nullable: false)]
     protected Step $step;
+
+    #[Groups(['action:read', 'action:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 255)]
+    protected string $name;
 
     #[Groups(['action:read'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -60,16 +60,6 @@ abstract class StepActionGenerated extends EntityBase
         parent::__construct();
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getStep(): Step
     {
         return $this->step;
@@ -78,6 +68,16 @@ abstract class StepActionGenerated extends EntityBase
     public function setStep(Step $step): self
     {
         $this->step = $step;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 

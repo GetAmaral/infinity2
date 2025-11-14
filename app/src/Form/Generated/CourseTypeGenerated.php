@@ -75,10 +75,13 @@ abstract class CourseTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '50',
                 'class' => 'form-input-modern',
             ],
             'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
                 new \Symfony\Component\Validator\Constraints\Count(['max' => 50]),
             ],
         ]);
@@ -86,7 +89,7 @@ abstract class CourseTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -98,7 +101,30 @@ abstract class CourseTypeGenerated extends AbstractType
             'label' => 'Owner',
             'required' => true,
             'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -119,10 +145,11 @@ abstract class CourseTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }

@@ -92,13 +92,13 @@ class HolidayProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('description', $requestData)) {
             $entity->setDescription($data->description);
         }
-        // recurring
-        if (!$isPatch || array_key_exists('recurring', $requestData)) {
-            $entity->setRecurring($data->recurring);
-        }
         // blocksScheduling
         if (!$isPatch || array_key_exists('blocksScheduling', $requestData)) {
             $entity->setBlocksScheduling($data->blocksScheduling);
+        }
+        // recurring
+        if (!$isPatch || array_key_exists('recurring', $requestData)) {
+            $entity->setRecurring($data->recurring);
         }
         // observed
         if (!$isPatch || array_key_exists('observed', $requestData)) {

@@ -65,9 +65,6 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      color:
-        description: "Hex color code used for visual identification of this deal type in dashboards and reports"
-        example: "#6366f1"
       deals:
         writable: false
         description: "Collection of deals associated with this deal type"
@@ -75,6 +72,9 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      color:
+        description: "Hex color code used for visual identification of this deal type in dashboards and reports"
+        example: "#6366f1"
       icon:
         description: "Bootstrap icon class name for visual representation in the UI"
         example: "bi-briefcase"

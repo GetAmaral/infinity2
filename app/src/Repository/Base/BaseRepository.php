@@ -332,14 +332,28 @@ abstract class BaseRepository extends ServiceEntityRepository
 
         // Validate sort field exists in allowed list
         if (!isset($sortableFields[$sortBy])) {
-            // Fallback to default sort
-            $sortBy = array_key_first($sortableFields) ?? 'id';
+            // Intelligently choose the best sorting field
+            // Priority: name, title, label, slug, subject, id
+            $preferredFields = ['name', 'title', 'label', 'slug', 'subject', 'id'];
+
+            foreach ($preferredFields as $field) {
+                if (isset($sortableFields[$field])) {
+                    $sortBy = $field;
+                    break;
+                }
+            }
+
+            // Final fallback if none of the preferred fields exist
+            if (!isset($sortableFields[$sortBy])) {
+                $sortBy = array_key_first($sortableFields) ?? 'id';
+            }
         }
 
         $entityProperty = $sortableFields[$sortBy];
         $direction = strtoupper($sortDir) === 'DESC' ? 'DESC' : 'ASC';
 
-        $qb->orderBy("e.{$entityProperty}", $direction);
+        // Use LOWER() for case-insensitive alphabetical sorting
+        $qb->orderBy("LOWER(e.{$entityProperty})", $direction);
     }
 
     /**

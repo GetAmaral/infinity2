@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\NotificationType;
+use App\MultiTenant\TenantContext;
 use App\Repository\NotificationTypeRepository;
 use App\Security\Voter\NotificationTypeVoter;
 use App\Form\NotificationTypeType;
@@ -36,6 +37,7 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -219,31 +221,60 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
         $form = $this->createForm(NotificationTypeType::class, $notificationType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($notificationType);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $notificationType->setOrganization($organization);
+                error_log('✅ NotificationTypeController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($notificationType);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($notificationType);
 
-                // After create hook
-                $this->afterCreate($notificationType);
+                    $this->entityManager->persist($notificationType);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'notificationtype.flash.created_successfully',
-                    ['%name%' => (string) $notificationType],
-                    'notificationtype'
-                ));
+                    // After create hook
+                    $this->afterCreate($notificationType);
 
-                return $this->redirectToRoute('notificationtype_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'notificationtype.flash.created_successfully',
+                        ['%name%' => (string) $notificationType],
+                        'notificationtype'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'notificationtype.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'notificationtype'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $notificationType;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'NotificationType',
+                            'entityId' => $notificationType->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('notificationtype_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'notificationtype.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'notificationtype'
+                    ));
+                }
             }
         }
 
@@ -286,33 +317,43 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(NotificationTypeVoter::EDIT, $notificationType);
 
+        // Store original organization to preserve it
+        $originalOrganization = $notificationType->getOrganization();
+
         $form = $this->createForm(NotificationTypeType::class, $notificationType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($notificationType);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $notificationType->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($notificationType);
 
-                // After update hook
-                $this->afterUpdate($notificationType);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'notificationtype.flash.updated_successfully',
-                    ['%name%' => (string) $notificationType],
-                    'notificationtype'
-                ));
+                    // After update hook
+                    $this->afterUpdate($notificationType);
 
-                return $this->redirectToRoute('notificationtype_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'notificationtype.flash.updated_successfully',
+                        ['%name%' => (string) $notificationType],
+                        'notificationtype'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'notificationtype.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'notificationtype'
-                ));
+                    return $this->redirectToRoute('notificationtype_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'notificationtype.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'notificationtype'
+                    ));
+                }
             }
         }
 
@@ -381,9 +422,22 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(NotificationTypeVoter::VIEW, $notificationType);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($notificationType);
+
         return $this->render('notificationtype/show.html.twig', [
             'notificationType' => $notificationType,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in NotificationTypeController to customize displayed properties
+     */
+    protected function buildShowProperties(NotificationType $notificationType): array
+    {
+        return [];
     }
 
     // ====================================
@@ -394,12 +448,22 @@ abstract class NotificationTypeControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(NotificationType $notificationType): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $notificationType->setOrganization($organization);
+            error_log('✅ NotificationTypeController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ NotificationTypeController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

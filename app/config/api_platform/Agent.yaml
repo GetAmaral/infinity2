@@ -47,6 +47,36 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
+      whatsappInstanceName:
+        description: "WhatsApp Instance Name"
+        example: "Sample whatsapp instance name"
+      whatsappPhone:
+        description: "WhatsApp Phone"
+        example: "Sample whatsapp phone"
+      whatsappServerUrl:
+        description: "WhatsApp Server URL"
+        example: "Sample whatsapp server url"
+      whatsappApiKey:
+        description: "WhatsApp API Key"
+        example: "Sample whatsapp api key"
+      whatsappActive:
+        description: "WhatsApp Active"
+        example: true
+      whatsappStatus:
+        description: "WhatsApp Status"
+        example: "Sample whatsapp status"
+      whatsappWebhookToken:
+        description: "WhatsApp Webhook Token"
+        example: "Sample whatsapp webhook token"
+      whatsappLastConnectedAt:
+        description: "WhatsApp Last Connected At"
+        example: "2025-01-15T10:30:00Z"
+      whatsappMetadata:
+        description: "WhatsApp Metadata"
+        example: "{\"key\": \"value\"}"
+      treeFlow:
+        description: "Tree Flow"
+        example: "/api/tree_flows/01234567-89ab-cdef-0123-456789abcdef"
       name:
         description: "The brand name"
         example: "Nike"

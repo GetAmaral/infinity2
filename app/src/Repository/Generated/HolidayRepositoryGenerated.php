@@ -54,7 +54,7 @@ abstract class HolidayRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'description' => 'description',            'recurring' => 'recurring',            'blocksScheduling' => 'blocksScheduling',            'observed' => 'observed',            'active' => 'active',            'country' => 'country',            'calendar' => 'calendar',            'region' => 'region',            'year' => 'year',            'event' => 'event',            'holidayType' => 'holidayType',            'originalDate' => 'originalDate',            'affectsSLA' => 'affectsSLA',            'sentAt' => 'sentAt',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'description' => 'description',            'blocksScheduling' => 'blocksScheduling',            'recurring' => 'recurring',            'observed' => 'observed',            'active' => 'active',            'country' => 'country',            'calendar' => 'calendar',            'region' => 'region',            'year' => 'year',            'event' => 'event',            'holidayType' => 'holidayType',            'originalDate' => 'originalDate',            'affectsSLA' => 'affectsSLA',            'sentAt' => 'sentAt',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class HolidayRepositoryGenerated extends BaseRepository
      */
     protected function getBooleanFilterFields(): array
     {
-        return [            'recurring',            'blocksScheduling',            'observed',            'active',            'affectsSLA',            'workingDay',        ];
+        return [            'blocksScheduling',            'recurring',            'observed',            'active',            'affectsSLA',            'workingDay',        ];
     }
 
     /**

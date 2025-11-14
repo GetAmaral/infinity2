@@ -47,15 +47,15 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
-      name:
-        description: "The brand name"
-        example: "Nike"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       default:
         description: "Whether this is a default system template that cannot be deleted"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      name:
+        description: "The brand name"
+        example: "Nike"
         # Advanced filters
         filters:
           - type: OrderFilter
@@ -83,16 +83,16 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      industry:
-        description: "The target industry for this pipeline template (e.g., SaaS, Real Estate, Healthcare)"
-        example: "SaaS"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       stageCount:
         writable: false
         description: "Total number of stages in this template (computed from stages relationship)"
         example: "7"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      industry:
+        description: "The target industry for this pipeline template (e.g., SaaS, Real Estate, Healthcare)"
+        example: "SaaS"
         # Advanced filters
         filters:
           - type: OrderFilter

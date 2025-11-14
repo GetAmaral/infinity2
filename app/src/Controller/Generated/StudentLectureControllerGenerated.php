@@ -132,13 +132,13 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
             // Property metadata for Twig templates (as PHP arrays)
             'listProperties' => json_decode('[{"name":"student","label":"Student","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudent","isRelationship":true},{"name":"lecture","label":"Lecture","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLecture","isRelationship":true},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletionPercentage","isRelationship":false},{"name":"completed","label":"Completed","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompleted","isRelationship":false}]', true),
             'searchableFields' => json_decode('[{"name":"student","label":"Student","type":"string"},{"name":"lecture","label":"Lecture","type":"string"},{"name":"studentCourse","label":"StudentCourse","type":"string"}]', true),
-            'filterableFields' => json_decode('[{"name":"student","label":"Student","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lecture","label":"Lecture","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"studentCourse","label":"StudentCourse","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"watchedSeconds","label":"WatchedSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastPositionSeconds","label":"LastPositionSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completed","label":"Completed","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastWatchedAt","label":"LastWatchedAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completedAt","label":"CompletedAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'filterableFields' => json_decode('[{"name":"student","label":"Student","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lecture","label":"Lecture","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"studentCourse","label":"StudentCourse","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"watchedSeconds","label":"WatchedSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastPositionSeconds","label":"LastPositionSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completed","label":"Completed","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastWatchedAt","label":"LastWatchedAt","type":"datetime","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completedAt","label":"CompletedAt","type":"datetime","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
             'sortableFields' => json_decode('[{"name":"student","label":"Student"},{"name":"lecture","label":"Lecture"},{"name":"studentCourse","label":"StudentCourse"},{"name":"watchedSeconds","label":"WatchedSeconds"},{"name":"lastPositionSeconds","label":"LastPositionSeconds"},{"name":"completionPercentage","label":"CompletionPercentage"},{"name":"completed","label":"Completed"},{"name":"lastWatchedAt","label":"LastWatchedAt"},{"name":"completedAt","label":"CompletedAt"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
             'list_fields' => '[{"name":"student","label":"Student","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStudent","isRelationship":true},{"name":"lecture","label":"Lecture","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLecture","isRelationship":true},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompletionPercentage","isRelationship":false},{"name":"completed","label":"Completed","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompleted","isRelationship":false}]',
             'searchable_fields' => '[{"name":"student","label":"Student","type":"string"},{"name":"lecture","label":"Lecture","type":"string"},{"name":"studentCourse","label":"StudentCourse","type":"string"}]',
-            'filterable_fields' => '[{"name":"student","label":"Student","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lecture","label":"Lecture","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"studentCourse","label":"StudentCourse","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"watchedSeconds","label":"WatchedSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastPositionSeconds","label":"LastPositionSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completed","label":"Completed","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastWatchedAt","label":"LastWatchedAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completedAt","label":"CompletedAt","type":"datetime_immutable","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
+            'filterable_fields' => '[{"name":"student","label":"Student","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lecture","label":"Lecture","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"studentCourse","label":"StudentCourse","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"watchedSeconds","label":"WatchedSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastPositionSeconds","label":"LastPositionSeconds","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completionPercentage","label":"CompletionPercentage","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completed","label":"Completed","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"lastWatchedAt","label":"LastWatchedAt","type":"datetime","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"completedAt","label":"CompletedAt","type":"datetime","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"student","label":"Student"},{"name":"lecture","label":"Lecture"},{"name":"studentCourse","label":"StudentCourse"},{"name":"watchedSeconds","label":"WatchedSeconds"},{"name":"lastPositionSeconds","label":"LastPositionSeconds"},{"name":"completionPercentage","label":"CompletionPercentage"},{"name":"completed","label":"Completed"},{"name":"lastWatchedAt","label":"LastWatchedAt"},{"name":"completedAt","label":"CompletedAt"}]',
         ]);
     }
@@ -203,31 +203,53 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
         $form = $this->createForm(StudentLectureType::class, $studentLecture);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($studentLecture);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($studentLecture);
 
-                $this->entityManager->persist($studentLecture);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($studentLecture);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($studentLecture);
+                    // After create hook
+                    $this->afterCreate($studentLecture);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'studentlecture.flash.created_successfully',
-                    ['%name%' => (string) $studentLecture],
-                    'studentlecture'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'studentlecture.flash.created_successfully',
+                        ['%name%' => (string) $studentLecture],
+                        'studentlecture'
+                    ));
 
-                return $this->redirectToRoute('studentlecture_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'studentlecture.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'studentlecture'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $studentLecture;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'StudentLecture',
+                            'entityId' => $studentLecture->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('studentlecture_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'studentlecture.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'studentlecture'
+                    ));
+                }
             }
         }
 
@@ -273,30 +295,32 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
         $form = $this->createForm(StudentLectureType::class, $studentLecture);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($studentLecture);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($studentLecture);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($studentLecture);
+                    // After update hook
+                    $this->afterUpdate($studentLecture);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'studentlecture.flash.updated_successfully',
-                    ['%name%' => (string) $studentLecture],
-                    'studentlecture'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'studentlecture.flash.updated_successfully',
+                        ['%name%' => (string) $studentLecture],
+                        'studentlecture'
+                    ));
 
-                return $this->redirectToRoute('studentlecture_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('studentlecture_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'studentlecture.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'studentlecture'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'studentlecture.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'studentlecture'
+                    ));
+                }
             }
         }
 
@@ -365,9 +389,22 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(StudentLectureVoter::VIEW, $studentLecture);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($studentLecture);
+
         return $this->render('studentlecture/show.html.twig', [
             'studentLecture' => $studentLecture,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in StudentLectureController to customize displayed properties
+     */
+    protected function buildShowProperties(StudentLecture $studentLecture): array
+    {
+        return [];
     }
 
     // ====================================
@@ -378,12 +415,10 @@ abstract class StudentLectureControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(StudentLecture $studentLecture): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

@@ -7,14 +7,12 @@ export default class extends Controller {
 
     async open(event) {
         event.preventDefault();
-        console.log('🔵 Modal opener clicked!', this.urlValue);
 
         // Close any open Bootstrap dropdowns
         this.closeAllDropdowns();
 
         try {
             // Fetch the modal content
-            console.log('📡 Fetching modal from:', this.urlValue);
             const response = await fetch(this.urlValue, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
@@ -22,18 +20,15 @@ export default class extends Controller {
             });
 
             if (!response.ok) {
-                console.error('❌ Response not OK:', response.status, response.statusText);
                 throw new Error('Failed to load modal');
             }
 
             const html = await response.text();
-            console.log('✅ Modal HTML received, length:', html.length);
 
             // Insert into global modal container
             const container = document.getElementById('global-modal-container');
             if (container) {
                 container.innerHTML = html;
-                console.log('✅ Modal inserted into container');
             } else {
                 console.error('❌ global-modal-container not found!');
             }

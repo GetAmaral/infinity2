@@ -73,7 +73,30 @@ abstract class DealTypeGenerated extends AbstractType
             'label' => 'Company',
             'required' => true,
             'class' => \App\Entity\Company::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Company',
+                'data-relation-select-route-value' => 'company_api_search',
+                'data-relation-select-add-route-value' => 'company_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select company',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -100,7 +123,30 @@ abstract class DealTypeGenerated extends AbstractType
             'label' => 'CurrentStage',
             'required' => true,
             'class' => \App\Entity\PipelineStage::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'PipelineStage',
+                'data-relation-select-route-value' => 'pipeline_stage_api_search',
+                'data-relation-select-add-route-value' => 'pipeline_stage_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select pipelinestage',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -120,7 +166,30 @@ abstract class DealTypeGenerated extends AbstractType
             'label' => 'DealType',
             'required' => false,
             'class' => \App\Entity\DealType::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'DealType',
+                'data-relation-select-route-value' => 'deal_type_api_search',
+                'data-relation-select-add-route-value' => 'deal_type_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select dealtype',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -133,7 +202,30 @@ abstract class DealTypeGenerated extends AbstractType
             'required' => false,
             'help' => 'Sales pipeline this deal belongs to',
             'class' => \App\Entity\Pipeline::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Pipeline',
+                'data-relation-select-route-value' => 'pipeline_api_search',
+                'data-relation-select-add-route-value' => 'pipeline_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select pipeline',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -159,7 +251,30 @@ abstract class DealTypeGenerated extends AbstractType
             'label' => 'Category',
             'required' => false,
             'class' => \App\Entity\DealCategory::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'DealCategory',
+                'data-relation-select-route-value' => 'deal_category_api_search',
+                'data-relation-select-add-route-value' => 'deal_category_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select dealcategory',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -273,20 +388,43 @@ abstract class DealTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('products', EntityType::class, [
-            'label' => 'Products',
+        $builder->add('closureDate', DateTimeType::class, [
+            'label' => 'ClosureDate',
             'required' => false,
-            'class' => \App\Entity\Product::class,
-            'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('closureDate', DateTimeType::class, [
-            'label' => 'ClosureDate',
+        $builder->add('products', EntityType::class, [
+            'label' => 'Products',
             'required' => false,
+            'class' => \App\Entity\Product::class,
+            'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Product',
+                'data-relation-select-route-value' => 'product_api_search',
+                'data-relation-select-add-route-value' => 'product_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more product',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -338,7 +476,66 @@ abstract class DealTypeGenerated extends AbstractType
             'label' => 'Manager',
             'required' => true,
             'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
+                'class' => 'form-input-modern',
+            ],
+        ]);
+        }
+
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('owner', EntityType::class, [
+            'label' => 'Deal Owner',
+            'required' => true,
+            'help' => 'Person who owns this deal',
+            'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
+            'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -349,23 +546,33 @@ abstract class DealTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\User::class,
             'multiple' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
 
-        // Conditionally exclude parent back-reference to prevent circular references in collections
-        if (empty($options['exclude_parent'])) {
-        $builder->add('owner', EntityType::class, [
-            'label' => 'Deal Owner',
-            'required' => true,
-            'help' => 'Person who owns this deal',
-            'class' => \App\Entity\User::class,
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more user',
                 'class' => 'form-input-modern',
             ],
         ]);
-        }
 
         // Conditionally exclude parent back-reference to prevent circular references in collections
         if (empty($options['exclude_parent'])) {
@@ -373,7 +580,30 @@ abstract class DealTypeGenerated extends AbstractType
             'label' => 'PrimaryContact',
             'required' => false,
             'class' => \App\Entity\Contact::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Contact',
+                'data-relation-select-route-value' => 'contact_api_search',
+                'data-relation-select-add-route-value' => 'contact_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select contact',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -384,7 +614,30 @@ abstract class DealTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Contact::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Contact',
+                'data-relation-select-route-value' => 'contact_api_search',
+                'data-relation-select-add-route-value' => 'contact_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more contact',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -395,7 +648,30 @@ abstract class DealTypeGenerated extends AbstractType
             'label' => 'LeadSource',
             'required' => false,
             'class' => \App\Entity\LeadSource::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'LeadSource',
+                'data-relation-select-route-value' => 'lead_source_api_search',
+                'data-relation-select-add-route-value' => 'lead_source_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select leadsource',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -407,7 +683,30 @@ abstract class DealTypeGenerated extends AbstractType
             'label' => 'Campaign',
             'required' => false,
             'class' => \App\Entity\Campaign::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Campaign',
+                'data-relation-select-route-value' => 'campaign_api_search',
+                'data-relation-select-add-route-value' => 'campaign_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select campaign',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -446,10 +745,11 @@ abstract class DealTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -469,10 +769,11 @@ abstract class DealTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -492,10 +793,11 @@ abstract class DealTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }
@@ -505,7 +807,30 @@ abstract class DealTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Competitor::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Competitor',
+                'data-relation-select-route-value' => 'competitor_api_search',
+                'data-relation-select-add-route-value' => 'competitor_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more competitor',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -515,7 +840,30 @@ abstract class DealTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Tag::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Tag',
+                'data-relation-select-route-value' => 'tag_api_search',
+                'data-relation-select-add-route-value' => 'tag_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more tag',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -535,7 +883,30 @@ abstract class DealTypeGenerated extends AbstractType
             'label' => 'LostReason',
             'required' => false,
             'class' => \App\Entity\LostReason::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'LostReason',
+                'data-relation-select-route-value' => 'lost_reason_api_search',
+                'data-relation-select-add-route-value' => 'lost_reason_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select lostreason',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -547,7 +918,30 @@ abstract class DealTypeGenerated extends AbstractType
             'label' => 'WinReason',
             'required' => false,
             'class' => \App\Entity\WinReason::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'WinReason',
+                'data-relation-select-route-value' => 'win_reason_api_search',
+                'data-relation-select-add-route-value' => 'win_reason_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select winreason',
                 'class' => 'form-input-modern',
             ],
         ]);

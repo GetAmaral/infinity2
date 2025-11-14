@@ -110,3 +110,34 @@ services:
             $tenantContext: '@App\MultiTenant\TenantContext'
             $security: '@security.helper'
             $logger: '@logger'
+
+    # OpenAI Service Configuration
+    App\Service\OpenAI\OpenAIService:
+        arguments:
+            $apiKey: '%env(OPENAI_API_KEY)%'
+            $model: '%env(OPENAI_MODEL)%'
+            $maxTokens: '%env(int:OPENAI_MAX_TOKENS)%'
+            $temperature: '%env(float:OPENAI_TEMPERATURE)%'
+            $logger: '@monolog.logger'
+
+    # WhatsApp Integration Services
+    App\Service\WhatsApp\WhatsAppService:
+        autowire: true
+        autoconfigure: true
+
+    App\Service\WhatsApp\EvolutionApiClient:
+        autowire: true
+        autoconfigure: true
+
+    App\Service\WhatsApp\MediaDownloadService:
+        autowire: true
+        autoconfigure: true
+        arguments:
+            $tempDir: '%kernel.project_dir%/var/tmp'
+
+    App\Service\WhatsApp\WebhookIdempotencyService:
+        autowire: true
+        autoconfigure: true
+        arguments:
+            $cache: '@cache.app'
+            $ttl: 3600

@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Holiday;
+use App\MultiTenant\TenantContext;
 use App\Repository\HolidayRepository;
 use App\Security\Voter\HolidayVoter;
 use App\Form\HolidayType;
@@ -36,6 +37,7 @@ abstract class HolidayControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -86,8 +88,8 @@ abstract class HolidayControllerGenerated extends BaseApiController
             ] : null,
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
-            'recurring' => $entity->getRecurring(),
             'blocksScheduling' => $entity->getBlocksScheduling(),
+            'recurring' => $entity->getRecurring(),
             'observed' => $entity->getObserved(),
             'active' => $entity->getActive(),
             'country' => $entity->getCountry(),
@@ -141,16 +143,16 @@ abstract class HolidayControllerGenerated extends BaseApiController
             'create_permission' => HolidayVoter::CREATE,
 
             // Property metadata for Twig templates (as PHP arrays)
-            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"recurring","label":"Recurring","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurring","isRelationship":false},{"name":"blocksScheduling","label":"Blocks Scheduling","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBlocksScheduling","isRelationship":false},{"name":"observed","label":"Observed","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getObserved","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"country","label":"Country","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountry","isRelationship":false},{"name":"calendar","label":"Calendar","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendar","isRelationship":true},{"name":"region","label":"Region","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRegion","isRelationship":false},{"name":"year","label":"Year","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getYear","isRelationship":false},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"holidayType","label":"Holiday Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidayType","isRelationship":false},{"name":"affectsSLA","label":"Affects SLA","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAffectsSLA","isRelationship":false},{"name":"sentAt","label":"Sent At","type":"date","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getSentAt","isRelationship":false}]', true),
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"blocksScheduling","label":"Blocks Scheduling","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBlocksScheduling","isRelationship":false},{"name":"recurring","label":"Recurring","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurring","isRelationship":false},{"name":"observed","label":"Observed","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getObserved","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"country","label":"Country","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountry","isRelationship":false},{"name":"calendar","label":"Calendar","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendar","isRelationship":true},{"name":"region","label":"Region","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRegion","isRelationship":false},{"name":"year","label":"Year","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getYear","isRelationship":false},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"holidayType","label":"Holiday Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidayType","isRelationship":false},{"name":"affectsSLA","label":"Affects SLA","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAffectsSLA","isRelationship":false},{"name":"sentAt","label":"Sent At","type":"date","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getSentAt","isRelationship":false}]', true),
             'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"country","label":"Country","type":"string"},{"name":"region","label":"Region","type":"string"},{"name":"holidayType","label":"Holiday Type","type":"string"},{"name":"notes","label":"Notes","type":"text"}]', true),
             'filterableFields' => json_decode('[{"name":"name","label":"Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"recurring","label":"Recurring","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"observed","label":"Observed","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"country","label":"Country","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"region","label":"Region","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"year","label":"Year","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"holidayType","label":"Holiday Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"originalDate","label":"Original Date","type":"date","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"affectsSLA","label":"Affects SLA","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"sentAt","label":"Sent At","type":"date","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"workingDay","label":"Working Day","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]', true),
-            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"recurring","label":"Recurring"},{"name":"blocksScheduling","label":"Blocks Scheduling"},{"name":"observed","label":"Observed"},{"name":"active","label":"Active"},{"name":"country","label":"Country"},{"name":"calendar","label":"Calendar"},{"name":"region","label":"Region"},{"name":"year","label":"Year"},{"name":"event","label":"Event"},{"name":"holidayType","label":"Holiday Type"},{"name":"originalDate","label":"Original Date"},{"name":"affectsSLA","label":"Affects SLA"},{"name":"sentAt","label":"Sent At"}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"blocksScheduling","label":"Blocks Scheduling"},{"name":"recurring","label":"Recurring"},{"name":"observed","label":"Observed"},{"name":"active","label":"Active"},{"name":"country","label":"Country"},{"name":"calendar","label":"Calendar"},{"name":"region","label":"Region"},{"name":"year","label":"Year"},{"name":"event","label":"Event"},{"name":"holidayType","label":"Holiday Type"},{"name":"originalDate","label":"Original Date"},{"name":"affectsSLA","label":"Affects SLA"},{"name":"sentAt","label":"Sent At"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"recurring","label":"Recurring","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurring","isRelationship":false},{"name":"blocksScheduling","label":"Blocks Scheduling","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBlocksScheduling","isRelationship":false},{"name":"observed","label":"Observed","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getObserved","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"country","label":"Country","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountry","isRelationship":false},{"name":"calendar","label":"Calendar","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendar","isRelationship":true},{"name":"region","label":"Region","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRegion","isRelationship":false},{"name":"year","label":"Year","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getYear","isRelationship":false},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"holidayType","label":"Holiday Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidayType","isRelationship":false},{"name":"affectsSLA","label":"Affects SLA","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAffectsSLA","isRelationship":false},{"name":"sentAt","label":"Sent At","type":"date","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getSentAt","isRelationship":false}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"blocksScheduling","label":"Blocks Scheduling","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getBlocksScheduling","isRelationship":false},{"name":"recurring","label":"Recurring","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurring","isRelationship":false},{"name":"observed","label":"Observed","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getObserved","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"country","label":"Country","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCountry","isRelationship":false},{"name":"calendar","label":"Calendar","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCalendar","isRelationship":true},{"name":"region","label":"Region","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRegion","isRelationship":false},{"name":"year","label":"Year","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getYear","isRelationship":false},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"holidayType","label":"Holiday Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getHolidayType","isRelationship":false},{"name":"affectsSLA","label":"Affects SLA","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAffectsSLA","isRelationship":false},{"name":"sentAt","label":"Sent At","type":"date","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getSentAt","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"country","label":"Country","type":"string"},{"name":"region","label":"Region","type":"string"},{"name":"holidayType","label":"Holiday Type","type":"string"},{"name":"notes","label":"Notes","type":"text"}]',
             'filterable_fields' => '[{"name":"name","label":"Name","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"recurring","label":"Recurring","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"observed","label":"Observed","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"country","label":"Country","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"region","label":"Region","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"year","label":"Year","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"holidayType","label":"Holiday Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"originalDate","label":"Original Date","type":"date","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"affectsSLA","label":"Affects SLA","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"sentAt","label":"Sent At","type":"date","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"workingDay","label":"Working Day","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]',
-            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"recurring","label":"Recurring"},{"name":"blocksScheduling","label":"Blocks Scheduling"},{"name":"observed","label":"Observed"},{"name":"active","label":"Active"},{"name":"country","label":"Country"},{"name":"calendar","label":"Calendar"},{"name":"region","label":"Region"},{"name":"year","label":"Year"},{"name":"event","label":"Event"},{"name":"holidayType","label":"Holiday Type"},{"name":"originalDate","label":"Original Date"},{"name":"affectsSLA","label":"Affects SLA"},{"name":"sentAt","label":"Sent At"}]',
+            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"blocksScheduling","label":"Blocks Scheduling"},{"name":"recurring","label":"Recurring"},{"name":"observed","label":"Observed"},{"name":"active","label":"Active"},{"name":"country","label":"Country"},{"name":"calendar","label":"Calendar"},{"name":"region","label":"Region"},{"name":"year","label":"Year"},{"name":"event","label":"Event"},{"name":"holidayType","label":"Holiday Type"},{"name":"originalDate","label":"Original Date"},{"name":"affectsSLA","label":"Affects SLA"},{"name":"sentAt","label":"Sent At"}]',
         ]);
     }
 
@@ -214,31 +216,60 @@ abstract class HolidayControllerGenerated extends BaseApiController
         $form = $this->createForm(HolidayType::class, $holiday);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($holiday);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $holiday->setOrganization($organization);
+                error_log('✅ HolidayController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($holiday);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($holiday);
 
-                // After create hook
-                $this->afterCreate($holiday);
+                    $this->entityManager->persist($holiday);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'holiday.flash.created_successfully',
-                    ['%name%' => (string) $holiday],
-                    'holiday'
-                ));
+                    // After create hook
+                    $this->afterCreate($holiday);
 
-                return $this->redirectToRoute('holiday_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'holiday.flash.created_successfully',
+                        ['%name%' => (string) $holiday],
+                        'holiday'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'holiday.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'holiday'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $holiday;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Holiday',
+                            'entityId' => $holiday->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('holiday_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'holiday.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'holiday'
+                    ));
+                }
             }
         }
 
@@ -281,33 +312,43 @@ abstract class HolidayControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(HolidayVoter::EDIT, $holiday);
 
+        // Store original organization to preserve it
+        $originalOrganization = $holiday->getOrganization();
+
         $form = $this->createForm(HolidayType::class, $holiday);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($holiday);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $holiday->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($holiday);
 
-                // After update hook
-                $this->afterUpdate($holiday);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'holiday.flash.updated_successfully',
-                    ['%name%' => (string) $holiday],
-                    'holiday'
-                ));
+                    // After update hook
+                    $this->afterUpdate($holiday);
 
-                return $this->redirectToRoute('holiday_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'holiday.flash.updated_successfully',
+                        ['%name%' => (string) $holiday],
+                        'holiday'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'holiday.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'holiday'
-                ));
+                    return $this->redirectToRoute('holiday_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'holiday.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'holiday'
+                    ));
+                }
             }
         }
 
@@ -376,9 +417,22 @@ abstract class HolidayControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(HolidayVoter::VIEW, $holiday);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($holiday);
+
         return $this->render('holiday/show.html.twig', [
             'holiday' => $holiday,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in HolidayController to customize displayed properties
+     */
+    protected function buildShowProperties(Holiday $holiday): array
+    {
+        return [];
     }
 
     // ====================================
@@ -389,12 +443,22 @@ abstract class HolidayControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Holiday $holiday): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $holiday->setOrganization($organization);
+            error_log('✅ HolidayController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ HolidayController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

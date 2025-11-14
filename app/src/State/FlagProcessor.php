@@ -86,13 +86,13 @@ class FlagProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('name', $requestData)) {
             $entity->setName($data->name);
         }
-        // category
-        if (!$isPatch || array_key_exists('category', $requestData)) {
-            $entity->setCategory($data->category);
-        }
         // description
         if (!$isPatch || array_key_exists('description', $requestData)) {
             $entity->setDescription($data->description);
+        }
+        // category
+        if (!$isPatch || array_key_exists('category', $requestData)) {
+            $entity->setCategory($data->category);
         }
         // color
         if (!$isPatch || array_key_exists('color', $requestData)) {

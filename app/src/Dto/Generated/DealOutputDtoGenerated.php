@@ -107,13 +107,13 @@ abstract class DealOutputDtoGenerated
 
     public ?\DateTimeImmutable $expectedClosureDate = null;
 
+    public ?\DateTimeImmutable $closureDate = null;
+
     /**
      * products collection
      * @var ProductOutputDto[]
      */
     public array $products = [];
-
-    public ?\DateTimeImmutable $closureDate = null;
 
     public ?\DateTimeImmutable $initialDate = null;
 
@@ -132,16 +132,16 @@ abstract class DealOutputDtoGenerated
     public string|UserOutputDto|null $manager = null;
 
     /**
-     * team collection
-     * @var UserOutputDto[]
-     */
-    public array $team = [];
-
-    /**
      * owner reference
      * Can be: IRI string or nested UserOutput object
      */
     public string|UserOutputDto $owner;
+
+    /**
+     * team collection
+     * @var UserOutputDto[]
+     */
+    public array $team = [];
 
     /**
      * primaryContact reference
@@ -464,16 +464,6 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getProducts(): array    {
-        return $this->products;
-    }
-
-    public function setProducts(array $products): self
-    {
-        $this->products = $products;
-        return $this;
-    }
-
     public function getClosureDate(): ?\DateTimeImmutable    {
         return $this->closureDate;
     }
@@ -481,6 +471,16 @@ abstract class DealOutputDtoGenerated
     public function setClosureDate(?\DateTimeImmutable $closureDate): self
     {
         $this->closureDate = $closureDate;
+        return $this;
+    }
+
+    public function getProducts(): array    {
+        return $this->products;
+    }
+
+    public function setProducts(array $products): self
+    {
+        $this->products = $products;
         return $this;
     }
 
@@ -544,16 +544,6 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getTeam(): array    {
-        return $this->team;
-    }
-
-    public function setTeam(array $team): self
-    {
-        $this->team = $team;
-        return $this;
-    }
-
     public function getOwner(): string|UserOutputDto    {
         return $this->owner;
     }
@@ -561,6 +551,16 @@ abstract class DealOutputDtoGenerated
     public function setOwner(string|UserOutputDto $owner): self
     {
         $this->owner = $owner;
+        return $this;
+    }
+
+    public function getTeam(): array    {
+        return $this->team;
+    }
+
+    public function setTeam(array $team): self
+    {
+        $this->team = $team;
         return $this;
     }
 

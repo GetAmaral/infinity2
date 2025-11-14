@@ -34,7 +34,30 @@ abstract class StudentLectureTypeGenerated extends AbstractType
             'label' => 'Student',
             'required' => true,
             'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -45,7 +68,30 @@ abstract class StudentLectureTypeGenerated extends AbstractType
             'label' => 'Lecture',
             'required' => true,
             'class' => \App\Entity\CourseLecture::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'CourseLecture',
+                'data-relation-select-route-value' => 'course_lecture_api_search',
+                'data-relation-select-add-route-value' => 'course_lecture_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select courselecture',
                 'class' => 'form-input-modern',
             ],
         ]);

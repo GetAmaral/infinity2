@@ -98,9 +98,9 @@ abstract class TaskOutputDtoGenerated
 
     public ?string $emailSubject = null;
 
-    public ?string $phoneNumber = null;
-
     public string $taskStatus;
+
+    public ?string $phoneNumber = null;
 
     public ?string $meetingUrl = null;
 
@@ -397,16 +397,6 @@ abstract class TaskOutputDtoGenerated
         return $this;
     }
 
-    public function getPhoneNumber(): ?string    {
-        return $this->phoneNumber;
-    }
-
-    public function setPhoneNumber(?string $phoneNumber): self
-    {
-        $this->phoneNumber = $phoneNumber;
-        return $this;
-    }
-
     public function getTaskStatus(): string    {
         return $this->taskStatus;
     }
@@ -414,6 +404,16 @@ abstract class TaskOutputDtoGenerated
     public function setTaskStatus(string $taskStatus): self
     {
         $this->taskStatus = $taskStatus;
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): self
+    {
+        $this->phoneNumber = $phoneNumber;
         return $this;
     }
 

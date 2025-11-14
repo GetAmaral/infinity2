@@ -28,9 +28,9 @@ abstract class FlagOutputDtoGenerated
 
     public string $name;
 
-    public string $category;
-
     public ?string $description = null;
+
+    public string $category;
 
     public ?string $color = null;
 
@@ -87,16 +87,6 @@ abstract class FlagOutputDtoGenerated
         return $this;
     }
 
-    public function getCategory(): string    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
-        return $this;
-    }
-
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -104,6 +94,16 @@ abstract class FlagOutputDtoGenerated
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getCategory(): string    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
         return $this;
     }
 

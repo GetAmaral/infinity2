@@ -194,7 +194,7 @@ abstract class ProductGenerated extends EntityBase
     protected ?string $discountPercentage = null;
 
     #[Groups(['product:read', 'product:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $endOfLifeDate = null;
 
     #[Groups(['product:read', 'product:write'])]
@@ -206,7 +206,7 @@ abstract class ProductGenerated extends EntityBase
     protected ?array $features = null;
 
     #[Groups(['product:read', 'product:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $launchDate = null;
 
     #[Groups(['product:read', 'product:write'])]

@@ -58,7 +58,7 @@
                         <h2 class="modal-title-text">
                             {% block modal_title %}
                                 {% if is_edit %}
-                                    {{ title_edit|default('action.edit'|trans ~ ' ' ~ entity.name) }}
+                                    {{ title_edit|default('action.edit'|trans ~ ' ' ~ entity) }}
                                 {% else %}
                                     {{ title_create|trans({}, submit_domain|default('messages')) }}
                                 {% endif %}
@@ -85,6 +85,17 @@
 
             <!-- Body -->
             <div class="modal-body-content">
+                {# Display error banner if form has errors #}
+                {% if form.vars.submitted and not form.vars.valid %}
+                    <div class="alert alert-danger d-flex align-items-start mb-4" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 10px; padding: 1rem;">
+                        <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 1.5rem; color: #dc2626; flex-shrink: 0; margin-top: 0.125rem;"></i>
+                        <div style="flex: 1;">
+                            <h5 class="alert-heading mb-2" style="color: #dc2626; font-weight: 600; font-size: 1rem;">{{ 'form.validation.errors_found'|trans({}, 'messages') }}</h5>
+                            <p class="mb-0" style="color: #991b1b; font-size: 0.9rem;">{{ 'form.validation.please_correct'|trans({}, 'messages') }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+
                 {% block modal_body %}
                     {# Child templates must override this block with form fields #}
                 {% endblock %}

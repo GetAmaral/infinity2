@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\DealType;
+use App\MultiTenant\TenantContext;
 use App\Repository\DealTypeRepository;
 use App\Security\Voter\DealTypeVoter;
 use App\Form\DealTypeType;
@@ -36,6 +37,7 @@ abstract class DealTypeControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -87,7 +89,6 @@ abstract class DealTypeControllerGenerated extends BaseApiController
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
             'category' => $entity->getCategory(),
-            'color' => $entity->getColor(),
             'deals' => ($dealsRel = $entity->getDeals()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
@@ -95,6 +96,7 @@ abstract class DealTypeControllerGenerated extends BaseApiController
                 ],
                 $dealsRel->toArray()
             ) : [],
+            'color' => $entity->getColor(),
             'icon' => $entity->getIcon(),
             'default' => $entity->getDefault(),
             'active' => $entity->getActive(),
@@ -133,13 +135,13 @@ abstract class DealTypeControllerGenerated extends BaseApiController
             'create_permission' => DealTypeVoter::CREATE,
 
             // Property metadata for Twig templates (as PHP arrays)
-            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"expectedDuration","label":"Expected Duration (days)","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExpectedDuration","isRelationship":false},{"name":"winProbability","label":"Win Probability (%)","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinProbability","isRelationship":false}]', true),
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"expectedDuration","label":"Expected Duration (days)","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExpectedDuration","isRelationship":false},{"name":"winProbability","label":"Win Probability (%)","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinProbability","isRelationship":false}]', true),
             'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"category","label":"Category","type":"string"}]', true),
             'filterableFields' => json_decode('[{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
             'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"category","label":"Category"},{"name":"deals","label":"Deals"},{"name":"default","label":"Default"},{"name":"active","label":"Active"},{"name":"sortOrder","label":"Sort Order"},{"name":"expectedDuration","label":"Expected Duration (days)"},{"name":"winProbability","label":"Win Probability (%)"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"expectedDuration","label":"Expected Duration (days)","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExpectedDuration","isRelationship":false},{"name":"winProbability","label":"Win Probability (%)","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinProbability","isRelationship":false}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"expectedDuration","label":"Expected Duration (days)","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getExpectedDuration","isRelationship":false},{"name":"winProbability","label":"Win Probability (%)","type":"decimal","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinProbability","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"category","label":"Category","type":"string"}]',
             'filterable_fields' => '[{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"category","label":"Category"},{"name":"deals","label":"Deals"},{"name":"default","label":"Default"},{"name":"active","label":"Active"},{"name":"sortOrder","label":"Sort Order"},{"name":"expectedDuration","label":"Expected Duration (days)"},{"name":"winProbability","label":"Win Probability (%)"}]',
@@ -206,31 +208,60 @@ abstract class DealTypeControllerGenerated extends BaseApiController
         $form = $this->createForm(DealTypeType::class, $dealType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($dealType);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $dealType->setOrganization($organization);
+                error_log('✅ DealTypeController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($dealType);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($dealType);
 
-                // After create hook
-                $this->afterCreate($dealType);
+                    $this->entityManager->persist($dealType);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'dealtype.flash.created_successfully',
-                    ['%name%' => (string) $dealType],
-                    'dealtype'
-                ));
+                    // After create hook
+                    $this->afterCreate($dealType);
 
-                return $this->redirectToRoute('dealtype_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'dealtype.flash.created_successfully',
+                        ['%name%' => (string) $dealType],
+                        'dealtype'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'dealtype.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'dealtype'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $dealType;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'DealType',
+                            'entityId' => $dealType->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('dealtype_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'dealtype.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'dealtype'
+                    ));
+                }
             }
         }
 
@@ -273,33 +304,43 @@ abstract class DealTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(DealTypeVoter::EDIT, $dealType);
 
+        // Store original organization to preserve it
+        $originalOrganization = $dealType->getOrganization();
+
         $form = $this->createForm(DealTypeType::class, $dealType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($dealType);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $dealType->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($dealType);
 
-                // After update hook
-                $this->afterUpdate($dealType);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'dealtype.flash.updated_successfully',
-                    ['%name%' => (string) $dealType],
-                    'dealtype'
-                ));
+                    // After update hook
+                    $this->afterUpdate($dealType);
 
-                return $this->redirectToRoute('dealtype_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'dealtype.flash.updated_successfully',
+                        ['%name%' => (string) $dealType],
+                        'dealtype'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'dealtype.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'dealtype'
-                ));
+                    return $this->redirectToRoute('dealtype_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'dealtype.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'dealtype'
+                    ));
+                }
             }
         }
 
@@ -368,9 +409,22 @@ abstract class DealTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(DealTypeVoter::VIEW, $dealType);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($dealType);
+
         return $this->render('dealtype/show.html.twig', [
             'dealType' => $dealType,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in DealTypeController to customize displayed properties
+     */
+    protected function buildShowProperties(DealType $dealType): array
+    {
+        return [];
     }
 
     // ====================================
@@ -381,12 +435,22 @@ abstract class DealTypeControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(DealType $dealType): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $dealType->setOrganization($organization);
+            error_log('✅ DealTypeController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ DealTypeController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

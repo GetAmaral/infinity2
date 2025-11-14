@@ -61,6 +61,12 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      blocksScheduling:
+        description: "Whether this holiday blocks scheduling and calendar operations"
+        example: "true"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       recurring:
         description: "Whether this holiday recurs annually on the same date"
         example: "true"
@@ -68,12 +74,6 @@ resources:
         filters:
           - type: OrderFilter
           - type: BooleanFilter
-      blocksScheduling:
-        description: "Whether this holiday blocks scheduling and calendar operations"
-        example: "true"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       observed:
         description: "Whether this is an observed holiday (moved from weekend to business day)"
         example: "false"

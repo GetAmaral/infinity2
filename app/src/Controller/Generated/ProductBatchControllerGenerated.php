@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\ProductBatch;
+use App\MultiTenant\TenantContext;
 use App\Repository\ProductBatchRepository;
 use App\Security\Voter\ProductBatchVoter;
 use App\Form\ProductBatchType;
@@ -36,6 +37,7 @@ abstract class ProductBatchControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -218,31 +220,60 @@ abstract class ProductBatchControllerGenerated extends BaseApiController
         $form = $this->createForm(ProductBatchType::class, $productBatch);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($productBatch);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $productBatch->setOrganization($organization);
+                error_log('✅ ProductBatchController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($productBatch);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($productBatch);
 
-                // After create hook
-                $this->afterCreate($productBatch);
+                    $this->entityManager->persist($productBatch);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'productbatch.flash.created_successfully',
-                    ['%name%' => (string) $productBatch],
-                    'productbatch'
-                ));
+                    // After create hook
+                    $this->afterCreate($productBatch);
 
-                return $this->redirectToRoute('productbatch_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'productbatch.flash.created_successfully',
+                        ['%name%' => (string) $productBatch],
+                        'productbatch'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'productbatch.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'productbatch'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $productBatch;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'ProductBatch',
+                            'entityId' => $productBatch->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('productbatch_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'productbatch.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'productbatch'
+                    ));
+                }
             }
         }
 
@@ -285,33 +316,43 @@ abstract class ProductBatchControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductBatchVoter::EDIT, $productBatch);
 
+        // Store original organization to preserve it
+        $originalOrganization = $productBatch->getOrganization();
+
         $form = $this->createForm(ProductBatchType::class, $productBatch);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($productBatch);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $productBatch->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($productBatch);
 
-                // After update hook
-                $this->afterUpdate($productBatch);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'productbatch.flash.updated_successfully',
-                    ['%name%' => (string) $productBatch],
-                    'productbatch'
-                ));
+                    // After update hook
+                    $this->afterUpdate($productBatch);
 
-                return $this->redirectToRoute('productbatch_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'productbatch.flash.updated_successfully',
+                        ['%name%' => (string) $productBatch],
+                        'productbatch'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'productbatch.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'productbatch'
-                ));
+                    return $this->redirectToRoute('productbatch_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'productbatch.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'productbatch'
+                    ));
+                }
             }
         }
 
@@ -380,9 +421,22 @@ abstract class ProductBatchControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProductBatchVoter::VIEW, $productBatch);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($productBatch);
+
         return $this->render('productbatch/show.html.twig', [
             'productBatch' => $productBatch,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in ProductBatchController to customize displayed properties
+     */
+    protected function buildShowProperties(ProductBatch $productBatch): array
+    {
+        return [];
     }
 
     // ====================================
@@ -393,12 +447,22 @@ abstract class ProductBatchControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(ProductBatch $productBatch): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $productBatch->setOrganization($organization);
+            error_log('✅ ProductBatchController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ ProductBatchController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\PipelineStageTemplate;
+use App\MultiTenant\TenantContext;
 use App\Repository\PipelineStageTemplateRepository;
 use App\Security\Voter\PipelineStageTemplateVoter;
 use App\Form\PipelineStageTemplateType;
@@ -36,6 +37,7 @@ abstract class PipelineStageTemplateControllerGenerated extends BaseApiControlle
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -86,8 +88,8 @@ abstract class PipelineStageTemplateControllerGenerated extends BaseApiControlle
             ] : null,
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
-            'probability' => $entity->getProbability(),
             'order' => $entity->getOrder(),
+            'probability' => $entity->getProbability(),
             'active' => $entity->getActive(),
             'color' => $entity->getColor(),
             'rottingDays' => $entity->getRottingDays(),
@@ -95,6 +97,7 @@ abstract class PipelineStageTemplateControllerGenerated extends BaseApiControlle
                 'id' => $pipelineTemplateRel->getId()->toString(),
                 'display' => (string) $pipelineTemplateRel,
             ] : null,
+            'final' => $entity->getFinal(),
             'tasks' => ($tasksRel = $entity->getTasks()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
@@ -102,7 +105,6 @@ abstract class PipelineStageTemplateControllerGenerated extends BaseApiControlle
                 ],
                 $tasksRel->toArray()
             ) : [],
-            'final' => $entity->getFinal(),
             'stageType' => $entity->getStageType(),
             'automationRules' => $entity->getAutomationRules(),
             'requiredFields' => $entity->getRequiredFields(),
@@ -139,16 +141,16 @@ abstract class PipelineStageTemplateControllerGenerated extends BaseApiControlle
             'create_permission' => PipelineStageTemplateVoter::CREATE,
 
             // Property metadata for Twig templates (as PHP arrays)
-            'listProperties' => json_decode('[{"name":"name","label":"Stage Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"probability","label":"Probability (%)","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getProbability","isRelationship":false},{"name":"order","label":"Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOrder","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"rottingDays","label":"Rotting Days","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getRottingDays","isRelationship":false},{"name":"pipelineTemplate","label":"Pipeline Template","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineTemplate","isRelationship":true},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks","isRelationship":true},{"name":"final","label":"Final Stage","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFinal","isRelationship":false},{"name":"stageType","label":"Stage Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageType","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false}]', true),
+            'listProperties' => json_decode('[{"name":"name","label":"Stage Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"order","label":"Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOrder","isRelationship":false},{"name":"probability","label":"Probability (%)","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getProbability","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"rottingDays","label":"Rotting Days","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getRottingDays","isRelationship":false},{"name":"pipelineTemplate","label":"Pipeline Template","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineTemplate","isRelationship":true},{"name":"final","label":"Final Stage","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFinal","isRelationship":false},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks","isRelationship":true},{"name":"stageType","label":"Stage Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageType","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false}]', true),
             'searchableFields' => json_decode('[{"name":"name","label":"Stage Name","type":"string"},{"name":"description","label":"Description","type":"string"},{"name":"stageType","label":"Stage Type","type":"string"},{"name":"icon","label":"Icon","type":"string"}]', true),
             'filterableFields' => json_decode('[{"name":"probability","label":"Probability (%)","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"rottingDays","label":"Rotting Days","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"final","label":"Final Stage","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"stageType","label":"Stage Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
-            'sortableFields' => json_decode('[{"name":"name","label":"Stage Name"},{"name":"description","label":"Description"},{"name":"probability","label":"Probability (%)"},{"name":"order","label":"Order"},{"name":"active","label":"Active"},{"name":"rottingDays","label":"Rotting Days"},{"name":"pipelineTemplate","label":"Pipeline Template"},{"name":"tasks","label":"Tasks"},{"name":"final","label":"Final Stage"},{"name":"stageType","label":"Stage Type"}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Stage Name"},{"name":"description","label":"Description"},{"name":"order","label":"Order"},{"name":"probability","label":"Probability (%)"},{"name":"active","label":"Active"},{"name":"rottingDays","label":"Rotting Days"},{"name":"pipelineTemplate","label":"Pipeline Template"},{"name":"final","label":"Final Stage"},{"name":"tasks","label":"Tasks"},{"name":"stageType","label":"Stage Type"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Stage Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"probability","label":"Probability (%)","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getProbability","isRelationship":false},{"name":"order","label":"Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOrder","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"rottingDays","label":"Rotting Days","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getRottingDays","isRelationship":false},{"name":"pipelineTemplate","label":"Pipeline Template","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineTemplate","isRelationship":true},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks","isRelationship":true},{"name":"final","label":"Final Stage","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFinal","isRelationship":false},{"name":"stageType","label":"Stage Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageType","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false}]',
+            'list_fields' => '[{"name":"name","label":"Stage Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"order","label":"Order","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOrder","isRelationship":false},{"name":"probability","label":"Probability (%)","type":"decimal","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getProbability","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"rottingDays","label":"Rotting Days","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getRottingDays","isRelationship":false},{"name":"pipelineTemplate","label":"Pipeline Template","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPipelineTemplate","isRelationship":true},{"name":"final","label":"Final Stage","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getFinal","isRelationship":false},{"name":"tasks","label":"Tasks","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTasks","isRelationship":true},{"name":"stageType","label":"Stage Type","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStageType","isRelationship":false},{"name":"icon","label":"Icon","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getIcon","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Stage Name","type":"string"},{"name":"description","label":"Description","type":"string"},{"name":"stageType","label":"Stage Type","type":"string"},{"name":"icon","label":"Icon","type":"string"}]',
             'filterable_fields' => '[{"name":"probability","label":"Probability (%)","type":"decimal","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"rottingDays","label":"Rotting Days","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"final","label":"Final Stage","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"stageType","label":"Stage Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
-            'sortable_fields' => '[{"name":"name","label":"Stage Name"},{"name":"description","label":"Description"},{"name":"probability","label":"Probability (%)"},{"name":"order","label":"Order"},{"name":"active","label":"Active"},{"name":"rottingDays","label":"Rotting Days"},{"name":"pipelineTemplate","label":"Pipeline Template"},{"name":"tasks","label":"Tasks"},{"name":"final","label":"Final Stage"},{"name":"stageType","label":"Stage Type"}]',
+            'sortable_fields' => '[{"name":"name","label":"Stage Name"},{"name":"description","label":"Description"},{"name":"order","label":"Order"},{"name":"probability","label":"Probability (%)"},{"name":"active","label":"Active"},{"name":"rottingDays","label":"Rotting Days"},{"name":"pipelineTemplate","label":"Pipeline Template"},{"name":"final","label":"Final Stage"},{"name":"tasks","label":"Tasks"},{"name":"stageType","label":"Stage Type"}]',
         ]);
     }
 
@@ -212,31 +214,60 @@ abstract class PipelineStageTemplateControllerGenerated extends BaseApiControlle
         $form = $this->createForm(PipelineStageTemplateType::class, $pipelineStageTemplate);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($pipelineStageTemplate);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $pipelineStageTemplate->setOrganization($organization);
+                error_log('✅ PipelineStageTemplateController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($pipelineStageTemplate);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($pipelineStageTemplate);
 
-                // After create hook
-                $this->afterCreate($pipelineStageTemplate);
+                    $this->entityManager->persist($pipelineStageTemplate);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'pipelinestagetemplate.flash.created_successfully',
-                    ['%name%' => (string) $pipelineStageTemplate],
-                    'pipelinestagetemplate'
-                ));
+                    // After create hook
+                    $this->afterCreate($pipelineStageTemplate);
 
-                return $this->redirectToRoute('pipelinestagetemplate_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'pipelinestagetemplate.flash.created_successfully',
+                        ['%name%' => (string) $pipelineStageTemplate],
+                        'pipelinestagetemplate'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'pipelinestagetemplate.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'pipelinestagetemplate'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $pipelineStageTemplate;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'PipelineStageTemplate',
+                            'entityId' => $pipelineStageTemplate->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('pipelinestagetemplate_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'pipelinestagetemplate.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'pipelinestagetemplate'
+                    ));
+                }
             }
         }
 
@@ -279,33 +310,43 @@ abstract class PipelineStageTemplateControllerGenerated extends BaseApiControlle
     {
         $this->denyAccessUnlessGranted(PipelineStageTemplateVoter::EDIT, $pipelineStageTemplate);
 
+        // Store original organization to preserve it
+        $originalOrganization = $pipelineStageTemplate->getOrganization();
+
         $form = $this->createForm(PipelineStageTemplateType::class, $pipelineStageTemplate);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($pipelineStageTemplate);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $pipelineStageTemplate->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($pipelineStageTemplate);
 
-                // After update hook
-                $this->afterUpdate($pipelineStageTemplate);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'pipelinestagetemplate.flash.updated_successfully',
-                    ['%name%' => (string) $pipelineStageTemplate],
-                    'pipelinestagetemplate'
-                ));
+                    // After update hook
+                    $this->afterUpdate($pipelineStageTemplate);
 
-                return $this->redirectToRoute('pipelinestagetemplate_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'pipelinestagetemplate.flash.updated_successfully',
+                        ['%name%' => (string) $pipelineStageTemplate],
+                        'pipelinestagetemplate'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'pipelinestagetemplate.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'pipelinestagetemplate'
-                ));
+                    return $this->redirectToRoute('pipelinestagetemplate_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'pipelinestagetemplate.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'pipelinestagetemplate'
+                    ));
+                }
             }
         }
 
@@ -374,9 +415,22 @@ abstract class PipelineStageTemplateControllerGenerated extends BaseApiControlle
     {
         $this->denyAccessUnlessGranted(PipelineStageTemplateVoter::VIEW, $pipelineStageTemplate);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($pipelineStageTemplate);
+
         return $this->render('pipelinestagetemplate/show.html.twig', [
             'pipelineStageTemplate' => $pipelineStageTemplate,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in PipelineStageTemplateController to customize displayed properties
+     */
+    protected function buildShowProperties(PipelineStageTemplate $pipelineStageTemplate): array
+    {
+        return [];
     }
 
     // ====================================
@@ -387,12 +441,22 @@ abstract class PipelineStageTemplateControllerGenerated extends BaseApiControlle
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(PipelineStageTemplate $pipelineStageTemplate): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $pipelineStageTemplate->setOrganization($organization);
+            error_log('✅ PipelineStageTemplateController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ PipelineStageTemplateController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

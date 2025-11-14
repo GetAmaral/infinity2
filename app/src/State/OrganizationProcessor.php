@@ -20,21 +20,21 @@ use App\Entity\BillingFrequency;
 use App\Entity\Brand;
 use App\Entity\Calendar;
 use App\Entity\Campaign;
-use App\Entity\Notification;
-use App\Entity\Attachment;
-use App\Entity\CalendarType;
-use App\Entity\City;
-use App\Entity\PipelineStageTemplate;
 use App\Entity\TreeFlow;
-use App\Entity\MeetingData;
-use App\Entity\LostReason;
-use App\Entity\EventAttendee;
-use App\Entity\DealType;
-use App\Entity\DealCategory;
-use App\Entity\TaskTemplate;
-use App\Entity\Reminder;
-use App\Entity\PipelineTemplate;
+use App\Entity\Attachment;
+use App\Entity\City;
+use App\Entity\CalendarType;
 use App\Entity\WinReason;
+use App\Entity\PipelineTemplate;
+use App\Entity\Reminder;
+use App\Entity\TaskTemplate;
+use App\Entity\DealCategory;
+use App\Entity\DealType;
+use App\Entity\EventAttendee;
+use App\Entity\LostReason;
+use App\Entity\MeetingData;
+use App\Entity\Notification;
+use App\Entity\PipelineStageTemplate;
 use App\Entity\Company;
 use App\Entity\Competitor;
 use App\Entity\Contact;
@@ -143,13 +143,13 @@ class OrganizationProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('logoPath', $requestData)) {
             $entity->setLogoPath($data->logoPath);
         }
-        // description
-        if (!$isPatch || array_key_exists('description', $requestData)) {
-            $entity->setDescription($data->description);
-        }
         // logoPathDark
         if (!$isPatch || array_key_exists('logoPathDark', $requestData)) {
             $entity->setLogoPathDark($data->logoPathDark);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
         }
         // logoUrl
         if (!$isPatch || array_key_exists('logoUrl', $requestData)) {

@@ -57,7 +57,30 @@ abstract class SocialMediaTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Campaign::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Campaign',
+                'data-relation-select-route-value' => 'campaign_api_search',
+                'data-relation-select-add-route-value' => 'campaign_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more campaign',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -68,7 +91,30 @@ abstract class SocialMediaTypeGenerated extends AbstractType
             'label' => 'Company',
             'required' => false,
             'class' => \App\Entity\Company::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Company',
+                'data-relation-select-route-value' => 'company_api_search',
+                'data-relation-select-add-route-value' => 'company_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select company',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -80,7 +126,30 @@ abstract class SocialMediaTypeGenerated extends AbstractType
             'label' => 'Contact',
             'required' => false,
             'class' => \App\Entity\Contact::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Contact',
+                'data-relation-select-route-value' => 'contact_api_search',
+                'data-relation-select-add-route-value' => 'contact_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select contact',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -90,7 +159,30 @@ abstract class SocialMediaTypeGenerated extends AbstractType
             'label' => 'SocialMediaType',
             'required' => false,
             'class' => \App\Entity\SocialMediaType::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'SocialMediaType',
+                'data-relation-select-route-value' => 'social_media_type_api_search',
+                'data-relation-select-add-route-value' => 'social_media_type_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select socialmediatype',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -110,7 +202,30 @@ abstract class SocialMediaTypeGenerated extends AbstractType
             'label' => 'User',
             'required' => false,
             'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
                 'class' => 'form-input-modern',
             ],
         ]);

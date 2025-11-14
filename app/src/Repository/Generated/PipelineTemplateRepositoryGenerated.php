@@ -54,7 +54,7 @@ abstract class PipelineTemplateRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'default' => 'default',            'description' => 'description',            'public' => 'public',            'templateCategory' => 'templateCategory',            'estimatedDuration' => 'estimatedDuration',            'industry' => 'industry',            'stageCount' => 'stageCount',            'targetDealSize' => 'targetDealSize',            'usageCount' => 'usageCount',            'stages' => 'stages',            'active' => 'active',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'default' => 'default',            'name' => 'name',            'description' => 'description',            'public' => 'public',            'templateCategory' => 'templateCategory',            'estimatedDuration' => 'estimatedDuration',            'stageCount' => 'stageCount',            'industry' => 'industry',            'targetDealSize' => 'targetDealSize',            'usageCount' => 'usageCount',            'stages' => 'stages',            'active' => 'active',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class PipelineTemplateRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'default' => 'default',            'public' => 'public',            'templateCategory' => 'templateCategory',            'estimatedDuration' => 'estimatedDuration',            'industry' => 'industry',            'stageCount' => 'stageCount',            'targetDealSize' => 'targetDealSize',            'usageCount' => 'usageCount',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'default' => 'default',            'public' => 'public',            'templateCategory' => 'templateCategory',            'estimatedDuration' => 'estimatedDuration',            'stageCount' => 'stageCount',            'industry' => 'industry',            'targetDealSize' => 'targetDealSize',            'usageCount' => 'usageCount',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**

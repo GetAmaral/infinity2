@@ -14,10 +14,10 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\Organization;
-use App\Entity\Company;
-use App\Entity\Contact;
-use App\Entity\Deal;
 use App\Entity\TalkType;
+use App\Entity\Contact;
+use App\Entity\Company;
+use App\Entity\Deal;
 use App\Entity\User;
 use App\Entity\Agent;
 use App\Entity\Campaign;
@@ -90,6 +90,10 @@ class TalkProcessor implements ProcessorInterface
         $requestData = $context['request']->toArray() ?? [];
 
         // Map scalar properties from DTO to Entity
+        // talkFlow
+        if (!$isPatch || array_key_exists('talkFlow', $requestData)) {
+            $entity->setTalkFlow($data->talkFlow);
+        }
         // subject
         if (!$isPatch || array_key_exists('subject', $requestData)) {
             $entity->setSubject($data->subject);
@@ -98,13 +102,17 @@ class TalkProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('summary', $requestData)) {
             $entity->setSummary($data->summary);
         }
-        // channel
-        if (!$isPatch || array_key_exists('channel', $requestData)) {
-            $entity->setChannel($data->channel);
+        // messageCount
+        if (!$isPatch || array_key_exists('messageCount', $requestData)) {
+            $entity->setMessageCount($data->messageCount);
         }
         // status
         if (!$isPatch || array_key_exists('status', $requestData)) {
             $entity->setStatus($data->status);
+        }
+        // channel
+        if (!$isPatch || array_key_exists('channel', $requestData)) {
+            $entity->setChannel($data->channel);
         }
         // priority
         if (!$isPatch || array_key_exists('priority', $requestData)) {
@@ -134,13 +142,25 @@ class TalkProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('durationSeconds', $requestData)) {
             $entity->setDurationSeconds($data->durationSeconds);
         }
+        // paused
+        if (!$isPatch || array_key_exists('paused', $requestData)) {
+            $entity->setPaused($data->paused);
+        }
+        // pausedAt
+        if (!$isPatch || array_key_exists('pausedAt', $requestData)) {
+            $entity->setPausedAt($data->pausedAt);
+        }
+        // pausedReason
+        if (!$isPatch || array_key_exists('pausedReason', $requestData)) {
+            $entity->setPausedReason($data->pausedReason);
+        }
+        // resumedAt
+        if (!$isPatch || array_key_exists('resumedAt', $requestData)) {
+            $entity->setResumedAt($data->resumedAt);
+        }
         // recordingUrl
         if (!$isPatch || array_key_exists('recordingUrl', $requestData)) {
             $entity->setRecordingUrl($data->recordingUrl);
-        }
-        // messageCount
-        if (!$isPatch || array_key_exists('messageCount', $requestData)) {
-            $entity->setMessageCount($data->messageCount);
         }
         // archived
         if (!$isPatch || array_key_exists('archived', $requestData)) {
@@ -175,21 +195,23 @@ class TalkProcessor implements ProcessorInterface
             }
         }
 
-        // company: ManyToOne
-        if (!$isPatch || array_key_exists('company', $requestData)) {
-            if ($data->company !== null) {
-                if (is_string($data->company)) {
-                    // IRI format: "/api/nies/{id}"
-                    $companyId = $this->extractIdFromIri($data->company);
-                    $company = $this->entityManager->getRepository(Company::class)->find($companyId);
-                    if (!$company) {
-                        throw new BadRequestHttpException('Company not found: ' . $companyId);
+        // talkType: ManyToOne
+        if (!$isPatch || array_key_exists('talkType', $requestData)) {
+            if ($data->talkType !== null) {
+                if (is_string($data->talkType)) {
+                    // IRI format: "/api/talk_types/{id}"
+                    $talkTypeId = $this->extractIdFromIri($data->talkType);
+                    $talkType = $this->entityManager->getRepository(TalkType::class)->find($talkTypeId);
+                    if (!$talkType) {
+                        throw new BadRequestHttpException('TalkType not found: ' . $talkTypeId);
                     }
-                    $entity->setCompany($company);
+                    $entity->setTalkType($talkType);
                 } else {
                     // Nested object creation (if supported)
-                    throw new BadRequestHttpException('Nested company creation not supported. Use IRI format.');
+                    throw new BadRequestHttpException('Nested talkType creation not supported. Use IRI format.');
                 }
+            } else {
+                throw new BadRequestHttpException('talkType is required');
             }
         }
 
@@ -211,6 +233,24 @@ class TalkProcessor implements ProcessorInterface
             }
         }
 
+        // company: ManyToOne
+        if (!$isPatch || array_key_exists('company', $requestData)) {
+            if ($data->company !== null) {
+                if (is_string($data->company)) {
+                    // IRI format: "/api/nies/{id}"
+                    $companyId = $this->extractIdFromIri($data->company);
+                    $company = $this->entityManager->getRepository(Company::class)->find($companyId);
+                    if (!$company) {
+                        throw new BadRequestHttpException('Company not found: ' . $companyId);
+                    }
+                    $entity->setCompany($company);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested company creation not supported. Use IRI format.');
+                }
+            }
+        }
+
         // deal: ManyToOne
         if (!$isPatch || array_key_exists('deal', $requestData)) {
             if ($data->deal !== null) {
@@ -226,26 +266,6 @@ class TalkProcessor implements ProcessorInterface
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested deal creation not supported. Use IRI format.');
                 }
-            }
-        }
-
-        // talkType: ManyToOne
-        if (!$isPatch || array_key_exists('talkType', $requestData)) {
-            if ($data->talkType !== null) {
-                if (is_string($data->talkType)) {
-                    // IRI format: "/api/talk_types/{id}"
-                    $talkTypeId = $this->extractIdFromIri($data->talkType);
-                    $talkType = $this->entityManager->getRepository(TalkType::class)->find($talkTypeId);
-                    if (!$talkType) {
-                        throw new BadRequestHttpException('TalkType not found: ' . $talkTypeId);
-                    }
-                    $entity->setTalkType($talkType);
-                } else {
-                    // Nested object creation (if supported)
-                    throw new BadRequestHttpException('Nested talkType creation not supported. Use IRI format.');
-                }
-            } else {
-                throw new BadRequestHttpException('talkType is required');
             }
         }
 

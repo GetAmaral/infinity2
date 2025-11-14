@@ -197,31 +197,53 @@ abstract class RoleControllerGenerated extends BaseApiController
         $form = $this->createForm(RoleType::class, $role);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($role);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($role);
 
-                $this->entityManager->persist($role);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($role);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($role);
+                    // After create hook
+                    $this->afterCreate($role);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'role.flash.created_successfully',
-                    ['%name%' => (string) $role],
-                    'role'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'role.flash.created_successfully',
+                        ['%name%' => (string) $role],
+                        'role'
+                    ));
 
-                return $this->redirectToRoute('role_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'role.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'role'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $role;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Role',
+                            'entityId' => $role->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('role_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'role.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'role'
+                    ));
+                }
             }
         }
 
@@ -267,30 +289,32 @@ abstract class RoleControllerGenerated extends BaseApiController
         $form = $this->createForm(RoleType::class, $role);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($role);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($role);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($role);
+                    // After update hook
+                    $this->afterUpdate($role);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'role.flash.updated_successfully',
-                    ['%name%' => (string) $role],
-                    'role'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'role.flash.updated_successfully',
+                        ['%name%' => (string) $role],
+                        'role'
+                    ));
 
-                return $this->redirectToRoute('role_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('role_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'role.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'role'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'role.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'role'
+                    ));
+                }
             }
         }
 
@@ -359,9 +383,22 @@ abstract class RoleControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(RoleVoter::VIEW, $role);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($role);
+
         return $this->render('role/show.html.twig', [
             'role' => $role,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in RoleController to customize displayed properties
+     */
+    protected function buildShowProperties(Role $role): array
+    {
+        return [];
     }
 
     // ====================================
@@ -372,12 +409,10 @@ abstract class RoleControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(Role $role): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

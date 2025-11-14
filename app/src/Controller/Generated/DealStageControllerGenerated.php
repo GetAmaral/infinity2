@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\DealStage;
+use App\MultiTenant\TenantContext;
 use App\Repository\DealStageRepository;
 use App\Security\Voter\DealStageVoter;
 use App\Form\DealStageType;
@@ -36,6 +37,7 @@ abstract class DealStageControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -218,31 +220,60 @@ abstract class DealStageControllerGenerated extends BaseApiController
         $form = $this->createForm(DealStageType::class, $dealStage);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($dealStage);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $dealStage->setOrganization($organization);
+                error_log('✅ DealStageController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($dealStage);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($dealStage);
 
-                // After create hook
-                $this->afterCreate($dealStage);
+                    $this->entityManager->persist($dealStage);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'dealstage.flash.created_successfully',
-                    ['%name%' => (string) $dealStage],
-                    'dealstage'
-                ));
+                    // After create hook
+                    $this->afterCreate($dealStage);
 
-                return $this->redirectToRoute('dealstage_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'dealstage.flash.created_successfully',
+                        ['%name%' => (string) $dealStage],
+                        'dealstage'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'dealstage.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'dealstage'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $dealStage;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'DealStage',
+                            'entityId' => $dealStage->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('dealstage_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'dealstage.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'dealstage'
+                    ));
+                }
             }
         }
 
@@ -285,33 +316,43 @@ abstract class DealStageControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(DealStageVoter::EDIT, $dealStage);
 
+        // Store original organization to preserve it
+        $originalOrganization = $dealStage->getOrganization();
+
         $form = $this->createForm(DealStageType::class, $dealStage);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($dealStage);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $dealStage->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($dealStage);
 
-                // After update hook
-                $this->afterUpdate($dealStage);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'dealstage.flash.updated_successfully',
-                    ['%name%' => (string) $dealStage],
-                    'dealstage'
-                ));
+                    // After update hook
+                    $this->afterUpdate($dealStage);
 
-                return $this->redirectToRoute('dealstage_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'dealstage.flash.updated_successfully',
+                        ['%name%' => (string) $dealStage],
+                        'dealstage'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'dealstage.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'dealstage'
-                ));
+                    return $this->redirectToRoute('dealstage_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'dealstage.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'dealstage'
+                    ));
+                }
             }
         }
 
@@ -380,9 +421,22 @@ abstract class DealStageControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(DealStageVoter::VIEW, $dealStage);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($dealStage);
+
         return $this->render('dealstage/show.html.twig', [
             'dealStage' => $dealStage,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in DealStageController to customize displayed properties
+     */
+    protected function buildShowProperties(DealStage $dealStage): array
+    {
+        return [];
     }
 
     // ====================================
@@ -393,12 +447,22 @@ abstract class DealStageControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(DealStage $dealStage): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $dealStage->setOrganization($organization);
+            error_log('✅ DealStageController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ DealStageController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

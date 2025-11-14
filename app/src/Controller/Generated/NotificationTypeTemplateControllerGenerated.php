@@ -187,31 +187,53 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
         $form = $this->createForm(NotificationTypeTemplateType::class, $notificationTypeTemplate);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($notificationTypeTemplate);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($notificationTypeTemplate);
 
-                $this->entityManager->persist($notificationTypeTemplate);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($notificationTypeTemplate);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($notificationTypeTemplate);
+                    // After create hook
+                    $this->afterCreate($notificationTypeTemplate);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'notificationtypetemplate.flash.created_successfully',
-                    ['%name%' => (string) $notificationTypeTemplate],
-                    'notificationtypetemplate'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'notificationtypetemplate.flash.created_successfully',
+                        ['%name%' => (string) $notificationTypeTemplate],
+                        'notificationtypetemplate'
+                    ));
 
-                return $this->redirectToRoute('notificationtypetemplate_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'notificationtypetemplate.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'notificationtypetemplate'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $notificationTypeTemplate;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'NotificationTypeTemplate',
+                            'entityId' => $notificationTypeTemplate->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('notificationtypetemplate_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'notificationtypetemplate.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'notificationtypetemplate'
+                    ));
+                }
             }
         }
 
@@ -257,30 +279,32 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
         $form = $this->createForm(NotificationTypeTemplateType::class, $notificationTypeTemplate);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($notificationTypeTemplate);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($notificationTypeTemplate);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($notificationTypeTemplate);
+                    // After update hook
+                    $this->afterUpdate($notificationTypeTemplate);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'notificationtypetemplate.flash.updated_successfully',
-                    ['%name%' => (string) $notificationTypeTemplate],
-                    'notificationtypetemplate'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'notificationtypetemplate.flash.updated_successfully',
+                        ['%name%' => (string) $notificationTypeTemplate],
+                        'notificationtypetemplate'
+                    ));
 
-                return $this->redirectToRoute('notificationtypetemplate_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('notificationtypetemplate_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'notificationtypetemplate.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'notificationtypetemplate'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'notificationtypetemplate.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'notificationtypetemplate'
+                    ));
+                }
             }
         }
 
@@ -349,9 +373,22 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
     {
         $this->denyAccessUnlessGranted(NotificationTypeTemplateVoter::VIEW, $notificationTypeTemplate);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($notificationTypeTemplate);
+
         return $this->render('notificationtypetemplate/show.html.twig', [
             'notificationTypeTemplate' => $notificationTypeTemplate,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in NotificationTypeTemplateController to customize displayed properties
+     */
+    protected function buildShowProperties(NotificationTypeTemplate $notificationTypeTemplate): array
+    {
+        return [];
     }
 
     // ====================================
@@ -362,12 +399,10 @@ abstract class NotificationTypeTemplateControllerGenerated extends BaseApiContro
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(NotificationTypeTemplate $notificationTypeTemplate): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

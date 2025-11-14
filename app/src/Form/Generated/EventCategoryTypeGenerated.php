@@ -75,7 +75,7 @@ abstract class EventCategoryTypeGenerated extends AbstractType
 
         $builder->add('default', CheckboxType::class, [
             'label' => 'Default Category',
-            'required' => true,
+            'required' => false,
             'help' => 'Default category is auto-selected when creating new events',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -111,7 +111,7 @@ abstract class EventCategoryTypeGenerated extends AbstractType
 
         $builder->add('allowMultiple', CheckboxType::class, [
             'label' => 'Allow Multiple',
-            'required' => true,
+            'required' => false,
             'help' => 'Allow events to be assigned to multiple categories of this type',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -120,7 +120,7 @@ abstract class EventCategoryTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'help' => 'Inactive categories are hidden from selection',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -132,7 +132,30 @@ abstract class EventCategoryTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Event::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Event',
+                'data-relation-select-route-value' => 'event_api_search',
+                'data-relation-select-add-route-value' => 'event_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more event',
                 'class' => 'form-input-modern',
             ],
         ]);

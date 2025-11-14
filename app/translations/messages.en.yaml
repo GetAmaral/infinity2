@@ -1,0 +1,4 @@
+form:
+  validation:
+    errors_found: 'Form has validation errors'
+    please_correct: 'Please correct the errors below and try again.'

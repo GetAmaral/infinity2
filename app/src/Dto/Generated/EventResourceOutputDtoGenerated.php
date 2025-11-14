@@ -37,9 +37,9 @@ abstract class EventResourceOutputDtoGenerated
 
     public bool $available;
 
-    public bool $active;
-
     public bool $bookable;
+
+    public bool $active;
 
     public ?string $timezone = null;
 
@@ -51,9 +51,9 @@ abstract class EventResourceOutputDtoGenerated
 
     public ?int $maximumBookingDuration = null;
 
-    public ?string $pricePerHour = null;
-
     public ?array $bookingRules = null;
+
+    public ?string $pricePerHour = null;
 
     public ?string $pricePerDay = null;
 
@@ -156,16 +156,6 @@ abstract class EventResourceOutputDtoGenerated
         return $this;
     }
 
-    public function getActive(): bool    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
     public function getBookable(): bool    {
         return $this->bookable;
     }
@@ -173,6 +163,16 @@ abstract class EventResourceOutputDtoGenerated
     public function setBookable(bool $bookable): self
     {
         $this->bookable = $bookable;
+        return $this;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
         return $this;
     }
 
@@ -226,16 +226,6 @@ abstract class EventResourceOutputDtoGenerated
         return $this;
     }
 
-    public function getPricePerHour(): ?string    {
-        return $this->pricePerHour;
-    }
-
-    public function setPricePerHour(?string $pricePerHour): self
-    {
-        $this->pricePerHour = $pricePerHour;
-        return $this;
-    }
-
     public function getBookingRules(): ?array    {
         return $this->bookingRules;
     }
@@ -243,6 +233,16 @@ abstract class EventResourceOutputDtoGenerated
     public function setBookingRules(?array $bookingRules): self
     {
         $this->bookingRules = $bookingRules;
+        return $this;
+    }
+
+    public function getPricePerHour(): ?string    {
+        return $this->pricePerHour;
+    }
+
+    public function setPricePerHour(?string $pricePerHour): self
+    {
+        $this->pricePerHour = $pricePerHour;
         return $this;
     }
 

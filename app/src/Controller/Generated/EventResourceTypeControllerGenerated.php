@@ -191,31 +191,53 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
         $form = $this->createForm(EventResourceTypeType::class, $eventResourceType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($eventResourceType);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($eventResourceType);
 
-                $this->entityManager->persist($eventResourceType);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($eventResourceType);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($eventResourceType);
+                    // After create hook
+                    $this->afterCreate($eventResourceType);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'eventresourcetype.flash.created_successfully',
-                    ['%name%' => (string) $eventResourceType],
-                    'eventresourcetype'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'eventresourcetype.flash.created_successfully',
+                        ['%name%' => (string) $eventResourceType],
+                        'eventresourcetype'
+                    ));
 
-                return $this->redirectToRoute('eventresourcetype_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'eventresourcetype.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'eventresourcetype'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $eventResourceType;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'EventResourceType',
+                            'entityId' => $eventResourceType->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('eventresourcetype_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'eventresourcetype.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'eventresourcetype'
+                    ));
+                }
             }
         }
 
@@ -261,30 +283,32 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
         $form = $this->createForm(EventResourceTypeType::class, $eventResourceType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($eventResourceType);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($eventResourceType);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($eventResourceType);
+                    // After update hook
+                    $this->afterUpdate($eventResourceType);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'eventresourcetype.flash.updated_successfully',
-                    ['%name%' => (string) $eventResourceType],
-                    'eventresourcetype'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'eventresourcetype.flash.updated_successfully',
+                        ['%name%' => (string) $eventResourceType],
+                        'eventresourcetype'
+                    ));
 
-                return $this->redirectToRoute('eventresourcetype_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('eventresourcetype_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'eventresourcetype.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'eventresourcetype'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'eventresourcetype.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'eventresourcetype'
+                    ));
+                }
             }
         }
 
@@ -353,9 +377,22 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventResourceTypeVoter::VIEW, $eventResourceType);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($eventResourceType);
+
         return $this->render('eventresourcetype/show.html.twig', [
             'eventResourceType' => $eventResourceType,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in EventResourceTypeController to customize displayed properties
+     */
+    protected function buildShowProperties(EventResourceType $eventResourceType): array
+    {
+        return [];
     }
 
     // ====================================
@@ -366,12 +403,10 @@ abstract class EventResourceTypeControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(EventResourceType $eventResourceType): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

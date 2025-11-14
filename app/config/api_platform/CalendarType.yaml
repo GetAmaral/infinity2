@@ -59,6 +59,9 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      color:
+        description: "Hexadecimal color code for visual representation of the calendar type"
+        example: "#3788d8"
       calendars:
         writable: false
         description: "Collection of calendars that use this calendar type"
@@ -66,9 +69,6 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      color:
-        description: "Hexadecimal color code for visual representation of the calendar type"
-        example: "#3788d8"
       icon:
         description: "Bootstrap icon class name for visual representation"
         example: "bi-calendar3"
@@ -90,21 +90,21 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      access_level:
+      accessLevel:
         description: "Default access level for calendars of this type"
         example: "read_write"
-      sort_order:
+      sortOrder:
         description: "Order in which this calendar type appears in lists (lower numbers appear first)"
         example: "10"
         # Advanced filters
         filters:
           - type: OrderFilter
-      allow_sharing:
+      allowSharing:
         description: "Whether calendars of this type can be shared with other users"
         example: "true"
-      require_approval:
+      requireApproval:
         description: "Whether creating a calendar of this type requires administrator approval"
         example: "false"
-      max_calendars_per_user:
+      maxCalendarsPerUser:
         description: "Maximum number of calendars of this type a user can create (null = no limit)"
         example: "5"

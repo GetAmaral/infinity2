@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\LostReason;
+use App\MultiTenant\TenantContext;
 use App\Repository\LostReasonRepository;
 use App\Security\Voter\LostReasonVoter;
 use App\Form\LostReasonType;
@@ -36,6 +37,7 @@ abstract class LostReasonControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -86,6 +88,7 @@ abstract class LostReasonControllerGenerated extends BaseApiController
             ] : null,
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
+            'category' => $entity->getCategory(),
             'deals' => ($dealsRel = $entity->getDeals()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
@@ -93,7 +96,6 @@ abstract class LostReasonControllerGenerated extends BaseApiController
                 ],
                 $dealsRel->toArray()
             ) : [],
-            'category' => $entity->getCategory(),
             'active' => $entity->getActive(),
             'default' => $entity->getDefault(),
             'sortOrder' => $entity->getSortOrder(),
@@ -138,16 +140,16 @@ abstract class LostReasonControllerGenerated extends BaseApiController
             'create_permission' => LostReasonVoter::CREATE,
 
             // Property metadata for Twig templates (as PHP arrays)
-            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresNotes","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"critical","label":"Critical","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCritical","isRelationship":false},{"name":"impact","label":"Impact","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getImpact","isRelationship":false},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinBackPotential","isRelationship":false},{"name":"actionable","label":"Actionable","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActionable","isRelationship":false},{"name":"internal","label":"Internal Only","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getInternal","isRelationship":false},{"name":"competitorName","label":"Competitor Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitorName","isRelationship":false}]', true),
+            'listProperties' => json_decode('[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresNotes","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"critical","label":"Critical","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCritical","isRelationship":false},{"name":"impact","label":"Impact","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getImpact","isRelationship":false},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinBackPotential","isRelationship":false},{"name":"actionable","label":"Actionable","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActionable","isRelationship":false},{"name":"internal","label":"Internal Only","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getInternal","isRelationship":false},{"name":"competitorName","label":"Competitor Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitorName","isRelationship":false}]', true),
             'searchableFields' => json_decode('[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"category","label":"Category","type":"string"},{"name":"impact","label":"Impact","type":"string"},{"name":"competitorName","label":"Competitor Name","type":"string"}]', true),
             'filterableFields' => json_decode('[{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sortOrder","label":"Sort Order","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"critical","label":"Critical","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"impact","label":"Impact","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"actionable","label":"Actionable","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"internal","label":"Internal Only","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
-            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"deals","label":"Deals"},{"name":"category","label":"Category"},{"name":"active","label":"Active"},{"name":"sortOrder","label":"Sort Order"},{"name":"impact","label":"Impact"},{"name":"winBackPotential","label":"Win-Back Potential"},{"name":"competitorName","label":"Competitor Name"}]', true),
+            'sortableFields' => json_decode('[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"category","label":"Category"},{"name":"deals","label":"Deals"},{"name":"active","label":"Active"},{"name":"sortOrder","label":"Sort Order"},{"name":"impact","label":"Impact"},{"name":"winBackPotential","label":"Win-Back Potential"},{"name":"competitorName","label":"Competitor Name"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresNotes","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"critical","label":"Critical","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCritical","isRelationship":false},{"name":"impact","label":"Impact","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getImpact","isRelationship":false},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinBackPotential","isRelationship":false},{"name":"actionable","label":"Actionable","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActionable","isRelationship":false},{"name":"internal","label":"Internal Only","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getInternal","isRelationship":false},{"name":"competitorName","label":"Competitor Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitorName","isRelationship":false}]',
+            'list_fields' => '[{"name":"name","label":"Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getName","isRelationship":false},{"name":"description","label":"Description","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDescription","isRelationship":false},{"name":"category","label":"Category","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCategory","isRelationship":false},{"name":"deals","label":"Deals","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeals","isRelationship":true},{"name":"active","label":"Active","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActive","isRelationship":false},{"name":"default","label":"Default","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDefault","isRelationship":false},{"name":"sortOrder","label":"Sort Order","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSortOrder","isRelationship":false},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRequiresNotes","isRelationship":false},{"name":"color","label":"Color","type":"string","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getColor","isRelationship":false},{"name":"critical","label":"Critical","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCritical","isRelationship":false},{"name":"impact","label":"Impact","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getImpact","isRelationship":false},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getWinBackPotential","isRelationship":false},{"name":"actionable","label":"Actionable","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getActionable","isRelationship":false},{"name":"internal","label":"Internal Only","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getInternal","isRelationship":false},{"name":"competitorName","label":"Competitor Name","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompetitorName","isRelationship":false}]',
             'searchable_fields' => '[{"name":"name","label":"Name","type":"string"},{"name":"description","label":"Description","type":"text"},{"name":"category","label":"Category","type":"string"},{"name":"impact","label":"Impact","type":"string"},{"name":"competitorName","label":"Competitor Name","type":"string"}]',
             'filterable_fields' => '[{"name":"category","label":"Category","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"active","label":"Active","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"default","label":"Default","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sortOrder","label":"Sort Order","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"requiresNotes","label":"Requires Notes","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"critical","label":"Critical","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"impact","label":"Impact","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"winBackPotential","label":"Win-Back Potential","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"actionable","label":"Actionable","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"internal","label":"Internal Only","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
-            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"deals","label":"Deals"},{"name":"category","label":"Category"},{"name":"active","label":"Active"},{"name":"sortOrder","label":"Sort Order"},{"name":"impact","label":"Impact"},{"name":"winBackPotential","label":"Win-Back Potential"},{"name":"competitorName","label":"Competitor Name"}]',
+            'sortable_fields' => '[{"name":"name","label":"Name"},{"name":"description","label":"Description"},{"name":"category","label":"Category"},{"name":"deals","label":"Deals"},{"name":"active","label":"Active"},{"name":"sortOrder","label":"Sort Order"},{"name":"impact","label":"Impact"},{"name":"winBackPotential","label":"Win-Back Potential"},{"name":"competitorName","label":"Competitor Name"}]',
         ]);
     }
 
@@ -211,31 +213,60 @@ abstract class LostReasonControllerGenerated extends BaseApiController
         $form = $this->createForm(LostReasonType::class, $lostReason);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($lostReason);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $lostReason->setOrganization($organization);
+                error_log('✅ LostReasonController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($lostReason);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($lostReason);
 
-                // After create hook
-                $this->afterCreate($lostReason);
+                    $this->entityManager->persist($lostReason);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'lostreason.flash.created_successfully',
-                    ['%name%' => (string) $lostReason],
-                    'lostreason'
-                ));
+                    // After create hook
+                    $this->afterCreate($lostReason);
 
-                return $this->redirectToRoute('lostreason_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'lostreason.flash.created_successfully',
+                        ['%name%' => (string) $lostReason],
+                        'lostreason'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'lostreason.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'lostreason'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $lostReason;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'LostReason',
+                            'entityId' => $lostReason->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('lostreason_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'lostreason.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'lostreason'
+                    ));
+                }
             }
         }
 
@@ -278,33 +309,43 @@ abstract class LostReasonControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(LostReasonVoter::EDIT, $lostReason);
 
+        // Store original organization to preserve it
+        $originalOrganization = $lostReason->getOrganization();
+
         $form = $this->createForm(LostReasonType::class, $lostReason);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($lostReason);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $lostReason->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($lostReason);
 
-                // After update hook
-                $this->afterUpdate($lostReason);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'lostreason.flash.updated_successfully',
-                    ['%name%' => (string) $lostReason],
-                    'lostreason'
-                ));
+                    // After update hook
+                    $this->afterUpdate($lostReason);
 
-                return $this->redirectToRoute('lostreason_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'lostreason.flash.updated_successfully',
+                        ['%name%' => (string) $lostReason],
+                        'lostreason'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'lostreason.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'lostreason'
-                ));
+                    return $this->redirectToRoute('lostreason_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'lostreason.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'lostreason'
+                    ));
+                }
             }
         }
 
@@ -373,9 +414,22 @@ abstract class LostReasonControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(LostReasonVoter::VIEW, $lostReason);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($lostReason);
+
         return $this->render('lostreason/show.html.twig', [
             'lostReason' => $lostReason,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in LostReasonController to customize displayed properties
+     */
+    protected function buildShowProperties(LostReason $lostReason): array
+    {
+        return [];
     }
 
     // ====================================
@@ -386,12 +440,22 @@ abstract class LostReasonControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(LostReason $lostReason): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $lostReason->setOrganization($organization);
+            error_log('✅ LostReasonController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ LostReasonController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

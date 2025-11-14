@@ -53,9 +53,9 @@ abstract class MeetingDataOutputDtoGenerated
 
     public ?string $minutes = null;
 
-    public ?array $attendees = null;
-
     public ?string $meetingId = null;
+
+    public ?array $attendees = null;
 
     public ?array $absentees = null;
 
@@ -75,9 +75,9 @@ abstract class MeetingDataOutputDtoGenerated
 
     public ?string $organizer = null;
 
-    public ?string $platform = null;
-
     public ?array $tags = null;
+
+    public ?string $platform = null;
 
     public bool $confidential;
 
@@ -228,16 +228,6 @@ abstract class MeetingDataOutputDtoGenerated
         return $this;
     }
 
-    public function getAttendees(): ?array    {
-        return $this->attendees;
-    }
-
-    public function setAttendees(?array $attendees): self
-    {
-        $this->attendees = $attendees;
-        return $this;
-    }
-
     public function getMeetingId(): ?string    {
         return $this->meetingId;
     }
@@ -245,6 +235,16 @@ abstract class MeetingDataOutputDtoGenerated
     public function setMeetingId(?string $meetingId): self
     {
         $this->meetingId = $meetingId;
+        return $this;
+    }
+
+    public function getAttendees(): ?array    {
+        return $this->attendees;
+    }
+
+    public function setAttendees(?array $attendees): self
+    {
+        $this->attendees = $attendees;
         return $this;
     }
 
@@ -338,16 +338,6 @@ abstract class MeetingDataOutputDtoGenerated
         return $this;
     }
 
-    public function getPlatform(): ?string    {
-        return $this->platform;
-    }
-
-    public function setPlatform(?string $platform): self
-    {
-        $this->platform = $platform;
-        return $this;
-    }
-
     public function getTags(): ?array    {
         return $this->tags;
     }
@@ -355,6 +345,16 @@ abstract class MeetingDataOutputDtoGenerated
     public function setTags(?array $tags): self
     {
         $this->tags = $tags;
+        return $this;
+    }
+
+    public function getPlatform(): ?string    {
+        return $this->platform;
+    }
+
+    public function setPlatform(?string $platform): self
+    {
+        $this->platform = $platform;
         return $this;
     }
 

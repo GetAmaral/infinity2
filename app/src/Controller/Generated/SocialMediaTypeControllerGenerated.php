@@ -188,31 +188,53 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
         $form = $this->createForm(SocialMediaTypeType::class, $socialMediaType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($socialMediaType);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($socialMediaType);
 
-                $this->entityManager->persist($socialMediaType);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($socialMediaType);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($socialMediaType);
+                    // After create hook
+                    $this->afterCreate($socialMediaType);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'socialmediatype.flash.created_successfully',
-                    ['%name%' => (string) $socialMediaType],
-                    'socialmediatype'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'socialmediatype.flash.created_successfully',
+                        ['%name%' => (string) $socialMediaType],
+                        'socialmediatype'
+                    ));
 
-                return $this->redirectToRoute('socialmediatype_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'socialmediatype.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'socialmediatype'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $socialMediaType;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'SocialMediaType',
+                            'entityId' => $socialMediaType->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('socialmediatype_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'socialmediatype.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'socialmediatype'
+                    ));
+                }
             }
         }
 
@@ -258,30 +280,32 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
         $form = $this->createForm(SocialMediaTypeType::class, $socialMediaType);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($socialMediaType);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($socialMediaType);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($socialMediaType);
+                    // After update hook
+                    $this->afterUpdate($socialMediaType);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'socialmediatype.flash.updated_successfully',
-                    ['%name%' => (string) $socialMediaType],
-                    'socialmediatype'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'socialmediatype.flash.updated_successfully',
+                        ['%name%' => (string) $socialMediaType],
+                        'socialmediatype'
+                    ));
 
-                return $this->redirectToRoute('socialmediatype_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('socialmediatype_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'socialmediatype.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'socialmediatype'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'socialmediatype.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'socialmediatype'
+                    ));
+                }
             }
         }
 
@@ -350,9 +374,22 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(SocialMediaTypeVoter::VIEW, $socialMediaType);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($socialMediaType);
+
         return $this->render('socialmediatype/show.html.twig', [
             'socialMediaType' => $socialMediaType,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in SocialMediaTypeController to customize displayed properties
+     */
+    protected function buildShowProperties(SocialMediaType $socialMediaType): array
+    {
+        return [];
     }
 
     // ====================================
@@ -363,12 +400,10 @@ abstract class SocialMediaTypeControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(SocialMediaType $socialMediaType): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

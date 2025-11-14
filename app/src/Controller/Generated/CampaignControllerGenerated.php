@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Campaign;
+use App\MultiTenant\TenantContext;
 use App\Repository\CampaignRepository;
 use App\Security\Voter\CampaignVoter;
 use App\Form\CampaignType;
@@ -36,6 +37,7 @@ abstract class CampaignControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -285,31 +287,60 @@ abstract class CampaignControllerGenerated extends BaseApiController
         $form = $this->createForm(CampaignType::class, $campaign);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($campaign);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $campaign->setOrganization($organization);
+                error_log('✅ CampaignController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($campaign);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($campaign);
 
-                // After create hook
-                $this->afterCreate($campaign);
+                    $this->entityManager->persist($campaign);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'campaign.flash.created_successfully',
-                    ['%name%' => (string) $campaign],
-                    'campaign'
-                ));
+                    // After create hook
+                    $this->afterCreate($campaign);
 
-                return $this->redirectToRoute('campaign_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'campaign.flash.created_successfully',
+                        ['%name%' => (string) $campaign],
+                        'campaign'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'campaign.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'campaign'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $campaign;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Campaign',
+                            'entityId' => $campaign->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('campaign_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'campaign.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'campaign'
+                    ));
+                }
             }
         }
 
@@ -352,33 +383,43 @@ abstract class CampaignControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CampaignVoter::EDIT, $campaign);
 
+        // Store original organization to preserve it
+        $originalOrganization = $campaign->getOrganization();
+
         $form = $this->createForm(CampaignType::class, $campaign);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($campaign);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $campaign->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($campaign);
 
-                // After update hook
-                $this->afterUpdate($campaign);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'campaign.flash.updated_successfully',
-                    ['%name%' => (string) $campaign],
-                    'campaign'
-                ));
+                    // After update hook
+                    $this->afterUpdate($campaign);
 
-                return $this->redirectToRoute('campaign_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'campaign.flash.updated_successfully',
+                        ['%name%' => (string) $campaign],
+                        'campaign'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'campaign.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'campaign'
-                ));
+                    return $this->redirectToRoute('campaign_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'campaign.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'campaign'
+                    ));
+                }
             }
         }
 
@@ -447,9 +488,22 @@ abstract class CampaignControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CampaignVoter::VIEW, $campaign);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($campaign);
+
         return $this->render('campaign/show.html.twig', [
             'campaign' => $campaign,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in CampaignController to customize displayed properties
+     */
+    protected function buildShowProperties(Campaign $campaign): array
+    {
+        return [];
     }
 
     // ====================================
@@ -460,12 +514,22 @@ abstract class CampaignControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Campaign $campaign): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $campaign->setOrganization($organization);
+            error_log('✅ CampaignController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ CampaignController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

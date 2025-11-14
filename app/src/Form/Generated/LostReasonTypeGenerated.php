@@ -64,7 +64,7 @@ abstract class LostReasonTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'help' => 'Inactive reasons will not appear in dropdowns but historical data is preserved',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -73,7 +73,7 @@ abstract class LostReasonTypeGenerated extends AbstractType
 
         $builder->add('default', CheckboxType::class, [
             'label' => 'Default',
-            'required' => true,
+            'required' => false,
             'help' => 'Only one lost reason should be marked as default',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -91,7 +91,7 @@ abstract class LostReasonTypeGenerated extends AbstractType
 
         $builder->add('requiresNotes', CheckboxType::class, [
             'label' => 'Requires Notes',
-            'required' => true,
+            'required' => false,
             'help' => 'Enable this to force sales reps to provide detailed notes when selecting this reason',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -109,7 +109,7 @@ abstract class LostReasonTypeGenerated extends AbstractType
 
         $builder->add('critical', CheckboxType::class, [
             'label' => 'Critical',
-            'required' => true,
+            'required' => false,
             'help' => 'Mark as critical if this reason indicates a systemic problem requiring leadership review',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -136,7 +136,7 @@ abstract class LostReasonTypeGenerated extends AbstractType
 
         $builder->add('actionable', CheckboxType::class, [
             'label' => 'Actionable',
-            'required' => true,
+            'required' => false,
             'help' => 'Actionable reasons (e.g., pricing, features) vs non-actionable (e.g., timing, budget cuts)',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -145,7 +145,7 @@ abstract class LostReasonTypeGenerated extends AbstractType
 
         $builder->add('internal', CheckboxType::class, [
             'label' => 'Internal Only',
-            'required' => true,
+            'required' => false,
             'help' => 'Internal reasons help track issues without exposing sensitive data to customers',
             'attr' => [
                 'class' => 'form-input-modern',

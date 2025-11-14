@@ -101,13 +101,13 @@ class EventResourceProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('available', $requestData)) {
             $entity->setAvailable($data->available);
         }
-        // active
-        if (!$isPatch || array_key_exists('active', $requestData)) {
-            $entity->setActive($data->active);
-        }
         // bookable
         if (!$isPatch || array_key_exists('bookable', $requestData)) {
             $entity->setBookable($data->bookable);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
         }
         // timezone
         if (!$isPatch || array_key_exists('timezone', $requestData)) {
@@ -129,13 +129,13 @@ class EventResourceProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('maximumBookingDuration', $requestData)) {
             $entity->setMaximumBookingDuration($data->maximumBookingDuration);
         }
-        // pricePerHour
-        if (!$isPatch || array_key_exists('pricePerHour', $requestData)) {
-            $entity->setPricePerHour($data->pricePerHour);
-        }
         // bookingRules
         if (!$isPatch || array_key_exists('bookingRules', $requestData)) {
             $entity->setBookingRules($data->bookingRules);
+        }
+        // pricePerHour
+        if (!$isPatch || array_key_exists('pricePerHour', $requestData)) {
+            $entity->setPricePerHour($data->pricePerHour);
         }
         // pricePerDay
         if (!$isPatch || array_key_exists('pricePerDay', $requestData)) {

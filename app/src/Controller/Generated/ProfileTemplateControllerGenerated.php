@@ -193,31 +193,53 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
         $form = $this->createForm(ProfileTemplateType::class, $profileTemplate);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($profileTemplate);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($profileTemplate);
 
-                $this->entityManager->persist($profileTemplate);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($profileTemplate);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($profileTemplate);
+                    // After create hook
+                    $this->afterCreate($profileTemplate);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'profiletemplate.flash.created_successfully',
-                    ['%name%' => (string) $profileTemplate],
-                    'profiletemplate'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'profiletemplate.flash.created_successfully',
+                        ['%name%' => (string) $profileTemplate],
+                        'profiletemplate'
+                    ));
 
-                return $this->redirectToRoute('profiletemplate_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'profiletemplate.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'profiletemplate'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $profileTemplate;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'ProfileTemplate',
+                            'entityId' => $profileTemplate->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('profiletemplate_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'profiletemplate.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'profiletemplate'
+                    ));
+                }
             }
         }
 
@@ -263,30 +285,32 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
         $form = $this->createForm(ProfileTemplateType::class, $profileTemplate);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($profileTemplate);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($profileTemplate);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($profileTemplate);
+                    // After update hook
+                    $this->afterUpdate($profileTemplate);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'profiletemplate.flash.updated_successfully',
-                    ['%name%' => (string) $profileTemplate],
-                    'profiletemplate'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'profiletemplate.flash.updated_successfully',
+                        ['%name%' => (string) $profileTemplate],
+                        'profiletemplate'
+                    ));
 
-                return $this->redirectToRoute('profiletemplate_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('profiletemplate_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'profiletemplate.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'profiletemplate'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'profiletemplate.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'profiletemplate'
+                    ));
+                }
             }
         }
 
@@ -355,9 +379,22 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ProfileTemplateVoter::VIEW, $profileTemplate);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($profileTemplate);
+
         return $this->render('profiletemplate/show.html.twig', [
             'profileTemplate' => $profileTemplate,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in ProfileTemplateController to customize displayed properties
+     */
+    protected function buildShowProperties(ProfileTemplate $profileTemplate): array
+    {
+        return [];
     }
 
     // ====================================
@@ -368,12 +405,10 @@ abstract class ProfileTemplateControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(ProfileTemplate $profileTemplate): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

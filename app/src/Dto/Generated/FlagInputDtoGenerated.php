@@ -31,12 +31,12 @@ abstract class FlagInputDtoGenerated
     #[Groups(['flag:write'])]
     public string $name;
 
+    #[Groups(['flag:write'])]
+    public ?string $description = null;
+
     #[Assert\Length(max: 50)]
     #[Groups(['flag:write'])]
     public string $category = 'custom';
-
-    #[Groups(['flag:write'])]
-    public ?string $description = null;
 
     #[Assert\Length(max: 7)]
     #[Groups(['flag:write'])]
@@ -92,16 +92,6 @@ abstract class FlagInputDtoGenerated
         return $this;
     }
 
-    public function getCategory(): string    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
-        return $this;
-    }
-
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -109,6 +99,16 @@ abstract class FlagInputDtoGenerated
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getCategory(): string    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
         return $this;
     }
 

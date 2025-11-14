@@ -172,13 +172,13 @@ class TaskProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('emailSubject', $requestData)) {
             $entity->setEmailSubject($data->emailSubject);
         }
-        // phoneNumber
-        if (!$isPatch || array_key_exists('phoneNumber', $requestData)) {
-            $entity->setPhoneNumber($data->phoneNumber);
-        }
         // taskStatus
         if (!$isPatch || array_key_exists('taskStatus', $requestData)) {
             $entity->setTaskStatus($data->taskStatus);
+        }
+        // phoneNumber
+        if (!$isPatch || array_key_exists('phoneNumber', $requestData)) {
+            $entity->setPhoneNumber($data->phoneNumber);
         }
         // meetingUrl
         if (!$isPatch || array_key_exists('meetingUrl', $requestData)) {

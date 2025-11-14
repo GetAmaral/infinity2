@@ -56,7 +56,7 @@ abstract class DealStageGenerated extends EntityBase
     protected ?User $exitedBy = null;
 
     #[Groups(['dealstage:read', 'dealstage:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $expectedCloseDate = null;
 
     #[Groups(['dealstage:read', 'dealstage:write'])]
@@ -80,11 +80,11 @@ abstract class DealStageGenerated extends EntityBase
     protected ?Deal $deal = null;
 
     #[Groups(['dealstage:read', 'dealstage:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $endedAt = null;
 
     #[Groups(['dealstage:read', 'dealstage:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastUpdatedAt = null;
 
     #[Groups(['dealstage:read', 'dealstage:write'])]
@@ -96,7 +96,7 @@ abstract class DealStageGenerated extends EntityBase
     protected ?PipelineStage $pipelineStage = null;
 
     #[Groups(['dealstage:read', 'dealstage:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $startedAt = null;
 
 

@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Reminder;
+use App\MultiTenant\TenantContext;
 use App\Repository\ReminderRepository;
 use App\Security\Voter\ReminderVoter;
 use App\Form\ReminderType;
@@ -36,6 +37,7 @@ abstract class ReminderControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -207,31 +209,60 @@ abstract class ReminderControllerGenerated extends BaseApiController
         $form = $this->createForm(ReminderType::class, $reminder);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($reminder);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $reminder->setOrganization($organization);
+                error_log('✅ ReminderController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($reminder);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($reminder);
 
-                // After create hook
-                $this->afterCreate($reminder);
+                    $this->entityManager->persist($reminder);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'reminder.flash.created_successfully',
-                    ['%name%' => (string) $reminder],
-                    'reminder'
-                ));
+                    // After create hook
+                    $this->afterCreate($reminder);
 
-                return $this->redirectToRoute('reminder_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'reminder.flash.created_successfully',
+                        ['%name%' => (string) $reminder],
+                        'reminder'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'reminder.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'reminder'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $reminder;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Reminder',
+                            'entityId' => $reminder->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('reminder_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'reminder.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'reminder'
+                    ));
+                }
             }
         }
 
@@ -274,33 +305,43 @@ abstract class ReminderControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ReminderVoter::EDIT, $reminder);
 
+        // Store original organization to preserve it
+        $originalOrganization = $reminder->getOrganization();
+
         $form = $this->createForm(ReminderType::class, $reminder);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($reminder);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $reminder->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($reminder);
 
-                // After update hook
-                $this->afterUpdate($reminder);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'reminder.flash.updated_successfully',
-                    ['%name%' => (string) $reminder],
-                    'reminder'
-                ));
+                    // After update hook
+                    $this->afterUpdate($reminder);
 
-                return $this->redirectToRoute('reminder_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'reminder.flash.updated_successfully',
+                        ['%name%' => (string) $reminder],
+                        'reminder'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'reminder.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'reminder'
-                ));
+                    return $this->redirectToRoute('reminder_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'reminder.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'reminder'
+                    ));
+                }
             }
         }
 
@@ -369,9 +410,22 @@ abstract class ReminderControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(ReminderVoter::VIEW, $reminder);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($reminder);
+
         return $this->render('reminder/show.html.twig', [
             'reminder' => $reminder,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in ReminderController to customize displayed properties
+     */
+    protected function buildShowProperties(Reminder $reminder): array
+    {
+        return [];
     }
 
     // ====================================
@@ -382,12 +436,22 @@ abstract class ReminderControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Reminder $reminder): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $reminder->setOrganization($organization);
+            error_log('✅ ReminderController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ ReminderController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

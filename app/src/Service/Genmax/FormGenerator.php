@@ -251,9 +251,12 @@ class FormGenerator
      */
     protected function buildFormOptions(GeneratorProperty $property, GeneratorEntity $entity): array
     {
+        // Checkboxes should never be required (unchecked = false)
+        $isCheckbox = $property->getPropertyType() === 'boolean';
+
         $options = [
             'label' => $property->getPropertyLabel(),
-            'required' => $property->isFormRequired() ? true : !$property->isNullable(),
+            'required' => $isCheckbox ? false : ($property->isFormRequired() ? true : !$property->isNullable()),
         ];
 
         // Help text
@@ -355,6 +358,26 @@ class FormGenerator
                 $options['multiple'] = true;
             }
 
+            // Add query_builder to sort options alphabetically (case-insensitive)
+            // Priority: name, title, label, slug, subject, id
+            // Use special marker to output as raw PHP code in template
+            $options['query_builder'] = '__RAW__function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder(\'e\');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = \'id\';
+                foreach ([\'name\', \'title\', \'label\', \'slug\', \'subject\'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy(\'LOWER(e.\' . $sortField . \')\', \'ASC\');
+            }__RAW__';
+
             // Expanded (radio/checkboxes)
             if ($property->isFormExpanded()) {
                 $options['expanded'] = true;
@@ -405,9 +428,8 @@ class FormGenerator
                 'label' => $property->getPropertyLabel(),
             ];
 
-            // Add constraints
+            // Add constraints (only if max is set - collections are optional by default)
             $constraints = [];
-            $constraints[] = "new \\Symfony\\Component\\Validator\\Constraints\\Count(['min' => 1])";
 
             if ($max = $property->getDtoNestedMaxItems()) {
                 $constraints[] = "new \\Symfony\\Component\\Validator\\Constraints\\Count(['max' => {$max}])";

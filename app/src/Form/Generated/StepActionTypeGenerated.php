@@ -8,8 +8,8 @@ use App\Entity\StepAction;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use App\Entity\Step;
@@ -32,6 +32,41 @@ abstract class StepActionTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('step', EntityType::class, [
+            'label' => 'Step',
+            'required' => true,
+            'class' => \App\Entity\Step::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
+            'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Step',
+                'data-relation-select-route-value' => 'step_api_search',
+                'data-relation-select-add-route-value' => 'step_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select step',
+                'class' => 'form-input-modern',
+            ],
+        ]);
+        }
+
         $builder->add('name', TextType::class, [
             'label' => 'Name',
             'required' => true,
@@ -40,18 +75,6 @@ abstract class StepActionTypeGenerated extends AbstractType
                 'placeholder' => 'Enter name',
             ],
         ]);
-
-        // Conditionally exclude parent back-reference to prevent circular references in collections
-        if (empty($options['exclude_parent'])) {
-        $builder->add('step', EntityType::class, [
-            'label' => 'Step',
-            'required' => true,
-            'class' => \App\Entity\Step::class,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-        }
 
         $builder->add('prompt', TextareaType::class, [
             'label' => 'Prompt',

@@ -20,10 +20,6 @@ use App\Dto\StepInputDto;
  */
 abstract class StepActionInputDtoGenerated
 {
-    #[Assert\Length(max: 255)]
-    #[Groups(['step_question:write'])]
-    public string $name;
-
     /**
      * step reference
      * Must be: IRI string (e.g., "/api/steps/uuid")
@@ -31,6 +27,10 @@ abstract class StepActionInputDtoGenerated
     #[Assert\NotNull]
     #[Groups(['step_question:write'])]
     public ?string $step = null;
+
+    #[Assert\Length(max: 255)]
+    #[Groups(['step_question:write'])]
+    public string $name;
 
     #[Assert\Length(max: 255)]
     #[Groups(['step_question:write'])]
@@ -51,16 +51,6 @@ abstract class StepActionInputDtoGenerated
 
     // Getters and Setters
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getStep(): ?string    {
         return $this->step;
     }
@@ -68,6 +58,16 @@ abstract class StepActionInputDtoGenerated
     public function setStep(?string $step): self
     {
         $this->step = $step;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 

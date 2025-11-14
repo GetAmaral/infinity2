@@ -4,7 +4,11 @@ export default class extends Controller {
     static targets = ["overlay", "form", "submitButton"];
 
     connect() {
-        console.log('🔵 CRUD Modal Controller connected');
+        console.log('🔌 crud-modal controller connected', {
+            hasFormTarget: this.hasFormTarget,
+            hasSubmitButtonTarget: this.hasSubmitButtonTarget,
+            formAction: this.hasFormTarget ? this.formTarget.action : 'N/A'
+        });
 
         // Prevent body scroll
         document.body.style.overflow = 'hidden';
@@ -12,7 +16,6 @@ export default class extends Controller {
         // Track if form has been modified
         this.formModified = false;
         this.initialFormData = null;
-        this.formSubmittedSuccessfully = false;
 
         // Capture initial form state after a short delay
         setTimeout(() => {
@@ -30,20 +33,22 @@ export default class extends Controller {
         // Turbo event handlers for form submission
         this.boundTurboSubmitEnd = this.handleTurboSubmitEnd.bind(this);
         this.boundTurboBeforeStreamRender = this.handleTurboBeforeStreamRender.bind(this);
-        this.boundTurboBeforeVisit = this.handleTurboBeforeVisit.bind(this);
+        this.boundTurboSubmitStart = this.handleTurboSubmitStart.bind(this);
+        this.boundTurboBeforeFetchResponse = this.handleTurboBeforeFetchResponse.bind(this);
 
+        document.addEventListener('turbo:submit-start', this.boundTurboSubmitStart);
+        document.addEventListener('turbo:before-fetch-response', this.boundTurboBeforeFetchResponse);
         document.addEventListener('turbo:submit-end', this.boundTurboSubmitEnd);
         document.addEventListener('turbo:before-stream-render', this.boundTurboBeforeStreamRender);
-        document.addEventListener('turbo:before-visit', this.boundTurboBeforeVisit);
     }
 
     disconnect() {
-        console.log('🔴 CRUD Modal Controller disconnected');
         document.body.style.overflow = '';
         document.removeEventListener('keydown', this.boundHandleEscape);
+        document.removeEventListener('turbo:submit-start', this.boundTurboSubmitStart);
+        document.removeEventListener('turbo:before-fetch-response', this.boundTurboBeforeFetchResponse);
         document.removeEventListener('turbo:submit-end', this.boundTurboSubmitEnd);
         document.removeEventListener('turbo:before-stream-render', this.boundTurboBeforeStreamRender);
-        document.removeEventListener('turbo:before-visit', this.boundTurboBeforeVisit);
     }
 
     /**
@@ -249,10 +254,25 @@ export default class extends Controller {
             return; // Don't close yet
         }
 
-        // Clear the modal container
-        const container = document.getElementById('global-modal-container');
-        if (container) {
-            container.innerHTML = '';
+        // Check if this modal is inside a nested container
+        const nestedContainer = document.getElementById('nested-modal-container');
+        const isNestedModal = nestedContainer && nestedContainer.contains(this.element);
+
+        // Dispatch modal closed event before clearing
+        document.dispatchEvent(new CustomEvent('modal:closed', {
+            detail: { isNested: isNestedModal }
+        }));
+
+        if (isNestedModal) {
+            // For nested modals, just clear the nested container
+            // The relation-select controller will handle showing the original modal
+            nestedContainer.innerHTML = '';
+        } else {
+            // For regular modals, clear the global container
+            const container = document.getElementById('global-modal-container');
+            if (container) {
+                container.innerHTML = '';
+            }
         }
     }
 
@@ -260,6 +280,9 @@ export default class extends Controller {
      * Actually close the modal (called after user confirms)
      */
     forceClose() {
+        // Dispatch modal closed event before clearing
+        document.dispatchEvent(new CustomEvent('modal:closed'));
+
         const container = document.getElementById('global-modal-container');
         if (container) {
             container.innerHTML = '';
@@ -269,6 +292,18 @@ export default class extends Controller {
     backdropClick(event) {
         // Only close if clicking directly on the overlay
         if (event.target === this.overlayTarget) {
+            // Check if there's a nested modal
+            const nestedContainer = document.getElementById('nested-modal-container');
+            const hasNestedModal = nestedContainer && nestedContainer.children.length > 0;
+
+            // Check if THIS modal is the nested one
+            const isThisNested = nestedContainer && nestedContainer.contains(this.element);
+
+            // If there's a nested modal and this is the ORIGINAL modal, don't close
+            if (hasNestedModal && !isThisNested) {
+                return;
+            }
+
             this.close(event);
         }
     }
@@ -280,6 +315,19 @@ export default class extends Controller {
 
     handleEscape(event) {
         if (event.key === 'Escape') {
+            // Check if there's a nested modal
+            const nestedContainer = document.getElementById('nested-modal-container');
+            const hasNestedModal = nestedContainer && nestedContainer.children.length > 0;
+
+            // Check if THIS modal is the nested one
+            const isThisNested = nestedContainer && nestedContainer.contains(this.element);
+
+            // If there's a nested modal and this is the ORIGINAL modal, don't close
+            // Let the nested modal handle the ESC key
+            if (hasNestedModal && !isThisNested) {
+                return;
+            }
+
             this.close();
         }
     }
@@ -377,47 +425,152 @@ export default class extends Controller {
     }
 
     /**
-     * Handle Turbo form submission end
+     * Handle Turbo before fetch response - intercept responses BEFORE Turbo processes them
      */
-    handleTurboSubmitEnd(event) {
-        // Check if this is our form
-        if (event.detail.formSubmission.formElement !== this.formTarget) {
+    async handleTurboBeforeFetchResponse(event) {
+        // Check if we have a form target
+        if (!this.hasFormTarget) {
             return;
         }
 
-        console.log('📥 Form submission ended', event.detail);
+        const response = event.detail.fetchResponse.response;
 
-        const fetchResponse = event.detail.fetchResponse;
+        // Check if this is a redirect response (3xx status codes or redirected flag)
+        const isRedirect = (response.status >= 300 && response.status < 400) || response.redirected;
 
-        // Check if response is a redirect (successful save)
-        if (fetchResponse && fetchResponse.response.redirected) {
-            console.log('✅ Form saved successfully - Turbo will handle redirect');
+        if (isRedirect) {
+            // PREVENT Turbo from following the redirect
+            event.preventDefault();
 
-            // Set flag so turbo:before-visit knows to save scroll
-            this.formSubmittedSuccessfully = true;
+            // Extract entity ID from redirect URL
+            const entityId = this.extractEntityIdFromRedirect(response.url);
 
-            // Form saved successfully and server sent redirect
-            // Mark form as clean and close modal - Turbo will handle the navigation
+            // Dispatch success event for the page to handle
+            window.dispatchEvent(new CustomEvent('modal:success', {
+                detail: {
+                    type: this.formTarget.dataset.entityType || 'entity',
+                    entityId: entityId
+                }
+            }));
+
+            // Mark form as clean and close modal
             this.formModified = false;
             this.forceClose();
             return;
         }
 
+        // Check if this is a 422 validation error from our modal form
+        if (response.status === 422) {
+            // Prevent Turbo from navigating away
+            event.preventDefault();
+
+            try {
+                // Clone the response so we can read it
+                const clonedResponse = response.clone();
+                const html = await clonedResponse.text();
+
+                const container = document.getElementById('global-modal-container');
+                if (container) {
+                    container.innerHTML = html;
+
+                    // Focus on first error field
+                    setTimeout(() => {
+                        const firstError = container.querySelector('.input-error, .is-invalid');
+                        if (firstError) {
+                            firstError.focus();
+                            firstError.select?.();
+                        }
+                    }, 100);
+                }
+            } catch (error) {
+                console.error('❌ Error re-rendering modal with errors:', error);
+            }
+        }
+    }
+
+    /**
+     * Handle Turbo form submission start
+     */
+    handleTurboSubmitStart(event) {
+        console.log('🚀 turbo:submit-start fired', {
+            formElement: event.detail.formSubmission.formElement,
+            isOurForm: event.detail.formSubmission.formElement === this.formTarget,
+            formAction: event.detail.formSubmission.formElement.action
+        });
+
+        // Check if this is our form
+        if (event.detail.formSubmission.formElement !== this.formTarget) {
+            console.log('⏭️ Not our form, skipping');
+            return;
+        }
+
+        console.log('✅ This is our form, disabling submit button');
+
+        // Disable submit button to prevent double submission
+        if (this.hasSubmitButtonTarget) {
+            const originalContent = this.submitButtonTarget.innerHTML;
+            this.submitButtonTarget.disabled = true;
+            this.submitButtonTarget.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+
+            // Store original content to restore it later if needed
+            this.submitButtonTarget.dataset.originalContent = originalContent;
+            console.log('🔘 Submit button disabled');
+        } else {
+            console.log('⚠️ No submit button target found');
+        }
+    }
+
+    /**
+     * Handle Turbo form submission end
+     */
+    handleTurboSubmitEnd(event) {
+        console.log('🏁 turbo:submit-end fired', {
+            formElement: event.detail.formSubmission.formElement,
+            isOurForm: event.detail.formSubmission.formElement === this.formTarget,
+            success: event.detail.success,
+            fetchResponse: event.detail.fetchResponse
+        });
+
+        // Check if this is our form
+        if (event.detail.formSubmission.formElement !== this.formTarget) {
+            console.log('⏭️ Not our form, skipping');
+            return;
+        }
+
+        console.log('✅ This is our form');
+
+        const fetchResponse = event.detail.fetchResponse;
+
         // Check if response is a Turbo Stream
         if (fetchResponse) {
             const contentType = fetchResponse.response.headers.get('Content-Type');
+            console.log('📦 Response Content-Type:', contentType);
 
             // If it's a Turbo Stream response, mark form as clean
-            // The modal will be closed in handleTurboBeforeStreamRender
+            // The modal will be closed by the Turbo Stream, so don't re-enable button
             if (contentType && contentType.includes('turbo-stream')) {
+                console.log('🎬 Turbo Stream detected, keeping button disabled');
                 this.formModified = false;
                 return;
             }
+        } else {
+            console.log('❌ No fetchResponse - request may have failed');
         }
 
-        // If submission was successful but not a stream (could be a re-render with errors)
+        // If there was an error or validation failed, re-enable the submit button
+        if (this.hasSubmitButtonTarget && this.submitButtonTarget.dataset.originalContent) {
+            console.log('🔄 Re-enabling submit button');
+            this.submitButtonTarget.disabled = false;
+            this.submitButtonTarget.innerHTML = this.submitButtonTarget.dataset.originalContent;
+            delete this.submitButtonTarget.dataset.originalContent;
+        }
+
+        // If submission was successful but not a stream or redirect (re-render with errors)
         if (event.detail.success) {
+            console.log('✅ Submission successful');
             this.formModified = false;
+        } else {
+            console.log('⚠️ Submission not successful');
         }
     }
 
@@ -427,28 +580,12 @@ export default class extends Controller {
     handleTurboBeforeStreamRender(event) {
         // Check if it's a refresh action
         const streamElement = event.target;
-        console.log('Turbo stream detected:', streamElement.getAttribute('action'));
 
         if (streamElement.getAttribute('action') === 'refresh') {
-            console.log('Refresh stream detected - closing modal');
             // Close modal but DON'T prevent the stream from rendering
             // The stream will still execute after this
             this.formModified = false;
             this.forceClose();
-        }
-    }
-
-    /**
-     * Handle Turbo before visit - intercept to save scroll position
-     */
-    handleTurboBeforeVisit(event) {
-        // Only save scroll if this visit is from our form submission
-        if (this.formSubmittedSuccessfully) {
-            console.log('🚀 Turbo visit starting after form submit - saving scroll');
-            this.saveScrollPosition();
-
-            // Reset flag
-            this.formSubmittedSuccessfully = false;
         }
     }
 
@@ -461,7 +598,17 @@ export default class extends Controller {
 
         sessionStorage.setItem('modalSaveScrollY', scrollY.toString());
         sessionStorage.setItem('modalSaveScrollX', scrollX.toString());
+    }
 
-        console.log(`📍 Scroll position saved: x=${scrollX}, y=${scrollY}`);
+    /**
+     * Extract entity ID from redirect URL
+     */
+    extractEntityIdFromRedirect(url) {
+        // Try to extract UUID from URL like /talk/019a0982-0e5f-7b80-a0dd-0bdff8e14d57
+        const uuidMatch = url.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+        if (uuidMatch) {
+            return uuidMatch[1];
+        }
+        return null;
     }
 }

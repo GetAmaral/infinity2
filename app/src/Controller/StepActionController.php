@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\StepAction;
-use App\Form\StepActionFormType;
+use App\Form\StepActionType;
 use App\Repository\StepActionRepository;
 use App\Repository\StepRepository;
 use App\Repository\TreeFlowRepository;
@@ -55,8 +55,8 @@ final class StepActionController extends AbstractController
 
         $action->setViewOrder(($maxOrder ?? 0) + 1);
 
-        $form = $this->createForm(StepActionFormType::class, $action, [
-            'is_edit' => false,
+        $form = $this->createForm(StepActionType::class, $action, [
+            'exclude_parent' => true, // Exclude step field since it's already set
         ]);
 
         $form->handleRequest($request);
@@ -133,8 +133,8 @@ final class StepActionController extends AbstractController
 
         $this->denyAccessUnlessGranted(TreeFlowVoter::EDIT, $treeFlow);
 
-        $form = $this->createForm(StepActionFormType::class, $action, [
-            'is_edit' => true,
+        $form = $this->createForm(StepActionType::class, $action, [
+            'exclude_parent' => true, // Exclude step field since it's already set
         ]);
 
         $form->handleRequest($request);

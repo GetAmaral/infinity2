@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Form\Generated\StepActionTypeGenerated;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * StepAction Form Type
@@ -16,20 +19,53 @@ use App\Form\Generated\StepActionTypeGenerated;
  */
 class StepActionType extends StepActionTypeGenerated
 {
-    // Override buildForm() to add custom fields or modify generated ones
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        parent::buildForm($builder, $options);
 
-    // Example:
-    // public function buildForm(FormBuilderInterface $builder, array $options): void
-    // {
-    //     parent::buildForm($builder, $options);
-    //
-    //     // Add custom field
-    //     $builder->add('customField', TextType::class, [
-    //         'label' => 'Custom Field',
-    //         'required' => false,
-    //     ]);
-    //
-    //     // Or modify existing field
-    //     $builder->get('existingField')->setRequired(false);
-    // }
+        // Make viewOrder field optional - use existing value if empty
+        $builder->add('viewOrder', null, [
+            'required' => false,
+            'empty_data' => function ($form) {
+                // Return the existing value if the field is empty
+                return $form->getParent()->getData()->getViewOrder();
+            },
+            'attr' => [
+                'class' => 'form-input-modern',
+                'type' => 'number',
+                'min' => 1,
+            ],
+        ]);
+
+        // Replace importance field with ChoiceType for star rating
+        $builder->add('importance', ChoiceType::class, [
+            'label' => 'Importance',
+            'choices' => [
+                '1' => 1,
+                '2' => 2,
+                '3' => 3,
+            ],
+            'expanded' => true,
+            'required' => false,
+            'data' => 1, // Default to 1 star
+        ]);
+
+        // Replace fewShot with CollectionType for structured user/assistant pairs
+        $builder->add('fewShot', CollectionType::class, [
+            'entry_type' => FewShotExampleType::class,
+            'entry_options' => [
+                'label' => false,
+            ],
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'required' => false,
+            'label' => 'Few-Shot Examples',
+            'attr' => [
+                'class' => 'fewshot-collection',
+                'data-controller' => 'collection',
+                'data-collection-prototype-name-value' => '__fewshot_name__',
+            ],
+        ]);
+    }
 }

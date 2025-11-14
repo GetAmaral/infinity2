@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Course;
+use App\MultiTenant\TenantContext;
 use App\Repository\CourseRepository;
 use App\Security\Voter\CourseVoter;
 use App\Form\CourseType;
@@ -36,6 +37,7 @@ abstract class CourseControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -212,31 +214,60 @@ abstract class CourseControllerGenerated extends BaseApiController
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($course);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $course->setOrganization($organization);
+                error_log('✅ CourseController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($course);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($course);
 
-                // After create hook
-                $this->afterCreate($course);
+                    $this->entityManager->persist($course);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'course.flash.created_successfully',
-                    ['%name%' => (string) $course],
-                    'course'
-                ));
+                    // After create hook
+                    $this->afterCreate($course);
 
-                return $this->redirectToRoute('course_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'course.flash.created_successfully',
+                        ['%name%' => (string) $course],
+                        'course'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'course.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'course'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $course;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Course',
+                            'entityId' => $course->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('course_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'course.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'course'
+                    ));
+                }
             }
         }
 
@@ -279,33 +310,43 @@ abstract class CourseControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CourseVoter::EDIT, $course);
 
+        // Store original organization to preserve it
+        $originalOrganization = $course->getOrganization();
+
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($course);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $course->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($course);
 
-                // After update hook
-                $this->afterUpdate($course);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'course.flash.updated_successfully',
-                    ['%name%' => (string) $course],
-                    'course'
-                ));
+                    // After update hook
+                    $this->afterUpdate($course);
 
-                return $this->redirectToRoute('course_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'course.flash.updated_successfully',
+                        ['%name%' => (string) $course],
+                        'course'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'course.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'course'
-                ));
+                    return $this->redirectToRoute('course_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'course.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'course'
+                    ));
+                }
             }
         }
 
@@ -374,9 +415,22 @@ abstract class CourseControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(CourseVoter::VIEW, $course);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($course);
+
         return $this->render('course/show.html.twig', [
             'course' => $course,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in CourseController to customize displayed properties
+     */
+    protected function buildShowProperties(Course $course): array
+    {
+        return [];
     }
 
     // ====================================
@@ -387,12 +441,22 @@ abstract class CourseControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Course $course): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $course->setOrganization($organization);
+            error_log('✅ CourseController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ CourseController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

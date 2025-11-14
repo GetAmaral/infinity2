@@ -146,15 +146,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      doNotCall:
-        description: "Do Not Call (yes\/no)"
-        example: "true"
       leadSource:
         description: "Lead Source (text field)"
         example: "Sample longer text value"
         # Advanced filters
         filters:
           - type: OrderFilter
+      doNotCall:
+        description: "Do Not Call (yes\/no)"
+        example: "true"
       preferredContactMethod:
         description: "Preferred Contact Method (text field)"
         example: "Sample longer text value"

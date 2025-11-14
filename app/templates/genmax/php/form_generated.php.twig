@@ -63,6 +63,8 @@ abstract class {{ entityName }}TypeGenerated extends AbstractType
             '{{ key }}' => false,
 {% elseif value is same as(null) %}
             '{{ key }}' => null,
+{% elseif key == 'query_builder' and value starts with '__RAW__' %}
+            '{{ key }}' => {{ value|replace({'__RAW__': ''})|raw }},
 {% elseif key == 'class' %}
             '{{ key }}' => \{{ value|replace({'\\\\': '\\'}) }}::class,
 {% elseif key == 'entry_type' %}

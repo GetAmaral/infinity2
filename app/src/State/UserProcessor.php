@@ -160,13 +160,13 @@ class UserProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('openAiApiKey', $requestData)) {
             $entity->setOpenAiApiKey($data->openAiApiKey);
         }
-        // lastLoginAt
-        if (!$isPatch || array_key_exists('lastLoginAt', $requestData)) {
-            $entity->setLastLoginAt($data->lastLoginAt);
-        }
         // gender
         if (!$isPatch || array_key_exists('gender', $requestData)) {
             $entity->setGender($data->gender);
+        }
+        // lastLoginAt
+        if (!$isPatch || array_key_exists('lastLoginAt', $requestData)) {
+            $entity->setLastLoginAt($data->lastLoginAt);
         }
         // lockedUntil
         if (!$isPatch || array_key_exists('lockedUntil', $requestData)) {

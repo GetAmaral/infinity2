@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\MultiTenant;
 
 use App\Entity\Organization;
+use App\Entity\User;
 use App\Repository\OrganizationRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -25,7 +27,8 @@ final class TenantContext
 
     public function __construct(
         private readonly RequestStack $requestStack,
-        private readonly OrganizationRepository $organizationRepository
+        private readonly OrganizationRepository $organizationRepository,
+        private readonly Security $security
     ) {
     }
 
@@ -175,6 +178,45 @@ final class TenantContext
     public function loadTenantBySlug(string $slug): ?Organization
     {
         return $this->organizationRepository->findOneBy(['slug' => $slug]);
+    }
+
+    /**
+     * Get organization for new entity creation
+     *
+     * Multi-tenant organization resolution with fallback:
+     * 1. Subdomain-based organization (e.g., test-org-1.localhost)
+     * 2. Current user's organization (fallback for root domain access)
+     * 3. null (if neither available)
+     *
+     * This is the single method controllers should call to get organization
+     * for new entities before form validation.
+     *
+     * @return Organization|null Organization to use for new entity, or null if none available
+     */
+    public function getOrganizationForNewEntity(): ?Organization
+    {
+        // Strategy 1: Try subdomain-based tenant context
+        $organization = $this->getTenant();
+
+        if ($organization) {
+            error_log('🏢 TenantContext: Got organization from subdomain: ' . $organization->getName());
+            return $organization;
+        }
+
+        // Strategy 2: Fallback to current user's organization
+        $user = $this->security->getUser();
+        if ($user instanceof User) {
+            $organization = $user->getOrganization();
+            if ($organization) {
+                error_log('🏢 TenantContext: Got organization from user: ' . $organization->getName());
+            } else {
+                error_log('⚠️ TenantContext: User has NO organization! User ID: ' . $user->getId()->toRfc4122());
+            }
+        } else {
+            error_log('⚠️ TenantContext: NO authenticated user');
+        }
+
+        return $organization;
     }
 
     /**

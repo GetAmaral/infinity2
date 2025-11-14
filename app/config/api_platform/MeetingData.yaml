@@ -104,15 +104,15 @@ resources:
       minutes:
         description: "Formal minutes documenting decisions and discussions"
         example: "Board approved Q1 budget of $500K"
-      attendees:
-        description: "Array of attendees with their attendance status"
-        example: "{\"attendees\": [{\"name\": \"John Doe\", \"email\": \"john@example.com\", \"status\": \"attended\", \"role\": \"presenter\"}]}"
       meetingId:
         description: "The unique meeting identifier from the platform (e.g., Zoom meeting ID)"
         example: "123-456-789"
         # Advanced filters
         filters:
           - type: OrderFilter
+      attendees:
+        description: "Array of attendees with their attendance status"
+        example: "{\"attendees\": [{\"name\": \"John Doe\", \"email\": \"john@example.com\", \"status\": \"attended\", \"role\": \"presenter\"}]}"
       absentees:
         description: "Array of people who were expected but did not attend"
         example: "{\"absentees\": [{\"name\": \"Jane Smith\", \"email\": \"jane@example.com\", \"reason\": \"sick leave\"}]}"
@@ -146,15 +146,15 @@ resources:
       organizer:
         description: "The person who organized or facilitated the meeting"
         example: "John Doe"
+      tags:
+        description: "Array of tags for categorization and search"
+        example: "[\"budget\", \"planning\", \"quarterly\"]"
       platform:
         description: "The virtual meeting platform or service used"
         example: "zoom"
         # Advanced filters
         filters:
           - type: OrderFilter
-      tags:
-        description: "Array of tags for categorization and search"
-        example: "[\"budget\", \"planning\", \"quarterly\"]"
       confidential:
         description: "Whether the meeting content is confidential"
         example: "false"

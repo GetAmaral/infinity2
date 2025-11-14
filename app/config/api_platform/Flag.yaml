@@ -53,15 +53,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      description:
+        description: "..."
+        example: "..."
       category:
         description: "Category (text field)"
         example: "Sample text"
         # Advanced filters
         filters:
           - type: OrderFilter
-      description:
-        description: "..."
-        example: "..."
       color:
         description: "Color (text field)"
         example: "Sample text"

@@ -34,7 +34,30 @@ abstract class StepConnectionTypeGenerated extends AbstractType
             'label' => 'SourceOutput',
             'required' => true,
             'class' => \App\Entity\StepOutput::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'StepOutput',
+                'data-relation-select-route-value' => 'step_output_api_search_unrelated',
+                'data-relation-select-add-route-value' => 'step_output_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'true',
+                'placeholder' => 'Select stepoutput',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -45,7 +68,30 @@ abstract class StepConnectionTypeGenerated extends AbstractType
             'label' => 'Target Step',
             'required' => true,
             'class' => \App\Entity\Step::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Step',
+                'data-relation-select-route-value' => 'step_api_search',
+                'data-relation-select-add-route-value' => 'step_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select step',
                 'class' => 'form-input-modern',
             ],
         ]);

@@ -113,12 +113,6 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      emailVerifiedAt:
-        description: "EmailVerifiedAt (date and time)"
-        example: "2025-01-15T10:30:00Z"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       grantedRoles:
         writable: false
         description: "Granted Roles"
@@ -135,15 +129,21 @@ resources:
         writable: false
         description: "Deals"
         example: "/api/deals/01234567-89ab-cdef-0123-456789abcdef"
-      eventAttendances:
-        description: "EventAttendances"
-        example: "sample value"
+      emailVerifiedAt:
+        description: "EmailVerifiedAt (date and time)"
+        example: "2025-01-15T10:30:00Z"
         # Advanced filters
         filters:
           - type: OrderFilter
       verified:
         description: "Verified"
         example: true
+      eventAttendances:
+        description: "EventAttendances"
+        example: "sample value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       termsSigned:
         description: "Terms Signed"
         example: true
@@ -178,16 +178,16 @@ resources:
         writable: false
         description: "OpenAI API Key"
         example: "Sample openai api key"
-      lastLoginAt:
-        writable: false
-        description: "Last Login At"
-        example: "2025-01-15T10:30:00Z"
       gender:
         description: "Gender (numeric value)"
         example: "42"
         # Advanced filters
         filters:
           - type: OrderFilter
+      lastLoginAt:
+        writable: false
+        description: "Last Login At"
+        example: "2025-01-15T10:30:00Z"
       lockedUntil:
         writable: false
         description: "Locked Until"
@@ -442,15 +442,15 @@ resources:
       officeLocation:
         description: "Office Location"
         example: "Sample office location"
-      employeeId:
-        description: "Employee ID"
-        example: "Sample employee id"
       profiles:
         description: "Profiles"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
+      employeeId:
+        description: "Employee ID"
+        example: "Sample employee id"
       hireDate:
         description: "Hire Date"
         example: "2025-01-15"
@@ -528,15 +528,15 @@ resources:
         writable: false
         description: "Last Activity At"
         example: "2025-01-15T10:30:00Z"
-      status:
-        description: "Status"
-        example: "Sample status"
       talks:
         description: "Talks"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
+      status:
+        description: "Status"
+        example: "Sample status"
       statusMessage:
         description: "Status Message"
         example: "Sample status message"

@@ -1,0 +1,55 @@
+{#
+/**
+ * Entity Created Success Template
+ *
+ * Dispatches a custom 'entity:created' event when an entity is successfully created
+ * from a modal "+" button. This allows the parent form to add the new entity
+ * to its Tom Select dropdown and select it automatically.
+ */
+#}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Entity Created</title>
+</head>
+<body>
+    <script>
+        (function() {
+            console.log('🎉 Entity created successfully, dispatching event...');
+
+            // Dispatch custom event with entity details
+            const event = new CustomEvent('entity:created', {
+                detail: {
+                    entityType: '{{ entityType }}',
+                    id: '{{ entityId }}',
+                    displayText: '{{ displayText|e('js') }}'
+                },
+                bubbles: true
+            });
+
+            document.dispatchEvent(event);
+
+            console.log('✅ Event dispatched:', {
+                entityType: '{{ entityType }}',
+                id: '{{ entityId }}',
+                displayText: '{{ displayText|e('js') }}'
+            });
+
+            // Modal will be closed by the relation-select controller after adding entity to Tom Select
+        })();
+    </script>
+
+    <div style="padding: 2rem; text-align: center;">
+        <div style="color: #10b981; font-size: 3rem; margin-bottom: 1rem;">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h3 style="color: var(--luminai-text-primary); margin-bottom: 0.5rem;">
+            Success!
+        </h3>
+        <p style="color: var(--luminai-text-secondary);">
+            {{ entityType }} created successfully
+        </p>
+    </div>
+</body>
+</html>

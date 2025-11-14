@@ -39,7 +39,30 @@ abstract class AttachmentTypeGenerated extends AbstractType
             'label' => 'Event',
             'required' => false,
             'class' => \App\Entity\Event::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Event',
+                'data-relation-select-route-value' => 'event_api_search',
+                'data-relation-select-add-route-value' => 'event_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select event',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -77,7 +100,30 @@ abstract class AttachmentTypeGenerated extends AbstractType
             'label' => 'Product',
             'required' => false,
             'class' => \App\Entity\Product::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Product',
+                'data-relation-select-route-value' => 'product_api_search',
+                'data-relation-select-add-route-value' => 'product_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select product',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -89,7 +135,30 @@ abstract class AttachmentTypeGenerated extends AbstractType
             'label' => 'TalkMessage',
             'required' => false,
             'class' => \App\Entity\TalkMessage::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'TalkMessage',
+                'data-relation-select-route-value' => 'talk_message_api_search',
+                'data-relation-select-add-route-value' => 'talk_message_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select talkmessage',
                 'class' => 'form-input-modern',
             ],
         ]);

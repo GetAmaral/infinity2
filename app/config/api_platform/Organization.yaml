@@ -53,15 +53,15 @@ resources:
       logoPath:
         description: "Logo Path (text field)"
         example: "Sample longer text value"
+      logoPathDark:
+        description: "Logo Path Dark (text field)"
+        example: "Sample longer text value"
       description:
         description: "..."
         example: "..."
         # Advanced filters
         filters:
           - type: OrderFilter
-      logoPathDark:
-        description: "Logo Path Dark (text field)"
-        example: "Sample longer text value"
       studentCourses:
         description: "Student Courses"
         example: "sample value"
@@ -146,10 +146,10 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      notifications:
+      treeFlows:
         writable: false
-        description: "Notifications"
-        example: "/api/notificatia/01234567-89ab-cdef-0123-456789abcdef"
+        description: "TreeFlows"
+        example: "/api/tree_flows/01234567-89ab-cdef-0123-456789abcdef"
       celPhone:
         description: "CelPhone (text field)"
         example: "Sample text"
@@ -160,58 +160,58 @@ resources:
         writable: false
         description: "Attachments"
         example: "/api/attachments/01234567-89ab-cdef-0123-456789abcdef"
-      calendarTypes:
-        writable: false
-        description: "CalendarTypes"
-        example: "/api/calendar_types/01234567-89ab-cdef-0123-456789abcdef"
       cities:
         writable: false
         description: "Citys"
         example: "/api/ties/01234567-89ab-cdef-0123-456789abcdef"
-      pipelineStageTemplates:
+      calendarTypes:
         writable: false
-        description: "PipelineStageTemplates"
-        example: "/api/pipeline_stage_templates/01234567-89ab-cdef-0123-456789abcdef"
-      treeFlows:
-        writable: false
-        description: "TreeFlows"
-        example: "/api/tree_flows/01234567-89ab-cdef-0123-456789abcdef"
-      meetingDatas:
-        writable: false
-        description: "MeetingDatas"
-        example: "/api/meeting_data/01234567-89ab-cdef-0123-456789abcdef"
-      lostReasons:
-        writable: false
-        description: "LostReasons"
-        example: "/api/lost_reasa/01234567-89ab-cdef-0123-456789abcdef"
-      eventAttendees:
-        writable: false
-        description: "EventAttendees"
-        example: "/api/event_attendees/01234567-89ab-cdef-0123-456789abcdef"
-      dealTypes:
-        writable: false
-        description: "DealTypes"
-        example: "/api/deal_types/01234567-89ab-cdef-0123-456789abcdef"
-      dealCategories:
-        writable: false
-        description: "DealCategorys"
-        example: "/api/deal_ries/01234567-89ab-cdef-0123-456789abcdef"
-      taskTemplates:
-        writable: false
-        description: "TaskTemplates"
-        example: "/api/task_templates/01234567-89ab-cdef-0123-456789abcdef"
-      reminders:
-        writable: false
-        description: "Reminders"
-        example: "/api/reminders/01234567-89ab-cdef-0123-456789abcdef"
-      pipelineTemplates:
-        writable: false
-        description: "PipelineTemplates"
-        example: "/api/pipeline_templates/01234567-89ab-cdef-0123-456789abcdef"
+        description: "CalendarTypes"
+        example: "/api/calendar_types/01234567-89ab-cdef-0123-456789abcdef"
       winReasons:
         writable: false
         description: "WinReasons"
         example: "/api/win_reasa/01234567-89ab-cdef-0123-456789abcdef"
+      pipelineTemplates:
+        writable: false
+        description: "PipelineTemplates"
+        example: "/api/pipeline_templates/01234567-89ab-cdef-0123-456789abcdef"
+      reminders:
+        writable: false
+        description: "Reminders"
+        example: "/api/reminders/01234567-89ab-cdef-0123-456789abcdef"
+      taskTemplates:
+        writable: false
+        description: "TaskTemplates"
+        example: "/api/task_templates/01234567-89ab-cdef-0123-456789abcdef"
+      dealCategories:
+        writable: false
+        description: "DealCategorys"
+        example: "/api/deal_ries/01234567-89ab-cdef-0123-456789abcdef"
+      dealTypes:
+        writable: false
+        description: "DealTypes"
+        example: "/api/deal_types/01234567-89ab-cdef-0123-456789abcdef"
+      eventAttendees:
+        writable: false
+        description: "EventAttendees"
+        example: "/api/event_attendees/01234567-89ab-cdef-0123-456789abcdef"
+      lostReasons:
+        writable: false
+        description: "LostReasons"
+        example: "/api/lost_reasa/01234567-89ab-cdef-0123-456789abcdef"
+      meetingDatas:
+        writable: false
+        description: "MeetingDatas"
+        example: "/api/meeting_data/01234567-89ab-cdef-0123-456789abcdef"
+      notifications:
+        writable: false
+        description: "Notifications"
+        example: "/api/notificatia/01234567-89ab-cdef-0123-456789abcdef"
+      pipelineStageTemplates:
+        writable: false
+        description: "PipelineStageTemplates"
+        example: "/api/pipeline_stage_templates/01234567-89ab-cdef-0123-456789abcdef"
       city:
         description: "City"
         example: "sample value"

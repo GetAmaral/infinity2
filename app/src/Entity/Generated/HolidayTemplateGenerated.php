@@ -49,7 +49,7 @@ abstract class HolidayTemplateGenerated extends EntityBase
     protected ?int $recurrenceInterval = null;
 
     #[Groups(['holidaytemplate:read', 'holidaytemplate:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $sentAt = null;
 
 

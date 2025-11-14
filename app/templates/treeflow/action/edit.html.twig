@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'action.edit'|trans({}, 'treeflow') }} {{ action.name }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <a href="{{ path('treeflow_show', {id: treeFlow.id}) }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>{{ 'action.back.to.treeflow'|trans({}, 'treeflow') }}
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-10 col-xl-8 mx-auto">
+            <div class="infinity-card p-4">
+                <h1 class="mb-4">
+                    <i class="bi bi-lightning me-2"></i>
+                    {{ 'action.edit'|trans({}, 'treeflow') }}: {{ action.name }}
+                </h1>
+
+                <p class="text-muted mb-4">
+                    <strong>{{ 'action.form.step'|trans({}, 'treeflow') }}:</strong> {{ step.name }}
+                </p>
+
+                {{ form_start(form, {
+                    'action': path('action_edit', {
+                        treeflowId: treeFlow.id.toRfc4122(),
+                        stepId: step.id.toRfc4122(),
+                        actionId: action.id.toRfc4122()
+                    }),
+                    'method': 'POST'
+                }) }}
+
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">{{ form_label(form.name) }}</label>
+                        {{ form_widget(form.name, {'attr': {'class': 'form-input-modern', 'placeholder': 'action.form.name.placeholder'|trans({}, 'treeflow')}}) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">{{ form_label(form.prompt) }}</label>
+                        {{ form_widget(form.prompt, {'attr': {'class': 'form-input-modern', 'rows': 5, 'placeholder': 'action.form.prompt.placeholder'|trans({}, 'treeflow')}}) }}
+                        <small class="text-muted d-block mt-1">{{ 'action.form.prompt.help'|trans({}, 'treeflow') }}</small>
+                        {{ form_errors(form.prompt) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">{{ form_label(form.importance) }}</label>
+                        {{ form_widget(form.importance, {'attr': {'class': 'form-input-modern'}}) }}
+                        <small class="text-muted d-block mt-1">{{ 'action.form.importance.help'|trans({}, 'treeflow') }}</small>
+                        {{ form_errors(form.importance) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">{{ form_label(form.viewOrder) }}</label>
+                        {{ form_widget(form.viewOrder, {'attr': {'class': 'form-input-modern'}}) }}
+                        <small class="text-muted d-block mt-1">{{ 'action.form.vieworder.help'|trans({}, 'treeflow') }}</small>
+                        {{ form_errors(form.viewOrder) }}
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">{{ form_label(form.fewShot) }}</label>
+                        <small class="text-muted d-block mb-3">{{ 'action.form.fewshot.help'|trans({}, 'treeflow') }}</small>
+
+                        <div data-controller="collection" data-collection-prototype-name-value="{{ form.fewShot.vars.prototype.vars.name }}">
+                            <div data-prototype="{{ form_widget(form.fewShot.vars.prototype)|e('html_attr') }}">
+                                {% for exampleForm in form.fewShot %}
+                                    <div class="fewshot-item mb-3 p-3 border rounded bg-light" data-collection-target="item" data-index="{{ loop.index0 }}">
+                                        <div class="row">
+                                            <div class="col-12 mb-2">
+                                                <label class="form-label fw-bold text-primary">
+                                                    <i class="bi bi-person"></i> {{ form_label(exampleForm.user) }}
+                                                </label>
+                                                {{ form_widget(exampleForm.user) }}
+                                                {{ form_errors(exampleForm.user) }}
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <label class="form-label fw-bold text-success">
+                                                    <i class="bi bi-robot"></i> {{ form_label(exampleForm.assistant) }}
+                                                </label>
+                                                {{ form_widget(exampleForm.assistant) }}
+                                                {{ form_errors(exampleForm.assistant) }}
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-danger mt-2" data-action="click->collection#removeItem">
+                                            <i class="bi bi-trash"></i> Remove Example
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <button type="button" class="btn btn-sm infinity-btn-primary add-item-btn" data-action="click->collection#addItem">
+                                <i class="bi bi-plus-circle"></i> Add Example
+                            </button>
+                        </div>
+
+                        <small class="text-muted d-block mt-2">
+                            <i class="bi bi-info-circle"></i> Add conversation examples to guide the AI's responses
+                        </small>
+                        {{ form_errors(form.fewShot) }}
+                    </div>
+
+                    {{ form_rest(form) }}
+
+                    <div class="d-flex gap-2 mt-4">
+                        <a href="{{ path('treeflow_show', {id: treeFlow.id}) }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-2"></i>{{ 'button.cancel'|trans }}
+                        </a>
+                        <button type="submit" class="btn infinity-btn-success">
+                            <i class="bi bi-check2 me-2"></i>{{ 'button.save.changes'|trans }}
+                        </button>
+                    </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

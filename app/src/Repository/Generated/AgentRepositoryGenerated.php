@@ -87,7 +87,7 @@ abstract class AgentRepositoryGenerated extends BaseRepository
      */
     protected function getBooleanFilterFields(): array
     {
-        return [            'active',            'available',        ];
+        return [            'whatsappActive',            'active',            'available',        ];
     }
 
     /**
@@ -98,7 +98,7 @@ abstract class AgentRepositoryGenerated extends BaseRepository
      */
     protected function getDateFilterFields(): array
     {
-        return [            'startDate',            'endDate',            'createdAt',            'updatedAt',        ];
+        return [            'whatsappLastConnectedAt',            'startDate',            'endDate',            'createdAt',            'updatedAt',        ];
     }
 
     /**
@@ -115,6 +115,15 @@ abstract class AgentRepositoryGenerated extends BaseRepository
         return [
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
+            'whatsappInstanceName' => $entity->getWhatsappInstanceName(),
+            'whatsappPhone' => $entity->getWhatsappPhone(),
+            'whatsappServerUrl' => $entity->getWhatsappServerUrl(),
+            'whatsappApiKey' => $entity->getWhatsappApiKey(),
+            'whatsappStatus' => $entity->getWhatsappStatus(),
+            'whatsappWebhookToken' => $entity->getWhatsappWebhookToken(),
+            'whatsappLastConnectedAt' => $entity->getWhatsappLastConnectedAt()?->format('c'),
+            'treeFlow' => $entity->getTreeFlow()?->getId()?->toString() ?? '',
+            'treeFlowName' => $entity->getTreeFlow()?->getName() ?? '',
             'name' => $entity->getName(),
             'phone' => $entity->getPhone(),
             'title' => $entity->getTitle(),

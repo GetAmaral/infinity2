@@ -115,7 +115,7 @@ abstract class CountryTypeGenerated extends AbstractType
 
         $builder->add('euMember', CheckboxType::class, [
             'label' => 'EU Member',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -150,7 +150,7 @@ abstract class CountryTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -219,7 +219,7 @@ abstract class CountryTypeGenerated extends AbstractType
 
         $builder->add('availableForShipping', CheckboxType::class, [
             'label' => 'Available for Shipping',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -227,7 +227,7 @@ abstract class CountryTypeGenerated extends AbstractType
 
         $builder->add('availableForBilling', CheckboxType::class, [
             'label' => 'Available for Billing',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -235,7 +235,7 @@ abstract class CountryTypeGenerated extends AbstractType
 
         $builder->add('schengenMember', CheckboxType::class, [
             'label' => 'Schengen Member',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -243,7 +243,7 @@ abstract class CountryTypeGenerated extends AbstractType
 
         $builder->add('oecdMember', CheckboxType::class, [
             'label' => 'OECD Member',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -251,7 +251,7 @@ abstract class CountryTypeGenerated extends AbstractType
 
         $builder->add('dataResidencyRequired', CheckboxType::class, [
             'label' => 'Data Residency Required',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -268,7 +268,7 @@ abstract class CountryTypeGenerated extends AbstractType
 
         $builder->add('postalCodeRequired', CheckboxType::class, [
             'label' => 'Postal Code Required',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -285,7 +285,7 @@ abstract class CountryTypeGenerated extends AbstractType
 
         $builder->add('taxIdRequired', CheckboxType::class, [
             'label' => 'Tax ID Required',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],

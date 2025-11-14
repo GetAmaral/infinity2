@@ -35,6 +35,7 @@ class TreeFlowJsonController extends AbstractController
 
         return new JsonResponse([
             'id' => $treeFlow->getId()->toRfc4122(),
+            'slug' => $treeFlow->getSlug(),
             'jsonStructure' => $treeFlow->getJsonStructure(),
             'talkFlow' => $treeFlow->getTalkFlow(),
         ]);

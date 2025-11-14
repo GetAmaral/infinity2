@@ -54,7 +54,7 @@ abstract class CalendarTypeRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'description' => 'description',            'calendars' => 'calendars',            'active' => 'active',            'default' => 'default',            'visibility' => 'visibility',            'sort_order' => 'sort_order',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'description' => 'description',            'calendars' => 'calendars',            'active' => 'active',            'default' => 'default',            'visibility' => 'visibility',            'sortOrder' => 'sortOrder',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class CalendarTypeRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'name' => 'name',            'color' => 'color',            'active' => 'active',            'default' => 'default',            'visibility' => 'visibility',            'access_level' => 'access_level',            'allow_sharing' => 'allow_sharing',            'require_approval' => 'require_approval',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'color' => 'color',            'active' => 'active',            'default' => 'default',            'visibility' => 'visibility',            'accessLevel' => 'accessLevel',            'allowSharing' => 'allowSharing',            'requireApproval' => 'requireApproval',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class CalendarTypeRepositoryGenerated extends BaseRepository
      */
     protected function getBooleanFilterFields(): array
     {
-        return [            'active',            'default',            'allow_sharing',            'require_approval',        ];
+        return [            'active',            'default',            'allowSharing',            'requireApproval',        ];
     }
 
     /**
@@ -117,11 +117,11 @@ abstract class CalendarTypeRepositoryGenerated extends BaseRepository
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
-            'calendarsCount' => $entity->getCalendars()->count(),
             'color' => $entity->getColor(),
+            'calendarsCount' => $entity->getCalendars()->count(),
             'icon' => $entity->getIcon(),
             'visibility' => $entity->getVisibility(),
-            'access_level' => $entity->getAccess_level(),
+            'accessLevel' => $entity->getAccessLevel(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];

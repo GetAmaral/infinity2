@@ -44,12 +44,12 @@ abstract class DealTypeGenerated extends EntityBase
     protected ?string $category = null;
 
     #[Groups(['dealtype:read', 'dealtype:write'])]
-    #[ORM\Column(type: 'string', length: 7)]
-    protected string $color = '#0dcaf0';
-
-    #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'dealType', fetch: 'LAZY')]
     protected Collection $deals;
+
+    #[Groups(['dealtype:read', 'dealtype:write'])]
+    #[ORM\Column(type: 'string', length: 7)]
+    protected string $color = '#0dcaf0';
 
     #[Groups(['dealtype:read', 'dealtype:write'])]
     #[ORM\Column(type: 'string', length: 50)]
@@ -123,16 +123,6 @@ abstract class DealTypeGenerated extends EntityBase
         return $this;
     }
 
-    public function getColor(): string    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): self
-    {
-        $this->color = $color;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Deal>
      */
@@ -157,6 +147,16 @@ abstract class DealTypeGenerated extends EntityBase
                 $deal->setDealType(null);
             }
         }
+        return $this;
+    }
+
+    public function getColor(): string    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
         return $this;
     }
 

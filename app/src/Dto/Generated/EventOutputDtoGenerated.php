@@ -14,10 +14,10 @@ use App\Dto\AttachmentOutputDto;
 use App\Dto\ReminderOutputDto;
 use App\Dto\EventResourceBookingOutputDto;
 use App\Dto\EventOutputDto;
-use App\Dto\NotificationOutputDto;
-use App\Dto\HolidayOutputDto;
-use App\Dto\WorkingHourOutputDto;
 use App\Dto\MeetingDataOutputDto;
+use App\Dto\WorkingHourOutputDto;
+use App\Dto\HolidayOutputDto;
+use App\Dto\NotificationOutputDto;
 use App\Dto\ContactOutputDto;
 use App\Dto\CompanyOutputDto;
 use App\Dto\DealOutputDto;
@@ -120,16 +120,10 @@ abstract class EventOutputDtoGenerated
     public ?array $source = null;
 
     /**
-     * notifications collection
-     * @var NotificationOutputDto[]
+     * meetingDatas collection
+     * @var MeetingDataOutputDto[]
      */
-    public array $notifications = [];
-
-    /**
-     * holidays collection
-     * @var HolidayOutputDto[]
-     */
-    public array $holidays = [];
+    public array $meetingDatas = [];
 
     /**
      * workingHours collection
@@ -138,10 +132,16 @@ abstract class EventOutputDtoGenerated
     public array $workingHours = [];
 
     /**
-     * meetingDatas collection
-     * @var MeetingDataOutputDto[]
+     * holidays collection
+     * @var HolidayOutputDto[]
      */
-    public array $meetingDatas = [];
+    public array $holidays = [];
+
+    /**
+     * notifications collection
+     * @var NotificationOutputDto[]
+     */
+    public array $notifications = [];
 
     public ?string $subject = null;
 
@@ -480,23 +480,13 @@ abstract class EventOutputDtoGenerated
         return $this;
     }
 
-    public function getNotifications(): array    {
-        return $this->notifications;
+    public function getMeetingDatas(): array    {
+        return $this->meetingDatas;
     }
 
-    public function setNotifications(array $notifications): self
+    public function setMeetingDatas(array $meetingDatas): self
     {
-        $this->notifications = $notifications;
-        return $this;
-    }
-
-    public function getHolidays(): array    {
-        return $this->holidays;
-    }
-
-    public function setHolidays(array $holidays): self
-    {
-        $this->holidays = $holidays;
+        $this->meetingDatas = $meetingDatas;
         return $this;
     }
 
@@ -510,13 +500,23 @@ abstract class EventOutputDtoGenerated
         return $this;
     }
 
-    public function getMeetingDatas(): array    {
-        return $this->meetingDatas;
+    public function getHolidays(): array    {
+        return $this->holidays;
     }
 
-    public function setMeetingDatas(array $meetingDatas): self
+    public function setHolidays(array $holidays): self
     {
-        $this->meetingDatas = $meetingDatas;
+        $this->holidays = $holidays;
+        return $this;
+    }
+
+    public function getNotifications(): array    {
+        return $this->notifications;
+    }
+
+    public function setNotifications(array $notifications): self
+    {
+        $this->notifications = $notifications;
         return $this;
     }
 

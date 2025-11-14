@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Talk;
+use App\MultiTenant\TenantContext;
 use App\Repository\TalkRepository;
 use App\Security\Voter\TalkVoter;
 use App\Form\TalkType;
@@ -36,6 +37,7 @@ abstract class TalkControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -84,40 +86,39 @@ abstract class TalkControllerGenerated extends BaseApiController
                 'id' => $organizationRel->getId()->toString(),
                 'display' => (string) $organizationRel,
             ] : null,
+            'talkFlow' => $entity->getTalkFlow(),
             'subject' => $entity->getSubject(),
-            'summary' => $entity->getSummary(),
-            'company' => ($companyRel = $entity->getCompany()) ? [
-                'id' => $companyRel->getId()->toString(),
-                'display' => (string) $companyRel,
+            'talkType' => ($talkTypeRel = $entity->getTalkType()) ? [
+                'id' => $talkTypeRel->getId()->toString(),
+                'display' => (string) $talkTypeRel,
             ] : null,
+            'summary' => $entity->getSummary(),
+            'messageCount' => $entity->getMessageCount(),
             'contact' => ($contactRel = $entity->getContact()) ? [
                 'id' => $contactRel->getId()->toString(),
                 'display' => (string) $contactRel,
+            ] : null,
+            'company' => ($companyRel = $entity->getCompany()) ? [
+                'id' => $companyRel->getId()->toString(),
+                'display' => (string) $companyRel,
             ] : null,
             'deal' => ($dealRel = $entity->getDeal()) ? [
                 'id' => $dealRel->getId()->toString(),
                 'display' => (string) $dealRel,
             ] : null,
-            'talkType' => ($talkTypeRel = $entity->getTalkType()) ? [
-                'id' => $talkTypeRel->getId()->toString(),
-                'display' => (string) $talkTypeRel,
-            ] : null,
-            'channel' => $entity->getChannel(),
-            'status' => $entity->getStatus(),
-            'priority' => $entity->getPriority(),
-            'outcome' => $entity->getOutcome(),
-            'sentiment' => $entity->getSentiment(),
-            'dateStart' => $entity->getDateStart()?->format('M d, Y'),
-            'dateLastMessage' => $entity->getDateLastMessage()?->format('M d, Y'),
-            'closedAt' => $entity->getClosedAt()?->format('M d, Y'),
-            'durationSeconds' => $entity->getDurationSeconds(),
-            'recordingUrl' => $entity->getRecordingUrl(),
             'users' => ($usersRel = $entity->getUsers()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
                     'display' => (string) $item,
                 ],
                 $usersRel->toArray()
+            ) : [],
+            'agents' => ($agentsRel = $entity->getAgents()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $agentsRel->toArray()
             ) : [],
             'owner' => ($ownerRel = $entity->getOwner()) ? [
                 'id' => $ownerRel->getId()->toString(),
@@ -127,13 +128,19 @@ abstract class TalkControllerGenerated extends BaseApiController
                 'id' => $assignedToRel->getId()->toString(),
                 'display' => (string) $assignedToRel,
             ] : null,
-            'agents' => ($agentsRel = $entity->getAgents()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $agentsRel->toArray()
-            ) : [],
+            'status' => $entity->getStatus(),
+            'channel' => $entity->getChannel(),
+            'priority' => $entity->getPriority(),
+            'outcome' => $entity->getOutcome(),
+            'sentiment' => $entity->getSentiment(),
+            'dateStart' => $entity->getDateStart()?->format('M d, Y'),
+            'dateLastMessage' => $entity->getDateLastMessage()?->format('M d, Y'),
+            'closedAt' => $entity->getClosedAt()?->format('M d, Y'),
+            'durationSeconds' => $entity->getDurationSeconds(),
+            'paused' => $entity->getPaused(),
+            'pausedAt' => $entity->getPausedAt()?->format('M d, Y'),
+            'pausedReason' => $entity->getPausedReason(),
+            'resumedAt' => $entity->getResumedAt()?->format('M d, Y'),
             'campaigns' => ($campaignsRel = $entity->getCampaigns()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
@@ -141,6 +148,9 @@ abstract class TalkControllerGenerated extends BaseApiController
                 ],
                 $campaignsRel->toArray()
             ) : [],
+            'recordingUrl' => $entity->getRecordingUrl(),
+            'archived' => $entity->getArchived(),
+            'internal' => $entity->getInternal(),
             'messages' => ($messagesRel = $entity->getMessages()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
@@ -148,9 +158,6 @@ abstract class TalkControllerGenerated extends BaseApiController
                 ],
                 $messagesRel->toArray()
             ) : [],
-            'messageCount' => $entity->getMessageCount(),
-            'archived' => $entity->getArchived(),
-            'internal' => $entity->getInternal(),
             'tags' => $entity->getTags(),
         ];
     }
@@ -184,16 +191,16 @@ abstract class TalkControllerGenerated extends BaseApiController
             'create_permission' => TalkVoter::CREATE,
 
             // Property metadata for Twig templates (as PHP arrays)
-            'listProperties' => json_decode('[{"name":"subject","label":"Subject","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSubject","isRelationship":false},{"name":"summary","label":"Summary","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSummary","isRelationship":false},{"name":"company","label":"Company","type":"","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany","isRelationship":true},{"name":"contact","label":"Contact","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact","isRelationship":true},{"name":"deal","label":"Deal","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeal","isRelationship":true},{"name":"talkType","label":"TalkType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkType","isRelationship":true},{"name":"channel","label":"Channel","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getChannel","isRelationship":false},{"name":"status","label":"Status","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStatus","isRelationship":false},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"outcome","label":"Outcome","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOutcome","isRelationship":false},{"name":"sentiment","label":"Sentiment","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSentiment","isRelationship":false},{"name":"dateStart","label":"DateStart","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDateStart","isRelationship":false},{"name":"dateLastMessage","label":"DateLastMessage","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDateLastMessage","isRelationship":false},{"name":"closedAt","label":"Closed At","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getClosedAt","isRelationship":false},{"name":"durationSeconds","label":"DurationSeconds","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDurationSeconds","isRelationship":false},{"name":"recordingUrl","label":"RecordingUrl","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecordingUrl","isRelationship":false},{"name":"users","label":"Users","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsers","isRelationship":true},{"name":"owner","label":"Owner","type":"","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOwner","isRelationship":true},{"name":"assignedTo","label":"Assigned To","type":"","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAssignedTo","isRelationship":true},{"name":"agents","label":"Agents","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAgents","isRelationship":true},{"name":"campaigns","label":"Campaigns","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCampaigns","isRelationship":true},{"name":"messages","label":"Messages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMessages","isRelationship":true},{"name":"messageCount","label":"Message Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMessageCount","isRelationship":false},{"name":"archived","label":"IsArchived","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getArchived","isRelationship":false},{"name":"internal","label":"Internal","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getInternal","isRelationship":false}]', true),
+            'listProperties' => json_decode('[{"name":"subject","label":"Subject","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSubject","isRelationship":false},{"name":"talkType","label":"TalkType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkType","isRelationship":true},{"name":"messageCount","label":"Message Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMessageCount","isRelationship":false},{"name":"contact","label":"Contact","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact","isRelationship":true},{"name":"company","label":"Company","type":"","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany","isRelationship":true},{"name":"assignedTo","label":"Assigned To","type":"","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAssignedTo","isRelationship":true},{"name":"status","label":"Status","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStatus","isRelationship":false},{"name":"dateLastMessage","label":"DateLastMessage","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDateLastMessage","isRelationship":false},{"name":"paused","label":"Paused","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPaused","isRelationship":false}]', true),
             'searchableFields' => json_decode('[{"name":"subject","label":"Subject","type":"string"},{"name":"summary","label":"Summary","type":"text"},{"name":"tags","label":"Tags","type":"json"}]', true),
-            'filterableFields' => json_decode('[{"name":"company","label":"Company","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sentiment","label":"Sentiment","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"closedAt","label":"Closed At","type":"datetime","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"owner","label":"Owner","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"assignedTo","label":"Assigned To","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"messageCount","label":"Message Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"internal","label":"Internal","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"tags","label":"Tags","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
-            'sortableFields' => json_decode('[{"name":"subject","label":"Subject"},{"name":"summary","label":"Summary"},{"name":"company","label":"Company"},{"name":"deal","label":"Deal"},{"name":"talkType","label":"TalkType"},{"name":"channel","label":"Channel"},{"name":"status","label":"Status"},{"name":"priority","label":"Priority"},{"name":"outcome","label":"Outcome"},{"name":"sentiment","label":"Sentiment"},{"name":"dateStart","label":"DateStart"},{"name":"dateLastMessage","label":"DateLastMessage"},{"name":"closedAt","label":"Closed At"},{"name":"durationSeconds","label":"DurationSeconds"},{"name":"recordingUrl","label":"RecordingUrl"},{"name":"users","label":"Users"},{"name":"owner","label":"Owner"},{"name":"assignedTo","label":"Assigned To"},{"name":"agents","label":"Agents"},{"name":"campaigns","label":"Campaigns"},{"name":"messages","label":"Messages"},{"name":"messageCount","label":"Message Count"},{"name":"archived","label":"IsArchived"},{"name":"internal","label":"Internal"}]', true),
+            'filterableFields' => json_decode('[{"name":"messageCount","label":"Message Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"company","label":"Company","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"owner","label":"Owner","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"assignedTo","label":"Assigned To","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sentiment","label":"Sentiment","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"closedAt","label":"Closed At","type":"datetime","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"internal","label":"Internal","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"tags","label":"Tags","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]', true),
+            'sortableFields' => json_decode('[{"name":"subject","label":"Subject"},{"name":"talkType","label":"TalkType"},{"name":"summary","label":"Summary"},{"name":"messageCount","label":"Message Count"},{"name":"company","label":"Company"},{"name":"deal","label":"Deal"},{"name":"users","label":"Users"},{"name":"agents","label":"Agents"},{"name":"owner","label":"Owner"},{"name":"assignedTo","label":"Assigned To"},{"name":"status","label":"Status"},{"name":"channel","label":"Channel"},{"name":"priority","label":"Priority"},{"name":"outcome","label":"Outcome"},{"name":"sentiment","label":"Sentiment"},{"name":"dateStart","label":"DateStart"},{"name":"dateLastMessage","label":"DateLastMessage"},{"name":"closedAt","label":"Closed At"},{"name":"durationSeconds","label":"DurationSeconds"},{"name":"campaigns","label":"Campaigns"},{"name":"recordingUrl","label":"RecordingUrl"},{"name":"archived","label":"IsArchived"},{"name":"internal","label":"Internal"},{"name":"messages","label":"Messages"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
-            'list_fields' => '[{"name":"subject","label":"Subject","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSubject","isRelationship":false},{"name":"summary","label":"Summary","type":"text","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSummary","isRelationship":false},{"name":"company","label":"Company","type":"","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany","isRelationship":true},{"name":"contact","label":"Contact","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact","isRelationship":true},{"name":"deal","label":"Deal","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDeal","isRelationship":true},{"name":"talkType","label":"TalkType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkType","isRelationship":true},{"name":"channel","label":"Channel","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getChannel","isRelationship":false},{"name":"status","label":"Status","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStatus","isRelationship":false},{"name":"priority","label":"Priority","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPriority","isRelationship":false},{"name":"outcome","label":"Outcome","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOutcome","isRelationship":false},{"name":"sentiment","label":"Sentiment","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSentiment","isRelationship":false},{"name":"dateStart","label":"DateStart","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDateStart","isRelationship":false},{"name":"dateLastMessage","label":"DateLastMessage","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDateLastMessage","isRelationship":false},{"name":"closedAt","label":"Closed At","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getClosedAt","isRelationship":false},{"name":"durationSeconds","label":"DurationSeconds","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDurationSeconds","isRelationship":false},{"name":"recordingUrl","label":"RecordingUrl","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecordingUrl","isRelationship":false},{"name":"users","label":"Users","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUsers","isRelationship":true},{"name":"owner","label":"Owner","type":"","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOwner","isRelationship":true},{"name":"assignedTo","label":"Assigned To","type":"","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAssignedTo","isRelationship":true},{"name":"agents","label":"Agents","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAgents","isRelationship":true},{"name":"campaigns","label":"Campaigns","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCampaigns","isRelationship":true},{"name":"messages","label":"Messages","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMessages","isRelationship":true},{"name":"messageCount","label":"Message Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMessageCount","isRelationship":false},{"name":"archived","label":"IsArchived","type":"boolean","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getArchived","isRelationship":false},{"name":"internal","label":"Internal","type":"boolean","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getInternal","isRelationship":false}]',
+            'list_fields' => '[{"name":"subject","label":"Subject","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getSubject","isRelationship":false},{"name":"talkType","label":"TalkType","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTalkType","isRelationship":true},{"name":"messageCount","label":"Message Count","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMessageCount","isRelationship":false},{"name":"contact","label":"Contact","type":"","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getContact","isRelationship":true},{"name":"company","label":"Company","type":"","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getCompany","isRelationship":true},{"name":"assignedTo","label":"Assigned To","type":"","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getAssignedTo","isRelationship":true},{"name":"status","label":"Status","type":"integer","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStatus","isRelationship":false},{"name":"dateLastMessage","label":"DateLastMessage","type":"datetime","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getDateLastMessage","isRelationship":false},{"name":"paused","label":"Paused","type":"boolean","sortable":false,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPaused","isRelationship":false}]',
             'searchable_fields' => '[{"name":"subject","label":"Subject","type":"string"},{"name":"summary","label":"Summary","type":"text"},{"name":"tags","label":"Tags","type":"json"}]',
-            'filterable_fields' => '[{"name":"company","label":"Company","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sentiment","label":"Sentiment","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"closedAt","label":"Closed At","type":"datetime","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"owner","label":"Owner","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"assignedTo","label":"Assigned To","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"messageCount","label":"Message Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"internal","label":"Internal","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"tags","label":"Tags","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
-            'sortable_fields' => '[{"name":"subject","label":"Subject"},{"name":"summary","label":"Summary"},{"name":"company","label":"Company"},{"name":"deal","label":"Deal"},{"name":"talkType","label":"TalkType"},{"name":"channel","label":"Channel"},{"name":"status","label":"Status"},{"name":"priority","label":"Priority"},{"name":"outcome","label":"Outcome"},{"name":"sentiment","label":"Sentiment"},{"name":"dateStart","label":"DateStart"},{"name":"dateLastMessage","label":"DateLastMessage"},{"name":"closedAt","label":"Closed At"},{"name":"durationSeconds","label":"DurationSeconds"},{"name":"recordingUrl","label":"RecordingUrl"},{"name":"users","label":"Users"},{"name":"owner","label":"Owner"},{"name":"assignedTo","label":"Assigned To"},{"name":"agents","label":"Agents"},{"name":"campaigns","label":"Campaigns"},{"name":"messages","label":"Messages"},{"name":"messageCount","label":"Message Count"},{"name":"archived","label":"IsArchived"},{"name":"internal","label":"Internal"}]',
+            'filterable_fields' => '[{"name":"messageCount","label":"Message Count","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"company","label":"Company","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"owner","label":"Owner","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"assignedTo","label":"Assigned To","type":"","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"sentiment","label":"Sentiment","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"closedAt","label":"Closed At","type":"datetime","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"internal","label":"Internal","type":"boolean","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"tags","label":"Tags","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false}]',
+            'sortable_fields' => '[{"name":"subject","label":"Subject"},{"name":"talkType","label":"TalkType"},{"name":"summary","label":"Summary"},{"name":"messageCount","label":"Message Count"},{"name":"company","label":"Company"},{"name":"deal","label":"Deal"},{"name":"users","label":"Users"},{"name":"agents","label":"Agents"},{"name":"owner","label":"Owner"},{"name":"assignedTo","label":"Assigned To"},{"name":"status","label":"Status"},{"name":"channel","label":"Channel"},{"name":"priority","label":"Priority"},{"name":"outcome","label":"Outcome"},{"name":"sentiment","label":"Sentiment"},{"name":"dateStart","label":"DateStart"},{"name":"dateLastMessage","label":"DateLastMessage"},{"name":"closedAt","label":"Closed At"},{"name":"durationSeconds","label":"DurationSeconds"},{"name":"campaigns","label":"Campaigns"},{"name":"recordingUrl","label":"RecordingUrl"},{"name":"archived","label":"IsArchived"},{"name":"internal","label":"Internal"},{"name":"messages","label":"Messages"}]',
         ]);
     }
 
@@ -257,31 +264,60 @@ abstract class TalkControllerGenerated extends BaseApiController
         $form = $this->createForm(TalkType::class, $talk);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($talk);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $talk->setOrganization($organization);
+                error_log('✅ TalkController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($talk);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($talk);
 
-                // After create hook
-                $this->afterCreate($talk);
+                    $this->entityManager->persist($talk);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'talk.flash.created_successfully',
-                    ['%name%' => (string) $talk],
-                    'talk'
-                ));
+                    // After create hook
+                    $this->afterCreate($talk);
 
-                return $this->redirectToRoute('talk_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'talk.flash.created_successfully',
+                        ['%name%' => (string) $talk],
+                        'talk'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'talk.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'talk'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $talk;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Talk',
+                            'entityId' => $talk->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('talk_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'talk.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'talk'
+                    ));
+                }
             }
         }
 
@@ -324,33 +360,43 @@ abstract class TalkControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TalkVoter::EDIT, $talk);
 
+        // Store original organization to preserve it
+        $originalOrganization = $talk->getOrganization();
+
         $form = $this->createForm(TalkType::class, $talk);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($talk);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $talk->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($talk);
 
-                // After update hook
-                $this->afterUpdate($talk);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'talk.flash.updated_successfully',
-                    ['%name%' => (string) $talk],
-                    'talk'
-                ));
+                    // After update hook
+                    $this->afterUpdate($talk);
 
-                return $this->redirectToRoute('talk_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'talk.flash.updated_successfully',
+                        ['%name%' => (string) $talk],
+                        'talk'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'talk.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'talk'
-                ));
+                    return $this->redirectToRoute('talk_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'talk.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'talk'
+                    ));
+                }
             }
         }
 
@@ -419,9 +465,22 @@ abstract class TalkControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(TalkVoter::VIEW, $talk);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($talk);
+
         return $this->render('talk/show.html.twig', [
             'talk' => $talk,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in TalkController to customize displayed properties
+     */
+    protected function buildShowProperties(Talk $talk): array
+    {
+        return [];
     }
 
     // ====================================
@@ -432,12 +491,22 @@ abstract class TalkControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Talk $talk): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $talk->setOrganization($organization);
+            error_log('✅ TalkController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ TalkController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

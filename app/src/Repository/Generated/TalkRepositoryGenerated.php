@@ -54,7 +54,7 @@ abstract class TalkRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'subject' => 'subject',            'summary' => 'summary',            'company' => 'company',            'deal' => 'deal',            'talkType' => 'talkType',            'channel' => 'channel',            'status' => 'status',            'priority' => 'priority',            'outcome' => 'outcome',            'sentiment' => 'sentiment',            'dateStart' => 'dateStart',            'dateLastMessage' => 'dateLastMessage',            'closedAt' => 'closedAt',            'durationSeconds' => 'durationSeconds',            'recordingUrl' => 'recordingUrl',            'users' => 'users',            'owner' => 'owner',            'assignedTo' => 'assignedTo',            'agents' => 'agents',            'campaigns' => 'campaigns',            'messages' => 'messages',            'messageCount' => 'messageCount',            'archived' => 'archived',            'internal' => 'internal',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'subject' => 'subject',            'talkType' => 'talkType',            'summary' => 'summary',            'messageCount' => 'messageCount',            'company' => 'company',            'deal' => 'deal',            'users' => 'users',            'agents' => 'agents',            'owner' => 'owner',            'assignedTo' => 'assignedTo',            'status' => 'status',            'channel' => 'channel',            'priority' => 'priority',            'outcome' => 'outcome',            'sentiment' => 'sentiment',            'dateStart' => 'dateStart',            'dateLastMessage' => 'dateLastMessage',            'closedAt' => 'closedAt',            'durationSeconds' => 'durationSeconds',            'campaigns' => 'campaigns',            'recordingUrl' => 'recordingUrl',            'archived' => 'archived',            'internal' => 'internal',            'messages' => 'messages',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class TalkRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'sentiment' => 'sentiment',            'closedAt' => 'closedAt',            'messageCount' => 'messageCount',            'internal' => 'internal',            'tags' => 'tags',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'messageCount' => 'messageCount',            'sentiment' => 'sentiment',            'closedAt' => 'closedAt',            'internal' => 'internal',            'tags' => 'tags',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class TalkRepositoryGenerated extends BaseRepository
      */
     protected function getBooleanFilterFields(): array
     {
-        return [            'archived',            'internal',        ];
+        return [            'paused',            'archived',            'internal',        ];
     }
 
     /**
@@ -98,7 +98,7 @@ abstract class TalkRepositoryGenerated extends BaseRepository
      */
     protected function getDateFilterFields(): array
     {
-        return [            'dateStart',            'dateLastMessage',            'closedAt',            'createdAt',            'updatedAt',        ];
+        return [            'dateStart',            'dateLastMessage',            'closedAt',            'pausedAt',            'resumedAt',            'createdAt',            'updatedAt',        ];
     }
 
     /**
@@ -116,27 +116,30 @@ abstract class TalkRepositoryGenerated extends BaseRepository
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
             'subject' => $entity->getSubject(),
-            'summary' => $entity->getSummary(),
-            'company' => $entity->getCompany()?->getId()?->toString() ?? '',
-            'companyName' => $entity->getCompany()?->getName() ?? '',
-            'contact' => $entity->getContact()?->getId()?->toString() ?? '',
-            'contactName' => $entity->getContact()?->getName() ?? '',
-            'deal' => $entity->getDeal()?->getId()?->toString() ?? '',
-            'dealName' => $entity->getDeal()?->getName() ?? '',
             'talkType' => $entity->getTalkType()?->getId()?->toString() ?? '',
             'talkTypeName' => $entity->getTalkType()?->getName() ?? '',
-            'sentiment' => $entity->getSentiment(),
-            'dateStart' => $entity->getDateStart()?->format('c'),
-            'dateLastMessage' => $entity->getDateLastMessage()?->format('c'),
-            'closedAt' => $entity->getClosedAt()?->format('c'),
-            'recordingUrl' => $entity->getRecordingUrl(),
+            'summary' => $entity->getSummary(),
+            'contact' => $entity->getContact()?->getId()?->toString() ?? '',
+            'contactName' => $entity->getContact()?->getName() ?? '',
+            'company' => $entity->getCompany()?->getId()?->toString() ?? '',
+            'companyName' => $entity->getCompany()?->getName() ?? '',
+            'deal' => $entity->getDeal()?->getId()?->toString() ?? '',
+            'dealName' => $entity->getDeal()?->getName() ?? '',
             'usersCount' => $entity->getUsers()->count(),
+            'agentsCount' => $entity->getAgents()->count(),
             'owner' => $entity->getOwner()?->getId()?->toString() ?? '',
             'ownerName' => $entity->getOwner()?->getName() ?? '',
             'assignedTo' => $entity->getAssignedTo()?->getId()?->toString() ?? '',
             'assignedToName' => $entity->getAssignedTo()?->getName() ?? '',
-            'agentsCount' => $entity->getAgents()->count(),
+            'sentiment' => $entity->getSentiment(),
+            'dateStart' => $entity->getDateStart()?->format('c'),
+            'dateLastMessage' => $entity->getDateLastMessage()?->format('c'),
+            'closedAt' => $entity->getClosedAt()?->format('c'),
+            'pausedAt' => $entity->getPausedAt()?->format('c'),
+            'pausedReason' => $entity->getPausedReason(),
+            'resumedAt' => $entity->getResumedAt()?->format('c'),
             'campaignsCount' => $entity->getCampaigns()->count(),
+            'recordingUrl' => $entity->getRecordingUrl(),
             'messagesCount' => $entity->getMessages()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),

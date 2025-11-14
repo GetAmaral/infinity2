@@ -6,6 +6,9 @@ namespace {{ generatedNamespace }};
 
 use {{ namespace }}\Base\{{ baseControllerClass }};
 use App\Entity\{{ entityName }};
+{% if hasOrganization %}
+use App\MultiTenant\TenantContext;
+{% endif %}
 use App\Repository\{{ repositoryClass }};
 use App\Security\Voter\{{ voterClass }};
 {% if operations.new or operations.edit %}
@@ -38,6 +41,9 @@ abstract class {{ entityName }}ControllerGenerated extends {{ baseControllerClas
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+{% if hasOrganization %}
+        protected readonly TenantContext $tenantContext,
+{% endif %}
     ) {}
 
     // ====================================
@@ -214,31 +220,62 @@ abstract class {{ entityName }}ControllerGenerated extends {{ baseControllerClas
         $form = $this->createForm({{ formTypeClass }}::class, ${{ entityVariable }});
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate(${{ entityVariable }});
+        if ($form->isSubmitted()) {
+{% if hasOrganization %}
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                ${{ entityVariable }}->setOrganization($organization);
+                error_log('✅ {{ entityName }}Controller: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist(${{ entityVariable }});
-                $this->entityManager->flush();
+{% endif %}
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate(${{ entityVariable }});
 
-                // After create hook
-                $this->afterCreate(${{ entityVariable }});
+                    $this->entityManager->persist(${{ entityVariable }});
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    '{{ routePrefix }}.flash.created_successfully',
-                    ['%name%' => (string) ${{ entityVariable }}],
-                    '{{ translationDomain }}'
-                ));
+                    // After create hook
+                    $this->afterCreate(${{ entityVariable }});
 
-                return $this->redirectToRoute('{{ routePrefix }}_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        '{{ routePrefix }}.flash.created_successfully',
+                        ['%name%' => (string) ${{ entityVariable }}],
+                        '{{ translationDomain }}'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    '{{ routePrefix }}.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    '{{ translationDomain }}'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) ${{ entityVariable }};
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => '{{ entityName }}',
+                            'entityId' => ${{ entityVariable }}->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('{{ routePrefix }}_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        '{{ routePrefix }}.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        '{{ translationDomain }}'
+                    ));
+                }
             }
         }
 
@@ -283,33 +320,47 @@ abstract class {{ entityName }}ControllerGenerated extends {{ baseControllerClas
     {
         $this->denyAccessUnlessGranted({{ voterClass }}::EDIT, ${{ entityVariable }});
 
+{% if hasOrganization %}
+        // Store original organization to preserve it
+        $originalOrganization = ${{ entityVariable }}->getOrganization();
+
+{% endif %}
         $form = $this->createForm({{ formTypeClass }}::class, ${{ entityVariable }});
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate(${{ entityVariable }});
+        if ($form->isSubmitted()) {
+{% if hasOrganization %}
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                ${{ entityVariable }}->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+{% endif %}
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate(${{ entityVariable }});
 
-                // After update hook
-                $this->afterUpdate(${{ entityVariable }});
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    '{{ routePrefix }}.flash.updated_successfully',
-                    ['%name%' => (string) ${{ entityVariable }}],
-                    '{{ translationDomain }}'
-                ));
+                    // After update hook
+                    $this->afterUpdate(${{ entityVariable }});
 
-                return $this->redirectToRoute('{{ routePrefix }}_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        '{{ routePrefix }}.flash.updated_successfully',
+                        ['%name%' => (string) ${{ entityVariable }}],
+                        '{{ translationDomain }}'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    '{{ routePrefix }}.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    '{{ translationDomain }}'
-                ));
+                    return $this->redirectToRoute('{{ routePrefix }}_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        '{{ routePrefix }}.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        '{{ translationDomain }}'
+                    ));
+                }
             }
         }
 
@@ -382,9 +433,22 @@ abstract class {{ entityName }}ControllerGenerated extends {{ baseControllerClas
     {
         $this->denyAccessUnlessGranted({{ voterClass }}::VIEW, ${{ entityVariable }});
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties(${{ entityVariable }});
+
         return $this->render('{{ routePrefix }}/show.html.twig', [
             '{{ entityVariable }}' => ${{ entityVariable }},
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in {{ entityName }}Controller to customize displayed properties
+     */
+    protected function buildShowProperties({{ entityName }} ${{ entityVariable }}): array
+    {
+        return [];
     }
 {% endif %}
 
@@ -396,12 +460,28 @@ abstract class {{ entityName }}ControllerGenerated extends {{ baseControllerClas
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+{% if hasOrganization %}
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
+{% else %}
+     * Override this method to add custom initialization logic.
+{% endif %}
      */
     protected function initializeNewEntity({{ entityName }} ${{ entityVariable }}): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+{% if hasOrganization %}
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            ${{ entityVariable }}->setOrganization($organization);
+            error_log('✅ {{ entityName }}Controller: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ {{ entityName }}Controller: No organization available from TenantContext');
+        }
+
+{% endif %}
         // Add your custom initialization here
     }
 

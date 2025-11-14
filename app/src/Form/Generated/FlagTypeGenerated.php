@@ -9,8 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -43,15 +43,6 @@ abstract class FlagTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('category', ChoiceType::class, [
-            'label' => 'Category',
-            'required' => true,
-            'help' => 'Categorize this flag for better organization',
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('description', TextareaType::class, [
             'label' => 'Description',
             'required' => false,
@@ -59,6 +50,15 @@ abstract class FlagTypeGenerated extends AbstractType
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter description',
+            ],
+        ]);
+
+        $builder->add('category', ChoiceType::class, [
+            'label' => 'Category',
+            'required' => true,
+            'help' => 'Categorize this flag for better organization',
+            'attr' => [
+                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -108,7 +108,7 @@ abstract class FlagTypeGenerated extends AbstractType
 
         $builder->add('active', CheckboxType::class, [
             'label' => 'Active',
-            'required' => true,
+            'required' => false,
             'help' => 'Uncheck to deactivate flag without deleting',
             'attr' => [
                 'class' => 'form-input-modern',
@@ -117,7 +117,7 @@ abstract class FlagTypeGenerated extends AbstractType
 
         $builder->add('system', CheckboxType::class, [
             'label' => 'System Flag',
-            'required' => true,
+            'required' => false,
             'help' => 'System flags cannot be deleted',
             'attr' => [
                 'class' => 'form-input-modern',

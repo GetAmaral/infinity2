@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\EventCategory;
+use App\MultiTenant\TenantContext;
 use App\Repository\EventCategoryRepository;
 use App\Security\Voter\EventCategoryVoter;
 use App\Form\EventCategoryType;
@@ -36,6 +37,7 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -205,31 +207,60 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
         $form = $this->createForm(EventCategoryType::class, $eventCategory);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($eventCategory);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $eventCategory->setOrganization($organization);
+                error_log('✅ EventCategoryController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($eventCategory);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($eventCategory);
 
-                // After create hook
-                $this->afterCreate($eventCategory);
+                    $this->entityManager->persist($eventCategory);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'eventcategory.flash.created_successfully',
-                    ['%name%' => (string) $eventCategory],
-                    'eventcategory'
-                ));
+                    // After create hook
+                    $this->afterCreate($eventCategory);
 
-                return $this->redirectToRoute('eventcategory_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'eventcategory.flash.created_successfully',
+                        ['%name%' => (string) $eventCategory],
+                        'eventcategory'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'eventcategory.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'eventcategory'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $eventCategory;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'EventCategory',
+                            'entityId' => $eventCategory->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('eventcategory_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'eventcategory.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'eventcategory'
+                    ));
+                }
             }
         }
 
@@ -272,33 +303,43 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventCategoryVoter::EDIT, $eventCategory);
 
+        // Store original organization to preserve it
+        $originalOrganization = $eventCategory->getOrganization();
+
         $form = $this->createForm(EventCategoryType::class, $eventCategory);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($eventCategory);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $eventCategory->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($eventCategory);
 
-                // After update hook
-                $this->afterUpdate($eventCategory);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'eventcategory.flash.updated_successfully',
-                    ['%name%' => (string) $eventCategory],
-                    'eventcategory'
-                ));
+                    // After update hook
+                    $this->afterUpdate($eventCategory);
 
-                return $this->redirectToRoute('eventcategory_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'eventcategory.flash.updated_successfully',
+                        ['%name%' => (string) $eventCategory],
+                        'eventcategory'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'eventcategory.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'eventcategory'
-                ));
+                    return $this->redirectToRoute('eventcategory_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'eventcategory.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'eventcategory'
+                    ));
+                }
             }
         }
 
@@ -367,9 +408,22 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(EventCategoryVoter::VIEW, $eventCategory);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($eventCategory);
+
         return $this->render('eventcategory/show.html.twig', [
             'eventCategory' => $eventCategory,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in EventCategoryController to customize displayed properties
+     */
+    protected function buildShowProperties(EventCategory $eventCategory): array
+    {
+        return [];
     }
 
     // ====================================
@@ -380,12 +434,22 @@ abstract class EventCategoryControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(EventCategory $eventCategory): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $eventCategory->setOrganization($organization);
+            error_log('✅ EventCategoryController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ EventCategoryController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

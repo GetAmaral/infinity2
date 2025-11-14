@@ -38,7 +38,7 @@ abstract class ProductBatchGenerated extends EntityBase
     protected string $name;
 
     #[Groups(['productbatch:read', 'productbatch:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $manufacturingDate = null;
 
     #[Groups(['productbatch:read', 'productbatch:write'])]
@@ -104,7 +104,7 @@ abstract class ProductBatchGenerated extends EntityBase
     protected ?float $exchangeRate = null;
 
     #[Groups(['productbatch:read', 'productbatch:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $expirationDate = null;
 
     #[Groups(['productbatch:read', 'productbatch:write'])]

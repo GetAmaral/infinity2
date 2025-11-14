@@ -116,7 +116,7 @@ abstract class CompetitorGenerated extends EntityBase
     protected ?string $notes = null;
 
     #[Groups(['competitor:read', 'competitor:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastAnalyzedAt = null;
 
     #[Groups(['competitor:read', 'competitor:write'])]

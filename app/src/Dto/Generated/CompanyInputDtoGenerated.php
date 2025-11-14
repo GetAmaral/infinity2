@@ -153,12 +153,12 @@ abstract class CompanyInputDtoGenerated
     #[Groups(['company:write'])]
     public ?string $country = null;
 
+    #[Groups(['company:write'])]
+    public ?int $companySize = null;
+
     #[Assert\Length(max: 100)]
     #[Groups(['company:write'])]
     public ?string $shippingCountry = null;
-
-    #[Groups(['company:write'])]
-    public ?int $companySize = null;
 
     #[Assert\Length(max: 20)]
     #[Groups(['company:write'])]
@@ -199,7 +199,14 @@ abstract class CompanyInputDtoGenerated
     public ?string $taxId = null;
 
     #[Groups(['company:write'])]
-    public ?\DateTimeImmutable $nextActivityDate = null;
+    public string $timeZone = 'UTC';
+
+    #[Assert\Length(max: 500)]
+    #[Groups(['company:write'])]
+    public ?string $tags = null;
+
+    #[Groups(['company:write'])]
+    public ?bool $public = null;
 
     #[Assert\Length(max: 50)]
     #[Groups(['company:write'])]
@@ -209,36 +216,29 @@ abstract class CompanyInputDtoGenerated
     #[Groups(['company:write'])]
     public ?string $companyDomain = null;
 
+    #[Assert\Length(max: 100)]
     #[Groups(['company:write'])]
-    public ?int $numberOfAssociatedContacts = null;
+    public ?string $stateProvince = null;
 
     #[Assert\Length(max: 100)]
     #[Groups(['company:write'])]
     public ?string $shippingStateProvince = null;
 
-    #[Assert\Length(max: 500)]
     #[Groups(['company:write'])]
-    public ?string $tags = null;
+    public ?int $numberOfAssociatedDeals = null;
 
     #[Groups(['company:write'])]
     public ?\DateTimeImmutable $lastActivityDate = null;
 
     #[Groups(['company:write'])]
-    public ?bool $public = null;
+    public ?\DateTimeImmutable $nextActivityDate = null;
 
     #[Assert\Length(max: 50)]
     #[Groups(['company:write'])]
     public ?string $lifecycleStage = null;
 
     #[Groups(['company:write'])]
-    public string $timeZone = 'UTC';
-
-    #[Assert\Length(max: 100)]
-    #[Groups(['company:write'])]
-    public ?string $stateProvince = null;
-
-    #[Groups(['company:write'])]
-    public ?int $numberOfAssociatedDeals = null;
+    public ?int $numberOfAssociatedContacts = null;
 
 
     // Getters and Setters
@@ -343,16 +343,6 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getShippingPostalCode(): ?string    {
-        return $this->shippingPostalCode;
-    }
-
-    public function setShippingPostalCode(?string $shippingPostalCode): self
-    {
-        $this->shippingPostalCode = $shippingPostalCode;
-        return $this;
-    }
-
     public function getCampaigns(): ?string    {
         return $this->campaigns;
     }
@@ -360,6 +350,16 @@ abstract class CompanyInputDtoGenerated
     public function setCampaigns(?string $campaigns): self
     {
         $this->campaigns = $campaigns;
+        return $this;
+    }
+
+    public function getShippingPostalCode(): ?string    {
+        return $this->shippingPostalCode;
+    }
+
+    public function setShippingPostalCode(?string $shippingPostalCode): self
+    {
+        $this->shippingPostalCode = $shippingPostalCode;
         return $this;
     }
 
@@ -553,16 +553,6 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getShippingCountry(): ?string    {
-        return $this->shippingCountry;
-    }
-
-    public function setShippingCountry(?string $shippingCountry): self
-    {
-        $this->shippingCountry = $shippingCountry;
-        return $this;
-    }
-
     public function getCompanySize(): ?int    {
         return $this->companySize;
     }
@@ -570,6 +560,16 @@ abstract class CompanyInputDtoGenerated
     public function setCompanySize(?int $companySize): self
     {
         $this->companySize = $companySize;
+        return $this;
+    }
+
+    public function getShippingCountry(): ?string    {
+        return $this->shippingCountry;
+    }
+
+    public function setShippingCountry(?string $shippingCountry): self
+    {
+        $this->shippingCountry = $shippingCountry;
         return $this;
     }
 
@@ -753,13 +753,33 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getNextActivityDate(): ?\DateTimeImmutable    {
-        return $this->nextActivityDate;
+    public function getTimeZone(): string    {
+        return $this->timeZone;
     }
 
-    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
+    public function setTimeZone(string $timeZone): self
     {
-        $this->nextActivityDate = $nextActivityDate;
+        $this->timeZone = $timeZone;
+        return $this;
+    }
+
+    public function getTags(): ?string    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): self
+    {
+        $this->tags = $tags;
+        return $this;
+    }
+
+    public function getPublic(): ?bool    {
+        return $this->public;
+    }
+
+    public function setPublic(?bool $public): self
+    {
+        $this->public = $public;
         return $this;
     }
 
@@ -783,13 +803,13 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getNumberOfAssociatedContacts(): ?int    {
-        return $this->numberOfAssociatedContacts;
+    public function getStateProvince(): ?string    {
+        return $this->stateProvince;
     }
 
-    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
+    public function setStateProvince(?string $stateProvince): self
     {
-        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
+        $this->stateProvince = $stateProvince;
         return $this;
     }
 
@@ -803,13 +823,13 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getTags(): ?string    {
-        return $this->tags;
+    public function getNumberOfAssociatedDeals(): ?int    {
+        return $this->numberOfAssociatedDeals;
     }
 
-    public function setTags(?string $tags): self
+    public function setNumberOfAssociatedDeals(?int $numberOfAssociatedDeals): self
     {
-        $this->tags = $tags;
+        $this->numberOfAssociatedDeals = $numberOfAssociatedDeals;
         return $this;
     }
 
@@ -823,13 +843,13 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getPublic(): ?bool    {
-        return $this->public;
+    public function getNextActivityDate(): ?\DateTimeImmutable    {
+        return $this->nextActivityDate;
     }
 
-    public function setPublic(?bool $public): self
+    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
     {
-        $this->public = $public;
+        $this->nextActivityDate = $nextActivityDate;
         return $this;
     }
 
@@ -843,33 +863,13 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getTimeZone(): string    {
-        return $this->timeZone;
+    public function getNumberOfAssociatedContacts(): ?int    {
+        return $this->numberOfAssociatedContacts;
     }
 
-    public function setTimeZone(string $timeZone): self
+    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
     {
-        $this->timeZone = $timeZone;
-        return $this;
-    }
-
-    public function getStateProvince(): ?string    {
-        return $this->stateProvince;
-    }
-
-    public function setStateProvince(?string $stateProvince): self
-    {
-        $this->stateProvince = $stateProvince;
-        return $this;
-    }
-
-    public function getNumberOfAssociatedDeals(): ?int    {
-        return $this->numberOfAssociatedDeals;
-    }
-
-    public function setNumberOfAssociatedDeals(?int $numberOfAssociatedDeals): self
-    {
-        $this->numberOfAssociatedDeals = $numberOfAssociatedDeals;
+        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
         return $this;
     }
 }

@@ -50,7 +50,30 @@ abstract class EventResourceBookingTypeGenerated extends AbstractType
             'label' => 'Booked By',
             'required' => false,
             'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -66,7 +89,7 @@ abstract class EventResourceBookingTypeGenerated extends AbstractType
 
         $builder->add('confirmed', CheckboxType::class, [
             'label' => 'Confirmed',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -74,7 +97,7 @@ abstract class EventResourceBookingTypeGenerated extends AbstractType
 
         $builder->add('cancelled', CheckboxType::class, [
             'label' => 'Cancelled',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -82,7 +105,7 @@ abstract class EventResourceBookingTypeGenerated extends AbstractType
 
         $builder->add('paid', CheckboxType::class, [
             'label' => 'Paid',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -119,7 +142,30 @@ abstract class EventResourceBookingTypeGenerated extends AbstractType
             'label' => 'Event',
             'required' => false,
             'class' => \App\Entity\Event::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Event',
+                'data-relation-select-route-value' => 'event_api_search',
+                'data-relation-select-add-route-value' => 'event_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select event',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -148,7 +194,30 @@ abstract class EventResourceBookingTypeGenerated extends AbstractType
             'label' => 'Resource',
             'required' => false,
             'class' => \App\Entity\EventResource::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'EventResource',
+                'data-relation-select-route-value' => 'event_resource_api_search',
+                'data-relation-select-add-route-value' => 'event_resource_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select eventresource',
                 'class' => 'form-input-modern',
             ],
         ]);

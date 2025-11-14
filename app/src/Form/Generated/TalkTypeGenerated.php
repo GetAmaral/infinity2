@@ -9,16 +9,15 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use App\Entity\Company;
-use App\Entity\Contact;
-use App\Entity\Deal;
 use App\Entity\TalkType;
+use App\Entity\Contact;
+use App\Entity\Company;
+use App\Entity\Deal;
 use App\Entity\User;
 use App\Entity\Agent;
 use App\Entity\Campaign;
@@ -50,6 +49,41 @@ abstract class TalkTypeGenerated extends AbstractType
             ],
         ]);
 
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('talkType', EntityType::class, [
+            'label' => 'TalkType',
+            'required' => true,
+            'class' => \App\Entity\TalkType::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
+            'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'TalkType',
+                'data-relation-select-route-value' => 'talk_type_api_search',
+                'data-relation-select-add-route-value' => 'talk_type_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select talktype',
+                'class' => 'form-input-modern',
+            ],
+        ]);
+        }
+
         $builder->add('summary', TextareaType::class, [
             'label' => 'Summary',
             'required' => false,
@@ -61,11 +95,34 @@ abstract class TalkTypeGenerated extends AbstractType
 
         // Conditionally exclude parent back-reference to prevent circular references in collections
         if (empty($options['exclude_parent'])) {
-        $builder->add('company', EntityType::class, [
-            'label' => 'Company',
+        $builder->add('contact', EntityType::class, [
+            'label' => 'Contact',
             'required' => false,
-            'class' => \App\Entity\Company::class,
+            'class' => \App\Entity\Contact::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Contact',
+                'data-relation-select-route-value' => 'contact_api_search',
+                'data-relation-select-add-route-value' => 'contact_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select contact',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -73,11 +130,34 @@ abstract class TalkTypeGenerated extends AbstractType
 
         // Conditionally exclude parent back-reference to prevent circular references in collections
         if (empty($options['exclude_parent'])) {
-        $builder->add('contact', EntityType::class, [
-            'label' => 'Contact',
+        $builder->add('company', EntityType::class, [
+            'label' => 'Company',
             'required' => false,
-            'class' => \App\Entity\Contact::class,
+            'class' => \App\Entity\Company::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Company',
+                'data-relation-select-route-value' => 'company_api_search',
+                'data-relation-select-add-route-value' => 'company_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select company',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -89,34 +169,175 @@ abstract class TalkTypeGenerated extends AbstractType
             'label' => 'Deal',
             'required' => false,
             'class' => \App\Entity\Deal::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Deal',
+                'data-relation-select-route-value' => 'deal_api_search',
+                'data-relation-select-add-route-value' => 'deal_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select deal',
                 'class' => 'form-input-modern',
             ],
         ]);
         }
 
-        // Conditionally exclude parent back-reference to prevent circular references in collections
-        if (empty($options['exclude_parent'])) {
-        $builder->add('talkType', EntityType::class, [
-            'label' => 'TalkType',
-            'required' => true,
-            'class' => \App\Entity\TalkType::class,
+        $builder->add('users', EntityType::class, [
+            'label' => 'Users',
+            'required' => false,
+            'class' => \App\Entity\User::class,
+            'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more user',
                 'class' => 'form-input-modern',
             ],
         ]);
-        }
 
-        $builder->add('channel', IntegerType::class, [
-            'label' => 'Channel',
-            'required' => true,
+        $builder->add('agents', EntityType::class, [
+            'label' => 'Agents',
+            'required' => false,
+            'class' => \App\Entity\Agent::class,
+            'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Agent',
+                'data-relation-select-route-value' => 'agent_api_search',
+                'data-relation-select-add-route-value' => 'agent_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more agent',
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('owner', EntityType::class, [
+            'label' => 'Owner',
+            'required' => true,
+            'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
+            'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('assignedTo', EntityType::class, [
+            'label' => 'Assigned To',
+            'required' => false,
+            'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
+            'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
                 'class' => 'form-input-modern',
             ],
         ]);
 
         $builder->add('status', IntegerType::class, [
             'label' => 'Status',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('channel', IntegerType::class, [
+            'label' => 'Channel',
             'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -180,47 +401,34 @@ abstract class TalkTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('recordingUrl', IntegerType::class, [
-            'label' => 'RecordingUrl',
+        $builder->add('paused', CheckboxType::class, [
+            'label' => 'Paused',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('users', EntityType::class, [
-            'label' => 'Users',
+        $builder->add('pausedAt', DateTimeType::class, [
+            'label' => 'Paused At',
             'required' => false,
-            'class' => \App\Entity\User::class,
-            'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('owner', EntityType::class, [
-            'label' => 'Owner',
-            'required' => true,
-            'class' => \App\Entity\User::class,
+        $builder->add('pausedReason', TextareaType::class, [
+            'label' => 'Paused Reason',
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter paused reason',
             ],
         ]);
 
-        $builder->add('assignedTo', EntityType::class, [
-            'label' => 'Assigned To',
+        $builder->add('resumedAt', DateTimeType::class, [
+            'label' => 'Resumed At',
             'required' => false,
-            'class' => \App\Entity\User::class,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('agents', EntityType::class, [
-            'label' => 'Agents',
-            'required' => false,
-            'class' => \App\Entity\Agent::class,
-            'multiple' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -231,37 +439,45 @@ abstract class TalkTypeGenerated extends AbstractType
             'required' => false,
             'class' => \App\Entity\Campaign::class,
             'multiple' => true,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Campaign',
+                'data-relation-select-route-value' => 'campaign_api_search',
+                'data-relation-select-add-route-value' => 'campaign_new_modal',
+                'data-relation-select-multiple-value' => 'true',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select one or more campaign',
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        // Exclude nested collections when form is used inside another collection
-        if (empty($options['exclude_parent'])) {
-        $builder->add('messages', CollectionType::class, [
-            'label' => 'Messages',
+        $builder->add('recordingUrl', IntegerType::class, [
+            'label' => 'RecordingUrl',
             'required' => false,
-            'entry_type' => \App\Form\TalkMessageType::class,
-            'entry_options' => [
-                'label' => false,
-                'exclude_parent' => true,
-            ],
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
-            ],
         ]);
-        }
 
         $builder->add('archived', CheckboxType::class, [
             'label' => 'IsArchived',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -269,18 +485,9 @@ abstract class TalkTypeGenerated extends AbstractType
 
         $builder->add('internal', CheckboxType::class, [
             'label' => 'Internal',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('tags', TextareaType::class, [
-            'label' => 'Tags',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
-                'placeholder' => 'Enter tags',
             ],
         ]);
 

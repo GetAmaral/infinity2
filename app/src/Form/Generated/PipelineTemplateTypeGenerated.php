@@ -8,8 +8,8 @@ use App\Entity\PipelineTemplate;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -35,20 +35,20 @@ abstract class PipelineTemplateTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $builder->add('default', CheckboxType::class, [
+            'label' => 'Default Template',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
         $builder->add('name', TextType::class, [
             'label' => 'Template Name',
             'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter template name',
-            ],
-        ]);
-
-        $builder->add('default', CheckboxType::class, [
-            'label' => 'Default Template',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -63,7 +63,7 @@ abstract class PipelineTemplateTypeGenerated extends AbstractType
 
         $builder->add('public', CheckboxType::class, [
             'label' => 'Public Template',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -133,10 +133,11 @@ abstract class PipelineTemplateTypeGenerated extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'attr' => [
+                'data-controller' => 'live-collection',
+                'data-live-collection-allow-add-value' => '1',
+                'data-live-collection-allow-delete-value' => '1',
+                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
-            ],
-            'constraints' => [
-                new \Symfony\Component\Validator\Constraints\Count(['min' => 1]),
             ],
         ]);
         }

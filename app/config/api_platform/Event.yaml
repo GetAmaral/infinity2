@@ -173,22 +173,22 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      notifications:
-        writable: false
-        description: "Notifications"
-        example: "/api/notificatia/01234567-89ab-cdef-0123-456789abcdef"
-      holidays:
-        writable: false
-        description: "Holidays"
-        example: "/api/holidays/01234567-89ab-cdef-0123-456789abcdef"
-      workingHours:
-        writable: false
-        description: "WorkingHours"
-        example: "/api/working_hours/01234567-89ab-cdef-0123-456789abcdef"
       meetingDatas:
         writable: false
         description: "MeetingDatas"
         example: "/api/meeting_data/01234567-89ab-cdef-0123-456789abcdef"
+      workingHours:
+        writable: false
+        description: "WorkingHours"
+        example: "/api/working_hours/01234567-89ab-cdef-0123-456789abcdef"
+      holidays:
+        writable: false
+        description: "Holidays"
+        example: "/api/holidays/01234567-89ab-cdef-0123-456789abcdef"
+      notifications:
+        writable: false
+        description: "Notifications"
+        example: "/api/notificatia/01234567-89ab-cdef-0123-456789abcdef"
       subject:
         description: "Event subject (Salesforce\/Outlook compatibility)"
         example: "Q4 Planning Meeting"

@@ -43,10 +43,10 @@ abstract class EventResourceInputDtoGenerated
     public bool $available = true;
 
     #[Groups(['eventresource:write'])]
-    public bool $active = true;
+    public bool $bookable = true;
 
     #[Groups(['eventresource:write'])]
-    public bool $bookable = true;
+    public bool $active = true;
 
     #[Groups(['eventresource:write'])]
     public ?string $timezone = null;
@@ -64,10 +64,10 @@ abstract class EventResourceInputDtoGenerated
     public ?int $maximumBookingDuration = null;
 
     #[Groups(['eventresource:write'])]
-    public ?string $pricePerHour = null;
+    public ?array $bookingRules = null;
 
     #[Groups(['eventresource:write'])]
-    public ?array $bookingRules = null;
+    public ?string $pricePerHour = null;
 
     #[Groups(['eventresource:write'])]
     public ?string $pricePerDay = null;
@@ -161,16 +161,6 @@ abstract class EventResourceInputDtoGenerated
         return $this;
     }
 
-    public function getActive(): bool    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
     public function getBookable(): bool    {
         return $this->bookable;
     }
@@ -178,6 +168,16 @@ abstract class EventResourceInputDtoGenerated
     public function setBookable(bool $bookable): self
     {
         $this->bookable = $bookable;
+        return $this;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
         return $this;
     }
 
@@ -231,16 +231,6 @@ abstract class EventResourceInputDtoGenerated
         return $this;
     }
 
-    public function getPricePerHour(): ?string    {
-        return $this->pricePerHour;
-    }
-
-    public function setPricePerHour(?string $pricePerHour): self
-    {
-        $this->pricePerHour = $pricePerHour;
-        return $this;
-    }
-
     public function getBookingRules(): ?array    {
         return $this->bookingRules;
     }
@@ -248,6 +238,16 @@ abstract class EventResourceInputDtoGenerated
     public function setBookingRules(?array $bookingRules): self
     {
         $this->bookingRules = $bookingRules;
+        return $this;
+    }
+
+    public function getPricePerHour(): ?string    {
+        return $this->pricePerHour;
+    }
+
+    public function setPricePerHour(?string $pricePerHour): self
+    {
+        $this->pricePerHour = $pricePerHour;
         return $this;
     }
 

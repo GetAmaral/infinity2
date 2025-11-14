@@ -26,6 +26,9 @@ framework:
             Symfony\Component\Notifier\Message\SmsMessage: async
             'App\Message\ProcessVideoMessage': async
             'App\Message\AuditEventMessage': async
+            'App\Message\ProcessTalkMessageCommand': async
+            'App\Message\GenerateAgentResponseCommand': async
+            'App\Message\EvaluateStepCompletionCommand': async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

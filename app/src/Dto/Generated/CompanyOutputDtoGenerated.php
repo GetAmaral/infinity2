@@ -62,13 +62,13 @@ abstract class CompanyOutputDtoGenerated
      */
     public string|CityOutputDto|null $shippingCity = null;
 
-    public ?string $shippingPostalCode = null;
-
     /**
      * campaigns collection
      * @var CampaignOutputDto[]
      */
     public array $campaigns = [];
+
+    public ?string $shippingPostalCode = null;
 
     public ?string $annualRevenue = null;
 
@@ -116,9 +116,9 @@ abstract class CompanyOutputDtoGenerated
 
     public ?string $country = null;
 
-    public ?string $shippingCountry = null;
-
     public ?int $companySize = null;
+
+    public ?string $shippingCountry = null;
 
     public ?string $fax = null;
 
@@ -188,29 +188,29 @@ abstract class CompanyOutputDtoGenerated
 
     public ?string $taxId = null;
 
-    public ?\DateTimeImmutable $nextActivityDate = null;
+    public string $timeZone;
+
+    public ?string $tags = null;
+
+    public ?bool $public = null;
 
     public ?string $leadStatus = null;
 
     public ?string $companyDomain = null;
 
-    public ?int $numberOfAssociatedContacts = null;
+    public ?string $stateProvince = null;
 
     public ?string $shippingStateProvince = null;
 
-    public ?string $tags = null;
+    public ?int $numberOfAssociatedDeals = null;
 
     public ?\DateTimeImmutable $lastActivityDate = null;
 
-    public ?bool $public = null;
+    public ?\DateTimeImmutable $nextActivityDate = null;
 
     public ?string $lifecycleStage = null;
 
-    public string $timeZone;
-
-    public ?string $stateProvince = null;
-
-    public ?int $numberOfAssociatedDeals = null;
+    public ?int $numberOfAssociatedContacts = null;
 
     public ?\DateTimeImmutable $createdAt = null;
 
@@ -329,16 +329,6 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
-    public function getShippingPostalCode(): ?string    {
-        return $this->shippingPostalCode;
-    }
-
-    public function setShippingPostalCode(?string $shippingPostalCode): self
-    {
-        $this->shippingPostalCode = $shippingPostalCode;
-        return $this;
-    }
-
     public function getCampaigns(): array    {
         return $this->campaigns;
     }
@@ -346,6 +336,16 @@ abstract class CompanyOutputDtoGenerated
     public function setCampaigns(array $campaigns): self
     {
         $this->campaigns = $campaigns;
+        return $this;
+    }
+
+    public function getShippingPostalCode(): ?string    {
+        return $this->shippingPostalCode;
+    }
+
+    public function setShippingPostalCode(?string $shippingPostalCode): self
+    {
+        $this->shippingPostalCode = $shippingPostalCode;
         return $this;
     }
 
@@ -539,16 +539,6 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
-    public function getShippingCountry(): ?string    {
-        return $this->shippingCountry;
-    }
-
-    public function setShippingCountry(?string $shippingCountry): self
-    {
-        $this->shippingCountry = $shippingCountry;
-        return $this;
-    }
-
     public function getCompanySize(): ?int    {
         return $this->companySize;
     }
@@ -556,6 +546,16 @@ abstract class CompanyOutputDtoGenerated
     public function setCompanySize(?int $companySize): self
     {
         $this->companySize = $companySize;
+        return $this;
+    }
+
+    public function getShippingCountry(): ?string    {
+        return $this->shippingCountry;
+    }
+
+    public function setShippingCountry(?string $shippingCountry): self
+    {
+        $this->shippingCountry = $shippingCountry;
         return $this;
     }
 
@@ -739,13 +739,33 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
-    public function getNextActivityDate(): ?\DateTimeImmutable    {
-        return $this->nextActivityDate;
+    public function getTimeZone(): string    {
+        return $this->timeZone;
     }
 
-    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
+    public function setTimeZone(string $timeZone): self
     {
-        $this->nextActivityDate = $nextActivityDate;
+        $this->timeZone = $timeZone;
+        return $this;
+    }
+
+    public function getTags(): ?string    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): self
+    {
+        $this->tags = $tags;
+        return $this;
+    }
+
+    public function getPublic(): ?bool    {
+        return $this->public;
+    }
+
+    public function setPublic(?bool $public): self
+    {
+        $this->public = $public;
         return $this;
     }
 
@@ -769,13 +789,13 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
-    public function getNumberOfAssociatedContacts(): ?int    {
-        return $this->numberOfAssociatedContacts;
+    public function getStateProvince(): ?string    {
+        return $this->stateProvince;
     }
 
-    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
+    public function setStateProvince(?string $stateProvince): self
     {
-        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
+        $this->stateProvince = $stateProvince;
         return $this;
     }
 
@@ -789,13 +809,13 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
-    public function getTags(): ?string    {
-        return $this->tags;
+    public function getNumberOfAssociatedDeals(): ?int    {
+        return $this->numberOfAssociatedDeals;
     }
 
-    public function setTags(?string $tags): self
+    public function setNumberOfAssociatedDeals(?int $numberOfAssociatedDeals): self
     {
-        $this->tags = $tags;
+        $this->numberOfAssociatedDeals = $numberOfAssociatedDeals;
         return $this;
     }
 
@@ -809,13 +829,13 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
-    public function getPublic(): ?bool    {
-        return $this->public;
+    public function getNextActivityDate(): ?\DateTimeImmutable    {
+        return $this->nextActivityDate;
     }
 
-    public function setPublic(?bool $public): self
+    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
     {
-        $this->public = $public;
+        $this->nextActivityDate = $nextActivityDate;
         return $this;
     }
 
@@ -829,33 +849,13 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
-    public function getTimeZone(): string    {
-        return $this->timeZone;
+    public function getNumberOfAssociatedContacts(): ?int    {
+        return $this->numberOfAssociatedContacts;
     }
 
-    public function setTimeZone(string $timeZone): self
+    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
     {
-        $this->timeZone = $timeZone;
-        return $this;
-    }
-
-    public function getStateProvince(): ?string    {
-        return $this->stateProvince;
-    }
-
-    public function setStateProvince(?string $stateProvince): self
-    {
-        $this->stateProvince = $stateProvince;
-        return $this;
-    }
-
-    public function getNumberOfAssociatedDeals(): ?int    {
-        return $this->numberOfAssociatedDeals;
-    }
-
-    public function setNumberOfAssociatedDeals(?int $numberOfAssociatedDeals): self
-    {
-        $this->numberOfAssociatedDeals = $numberOfAssociatedDeals;
+        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
         return $this;
     }
 

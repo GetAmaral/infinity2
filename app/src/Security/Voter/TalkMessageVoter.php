@@ -16,16 +16,12 @@ use App\Security\Voter\Generated\TalkMessageVoterGenerated;
  */
 class TalkMessageVoter extends TalkMessageVoterGenerated
 {
-    // Override authorization methods here if needed
-
-    // Example:
-    // protected function canEdit(TalkMessage $talkmessage, User $user): bool
-    // {
-    //     // Custom edit logic
-    //     if ($talkmessage->getCreatedBy() === $user) {
-    //         return true;
-    //     }
-    //
-    //     return parent::canEdit($talkmessage, $user);
-    // }
+    /**
+     * Override: All authenticated users can create messages in chat
+     */
+    protected function canCREATE(\App\Entity\User $user): bool
+    {
+        // All authenticated users can send chat messages
+        return true;
+    }
 }

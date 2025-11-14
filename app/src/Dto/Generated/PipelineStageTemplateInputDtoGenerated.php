@@ -36,10 +36,10 @@ abstract class PipelineStageTemplateInputDtoGenerated
     public ?string $description = null;
 
     #[Groups(['pipelinestagetemplate:write'])]
-    public string $probability = '0';
+    public int $order = 0;
 
     #[Groups(['pipelinestagetemplate:write'])]
-    public int $order = 0;
+    public string $probability = '0';
 
     #[Groups(['pipelinestagetemplate:write'])]
     public bool $active;
@@ -106,16 +106,6 @@ abstract class PipelineStageTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getProbability(): string    {
-        return $this->probability;
-    }
-
-    public function setProbability(string $probability): self
-    {
-        $this->probability = $probability;
-        return $this;
-    }
-
     public function getOrder(): int    {
         return $this->order;
     }
@@ -123,6 +113,16 @@ abstract class PipelineStageTemplateInputDtoGenerated
     public function setOrder(int $order): self
     {
         $this->order = $order;
+        return $this;
+    }
+
+    public function getProbability(): string    {
+        return $this->probability;
+    }
+
+    public function setProbability(string $probability): self
+    {
+        $this->probability = $probability;
         return $this;
     }
 
@@ -166,16 +166,6 @@ abstract class PipelineStageTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getTasks(): ?string    {
-        return $this->tasks;
-    }
-
-    public function setTasks(?string $tasks): self
-    {
-        $this->tasks = $tasks;
-        return $this;
-    }
-
     public function getFinal(): bool    {
         return $this->final;
     }
@@ -183,6 +173,16 @@ abstract class PipelineStageTemplateInputDtoGenerated
     public function setFinal(bool $final): self
     {
         $this->final = $final;
+        return $this;
+    }
+
+    public function getTasks(): ?string    {
+        return $this->tasks;
+    }
+
+    public function setTasks(?string $tasks): self
+    {
+        $this->tasks = $tasks;
         return $this;
     }
 

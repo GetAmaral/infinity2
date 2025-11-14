@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\MeetingData;
+use App\MultiTenant\TenantContext;
 use App\Repository\MeetingDataRepository;
 use App\Security\Voter\MeetingDataVoter;
 use App\Form\MeetingDataType;
@@ -36,6 +37,7 @@ abstract class MeetingDataControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -98,8 +100,8 @@ abstract class MeetingDataControllerGenerated extends BaseApiController
             'agenda' => $entity->getAgenda(),
             'notes' => $entity->getNotes(),
             'minutes' => $entity->getMinutes(),
-            'attendees' => $entity->getAttendees(),
             'meetingId' => $entity->getMeetingId(),
+            'attendees' => $entity->getAttendees(),
             'absentees' => $entity->getAbsentees(),
             'decisions' => $entity->getDecisions(),
             'actionItems' => $entity->getActionItems(),
@@ -109,8 +111,8 @@ abstract class MeetingDataControllerGenerated extends BaseApiController
             'recordingSize' => $entity->getRecordingSize(),
             'nextMeetingDate' => $entity->getNextMeetingDate()?->format('M d, Y'),
             'organizer' => $entity->getOrganizer(),
-            'platform' => $entity->getPlatform(),
             'tags' => $entity->getTags(),
+            'platform' => $entity->getPlatform(),
             'confidential' => $entity->getConfidential(),
             'recurring' => $entity->getRecurring(),
             'recurrencePattern' => $entity->getRecurrencePattern(),
@@ -150,14 +152,14 @@ abstract class MeetingDataControllerGenerated extends BaseApiController
 
             // Property metadata for Twig templates (as PHP arrays)
             'listProperties' => json_decode('[{"name":"title","label":"Meeting Title","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTitle","isRelationship":false},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"meetingType","label":"Meeting Type","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMeetingType","isRelationship":false},{"name":"status","label":"Status","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStatus","isRelationship":false},{"name":"startTime","label":"Start Time","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getStartTime","isRelationship":false},{"name":"endTime","label":"End Time","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getEndTime","isRelationship":false},{"name":"duration","label":"Duration (minutes)","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getDuration","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"meetingId","label":"Meeting ID","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMeetingId","isRelationship":false},{"name":"recordingAvailable","label":"Recording Available","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecordingAvailable","isRelationship":false},{"name":"nextMeetingDate","label":"Next Meeting Date","type":"datetime","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getNextMeetingDate","isRelationship":false},{"name":"organizer","label":"Organizer","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOrganizer","isRelationship":false},{"name":"platform","label":"Platform","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPlatform","isRelationship":false},{"name":"confidential","label":"Confidential","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getConfidential","isRelationship":false},{"name":"recurring","label":"Recurring","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurring","isRelationship":false},{"name":"url","label":"Meeting URL","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl","isRelationship":false}]', true),
-            'searchableFields' => json_decode('[{"name":"title","label":"Meeting Title","type":"string"},{"name":"location","label":"Location","type":"string"},{"name":"notes","label":"Meeting Notes","type":"text"},{"name":"minutes","label":"Meeting Minutes","type":"text"},{"name":"meetingId","label":"Meeting ID","type":"string"},{"name":"transcript","label":"Transcript","type":"text"},{"name":"organizer","label":"Organizer","type":"string"},{"name":"platform","label":"Platform","type":"string"},{"name":"tags","label":"Tags","type":"json"}]', true),
-            'filterableFields' => json_decode('[{"name":"title","label":"Meeting Title","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"meetingType","label":"Meeting Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"status","label":"Status","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"startTime","label":"Start Time","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"endTime","label":"End Time","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"duration","label":"Duration (minutes)","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"recordingAvailable","label":"Recording Available","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"nextMeetingDate","label":"Next Meeting Date","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"platform","label":"Platform","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"tags","label":"Tags","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"confidential","label":"Confidential","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"recurring","label":"Recurring","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]', true),
+            'searchableFields' => json_decode('[{"name":"title","label":"Meeting Title","type":"string"},{"name":"location","label":"Location","type":"string"},{"name":"notes","label":"Meeting Notes","type":"text"},{"name":"minutes","label":"Meeting Minutes","type":"text"},{"name":"meetingId","label":"Meeting ID","type":"string"},{"name":"transcript","label":"Transcript","type":"text"},{"name":"organizer","label":"Organizer","type":"string"},{"name":"tags","label":"Tags","type":"json"},{"name":"platform","label":"Platform","type":"string"}]', true),
+            'filterableFields' => json_decode('[{"name":"title","label":"Meeting Title","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"meetingType","label":"Meeting Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"status","label":"Status","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"startTime","label":"Start Time","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"endTime","label":"End Time","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"duration","label":"Duration (minutes)","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"recordingAvailable","label":"Recording Available","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"nextMeetingDate","label":"Next Meeting Date","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"tags","label":"Tags","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"platform","label":"Platform","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"confidential","label":"Confidential","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"recurring","label":"Recurring","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]', true),
             'sortableFields' => json_decode('[{"name":"title","label":"Meeting Title"},{"name":"event","label":"Event"},{"name":"meetingType","label":"Meeting Type"},{"name":"status","label":"Status"},{"name":"startTime","label":"Start Time"},{"name":"endTime","label":"End Time"},{"name":"duration","label":"Duration (minutes)"},{"name":"meetingId","label":"Meeting ID"},{"name":"platform","label":"Platform"},{"name":"recordUrl","label":"Recording URL"},{"name":"secret","label":"Meeting Secret\/Password"},{"name":"url","label":"Meeting URL"}]', true),
 
             // Property metadata for client-side rendering (as JSON strings)
             'list_fields' => '[{"name":"title","label":"Meeting Title","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getTitle","isRelationship":false},{"name":"event","label":"Event","type":"","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getEvent","isRelationship":true},{"name":"meetingType","label":"Meeting Type","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMeetingType","isRelationship":false},{"name":"status","label":"Status","type":"string","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getStatus","isRelationship":false},{"name":"startTime","label":"Start Time","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getStartTime","isRelationship":false},{"name":"endTime","label":"End Time","type":"datetime","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getEndTime","isRelationship":false},{"name":"duration","label":"Duration (minutes)","type":"integer","sortable":true,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":true,"filterExists":false,"getter":"getDuration","isRelationship":false},{"name":"location","label":"Location","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getLocation","isRelationship":false},{"name":"meetingId","label":"Meeting ID","type":"string","sortable":true,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getMeetingId","isRelationship":false},{"name":"recordingAvailable","label":"Recording Available","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecordingAvailable","isRelationship":false},{"name":"nextMeetingDate","label":"Next Meeting Date","type":"datetime","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":true,"filterNumericRange":false,"filterExists":false,"getter":"getNextMeetingDate","isRelationship":false},{"name":"organizer","label":"Organizer","type":"string","sortable":false,"searchable":true,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getOrganizer","isRelationship":false},{"name":"platform","label":"Platform","type":"string","sortable":true,"searchable":true,"filterable":true,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getPlatform","isRelationship":false},{"name":"confidential","label":"Confidential","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getConfidential","isRelationship":false},{"name":"recurring","label":"Recurring","type":"boolean","sortable":false,"searchable":false,"filterable":true,"filterStrategy":null,"filterBoolean":true,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getRecurring","isRelationship":false},{"name":"url","label":"Meeting URL","type":"string","sortable":true,"searchable":false,"filterable":false,"filterStrategy":null,"filterBoolean":false,"filterDate":false,"filterNumericRange":false,"filterExists":false,"getter":"getUrl","isRelationship":false}]',
-            'searchable_fields' => '[{"name":"title","label":"Meeting Title","type":"string"},{"name":"location","label":"Location","type":"string"},{"name":"notes","label":"Meeting Notes","type":"text"},{"name":"minutes","label":"Meeting Minutes","type":"text"},{"name":"meetingId","label":"Meeting ID","type":"string"},{"name":"transcript","label":"Transcript","type":"text"},{"name":"organizer","label":"Organizer","type":"string"},{"name":"platform","label":"Platform","type":"string"},{"name":"tags","label":"Tags","type":"json"}]',
-            'filterable_fields' => '[{"name":"title","label":"Meeting Title","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"meetingType","label":"Meeting Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"status","label":"Status","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"startTime","label":"Start Time","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"endTime","label":"End Time","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"duration","label":"Duration (minutes)","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"recordingAvailable","label":"Recording Available","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"nextMeetingDate","label":"Next Meeting Date","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"platform","label":"Platform","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"tags","label":"Tags","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"confidential","label":"Confidential","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"recurring","label":"Recurring","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]',
+            'searchable_fields' => '[{"name":"title","label":"Meeting Title","type":"string"},{"name":"location","label":"Location","type":"string"},{"name":"notes","label":"Meeting Notes","type":"text"},{"name":"minutes","label":"Meeting Minutes","type":"text"},{"name":"meetingId","label":"Meeting ID","type":"string"},{"name":"transcript","label":"Transcript","type":"text"},{"name":"organizer","label":"Organizer","type":"string"},{"name":"tags","label":"Tags","type":"json"},{"name":"platform","label":"Platform","type":"string"}]',
+            'filterable_fields' => '[{"name":"title","label":"Meeting Title","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"meetingType","label":"Meeting Type","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"status","label":"Status","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"startTime","label":"Start Time","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"endTime","label":"End Time","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"duration","label":"Duration (minutes)","type":"integer","strategy":null,"boolean":false,"date":false,"numericRange":true,"exists":false},{"name":"recordingAvailable","label":"Recording Available","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"nextMeetingDate","label":"Next Meeting Date","type":"datetime","strategy":null,"boolean":false,"date":true,"numericRange":false,"exists":false},{"name":"tags","label":"Tags","type":"json","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"platform","label":"Platform","type":"string","strategy":null,"boolean":false,"date":false,"numericRange":false,"exists":false},{"name":"confidential","label":"Confidential","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false},{"name":"recurring","label":"Recurring","type":"boolean","strategy":null,"boolean":true,"date":false,"numericRange":false,"exists":false}]',
             'sortable_fields' => '[{"name":"title","label":"Meeting Title"},{"name":"event","label":"Event"},{"name":"meetingType","label":"Meeting Type"},{"name":"status","label":"Status"},{"name":"startTime","label":"Start Time"},{"name":"endTime","label":"End Time"},{"name":"duration","label":"Duration (minutes)"},{"name":"meetingId","label":"Meeting ID"},{"name":"platform","label":"Platform"},{"name":"recordUrl","label":"Recording URL"},{"name":"secret","label":"Meeting Secret\/Password"},{"name":"url","label":"Meeting URL"}]',
         ]);
     }
@@ -222,31 +224,60 @@ abstract class MeetingDataControllerGenerated extends BaseApiController
         $form = $this->createForm(MeetingDataType::class, $meetingData);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($meetingData);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $meetingData->setOrganization($organization);
+                error_log('✅ MeetingDataController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($meetingData);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($meetingData);
 
-                // After create hook
-                $this->afterCreate($meetingData);
+                    $this->entityManager->persist($meetingData);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'meetingdata.flash.created_successfully',
-                    ['%name%' => (string) $meetingData],
-                    'meetingdata'
-                ));
+                    // After create hook
+                    $this->afterCreate($meetingData);
 
-                return $this->redirectToRoute('meetingdata_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'meetingdata.flash.created_successfully',
+                        ['%name%' => (string) $meetingData],
+                        'meetingdata'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'meetingdata.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'meetingdata'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $meetingData;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'MeetingData',
+                            'entityId' => $meetingData->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('meetingdata_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'meetingdata.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'meetingdata'
+                    ));
+                }
             }
         }
 
@@ -289,33 +320,43 @@ abstract class MeetingDataControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(MeetingDataVoter::EDIT, $meetingData);
 
+        // Store original organization to preserve it
+        $originalOrganization = $meetingData->getOrganization();
+
         $form = $this->createForm(MeetingDataType::class, $meetingData);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($meetingData);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $meetingData->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($meetingData);
 
-                // After update hook
-                $this->afterUpdate($meetingData);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'meetingdata.flash.updated_successfully',
-                    ['%name%' => (string) $meetingData],
-                    'meetingdata'
-                ));
+                    // After update hook
+                    $this->afterUpdate($meetingData);
 
-                return $this->redirectToRoute('meetingdata_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'meetingdata.flash.updated_successfully',
+                        ['%name%' => (string) $meetingData],
+                        'meetingdata'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'meetingdata.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'meetingdata'
-                ));
+                    return $this->redirectToRoute('meetingdata_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'meetingdata.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'meetingdata'
+                    ));
+                }
             }
         }
 
@@ -384,9 +425,22 @@ abstract class MeetingDataControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(MeetingDataVoter::VIEW, $meetingData);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($meetingData);
+
         return $this->render('meetingdata/show.html.twig', [
             'meetingData' => $meetingData,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in MeetingDataController to customize displayed properties
+     */
+    protected function buildShowProperties(MeetingData $meetingData): array
+    {
+        return [];
     }
 
     // ====================================
@@ -397,12 +451,22 @@ abstract class MeetingDataControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(MeetingData $meetingData): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $meetingData->setOrganization($organization);
+            error_log('✅ MeetingDataController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ MeetingDataController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

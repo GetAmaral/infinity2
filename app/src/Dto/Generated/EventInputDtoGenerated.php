@@ -456,23 +456,13 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getNotifications(): ?string    {
-        return $this->notifications;
+    public function getMeetingDatas(): ?string    {
+        return $this->meetingDatas;
     }
 
-    public function setNotifications(?string $notifications): self
+    public function setMeetingDatas(?string $meetingDatas): self
     {
-        $this->notifications = $notifications;
-        return $this;
-    }
-
-    public function getHolidays(): ?string    {
-        return $this->holidays;
-    }
-
-    public function setHolidays(?string $holidays): self
-    {
-        $this->holidays = $holidays;
+        $this->meetingDatas = $meetingDatas;
         return $this;
     }
 
@@ -486,13 +476,23 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getMeetingDatas(): ?string    {
-        return $this->meetingDatas;
+    public function getHolidays(): ?string    {
+        return $this->holidays;
     }
 
-    public function setMeetingDatas(?string $meetingDatas): self
+    public function setHolidays(?string $holidays): self
     {
-        $this->meetingDatas = $meetingDatas;
+        $this->holidays = $holidays;
+        return $this;
+    }
+
+    public function getNotifications(): ?string    {
+        return $this->notifications;
+    }
+
+    public function setNotifications(?string $notifications): self
+    {
+        $this->notifications = $notifications;
         return $this;
     }
 

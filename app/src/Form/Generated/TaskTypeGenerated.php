@@ -124,7 +124,30 @@ abstract class TaskTypeGenerated extends AbstractType
             'label' => 'Contact',
             'required' => false,
             'class' => \App\Entity\Contact::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Contact',
+                'data-relation-select-route-value' => 'contact_api_search',
+                'data-relation-select-add-route-value' => 'contact_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select contact',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -136,7 +159,30 @@ abstract class TaskTypeGenerated extends AbstractType
             'label' => 'Deal',
             'required' => false,
             'class' => \App\Entity\Deal::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Deal',
+                'data-relation-select-route-value' => 'deal_api_search',
+                'data-relation-select-add-route-value' => 'deal_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select deal',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -165,7 +211,30 @@ abstract class TaskTypeGenerated extends AbstractType
             'label' => 'Pipeline Stage',
             'required' => false,
             'class' => \App\Entity\PipelineStage::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'PipelineStage',
+                'data-relation-select-route-value' => 'pipeline_stage_api_search',
+                'data-relation-select-add-route-value' => 'pipeline_stage_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select pipelinestage',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -189,7 +258,7 @@ abstract class TaskTypeGenerated extends AbstractType
 
         $builder->add('completed', CheckboxType::class, [
             'label' => 'Completed',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -207,7 +276,30 @@ abstract class TaskTypeGenerated extends AbstractType
             'label' => 'Company',
             'required' => false,
             'class' => \App\Entity\Company::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Company',
+                'data-relation-select-route-value' => 'company_api_search',
+                'data-relation-select-add-route-value' => 'company_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select company',
                 'class' => 'form-input-modern',
             ],
             'choice_label' => 'name',
@@ -225,7 +317,7 @@ abstract class TaskTypeGenerated extends AbstractType
 
         $builder->add('reminder', CheckboxType::class, [
             'label' => 'Reminder',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -233,7 +325,7 @@ abstract class TaskTypeGenerated extends AbstractType
 
         $builder->add('recurring', CheckboxType::class, [
             'label' => 'Recurring',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -250,7 +342,7 @@ abstract class TaskTypeGenerated extends AbstractType
 
         $builder->add('overdue', CheckboxType::class, [
             'label' => 'Overdue',
-            'required' => true,
+            'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
@@ -274,15 +366,6 @@ abstract class TaskTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('phoneNumber', TextType::class, [
-            'label' => 'Phone Number',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter phone number',
-            ],
-        ]);
-
         $builder->add('taskStatus', ChoiceType::class, [
             'label' => 'Status',
             'required' => true,
@@ -297,6 +380,15 @@ abstract class TaskTypeGenerated extends AbstractType
                 'Deferred' => 'deferred',
             ],
             'placeholder' => 'Select status',
+        ]);
+
+        $builder->add('phoneNumber', TextType::class, [
+            'label' => 'Phone Number',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter phone number',
+            ],
         ]);
 
         $builder->add('meetingUrl', TextType::class, [
@@ -331,7 +423,30 @@ abstract class TaskTypeGenerated extends AbstractType
             'label' => 'Task Type',
             'required' => false,
             'class' => \App\Entity\TaskType::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'TaskType',
+                'data-relation-select-route-value' => 'task_type_api_search',
+                'data-relation-select-add-route-value' => 'task_type_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select tasktype',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -343,7 +458,30 @@ abstract class TaskTypeGenerated extends AbstractType
             'label' => 'Assigned To',
             'required' => false,
             'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
                 'class' => 'form-input-modern',
             ],
         ]);

@@ -176,15 +176,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      products:
-        description: "Products associated..."
-        example: "[{\"@id\": \"\/api\/products\/123\"}]"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       closureDate:
         description: "ClosureDate (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      products:
+        description: "Products associated..."
+        example: "[{\"@id\": \"\/api\/products\/123\"}]"
         # Advanced filters
         filters:
           - type: OrderFilter
@@ -224,14 +224,14 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      team:
-        description: "Team"
+      owner:
+        description: "Deal Owner"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
-      owner:
-        description: "Deal Owner"
+      team:
+        description: "Team"
         example: "sample value"
         # Advanced filters
         filters:

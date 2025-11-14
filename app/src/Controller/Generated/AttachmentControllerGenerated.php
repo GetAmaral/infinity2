@@ -6,6 +6,7 @@ namespace App\Controller\Generated;
 
 use App\Controller\Base\BaseApiController;
 use App\Entity\Attachment;
+use App\MultiTenant\TenantContext;
 use App\Repository\AttachmentRepository;
 use App\Security\Voter\AttachmentVoter;
 use App\Form\AttachmentType;
@@ -36,6 +37,7 @@ abstract class AttachmentControllerGenerated extends BaseApiController
         protected readonly ListPreferencesService $listPreferencesService,
         protected readonly TranslatorInterface $translator,
         protected readonly CsrfTokenManagerInterface $csrfTokenManager,
+        protected readonly TenantContext $tenantContext,
     ) {}
 
     // ====================================
@@ -205,31 +207,60 @@ abstract class AttachmentControllerGenerated extends BaseApiController
         $form = $this->createForm(AttachmentType::class, $attachment);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($attachment);
+        if ($form->isSubmitted()) {
+            // Re-set organization after form handling (form excludes this field)
+            $organization = $this->tenantContext->getOrganizationForNewEntity();
+            if ($organization) {
+                $attachment->setOrganization($organization);
+                error_log('✅ AttachmentController: Organization re-set after form handling to ' . $organization->getName());
+            }
 
-                $this->entityManager->persist($attachment);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($attachment);
 
-                // After create hook
-                $this->afterCreate($attachment);
+                    $this->entityManager->persist($attachment);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'attachment.flash.created_successfully',
-                    ['%name%' => (string) $attachment],
-                    'attachment'
-                ));
+                    // After create hook
+                    $this->afterCreate($attachment);
 
-                return $this->redirectToRoute('attachment_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'attachment.flash.created_successfully',
+                        ['%name%' => (string) $attachment],
+                        'attachment'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'attachment.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'attachment'
-                ));
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
+
+                        // Get display text for the entity
+                        $displayText = (string) $attachment;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'Attachment',
+                            'entityId' => $attachment->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('attachment_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'attachment.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'attachment'
+                    ));
+                }
             }
         }
 
@@ -272,33 +303,43 @@ abstract class AttachmentControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AttachmentVoter::EDIT, $attachment);
 
+        // Store original organization to preserve it
+        $originalOrganization = $attachment->getOrganization();
+
         $form = $this->createForm(AttachmentType::class, $attachment);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($attachment);
+        if ($form->isSubmitted()) {
+            // Restore organization after form handling (form excludes this field)
+            if ($originalOrganization) {
+                $attachment->setOrganization($originalOrganization);
+            }
 
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($attachment);
 
-                // After update hook
-                $this->afterUpdate($attachment);
+                    $this->entityManager->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'attachment.flash.updated_successfully',
-                    ['%name%' => (string) $attachment],
-                    'attachment'
-                ));
+                    // After update hook
+                    $this->afterUpdate($attachment);
 
-                return $this->redirectToRoute('attachment_index', [], Response::HTTP_SEE_OTHER);
+                    $this->addFlash('success', $this->translator->trans(
+                        'attachment.flash.updated_successfully',
+                        ['%name%' => (string) $attachment],
+                        'attachment'
+                    ));
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'attachment.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'attachment'
-                ));
+                    return $this->redirectToRoute('attachment_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'attachment.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'attachment'
+                    ));
+                }
             }
         }
 
@@ -367,9 +408,22 @@ abstract class AttachmentControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AttachmentVoter::VIEW, $attachment);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($attachment);
+
         return $this->render('attachment/show.html.twig', [
             'attachment' => $attachment,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in AttachmentController to customize displayed properties
+     */
+    protected function buildShowProperties(Attachment $attachment): array
+    {
+        return [];
     }
 
     // ====================================
@@ -380,12 +434,22 @@ abstract class AttachmentControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Sets organization from multi-tenant context.
+     * Multi-tenant system handles: subdomain OR user's organization fallback.
+     *
+     * This runs BEFORE form validation, ensuring required organization field is set.
      */
     protected function initializeNewEntity(Attachment $attachment): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
+        // Auto-set organization from multi-tenant context
+        $organization = $this->tenantContext->getOrganizationForNewEntity();
+        if ($organization) {
+            $attachment->setOrganization($organization);
+            error_log('✅ AttachmentController: Organization set to ' . $organization->getName());
+        } else {
+            error_log('❌ AttachmentController: No organization available from TenantContext');
+        }
+
         // Add your custom initialization here
     }
 

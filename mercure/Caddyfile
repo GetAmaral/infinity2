@@ -1,0 +1,57 @@
+{
+    auto_https off
+    admin off
+}
+
+:80 {
+    encode gzip
+
+    # CORS configuration - Allow all localhost subdomains
+    @cors_preflight {
+        method OPTIONS
+    }
+
+    # Dynamic CORS header based on Origin
+    header @mercure_route {
+        Access-Control-Allow-Origin "{http.request.header.Origin}"
+        Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        Access-Control-Allow-Headers "Authorization, Content-Type, Last-Event-ID"
+        Access-Control-Expose-Headers "Link"
+        Access-Control-Allow-Credentials "true"
+    }
+
+    # Handle preflight requests
+    handle @cors_preflight {
+        header Access-Control-Allow-Origin "{http.request.header.Origin}"
+        header Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        header Access-Control-Allow-Headers "Authorization, Content-Type, Last-Event-ID"
+        header Access-Control-Allow-Credentials "true"
+        respond 204
+    }
+
+    # Mercure hub
+    @mercure_route {
+        path /.well-known/mercure*
+    }
+
+    handle @mercure_route {
+        header Access-Control-Allow-Origin "{http.request.header.Origin}"
+        header Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        header Access-Control-Allow-Headers "Authorization, Content-Type, Last-Event-ID"
+        header Access-Control-Expose-Headers "Link"
+
+        mercure {
+            # Publisher JWT key
+            publisher_jwt !ChangeThisMercureHubJWTSecretKey!
+            # Subscriber JWT key
+            subscriber_jwt !ChangeThisMercureHubJWTSecretKey!
+            # Allow anonymous subscribers
+            anonymous
+            # Subscriptions
+            subscriptions
+        }
+    }
+
+    # Health check endpoint
+    respond /healthz 200
+}

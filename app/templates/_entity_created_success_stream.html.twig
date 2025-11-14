@@ -1,0 +1,10 @@
+<turbo-stream action="append" target="body">
+    <template>
+        <div data-entity-type="{{ entityType }}"
+             data-entity-id="{{ entityId }}"
+             data-display-text="{{ displayText|e('html_attr') }}"
+             style="display:none;"
+             id="entity-created-marker">
+        </div>
+    </template>
+</turbo-stream>

@@ -49,7 +49,30 @@ abstract class WorkingHourTypeGenerated extends AbstractType
             'label' => 'Calendar',
             'required' => false,
             'class' => \App\Entity\Calendar::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Calendar',
+                'data-relation-select-route-value' => 'calendar_api_search',
+                'data-relation-select-add-route-value' => 'calendar_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select calendar',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -78,7 +101,30 @@ abstract class WorkingHourTypeGenerated extends AbstractType
             'label' => 'Event',
             'required' => false,
             'class' => \App\Entity\Event::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'Event',
+                'data-relation-select-route-value' => 'event_api_search',
+                'data-relation-select-add-route-value' => 'event_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select event',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -116,7 +162,30 @@ abstract class WorkingHourTypeGenerated extends AbstractType
             'label' => 'TimeZone',
             'required' => true,
             'class' => \App\Entity\TimeZone::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'TimeZone',
+                'data-relation-select-route-value' => 'time_zone_api_search',
+                'data-relation-select-add-route-value' => 'time_zone_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select timezone',
                 'class' => 'form-input-modern',
             ],
         ]);

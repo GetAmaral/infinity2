@@ -195,31 +195,53 @@ abstract class AuditLogControllerGenerated extends BaseApiController
         $form = $this->createForm(AuditLogType::class, $auditLog);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before create hook
-                $this->beforeCreate($auditLog);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before create hook
+                    $this->beforeCreate($auditLog);
 
-                $this->entityManager->persist($auditLog);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($auditLog);
+                    $this->entityManager->flush();
 
-                // After create hook
-                $this->afterCreate($auditLog);
+                    // After create hook
+                    $this->afterCreate($auditLog);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'auditlog.flash.created_successfully',
-                    ['%name%' => (string) $auditLog],
-                    'auditlog'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'auditlog.flash.created_successfully',
+                        ['%name%' => (string) $auditLog],
+                        'auditlog'
+                    ));
 
-                return $this->redirectToRoute('auditlog_index', [], Response::HTTP_SEE_OTHER);
+                    // If this is a modal/AJAX request (from "+" button), return Turbo Stream with event dispatch
+                    // Check both GET and POST for modal parameter
+                    if ($request->headers->get('X-Requested-With') === 'turbo-frame' ||
+                        $request->get('modal') === '1') {
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'auditlog.flash.create_failed',
-                    ['%error%' => $e->getMessage()],
-                    'auditlog'
-                ));
+                        // Get display text for the entity
+                        $displayText = (string) $auditLog;
+
+                        $response = $this->render('_entity_created_success_stream.html.twig', [
+                            'entityType' => 'AuditLog',
+                            'entityId' => $auditLog->getId()->toRfc4122(),
+                            'displayText' => $displayText,
+                        ]);
+
+                        // Set Turbo Stream content type so Turbo processes it without navigating
+                        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
+
+                        return $response;
+                    }
+
+                    return $this->redirectToRoute('auditlog_index', [], Response::HTTP_SEE_OTHER);
+
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'auditlog.flash.create_failed',
+                        ['%error%' => $e->getMessage()],
+                        'auditlog'
+                    ));
+                }
             }
         }
 
@@ -265,30 +287,32 @@ abstract class AuditLogControllerGenerated extends BaseApiController
         $form = $this->createForm(AuditLogType::class, $auditLog);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                // Before update hook
-                $this->beforeUpdate($auditLog);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    // Before update hook
+                    $this->beforeUpdate($auditLog);
 
-                $this->entityManager->flush();
+                    $this->entityManager->flush();
 
-                // After update hook
-                $this->afterUpdate($auditLog);
+                    // After update hook
+                    $this->afterUpdate($auditLog);
 
-                $this->addFlash('success', $this->translator->trans(
-                    'auditlog.flash.updated_successfully',
-                    ['%name%' => (string) $auditLog],
-                    'auditlog'
-                ));
+                    $this->addFlash('success', $this->translator->trans(
+                        'auditlog.flash.updated_successfully',
+                        ['%name%' => (string) $auditLog],
+                        'auditlog'
+                    ));
 
-                return $this->redirectToRoute('auditlog_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('auditlog_index', [], Response::HTTP_SEE_OTHER);
 
-            } catch (\Exception $e) {
-                $this->addFlash('error', $this->translator->trans(
-                    'auditlog.flash.update_failed',
-                    ['%error%' => $e->getMessage()],
-                    'auditlog'
-                ));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $this->translator->trans(
+                        'auditlog.flash.update_failed',
+                        ['%error%' => $e->getMessage()],
+                        'auditlog'
+                    ));
+                }
             }
         }
 
@@ -357,9 +381,22 @@ abstract class AuditLogControllerGenerated extends BaseApiController
     {
         $this->denyAccessUnlessGranted(AuditLogVoter::VIEW, $auditLog);
 
+        // Build show properties configuration for view
+        $showProperties = $this->buildShowProperties($auditLog);
+
         return $this->render('auditlog/show.html.twig', [
             'auditLog' => $auditLog,
+            'showProperties' => $showProperties,
         ]);
+    }
+
+    /**
+     * Build show properties configuration
+     * Override this method in AuditLogController to customize displayed properties
+     */
+    protected function buildShowProperties(AuditLog $auditLog): array
+    {
+        return [];
     }
 
     // ====================================
@@ -370,12 +407,10 @@ abstract class AuditLogControllerGenerated extends BaseApiController
     /**
      * Initialize new entity before creating form
      *
-     * Note: Organization and Owner are set automatically by TenantEntityProcessor
-     * Only use this for custom initialization logic
+     * Override this method to add custom initialization logic.
      */
     protected function initializeNewEntity(AuditLog $auditLog): void
     {
-        // Organization and Owner are set automatically by TenantEntityProcessor
         // Add your custom initialization here
     }
 

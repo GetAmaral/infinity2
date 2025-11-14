@@ -16,16 +16,12 @@ use App\Security\Voter\Generated\TalkVoterGenerated;
  */
 class TalkVoter extends TalkVoterGenerated
 {
-    // Override authorization methods here if needed
-
-    // Example:
-    // protected function canEdit(Talk $talk, User $user): bool
-    // {
-    //     // Custom edit logic
-    //     if ($talk->getCreatedBy() === $user) {
-    //         return true;
-    //     }
-    //
-    //     return parent::canEdit($talk, $user);
-    // }
+    /**
+     * Override: All authenticated users can create talks
+     */
+    protected function canCREATE(\App\Entity\User $user): bool
+    {
+        // All authenticated users can create talks
+        return true;
+    }
 }

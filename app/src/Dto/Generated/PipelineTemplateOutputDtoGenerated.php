@@ -27,9 +27,9 @@ abstract class PipelineTemplateOutputDtoGenerated
      */
     public string|OrganizationOutputDto $organization;
 
-    public string $name;
-
     public bool $default;
+
+    public string $name;
 
     public ?string $description = null;
 
@@ -39,9 +39,9 @@ abstract class PipelineTemplateOutputDtoGenerated
 
     public ?int $estimatedDuration = null;
 
-    public ?string $industry = null;
-
     public int $stageCount;
+
+    public ?string $industry = null;
 
     public ?string $targetDealSize = null;
 
@@ -88,16 +88,6 @@ abstract class PipelineTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getDefault(): bool    {
         return $this->default;
     }
@@ -105,6 +95,16 @@ abstract class PipelineTemplateOutputDtoGenerated
     public function setDefault(bool $default): self
     {
         $this->default = $default;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -148,16 +148,6 @@ abstract class PipelineTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getIndustry(): ?string    {
-        return $this->industry;
-    }
-
-    public function setIndustry(?string $industry): self
-    {
-        $this->industry = $industry;
-        return $this;
-    }
-
     public function getStageCount(): int    {
         return $this->stageCount;
     }
@@ -165,6 +155,16 @@ abstract class PipelineTemplateOutputDtoGenerated
     public function setStageCount(int $stageCount): self
     {
         $this->stageCount = $stageCount;
+        return $this;
+    }
+
+    public function getIndustry(): ?string    {
+        return $this->industry;
+    }
+
+    public function setIndustry(?string $industry): self
+    {
+        $this->industry = $industry;
         return $this;
     }
 

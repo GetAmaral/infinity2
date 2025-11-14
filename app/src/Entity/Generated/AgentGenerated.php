@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Organization;
+use App\Entity\TreeFlow;
 use App\Entity\User;
 use App\Entity\AgentType;
 use App\Entity\Talk;
@@ -32,6 +33,46 @@ abstract class AgentGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: Organization::class, inversedBy: 'agents')]
     #[ORM\JoinColumn(nullable: false)]
     protected Organization $organization;
+
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $whatsappInstanceName = null;
+
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\Column(type: 'string', length: 25, nullable: true)]
+    protected ?string $whatsappPhone = null;
+
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    protected ?string $whatsappServerUrl = null;
+
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $whatsappApiKey = null;
+
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $whatsappActive;
+
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    protected ?string $whatsappStatus = null;
+
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $whatsappWebhookToken = null;
+
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $whatsappLastConnectedAt = null;
+
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $whatsappMetadata = null;
+
+    #[Groups(['agent:read', 'agent:write'])]
+    #[ORM\ManyToOne(targetEntity: TreeFlow::class)]
+    protected ?TreeFlow $treeFlow = null;
 
     #[Groups(['agent:read', 'agent:write'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -74,11 +115,11 @@ abstract class AgentGenerated extends EntityBase
     protected ?string $commissionRate = '0';
 
     #[Groups(['agent:read', 'agent:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $startDate = null;
 
     #[Groups(['agent:read', 'agent:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $endDate = null;
 
     #[Groups(['agent:read', 'agent:write'])]
@@ -148,6 +189,112 @@ abstract class AgentGenerated extends EntityBase
     public function setOrganization(Organization $organization): self
     {
         $this->organization = $organization;
+        return $this;
+    }
+
+    public function getWhatsappInstanceName(): ?string    {
+        return $this->whatsappInstanceName;
+    }
+
+    public function setWhatsappInstanceName(?string $whatsappInstanceName): self
+    {
+        $this->whatsappInstanceName = $whatsappInstanceName;
+        return $this;
+    }
+
+    public function getWhatsappPhone(): ?string    {
+        return $this->whatsappPhone;
+    }
+
+    public function setWhatsappPhone(?string $whatsappPhone): self
+    {
+        $this->whatsappPhone = $whatsappPhone;
+        return $this;
+    }
+
+    public function getWhatsappServerUrl(): ?string    {
+        return $this->whatsappServerUrl;
+    }
+
+    public function setWhatsappServerUrl(?string $whatsappServerUrl): self
+    {
+        $this->whatsappServerUrl = $whatsappServerUrl;
+        return $this;
+    }
+
+    public function getWhatsappApiKey(): ?string    {
+        return $this->whatsappApiKey;
+    }
+
+    public function setWhatsappApiKey(?string $whatsappApiKey): self
+    {
+        $this->whatsappApiKey = $whatsappApiKey;
+        return $this;
+    }
+
+    public function getWhatsappActive(): bool    {
+        return $this->whatsappActive;
+    }
+
+    public function setWhatsappActive(bool $whatsappActive): self
+    {
+        $this->whatsappActive = $whatsappActive;
+        return $this;
+    }
+
+    public function isWhatsappActive(): bool
+    {
+        return $this->whatsappActive === true;
+    }
+
+    public function getWhatsappStatus(): ?string    {
+        return $this->whatsappStatus;
+    }
+
+    public function setWhatsappStatus(?string $whatsappStatus): self
+    {
+        $this->whatsappStatus = $whatsappStatus;
+        return $this;
+    }
+
+    public function getWhatsappWebhookToken(): ?string    {
+        return $this->whatsappWebhookToken;
+    }
+
+    public function setWhatsappWebhookToken(?string $whatsappWebhookToken): self
+    {
+        $this->whatsappWebhookToken = $whatsappWebhookToken;
+        return $this;
+    }
+
+    public function getWhatsappLastConnectedAt(): ?\DateTimeImmutable    {
+        return $this->whatsappLastConnectedAt;
+    }
+
+    public function setWhatsappLastConnectedAt(?\DateTimeImmutable $whatsappLastConnectedAt): self
+    {
+        $this->whatsappLastConnectedAt = $whatsappLastConnectedAt;
+        return $this;
+    }
+
+    public function getWhatsappMetadata(): ?array    {
+        return $this->whatsappMetadata;
+    }
+
+    public function setWhatsappMetadata(?array $whatsappMetadata): self
+    {
+        $this->whatsappMetadata = $whatsappMetadata;
+        return $this;
+    }
+
+    public function getTreeFlow(): ?TreeFlow
+    {
+        return $this->treeFlow;
+    }
+
+    public function setTreeFlow(?TreeFlow $treeFlow): self
+    {
+        $this->treeFlow = $treeFlow;
         return $this;
     }
 

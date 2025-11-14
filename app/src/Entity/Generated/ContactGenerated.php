@@ -80,7 +80,7 @@ abstract class ContactGenerated extends EntityBase
     protected ?City $billingCity = null;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     protected ?\DateTimeImmutable $birthDate = null;
 
     #[Groups(['contact:read', 'contact:write'])]
@@ -123,20 +123,20 @@ abstract class ContactGenerated extends EntityBase
     protected ?string $department = null;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'boolean')]
-    protected bool $doNotCall;
-
-    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Assert\Length(max: 100)]
     protected ?string $leadSource = null;
+
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $doNotCall;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $preferredContactMethod = null;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastContactDate = null;
 
     #[Groups(['contact:read', 'contact:write'])]
@@ -145,15 +145,15 @@ abstract class ContactGenerated extends EntityBase
     protected ?string $document = null;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
-    protected string $email;
+    #[ORM\Column(type: 'string', length: 180, nullable: true, unique: true)]
+    protected ?string $email = null;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\OneToMany(targetEntity: EventAttendee::class, mappedBy: 'contact', fetch: 'LAZY')]
     protected Collection $eventAttendances;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $firstTalkDate = null;
 
     #[Groups(['contact:read', 'contact:write'])]
@@ -165,7 +165,7 @@ abstract class ContactGenerated extends EntityBase
     protected ?string $geo = null;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastTalkDate = null;
 
     #[Groups(['contact:read', 'contact:write'])]
@@ -495,6 +495,16 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
+    public function getLeadSource(): ?string    {
+        return $this->leadSource;
+    }
+
+    public function setLeadSource(?string $leadSource): self
+    {
+        $this->leadSource = $leadSource;
+        return $this;
+    }
+
     public function getDoNotCall(): bool    {
         return $this->doNotCall;
     }
@@ -508,16 +518,6 @@ abstract class ContactGenerated extends EntityBase
     public function isDoNotCall(): bool
     {
         return $this->doNotCall === true;
-    }
-
-    public function getLeadSource(): ?string    {
-        return $this->leadSource;
-    }
-
-    public function setLeadSource(?string $leadSource): self
-    {
-        $this->leadSource = $leadSource;
-        return $this;
     }
 
     public function getPreferredContactMethod(): ?string    {
@@ -550,11 +550,11 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getEmail(): string    {
+    public function getEmail(): ?string    {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
         return $this;
