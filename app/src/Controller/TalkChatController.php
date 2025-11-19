@@ -274,6 +274,20 @@ final class TalkChatController extends AbstractController
             $message->setReadAt(new \DateTimeImmutable());
 
             $this->entityManager->flush();
+
+            // Publish Mercure update to refresh sidebar badge
+            $talk = $message->getTalk();
+            $update = new Update(
+                'https://luminai.app/organization/' . $talk->getOrganization()->getId()->toRfc4122() . '/talks',
+                json_encode([
+                    'type' => 'message_read',
+                    'talk' => [
+                        'id' => $talk->getId()->toRfc4122(),
+                        'hasNewMessage' => false, // Message was read, so clear badge
+                    ]
+                ])
+            );
+            $this->mercureHub->publish($update);
         }
 
         return $this->json(['success' => true]);
@@ -315,7 +329,7 @@ final class TalkChatController extends AbstractController
             ->select('COUNT(m.id)')
             ->where('m.talk = :talk')
             ->andWhere('m.read = false')
-            ->andWhere('m.fromUser != :user')
+            ->andWhere('(m.fromUser IS NULL OR m.fromUser != :user)')
             ->setParameter('talk', $talk)
             ->setParameter('user', $user)
             ->getQuery()
@@ -373,10 +387,15 @@ final class TalkChatController extends AbstractController
             'deliveredAt' => $message->getDeliveredAt()?->format('c'),
             'messageType' => $message->getMessageType(),
             'direction' => $message->getDirection(),
+            'senderLabel' => $message->getSenderLabel(),
             'attachments' => $attachments,
             'fromUser' => $message->getFromUser() ? [
                 'id' => $message->getFromUser()->getId()->toRfc4122(),
                 'name' => $message->getFromUser()->__toString(),
+            ] : null,
+            'fromAgent' => $message->getFromAgent() ? [
+                'id' => $message->getFromAgent()->getId()->toRfc4122(),
+                'name' => $message->getFromAgent()->__toString(),
             ] : null,
             'fromContact' => $message->getFromContact() ? [
                 'id' => $message->getFromContact()->getId()->toRfc4122(),

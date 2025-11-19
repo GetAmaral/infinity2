@@ -19,11 +19,13 @@ use App\Repository\ContactRepository;
 use App\Repository\TalkRepository;
 use App\Repository\TalkTypeRepository;
 use App\Repository\UserRepository;
+use App\Message\ProcessTalkMessageCommand;
 use App\Service\TalkFlow\TalkFlowService;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * WhatsApp Service
@@ -42,8 +44,10 @@ class WhatsAppService
         private readonly UserRepository $userRepository,
         private readonly TalkFlowService $talkFlowService,
         private readonly EvolutionApiClient $evolutionApiClient,
+        private readonly WhatsAppCloudApiClient $cloudApiClient,
         private readonly MediaDownloadService $mediaDownloadService,
         private readonly WebhookIdempotencyService $idempotencyService,
+        private readonly MessageBusInterface $messageBus,
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger
     ) {
@@ -314,7 +318,131 @@ class WhatsAppService
     }
 
     /**
-     * Identify Agent by Evolution API instance name
+     * Process inbound WhatsApp message from Cloud API webhook
+     *
+     * @param array $parsedMessage Parsed webhook payload from WhatsAppWebhookParser
+     * @throws \Exception
+     */
+    public function processInboundMessage(array $parsedMessage): void
+    {
+        // 1. Extract routing information (CRITICAL for multi-tenant)
+        $phoneNumberId = $parsedMessage['phone_number_id'] ?? null;
+        $from = $parsedMessage['from'] ?? null;
+        $messageText = is_string($parsedMessage['content']) ? $parsedMessage['content'] : null;
+        $messageId = $parsedMessage['message_id'] ?? null;
+        $contactName = $parsedMessage['contact_name'] ?? 'Unknown';
+        $messageType = $parsedMessage['type'] ?? 'text';
+        $timestamp = $parsedMessage['timestamp'] ?? time();
+
+        if (!$phoneNumberId || !$from || !$messageText) {
+            $this->logger->warning('Missing required fields in Cloud API message', [
+                'phone_number_id' => $phoneNumberId,
+                'from' => $from,
+                'message_text' => $messageText,
+            ]);
+            return;
+        }
+
+        // 2. Check idempotency (prevent duplicate processing)
+        if ($messageId && $this->idempotencyService->isProcessed($messageId)) {
+            $this->logger->info('Skipping duplicate Cloud API message', [
+                'message_id' => $messageId,
+                'phone_number_id' => $phoneNumberId,
+            ]);
+            return;
+        }
+
+        // Mark message as being processed
+        if ($messageId) {
+            $this->idempotencyService->markAsProcessed($messageId);
+        }
+
+        $this->logger->info('Processing inbound WhatsApp Cloud API message', [
+            'phone_number_id' => $phoneNumberId,
+            'from' => $from,
+            'contact_name' => $contactName,
+            'message_type' => $messageType,
+            'message_length' => strlen($messageText ?? ''),
+        ]);
+
+        // 3. Identify Agent by phone_number_id (multi-tenant routing)
+        $agent = $this->identifyAgentByPhoneNumberId($phoneNumberId);
+        if (!$agent) {
+            $this->logger->error('No active agent found for phone_number_id', [
+                'phone_number_id' => $phoneNumberId,
+            ]);
+            return;
+        }
+
+        // 4. Normalize phone number to E.164 format
+        $phoneNumber = $this->normalizePhoneNumber($from);
+
+        // 5. Find or create Contact
+        $contact = $this->identifyOrCreateContact(
+            $phoneNumber,
+            $contactName,
+            $agent->getOrganization()
+        );
+
+        // 6. Find or create Talk
+        $talk = $this->findOrCreateTalk($contact, $agent);
+
+        // 7. Create inbound TalkMessage
+        $talkMessage = new TalkMessage();
+        $talkMessage->setOrganization($agent->getOrganization());
+        $talkMessage->setTalk($talk);
+        $talkMessage->setFromContact($contact);
+        $talkMessage->setDirection('inbound');
+        $talkMessage->setBody($messageText);
+        $talkMessage->setMessageType($messageType);
+        $talkMessage->setChannel('whatsapp_cloud');
+        $talkMessage->setSentAt(new \DateTimeImmutable());
+        $talkMessage->setMetadata([
+            'whatsapp_message_id' => $messageId,
+            'phone_number_id' => $phoneNumberId,
+            'timestamp' => $timestamp,
+        ]);
+
+        $this->entityManager->persist($talkMessage);
+
+        // Update Talk preview and counters
+        $talk->setLastMessagePreview(substr($messageText, 0, 100));
+        $talk->setMessageCount($talk->getMessageCount() + 1);
+        $talk->setDateLastMessage($talkMessage->getSentAt());
+
+        $this->entityManager->flush();
+
+        $this->logger->info('Cloud API message saved to database', [
+            'talk_message_id' => $talkMessage->getId(),
+            'talk_id' => $talk->getId(),
+        ]);
+
+        // NOTE: ProcessTalkMessageCommand is automatically dispatched by TalkMessageSubscriber::postPersist()
+        // No need to dispatch here - the subscriber handles it based on direction=inbound and presence of TreeFlow
+    }
+
+    /**
+     * Identify Agent by WhatsApp Cloud API phone_number_id
+     *
+     * @param string $phoneNumberId Meta's phone number ID (15 digits)
+     * @return Agent|null
+     */
+    private function identifyAgentByPhoneNumberId(string $phoneNumberId): ?Agent
+    {
+        // Query using indexed whatsappPhoneNumberId field for optimal performance
+        return $this->agentRepository->createQueryBuilder('a')
+            ->where('a.whatsappActive = :whatsapp_active')
+            ->andWhere('a.active = :general_active')
+            ->andWhere('a.whatsappPhoneNumberId = :phone_number_id')
+            ->setParameter('whatsapp_active', true)
+            ->setParameter('general_active', true)
+            ->setParameter('phone_number_id', $phoneNumberId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Identify Agent by Evolution API instance name (DEPRECATED)
      *
      * @param string $instanceName Evolution API instance identifier
      * @return Agent|null
@@ -642,7 +770,7 @@ class WhatsAppService
         $talkType = new TalkType();
         $talkType->setOrganization($org);
         $talkType->setName('WhatsApp');
-        $talkType->setActive(true);
+        $talkType->setDescription('WhatsApp Cloud API conversations');
 
         $this->entityManager->persist($talkType);
         $this->entityManager->flush();

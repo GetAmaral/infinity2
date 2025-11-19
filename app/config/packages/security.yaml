@@ -68,6 +68,9 @@ security:
         - { path: ^/api/lookup-organization$, roles: PUBLIC_ACCESS }
         - { path: ^/health, roles: PUBLIC_ACCESS }
 
+        # WhatsApp Cloud API webhooks (public - called by Meta)
+        - { path: ^/api/webhooks/whatsapp/cloud, roles: PUBLIC_ACCESS }
+
         # API routes require authentication
         - { path: ^/api, roles: ROLE_USER }
 

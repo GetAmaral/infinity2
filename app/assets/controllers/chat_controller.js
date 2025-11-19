@@ -28,7 +28,8 @@ export default class extends Controller {
 
     static values = {
         userId: String,
-        currentTalk: String
+        currentTalk: String,
+        organizationId: String
     };
 
     connect() {
@@ -36,6 +37,7 @@ export default class extends Controller {
         this.currentTalkId = this.currentTalkValue || null;
         this.lastMessageId = null;
         this.eventSource = null;
+        this.sidebarEventSource = null; // Separate subscription for sidebar updates
         this.originalTitle = document.title;
         this.totalUnreadCount = 0;
         this.isVisible = true;
@@ -49,6 +51,9 @@ export default class extends Controller {
 
         // Load initial data
         this.loadTalks();
+
+        // Subscribe to organization-wide talk updates (sidebar)
+        this.subscribeToSidebarUpdates();
 
         // If a talk is already selected, load its messages
         if (this.currentTalkId) {
@@ -83,6 +88,7 @@ export default class extends Controller {
 
     disconnect() {
         this.unsubscribeFromMercure();
+        this.unsubscribeFromSidebar();
         if (this.boundHandleModalSuccess) {
             window.removeEventListener('modal:success', this.boundHandleModalSuccess);
         }
@@ -285,8 +291,14 @@ export default class extends Controller {
             html += `<div class="date-separator"><span>${date}</span></div>`;
 
             msgs.forEach((msg, index) => {
-                const isOwn = msg.fromUser?.id === this.userIdValue;
-                const showAvatar = index === 0 || msgs[index - 1].fromUser?.id !== msg.fromUser?.id;
+                // Message is "own" if:
+                // 1. Sent by current user (fromUser matches), OR
+                // 2. Sent by an agent (fromAgent exists) - agents represent the organization/user
+                const isOwn = (msg.fromUser?.id === this.userIdValue) || (msg.fromAgent && msg.fromAgent.id);
+
+                // Get unique sender ID (works for user, agent, or contact)
+                const getSenderId = (m) => m.fromUser?.id || m.fromAgent?.id || m.fromContact?.id || 'unknown';
+                const showAvatar = index === 0 || getSenderId(msgs[index - 1]) !== getSenderId(msg);
 
                 html += this.renderMessage(msg, isOwn, showAvatar);
             });
@@ -323,8 +335,8 @@ export default class extends Controller {
                 ` : '<div class="message-avatar-spacer"></div>'}
 
                 <div class="message-bubble">
-                    ${!isOwn && showAvatar ? `
-                        <div class="message-sender">${this.escapeHtml(msg.fromUser?.name || msg.fromContact?.name || 'Unknown')}</div>
+                    ${showAvatar ? `
+                        <div class="message-sender">${this.escapeHtml(msg.senderLabel || 'Unknown')}</div>
                     ` : ''}
                     ${msg.body ? `<div class="message-body">${this.escapeHtml(msg.body)}</div>` : ''}
                     ${attachmentsHtml}
@@ -574,6 +586,130 @@ export default class extends Controller {
     }
 
     /**
+     * Subscribe to sidebar updates (organization-wide talk list)
+     */
+    subscribeToSidebarUpdates() {
+        if (!this.hasOrganizationIdValue || !this.organizationIdValue) {
+            console.warn('No organization ID available for sidebar subscription');
+            return;
+        }
+
+        const mercureUrl = 'http://localhost:3000/.well-known/mercure';
+        const topic = `https://luminai.app/organization/${this.organizationIdValue}/talks`;
+
+        const url = new URL(mercureUrl);
+        url.searchParams.append('topic', topic);
+
+        this.sidebarEventSource = new EventSource(url);
+
+        this.sidebarEventSource.onmessage = (event) => {
+            this.handleSidebarUpdate(event);
+        };
+
+        this.sidebarEventSource.onerror = (error) => {
+            console.warn('Sidebar Mercure connection error (will auto-reconnect):', error);
+        };
+
+        console.log('Subscribed to sidebar updates:', topic);
+    }
+
+    /**
+     * Unsubscribe from sidebar updates
+     */
+    unsubscribeFromSidebar() {
+        if (this.sidebarEventSource) {
+            this.sidebarEventSource.close();
+            this.sidebarEventSource = null;
+        }
+    }
+
+    /**
+     * Handle sidebar Mercure update (talk_updated event)
+     */
+    handleSidebarUpdate(event) {
+        try {
+            const data = JSON.parse(event.data);
+
+            if (data.type === 'talk_updated') {
+                const talk = data.talk;
+
+                // Find the talk item in the sidebar
+                const talkItem = this.talkListTarget.querySelector(`[data-talk-id="${talk.id}"]`);
+                if (!talkItem) {
+                    // Talk not in current view, reload the list
+                    this.loadTalks();
+                    return;
+                }
+
+                // Update the talk item without full reload
+                const talkContent = talkItem.querySelector('.talk-content');
+                if (!talkContent) return;
+
+                // Update preview and time
+                const previewElement = talkContent.querySelector('.talk-preview span');
+                const timeElement = talkContent.querySelector('.talk-time');
+                const badgeElement = talkContent.querySelector('.badge');
+
+                if (previewElement) {
+                    previewElement.textContent = talk.lastMessagePreview || 'No messages yet';
+                }
+
+                if (timeElement) {
+                    timeElement.textContent = this.formatTime(talk.dateLastMessage);
+                }
+
+                // Update or add unread badge
+                const unreadCount = talk.hasNewMessage && talk.id !== this.currentTalkId ?
+                    (parseInt(badgeElement?.textContent || '0') + 1) : 0;
+
+                if (badgeElement) {
+                    if (unreadCount > 0) {
+                        badgeElement.textContent = unreadCount;
+                    } else {
+                        badgeElement.remove();
+                    }
+                } else if (unreadCount > 0) {
+                    // Add badge if doesn't exist
+                    const preview = talkContent.querySelector('.talk-preview');
+                    if (preview) {
+                        preview.insertAdjacentHTML('beforeend',
+                            `<span class="badge bg-primary rounded-pill">${unreadCount}</span>`
+                        );
+                    }
+                }
+
+                // Move talk to top of list if it's not the current talk
+                if (talk.id !== this.currentTalkId) {
+                    this.talkListTarget.insertBefore(talkItem, this.talkListTarget.firstChild);
+                }
+
+                // Play notification sound for new messages (not from current user/agent)
+                if (talk.hasNewMessage && this.soundEnabled && talk.id !== this.currentTalkId) {
+                    this.playNotificationSound();
+                }
+            } else if (data.type === 'message_read') {
+                // Handle message read event - clear badge for this talk
+                const talk = data.talk;
+
+                // Find the talk item in the sidebar
+                const talkItem = this.talkListTarget.querySelector(`[data-talk-id="${talk.id}"]`);
+                if (!talkItem) return;
+
+                // Remove the unread badge
+                const talkContent = talkItem.querySelector('.talk-content');
+                if (!talkContent) return;
+
+                const badgeElement = talkContent.querySelector('.badge');
+                if (badgeElement) {
+                    badgeElement.remove();
+                }
+            }
+        } catch (error) {
+            console.error('Error handling sidebar update:', error);
+        }
+    }
+
+    /**
      * Handle Mercure message event
      */
     handleMercureMessage(event) {
@@ -582,7 +718,10 @@ export default class extends Controller {
 
             if (data.type === 'new_message') {
                 const msg = data.message;
-                const isOwn = msg.fromUser?.id === this.userIdValue;
+                // Message is "own" if:
+                // 1. Sent by current user (fromUser matches), OR
+                // 2. Sent by an agent (fromAgent exists) - agents represent the organization/user
+                const isOwn = (msg.fromUser?.id === this.userIdValue) || (msg.fromAgent && msg.fromAgent.id);
 
                 // Check if message is already displayed (avoid duplicates)
                 const messageExists = this.messageThreadTarget.querySelector(`[data-message-id="${msg.id}"]`);

@@ -8,6 +8,14 @@ parameters:
     app.videos.originals_path: '%kernel.project_dir%/var/videos/originals'
     app.videos.hls_path: '%kernel.project_dir%/var/videos/hls'
 
+    # WhatsApp Cloud API Parameters
+    whatsapp.cloud.api.version: '%env(WHATSAPP_CLOUD_API_VERSION)%'
+    whatsapp.cloud.base_url: '%env(WHATSAPP_CLOUD_BASE_URL)%'
+    whatsapp.phone_number_id: '%env(WHATSAPP_PHONE_NUMBER_ID)%'
+    whatsapp.access_token: '%env(WHATSAPP_ACCESS_TOKEN)%'
+    whatsapp.app_secret: '%env(WHATSAPP_APP_SECRET)%'
+    whatsapp.verify_token: '%env(WHATSAPP_VERIFY_TOKEN)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -121,10 +129,38 @@ services:
             $logger: '@monolog.logger'
 
     # WhatsApp Integration Services
+
+    # WhatsApp Cloud API Client (Official Meta API)
+    App\Service\WhatsApp\WhatsAppCloudApiClient:
+        arguments:
+            $httpClient: '@http_client'
+            $baseUrl: '%whatsapp.cloud.base_url%'
+            $apiVersion: '%whatsapp.cloud.api.version%'
+            $defaultPhoneNumberId: '%whatsapp.phone_number_id%'
+            $defaultAccessToken: '%whatsapp.access_token%'
+            $logger: '@monolog.logger.whatsapp'
+
+    # WhatsApp Webhook Parser (Meta webhook payload parser)
+    App\Service\WhatsApp\WhatsAppWebhookParser:
+        arguments:
+            $appSecret: '%whatsapp.app_secret%'
+            $logger: '@monolog.logger.whatsapp'
+
+    # WhatsApp Webhook Controller (needs verify token)
+    App\Controller\Api\WhatsAppWebhookController:
+        arguments:
+            $webhookParser: '@App\Service\WhatsApp\WhatsAppWebhookParser'
+            $whatsAppService: '@App\Service\WhatsApp\WhatsAppService'
+            $logger: '@monolog.logger.whatsapp'
+            $verifyToken: '%whatsapp.verify_token%'
+        tags: ['controller.service_arguments']
+
+    # Main WhatsApp Service (updated for Cloud API)
     App\Service\WhatsApp\WhatsAppService:
         autowire: true
         autoconfigure: true
 
+    # Evolution API Client (DEPRECATED - will be removed)
     App\Service\WhatsApp\EvolutionApiClient:
         autowire: true
         autoconfigure: true

@@ -30,7 +30,8 @@ class OpenAIService
      *
      * @param Talk $talk Current conversation
      * @param Agent $agent SDR agent
-     * @param array $currentStep Current TreeFlow step data
+     * @param array $currentStep Current step runtime data from talkFlow
+     * @param array $actionDefinitions Action definitions from TreeFlow
      * @param array $messageHistory Recent message history
      * @return string Generated response
      */
@@ -38,10 +39,11 @@ class OpenAIService
         Talk $talk,
         Agent $agent,
         array $currentStep,
+        array $actionDefinitions,
         array $messageHistory
     ): string {
-        $systemPrompt = $this->buildSystemPrompt($agent, $currentStep);
-        $messages = $this->buildMessageContext($messageHistory, $currentStep);
+        $systemPrompt = $this->buildSystemPrompt($agent, $currentStep, $actionDefinitions);
+        $messages = $this->buildMessageContext($messageHistory);
 
         try {
             $response = $this->client->chat()->create([
@@ -76,19 +78,17 @@ class OpenAIService
      * Extract structured answers from lead's message
      *
      * @param TalkMessage $message Lead's message
-     * @param array $currentStep Current step with actions
+     * @param array $actionDefinitions Action definitions from TreeFlow (not runtime answers)
      * @return array Map of action slug => extracted answer
      */
-    public function extractAnswers(TalkMessage $message, array $currentStep): array
+    public function extractAnswers(TalkMessage $message, array $actionDefinitions): array
     {
-        $actions = $currentStep['actions'] ?? [];
-
-        if (empty($actions)) {
+        if (empty($actionDefinitions)) {
             return [];
         }
 
         // Build function schema for structured extraction
-        $functionSchema = $this->buildExtractionSchema($actions);
+        $functionSchema = $this->buildExtractionSchema($actionDefinitions);
 
         try {
             $response = $this->client->chat()->create([
@@ -262,13 +262,13 @@ class OpenAIService
     /**
      * Build system prompt for agent
      */
-    private function buildSystemPrompt(Agent $agent, array $currentStep): string
+    private function buildSystemPrompt(Agent $agent, array $currentStep, array $actionDefinitions): string
     {
         $agentPrompt = $agent->getPrompt() ?? 'You are a professional SDR agent.';
         $stepObjective = $currentStep['objective'] ?? '';
 
         $actions = [];
-        foreach ($currentStep['actions'] ?? [] as $slug => $actionData) {
+        foreach ($actionDefinitions as $slug => $actionData) {
             $actions[] = "- {$actionData['prompt']}";
         }
         $actionsText = implode("\n", $actions);
@@ -296,7 +296,7 @@ PROMPT;
     /**
      * Build message context for API call
      */
-    private function buildMessageContext(array $messageHistory, array $currentStep): array
+    private function buildMessageContext(array $messageHistory): array
     {
         $messages = [];
 

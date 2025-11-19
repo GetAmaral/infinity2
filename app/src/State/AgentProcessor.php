@@ -86,42 +86,6 @@ class AgentProcessor implements ProcessorInterface
         $requestData = $context['request']->toArray() ?? [];
 
         // Map scalar properties from DTO to Entity
-        // whatsappInstanceName
-        if (!$isPatch || array_key_exists('whatsappInstanceName', $requestData)) {
-            $entity->setWhatsappInstanceName($data->whatsappInstanceName);
-        }
-        // whatsappPhone
-        if (!$isPatch || array_key_exists('whatsappPhone', $requestData)) {
-            $entity->setWhatsappPhone($data->whatsappPhone);
-        }
-        // whatsappServerUrl
-        if (!$isPatch || array_key_exists('whatsappServerUrl', $requestData)) {
-            $entity->setWhatsappServerUrl($data->whatsappServerUrl);
-        }
-        // whatsappApiKey
-        if (!$isPatch || array_key_exists('whatsappApiKey', $requestData)) {
-            $entity->setWhatsappApiKey($data->whatsappApiKey);
-        }
-        // whatsappActive
-        if (!$isPatch || array_key_exists('whatsappActive', $requestData)) {
-            $entity->setWhatsappActive($data->whatsappActive);
-        }
-        // whatsappStatus
-        if (!$isPatch || array_key_exists('whatsappStatus', $requestData)) {
-            $entity->setWhatsappStatus($data->whatsappStatus);
-        }
-        // whatsappWebhookToken
-        if (!$isPatch || array_key_exists('whatsappWebhookToken', $requestData)) {
-            $entity->setWhatsappWebhookToken($data->whatsappWebhookToken);
-        }
-        // whatsappLastConnectedAt
-        if (!$isPatch || array_key_exists('whatsappLastConnectedAt', $requestData)) {
-            $entity->setWhatsappLastConnectedAt($data->whatsappLastConnectedAt);
-        }
-        // whatsappMetadata
-        if (!$isPatch || array_key_exists('whatsappMetadata', $requestData)) {
-            $entity->setWhatsappMetadata($data->whatsappMetadata);
-        }
         // name
         if (!$isPatch || array_key_exists('name', $requestData)) {
             $entity->setName($data->name);
@@ -209,6 +173,46 @@ class AgentProcessor implements ProcessorInterface
         // prompt
         if (!$isPatch || array_key_exists('prompt', $requestData)) {
             $entity->setPrompt($data->prompt);
+        }
+        // whatsappInstanceName
+        if (!$isPatch || array_key_exists('whatsappInstanceName', $requestData)) {
+            $entity->setWhatsappInstanceName($data->whatsappInstanceName);
+        }
+        // whatsappPhone
+        if (!$isPatch || array_key_exists('whatsappPhone', $requestData)) {
+            $entity->setWhatsappPhone($data->whatsappPhone);
+        }
+        // whatsappServerUrl
+        if (!$isPatch || array_key_exists('whatsappServerUrl', $requestData)) {
+            $entity->setWhatsappServerUrl($data->whatsappServerUrl);
+        }
+        // whatsappApiKey
+        if (!$isPatch || array_key_exists('whatsappApiKey', $requestData)) {
+            $entity->setWhatsappApiKey($data->whatsappApiKey);
+        }
+        // whatsappActive
+        if (!$isPatch || array_key_exists('whatsappActive', $requestData)) {
+            $entity->setWhatsappActive($data->whatsappActive);
+        }
+        // whatsappStatus
+        if (!$isPatch || array_key_exists('whatsappStatus', $requestData)) {
+            $entity->setWhatsappStatus($data->whatsappStatus);
+        }
+        // whatsappWebhookToken
+        if (!$isPatch || array_key_exists('whatsappWebhookToken', $requestData)) {
+            $entity->setWhatsappWebhookToken($data->whatsappWebhookToken);
+        }
+        // whatsappLastConnectedAt
+        if (!$isPatch || array_key_exists('whatsappLastConnectedAt', $requestData)) {
+            $entity->setWhatsappLastConnectedAt($data->whatsappLastConnectedAt);
+        }
+        // whatsappMetadata
+        if (!$isPatch || array_key_exists('whatsappMetadata', $requestData)) {
+            $entity->setWhatsappMetadata($data->whatsappMetadata);
+        }
+        // whatsappPhoneNumberId
+        if (!$isPatch || array_key_exists('whatsappPhoneNumberId', $requestData)) {
+            $entity->setWhatsappPhoneNumberId($data->whatsappPhoneNumberId);
         }
 
         // Map relationship properties

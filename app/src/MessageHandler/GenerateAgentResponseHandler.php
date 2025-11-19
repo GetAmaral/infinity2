@@ -33,11 +33,18 @@ class GenerateAgentResponseHandler
 
     public function __invoke(GenerateAgentResponseCommand $command): void
     {
+        $invokeTraceId = uniqid('gen_invoke_', true);
+        $this->logger->info('HANDLER TRACE: GenerateAgentResponseHandler invoked', [
+            'talk_id' => $command->getTalkId(),
+            'trace_id' => $invokeTraceId,
+        ]);
+
         $talk = $this->talkRepository->find($command->getTalkId());
 
         if (!$talk) {
             $this->logger->error('Talk not found', [
                 'talk_id' => $command->getTalkId(),
+                'trace_id' => $invokeTraceId,
             ]);
             return;
         }
@@ -50,22 +57,20 @@ class GenerateAgentResponseHandler
             return;
         }
 
-        // Check if flow is complete
-        if ($this->talkFlowService->isFlowComplete($talk)) {
-            $this->logger->info('Flow is complete, no more responses needed', [
-                'talk_id' => $talk->getId()->toRfc4122(),
-            ]);
-
-            // Mark talk as completed
-            $talk->setStatus(2); // Assuming 2 = completed
-            $talk->setClosedAt(new \DateTimeImmutable());
-            $this->entityManager->flush();
-
-            return;
-        }
+        // REMOVED: Auto-closing talk when flow completes
+        // We want Sarah to continue the conversation even after the structured flow ends
+        // The talk should only be closed manually by a user or when explicitly requested
+        //
+        // if ($this->talkFlowService->isFlowComplete($talk)) {
+        //     $this->logger->info('Flow is complete, no more responses needed');
+        //     $talk->setStatus(2); // completed
+        //     $talk->setClosedAt(new \DateTimeImmutable());
+        //     $this->entityManager->flush();
+        //     return;
+        // }
 
         try {
-            $this->generateResponse($talk, $command->getContextMessage());
+            $this->generateResponse($talk, $command->getContextMessage(), $invokeTraceId);
         } catch (\Exception $e) {
             $this->logger->error('Failed to generate agent response', [
                 'error' => $e->getMessage(),
@@ -75,7 +80,7 @@ class GenerateAgentResponseHandler
         }
     }
 
-    private function generateResponse(\App\Entity\Talk $talk, ?string $contextMessage): void
+    private function generateResponse(\App\Entity\Talk $talk, ?string $contextMessage, string $traceId): void
     {
         // Get assigned agent or use first available agent
         $agent = $this->getAssignedAgent($talk);
@@ -86,13 +91,23 @@ class GenerateAgentResponseHandler
             return;
         }
 
-        // Get current step
+        // Get current step from talkFlow (runtime data)
         $currentStep = $this->talkFlowService->getCurrentStep($talk);
+        $actionDefinitions = [];
+
         if (!$currentStep) {
-            $this->logger->warning('No current step for response generation', [
+            $this->logger->info('No current step - using conversational mode', [
                 'talk_id' => $talk->getId()->toRfc4122(),
             ]);
-            return;
+            // Flow is complete - use empty step and actions for pure conversational mode
+            $currentStep = [
+                'objective' => 'Continue the conversation naturally and help the customer',
+                'actions' => [],
+            ];
+            $actionDefinitions = [];
+        } else {
+            // Get action definitions from TreeFlow (not runtime answers)
+            $actionDefinitions = $this->talkFlowService->getCurrentStepActionDefinitions($talk);
         }
 
         // Get recent message history (last 10 messages)
@@ -117,6 +132,7 @@ class GenerateAgentResponseHandler
             $talk,
             $agent,
             $currentStep,
+            $actionDefinitions,
             $messageHistory
         );
 
@@ -130,7 +146,19 @@ class GenerateAgentResponseHandler
         $responseMessage->setMessageType('text');
         $responseMessage->setSentAt(new \DateTimeImmutable());
 
+        $this->logger->info('MESSAGE TRACE: Creating outbound message', [
+            'talk_id' => $talk->getId()->toRfc4122(),
+            'trace_id' => $traceId,
+            'message_preview' => substr($responseText, 0, 50),
+        ]);
+
         $this->entityManager->persist($responseMessage);
+
+        $this->logger->info('MESSAGE TRACE: Before flush', [
+            'talk_id' => $talk->getId()->toRfc4122(),
+            'trace_id' => $traceId,
+            'message_id' => $responseMessage->getId()->toRfc4122(),
+        ]);
 
         // Update talk metadata
         $talk->setDateLastMessage(new \DateTimeImmutable());
@@ -138,10 +166,11 @@ class GenerateAgentResponseHandler
 
         $this->entityManager->flush();
 
-        $this->logger->info('Agent response generated and sent', [
+        $this->logger->info('MESSAGE TRACE: After flush - Agent response generated and sent', [
             'talk_id' => $talk->getId()->toRfc4122(),
             'message_id' => $responseMessage->getId()->toRfc4122(),
             'agent_id' => $agent->getId()->toRfc4122(),
+            'trace_id' => $traceId,
         ]);
     }
 

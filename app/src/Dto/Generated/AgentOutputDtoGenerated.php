@@ -30,24 +30,6 @@ abstract class AgentOutputDtoGenerated
      */
     public string|OrganizationOutputDto $organization;
 
-    public ?string $whatsappInstanceName = null;
-
-    public ?string $whatsappPhone = null;
-
-    public ?string $whatsappServerUrl = null;
-
-    public ?string $whatsappApiKey = null;
-
-    public bool $whatsappActive;
-
-    public ?string $whatsappStatus = null;
-
-    public ?string $whatsappWebhookToken = null;
-
-    public ?\DateTimeImmutable $whatsappLastConnectedAt = null;
-
-    public ?array $whatsappMetadata = null;
-
     /**
      * treeFlow reference
      * Can be: IRI string or nested TreeFlowOutput object
@@ -116,6 +98,26 @@ abstract class AgentOutputDtoGenerated
      */
     public array $talks = [];
 
+    public ?string $whatsappInstanceName = null;
+
+    public ?string $whatsappPhone = null;
+
+    public ?string $whatsappServerUrl = null;
+
+    public ?string $whatsappApiKey = null;
+
+    public bool $whatsappActive;
+
+    public ?string $whatsappStatus = null;
+
+    public ?string $whatsappWebhookToken = null;
+
+    public ?\DateTimeImmutable $whatsappLastConnectedAt = null;
+
+    public ?array $whatsappMetadata = null;
+
+    public ?string $whatsappPhoneNumberId = null;
+
     public ?\DateTimeImmutable $createdAt = null;
 
     public ?\DateTimeImmutable $updatedAt = null;
@@ -140,96 +142,6 @@ abstract class AgentOutputDtoGenerated
     public function setOrganization(string|OrganizationOutputDto $organization): self
     {
         $this->organization = $organization;
-        return $this;
-    }
-
-    public function getWhatsappInstanceName(): ?string    {
-        return $this->whatsappInstanceName;
-    }
-
-    public function setWhatsappInstanceName(?string $whatsappInstanceName): self
-    {
-        $this->whatsappInstanceName = $whatsappInstanceName;
-        return $this;
-    }
-
-    public function getWhatsappPhone(): ?string    {
-        return $this->whatsappPhone;
-    }
-
-    public function setWhatsappPhone(?string $whatsappPhone): self
-    {
-        $this->whatsappPhone = $whatsappPhone;
-        return $this;
-    }
-
-    public function getWhatsappServerUrl(): ?string    {
-        return $this->whatsappServerUrl;
-    }
-
-    public function setWhatsappServerUrl(?string $whatsappServerUrl): self
-    {
-        $this->whatsappServerUrl = $whatsappServerUrl;
-        return $this;
-    }
-
-    public function getWhatsappApiKey(): ?string    {
-        return $this->whatsappApiKey;
-    }
-
-    public function setWhatsappApiKey(?string $whatsappApiKey): self
-    {
-        $this->whatsappApiKey = $whatsappApiKey;
-        return $this;
-    }
-
-    public function getWhatsappActive(): bool    {
-        return $this->whatsappActive;
-    }
-
-    public function setWhatsappActive(bool $whatsappActive): self
-    {
-        $this->whatsappActive = $whatsappActive;
-        return $this;
-    }
-
-    public function getWhatsappStatus(): ?string    {
-        return $this->whatsappStatus;
-    }
-
-    public function setWhatsappStatus(?string $whatsappStatus): self
-    {
-        $this->whatsappStatus = $whatsappStatus;
-        return $this;
-    }
-
-    public function getWhatsappWebhookToken(): ?string    {
-        return $this->whatsappWebhookToken;
-    }
-
-    public function setWhatsappWebhookToken(?string $whatsappWebhookToken): self
-    {
-        $this->whatsappWebhookToken = $whatsappWebhookToken;
-        return $this;
-    }
-
-    public function getWhatsappLastConnectedAt(): ?\DateTimeImmutable    {
-        return $this->whatsappLastConnectedAt;
-    }
-
-    public function setWhatsappLastConnectedAt(?\DateTimeImmutable $whatsappLastConnectedAt): self
-    {
-        $this->whatsappLastConnectedAt = $whatsappLastConnectedAt;
-        return $this;
-    }
-
-    public function getWhatsappMetadata(): ?array    {
-        return $this->whatsappMetadata;
-    }
-
-    public function setWhatsappMetadata(?array $whatsappMetadata): self
-    {
-        $this->whatsappMetadata = $whatsappMetadata;
         return $this;
     }
 
@@ -490,6 +402,106 @@ abstract class AgentOutputDtoGenerated
     public function setTalks(array $talks): self
     {
         $this->talks = $talks;
+        return $this;
+    }
+
+    public function getWhatsappInstanceName(): ?string    {
+        return $this->whatsappInstanceName;
+    }
+
+    public function setWhatsappInstanceName(?string $whatsappInstanceName): self
+    {
+        $this->whatsappInstanceName = $whatsappInstanceName;
+        return $this;
+    }
+
+    public function getWhatsappPhone(): ?string    {
+        return $this->whatsappPhone;
+    }
+
+    public function setWhatsappPhone(?string $whatsappPhone): self
+    {
+        $this->whatsappPhone = $whatsappPhone;
+        return $this;
+    }
+
+    public function getWhatsappServerUrl(): ?string    {
+        return $this->whatsappServerUrl;
+    }
+
+    public function setWhatsappServerUrl(?string $whatsappServerUrl): self
+    {
+        $this->whatsappServerUrl = $whatsappServerUrl;
+        return $this;
+    }
+
+    public function getWhatsappApiKey(): ?string    {
+        return $this->whatsappApiKey;
+    }
+
+    public function setWhatsappApiKey(?string $whatsappApiKey): self
+    {
+        $this->whatsappApiKey = $whatsappApiKey;
+        return $this;
+    }
+
+    public function getWhatsappActive(): bool    {
+        return $this->whatsappActive;
+    }
+
+    public function setWhatsappActive(bool $whatsappActive): self
+    {
+        $this->whatsappActive = $whatsappActive;
+        return $this;
+    }
+
+    public function getWhatsappStatus(): ?string    {
+        return $this->whatsappStatus;
+    }
+
+    public function setWhatsappStatus(?string $whatsappStatus): self
+    {
+        $this->whatsappStatus = $whatsappStatus;
+        return $this;
+    }
+
+    public function getWhatsappWebhookToken(): ?string    {
+        return $this->whatsappWebhookToken;
+    }
+
+    public function setWhatsappWebhookToken(?string $whatsappWebhookToken): self
+    {
+        $this->whatsappWebhookToken = $whatsappWebhookToken;
+        return $this;
+    }
+
+    public function getWhatsappLastConnectedAt(): ?\DateTimeImmutable    {
+        return $this->whatsappLastConnectedAt;
+    }
+
+    public function setWhatsappLastConnectedAt(?\DateTimeImmutable $whatsappLastConnectedAt): self
+    {
+        $this->whatsappLastConnectedAt = $whatsappLastConnectedAt;
+        return $this;
+    }
+
+    public function getWhatsappMetadata(): ?array    {
+        return $this->whatsappMetadata;
+    }
+
+    public function setWhatsappMetadata(?array $whatsappMetadata): self
+    {
+        $this->whatsappMetadata = $whatsappMetadata;
+        return $this;
+    }
+
+    public function getWhatsappPhoneNumberId(): ?string    {
+        return $this->whatsappPhoneNumberId;
+    }
+
+    public function setWhatsappPhoneNumberId(?string $whatsappPhoneNumberId): self
+    {
+        $this->whatsappPhoneNumberId = $whatsappPhoneNumberId;
         return $this;
     }
 

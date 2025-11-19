@@ -8,14 +8,14 @@ use App\Entity\Agent;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use App\Entity\TreeFlow;
 use App\Entity\User;
 use App\Entity\AgentType;
@@ -39,85 +39,6 @@ abstract class AgentTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('whatsappInstanceName', TextType::class, [
-            'label' => 'WhatsApp Instance Name',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter whatsapp instance name',
-            ],
-        ]);
-
-        $builder->add('whatsappPhone', TextType::class, [
-            'label' => 'WhatsApp Phone',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter whatsapp phone',
-            ],
-        ]);
-
-        $builder->add('whatsappServerUrl', TextareaType::class, [
-            'label' => 'WhatsApp Server URL',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter whatsapp server url',
-            ],
-        ]);
-
-        $builder->add('whatsappApiKey', TextareaType::class, [
-            'label' => 'WhatsApp API Key',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter whatsapp api key',
-            ],
-        ]);
-
-        $builder->add('whatsappActive', CheckboxType::class, [
-            'label' => 'WhatsApp Active',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('whatsappStatus', TextType::class, [
-            'label' => 'WhatsApp Status',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter whatsapp status',
-            ],
-        ]);
-
-        $builder->add('whatsappWebhookToken', TextType::class, [
-            'label' => 'WhatsApp Webhook Token',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter whatsapp webhook token',
-            ],
-        ]);
-
-        $builder->add('whatsappLastConnectedAt', DateTimeType::class, [
-            'label' => 'WhatsApp Last Connected At',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('whatsappMetadata', TextareaType::class, [
-            'label' => 'WhatsApp Metadata',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter whatsapp metadata',
-            ],
-        ]);
-
         $builder->add('treeFlow', EntityType::class, [
             'label' => 'Tree Flow',
             'required' => false,
@@ -435,6 +356,94 @@ abstract class AgentTypeGenerated extends AbstractType
                 'data-relation-select-one-to-one-value' => 'false',
                 'placeholder' => 'Select one or more talk',
                 'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('whatsappInstanceName', TextType::class, [
+            'label' => 'WhatsApp Instance',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter whatsapp instance',
+            ],
+        ]);
+
+        $builder->add('whatsappPhone', TextType::class, [
+            'label' => 'WhatsApp Phone',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter whatsapp phone',
+            ],
+        ]);
+
+        $builder->add('whatsappServerUrl', TextType::class, [
+            'label' => 'WhatsApp Server URL',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter whatsapp server url',
+            ],
+        ]);
+
+        $builder->add('whatsappApiKey', TextareaType::class, [
+            'label' => 'WhatsApp API Key',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter whatsapp api key',
+            ],
+        ]);
+
+        $builder->add('whatsappActive', CheckboxType::class, [
+            'label' => 'WhatsApp Active',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('whatsappStatus', TextType::class, [
+            'label' => 'WhatsApp Status',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter whatsapp status',
+            ],
+        ]);
+
+        $builder->add('whatsappWebhookToken', TextType::class, [
+            'label' => 'WhatsApp Webhook Token',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter whatsapp webhook token',
+            ],
+        ]);
+
+        $builder->add('whatsappLastConnectedAt', DateTimeType::class, [
+            'label' => 'Last Connected',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('whatsappMetadata', TextareaType::class, [
+            'label' => 'WhatsApp Metadata',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter whatsapp metadata',
+            ],
+        ]);
+
+        $builder->add('whatsappPhoneNumberId', TextType::class, [
+            'label' => 'WhatsApp Phone Number ID',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter whatsapp phone number id',
             ],
         ]);
 

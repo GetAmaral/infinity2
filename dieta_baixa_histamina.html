@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Dieta com Baixa Histamina</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            font-weight: 300;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
+        }
+
+        .intro h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .intro p {
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .category {
+            margin-bottom: 50px;
+            page-break-inside: avoid;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid;
+            border-image: linear-gradient(90deg, #667eea, #764ba2) 1;
+        }
+
+        .category-icon {
+            font-size: 42px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .category-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .food-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avoid {
+            color: #e53e3e;
+        }
+
+        .avoid::before {
+            content: '❌';
+            font-size: 20px;
+        }
+
+        .allowed {
+            color: #38a169;
+        }
+
+        .allowed::before {
+            content: '✅';
+            font-size: 20px;
+        }
+
+        .food-list {
+            background: #f7fafc;
+            padding: 20px 25px;
+            border-radius: 12px;
+            border-left: 4px solid;
+            margin-bottom: 20px;
+        }
+
+        .avoid-list {
+            border-left-color: #fc8181;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+        }
+
+        .allowed-list {
+            border-left-color: #68d391;
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+        }
+
+        .food-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .food-list li {
+            padding: 8px 0;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .food-list li::before {
+            content: '•';
+            color: #667eea;
+            font-weight: bold;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .food-list strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-left: 5px solid #f39c12;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.2);
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: #2d3748;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .highlight-box p::before {
+            content: '💡';
+            font-size: 24px;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 50px;
+            text-align: center;
+        }
+
+        .footer h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .footer p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, #764ba2, transparent);
+            margin: 40px 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🥗 Guia de Dieta com Baixa Histamina</h1>
+            <p>Alimentação saudável para controle de histamina</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Important Tips at the top -->
+            <div class="intro" style="margin-bottom: 40px;">
+                <h2>💪 Dicas Importantes</h2>
+                <p>✓ Sempre priorize alimentos frescos<br>
+                   ✓ Prepare e consuma as refeições imediatamente<br>
+                   ✓ Congele porções logo após o preparo<br>
+                   ✓ Evite alimentos armazenados por longos períodos</p>
+            </div>
+
+            <!-- Category 1: Carnes, Peixes e Frutos-do-Mar -->
+            <div class="category">
+                <div class="category-header">
+                    <span class="category-icon">🥩</span>
+                    <h2 class="category-title">1. Carnes, Peixes e Frutos-do-Mar</h2>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title avoid">Evitar</h3>
+                    <div class="food-list avoid-list">
+                        <ul>
+                            <li><strong>Carnes curadas, defumadas ou maturadas:</strong><br>salame, presunto cru, pepperoni, bacon, copa</li>
+                            <li><strong>Peixes ricos em histamina ou que estragam rápido:</strong><br>atum, sardinha, anchova, cavala, arenque</li>
+                            <li><strong>Peixes processados:</strong><br>defumados, enlatados, marinados, secos<br>➤ Inclui salmão defumado</li>
+                            <li><strong>Frutos do mar:</strong><br>camarão, lagosta, caranguejo, mexilhão</li>
+                            <li><strong>Sobras de carne ou peixe</strong> guardadas por muito tempo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title allowed">Opções de Baixa Histamina (permitidas)</h3>
+                    <div class="food-list allowed-list">
+                        <ul>
+                            <li><strong>Carnes frescas, preparadas e consumidas na hora:</strong><br>frango, peru, patinho moído na hora, lombo suíno, coxão mole</li>
+                            <li><strong>Peixes muito frescos e consumidos imediatamente:</strong><br>pescada, tilápia, robalo, salmão fresco</li>
+                            <li><strong>Ovos frescos</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Category 2: Laticínios -->
+            <div class="category">
+                <div class="category-header">
+                    <span class="category-icon">🧀</span>
+                    <h2 class="category-title">2. Laticínios</h2>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title avoid">Evitar</h3>
+                    <div class="food-list avoid-list">
+                        <ul>
+                            <li><strong>Queijos maturados:</strong><br>parmesão, gorgonzola, brie, camembert, provolone</li>
+                            <li><strong>Lácteos fermentados:</strong><br>kefir, iogurte, coalhada</li>
+                            <li>Leite ou queijos pouco frescos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title allowed">Opções de Baixa Histamina</h3>
+                    <div class="food-list allowed-list">
+                        <ul>
+                            <li>Leite fresco (vaca, sem lactose ou vegetal)</li>
+                            <li><strong>Queijos frescos:</strong> ricota fresca, cottage fresco</li>
+                            <li>Bebidas vegetais não fermentadas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Category 3: Vegetais -->
+            <div class="category">
+                <div class="category-header">
+                    <span class="category-icon">🍅</span>
+                    <h2 class="category-title">3. Vegetais</h2>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title avoid">Evitar</h3>
+                    <div class="food-list avoid-list">
+                        <ul>
+                            <li>Tomate e derivados, espinafre, berinjela</li>
+                            <li><strong>Leguminosas (especialmente enlatadas):</strong><br>soja, feijão, grão-de-bico, lentilha</li>
+                            <li><strong>Fermentados:</strong> chucrute, kimchi, picles</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title allowed">Opções de Baixa Histamina</h3>
+                    <div class="food-list allowed-list">
+                        <ul>
+                            <li>Abobrinha, chuchu, cenoura, pepino, brócolis, couve-flor, alface, rúcula, repolho fresco, abóbora</li>
+                            <li><strong>Tubérculos:</strong> batata, batata-doce, mandioca</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Category 4: Frutas -->
+            <div class="category">
+                <div class="category-header">
+                    <span class="category-icon">🍓</span>
+                    <h2 class="category-title">4. Frutas</h2>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title avoid">Evitar</h3>
+                    <div class="food-list avoid-list">
+                        <ul>
+                            <li><strong>Cítricas:</strong> laranja, limão, tangerina, grapefruit</li>
+                            <li><strong>Liberadoras:</strong> abacate, morango, kiwi, banana madura, uva, abacaxi, mamão</li>
+                            <li>Frutas muito maduras ou armazenadas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title allowed">Opções de Baixa Histamina</h3>
+                    <div class="food-list allowed-list">
+                        <ul>
+                            <li>Maçã, pera, melão, manga menos madura, mirtilo, ameixa, pêssego, nectarina, lichia</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Category 5: Bebidas, Molhos e Condimentos -->
+            <div class="category">
+                <div class="category-header">
+                    <span class="category-icon">🥤</span>
+                    <h2 class="category-title">5. Bebidas, Molhos e Condimentos</h2>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title avoid">Evitar</h3>
+                    <div class="food-list avoid-list">
+                        <ul>
+                            <li><strong>Álcool:</strong> vinho, cerveja</li>
+                            <li><strong>Vinagre e molhos industrializados:</strong> ketchup, mostarda, maionese</li>
+                            <li>Chá preto, mate, energéticos</li>
+                            <li>Chocolate e cacau</li>
+                            <li>Shoyu, missô, molho de soja</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title allowed">Opções de Baixa Histamina</h3>
+                    <div class="food-list allowed-list">
+                        <ul>
+                            <li>Água, água com gás</li>
+                            <li><strong>Chás leves:</strong> camomila, rooibos, hibisco</li>
+                            <li>Azeite de oliva, ervas frescas</li>
+                            <li>Molhos caseiros sem fermentação</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Category 6: Nozes, Sementes e Snacks -->
+            <div class="category">
+                <div class="category-header">
+                    <span class="category-icon">🥜</span>
+                    <h2 class="category-title">6. Nozes, Sementes e Snacks</h2>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title avoid">Evitar</h3>
+                    <div class="food-list avoid-list">
+                        <ul>
+                            <li>Amendoim, castanha de caju, pistache, nozes</li>
+                            <li>Snacks processados</li>
+                            <li>Barras industrializadas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title allowed">Opções de Baixa Histamina</h3>
+                    <div class="food-list allowed-list">
+                        <ul>
+                            <li><strong>Sementes:</strong> chia, linhaça, girassol</li>
+                            <li><strong>Castanhas melhor toleradas:</strong> castanha-do-pará, amêndoas</li>
+                            <li><strong>Snacks caseiros:</strong> pipoca, chips de legumes no forno</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Category 7: Fermentados, Envelhecidos e Processados -->
+            <div class="category">
+                <div class="category-header">
+                    <span class="category-icon">🍞</span>
+                    <h2 class="category-title">7. Fermentados, Envelhecidos e Processados</h2>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title avoid">Evitar</h3>
+                    <div class="food-list avoid-list">
+                        <ul>
+                            <li><strong>Fermentados:</strong> kombucha, kimchi, chucrute, missô, shoyu</li>
+                            <li>Enlatados, embutidos</li>
+                            <li>Pães de fermentação lenta</li>
+                            <li>Sobras muito armazenadas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="food-section">
+                    <h3 class="section-title allowed">Opções de Baixa Histamina</h3>
+                    <div class="food-list allowed-list">
+                        <ul>
+                            <li>Pães de fermentação rápida</li>
+                            <li>Arroz, massas simples, quinoa</li>
+                            <li>Comidas preparadas e consumidas na hora</li>
+                            <li>Congelar imediatamente após cozinhar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

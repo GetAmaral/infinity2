@@ -49,4 +49,17 @@ use ApiPlatform\Metadata\Delete;
 )]
 class Organization extends OrganizationGenerated
 {
+    /**
+     * Override setSlug to add "_org" suffix when organization name is "evolution"
+     * This prevents conflicts with the evolution API service subdomain
+     */
+    public function setSlug(string $slug): self
+    {
+        // Check if slug is "evolution" (case-insensitive) and add "_org" suffix
+        if (strtolower($slug) === 'evolution') {
+            $slug = 'evolution_org';
+        }
+
+        return parent::setSlug($slug);
+    }
 }

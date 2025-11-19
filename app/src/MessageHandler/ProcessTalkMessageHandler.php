@@ -31,6 +31,8 @@ class ProcessTalkMessageHandler
 
     public function __invoke(ProcessTalkMessageCommand $command): void
     {
+        $this->logger->info('HANDLER INVOKE START', ['message_id' => $command->getTalkMessageId()]);
+
         $message = $this->talkMessageRepository->find($command->getTalkMessageId());
 
         if (!$message) {
@@ -40,7 +42,11 @@ class ProcessTalkMessageHandler
             return;
         }
 
+        $this->logger->info('Message found', ['message_id' => $message->getId()->toRfc4122()]);
+
         $talk = $message->getTalk();
+
+        $this->logger->info('Talk retrieved', ['talk_id' => $talk->getId()->toRfc4122()]);
 
         // Check if talk is paused
         if ($talk->isPaused()) {
@@ -50,6 +56,8 @@ class ProcessTalkMessageHandler
             return;
         }
 
+        $this->logger->info('Talk is not paused');
+
         // Check if this is an inbound message (from contact)
         if ($message->getDirection() !== 'inbound') {
             $this->logger->debug('Message is not inbound, skipping', [
@@ -58,8 +66,24 @@ class ProcessTalkMessageHandler
             return;
         }
 
+        $this->logger->info('Message is inbound, checking TreeFlow');
+
         // Check if Talk has Agent with TreeFlow
-        if (!$talk->getTreeFlow()) { // Uses Talk->Agent->TreeFlow
+        try {
+            $treeFlow = $talk->getTreeFlow();
+            $this->logger->info('TreeFlow check completed', [
+                'has_treeflow' => $treeFlow !== null,
+            ]);
+        } catch (\Throwable $e) {
+            $this->logger->error('ERROR getting TreeFlow', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            throw $e;
+        }
+
+        if (!$treeFlow) {
             $this->logger->info('Talk has no Agent with TreeFlow, skipping', [
                 'talk_id' => $talk->getId()->toRfc4122(),
             ]);
@@ -88,22 +112,55 @@ class ProcessTalkMessageHandler
     private function processMessage(TalkMessage $message): void
     {
         $talk = $message->getTalk();
-        $currentStep = $this->talkFlowService->getCurrentStep($talk);
 
-        if (!$currentStep) {
-            $this->logger->warning('No current step in talkFlow', [
-                'talk_id' => $talk->getId()->toRfc4122(),
-            ]);
-            return;
-        }
-
-        $this->logger->info('Processing inbound message', [
+        $this->logger->info('ProcessMessage started', [
             'message_id' => $message->getId()->toRfc4122(),
             'talk_id' => $talk->getId()->toRfc4122(),
         ]);
 
+        try {
+            $currentStep = $this->talkFlowService->getCurrentStep($talk);
+        } catch (\Throwable $e) {
+            $this->logger->error('ERROR in getCurrentStep', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'talk_id' => $talk->getId()->toRfc4122(),
+            ]);
+            throw $e;
+        }
+
+        if (!$currentStep) {
+            $this->logger->info('No current step - flow is complete, continuing in conversational mode', [
+                'talk_id' => $talk->getId()->toRfc4122(),
+            ]);
+
+            // Flow is complete, but still generate conversational responses
+            $this->messageBus->dispatch(
+                new GenerateAgentResponseCommand(
+                    $talk->getId()->toRfc4122(),
+                    $message->getBody()
+                )
+            );
+            return;
+        }
+
+        $this->logger->info('Processing inbound message with structured flow', [
+            'message_id' => $message->getId()->toRfc4122(),
+            'talk_id' => $talk->getId()->toRfc4122(),
+        ]);
+
+        // Get action definitions from TreeFlow (not runtime answers from talkFlow)
+        $actionDefinitions = $this->talkFlowService->getCurrentStepActionDefinitions($talk);
+
+        $this->logger->info('Action definitions retrieved', [
+            'action_count' => count($actionDefinitions),
+            'action_slugs' => array_keys($actionDefinitions),
+        ]);
+
         // Extract answers from message using AI
-        $extractedAnswers = $this->openAIService->extractAnswers($message, $currentStep);
+        $extractedAnswers = $this->openAIService->extractAnswers($message, $actionDefinitions);
 
         // Record extracted answers
         $currentStepSlug = $this->talkFlowService->getCurrentStepSlug($talk);
@@ -118,18 +175,21 @@ class ProcessTalkMessageHandler
             }
         }
 
-        // Check if step is now complete
+        // Check if step is now complete - this will trigger response generation
+        $traceId = uniqid('eval_', true);
+        $this->logger->info('DISPATCH TRACE: Dispatching EvaluateStepCompletionCommand', [
+            'talk_id' => $talk->getId()->toRfc4122(),
+            'trace_id' => $traceId,
+            'source' => 'ProcessTalkMessageHandler',
+        ]);
+
         $this->messageBus->dispatch(
             new EvaluateStepCompletionCommand($talk->getId()->toRfc4122())
         );
 
-        // Generate agent response
-        $this->messageBus->dispatch(
-            new GenerateAgentResponseCommand(
-                $talk->getId()->toRfc4122(),
-                $message->getBody()
-            )
-        );
+        // NOTE: GenerateAgentResponseCommand will be dispatched by EvaluateStepCompletionHandler
+        // after determining the current step (whether we moved to next step or stayed on current)
+        // This prevents duplicate responses
     }
 
     private function escalateToHuman(\App\Entity\Talk $talk, string $reason): void

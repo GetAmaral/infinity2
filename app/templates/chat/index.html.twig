@@ -6,6 +6,7 @@
 <div class="chat-container"
      data-controller="chat"
      data-chat-user-id-value="{{ app.user.id.toRfc4122 }}"
+     data-chat-organization-id-value="{{ app.user.organization.id.toRfc4122 }}"
      data-chat-current-talk-value="{{ currentTalk ? currentTalk.id.toRfc4122 : '' }}">
 
     {# Left Sidebar - Talk List #}

@@ -43,7 +43,7 @@ abstract class AgentRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'name',            'prompt',        ];
+        return [            'name',            'prompt',            'whatsappInstanceName',            'whatsappPhone',            'whatsappStatus',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class AgentRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'user' => 'user',            'agentType' => 'agentType',            'prompt' => 'prompt',            'talks' => 'talks',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'user' => 'user',            'agentType' => 'agentType',            'prompt' => 'prompt',            'talks' => 'talks',            'whatsappInstanceName' => 'whatsappInstanceName',            'whatsappActive' => 'whatsappActive',            'whatsappStatus' => 'whatsappStatus',            'whatsappLastConnectedAt' => 'whatsappLastConnectedAt',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class AgentRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'whatsappActive' => 'whatsappActive',            'whatsappStatus' => 'whatsappStatus',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class AgentRepositoryGenerated extends BaseRepository
      */
     protected function getBooleanFilterFields(): array
     {
-        return [            'whatsappActive',            'active',            'available',        ];
+        return [            'active',            'available',            'whatsappActive',        ];
     }
 
     /**
@@ -98,7 +98,7 @@ abstract class AgentRepositoryGenerated extends BaseRepository
      */
     protected function getDateFilterFields(): array
     {
-        return [            'whatsappLastConnectedAt',            'startDate',            'endDate',            'createdAt',            'updatedAt',        ];
+        return [            'startDate',            'endDate',            'whatsappLastConnectedAt',            'createdAt',            'updatedAt',        ];
     }
 
     /**
@@ -115,13 +115,6 @@ abstract class AgentRepositoryGenerated extends BaseRepository
         return [
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
-            'whatsappInstanceName' => $entity->getWhatsappInstanceName(),
-            'whatsappPhone' => $entity->getWhatsappPhone(),
-            'whatsappServerUrl' => $entity->getWhatsappServerUrl(),
-            'whatsappApiKey' => $entity->getWhatsappApiKey(),
-            'whatsappStatus' => $entity->getWhatsappStatus(),
-            'whatsappWebhookToken' => $entity->getWhatsappWebhookToken(),
-            'whatsappLastConnectedAt' => $entity->getWhatsappLastConnectedAt()?->format('c'),
             'treeFlow' => $entity->getTreeFlow()?->getId()?->toString() ?? '',
             'treeFlowName' => $entity->getTreeFlow()?->getName() ?? '',
             'name' => $entity->getName(),
@@ -140,6 +133,14 @@ abstract class AgentRepositoryGenerated extends BaseRepository
             'skills' => $entity->getSkills(),
             'prompt' => $entity->getPrompt(),
             'talksCount' => $entity->getTalks()->count(),
+            'whatsappInstanceName' => $entity->getWhatsappInstanceName(),
+            'whatsappPhone' => $entity->getWhatsappPhone(),
+            'whatsappServerUrl' => $entity->getWhatsappServerUrl(),
+            'whatsappApiKey' => $entity->getWhatsappApiKey(),
+            'whatsappStatus' => $entity->getWhatsappStatus(),
+            'whatsappWebhookToken' => $entity->getWhatsappWebhookToken(),
+            'whatsappLastConnectedAt' => $entity->getWhatsappLastConnectedAt()?->format('c'),
+            'whatsappPhoneNumberId' => $entity->getWhatsappPhoneNumberId(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];

@@ -54,17 +54,58 @@ class TalkFlowService
      */
     public function getCurrentStep(Talk $talk): ?array
     {
+        // DEBUG: Log at entry
+        $this->logger->info('getCurrentStep called', [
+            'talk_id' => $talk->getId()->toRfc4122(),
+        ]);
+
         $talkFlow = $talk->getTalkFlow();
+
+        // DEBUG: Log talkFlow
+        $this->logger->info('TalkFlow retrieved', [
+            'talk_id' => $talk->getId()->toRfc4122(),
+            'talkFlow_is_null' => $talkFlow === null,
+            'talkFlow_type' => gettype($talkFlow),
+            'talkFlow_value' => is_array($talkFlow) ? 'array[' . implode(',', array_keys($talkFlow)) . ']' : (is_string($talkFlow) ? substr($talkFlow, 0, 100) : gettype($talkFlow)),
+        ]);
+
         if (!$talkFlow) {
+            $this->logger->info('TalkFlow is null, returning null');
             return null;
         }
 
         $treeFlow = $talk->getTreeFlow(); // Uses Talk->Agent->TreeFlow
         if (!$treeFlow) {
+            $this->logger->info('TreeFlow is null, returning null');
             return null;
         }
 
         $slug = $treeFlow->getSlug();
+
+        // DEBUG: Log the slug and structure
+        $this->logger->info('Slug and structure check', [
+            'talk_id' => $talk->getId()->toRfc4122(),
+            'slug' => $slug,
+            'slug_type' => gettype($slug),
+            'slug_is_string' => is_string($slug),
+            'talkFlow_has_slug_key' => is_array($talkFlow) && isset($talkFlow[$slug]),
+        ]);
+
+        if (!is_string($slug)) {
+            $this->logger->error('Slug is not a string!', [
+                'slug_type' => gettype($slug),
+                'slug_value' => $slug,
+            ]);
+            return null;
+        }
+
+        if (!is_array($talkFlow)) {
+            $this->logger->error('TalkFlow is not an array!', [
+                'talkFlow_type' => gettype($talkFlow),
+            ]);
+            return null;
+        }
+
         $currentStepSlug = $talkFlow[$slug]['currentStep'] ?? null;
 
         if (!$currentStepSlug) {
@@ -160,7 +201,7 @@ class TalkFlowService
     public function completeStep(
         Talk $talk,
         string $stepSlug,
-        string $selectedOutputSlug,
+        ?string $selectedOutputSlug,
         ?string $nextStepSlug
     ): void {
         $talkFlow = $talk->getTalkFlow();
@@ -175,9 +216,13 @@ class TalkFlowService
         // Mark current step as completed
         $talkFlow[$slug]['steps'][$stepSlug]['completed'] = true;
         $talkFlow[$slug]['steps'][$stepSlug]['timestamp'] = (new \DateTimeImmutable())->format('c');
-        $talkFlow[$slug]['steps'][$stepSlug]['selectedOutput'] = $selectedOutputSlug;
 
-        // Move to next step
+        // Only set selectedOutput if there was an output
+        if ($selectedOutputSlug !== null) {
+            $talkFlow[$slug]['steps'][$stepSlug]['selectedOutput'] = $selectedOutputSlug;
+        }
+
+        // Move to next step (null means flow is complete)
         $talkFlow[$slug]['currentStep'] = $nextStepSlug;
 
         $talk->setTalkFlow($talkFlow);
@@ -216,6 +261,29 @@ class TalkFlowService
         }
 
         return $allAnswers;
+    }
+
+    /**
+     * Get action definitions for current step
+     * Returns action definitions from TreeFlow's jsonStructure (not runtime answers)
+     * TreeFlow is accessed via Agent: talk->getTreeFlow()
+     */
+    public function getCurrentStepActionDefinitions(Talk $talk): array
+    {
+        $treeFlow = $talk->getTreeFlow();
+        if (!$treeFlow) {
+            return [];
+        }
+
+        $stepSlug = $this->getCurrentStepSlug($talk);
+        if (!$stepSlug) {
+            return [];
+        }
+
+        $slug = $treeFlow->getSlug();
+        $jsonStructure = $treeFlow->getJsonStructure();
+
+        return $jsonStructure[$slug]['steps'][$stepSlug]['actions'] ?? [];
     }
 
     /**

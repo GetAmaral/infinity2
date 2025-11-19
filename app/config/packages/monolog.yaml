@@ -7,6 +7,7 @@ monolog:
         - business # Business logic events
         - audit # Audit logging for entity changes
         - video_processing # Video processing background jobs
+        - whatsapp # WhatsApp Cloud API integration logs
 
 when@dev:
     monolog:
@@ -135,6 +136,17 @@ when@prod:
                 path: "%kernel.logs_dir%/video_processing.log"
                 level: info
                 channels: ['video_processing']
+                formatter: monolog.formatter.json
+                max_files: 30  # Keep 30 days of logs
+                filename_format: '{filename}-{date}'
+                date_format: 'Y-m-d'
+
+            # WhatsApp Cloud API logs with rotation
+            whatsapp_file:
+                type: rotating_file
+                path: "%kernel.logs_dir%/whatsapp.log"
+                level: info
+                channels: ['whatsapp']
                 formatter: monolog.formatter.json
                 max_files: 30  # Keep 30 days of logs
                 filename_format: '{filename}-{date}'
