@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\Organization;
 use App\Entity\Step;
+use App\Entity\Pipeline;
 
 /**
  * TreeFlow State Processor
@@ -139,6 +140,24 @@ class TreeFlowProcessor implements ProcessorInterface
                 $data->steps,
                 'create_and_update'
             );
+        }
+
+        // pipeline: ManyToOne
+        if (!$isPatch || array_key_exists('pipeline', $requestData)) {
+            if ($data->pipeline !== null) {
+                if (is_string($data->pipeline)) {
+                    // IRI format: "/api/pipelines/{id}"
+                    $pipelineId = $this->extractIdFromIri($data->pipeline);
+                    $pipeline = $this->entityManager->getRepository(Pipeline::class)->find($pipelineId);
+                    if (!$pipeline) {
+                        throw new BadRequestHttpException('Pipeline not found: ' . $pipelineId);
+                    }
+                    $entity->setPipeline($pipeline);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested pipeline creation not supported. Use IRI format.');
+                }
+            }
         }
 
         // Persist and flush

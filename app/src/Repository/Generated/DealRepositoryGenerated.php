@@ -54,7 +54,7 @@ abstract class DealRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'name' => 'name',            'description' => 'description',            'company' => 'company',            'dealStatus' => 'dealStatus',            'currentStage' => 'currentStage',            'dealType' => 'dealType',            'pipeline' => 'pipeline',            'priority' => 'priority',            'category' => 'category',            'dealNumber' => 'dealNumber',            'expectedAmount' => 'expectedAmount',            'weightedAmount' => 'weightedAmount',            'closureAmount' => 'closureAmount',            'initialAmount' => 'initialAmount',            'currency' => 'currency',            'exchangeRate' => 'exchangeRate',            'discountPercentage' => 'discountPercentage',            'discountAmount' => 'discountAmount',            'commissionRate' => 'commissionRate',            'commissionAmount' => 'commissionAmount',            'expectedClosureDate' => 'expectedClosureDate',            'closureDate' => 'closureDate',            'products' => 'products',            'initialDate' => 'initialDate',            'lastActivityDate' => 'lastActivityDate',            'nextFollowUp' => 'nextFollowUp',            'daysInCurrentStage' => 'daysInCurrentStage',            'forecastCategory' => 'forecastCategory',            'manager' => 'manager',            'owner' => 'owner',            'team' => 'team',            'primaryContact' => 'primaryContact',            'contacts' => 'contacts',            'leadSource' => 'leadSource',            'campaign' => 'campaign',            'sourceDetails' => 'sourceDetails',            'notes' => 'notes',            'dealStages' => 'dealStages',            'talks' => 'talks',            'tasks' => 'tasks',            'competitors' => 'competitors',            'tags' => 'tags',            'customFields' => 'customFields',            'lostReason' => 'lostReason',            'winReason' => 'winReason',            'actualClosureDate' => 'actualClosureDate',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'description' => 'description',            'company' => 'company',            'dealStatus' => 'dealStatus',            'currentStage' => 'currentStage',            'pipeline' => 'pipeline',            'dealType' => 'dealType',            'priority' => 'priority',            'category' => 'category',            'dealNumber' => 'dealNumber',            'expectedAmount' => 'expectedAmount',            'weightedAmount' => 'weightedAmount',            'closureAmount' => 'closureAmount',            'initialAmount' => 'initialAmount',            'currency' => 'currency',            'exchangeRate' => 'exchangeRate',            'discountPercentage' => 'discountPercentage',            'discountAmount' => 'discountAmount',            'commissionRate' => 'commissionRate',            'commissionAmount' => 'commissionAmount',            'expectedClosureDate' => 'expectedClosureDate',            'closureDate' => 'closureDate',            'products' => 'products',            'initialDate' => 'initialDate',            'lastActivityDate' => 'lastActivityDate',            'nextFollowUp' => 'nextFollowUp',            'daysInCurrentStage' => 'daysInCurrentStage',            'forecastCategory' => 'forecastCategory',            'manager' => 'manager',            'team' => 'team',            'owner' => 'owner',            'primaryContact' => 'primaryContact',            'contacts' => 'contacts',            'leadSource' => 'leadSource',            'campaign' => 'campaign',            'sourceDetails' => 'sourceDetails',            'notes' => 'notes',            'dealStages' => 'dealStages',            'talks' => 'talks',            'tasks' => 'tasks',            'competitors' => 'competitors',            'tags' => 'tags',            'customFields' => 'customFields',            'lostReason' => 'lostReason',            'winReason' => 'winReason',            'actualClosureDate' => 'actualClosureDate',            'aiScore' => 'aiScore',            'winProbability' => 'winProbability',            'daysStale' => 'daysStale',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class DealRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'actualClosureDate' => 'actualClosureDate',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'actualClosureDate' => 'actualClosureDate',            'aiScore' => 'aiScore',            'winProbability' => 'winProbability',            'daysStale' => 'daysStale',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -98,7 +98,7 @@ abstract class DealRepositoryGenerated extends BaseRepository
      */
     protected function getDateFilterFields(): array
     {
-        return [            'expectedClosureDate',            'closureDate',            'initialDate',            'lastActivityDate',            'nextFollowUp',            'actualClosureDate',            'createdAt',            'updatedAt',        ];
+        return [            'expectedClosureDate',            'closureDate',            'initialDate',            'lastActivityDate',            'nextFollowUp',            'actualClosureDate',            'lastAiAnalysisAt',            'createdAt',            'updatedAt',        ];
     }
 
     /**
@@ -122,10 +122,10 @@ abstract class DealRepositoryGenerated extends BaseRepository
             'dealStatus' => $entity->getDealStatus(),
             'currentStage' => $entity->getCurrentStage()?->getId()?->toString() ?? '',
             'currentStageName' => $entity->getCurrentStage()?->getName() ?? '',
-            'dealType' => $entity->getDealType()?->getId()?->toString() ?? '',
-            'dealTypeName' => $entity->getDealType()?->getName() ?? '',
             'pipeline' => $entity->getPipeline()?->getId()?->toString() ?? '',
             'pipelineName' => $entity->getPipeline()?->getName() ?? '',
+            'dealType' => $entity->getDealType()?->getId()?->toString() ?? '',
+            'dealTypeName' => $entity->getDealType()?->getName() ?? '',
             'priority' => $entity->getPriority(),
             'category' => $entity->getCategory()?->getId()?->toString() ?? '',
             'categoryName' => $entity->getCategory()?->getName() ?? '',
@@ -141,9 +141,9 @@ abstract class DealRepositoryGenerated extends BaseRepository
             'daysInCurrentStage' => $entity->getDaysInCurrentStage(),
             'manager' => $entity->getManager()?->getId()?->toString() ?? '',
             'managerName' => $entity->getManager()?->getName() ?? '',
+            'teamCount' => $entity->getTeam()->count(),
             'owner' => $entity->getOwner()?->getId()?->toString() ?? '',
             'ownerName' => $entity->getOwner()?->getName() ?? '',
-            'teamCount' => $entity->getTeam()->count(),
             'primaryContact' => $entity->getPrimaryContact()?->getId()?->toString() ?? '',
             'primaryContactName' => $entity->getPrimaryContact()?->getName() ?? '',
             'contactsCount' => $entity->getContacts()->count(),
@@ -163,6 +163,7 @@ abstract class DealRepositoryGenerated extends BaseRepository
             'winReason' => $entity->getWinReason()?->getId()?->toString() ?? '',
             'winReasonName' => $entity->getWinReason()?->getName() ?? '',
             'actualClosureDate' => $entity->getActualClosureDate()?->format('c'),
+            'lastAiAnalysisAt' => $entity->getLastAiAnalysisAt()?->format('c'),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];

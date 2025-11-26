@@ -118,6 +118,8 @@ abstract class TreeFlowRepositoryGenerated extends BaseRepository
             'name' => $entity->getName(),
             'slug' => $entity->getSlug(),
             'steps' => $entity->getSteps(),
+            'pipeline' => $entity->getPipeline()?->getId()?->toString() ?? '',
+            'pipelineName' => $entity->getPipeline()?->getName() ?? '',
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),
         ];

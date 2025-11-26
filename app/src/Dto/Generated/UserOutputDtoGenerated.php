@@ -135,9 +135,9 @@ abstract class UserOutputDtoGenerated
 
     public ?string $openAiApiKey = null;
 
-    public ?int $gender = null;
-
     public ?\DateTimeImmutable $lastLoginAt = null;
+
+    public ?int $gender = null;
 
     public ?\DateTimeImmutable $lockedUntil = null;
 
@@ -351,13 +351,13 @@ abstract class UserOutputDtoGenerated
 
     public ?array $tags = null;
 
-    public int $loginCount;
-
     /**
      * studentCourses collection
      * @var StudentCourseOutputDto[]
      */
     public array $studentCourses = [];
+
+    public int $loginCount;
 
     public ?string $lastIpAddress = null;
 
@@ -369,13 +369,13 @@ abstract class UserOutputDtoGenerated
 
     public ?\DateTimeImmutable $lastActivityAt = null;
 
+    public ?string $status = null;
+
     /**
      * talks collection
      * @var TalkOutputDto[]
      */
     public array $talks = [];
-
-    public ?string $status = null;
 
     public ?string $statusMessage = null;
 
@@ -676,16 +676,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getGender(): ?int    {
-        return $this->gender;
-    }
-
-    public function setGender(?int $gender): self
-    {
-        $this->gender = $gender;
-        return $this;
-    }
-
     public function getLastLoginAt(): ?\DateTimeImmutable    {
         return $this->lastLoginAt;
     }
@@ -693,6 +683,16 @@ abstract class UserOutputDtoGenerated
     public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
     {
         $this->lastLoginAt = $lastLoginAt;
+        return $this;
+    }
+
+    public function getGender(): ?int    {
+        return $this->gender;
+    }
+
+    public function setGender(?int $gender): self
+    {
+        $this->gender = $gender;
         return $this;
     }
 
@@ -1556,16 +1556,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getLoginCount(): int    {
-        return $this->loginCount;
-    }
-
-    public function setLoginCount(int $loginCount): self
-    {
-        $this->loginCount = $loginCount;
-        return $this;
-    }
-
     public function getStudentCourses(): array    {
         return $this->studentCourses;
     }
@@ -1573,6 +1563,16 @@ abstract class UserOutputDtoGenerated
     public function setStudentCourses(array $studentCourses): self
     {
         $this->studentCourses = $studentCourses;
+        return $this;
+    }
+
+    public function getLoginCount(): int    {
+        return $this->loginCount;
+    }
+
+    public function setLoginCount(int $loginCount): self
+    {
+        $this->loginCount = $loginCount;
         return $this;
     }
 
@@ -1626,16 +1626,6 @@ abstract class UserOutputDtoGenerated
         return $this;
     }
 
-    public function getTalks(): array    {
-        return $this->talks;
-    }
-
-    public function setTalks(array $talks): self
-    {
-        $this->talks = $talks;
-        return $this;
-    }
-
     public function getStatus(): ?string    {
         return $this->status;
     }
@@ -1643,6 +1633,16 @@ abstract class UserOutputDtoGenerated
     public function setStatus(?string $status): self
     {
         $this->status = $status;
+        return $this;
+    }
+
+    public function getTalks(): array    {
+        return $this->talks;
+    }
+
+    public function setTalks(array $talks): self
+    {
+        $this->talks = $talks;
         return $this;
     }
 

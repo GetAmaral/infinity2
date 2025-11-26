@@ -49,9 +49,13 @@ final class StepOutputController extends AbstractController
             fn($s) => $s->getId()->toString() !== $stepId
         )->toArray();
 
+        // Get pipeline ID from TreeFlow for filtering pipeline stages
+        $pipelineId = $treeFlow->getPipeline()?->getId()->toString();
+
         $form = $this->createForm(StepOutputFormType::class, $output, [
             'is_edit' => false,
             'available_steps' => $availableSteps,
+            'pipeline_id' => $pipelineId,
         ]);
 
         $form->handleRequest($request);
@@ -133,9 +137,13 @@ final class StepOutputController extends AbstractController
             fn($s) => $s->getId()->toString() !== $stepId
         )->toArray();
 
+        // Get pipeline ID from TreeFlow for filtering pipeline stages
+        $pipelineId = $treeFlow->getPipeline()?->getId()->toString();
+
         $form = $this->createForm(StepOutputFormType::class, $output, [
             'is_edit' => true,
             'available_steps' => $availableSteps,
+            'pipeline_id' => $pipelineId,
         ]);
 
         $form->handleRequest($request);

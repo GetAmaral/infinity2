@@ -47,27 +47,27 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
-      default:
-        description: "Whether this is a default system template that cannot be deleted"
-        example: "false"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       name:
         description: "The brand name"
         example: "Nike"
         # Advanced filters
         filters:
           - type: OrderFilter
-      description:
-        description: "..."
-        example: "..."
+      default:
+        description: "Whether this is a default system template that cannot be deleted"
+        example: "false"
         # Advanced filters
         filters:
           - type: OrderFilter
       public:
         description: "Whether this template is publicly available across all organizations"
         example: "false"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      description:
+        description: "..."
+        example: "..."
         # Advanced filters
         filters:
           - type: OrderFilter

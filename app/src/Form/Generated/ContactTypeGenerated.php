@@ -44,21 +44,21 @@ abstract class ContactTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('name', TextType::class, [
-            'label' => 'Name',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter name',
-            ],
-        ]);
-
         $builder->add('firstName', TextType::class, [
             'label' => 'First Name',
             'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter first name',
+            ],
+        ]);
+
+        $builder->add('name', TextType::class, [
+            'label' => 'Name',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter name',
             ],
         ]);
 
@@ -90,7 +90,10 @@ abstract class ContactTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -132,7 +135,10 @@ abstract class ContactTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -182,7 +188,10 @@ abstract class ContactTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -223,7 +232,10 @@ abstract class ContactTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -255,7 +267,10 @@ abstract class ContactTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -289,7 +304,10 @@ abstract class ContactTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -304,14 +322,6 @@ abstract class ContactTypeGenerated extends AbstractType
             ],
         ]);
         }
-
-        $builder->add('mobilePhone', TelType::class, [
-            'label' => 'Mobile Phone',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
 
         $builder->add('deals', EntityType::class, [
             'label' => 'Deals',
@@ -331,7 +341,10 @@ abstract class ContactTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -342,6 +355,14 @@ abstract class ContactTypeGenerated extends AbstractType
                 'data-relation-select-multiple-value' => 'true',
                 'data-relation-select-one-to-one-value' => 'false',
                 'placeholder' => 'Select one or more deal',
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('mobilePhone', TelType::class, [
+            'label' => 'Mobile Phone',
+            'required' => false,
+            'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);

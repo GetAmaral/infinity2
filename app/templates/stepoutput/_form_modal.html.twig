@@ -4,6 +4,8 @@
 
 {% extends 'stepoutput/generated/_form_modal_generated.html.twig' %}
 
-{# Uncomment to customize specific blocks: #}
-{# {% block page_icon %}<i class="bi bi-custom-icon text-neon fs-2 me-3"></i>{% endblock %} #}
-{# {% block grid_view_item_template %}...custom grid layout...{% endblock %} #}
+{% block modal_body %}
+    <div data-controller="step-output-form">
+        {{ parent() }}
+    </div>
+{% endblock %}

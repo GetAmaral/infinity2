@@ -80,14 +80,14 @@ resources:
       probability:
         description: "Probability (decimal value)"
         example: "99.99"
-      dealType:
-        description: "DealType"
+      pipeline:
+        description: "Pipeline"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
-      pipeline:
-        description: "Pipeline"
+      dealType:
+        description: "DealType"
         example: "sample value"
         # Advanced filters
         filters:
@@ -224,14 +224,14 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      owner:
-        description: "Deal Owner"
+      team:
+        description: "Team"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
-      team:
-        description: "Team"
+      owner:
+        description: "Deal Owner"
         example: "sample value"
         # Advanced filters
         filters:
@@ -323,6 +323,39 @@ resources:
       actualClosureDate:
         description: "Actual Closure Date (date and time)"
         example: "2025-01-15T10:30:00Z"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      aiScore:
+        writable: false
+        description: "AI Health Score"
+        example: 42
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      winProbability:
+        writable: false
+        description: "Win Probability %"
+        example: 99.99
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      riskFactors:
+        writable: false
+        description: "Risk Factors"
+        example: "{\"key\": \"value\"}"
+      recommendedActions:
+        writable: false
+        description: "AI Recommendations"
+        example: "{\"key\": \"value\"}"
+      lastAiAnalysisAt:
+        writable: false
+        description: "Last AI Analysis"
+        example: "2025-01-15T10:30:00Z"
+      daysStale:
+        writable: false
+        description: "Days Stale"
+        example: 42
         # Advanced filters
         filters:
           - type: OrderFilter

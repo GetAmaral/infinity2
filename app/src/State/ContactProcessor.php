@@ -91,13 +91,13 @@ class ContactProcessor implements ProcessorInterface
         $requestData = $context['request']->toArray() ?? [];
 
         // Map scalar properties from DTO to Entity
-        // name
-        if (!$isPatch || array_key_exists('name', $requestData)) {
-            $entity->setName($data->name);
-        }
         // firstName
         if (!$isPatch || array_key_exists('firstName', $requestData)) {
             $entity->setFirstName($data->firstName);
+        }
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
         }
         // lastName
         if (!$isPatch || array_key_exists('lastName', $requestData)) {

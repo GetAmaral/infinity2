@@ -83,21 +83,21 @@ class PipelineTemplateProcessor implements ProcessorInterface
         $requestData = $context['request']->toArray() ?? [];
 
         // Map scalar properties from DTO to Entity
-        // default
-        if (!$isPatch || array_key_exists('default', $requestData)) {
-            $entity->setDefault($data->default);
-        }
         // name
         if (!$isPatch || array_key_exists('name', $requestData)) {
             $entity->setName($data->name);
         }
-        // description
-        if (!$isPatch || array_key_exists('description', $requestData)) {
-            $entity->setDescription($data->description);
+        // default
+        if (!$isPatch || array_key_exists('default', $requestData)) {
+            $entity->setDefault($data->default);
         }
         // public
         if (!$isPatch || array_key_exists('public', $requestData)) {
             $entity->setPublic($data->public);
+        }
+        // description
+        if (!$isPatch || array_key_exists('description', $requestData)) {
+            $entity->setDescription($data->description);
         }
         // templateCategory
         if (!$isPatch || array_key_exists('templateCategory', $requestData)) {

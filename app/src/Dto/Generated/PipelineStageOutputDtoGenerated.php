@@ -6,10 +6,10 @@ namespace App\Dto\Generated;
 
 use Symfony\Component\Uid\Uuid;
 use App\Dto\OrganizationOutputDto;
-use App\Dto\DealStageOutputDto;
-use App\Dto\DealOutputDto;
-use App\Dto\PipelineStageOutputDto;
 use App\Dto\PipelineOutputDto;
+use App\Dto\DealStageOutputDto;
+use App\Dto\PipelineStageOutputDto;
+use App\Dto\DealOutputDto;
 use App\Dto\TaskOutputDto;
 
 /**
@@ -31,9 +31,27 @@ abstract class PipelineStageOutputDtoGenerated
      */
     public string|OrganizationOutputDto $organization;
 
+    public string $name;
+
     public ?string $description = null;
 
+    /**
+     * pipeline reference
+     * Can be: IRI string or nested PipelineOutput object
+     */
+    public string|PipelineOutputDto|null $pipeline = null;
+
+    public ?int $displayOrder = null;
+
     public int $probability;
+
+    public string $color;
+
+    public bool $active;
+
+    public bool $won;
+
+    public bool $lost;
 
     /**
      * dealStages collection
@@ -43,23 +61,11 @@ abstract class PipelineStageOutputDtoGenerated
 
     public bool $final;
 
-    public bool $won;
-
-    public bool $lost;
-
-    public bool $active;
-
-    public string $color;
-
     /**
-     * deals collection
-     * @var DealOutputDto[]
+     * previous reference
+     * Can be: IRI string or nested PipelineStageOutput object
      */
-    public array $deals = [];
-
-    public ?int $displayOrder = null;
-
-    public ?string $migrationCriteria = null;
+    public string|PipelineStageOutputDto|null $previous = null;
 
     /**
      * next reference
@@ -67,19 +73,13 @@ abstract class PipelineStageOutputDtoGenerated
      */
     public string|PipelineStageOutputDto|null $next = null;
 
-    /**
-     * pipeline reference
-     * Can be: IRI string or nested PipelineOutput object
-     */
-    public string|PipelineOutputDto|null $pipeline = null;
+    public ?string $migrationCriteria = null;
 
     /**
-     * previous reference
-     * Can be: IRI string or nested PipelineStageOutput object
+     * deals collection
+     * @var DealOutputDto[]
      */
-    public string|PipelineStageOutputDto|null $previous = null;
-
-    public string $stageName;
+    public array $deals = [];
 
     /**
      * tasks collection
@@ -114,6 +114,16 @@ abstract class PipelineStageOutputDtoGenerated
         return $this;
     }
 
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -121,6 +131,26 @@ abstract class PipelineStageOutputDtoGenerated
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getPipeline(): string|PipelineOutputDto|null    {
+        return $this->pipeline;
+    }
+
+    public function setPipeline(string|PipelineOutputDto|null $pipeline): self
+    {
+        $this->pipeline = $pipeline;
+        return $this;
+    }
+
+    public function getDisplayOrder(): ?int    {
+        return $this->displayOrder;
+    }
+
+    public function setDisplayOrder(?int $displayOrder): self
+    {
+        $this->displayOrder = $displayOrder;
         return $this;
     }
 
@@ -134,23 +164,23 @@ abstract class PipelineStageOutputDtoGenerated
         return $this;
     }
 
-    public function getDealStages(): array    {
-        return $this->dealStages;
+    public function getColor(): string    {
+        return $this->color;
     }
 
-    public function setDealStages(array $dealStages): self
+    public function setColor(string $color): self
     {
-        $this->dealStages = $dealStages;
+        $this->color = $color;
         return $this;
     }
 
-    public function getFinal(): bool    {
-        return $this->final;
+    public function getActive(): bool    {
+        return $this->active;
     }
 
-    public function setFinal(bool $final): self
+    public function setActive(bool $active): self
     {
-        $this->final = $final;
+        $this->active = $active;
         return $this;
     }
 
@@ -174,73 +204,23 @@ abstract class PipelineStageOutputDtoGenerated
         return $this;
     }
 
-    public function getActive(): bool    {
-        return $this->active;
+    public function getDealStages(): array    {
+        return $this->dealStages;
     }
 
-    public function setActive(bool $active): self
+    public function setDealStages(array $dealStages): self
     {
-        $this->active = $active;
+        $this->dealStages = $dealStages;
         return $this;
     }
 
-    public function getColor(): string    {
-        return $this->color;
+    public function getFinal(): bool    {
+        return $this->final;
     }
 
-    public function setColor(string $color): self
+    public function setFinal(bool $final): self
     {
-        $this->color = $color;
-        return $this;
-    }
-
-    public function getDeals(): array    {
-        return $this->deals;
-    }
-
-    public function setDeals(array $deals): self
-    {
-        $this->deals = $deals;
-        return $this;
-    }
-
-    public function getDisplayOrder(): ?int    {
-        return $this->displayOrder;
-    }
-
-    public function setDisplayOrder(?int $displayOrder): self
-    {
-        $this->displayOrder = $displayOrder;
-        return $this;
-    }
-
-    public function getMigrationCriteria(): ?string    {
-        return $this->migrationCriteria;
-    }
-
-    public function setMigrationCriteria(?string $migrationCriteria): self
-    {
-        $this->migrationCriteria = $migrationCriteria;
-        return $this;
-    }
-
-    public function getNext(): string|PipelineStageOutputDto|null    {
-        return $this->next;
-    }
-
-    public function setNext(string|PipelineStageOutputDto|null $next): self
-    {
-        $this->next = $next;
-        return $this;
-    }
-
-    public function getPipeline(): string|PipelineOutputDto|null    {
-        return $this->pipeline;
-    }
-
-    public function setPipeline(string|PipelineOutputDto|null $pipeline): self
-    {
-        $this->pipeline = $pipeline;
+        $this->final = $final;
         return $this;
     }
 
@@ -254,13 +234,33 @@ abstract class PipelineStageOutputDtoGenerated
         return $this;
     }
 
-    public function getStageName(): string    {
-        return $this->stageName;
+    public function getNext(): string|PipelineStageOutputDto|null    {
+        return $this->next;
     }
 
-    public function setStageName(string $stageName): self
+    public function setNext(string|PipelineStageOutputDto|null $next): self
     {
-        $this->stageName = $stageName;
+        $this->next = $next;
+        return $this;
+    }
+
+    public function getMigrationCriteria(): ?string    {
+        return $this->migrationCriteria;
+    }
+
+    public function setMigrationCriteria(?string $migrationCriteria): self
+    {
+        $this->migrationCriteria = $migrationCriteria;
+        return $this;
+    }
+
+    public function getDeals(): array    {
+        return $this->deals;
+    }
+
+    public function setDeals(array $deals): self
+    {
+        $this->deals = $deals;
         return $this;
     }
 

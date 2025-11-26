@@ -134,13 +134,13 @@ class CountryProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('officialName', $requestData)) {
             $entity->setOfficialName($data->officialName);
         }
-        // active
-        if (!$isPatch || array_key_exists('active', $requestData)) {
-            $entity->setActive($data->active);
-        }
         // subregion
         if (!$isPatch || array_key_exists('subregion', $requestData)) {
             $entity->setSubregion($data->subregion);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
         }
         // latitude
         if (!$isPatch || array_key_exists('latitude', $requestData)) {

@@ -10,8 +10,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\CompanyInputDto;
 use App\Dto\PipelineStageInputDto;
-use App\Dto\DealTypeInputDto;
 use App\Dto\PipelineInputDto;
+use App\Dto\DealTypeInputDto;
 use App\Dto\DealCategoryInputDto;
 use App\Dto\UserInputDto;
 use App\Dto\ContactInputDto;
@@ -66,18 +66,18 @@ abstract class DealInputDtoGenerated
     public ?string $probability = null;
 
     /**
-     * dealType reference
-     * Must be: IRI string (e.g., "/api/deal_types/uuid")
-     */
-    #[Groups(['deal:write'])]
-    public ?string $dealType = null;
-
-    /**
      * pipeline reference
      * Must be: IRI string (e.g., "/api/pipelines/uuid")
      */
     #[Groups(['deal:write'])]
     public ?string $pipeline = null;
+
+    /**
+     * dealType reference
+     * Must be: IRI string (e.g., "/api/deal_types/uuid")
+     */
+    #[Groups(['deal:write'])]
+    public ?string $dealType = null;
 
     #[Groups(['deal:write'])]
     public ?string $priority = null;
@@ -207,6 +207,24 @@ abstract class DealInputDtoGenerated
     #[Groups(['deal:write'])]
     public ?\DateTimeImmutable $actualClosureDate = null;
 
+    #[Groups(['deal:write'])]
+    public ?int $aiScore = null;
+
+    #[Groups(['deal:write'])]
+    public ?string $winProbability = null;
+
+    #[Groups(['deal:write'])]
+    public ?array $riskFactors = null;
+
+    #[Groups(['deal:write'])]
+    public ?array $recommendedActions = null;
+
+    #[Groups(['deal:write'])]
+    public ?\DateTimeImmutable $lastAiAnalysisAt = null;
+
+    #[Groups(['deal:write'])]
+    public ?int $daysStale = null;
+
 
     // Getters and Setters
 
@@ -280,16 +298,6 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getDealType(): ?string    {
-        return $this->dealType;
-    }
-
-    public function setDealType(?string $dealType): self
-    {
-        $this->dealType = $dealType;
-        return $this;
-    }
-
     public function getPipeline(): ?string    {
         return $this->pipeline;
     }
@@ -297,6 +305,16 @@ abstract class DealInputDtoGenerated
     public function setPipeline(?string $pipeline): self
     {
         $this->pipeline = $pipeline;
+        return $this;
+    }
+
+    public function getDealType(): ?string    {
+        return $this->dealType;
+    }
+
+    public function setDealType(?string $dealType): self
+    {
+        $this->dealType = $dealType;
         return $this;
     }
 
@@ -520,16 +538,6 @@ abstract class DealInputDtoGenerated
         return $this;
     }
 
-    public function getOwner(): ?string    {
-        return $this->owner;
-    }
-
-    public function setOwner(?string $owner): self
-    {
-        $this->owner = $owner;
-        return $this;
-    }
-
     public function getTeam(): ?string    {
         return $this->team;
     }
@@ -537,6 +545,16 @@ abstract class DealInputDtoGenerated
     public function setTeam(?string $team): self
     {
         $this->team = $team;
+        return $this;
+    }
+
+    public function getOwner(): ?string    {
+        return $this->owner;
+    }
+
+    public function setOwner(?string $owner): self
+    {
+        $this->owner = $owner;
         return $this;
     }
 
@@ -687,6 +705,66 @@ abstract class DealInputDtoGenerated
     public function setActualClosureDate(?\DateTimeImmutable $actualClosureDate): self
     {
         $this->actualClosureDate = $actualClosureDate;
+        return $this;
+    }
+
+    public function getAiScore(): ?int    {
+        return $this->aiScore;
+    }
+
+    public function setAiScore(?int $aiScore): self
+    {
+        $this->aiScore = $aiScore;
+        return $this;
+    }
+
+    public function getWinProbability(): ?string    {
+        return $this->winProbability;
+    }
+
+    public function setWinProbability(?string $winProbability): self
+    {
+        $this->winProbability = $winProbability;
+        return $this;
+    }
+
+    public function getRiskFactors(): ?array    {
+        return $this->riskFactors;
+    }
+
+    public function setRiskFactors(?array $riskFactors): self
+    {
+        $this->riskFactors = $riskFactors;
+        return $this;
+    }
+
+    public function getRecommendedActions(): ?array    {
+        return $this->recommendedActions;
+    }
+
+    public function setRecommendedActions(?array $recommendedActions): self
+    {
+        $this->recommendedActions = $recommendedActions;
+        return $this;
+    }
+
+    public function getLastAiAnalysisAt(): ?\DateTimeImmutable    {
+        return $this->lastAiAnalysisAt;
+    }
+
+    public function setLastAiAnalysisAt(?\DateTimeImmutable $lastAiAnalysisAt): self
+    {
+        $this->lastAiAnalysisAt = $lastAiAnalysisAt;
+        return $this;
+    }
+
+    public function getDaysStale(): ?int    {
+        return $this->daysStale;
+    }
+
+    public function setDaysStale(?int $daysStale): self
+    {
+        $this->daysStale = $daysStale;
         return $this;
     }
 }

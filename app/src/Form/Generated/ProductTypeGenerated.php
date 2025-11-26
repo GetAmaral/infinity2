@@ -272,7 +272,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -307,7 +310,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -351,7 +357,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -430,7 +439,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -542,7 +554,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -612,7 +627,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -671,7 +689,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -704,7 +725,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -813,7 +837,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -846,7 +873,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -879,7 +909,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -920,7 +953,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -954,7 +990,10 @@ abstract class ProductTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [

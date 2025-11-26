@@ -146,13 +146,13 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      message:
-        description: "Message (long text)"
-        example: "This is a longer text field with more content"
       childCampaigns:
         writable: false
         description: "Child Campaigns"
         example: "/api/campaigns/01234567-89ab-cdef-0123-456789abcdef"
+      message:
+        description: "Message (long text)"
+        example: "This is a longer text field with more content"
       numberOfContacts:
         description: "Number of Contacts (numeric value)"
         example: "42"

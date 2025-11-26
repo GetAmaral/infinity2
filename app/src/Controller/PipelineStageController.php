@@ -33,10 +33,17 @@ final class PipelineStageController extends PipelineStageControllerGenerated
     /**
      * API endpoint for searching pipelineStages
      * Used by list page for dynamic data loading
+     * Supports filtering by pipeline ID via ?pipeline= parameter
      */
     #[Route('/api/search', name: 'pipelinestage_api_search', methods: ['GET'])]
     public function apiSearch(Request $request): Response
     {
+        // Add pipeline filter if provided
+        $pipelineId = $request->query->get('pipeline');
+        if ($pipelineId) {
+            $request->query->set('pipeline.id', $pipelineId);
+        }
+
         return $this->apiSearchAction($request);
     }
 

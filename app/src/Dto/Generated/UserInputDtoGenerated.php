@@ -77,10 +77,10 @@ abstract class UserInputDtoGenerated
     public ?string $openAiApiKey = null;
 
     #[Groups(['user:write'])]
-    public ?int $gender = null;
+    public ?\DateTimeImmutable $lastLoginAt = null;
 
     #[Groups(['user:write'])]
-    public ?\DateTimeImmutable $lastLoginAt = null;
+    public ?int $gender = null;
 
     #[Groups(['user:write'])]
     public ?\DateTimeImmutable $lockedUntil = null;
@@ -617,16 +617,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getGender(): ?int    {
-        return $this->gender;
-    }
-
-    public function setGender(?int $gender): self
-    {
-        $this->gender = $gender;
-        return $this;
-    }
-
     public function getLastLoginAt(): ?\DateTimeImmutable    {
         return $this->lastLoginAt;
     }
@@ -634,6 +624,16 @@ abstract class UserInputDtoGenerated
     public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
     {
         $this->lastLoginAt = $lastLoginAt;
+        return $this;
+    }
+
+    public function getGender(): ?int    {
+        return $this->gender;
+    }
+
+    public function setGender(?int $gender): self
+    {
+        $this->gender = $gender;
         return $this;
     }
 
@@ -1497,16 +1497,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getLoginCount(): int    {
-        return $this->loginCount;
-    }
-
-    public function setLoginCount(int $loginCount): self
-    {
-        $this->loginCount = $loginCount;
-        return $this;
-    }
-
     public function getStudentCourses(): ?string    {
         return $this->studentCourses;
     }
@@ -1514,6 +1504,16 @@ abstract class UserInputDtoGenerated
     public function setStudentCourses(?string $studentCourses): self
     {
         $this->studentCourses = $studentCourses;
+        return $this;
+    }
+
+    public function getLoginCount(): int    {
+        return $this->loginCount;
+    }
+
+    public function setLoginCount(int $loginCount): self
+    {
+        $this->loginCount = $loginCount;
         return $this;
     }
 
@@ -1567,16 +1567,6 @@ abstract class UserInputDtoGenerated
         return $this;
     }
 
-    public function getTalks(): ?string    {
-        return $this->talks;
-    }
-
-    public function setTalks(?string $talks): self
-    {
-        $this->talks = $talks;
-        return $this;
-    }
-
     public function getStatus(): ?string    {
         return $this->status;
     }
@@ -1584,6 +1574,16 @@ abstract class UserInputDtoGenerated
     public function setStatus(?string $status): self
     {
         $this->status = $status;
+        return $this;
+    }
+
+    public function getTalks(): ?string    {
+        return $this->talks;
+    }
+
+    public function setTalks(?string $talks): self
+    {
+        $this->talks = $talks;
         return $this;
     }
 

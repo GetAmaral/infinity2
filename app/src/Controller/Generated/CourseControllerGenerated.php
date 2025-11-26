@@ -86,8 +86,8 @@ abstract class CourseControllerGenerated extends BaseApiController
                 'id' => $organizationRel->getId()->toString(),
                 'display' => (string) $organizationRel,
             ] : null,
-            'releaseDate' => $entity->getReleaseDate()?->format('M d, Y'),
             'name' => $entity->getName(),
+            'releaseDate' => $entity->getReleaseDate()?->format('M d, Y'),
             'description' => $entity->getDescription(),
             'modules' => ($modulesRel = $entity->getModules()) ? array_map(
                 fn($item) => [

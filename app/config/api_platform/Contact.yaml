@@ -47,15 +47,15 @@ resources:
       organization:
         description: "Organization"
         example: "/api/organizatia/01234567-89ab-cdef-0123-456789abcdef"
-      name:
-        description: "The brand name"
-        example: "Nike"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       firstName:
         description: "First Name (text field)"
         example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      name:
+        description: "The brand name"
+        example: "Nike"
         # Advanced filters
         filters:
           - type: OrderFilter
@@ -122,15 +122,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      mobilePhone:
-        description: "Mobile Phone (text field)"
-        example: "Sample text"
       deals:
         description: "Deals"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
+      mobilePhone:
+        description: "Mobile Phone (text field)"
+        example: "Sample text"
       title:
         description: "Job Title (text field)"
         example: "Sample longer text value"

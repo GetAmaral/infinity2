@@ -29,16 +29,16 @@ abstract class PipelineTemplateInputDtoGenerated
     public ?string $organization = null;
 
     #[Groups(['pipelinetemplate:write'])]
-    public bool $default = false;
-
-    #[Groups(['pipelinetemplate:write'])]
     public string $name;
 
     #[Groups(['pipelinetemplate:write'])]
-    public ?string $description = null;
+    public bool $default = false;
 
     #[Groups(['pipelinetemplate:write'])]
     public bool $public = false;
+
+    #[Groups(['pipelinetemplate:write'])]
+    public ?string $description = null;
 
     #[Groups(['pipelinetemplate:write'])]
     public ?string $templateCategory = null;
@@ -83,16 +83,6 @@ abstract class PipelineTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getDefault(): bool    {
-        return $this->default;
-    }
-
-    public function setDefault(bool $default): self
-    {
-        $this->default = $default;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -103,13 +93,13 @@ abstract class PipelineTemplateInputDtoGenerated
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
+    public function getDefault(): bool    {
+        return $this->default;
     }
 
-    public function setDescription(?string $description): self
+    public function setDefault(bool $default): self
     {
-        $this->description = $description;
+        $this->default = $default;
         return $this;
     }
 
@@ -120,6 +110,16 @@ abstract class PipelineTemplateInputDtoGenerated
     public function setPublic(bool $public): self
     {
         $this->public = $public;
+        return $this;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 

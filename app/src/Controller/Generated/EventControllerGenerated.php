@@ -152,20 +152,6 @@ abstract class EventControllerGenerated extends BaseApiController
             'conferenceData' => $entity->getConferenceData(),
             'extendedProperties' => $entity->getExtendedProperties(),
             'source' => $entity->getSource(),
-            'meetingDatas' => ($meetingDatasRel = $entity->getMeetingDatas()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $meetingDatasRel->toArray()
-            ) : [],
-            'workingHours' => ($workingHoursRel = $entity->getWorkingHours()) ? array_map(
-                fn($item) => [
-                    'id' => $item->getId()->toString(),
-                    'display' => (string) $item,
-                ],
-                $workingHoursRel->toArray()
-            ) : [],
             'holidays' => ($holidaysRel = $entity->getHolidays()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
@@ -180,7 +166,21 @@ abstract class EventControllerGenerated extends BaseApiController
                 ],
                 $notificationsRel->toArray()
             ) : [],
+            'workingHours' => ($workingHoursRel = $entity->getWorkingHours()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $workingHoursRel->toArray()
+            ) : [],
             'subject' => $entity->getSubject(),
+            'meetingDatas' => ($meetingDatasRel = $entity->getMeetingDatas()) ? array_map(
+                fn($item) => [
+                    'id' => $item->getId()->toString(),
+                    'display' => (string) $item,
+                ],
+                $meetingDatasRel->toArray()
+            ) : [],
             'status' => $entity->getStatus(),
             'showAs' => $entity->getShowAs(),
             'eventType' => $entity->getEventType(),

@@ -43,7 +43,7 @@ abstract class PipelineStageRepositoryGenerated extends BaseRepository
      */
     protected function getSearchableFields(): array
     {
-        return [            'description',            'migrationCriteria',            'stageName',        ];
+        return [            'name',            'description',            'migrationCriteria',        ];
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class PipelineStageRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'description' => 'description',            'probability' => 'probability',            'dealStages' => 'dealStages',            'final' => 'final',            'won' => 'won',            'lost' => 'lost',            'active' => 'active',            'deals' => 'deals',            'displayOrder' => 'displayOrder',            'migrationCriteria' => 'migrationCriteria',            'next' => 'next',            'pipeline' => 'pipeline',            'previous' => 'previous',            'stageName' => 'stageName',            'tasks' => 'tasks',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'description' => 'description',            'pipeline' => 'pipeline',            'displayOrder' => 'displayOrder',            'probability' => 'probability',            'active' => 'active',            'won' => 'won',            'lost' => 'lost',            'dealStages' => 'dealStages',            'final' => 'final',            'previous' => 'previous',            'next' => 'next',            'migrationCriteria' => 'migrationCriteria',            'deals' => 'deals',            'tasks' => 'tasks',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class PipelineStageRepositoryGenerated extends BaseRepository
      */
     protected function getFilterableFields(): array
     {
-        return [            'probability' => 'probability',            'final' => 'final',            'won' => 'won',            'lost' => 'lost',            'active' => 'active',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'probability' => 'probability',            'active' => 'active',            'won' => 'won',            'lost' => 'lost',            'final' => 'final',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class PipelineStageRepositoryGenerated extends BaseRepository
      */
     protected function getBooleanFilterFields(): array
     {
-        return [            'final',            'won',            'lost',            'active',        ];
+        return [            'active',            'won',            'lost',            'final',        ];
     }
 
     /**
@@ -115,18 +115,18 @@ abstract class PipelineStageRepositoryGenerated extends BaseRepository
         return [
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
+            'name' => $entity->getName(),
             'description' => $entity->getDescription(),
-            'dealStagesCount' => $entity->getDealStages()->count(),
-            'color' => $entity->getColor(),
-            'dealsCount' => $entity->getDeals()->count(),
-            'migrationCriteria' => $entity->getMigrationCriteria(),
-            'next' => $entity->getNext()?->getId()?->toString() ?? '',
-            'nextName' => $entity->getNext()?->getName() ?? '',
             'pipeline' => $entity->getPipeline()?->getId()?->toString() ?? '',
             'pipelineName' => $entity->getPipeline()?->getName() ?? '',
+            'color' => $entity->getColor(),
+            'dealStagesCount' => $entity->getDealStages()->count(),
             'previous' => $entity->getPrevious()?->getId()?->toString() ?? '',
             'previousName' => $entity->getPrevious()?->getName() ?? '',
-            'stageName' => $entity->getStageName(),
+            'next' => $entity->getNext()?->getId()?->toString() ?? '',
+            'nextName' => $entity->getNext()?->getName() ?? '',
+            'migrationCriteria' => $entity->getMigrationCriteria(),
+            'dealsCount' => $entity->getDeals()->count(),
             'tasksCount' => $entity->getTasks()->count(),
             'createdAt' => $entity->getCreatedAt()->format('c'),
             'updatedAt' => $entity->getUpdatedAt()->format('c'),

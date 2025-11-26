@@ -32,20 +32,20 @@ abstract class PipelineTemplateGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
-    #[ORM\Column(name: 'default_prop', type: 'boolean')]
-    protected bool $default = false;
-
-    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $name;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $description = null;
+    #[ORM\Column(name: 'default_prop', type: 'boolean')]
+    protected bool $default = false;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(name: 'public_prop', type: 'boolean')]
     protected bool $public = false;
+
+    #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $description = null;
 
     #[Groups(['pipelinetemplate:read', 'pipelinetemplate:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
@@ -109,6 +109,16 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this;
     }
 
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function getDefault(): bool    {
         return $this->default;
     }
@@ -124,26 +134,6 @@ abstract class PipelineTemplateGenerated extends EntityBase
         return $this->default === true;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getDescription(): ?string    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
     public function getPublic(): bool    {
         return $this->public;
     }
@@ -157,6 +147,16 @@ abstract class PipelineTemplateGenerated extends EntityBase
     public function isPublic(): bool
     {
         return $this->public === true;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+        return $this;
     }
 
     public function getTemplateCategory(): ?string    {

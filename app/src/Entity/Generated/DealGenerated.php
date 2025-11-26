@@ -13,8 +13,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Organization;
 use App\Entity\Company;
 use App\Entity\PipelineStage;
-use App\Entity\DealType;
 use App\Entity\Pipeline;
+use App\Entity\DealType;
 use App\Entity\DealCategory;
 use App\Entity\Product;
 use App\Entity\User;
@@ -72,12 +72,12 @@ abstract class DealGenerated extends EntityBase
     protected ?string $probability = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\ManyToOne(targetEntity: DealType::class, inversedBy: 'deals')]
-    protected ?DealType $dealType = null;
-
-    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: Pipeline::class, inversedBy: 'deals')]
     protected ?Pipeline $pipeline = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\ManyToOne(targetEntity: DealType::class, inversedBy: 'deals')]
+    protected ?DealType $dealType = null;
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -171,14 +171,14 @@ abstract class DealGenerated extends EntityBase
     protected ?User $manager = null;
 
     #[Groups(['deal:read', 'deal:write'])]
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedDeals')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected User $owner;
-
-    #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'deals', fetch: 'LAZY')]
     #[ORM\JoinTable(name: 'deal_team')]
     protected Collection $team;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ownedDeals')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected User $owner;
 
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'primaryDeals')]
@@ -242,6 +242,30 @@ abstract class DealGenerated extends EntityBase
     #[Groups(['deal:read', 'deal:write'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $actualClosureDate = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $aiScore = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
+    protected ?string $winProbability = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $riskFactors = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $recommendedActions = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $lastAiAnalysisAt = null;
+
+    #[Groups(['deal:read', 'deal:write'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $daysStale = null;
 
 
     public function __construct()
@@ -330,17 +354,6 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getDealType(): ?DealType
-    {
-        return $this->dealType;
-    }
-
-    public function setDealType(?DealType $dealType): self
-    {
-        $this->dealType = $dealType;
-        return $this;
-    }
-
     public function getPipeline(): ?Pipeline
     {
         return $this->pipeline;
@@ -349,6 +362,17 @@ abstract class DealGenerated extends EntityBase
     public function setPipeline(?Pipeline $pipeline): self
     {
         $this->pipeline = $pipeline;
+        return $this;
+    }
+
+    public function getDealType(): ?DealType
+    {
+        return $this->dealType;
+    }
+
+    public function setDealType(?DealType $dealType): self
+    {
+        $this->dealType = $dealType;
         return $this;
     }
 
@@ -587,17 +611,6 @@ abstract class DealGenerated extends EntityBase
         return $this;
     }
 
-    public function getOwner(): User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(User $owner): self
-    {
-        $this->owner = $owner;
-        return $this;
-    }
-
     /**
      * @return Collection<int, User>
      */
@@ -618,6 +631,17 @@ abstract class DealGenerated extends EntityBase
     {
         if ($this->team->removeElement($team)) {
         }
+        return $this;
+    }
+
+    public function getOwner(): User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(User $owner): self
+    {
+        $this->owner = $owner;
         return $this;
     }
 
@@ -863,6 +887,66 @@ abstract class DealGenerated extends EntityBase
     public function setActualClosureDate(?\DateTimeImmutable $actualClosureDate): self
     {
         $this->actualClosureDate = $actualClosureDate;
+        return $this;
+    }
+
+    public function getAiScore(): ?int    {
+        return $this->aiScore;
+    }
+
+    public function setAiScore(?int $aiScore): self
+    {
+        $this->aiScore = $aiScore;
+        return $this;
+    }
+
+    public function getWinProbability(): ?string    {
+        return $this->winProbability;
+    }
+
+    public function setWinProbability(?string $winProbability): self
+    {
+        $this->winProbability = $winProbability;
+        return $this;
+    }
+
+    public function getRiskFactors(): ?array    {
+        return $this->riskFactors;
+    }
+
+    public function setRiskFactors(?array $riskFactors): self
+    {
+        $this->riskFactors = $riskFactors;
+        return $this;
+    }
+
+    public function getRecommendedActions(): ?array    {
+        return $this->recommendedActions;
+    }
+
+    public function setRecommendedActions(?array $recommendedActions): self
+    {
+        $this->recommendedActions = $recommendedActions;
+        return $this;
+    }
+
+    public function getLastAiAnalysisAt(): ?\DateTimeImmutable    {
+        return $this->lastAiAnalysisAt;
+    }
+
+    public function setLastAiAnalysisAt(?\DateTimeImmutable $lastAiAnalysisAt): self
+    {
+        $this->lastAiAnalysisAt = $lastAiAnalysisAt;
+        return $this;
+    }
+
+    public function getDaysStale(): ?int    {
+        return $this->daysStale;
+    }
+
+    public function setDaysStale(?int $daysStale): self
+    {
+        $this->daysStale = $daysStale;
         return $this;
     }
 

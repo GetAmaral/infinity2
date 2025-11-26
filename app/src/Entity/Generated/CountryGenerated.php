@@ -78,12 +78,12 @@ abstract class CountryGenerated extends EntityBase
     protected ?string $officialName = null;
 
     #[Groups(['country:read', 'country:write'])]
-    #[ORM\Column(type: 'boolean')]
-    protected bool $active = true;
-
-    #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected ?string $subregion = null;
+
+    #[Groups(['country:read', 'country:write'])]
+    #[ORM\Column(type: 'boolean')]
+    protected bool $active = true;
 
     #[Groups(['country:read', 'country:write'])]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 7, nullable: true)]
@@ -311,6 +311,16 @@ abstract class CountryGenerated extends EntityBase
         return $this;
     }
 
+    public function getSubregion(): ?string    {
+        return $this->subregion;
+    }
+
+    public function setSubregion(?string $subregion): self
+    {
+        $this->subregion = $subregion;
+        return $this;
+    }
+
     public function getActive(): bool    {
         return $this->active;
     }
@@ -324,16 +334,6 @@ abstract class CountryGenerated extends EntityBase
     public function isActive(): bool
     {
         return $this->active === true;
-    }
-
-    public function getSubregion(): ?string    {
-        return $this->subregion;
-    }
-
-    public function setSubregion(?string $subregion): self
-    {
-        $this->subregion = $subregion;
-        return $this;
     }
 
     public function getLatitude(): ?string    {

@@ -54,7 +54,7 @@ abstract class PipelineTemplateRepositoryGenerated extends BaseRepository
      */
     protected function getSortableFields(): array
     {
-        return [            'default' => 'default',            'name' => 'name',            'description' => 'description',            'public' => 'public',            'templateCategory' => 'templateCategory',            'estimatedDuration' => 'estimatedDuration',            'stageCount' => 'stageCount',            'industry' => 'industry',            'targetDealSize' => 'targetDealSize',            'usageCount' => 'usageCount',            'stages' => 'stages',            'active' => 'active',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
+        return [            'name' => 'name',            'default' => 'default',            'public' => 'public',            'description' => 'description',            'templateCategory' => 'templateCategory',            'estimatedDuration' => 'estimatedDuration',            'stageCount' => 'stageCount',            'industry' => 'industry',            'targetDealSize' => 'targetDealSize',            'usageCount' => 'usageCount',            'stages' => 'stages',            'active' => 'active',            'createdAt' => 'createdAt',            'updatedAt' => 'updatedAt',        ];
     }
 
     /**

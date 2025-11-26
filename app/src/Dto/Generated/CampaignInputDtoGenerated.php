@@ -392,16 +392,6 @@ abstract class CampaignInputDtoGenerated
         return $this;
     }
 
-    public function getMessage(): ?string    {
-        return $this->message;
-    }
-
-    public function setMessage(?string $message): self
-    {
-        $this->message = $message;
-        return $this;
-    }
-
     public function getChildCampaigns(): ?string    {
         return $this->childCampaigns;
     }
@@ -409,6 +399,16 @@ abstract class CampaignInputDtoGenerated
     public function setChildCampaigns(?string $childCampaigns): self
     {
         $this->childCampaigns = $childCampaigns;
+        return $this;
+    }
+
+    public function getMessage(): ?string    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): self
+    {
+        $this->message = $message;
         return $this;
     }
 

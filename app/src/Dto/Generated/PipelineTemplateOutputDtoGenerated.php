@@ -27,13 +27,13 @@ abstract class PipelineTemplateOutputDtoGenerated
      */
     public string|OrganizationOutputDto $organization;
 
-    public bool $default;
-
     public string $name;
 
-    public ?string $description = null;
+    public bool $default;
 
     public bool $public;
+
+    public ?string $description = null;
 
     public ?string $templateCategory = null;
 
@@ -88,16 +88,6 @@ abstract class PipelineTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getDefault(): bool    {
-        return $this->default;
-    }
-
-    public function setDefault(bool $default): self
-    {
-        $this->default = $default;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -108,13 +98,13 @@ abstract class PipelineTemplateOutputDtoGenerated
         return $this;
     }
 
-    public function getDescription(): ?string    {
-        return $this->description;
+    public function getDefault(): bool    {
+        return $this->default;
     }
 
-    public function setDescription(?string $description): self
+    public function setDefault(bool $default): self
     {
-        $this->description = $description;
+        $this->default = $default;
         return $this;
     }
 
@@ -125,6 +115,16 @@ abstract class PipelineTemplateOutputDtoGenerated
     public function setPublic(bool $public): self
     {
         $this->public = $public;
+        return $this;
+    }
+
+    public function getDescription(): ?string    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 

@@ -188,29 +188,29 @@ abstract class CompanyOutputDtoGenerated
 
     public ?string $taxId = null;
 
+    public ?\DateTimeImmutable $nextActivityDate = null;
+
     public string $timeZone;
 
-    public ?string $tags = null;
-
-    public ?bool $public = null;
-
-    public ?string $leadStatus = null;
-
-    public ?string $companyDomain = null;
-
     public ?string $stateProvince = null;
+
+    public ?\DateTimeImmutable $lastActivityDate = null;
+
+    public ?string $tags = null;
 
     public ?string $shippingStateProvince = null;
 
     public ?int $numberOfAssociatedDeals = null;
 
-    public ?\DateTimeImmutable $lastActivityDate = null;
+    public ?int $numberOfAssociatedContacts = null;
 
-    public ?\DateTimeImmutable $nextActivityDate = null;
+    public ?bool $public = null;
+
+    public ?string $leadStatus = null;
 
     public ?string $lifecycleStage = null;
 
-    public ?int $numberOfAssociatedContacts = null;
+    public ?string $companyDomain = null;
 
     public ?\DateTimeImmutable $createdAt = null;
 
@@ -739,6 +739,16 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
+    public function getNextActivityDate(): ?\DateTimeImmutable    {
+        return $this->nextActivityDate;
+    }
+
+    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
+    {
+        $this->nextActivityDate = $nextActivityDate;
+        return $this;
+    }
+
     public function getTimeZone(): string    {
         return $this->timeZone;
     }
@@ -749,46 +759,6 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
-    public function getTags(): ?string    {
-        return $this->tags;
-    }
-
-    public function setTags(?string $tags): self
-    {
-        $this->tags = $tags;
-        return $this;
-    }
-
-    public function getPublic(): ?bool    {
-        return $this->public;
-    }
-
-    public function setPublic(?bool $public): self
-    {
-        $this->public = $public;
-        return $this;
-    }
-
-    public function getLeadStatus(): ?string    {
-        return $this->leadStatus;
-    }
-
-    public function setLeadStatus(?string $leadStatus): self
-    {
-        $this->leadStatus = $leadStatus;
-        return $this;
-    }
-
-    public function getCompanyDomain(): ?string    {
-        return $this->companyDomain;
-    }
-
-    public function setCompanyDomain(?string $companyDomain): self
-    {
-        $this->companyDomain = $companyDomain;
-        return $this;
-    }
-
     public function getStateProvince(): ?string    {
         return $this->stateProvince;
     }
@@ -796,6 +766,26 @@ abstract class CompanyOutputDtoGenerated
     public function setStateProvince(?string $stateProvince): self
     {
         $this->stateProvince = $stateProvince;
+        return $this;
+    }
+
+    public function getLastActivityDate(): ?\DateTimeImmutable    {
+        return $this->lastActivityDate;
+    }
+
+    public function setLastActivityDate(?\DateTimeImmutable $lastActivityDate): self
+    {
+        $this->lastActivityDate = $lastActivityDate;
+        return $this;
+    }
+
+    public function getTags(): ?string    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): self
+    {
+        $this->tags = $tags;
         return $this;
     }
 
@@ -819,23 +809,33 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
-    public function getLastActivityDate(): ?\DateTimeImmutable    {
-        return $this->lastActivityDate;
+    public function getNumberOfAssociatedContacts(): ?int    {
+        return $this->numberOfAssociatedContacts;
     }
 
-    public function setLastActivityDate(?\DateTimeImmutable $lastActivityDate): self
+    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
     {
-        $this->lastActivityDate = $lastActivityDate;
+        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
         return $this;
     }
 
-    public function getNextActivityDate(): ?\DateTimeImmutable    {
-        return $this->nextActivityDate;
+    public function getPublic(): ?bool    {
+        return $this->public;
     }
 
-    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
+    public function setPublic(?bool $public): self
     {
-        $this->nextActivityDate = $nextActivityDate;
+        $this->public = $public;
+        return $this;
+    }
+
+    public function getLeadStatus(): ?string    {
+        return $this->leadStatus;
+    }
+
+    public function setLeadStatus(?string $leadStatus): self
+    {
+        $this->leadStatus = $leadStatus;
         return $this;
     }
 
@@ -849,13 +849,13 @@ abstract class CompanyOutputDtoGenerated
         return $this;
     }
 
-    public function getNumberOfAssociatedContacts(): ?int    {
-        return $this->numberOfAssociatedContacts;
+    public function getCompanyDomain(): ?string    {
+        return $this->companyDomain;
     }
 
-    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
+    public function setCompanyDomain(?string $companyDomain): self
     {
-        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
+        $this->companyDomain = $companyDomain;
         return $this;
     }
 

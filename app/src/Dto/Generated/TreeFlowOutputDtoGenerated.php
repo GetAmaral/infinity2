@@ -7,6 +7,7 @@ namespace App\Dto\Generated;
 use Symfony\Component\Uid\Uuid;
 use App\Dto\OrganizationOutputDto;
 use App\Dto\StepOutputDto;
+use App\Dto\PipelineOutputDto;
 
 /**
  * TreeFlow Output DTO (Generated Base Class)
@@ -46,6 +47,12 @@ abstract class TreeFlowOutputDtoGenerated
     public array $steps = [];
 
     public bool $active;
+
+    /**
+     * pipeline reference
+     * Can be: IRI string or nested PipelineOutput object
+     */
+    public string|PipelineOutputDto|null $pipeline = null;
 
     public ?\DateTimeImmutable $createdAt = null;
 
@@ -151,6 +158,16 @@ abstract class TreeFlowOutputDtoGenerated
     public function setActive(bool $active): self
     {
         $this->active = $active;
+        return $this;
+    }
+
+    public function getPipeline(): string|PipelineOutputDto|null    {
+        return $this->pipeline;
+    }
+
+    public function setPipeline(string|PipelineOutputDto|null $pipeline): self
+    {
+        $this->pipeline = $pipeline;
         return $this;
     }
 

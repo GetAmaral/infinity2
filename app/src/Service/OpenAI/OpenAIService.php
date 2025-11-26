@@ -364,4 +364,36 @@ LATEST LEAD MESSAGE:
 Based on the above information, is the condition satisfied? Answer YES or NO.
 PROMPT;
     }
+
+    /**
+     * Analyze structured data and return JSON response
+     * Optimized for consistent, structured outputs like deal analysis
+     */
+    public function analyzeStructured(string $prompt, string $systemMessage = null): string
+    {
+        $messages = [];
+
+        if ($systemMessage) {
+            $messages[] = ['role' => 'system', 'content' => $systemMessage];
+        }
+
+        $messages[] = ['role' => 'user', 'content' => $prompt];
+
+        try {
+            $response = $this->client->chat()->create([
+                'model' => $this->model,
+                'messages' => $messages,
+                'max_tokens' => 800,
+                'temperature' => 0.3, // Lower temperature for structured output
+            ]);
+
+            return $response->choices[0]->message->content;
+        } catch (\Exception $e) {
+            $this->logger->error('OpenAI structured analysis error', [
+                'error' => $e->getMessage(),
+            ]);
+
+            throw new \RuntimeException('Failed to analyze: ' . $e->getMessage());
+        }
+    }
 }

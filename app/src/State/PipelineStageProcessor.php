@@ -14,9 +14,9 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\Organization;
+use App\Entity\Pipeline;
 use App\Entity\DealStage;
 use App\Entity\Deal;
-use App\Entity\Pipeline;
 use App\Entity\Task;
 
 /**
@@ -86,17 +86,29 @@ class PipelineStageProcessor implements ProcessorInterface
         $requestData = $context['request']->toArray() ?? [];
 
         // Map scalar properties from DTO to Entity
+        // name
+        if (!$isPatch || array_key_exists('name', $requestData)) {
+            $entity->setName($data->name);
+        }
         // description
         if (!$isPatch || array_key_exists('description', $requestData)) {
             $entity->setDescription($data->description);
+        }
+        // displayOrder
+        if (!$isPatch || array_key_exists('displayOrder', $requestData)) {
+            $entity->setDisplayOrder($data->displayOrder);
         }
         // probability
         if (!$isPatch || array_key_exists('probability', $requestData)) {
             $entity->setProbability($data->probability);
         }
-        // final
-        if (!$isPatch || array_key_exists('final', $requestData)) {
-            $entity->setFinal($data->final);
+        // color
+        if (!$isPatch || array_key_exists('color', $requestData)) {
+            $entity->setColor($data->color);
+        }
+        // active
+        if (!$isPatch || array_key_exists('active', $requestData)) {
+            $entity->setActive($data->active);
         }
         // won
         if (!$isPatch || array_key_exists('won', $requestData)) {
@@ -106,25 +118,13 @@ class PipelineStageProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('lost', $requestData)) {
             $entity->setLost($data->lost);
         }
-        // active
-        if (!$isPatch || array_key_exists('active', $requestData)) {
-            $entity->setActive($data->active);
-        }
-        // color
-        if (!$isPatch || array_key_exists('color', $requestData)) {
-            $entity->setColor($data->color);
-        }
-        // displayOrder
-        if (!$isPatch || array_key_exists('displayOrder', $requestData)) {
-            $entity->setDisplayOrder($data->displayOrder);
+        // final
+        if (!$isPatch || array_key_exists('final', $requestData)) {
+            $entity->setFinal($data->final);
         }
         // migrationCriteria
         if (!$isPatch || array_key_exists('migrationCriteria', $requestData)) {
             $entity->setMigrationCriteria($data->migrationCriteria);
-        }
-        // stageName
-        if (!$isPatch || array_key_exists('stageName', $requestData)) {
-            $entity->setStageName($data->stageName);
         }
 
         // Map relationship properties
@@ -143,24 +143,6 @@ class PipelineStageProcessor implements ProcessorInterface
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested organization creation not supported. Use IRI format.');
-                }
-            }
-        }
-
-        // next: OneToOne
-        if (!$isPatch || array_key_exists('next', $requestData)) {
-            if ($data->next !== null) {
-                if (is_string($data->next)) {
-                    // IRI format: "/api/pipeline_stages/{id}"
-                    $nextId = $this->extractIdFromIri($data->next);
-                    $next = $this->entityManager->getRepository(PipelineStage::class)->find($nextId);
-                    if (!$next) {
-                        throw new BadRequestHttpException('PipelineStage not found: ' . $nextId);
-                    }
-                    $entity->setNext($next);
-                } else {
-                    // Nested object creation (if supported)
-                    throw new BadRequestHttpException('Nested next creation not supported. Use IRI format.');
                 }
             }
         }
@@ -197,6 +179,24 @@ class PipelineStageProcessor implements ProcessorInterface
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested previous creation not supported. Use IRI format.');
+                }
+            }
+        }
+
+        // next: OneToOne
+        if (!$isPatch || array_key_exists('next', $requestData)) {
+            if ($data->next !== null) {
+                if (is_string($data->next)) {
+                    // IRI format: "/api/pipeline_stages/{id}"
+                    $nextId = $this->extractIdFromIri($data->next);
+                    $next = $this->entityManager->getRepository(PipelineStage::class)->find($nextId);
+                    if (!$next) {
+                        throw new BadRequestHttpException('PipelineStage not found: ' . $nextId);
+                    }
+                    $entity->setNext($next);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested next creation not supported. Use IRI format.');
                 }
             }
         }

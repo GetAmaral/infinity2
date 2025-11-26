@@ -87,7 +87,7 @@ class DealStageProcessor implements ProcessorInterface
         // Map scalar properties from DTO to Entity
         // stageName
         if (!$isPatch || array_key_exists('stageName', $requestData)) {
-            $entity->setStageName($data->stageName);
+            $entity->setName($data->stageName);
         }
         // probability
         if (!$isPatch || array_key_exists('probability', $requestData)) {

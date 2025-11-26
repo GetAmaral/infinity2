@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
 use App\Dto\StepInputDto;
+use App\Dto\PipelineInputDto;
 
 /**
  * TreeFlow Input DTO (Generated Base Class)
@@ -60,6 +61,13 @@ abstract class TreeFlowInputDtoGenerated
 
     #[Groups(['treeflow:write'])]
     public bool $active = true;
+
+    /**
+     * pipeline reference
+     * Must be: IRI string (e.g., "/api/pipelines/uuid")
+     */
+    #[Groups(['treeflow:write'])]
+    public ?string $pipeline = null;
 
 
     // Getters and Setters
@@ -151,6 +159,16 @@ abstract class TreeFlowInputDtoGenerated
     public function setActive(bool $active): self
     {
         $this->active = $active;
+        return $this;
+    }
+
+    public function getPipeline(): ?string    {
+        return $this->pipeline;
+    }
+
+    public function setPipeline(?string $pipeline): self
+    {
+        $this->pipeline = $pipeline;
         return $this;
     }
 }

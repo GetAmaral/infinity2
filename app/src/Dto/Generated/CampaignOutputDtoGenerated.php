@@ -93,13 +93,13 @@ abstract class CampaignOutputDtoGenerated
      */
     public string|UserOutputDto|null $manager = null;
 
-    public ?string $message = null;
-
     /**
      * childCampaigns collection
      * @var CampaignOutputDto[]
      */
     public array $childCampaigns = [];
+
+    public ?string $message = null;
 
     public ?int $numberOfContacts = null;
 
@@ -410,16 +410,6 @@ abstract class CampaignOutputDtoGenerated
         return $this;
     }
 
-    public function getMessage(): ?string    {
-        return $this->message;
-    }
-
-    public function setMessage(?string $message): self
-    {
-        $this->message = $message;
-        return $this;
-    }
-
     public function getChildCampaigns(): array    {
         return $this->childCampaigns;
     }
@@ -427,6 +417,16 @@ abstract class CampaignOutputDtoGenerated
     public function setChildCampaigns(array $childCampaigns): self
     {
         $this->childCampaigns = $childCampaigns;
+        return $this;
+    }
+
+    public function getMessage(): ?string    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): self
+    {
+        $this->message = $message;
         return $this;
     }
 

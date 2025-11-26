@@ -152,13 +152,13 @@ abstract class UserGenerated extends EntityBase
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $openAiApiKey = null;
 
-    #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $gender = null;
-
     #[Groups(['user:read', 'audit:read'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     protected ?\DateTimeImmutable $lastLoginAt = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $gender = null;
 
     #[Groups(['audit:read'])]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
@@ -505,13 +505,13 @@ abstract class UserGenerated extends EntityBase
     #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $tags = null;
 
-    #[Groups(['user:read'])]
-    #[ORM\Column(type: 'integer')]
-    protected int $loginCount = 0;
-
     #[Groups(['user:read', 'user:write'])]
     #[ORM\OneToMany(targetEntity: StudentCourse::class, mappedBy: 'student', fetch: 'LAZY')]
     protected Collection $studentCourses;
+
+    #[Groups(['user:read'])]
+    #[ORM\Column(type: 'integer')]
+    protected int $loginCount = 0;
 
     #[Groups(['user:read', 'audit:read'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -534,12 +534,12 @@ abstract class UserGenerated extends EntityBase
     protected ?\DateTimeImmutable $lastActivityAt = null;
 
     #[Groups(['user:read', 'user:write'])]
-    #[ORM\ManyToMany(targetEntity: Talk::class, mappedBy: 'users', fetch: 'LAZY')]
-    protected Collection $talks;
-
-    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     protected ?string $status = null;
+
+    #[Groups(['user:read', 'user:write'])]
+    #[ORM\ManyToMany(targetEntity: Talk::class, mappedBy: 'users', fetch: 'LAZY')]
+    protected Collection $talks;
 
     #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(type: 'text', nullable: true)]
@@ -1040,16 +1040,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getGender(): ?int    {
-        return $this->gender;
-    }
-
-    public function setGender(?int $gender): self
-    {
-        $this->gender = $gender;
-        return $this;
-    }
-
     public function getLastLoginAt(): ?\DateTimeImmutable    {
         return $this->lastLoginAt;
     }
@@ -1057,6 +1047,16 @@ abstract class UserGenerated extends EntityBase
     public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
     {
         $this->lastLoginAt = $lastLoginAt;
+        return $this;
+    }
+
+    public function getGender(): ?int    {
+        return $this->gender;
+    }
+
+    public function setGender(?int $gender): self
+    {
+        $this->gender = $gender;
         return $this;
     }
 
@@ -2109,16 +2109,6 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
-    public function getLoginCount(): int    {
-        return $this->loginCount;
-    }
-
-    public function setLoginCount(int $loginCount): self
-    {
-        $this->loginCount = $loginCount;
-        return $this;
-    }
-
     /**
      * @return Collection<int, StudentCourse>
      */
@@ -2143,6 +2133,16 @@ abstract class UserGenerated extends EntityBase
                 $studentCours->setStudent(null);
             }
         }
+        return $this;
+    }
+
+    public function getLoginCount(): int    {
+        return $this->loginCount;
+    }
+
+    public function setLoginCount(int $loginCount): self
+    {
+        $this->loginCount = $loginCount;
         return $this;
     }
 
@@ -2201,6 +2201,16 @@ abstract class UserGenerated extends EntityBase
         return $this;
     }
 
+    public function getStatus(): ?string    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Talk>
      */
@@ -2225,16 +2235,6 @@ abstract class UserGenerated extends EntityBase
                 $talk->setUsers(null);
             }
         }
-        return $this;
-    }
-
-    public function getStatus(): ?string    {
-        return $this->status;
-    }
-
-    public function setStatus(?string $status): self
-    {
-        $this->status = $status;
         return $this;
     }
 

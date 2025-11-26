@@ -148,20 +148,20 @@ abstract class CountryTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('active', CheckboxType::class, [
-            'label' => 'Active',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('subregion', TextType::class, [
             'label' => 'Subregion',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter subregion',
+            ],
+        ]);
+
+        $builder->add('active', CheckboxType::class, [
+            'label' => 'Active',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
             ],
         ]);
 

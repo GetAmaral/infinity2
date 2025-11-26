@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Step;
 use App\Entity\StepConnection;
+use App\Entity\PipelineStage;
 
 /**
  * StepOutput Entity (Generated Base Class)
@@ -24,15 +25,15 @@ use App\Entity\StepConnection;
 #[ORM\HasLifecycleCallbacks]
 abstract class StepOutputGenerated extends EntityBase
 {
-    #[Groups(['output:read'])]
-    #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'outputs')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected Step $step;
-
     #[Groups(['output:read', 'output:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(max: 255)]
     protected string $name;
+
+    #[Groups(['output:read'])]
+    #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'outputs')]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Step $step;
 
     #[Groups(['output:read', 'output:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -47,10 +48,24 @@ abstract class StepOutputGenerated extends EntityBase
     #[ORM\OneToOne(targetEntity: StepConnection::class, mappedBy: 'sourceOutput')]
     protected ?StepConnection $connection = null;
 
+    #[Groups(['stepoutput:read', 'stepoutput:write'])]
+    #[ORM\ManyToOne(targetEntity: PipelineStage::class, inversedBy: 'stepOutputs')]
+    protected ?PipelineStage $pipelineStage = null;
+
 
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
     }
 
     public function getStep(): Step
@@ -61,16 +76,6 @@ abstract class StepOutputGenerated extends EntityBase
     public function setStep(Step $step): self
     {
         $this->step = $step;
-        return $this;
-    }
-
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
         return $this;
     }
 
@@ -102,6 +107,17 @@ abstract class StepOutputGenerated extends EntityBase
     public function setConnection(?StepConnection $connection): self
     {
         $this->connection = $connection;
+        return $this;
+    }
+
+    public function getPipelineStage(): ?PipelineStage
+    {
+        return $this->pipelineStage;
+    }
+
+    public function setPipelineStage(?PipelineStage $pipelineStage): self
+    {
+        $this->pipelineStage = $pipelineStage;
         return $this;
     }
 

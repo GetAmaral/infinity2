@@ -29,9 +29,9 @@ abstract class CourseOutputDtoGenerated
      */
     public string|OrganizationOutputDto $organization;
 
-    public ?\DateTimeImmutable $releaseDate = null;
-
     public string $name;
+
+    public ?\DateTimeImmutable $releaseDate = null;
 
     public ?string $description = null;
 
@@ -84,16 +84,6 @@ abstract class CourseOutputDtoGenerated
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTimeImmutable    {
-        return $this->releaseDate;
-    }
-
-    public function setReleaseDate(?\DateTimeImmutable $releaseDate): self
-    {
-        $this->releaseDate = $releaseDate;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -101,6 +91,16 @@ abstract class CourseOutputDtoGenerated
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getReleaseDate(): ?\DateTimeImmutable    {
+        return $this->releaseDate;
+    }
+
+    public function setReleaseDate(?\DateTimeImmutable $releaseDate): self
+    {
+        $this->releaseDate = $releaseDate;
         return $this;
     }
 

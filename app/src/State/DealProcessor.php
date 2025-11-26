@@ -16,8 +16,8 @@ use Symfony\Component\Uid\Uuid;
 use App\Entity\Organization;
 use App\Entity\Company;
 use App\Entity\PipelineStage;
-use App\Entity\DealType;
 use App\Entity\Pipeline;
+use App\Entity\DealType;
 use App\Entity\DealCategory;
 use App\Entity\Product;
 use App\Entity\User;
@@ -207,6 +207,30 @@ class DealProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('actualClosureDate', $requestData)) {
             $entity->setActualClosureDate($data->actualClosureDate);
         }
+        // aiScore
+        if (!$isPatch || array_key_exists('aiScore', $requestData)) {
+            $entity->setAiScore($data->aiScore);
+        }
+        // winProbability
+        if (!$isPatch || array_key_exists('winProbability', $requestData)) {
+            $entity->setWinProbability($data->winProbability);
+        }
+        // riskFactors
+        if (!$isPatch || array_key_exists('riskFactors', $requestData)) {
+            $entity->setRiskFactors($data->riskFactors);
+        }
+        // recommendedActions
+        if (!$isPatch || array_key_exists('recommendedActions', $requestData)) {
+            $entity->setRecommendedActions($data->recommendedActions);
+        }
+        // lastAiAnalysisAt
+        if (!$isPatch || array_key_exists('lastAiAnalysisAt', $requestData)) {
+            $entity->setLastAiAnalysisAt($data->lastAiAnalysisAt);
+        }
+        // daysStale
+        if (!$isPatch || array_key_exists('daysStale', $requestData)) {
+            $entity->setDaysStale($data->daysStale);
+        }
 
         // Map relationship properties
         // organization: ManyToOne
@@ -264,24 +288,6 @@ class DealProcessor implements ProcessorInterface
             }
         }
 
-        // dealType: ManyToOne
-        if (!$isPatch || array_key_exists('dealType', $requestData)) {
-            if ($data->dealType !== null) {
-                if (is_string($data->dealType)) {
-                    // IRI format: "/api/deal_types/{id}"
-                    $dealTypeId = $this->extractIdFromIri($data->dealType);
-                    $dealType = $this->entityManager->getRepository(DealType::class)->find($dealTypeId);
-                    if (!$dealType) {
-                        throw new BadRequestHttpException('DealType not found: ' . $dealTypeId);
-                    }
-                    $entity->setDealType($dealType);
-                } else {
-                    // Nested object creation (if supported)
-                    throw new BadRequestHttpException('Nested dealType creation not supported. Use IRI format.');
-                }
-            }
-        }
-
         // pipeline: ManyToOne
         if (!$isPatch || array_key_exists('pipeline', $requestData)) {
             if ($data->pipeline !== null) {
@@ -296,6 +302,24 @@ class DealProcessor implements ProcessorInterface
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested pipeline creation not supported. Use IRI format.');
+                }
+            }
+        }
+
+        // dealType: ManyToOne
+        if (!$isPatch || array_key_exists('dealType', $requestData)) {
+            if ($data->dealType !== null) {
+                if (is_string($data->dealType)) {
+                    // IRI format: "/api/deal_types/{id}"
+                    $dealTypeId = $this->extractIdFromIri($data->dealType);
+                    $dealType = $this->entityManager->getRepository(DealType::class)->find($dealTypeId);
+                    if (!$dealType) {
+                        throw new BadRequestHttpException('DealType not found: ' . $dealTypeId);
+                    }
+                    $entity->setDealType($dealType);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested dealType creation not supported. Use IRI format.');
                 }
             }
         }

@@ -178,16 +178,16 @@ resources:
         writable: false
         description: "OpenAI API Key"
         example: "Sample openai api key"
+      lastLoginAt:
+        writable: false
+        description: "Last Login At"
+        example: "2025-01-15T10:30:00Z"
       gender:
         description: "Gender (numeric value)"
         example: "42"
         # Advanced filters
         filters:
           - type: OrderFilter
-      lastLoginAt:
-        writable: false
-        description: "Last Login At"
-        example: "2025-01-15T10:30:00Z"
       lockedUntil:
         writable: false
         description: "Locked Until"
@@ -499,16 +499,16 @@ resources:
       tags:
         description: "Tags"
         example: "{\"key\": \"value\"}"
-      loginCount:
-        writable: false
-        description: "Login Count"
-        example: 0
       studentCourses:
         description: "Student Courses"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
+      loginCount:
+        writable: false
+        description: "Login Count"
+        example: 0
       lastIpAddress:
         writable: false
         description: "Last IP Address"
@@ -528,15 +528,15 @@ resources:
         writable: false
         description: "Last Activity At"
         example: "2025-01-15T10:30:00Z"
+      status:
+        description: "Status"
+        example: "Sample status"
       talks:
         description: "Talks"
         example: "sample value"
         # Advanced filters
         filters:
           - type: OrderFilter
-      status:
-        description: "Status"
-        example: "Sample status"
       statusMessage:
         description: "Status Message"
         example: "Sample status message"

@@ -137,7 +137,10 @@ abstract class TaskTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -172,7 +175,10 @@ abstract class TaskTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -224,7 +230,10 @@ abstract class TaskTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -256,16 +265,16 @@ abstract class TaskTypeGenerated extends AbstractType
             'placeholder' => 'Select priority',
         ]);
 
-        $builder->add('completed', CheckboxType::class, [
-            'label' => 'Completed',
+        $builder->add('scheduledDate', DateTimeType::class, [
+            'label' => 'Due Date',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
             ],
         ]);
 
-        $builder->add('scheduledDate', DateTimeType::class, [
-            'label' => 'Due Date',
+        $builder->add('completed', CheckboxType::class, [
+            'label' => 'Completed',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
@@ -289,7 +298,10 @@ abstract class TaskTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -436,7 +448,10 @@ abstract class TaskTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -471,7 +486,10 @@ abstract class TaskTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [

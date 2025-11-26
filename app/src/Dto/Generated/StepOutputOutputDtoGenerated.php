@@ -7,6 +7,7 @@ namespace App\Dto\Generated;
 use Symfony\Component\Uid\Uuid;
 use App\Dto\StepOutputDto;
 use App\Dto\StepConnectionOutputDto;
+use App\Dto\PipelineStageOutputDto;
 
 /**
  * StepOutput Output DTO (Generated Base Class)
@@ -21,13 +22,13 @@ abstract class StepOutputOutputDtoGenerated
 {
     public ?Uuid $id = null;
 
+    public string $name;
+
     /**
      * step reference
      * Can be: IRI string or nested StepOutput object
      */
     public string|StepOutputDto $step;
-
-    public string $name;
 
     public ?string $slug = null;
 
@@ -38,6 +39,12 @@ abstract class StepOutputOutputDtoGenerated
      * Can be: IRI string or nested StepConnectionOutput object
      */
     public string|StepConnectionOutputDto|null $connection = null;
+
+    /**
+     * pipelineStage reference
+     * Can be: IRI string or nested PipelineStageOutput object
+     */
+    public string|PipelineStageOutputDto|null $pipelineStage = null;
 
     public ?\DateTimeImmutable $createdAt = null;
 
@@ -56,16 +63,6 @@ abstract class StepOutputOutputDtoGenerated
     }
 
 
-    public function getStep(): string|StepOutputDto    {
-        return $this->step;
-    }
-
-    public function setStep(string|StepOutputDto $step): self
-    {
-        $this->step = $step;
-        return $this;
-    }
-
     public function getName(): string    {
         return $this->name;
     }
@@ -73,6 +70,16 @@ abstract class StepOutputOutputDtoGenerated
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getStep(): string|StepOutputDto    {
+        return $this->step;
+    }
+
+    public function setStep(string|StepOutputDto $step): self
+    {
+        $this->step = $step;
         return $this;
     }
 
@@ -103,6 +110,16 @@ abstract class StepOutputOutputDtoGenerated
     public function setConnection(string|StepConnectionOutputDto|null $connection): self
     {
         $this->connection = $connection;
+        return $this;
+    }
+
+    public function getPipelineStage(): string|PipelineStageOutputDto|null    {
+        return $this->pipelineStage;
+    }
+
+    public function setPipelineStage(string|PipelineStageOutputDto|null $pipelineStage): self
+    {
+        $this->pipelineStage = $pipelineStage;
         return $this;
     }
 

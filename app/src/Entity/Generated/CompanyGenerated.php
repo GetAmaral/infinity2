@@ -273,32 +273,26 @@ abstract class CompanyGenerated extends EntityBase
     protected ?string $taxId = null;
 
     #[Groups(['company:read', 'company:write'])]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $nextActivityDate = null;
+
+    #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'string', length: 255)]
     protected string $timeZone = 'UTC';
-
-    #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(type: 'string', length: 500, nullable: true)]
-    #[Assert\Length(max: 500)]
-    protected ?string $tags = null;
-
-    #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(name: 'public_prop', type: 'boolean', nullable: true)]
-    protected ?bool $public = null;
-
-    #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Assert\Length(max: 50)]
-    protected ?string $leadStatus = null;
-
-    #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Assert\Length(max: 255)]
-    protected ?string $companyDomain = null;
 
     #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[Assert\Length(max: 100)]
     protected ?string $stateProvince = null;
+
+    #[Groups(['company:read'])]
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    protected ?\DateTimeImmutable $lastActivityDate = null;
+
+    #[Groups(['company:read', 'company:write'])]
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
+    protected ?string $tags = null;
 
     #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
@@ -310,21 +304,27 @@ abstract class CompanyGenerated extends EntityBase
     protected ?int $numberOfAssociatedDeals = null;
 
     #[Groups(['company:read'])]
-    #[ORM\Column(type: 'date_immutable', nullable: true)]
-    protected ?\DateTimeImmutable $lastActivityDate = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $numberOfAssociatedContacts = null;
 
     #[Groups(['company:read', 'company:write'])]
-    #[ORM\Column(type: 'date_immutable', nullable: true)]
-    protected ?\DateTimeImmutable $nextActivityDate = null;
+    #[ORM\Column(name: 'public_prop', type: 'boolean', nullable: true)]
+    protected ?bool $public = null;
+
+    #[Groups(['company:read', 'company:write'])]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
+    protected ?string $leadStatus = null;
 
     #[Groups(['company:read', 'company:write'])]
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Assert\Length(max: 50)]
     protected ?string $lifecycleStage = null;
 
-    #[Groups(['company:read'])]
-    #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $numberOfAssociatedContacts = null;
+    #[Groups(['company:read', 'company:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
+    protected ?string $companyDomain = null;
 
 
     public function __construct()
@@ -1003,6 +1003,16 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
+    public function getNextActivityDate(): ?\DateTimeImmutable    {
+        return $this->nextActivityDate;
+    }
+
+    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
+    {
+        $this->nextActivityDate = $nextActivityDate;
+        return $this;
+    }
+
     public function getTimeZone(): string    {
         return $this->timeZone;
     }
@@ -1013,6 +1023,26 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
+    public function getStateProvince(): ?string    {
+        return $this->stateProvince;
+    }
+
+    public function setStateProvince(?string $stateProvince): self
+    {
+        $this->stateProvince = $stateProvince;
+        return $this;
+    }
+
+    public function getLastActivityDate(): ?\DateTimeImmutable    {
+        return $this->lastActivityDate;
+    }
+
+    public function setLastActivityDate(?\DateTimeImmutable $lastActivityDate): self
+    {
+        $this->lastActivityDate = $lastActivityDate;
+        return $this;
+    }
+
     public function getTags(): ?string    {
         return $this->tags;
     }
@@ -1020,6 +1050,36 @@ abstract class CompanyGenerated extends EntityBase
     public function setTags(?string $tags): self
     {
         $this->tags = $tags;
+        return $this;
+    }
+
+    public function getShippingStateProvince(): ?string    {
+        return $this->shippingStateProvince;
+    }
+
+    public function setShippingStateProvince(?string $shippingStateProvince): self
+    {
+        $this->shippingStateProvince = $shippingStateProvince;
+        return $this;
+    }
+
+    public function getNumberOfAssociatedDeals(): ?int    {
+        return $this->numberOfAssociatedDeals;
+    }
+
+    public function setNumberOfAssociatedDeals(?int $numberOfAssociatedDeals): self
+    {
+        $this->numberOfAssociatedDeals = $numberOfAssociatedDeals;
+        return $this;
+    }
+
+    public function getNumberOfAssociatedContacts(): ?int    {
+        return $this->numberOfAssociatedContacts;
+    }
+
+    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
+    {
+        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
         return $this;
     }
 
@@ -1048,66 +1108,6 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getCompanyDomain(): ?string    {
-        return $this->companyDomain;
-    }
-
-    public function setCompanyDomain(?string $companyDomain): self
-    {
-        $this->companyDomain = $companyDomain;
-        return $this;
-    }
-
-    public function getStateProvince(): ?string    {
-        return $this->stateProvince;
-    }
-
-    public function setStateProvince(?string $stateProvince): self
-    {
-        $this->stateProvince = $stateProvince;
-        return $this;
-    }
-
-    public function getShippingStateProvince(): ?string    {
-        return $this->shippingStateProvince;
-    }
-
-    public function setShippingStateProvince(?string $shippingStateProvince): self
-    {
-        $this->shippingStateProvince = $shippingStateProvince;
-        return $this;
-    }
-
-    public function getNumberOfAssociatedDeals(): ?int    {
-        return $this->numberOfAssociatedDeals;
-    }
-
-    public function setNumberOfAssociatedDeals(?int $numberOfAssociatedDeals): self
-    {
-        $this->numberOfAssociatedDeals = $numberOfAssociatedDeals;
-        return $this;
-    }
-
-    public function getLastActivityDate(): ?\DateTimeImmutable    {
-        return $this->lastActivityDate;
-    }
-
-    public function setLastActivityDate(?\DateTimeImmutable $lastActivityDate): self
-    {
-        $this->lastActivityDate = $lastActivityDate;
-        return $this;
-    }
-
-    public function getNextActivityDate(): ?\DateTimeImmutable    {
-        return $this->nextActivityDate;
-    }
-
-    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
-    {
-        $this->nextActivityDate = $nextActivityDate;
-        return $this;
-    }
-
     public function getLifecycleStage(): ?string    {
         return $this->lifecycleStage;
     }
@@ -1118,13 +1118,13 @@ abstract class CompanyGenerated extends EntityBase
         return $this;
     }
 
-    public function getNumberOfAssociatedContacts(): ?int    {
-        return $this->numberOfAssociatedContacts;
+    public function getCompanyDomain(): ?string    {
+        return $this->companyDomain;
     }
 
-    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
+    public function setCompanyDomain(?string $companyDomain): self
     {
-        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
+        $this->companyDomain = $companyDomain;
         return $this;
     }
 

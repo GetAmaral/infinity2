@@ -456,26 +456,6 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
-    public function getMeetingDatas(): ?string    {
-        return $this->meetingDatas;
-    }
-
-    public function setMeetingDatas(?string $meetingDatas): self
-    {
-        $this->meetingDatas = $meetingDatas;
-        return $this;
-    }
-
-    public function getWorkingHours(): ?string    {
-        return $this->workingHours;
-    }
-
-    public function setWorkingHours(?string $workingHours): self
-    {
-        $this->workingHours = $workingHours;
-        return $this;
-    }
-
     public function getHolidays(): ?string    {
         return $this->holidays;
     }
@@ -496,6 +476,16 @@ abstract class EventInputDtoGenerated
         return $this;
     }
 
+    public function getWorkingHours(): ?string    {
+        return $this->workingHours;
+    }
+
+    public function setWorkingHours(?string $workingHours): self
+    {
+        $this->workingHours = $workingHours;
+        return $this;
+    }
+
     public function getSubject(): ?string    {
         return $this->subject;
     }
@@ -503,6 +493,16 @@ abstract class EventInputDtoGenerated
     public function setSubject(?string $subject): self
     {
         $this->subject = $subject;
+        return $this;
+    }
+
+    public function getMeetingDatas(): ?string    {
+        return $this->meetingDatas;
+    }
+
+    public function setMeetingDatas(?string $meetingDatas): self
+    {
+        $this->meetingDatas = $meetingDatas;
         return $this;
     }
 

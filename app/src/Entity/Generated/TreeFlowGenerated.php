@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Organization;
 use App\Entity\Step;
+use App\Entity\Pipeline;
 
 /**
  * TreeFlow Entity (Generated Base Class)
@@ -64,6 +65,10 @@ abstract class TreeFlowGenerated extends EntityBase
     #[Groups(['treeflow:read', 'treeflow:write'])]
     #[ORM\Column(type: 'boolean')]
     protected bool $active = true;
+
+    #[Groups(['treeflow:read', 'treeflow:write'])]
+    #[ORM\ManyToOne(targetEntity: Pipeline::class, inversedBy: 'treeFlows')]
+    protected ?Pipeline $pipeline = null;
 
 
     public function __construct()
@@ -183,6 +188,17 @@ abstract class TreeFlowGenerated extends EntityBase
     public function isActive(): bool
     {
         return $this->active === true;
+    }
+
+    public function getPipeline(): ?Pipeline
+    {
+        return $this->pipeline;
+    }
+
+    public function setPipeline(?Pipeline $pipeline): self
+    {
+        $this->pipeline = $pipeline;
+        return $this;
     }
 
 

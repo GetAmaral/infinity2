@@ -345,12 +345,48 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
+      nextActivityDate:
+        description: "Next Activity Date (date)"
+        example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       timeZone:
         description: "Time Zone (text field)"
         example: "Sample longer text value"
+      stateProvince:
+        description: "State\/Province (text field)"
+        example: "Sample longer text value"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      lastActivityDate:
+        writable: false
+        description: "Last Activity Date (date)"
+        example: "2025-01-15"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       tags:
         description: "Tags (text field)"
         example: "Sample longer text value"
+      shippingStateProvince:
+        description: "Shipping State\/Province (text field)"
+        example: "Sample longer text value"
+      numberOfAssociatedDeals:
+        writable: false
+        description: "Number of Deals (numeric value)"
+        example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
+      numberOfAssociatedContacts:
+        writable: false
+        description: "Number of Contacts (numeric value)"
+        example: "42"
+        # Advanced filters
+        filters:
+          - type: OrderFilter
       public:
         description: "Is Public Company (yes\/no)"
         example: "true"
@@ -363,51 +399,15 @@ resources:
         # Advanced filters
         filters:
           - type: OrderFilter
-      companyDomain:
-        description: "Company Domain (text field)"
-        example: "Sample longer text value"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
-      stateProvince:
-        description: "State\/Province (text field)"
-        example: "Sample longer text value"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
-      shippingStateProvince:
-        description: "Shipping State\/Province (text field)"
-        example: "Sample longer text value"
-      numberOfAssociatedDeals:
-        writable: false
-        description: "Number of Deals (numeric value)"
-        example: "42"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
-      lastActivityDate:
-        writable: false
-        description: "Last Activity Date (date)"
-        example: "2025-01-15"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
-      nextActivityDate:
-        description: "Next Activity Date (date)"
-        example: "2025-01-15"
-        # Advanced filters
-        filters:
-          - type: OrderFilter
       lifecycleStage:
         description: "Lifecycle Stage (text field)"
         example: "Sample text"
         # Advanced filters
         filters:
           - type: OrderFilter
-      numberOfAssociatedContacts:
-        writable: false
-        description: "Number of Contacts (numeric value)"
-        example: "42"
+      companyDomain:
+        description: "Company Domain (text field)"
+        example: "Sample longer text value"
         # Advanced filters
         filters:
           - type: OrderFilter

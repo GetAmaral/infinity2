@@ -136,13 +136,13 @@ class TaskProcessor implements ProcessorInterface
         if (!$isPatch || array_key_exists('priority', $requestData)) {
             $entity->setPriority($data->priority);
         }
-        // completed
-        if (!$isPatch || array_key_exists('completed', $requestData)) {
-            $entity->setCompleted($data->completed);
-        }
         // scheduledDate
         if (!$isPatch || array_key_exists('scheduledDate', $requestData)) {
             $entity->setScheduledDate($data->scheduledDate);
+        }
+        // completed
+        if (!$isPatch || array_key_exists('completed', $requestData)) {
+            $entity->setCompleted($data->completed);
         }
         // reminderDate
         if (!$isPatch || array_key_exists('reminderDate', $requestData)) {

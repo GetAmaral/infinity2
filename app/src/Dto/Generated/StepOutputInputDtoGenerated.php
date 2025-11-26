@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\StepInputDto;
 use App\Dto\StepConnectionInputDto;
+use App\Dto\PipelineStageInputDto;
 
 /**
  * StepOutput Input DTO (Generated Base Class)
@@ -21,6 +22,10 @@ use App\Dto\StepConnectionInputDto;
  */
 abstract class StepOutputInputDtoGenerated
 {
+    #[Assert\Length(max: 255)]
+    #[Groups(['step_output:write'])]
+    public string $name;
+
     /**
      * step reference
      * Must be: IRI string (e.g., "/api/steps/uuid")
@@ -28,10 +33,6 @@ abstract class StepOutputInputDtoGenerated
     #[Assert\NotNull]
     #[Groups(['step_output:write'])]
     public ?string $step = null;
-
-    #[Assert\Length(max: 255)]
-    #[Groups(['step_output:write'])]
-    public string $name;
 
     #[Assert\Length(max: 255)]
     #[Groups(['step_output:write'])]
@@ -47,18 +48,15 @@ abstract class StepOutputInputDtoGenerated
     #[Groups(['step_output:write'])]
     public ?string $connection = null;
 
+    /**
+     * pipelineStage reference
+     * Must be: IRI string (e.g., "/api/pipeline_stages/uuid")
+     */
+    #[Groups(['step_output:write'])]
+    public ?string $pipelineStage = null;
+
 
     // Getters and Setters
-
-    public function getStep(): ?string    {
-        return $this->step;
-    }
-
-    public function setStep(?string $step): self
-    {
-        $this->step = $step;
-        return $this;
-    }
 
     public function getName(): string    {
         return $this->name;
@@ -67,6 +65,16 @@ abstract class StepOutputInputDtoGenerated
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getStep(): ?string    {
+        return $this->step;
+    }
+
+    public function setStep(?string $step): self
+    {
+        $this->step = $step;
         return $this;
     }
 
@@ -97,6 +105,16 @@ abstract class StepOutputInputDtoGenerated
     public function setConnection(?string $connection): self
     {
         $this->connection = $connection;
+        return $this;
+    }
+
+    public function getPipelineStage(): ?string    {
+        return $this->pipelineStage;
+    }
+
+    public function setPipelineStage(?string $pipelineStage): self
+    {
+        $this->pipelineStage = $pipelineStage;
         return $this;
     }
 }

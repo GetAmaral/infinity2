@@ -27,6 +27,13 @@
     </div>
 
     <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.pipeline) }}</label>
+        {{ form_widget(form.pipeline) }}
+        <small class="text-muted mt-1 d-block">Optional: Link this TreeFlow to a sales pipeline for automatic deal movement</small>
+        {{ form_errors(form.pipeline) }}
+    </div>
+
+    <div class="form-group-modern">
         <div class="form-check form-switch">
             {{ form_widget(form.active, {
                 'attr': {

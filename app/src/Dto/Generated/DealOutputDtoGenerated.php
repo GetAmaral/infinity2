@@ -8,8 +8,8 @@ use Symfony\Component\Uid\Uuid;
 use App\Dto\OrganizationOutputDto;
 use App\Dto\CompanyOutputDto;
 use App\Dto\PipelineStageOutputDto;
-use App\Dto\DealTypeOutputDto;
 use App\Dto\PipelineOutputDto;
+use App\Dto\DealTypeOutputDto;
 use App\Dto\DealCategoryOutputDto;
 use App\Dto\ProductOutputDto;
 use App\Dto\UserOutputDto;
@@ -64,16 +64,16 @@ abstract class DealOutputDtoGenerated
     public ?string $probability = null;
 
     /**
-     * dealType reference
-     * Can be: IRI string or nested DealTypeOutput object
-     */
-    public string|DealTypeOutputDto|null $dealType = null;
-
-    /**
      * pipeline reference
      * Can be: IRI string or nested PipelineOutput object
      */
     public string|PipelineOutputDto|null $pipeline = null;
+
+    /**
+     * dealType reference
+     * Can be: IRI string or nested DealTypeOutput object
+     */
+    public string|DealTypeOutputDto|null $dealType = null;
 
     public ?string $priority = null;
 
@@ -132,16 +132,16 @@ abstract class DealOutputDtoGenerated
     public string|UserOutputDto|null $manager = null;
 
     /**
-     * owner reference
-     * Can be: IRI string or nested UserOutput object
-     */
-    public string|UserOutputDto $owner;
-
-    /**
      * team collection
      * @var UserOutputDto[]
      */
     public array $team = [];
+
+    /**
+     * owner reference
+     * Can be: IRI string or nested UserOutput object
+     */
+    public string|UserOutputDto $owner;
 
     /**
      * primaryContact reference
@@ -216,6 +216,18 @@ abstract class DealOutputDtoGenerated
     public string|WinReasonOutputDto|null $winReason = null;
 
     public ?\DateTimeImmutable $actualClosureDate = null;
+
+    public ?int $aiScore = null;
+
+    public ?string $winProbability = null;
+
+    public ?array $riskFactors = null;
+
+    public ?array $recommendedActions = null;
+
+    public ?\DateTimeImmutable $lastAiAnalysisAt = null;
+
+    public ?int $daysStale = null;
 
     public ?\DateTimeImmutable $createdAt = null;
 
@@ -304,16 +316,6 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getDealType(): string|DealTypeOutputDto|null    {
-        return $this->dealType;
-    }
-
-    public function setDealType(string|DealTypeOutputDto|null $dealType): self
-    {
-        $this->dealType = $dealType;
-        return $this;
-    }
-
     public function getPipeline(): string|PipelineOutputDto|null    {
         return $this->pipeline;
     }
@@ -321,6 +323,16 @@ abstract class DealOutputDtoGenerated
     public function setPipeline(string|PipelineOutputDto|null $pipeline): self
     {
         $this->pipeline = $pipeline;
+        return $this;
+    }
+
+    public function getDealType(): string|DealTypeOutputDto|null    {
+        return $this->dealType;
+    }
+
+    public function setDealType(string|DealTypeOutputDto|null $dealType): self
+    {
+        $this->dealType = $dealType;
         return $this;
     }
 
@@ -544,16 +556,6 @@ abstract class DealOutputDtoGenerated
         return $this;
     }
 
-    public function getOwner(): string|UserOutputDto    {
-        return $this->owner;
-    }
-
-    public function setOwner(string|UserOutputDto $owner): self
-    {
-        $this->owner = $owner;
-        return $this;
-    }
-
     public function getTeam(): array    {
         return $this->team;
     }
@@ -561,6 +563,16 @@ abstract class DealOutputDtoGenerated
     public function setTeam(array $team): self
     {
         $this->team = $team;
+        return $this;
+    }
+
+    public function getOwner(): string|UserOutputDto    {
+        return $this->owner;
+    }
+
+    public function setOwner(string|UserOutputDto $owner): self
+    {
+        $this->owner = $owner;
         return $this;
     }
 
@@ -711,6 +723,66 @@ abstract class DealOutputDtoGenerated
     public function setActualClosureDate(?\DateTimeImmutable $actualClosureDate): self
     {
         $this->actualClosureDate = $actualClosureDate;
+        return $this;
+    }
+
+    public function getAiScore(): ?int    {
+        return $this->aiScore;
+    }
+
+    public function setAiScore(?int $aiScore): self
+    {
+        $this->aiScore = $aiScore;
+        return $this;
+    }
+
+    public function getWinProbability(): ?string    {
+        return $this->winProbability;
+    }
+
+    public function setWinProbability(?string $winProbability): self
+    {
+        $this->winProbability = $winProbability;
+        return $this;
+    }
+
+    public function getRiskFactors(): ?array    {
+        return $this->riskFactors;
+    }
+
+    public function setRiskFactors(?array $riskFactors): self
+    {
+        $this->riskFactors = $riskFactors;
+        return $this;
+    }
+
+    public function getRecommendedActions(): ?array    {
+        return $this->recommendedActions;
+    }
+
+    public function setRecommendedActions(?array $recommendedActions): self
+    {
+        $this->recommendedActions = $recommendedActions;
+        return $this;
+    }
+
+    public function getLastAiAnalysisAt(): ?\DateTimeImmutable    {
+        return $this->lastAiAnalysisAt;
+    }
+
+    public function setLastAiAnalysisAt(?\DateTimeImmutable $lastAiAnalysisAt): self
+    {
+        $this->lastAiAnalysisAt = $lastAiAnalysisAt;
+        return $this;
+    }
+
+    public function getDaysStale(): ?int    {
+        return $this->daysStale;
+    }
+
+    public function setDaysStale(?int $daysStale): self
+    {
+        $this->daysStale = $daysStale;
         return $this;
     }
 

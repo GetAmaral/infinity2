@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\Step;
 use App\Entity\StepConnection;
+use App\Entity\PipelineStage;
 
 /**
  * StepOutput State Processor
@@ -131,6 +132,24 @@ class StepOutputProcessor implements ProcessorInterface
                 } else {
                     // Nested object creation (if supported)
                     throw new BadRequestHttpException('Nested connection creation not supported. Use IRI format.');
+                }
+            }
+        }
+
+        // pipelineStage: ManyToOne
+        if (!$isPatch || array_key_exists('pipelineStage', $requestData)) {
+            if ($data->pipelineStage !== null) {
+                if (is_string($data->pipelineStage)) {
+                    // IRI format: "/api/pipeline_stages/{id}"
+                    $pipelineStageId = $this->extractIdFromIri($data->pipelineStage);
+                    $pipelineStage = $this->entityManager->getRepository(PipelineStage::class)->find($pipelineStageId);
+                    if (!$pipelineStage) {
+                        throw new BadRequestHttpException('PipelineStage not found: ' . $pipelineStageId);
+                    }
+                    $entity->setPipelineStage($pipelineStage);
+                } else {
+                    // Nested object creation (if supported)
+                    throw new BadRequestHttpException('Nested pipelineStage creation not supported. Use IRI format.');
                 }
             }
         }

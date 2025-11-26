@@ -14,6 +14,7 @@
 
 {# Form fields #}
 {% block modal_body %}
+    <div data-controller="step-output-form">
     <div class="form-group-modern">
         <label class="form-label-modern">{{ form_label(form.name) }}</label>
         {{ form_widget(form.name, {
@@ -39,6 +40,15 @@
         {{ form_errors(form.condition) }}
     </div>
 
+    {% if form.pipelineStage is defined %}
+    <div class="form-group-modern">
+        <label class="form-label-modern">{{ form_label(form.pipelineStage) }}</label>
+        {{ form_widget(form.pipelineStage) }}
+        <small class="text-muted mt-1 d-block">Optional: Automatically move deal to this pipeline stage when this output is selected</small>
+        {{ form_errors(form.pipelineStage) }}
+    </div>
+    {% endif %}
+
     {{ form_widget(form._token) }}
 
     {% if is_edit and output.id %}
@@ -48,6 +58,7 @@
             </button>
         </div>
     {% endif %}
+    </div>
 {% endblock %}
 
 {% block modal_footer %}

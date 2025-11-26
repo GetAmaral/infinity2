@@ -74,9 +74,9 @@ abstract class TaskOutputDtoGenerated
 
     public ?int $priority = null;
 
-    public bool $completed;
-
     public ?\DateTimeImmutable $scheduledDate = null;
+
+    public bool $completed;
 
     /**
      * company reference
@@ -297,16 +297,6 @@ abstract class TaskOutputDtoGenerated
         return $this;
     }
 
-    public function getCompleted(): bool    {
-        return $this->completed;
-    }
-
-    public function setCompleted(bool $completed): self
-    {
-        $this->completed = $completed;
-        return $this;
-    }
-
     public function getScheduledDate(): ?\DateTimeImmutable    {
         return $this->scheduledDate;
     }
@@ -314,6 +304,16 @@ abstract class TaskOutputDtoGenerated
     public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
     {
         $this->scheduledDate = $scheduledDate;
+        return $this;
+    }
+
+    public function getCompleted(): bool    {
+        return $this->completed;
+    }
+
+    public function setCompleted(bool $completed): self
+    {
+        $this->completed = $completed;
         return $this;
     }
 

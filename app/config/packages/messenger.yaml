@@ -29,6 +29,7 @@ framework:
             'App\Message\ProcessTalkMessageCommand': async
             'App\Message\GenerateAgentResponseCommand': async
             'App\Message\EvaluateStepCompletionCommand': async
+            'App\Message\AnalyzeDealCommand': async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

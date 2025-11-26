@@ -129,7 +129,6 @@ abstract class CampaignControllerGenerated extends BaseApiController
                 'id' => $managerRel->getId()->toString(),
                 'display' => (string) $managerRel,
             ] : null,
-            'message' => $entity->getMessage(),
             'childCampaigns' => ($childCampaignsRel = $entity->getChildCampaigns()) ? array_map(
                 fn($item) => [
                     'id' => $item->getId()->toString(),
@@ -137,6 +136,7 @@ abstract class CampaignControllerGenerated extends BaseApiController
                 ],
                 $childCampaignsRel->toArray()
             ) : [],
+            'message' => $entity->getMessage(),
             'numberOfContacts' => $entity->getNumberOfContacts(),
             'numberOfConverted' => $entity->getNumberOfConverted(),
             'numberOfLeads' => $entity->getNumberOfLeads(),

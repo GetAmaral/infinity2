@@ -86,7 +86,10 @@ abstract class CompanyTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -155,7 +158,10 @@ abstract class CompanyTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -188,7 +194,10 @@ abstract class CompanyTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -255,7 +264,10 @@ abstract class CompanyTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -330,7 +342,10 @@ abstract class CompanyTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -534,7 +549,10 @@ abstract class CompanyTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -567,7 +585,10 @@ abstract class CompanyTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -677,7 +698,10 @@ abstract class CompanyTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -710,7 +734,10 @@ abstract class CompanyTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -734,6 +761,14 @@ abstract class CompanyTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('nextActivityDate', DateType::class, [
+            'label' => 'Next Activity Date',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
         $builder->add('timeZone', TextType::class, [
             'label' => 'Time Zone',
             'required' => true,
@@ -743,12 +778,30 @@ abstract class CompanyTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('stateProvince', TextType::class, [
+            'label' => 'State/Province',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter state/province',
+            ],
+        ]);
+
         $builder->add('tags', TextareaType::class, [
             'label' => 'Tags',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter tags',
+            ],
+        ]);
+
+        $builder->add('shippingStateProvince', TextType::class, [
+            'label' => 'Shipping State/Province',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter shipping state/province',
             ],
         ]);
 
@@ -769,47 +822,21 @@ abstract class CompanyTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('companyDomain', TextType::class, [
-            'label' => 'Company Domain',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter company domain',
-            ],
-        ]);
-
-        $builder->add('stateProvince', TextType::class, [
-            'label' => 'State/Province',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter state/province',
-            ],
-        ]);
-
-        $builder->add('shippingStateProvince', TextType::class, [
-            'label' => 'Shipping State/Province',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter shipping state/province',
-            ],
-        ]);
-
-        $builder->add('nextActivityDate', DateType::class, [
-            'label' => 'Next Activity Date',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('lifecycleStage', TextType::class, [
             'label' => 'Lifecycle Stage',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter lifecycle stage',
+            ],
+        ]);
+
+        $builder->add('companyDomain', TextType::class, [
+            'label' => 'Company Domain',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter company domain',
             ],
         ]);
 

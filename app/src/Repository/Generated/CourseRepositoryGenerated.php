@@ -115,8 +115,8 @@ abstract class CourseRepositoryGenerated extends BaseRepository
         return [
             'organization' => $entity->getOrganization()?->getId()?->toString() ?? '',
             'organizationName' => $entity->getOrganization()?->getName() ?? '',
-            'releaseDate' => $entity->getReleaseDate()?->format('c'),
             'name' => $entity->getName(),
+            'releaseDate' => $entity->getReleaseDate()?->format('c'),
             'description' => $entity->getDescription(),
             'modulesCount' => $entity->getModules()->count(),
             'owner' => $entity->getOwner()?->getId()?->toString() ?? '',

@@ -96,10 +96,10 @@ abstract class TaskInputDtoGenerated
     public ?int $priority = null;
 
     #[Groups(['task:write'])]
-    public bool $completed = false;
+    public ?\DateTimeImmutable $scheduledDate = null;
 
     #[Groups(['task:write'])]
-    public ?\DateTimeImmutable $scheduledDate = null;
+    public bool $completed = false;
 
     /**
      * company reference
@@ -328,16 +328,6 @@ abstract class TaskInputDtoGenerated
         return $this;
     }
 
-    public function getCompleted(): bool    {
-        return $this->completed;
-    }
-
-    public function setCompleted(bool $completed): self
-    {
-        $this->completed = $completed;
-        return $this;
-    }
-
     public function getScheduledDate(): ?\DateTimeImmutable    {
         return $this->scheduledDate;
     }
@@ -345,6 +335,16 @@ abstract class TaskInputDtoGenerated
     public function setScheduledDate(?\DateTimeImmutable $scheduledDate): self
     {
         $this->scheduledDate = $scheduledDate;
+        return $this;
+    }
+
+    public function getCompleted(): bool    {
+        return $this->completed;
+    }
+
+    public function setCompleted(bool $completed): self
+    {
+        $this->completed = $completed;
         return $this;
     }
 

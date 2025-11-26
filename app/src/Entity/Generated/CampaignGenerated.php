@@ -129,13 +129,13 @@ abstract class CampaignGenerated extends EntityBase
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'managedCampaigns')]
     protected ?User $manager = null;
 
-    #[Groups(['campaign:read', 'campaign:write'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    protected ?string $message = null;
-
     #[Groups(['campaign:read'])]
     #[ORM\OneToMany(targetEntity: Campaign::class, mappedBy: 'parentCampaign', fetch: 'LAZY')]
     protected Collection $childCampaigns;
+
+    #[Groups(['campaign:read', 'campaign:write'])]
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $message = null;
 
     #[Groups(['campaign:read', 'campaign:write'])]
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -528,16 +528,6 @@ abstract class CampaignGenerated extends EntityBase
         return $this;
     }
 
-    public function getMessage(): ?string    {
-        return $this->message;
-    }
-
-    public function setMessage(?string $message): self
-    {
-        $this->message = $message;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Campaign>
      */
@@ -562,6 +552,16 @@ abstract class CampaignGenerated extends EntityBase
                 $childCampaign->setParentCampaign(null);
             }
         }
+        return $this;
+    }
+
+    public function getMessage(): ?string    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): self
+    {
+        $this->message = $message;
         return $this;
     }
 

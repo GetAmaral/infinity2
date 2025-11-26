@@ -46,9 +46,9 @@ abstract class CountryOutputDtoGenerated
 
     public ?string $officialName = null;
 
-    public bool $active;
-
     public ?string $subregion = null;
+
+    public bool $active;
 
     public ?string $latitude = null;
 
@@ -243,16 +243,6 @@ abstract class CountryOutputDtoGenerated
         return $this;
     }
 
-    public function getActive(): bool    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
     public function getSubregion(): ?string    {
         return $this->subregion;
     }
@@ -260,6 +250,16 @@ abstract class CountryOutputDtoGenerated
     public function setSubregion(?string $subregion): self
     {
         $this->subregion = $subregion;
+        return $this;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
         return $this;
     }
 

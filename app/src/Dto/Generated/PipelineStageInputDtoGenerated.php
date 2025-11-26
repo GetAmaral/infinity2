@@ -8,8 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Dto\OrganizationInputDto;
-use App\Dto\PipelineStageInputDto;
 use App\Dto\PipelineInputDto;
+use App\Dto\PipelineStageInputDto;
 
 /**
  * PipelineStage Input DTO (Generated Base Class)
@@ -31,38 +31,10 @@ abstract class PipelineStageInputDtoGenerated
     public ?string $organization = null;
 
     #[Groups(['pipelinestage:write'])]
+    public string $name;
+
+    #[Groups(['pipelinestage:write'])]
     public ?string $description = null;
-
-    #[Groups(['pipelinestage:write'])]
-    public int $probability;
-
-    #[Groups(['pipelinestage:write'])]
-    public bool $final = false;
-
-    #[Groups(['pipelinestage:write'])]
-    public bool $won = false;
-
-    #[Groups(['pipelinestage:write'])]
-    public bool $lost = false;
-
-    #[Groups(['pipelinestage:write'])]
-    public bool $active = true;
-
-    #[Groups(['pipelinestage:write'])]
-    public string $color = '#0dcaf0';
-
-    #[Groups(['pipelinestage:write'])]
-    public ?int $displayOrder = null;
-
-    #[Groups(['pipelinestage:write'])]
-    public ?string $migrationCriteria = null;
-
-    /**
-     * next reference
-     * Must be: IRI string (e.g., "/api/pipeline_stages/uuid")
-     */
-    #[Groups(['pipelinestage:write'])]
-    public ?string $next = null;
 
     /**
      * pipeline reference
@@ -71,6 +43,27 @@ abstract class PipelineStageInputDtoGenerated
     #[Groups(['pipelinestage:write'])]
     public ?string $pipeline = null;
 
+    #[Groups(['pipelinestage:write'])]
+    public ?int $displayOrder = null;
+
+    #[Groups(['pipelinestage:write'])]
+    public int $probability;
+
+    #[Groups(['pipelinestage:write'])]
+    public string $color = '#0dcaf0';
+
+    #[Groups(['pipelinestage:write'])]
+    public bool $active = true;
+
+    #[Groups(['pipelinestage:write'])]
+    public bool $won = false;
+
+    #[Groups(['pipelinestage:write'])]
+    public bool $lost = false;
+
+    #[Groups(['pipelinestage:write'])]
+    public bool $final = false;
+
     /**
      * previous reference
      * Must be: IRI string (e.g., "/api/pipeline_stages/uuid")
@@ -78,8 +71,15 @@ abstract class PipelineStageInputDtoGenerated
     #[Groups(['pipelinestage:write'])]
     public ?string $previous = null;
 
+    /**
+     * next reference
+     * Must be: IRI string (e.g., "/api/pipeline_stages/uuid")
+     */
     #[Groups(['pipelinestage:write'])]
-    public string $stageName;
+    public ?string $next = null;
+
+    #[Groups(['pipelinestage:write'])]
+    public ?string $migrationCriteria = null;
 
 
     // Getters and Setters
@@ -94,6 +94,16 @@ abstract class PipelineStageInputDtoGenerated
         return $this;
     }
 
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -101,6 +111,26 @@ abstract class PipelineStageInputDtoGenerated
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getPipeline(): ?string    {
+        return $this->pipeline;
+    }
+
+    public function setPipeline(?string $pipeline): self
+    {
+        $this->pipeline = $pipeline;
+        return $this;
+    }
+
+    public function getDisplayOrder(): ?int    {
+        return $this->displayOrder;
+    }
+
+    public function setDisplayOrder(?int $displayOrder): self
+    {
+        $this->displayOrder = $displayOrder;
         return $this;
     }
 
@@ -114,23 +144,23 @@ abstract class PipelineStageInputDtoGenerated
         return $this;
     }
 
-    public function getDealStages(): ?string    {
-        return $this->dealStages;
+    public function getColor(): string    {
+        return $this->color;
     }
 
-    public function setDealStages(?string $dealStages): self
+    public function setColor(string $color): self
     {
-        $this->dealStages = $dealStages;
+        $this->color = $color;
         return $this;
     }
 
-    public function getFinal(): bool    {
-        return $this->final;
+    public function getActive(): bool    {
+        return $this->active;
     }
 
-    public function setFinal(bool $final): self
+    public function setActive(bool $active): self
     {
-        $this->final = $final;
+        $this->active = $active;
         return $this;
     }
 
@@ -154,73 +184,23 @@ abstract class PipelineStageInputDtoGenerated
         return $this;
     }
 
-    public function getActive(): bool    {
-        return $this->active;
+    public function getDealStages(): ?string    {
+        return $this->dealStages;
     }
 
-    public function setActive(bool $active): self
+    public function setDealStages(?string $dealStages): self
     {
-        $this->active = $active;
+        $this->dealStages = $dealStages;
         return $this;
     }
 
-    public function getColor(): string    {
-        return $this->color;
+    public function getFinal(): bool    {
+        return $this->final;
     }
 
-    public function setColor(string $color): self
+    public function setFinal(bool $final): self
     {
-        $this->color = $color;
-        return $this;
-    }
-
-    public function getDeals(): ?string    {
-        return $this->deals;
-    }
-
-    public function setDeals(?string $deals): self
-    {
-        $this->deals = $deals;
-        return $this;
-    }
-
-    public function getDisplayOrder(): ?int    {
-        return $this->displayOrder;
-    }
-
-    public function setDisplayOrder(?int $displayOrder): self
-    {
-        $this->displayOrder = $displayOrder;
-        return $this;
-    }
-
-    public function getMigrationCriteria(): ?string    {
-        return $this->migrationCriteria;
-    }
-
-    public function setMigrationCriteria(?string $migrationCriteria): self
-    {
-        $this->migrationCriteria = $migrationCriteria;
-        return $this;
-    }
-
-    public function getNext(): ?string    {
-        return $this->next;
-    }
-
-    public function setNext(?string $next): self
-    {
-        $this->next = $next;
-        return $this;
-    }
-
-    public function getPipeline(): ?string    {
-        return $this->pipeline;
-    }
-
-    public function setPipeline(?string $pipeline): self
-    {
-        $this->pipeline = $pipeline;
+        $this->final = $final;
         return $this;
     }
 
@@ -234,13 +214,33 @@ abstract class PipelineStageInputDtoGenerated
         return $this;
     }
 
-    public function getStageName(): string    {
-        return $this->stageName;
+    public function getNext(): ?string    {
+        return $this->next;
     }
 
-    public function setStageName(string $stageName): self
+    public function setNext(?string $next): self
     {
-        $this->stageName = $stageName;
+        $this->next = $next;
+        return $this;
+    }
+
+    public function getMigrationCriteria(): ?string    {
+        return $this->migrationCriteria;
+    }
+
+    public function setMigrationCriteria(?string $migrationCriteria): self
+    {
+        $this->migrationCriteria = $migrationCriteria;
+        return $this;
+    }
+
+    public function getDeals(): ?string    {
+        return $this->deals;
+    }
+
+    public function setDeals(?string $deals): self
+    {
+        $this->deals = $deals;
         return $this;
     }
 

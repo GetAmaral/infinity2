@@ -11,10 +11,10 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Organization;
-use App\Entity\DealStage;
-use App\Entity\Deal;
-use App\Entity\PipelineStage;
 use App\Entity\Pipeline;
+use App\Entity\DealStage;
+use App\Entity\PipelineStage;
+use App\Entity\Deal;
 use App\Entity\Task;
 
 /**
@@ -36,20 +36,32 @@ abstract class PipelineStageGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $name;
+
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $description = null;
+
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
+    #[ORM\ManyToOne(targetEntity: Pipeline::class, inversedBy: 'stages')]
+    protected ?Pipeline $pipeline = null;
+
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    protected ?int $displayOrder = null;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'integer')]
     protected int $probability;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\OneToMany(targetEntity: DealStage::class, mappedBy: 'pipelineStage', fetch: 'LAZY')]
-    protected Collection $dealStages;
+    #[ORM\Column(type: 'string', length: 7)]
+    protected string $color = '#0dcaf0';
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\Column(name: 'final_prop', type: 'boolean')]
-    protected bool $final = false;
+    #[ORM\Column(type: 'boolean')]
+    protected bool $active = true;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\Column(type: 'boolean')]
@@ -60,40 +72,28 @@ abstract class PipelineStageGenerated extends EntityBase
     protected bool $lost = false;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\Column(type: 'boolean')]
-    protected bool $active = true;
+    #[ORM\OneToMany(targetEntity: DealStage::class, mappedBy: 'pipelineStage', fetch: 'LAZY')]
+    protected Collection $dealStages;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\Column(type: 'string', length: 7)]
-    protected string $color = '#0dcaf0';
-
-    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'currentStage', fetch: 'LAZY')]
-    protected Collection $deals;
-
-    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\Column(type: 'integer', nullable: true)]
-    protected ?int $displayOrder = null;
-
-    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected ?string $migrationCriteria = null;
-
-    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\OneToOne(targetEntity: PipelineStage::class, inversedBy: 'previous')]
-    protected ?PipelineStage $next = null;
-
-    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\ManyToOne(targetEntity: Pipeline::class, inversedBy: 'stages')]
-    protected ?Pipeline $pipeline = null;
+    #[ORM\Column(name: 'final_prop', type: 'boolean')]
+    protected bool $final = false;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\OneToOne(targetEntity: PipelineStage::class, mappedBy: 'next')]
     protected ?PipelineStage $previous = null;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $stageName;
+    #[ORM\OneToOne(targetEntity: PipelineStage::class, inversedBy: 'previous')]
+    protected ?PipelineStage $next = null;
+
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $migrationCriteria = null;
+
+    #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
+    #[ORM\OneToMany(targetEntity: Deal::class, mappedBy: 'currentStage', fetch: 'LAZY')]
+    protected Collection $deals;
 
     #[Groups(['pipelinestage:read', 'pipelinestage:write'])]
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'pipelineStage', fetch: 'LAZY')]
@@ -119,6 +119,16 @@ abstract class PipelineStageGenerated extends EntityBase
         return $this;
     }
 
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function getDescription(): ?string    {
         return $this->description;
     }
@@ -126,6 +136,27 @@ abstract class PipelineStageGenerated extends EntityBase
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getPipeline(): ?Pipeline
+    {
+        return $this->pipeline;
+    }
+
+    public function setPipeline(?Pipeline $pipeline): self
+    {
+        $this->pipeline = $pipeline;
+        return $this;
+    }
+
+    public function getDisplayOrder(): ?int    {
+        return $this->displayOrder;
+    }
+
+    public function setDisplayOrder(?int $displayOrder): self
+    {
+        $this->displayOrder = $displayOrder;
         return $this;
     }
 
@@ -137,6 +168,61 @@ abstract class PipelineStageGenerated extends EntityBase
     {
         $this->probability = $probability;
         return $this;
+    }
+
+    public function getColor(): string    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
+        return $this;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active === true;
+    }
+
+    public function getWon(): bool    {
+        return $this->won;
+    }
+
+    public function setWon(bool $won): self
+    {
+        $this->won = $won;
+        return $this;
+    }
+
+    public function isWon(): bool
+    {
+        return $this->won === true;
+    }
+
+    public function getLost(): bool    {
+        return $this->lost;
+    }
+
+    public function setLost(bool $lost): self
+    {
+        $this->lost = $lost;
+        return $this;
+    }
+
+    public function isLost(): bool
+    {
+        return $this->lost === true;
     }
 
     /**
@@ -181,58 +267,35 @@ abstract class PipelineStageGenerated extends EntityBase
         return $this->final === true;
     }
 
-    public function getWon(): bool    {
-        return $this->won;
+    public function getPrevious(): ?PipelineStage
+    {
+        return $this->previous;
     }
 
-    public function setWon(bool $won): self
+    public function setPrevious(?PipelineStage $previous): self
     {
-        $this->won = $won;
+        $this->previous = $previous;
         return $this;
     }
 
-    public function isWon(): bool
+    public function getNext(): ?PipelineStage
     {
-        return $this->won === true;
+        return $this->next;
     }
 
-    public function getLost(): bool    {
-        return $this->lost;
-    }
-
-    public function setLost(bool $lost): self
+    public function setNext(?PipelineStage $next): self
     {
-        $this->lost = $lost;
+        $this->next = $next;
         return $this;
     }
 
-    public function isLost(): bool
+    public function getMigrationCriteria(): ?string    {
+        return $this->migrationCriteria;
+    }
+
+    public function setMigrationCriteria(?string $migrationCriteria): self
     {
-        return $this->lost === true;
-    }
-
-    public function getActive(): bool    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->active === true;
-    }
-
-    public function getColor(): string    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): self
-    {
-        $this->color = $color;
+        $this->migrationCriteria = $migrationCriteria;
         return $this;
     }
 
@@ -260,69 +323,6 @@ abstract class PipelineStageGenerated extends EntityBase
                 $deal->setCurrentStage(null);
             }
         }
-        return $this;
-    }
-
-    public function getDisplayOrder(): ?int    {
-        return $this->displayOrder;
-    }
-
-    public function setDisplayOrder(?int $displayOrder): self
-    {
-        $this->displayOrder = $displayOrder;
-        return $this;
-    }
-
-    public function getMigrationCriteria(): ?string    {
-        return $this->migrationCriteria;
-    }
-
-    public function setMigrationCriteria(?string $migrationCriteria): self
-    {
-        $this->migrationCriteria = $migrationCriteria;
-        return $this;
-    }
-
-    public function getNext(): ?PipelineStage
-    {
-        return $this->next;
-    }
-
-    public function setNext(?PipelineStage $next): self
-    {
-        $this->next = $next;
-        return $this;
-    }
-
-    public function getPipeline(): ?Pipeline
-    {
-        return $this->pipeline;
-    }
-
-    public function setPipeline(?Pipeline $pipeline): self
-    {
-        $this->pipeline = $pipeline;
-        return $this;
-    }
-
-    public function getPrevious(): ?PipelineStage
-    {
-        return $this->previous;
-    }
-
-    public function setPrevious(?PipelineStage $previous): self
-    {
-        $this->previous = $previous;
-        return $this;
-    }
-
-    public function getStageName(): string    {
-        return $this->stageName;
-    }
-
-    public function setStageName(string $stageName): self
-    {
-        $this->stageName = $stageName;
         return $this;
     }
 
@@ -356,6 +356,6 @@ abstract class PipelineStageGenerated extends EntityBase
 
     public function __toString(): string
     {
-        return $this->getId()?->toRfc4122() ?? '';
+        return $this->name ?? ($this->getId()?->toRfc4122() ?? '');
     }
 }

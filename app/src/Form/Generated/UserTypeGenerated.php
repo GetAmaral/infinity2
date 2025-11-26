@@ -142,7 +142,10 @@ abstract class UserTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -184,7 +187,10 @@ abstract class UserTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -217,7 +223,10 @@ abstract class UserTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -625,7 +634,10 @@ abstract class UserTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -972,7 +984,10 @@ abstract class UserTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -1177,6 +1192,15 @@ abstract class UserTypeGenerated extends AbstractType
             ],
         ]);
 
+        $builder->add('status', TextType::class, [
+            'label' => 'Status',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter status',
+            ],
+        ]);
+
         $builder->add('talks', EntityType::class, [
             'label' => 'Talks',
             'required' => false,
@@ -1195,7 +1219,10 @@ abstract class UserTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -1207,15 +1234,6 @@ abstract class UserTypeGenerated extends AbstractType
                 'data-relation-select-one-to-one-value' => 'false',
                 'placeholder' => 'Select one or more talk',
                 'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('status', TextType::class, [
-            'label' => 'Status',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter status',
             ],
         ]);
 

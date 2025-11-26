@@ -18,8 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use App\Entity\Company;
 use App\Entity\PipelineStage;
-use App\Entity\DealType;
 use App\Entity\Pipeline;
+use App\Entity\DealType;
 use App\Entity\DealCategory;
 use App\Entity\Product;
 use App\Entity\User;
@@ -86,7 +86,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -136,7 +139,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -162,41 +168,6 @@ abstract class DealTypeGenerated extends AbstractType
 
         // Conditionally exclude parent back-reference to prevent circular references in collections
         if (empty($options['exclude_parent'])) {
-        $builder->add('dealType', EntityType::class, [
-            'label' => 'DealType',
-            'required' => false,
-            'class' => \App\Entity\DealType::class,
-            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                $qb = $er->createQueryBuilder('e');
-
-                // Determine best field to sort by
-                $metadata = $er->getClassMetadata();
-                $sortField = 'id';
-                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
-                    if ($metadata->hasField($field)) {
-                        $sortField = $field;
-                        break;
-                    }
-                }
-
-                // Use LOWER() for case-insensitive sorting
-                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
-            },
-            'attr' => [
-                'data-controller' => 'relation-select',
-                'data-relation-select-entity-value' => 'DealType',
-                'data-relation-select-route-value' => 'deal_type_api_search',
-                'data-relation-select-add-route-value' => 'deal_type_new_modal',
-                'data-relation-select-multiple-value' => 'false',
-                'data-relation-select-one-to-one-value' => 'false',
-                'placeholder' => 'Select dealtype',
-                'class' => 'form-input-modern',
-            ],
-        ]);
-        }
-
-        // Conditionally exclude parent back-reference to prevent circular references in collections
-        if (empty($options['exclude_parent'])) {
         $builder->add('pipeline', EntityType::class, [
             'label' => 'Pipeline',
             'required' => false,
@@ -215,7 +186,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -226,6 +200,44 @@ abstract class DealTypeGenerated extends AbstractType
                 'data-relation-select-multiple-value' => 'false',
                 'data-relation-select-one-to-one-value' => 'false',
                 'placeholder' => 'Select pipeline',
+                'class' => 'form-input-modern',
+            ],
+        ]);
+        }
+
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('dealType', EntityType::class, [
+            'label' => 'DealType',
+            'required' => false,
+            'class' => \App\Entity\DealType::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
+            'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'DealType',
+                'data-relation-select-route-value' => 'deal_type_api_search',
+                'data-relation-select-add-route-value' => 'deal_type_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select dealtype',
                 'class' => 'form-input-modern',
             ],
         ]);
@@ -264,7 +276,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -414,7 +429,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -489,43 +507,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
-                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
-            },
-            'attr' => [
-                'data-controller' => 'relation-select',
-                'data-relation-select-entity-value' => 'User',
-                'data-relation-select-route-value' => 'user_api_search',
-                'data-relation-select-add-route-value' => 'user_new_modal',
-                'data-relation-select-multiple-value' => 'false',
-                'data-relation-select-one-to-one-value' => 'false',
-                'placeholder' => 'Select user',
-                'class' => 'form-input-modern',
-            ],
-        ]);
-        }
-
-        // Conditionally exclude parent back-reference to prevent circular references in collections
-        if (empty($options['exclude_parent'])) {
-        $builder->add('owner', EntityType::class, [
-            'label' => 'Deal Owner',
-            'required' => true,
-            'help' => 'Person who owns this deal',
-            'class' => \App\Entity\User::class,
-            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                $qb = $er->createQueryBuilder('e');
-
-                // Determine best field to sort by
-                $metadata = $er->getClassMetadata();
-                $sortField = 'id';
-                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
-                    if ($metadata->hasField($field)) {
-                        $sortField = $field;
-                        break;
-                    }
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
                 }
-
-                // Use LOWER() for case-insensitive sorting
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -559,7 +544,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -573,6 +561,45 @@ abstract class DealTypeGenerated extends AbstractType
                 'class' => 'form-input-modern',
             ],
         ]);
+
+        // Conditionally exclude parent back-reference to prevent circular references in collections
+        if (empty($options['exclude_parent'])) {
+        $builder->add('owner', EntityType::class, [
+            'label' => 'Deal Owner',
+            'required' => true,
+            'help' => 'Person who owns this deal',
+            'class' => \App\Entity\User::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
+            'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'User',
+                'data-relation-select-route-value' => 'user_api_search',
+                'data-relation-select-add-route-value' => 'user_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'false',
+                'placeholder' => 'Select user',
+                'class' => 'form-input-modern',
+            ],
+        ]);
+        }
 
         // Conditionally exclude parent back-reference to prevent circular references in collections
         if (empty($options['exclude_parent'])) {
@@ -593,7 +620,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -627,7 +657,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -661,7 +694,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -696,7 +732,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -820,7 +859,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -853,7 +895,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -896,7 +941,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -931,7 +979,10 @@ abstract class DealTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -949,6 +1000,58 @@ abstract class DealTypeGenerated extends AbstractType
 
         $builder->add('actualClosureDate', DateTimeType::class, [
             'label' => 'Actual Closure Date',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('aiScore', IntegerType::class, [
+            'label' => 'AI Health Score',
+            'required' => false,
+            'help' => 'AI-calculated deal health score (0-100)',
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('winProbability', NumberType::class, [
+            'label' => 'Win Probability %',
+            'required' => false,
+            'help' => 'AI-predicted probability of winning (0-100)',
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('riskFactors', TextareaType::class, [
+            'label' => 'Risk Factors',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter risk factors',
+            ],
+        ]);
+
+        $builder->add('recommendedActions', TextareaType::class, [
+            'label' => 'AI Recommendations',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter ai recommendations',
+            ],
+        ]);
+
+        $builder->add('lastAiAnalysisAt', DateTimeType::class, [
+            'label' => 'Last AI Analysis',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('daysStale', IntegerType::class, [
+            'label' => 'Days Stale',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',

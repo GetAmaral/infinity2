@@ -8,8 +8,8 @@ use App\Entity\Course;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -34,20 +34,20 @@ abstract class CourseTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('releaseDate', DateTimeType::class, [
-            'label' => 'Release Date',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
         $builder->add('name', TextType::class, [
             'label' => 'Name',
             'required' => true,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter name',
+            ],
+        ]);
+
+        $builder->add('releaseDate', DateTimeType::class, [
+            'label' => 'Release Date',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -114,7 +114,10 @@ abstract class CourseTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [

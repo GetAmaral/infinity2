@@ -199,26 +199,21 @@ abstract class CompanyInputDtoGenerated
     public ?string $taxId = null;
 
     #[Groups(['company:write'])]
+    public ?\DateTimeImmutable $nextActivityDate = null;
+
+    #[Groups(['company:write'])]
     public string $timeZone = 'UTC';
-
-    #[Assert\Length(max: 500)]
-    #[Groups(['company:write'])]
-    public ?string $tags = null;
-
-    #[Groups(['company:write'])]
-    public ?bool $public = null;
-
-    #[Assert\Length(max: 50)]
-    #[Groups(['company:write'])]
-    public ?string $leadStatus = null;
-
-    #[Assert\Length(max: 255)]
-    #[Groups(['company:write'])]
-    public ?string $companyDomain = null;
 
     #[Assert\Length(max: 100)]
     #[Groups(['company:write'])]
     public ?string $stateProvince = null;
+
+    #[Groups(['company:write'])]
+    public ?\DateTimeImmutable $lastActivityDate = null;
+
+    #[Assert\Length(max: 500)]
+    #[Groups(['company:write'])]
+    public ?string $tags = null;
 
     #[Assert\Length(max: 100)]
     #[Groups(['company:write'])]
@@ -228,17 +223,22 @@ abstract class CompanyInputDtoGenerated
     public ?int $numberOfAssociatedDeals = null;
 
     #[Groups(['company:write'])]
-    public ?\DateTimeImmutable $lastActivityDate = null;
+    public ?int $numberOfAssociatedContacts = null;
 
     #[Groups(['company:write'])]
-    public ?\DateTimeImmutable $nextActivityDate = null;
+    public ?bool $public = null;
+
+    #[Assert\Length(max: 50)]
+    #[Groups(['company:write'])]
+    public ?string $leadStatus = null;
 
     #[Assert\Length(max: 50)]
     #[Groups(['company:write'])]
     public ?string $lifecycleStage = null;
 
+    #[Assert\Length(max: 255)]
     #[Groups(['company:write'])]
-    public ?int $numberOfAssociatedContacts = null;
+    public ?string $companyDomain = null;
 
 
     // Getters and Setters
@@ -753,6 +753,16 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
+    public function getNextActivityDate(): ?\DateTimeImmutable    {
+        return $this->nextActivityDate;
+    }
+
+    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
+    {
+        $this->nextActivityDate = $nextActivityDate;
+        return $this;
+    }
+
     public function getTimeZone(): string    {
         return $this->timeZone;
     }
@@ -763,46 +773,6 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getTags(): ?string    {
-        return $this->tags;
-    }
-
-    public function setTags(?string $tags): self
-    {
-        $this->tags = $tags;
-        return $this;
-    }
-
-    public function getPublic(): ?bool    {
-        return $this->public;
-    }
-
-    public function setPublic(?bool $public): self
-    {
-        $this->public = $public;
-        return $this;
-    }
-
-    public function getLeadStatus(): ?string    {
-        return $this->leadStatus;
-    }
-
-    public function setLeadStatus(?string $leadStatus): self
-    {
-        $this->leadStatus = $leadStatus;
-        return $this;
-    }
-
-    public function getCompanyDomain(): ?string    {
-        return $this->companyDomain;
-    }
-
-    public function setCompanyDomain(?string $companyDomain): self
-    {
-        $this->companyDomain = $companyDomain;
-        return $this;
-    }
-
     public function getStateProvince(): ?string    {
         return $this->stateProvince;
     }
@@ -810,6 +780,26 @@ abstract class CompanyInputDtoGenerated
     public function setStateProvince(?string $stateProvince): self
     {
         $this->stateProvince = $stateProvince;
+        return $this;
+    }
+
+    public function getLastActivityDate(): ?\DateTimeImmutable    {
+        return $this->lastActivityDate;
+    }
+
+    public function setLastActivityDate(?\DateTimeImmutable $lastActivityDate): self
+    {
+        $this->lastActivityDate = $lastActivityDate;
+        return $this;
+    }
+
+    public function getTags(): ?string    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): self
+    {
+        $this->tags = $tags;
         return $this;
     }
 
@@ -833,23 +823,33 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getLastActivityDate(): ?\DateTimeImmutable    {
-        return $this->lastActivityDate;
+    public function getNumberOfAssociatedContacts(): ?int    {
+        return $this->numberOfAssociatedContacts;
     }
 
-    public function setLastActivityDate(?\DateTimeImmutable $lastActivityDate): self
+    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
     {
-        $this->lastActivityDate = $lastActivityDate;
+        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
         return $this;
     }
 
-    public function getNextActivityDate(): ?\DateTimeImmutable    {
-        return $this->nextActivityDate;
+    public function getPublic(): ?bool    {
+        return $this->public;
     }
 
-    public function setNextActivityDate(?\DateTimeImmutable $nextActivityDate): self
+    public function setPublic(?bool $public): self
     {
-        $this->nextActivityDate = $nextActivityDate;
+        $this->public = $public;
+        return $this;
+    }
+
+    public function getLeadStatus(): ?string    {
+        return $this->leadStatus;
+    }
+
+    public function setLeadStatus(?string $leadStatus): self
+    {
+        $this->leadStatus = $leadStatus;
         return $this;
     }
 
@@ -863,13 +863,13 @@ abstract class CompanyInputDtoGenerated
         return $this;
     }
 
-    public function getNumberOfAssociatedContacts(): ?int    {
-        return $this->numberOfAssociatedContacts;
+    public function getCompanyDomain(): ?string    {
+        return $this->companyDomain;
     }
 
-    public function setNumberOfAssociatedContacts(?int $numberOfAssociatedContacts): self
+    public function setCompanyDomain(?string $companyDomain): self
     {
-        $this->numberOfAssociatedContacts = $numberOfAssociatedContacts;
+        $this->companyDomain = $companyDomain;
         return $this;
     }
 }

@@ -35,9 +35,9 @@ abstract class ContactOutputDtoGenerated
      */
     public string|OrganizationOutputDto $organization;
 
-    public string $name;
-
     public string $firstName;
+
+    public string $name;
 
     public string $lastName;
 
@@ -85,13 +85,13 @@ abstract class ContactOutputDtoGenerated
      */
     public string|CompanyOutputDto $company;
 
-    public ?string $mobilePhone = null;
-
     /**
      * deals collection
      * @var DealOutputDto[]
      */
     public array $deals = [];
+
+    public ?string $mobilePhone = null;
 
     public ?string $title = null;
 
@@ -198,16 +198,6 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getFirstName(): string    {
         return $this->firstName;
     }
@@ -215,6 +205,16 @@ abstract class ContactOutputDtoGenerated
     public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -328,16 +328,6 @@ abstract class ContactOutputDtoGenerated
         return $this;
     }
 
-    public function getMobilePhone(): ?string    {
-        return $this->mobilePhone;
-    }
-
-    public function setMobilePhone(?string $mobilePhone): self
-    {
-        $this->mobilePhone = $mobilePhone;
-        return $this;
-    }
-
     public function getDeals(): array    {
         return $this->deals;
     }
@@ -345,6 +335,16 @@ abstract class ContactOutputDtoGenerated
     public function setDeals(array $deals): self
     {
         $this->deals = $deals;
+        return $this;
+    }
+
+    public function getMobilePhone(): ?string    {
+        return $this->mobilePhone;
+    }
+
+    public function setMobilePhone(?string $mobilePhone): self
+    {
+        $this->mobilePhone = $mobilePhone;
         return $this;
     }
 

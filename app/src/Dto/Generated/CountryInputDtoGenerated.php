@@ -59,10 +59,10 @@ abstract class CountryInputDtoGenerated
     public ?string $officialName = null;
 
     #[Groups(['country:write'])]
-    public bool $active = true;
+    public ?string $subregion = null;
 
     #[Groups(['country:write'])]
-    public ?string $subregion = null;
+    public bool $active = true;
 
     #[Groups(['country:write'])]
     public ?string $latitude = null;
@@ -257,16 +257,6 @@ abstract class CountryInputDtoGenerated
         return $this;
     }
 
-    public function getActive(): bool    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
     public function getSubregion(): ?string    {
         return $this->subregion;
     }
@@ -274,6 +264,16 @@ abstract class CountryInputDtoGenerated
     public function setSubregion(?string $subregion): self
     {
         $this->subregion = $subregion;
+        return $this;
+    }
+
+    public function getActive(): bool    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
         return $this;
     }
 

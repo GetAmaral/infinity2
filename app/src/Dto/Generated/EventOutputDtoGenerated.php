@@ -14,10 +14,10 @@ use App\Dto\AttachmentOutputDto;
 use App\Dto\ReminderOutputDto;
 use App\Dto\EventResourceBookingOutputDto;
 use App\Dto\EventOutputDto;
-use App\Dto\MeetingDataOutputDto;
-use App\Dto\WorkingHourOutputDto;
 use App\Dto\HolidayOutputDto;
 use App\Dto\NotificationOutputDto;
+use App\Dto\WorkingHourOutputDto;
+use App\Dto\MeetingDataOutputDto;
 use App\Dto\ContactOutputDto;
 use App\Dto\CompanyOutputDto;
 use App\Dto\DealOutputDto;
@@ -120,18 +120,6 @@ abstract class EventOutputDtoGenerated
     public ?array $source = null;
 
     /**
-     * meetingDatas collection
-     * @var MeetingDataOutputDto[]
-     */
-    public array $meetingDatas = [];
-
-    /**
-     * workingHours collection
-     * @var WorkingHourOutputDto[]
-     */
-    public array $workingHours = [];
-
-    /**
      * holidays collection
      * @var HolidayOutputDto[]
      */
@@ -143,7 +131,19 @@ abstract class EventOutputDtoGenerated
      */
     public array $notifications = [];
 
+    /**
+     * workingHours collection
+     * @var WorkingHourOutputDto[]
+     */
+    public array $workingHours = [];
+
     public ?string $subject = null;
+
+    /**
+     * meetingDatas collection
+     * @var MeetingDataOutputDto[]
+     */
+    public array $meetingDatas = [];
 
     public string $status;
 
@@ -480,26 +480,6 @@ abstract class EventOutputDtoGenerated
         return $this;
     }
 
-    public function getMeetingDatas(): array    {
-        return $this->meetingDatas;
-    }
-
-    public function setMeetingDatas(array $meetingDatas): self
-    {
-        $this->meetingDatas = $meetingDatas;
-        return $this;
-    }
-
-    public function getWorkingHours(): array    {
-        return $this->workingHours;
-    }
-
-    public function setWorkingHours(array $workingHours): self
-    {
-        $this->workingHours = $workingHours;
-        return $this;
-    }
-
     public function getHolidays(): array    {
         return $this->holidays;
     }
@@ -520,6 +500,16 @@ abstract class EventOutputDtoGenerated
         return $this;
     }
 
+    public function getWorkingHours(): array    {
+        return $this->workingHours;
+    }
+
+    public function setWorkingHours(array $workingHours): self
+    {
+        $this->workingHours = $workingHours;
+        return $this;
+    }
+
     public function getSubject(): ?string    {
         return $this->subject;
     }
@@ -527,6 +517,16 @@ abstract class EventOutputDtoGenerated
     public function setSubject(?string $subject): self
     {
         $this->subject = $subject;
+        return $this;
+    }
+
+    public function getMeetingDatas(): array    {
+        return $this->meetingDatas;
+    }
+
+    public function setMeetingDatas(array $meetingDatas): self
+    {
+        $this->meetingDatas = $meetingDatas;
         return $this;
     }
 

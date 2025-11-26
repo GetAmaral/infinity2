@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Controller\Generated\PipelineControllerGenerated;
 use App\Entity\Pipeline;
+use App\Security\Voter\PipelineVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -110,4 +111,44 @@ final class PipelineController extends PipelineControllerGenerated
     // }
 
     // Add your custom controller methods here
+
+    /**
+     * Show kanban board for a pipeline
+     */
+    #[Route('/{id}/board', name: 'pipeline_board', methods: ['GET'])]
+    public function board(Pipeline $pipeline): Response
+    {
+        // Check permissions
+        $this->denyAccessUnlessGranted(PipelineVoter::VIEW, $pipeline);
+
+        // Calculate metrics
+        $activeDeals = $pipeline->getDeals()->filter(fn($d) => in_array($d->getDealStatus(), ['open', 'in_progress']));
+
+        $metrics = [
+            'totalPipelineValue' => $activeDeals->reduce(fn($sum, $d) => $sum + ($d->getExpectedAmount() ?? 0), 0),
+            'activeDealsCount' => $activeDeals->count(),
+            'avgCycleTime' => $pipeline->getAvgCycleTime(),
+            'forecastedRevenue' => $this->calculateForecast($activeDeals),
+        ];
+
+        return $this->render('pipeline/board.html.twig', [
+            'pipeline' => $pipeline,
+            'metrics' => $metrics,
+        ]);
+    }
+
+    /**
+     * Calculate probability-weighted forecast
+     */
+    private function calculateForecast($deals): float
+    {
+        $total = 0;
+        foreach ($deals as $deal) {
+            $probability = (float)($deal->getWinProbability() ??
+                          $deal->getCurrentStage()?->getProbability() ?? 0);
+            $amount = (float)($deal->getExpectedAmount() ?? 0);
+            $total += $amount * ($probability / 100);
+        }
+        return $total;
+    }
 }

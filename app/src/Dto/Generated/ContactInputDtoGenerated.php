@@ -31,12 +31,12 @@ abstract class ContactInputDtoGenerated
     #[Groups(['contact:write'])]
     public ?string $organization = null;
 
-    #[Groups(['contact:write'])]
-    public string $name;
-
     #[Assert\Length(max: 100)]
     #[Groups(['contact:write'])]
     public string $firstName;
+
+    #[Groups(['contact:write'])]
+    public string $name;
 
     #[Assert\Length(max: 100)]
     #[Groups(['contact:write'])]
@@ -176,16 +176,6 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getFirstName(): string    {
         return $this->firstName;
     }
@@ -193,6 +183,16 @@ abstract class ContactInputDtoGenerated
     public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -306,16 +306,6 @@ abstract class ContactInputDtoGenerated
         return $this;
     }
 
-    public function getMobilePhone(): ?string    {
-        return $this->mobilePhone;
-    }
-
-    public function setMobilePhone(?string $mobilePhone): self
-    {
-        $this->mobilePhone = $mobilePhone;
-        return $this;
-    }
-
     public function getDeals(): ?string    {
         return $this->deals;
     }
@@ -323,6 +313,16 @@ abstract class ContactInputDtoGenerated
     public function setDeals(?string $deals): self
     {
         $this->deals = $deals;
+        return $this;
+    }
+
+    public function getMobilePhone(): ?string    {
+        return $this->mobilePhone;
+    }
+
+    public function setMobilePhone(?string $mobilePhone): self
+    {
+        $this->mobilePhone = $mobilePhone;
         return $this;
     }
 

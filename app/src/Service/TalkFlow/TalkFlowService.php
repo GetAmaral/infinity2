@@ -6,6 +6,8 @@ namespace App\Service\TalkFlow;
 
 use App\Entity\Talk;
 use App\Entity\TreeFlow;
+use App\Repository\StepOutputRepository;
+use App\Service\Pipeline\DealMovementService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -13,7 +15,9 @@ class TalkFlowService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly StepOutputRepository $stepOutputRepository,
+        private readonly DealMovementService $dealMovementService
     ) {
     }
 
@@ -220,6 +224,9 @@ class TalkFlowService
         // Only set selectedOutput if there was an output
         if ($selectedOutputSlug !== null) {
             $talkFlow[$slug]['steps'][$stepSlug]['selectedOutput'] = $selectedOutputSlug;
+
+            // Handle pipeline stage movement if output has one
+            $this->handlePipelineStageMovement($talk, $selectedOutputSlug);
         }
 
         // Move to next step (null means flow is complete)
@@ -388,5 +395,52 @@ class TalkFlowService
 
         // If no outputs, this is the end
         return empty($outputs);
+    }
+
+    /**
+     * Handle automatic deal movement when output with pipeline stage is selected
+     */
+    private function handlePipelineStageMovement(Talk $talk, string $outputSlug): void
+    {
+        // Check if talk has an associated deal
+        $deal = $talk->getDeal();
+        if (!$deal) {
+            return;
+        }
+
+        // Find the StepOutput by slug
+        $stepOutput = $this->stepOutputRepository->findOneBy(['slug' => $outputSlug]);
+        if (!$stepOutput) {
+            $this->logger->warning('StepOutput not found by slug', [
+                'output_slug' => $outputSlug,
+                'talk_id' => $talk->getId()->toRfc4122(),
+            ]);
+            return;
+        }
+
+        // Check if output has a pipeline stage
+        $pipelineStage = $stepOutput->getPipelineStage();
+        if (!$pipelineStage) {
+            return;
+        }
+
+        try {
+            // Move deal to the pipeline stage
+            $this->dealMovementService->moveDealToStage($deal, $pipelineStage);
+
+            $this->logger->info('Deal automatically moved to pipeline stage via TalkFlow output', [
+                'talk_id' => $talk->getId()->toRfc4122(),
+                'deal_id' => $deal->getId()->toRfc4122(),
+                'output_slug' => $outputSlug,
+                'pipeline_stage' => $pipelineStage->getName(),
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to move deal to pipeline stage', [
+                'talk_id' => $talk->getId()->toRfc4122(),
+                'deal_id' => $deal->getId()->toRfc4122(),
+                'output_slug' => $outputSlug,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

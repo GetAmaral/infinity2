@@ -40,13 +40,13 @@ abstract class ContactGenerated extends EntityBase
     protected Organization $organization;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    protected string $name;
-
-    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\Length(max: 100)]
     protected string $firstName;
+
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    protected string $name;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 100)]
@@ -97,12 +97,12 @@ abstract class ContactGenerated extends EntityBase
     protected Company $company;
 
     #[Groups(['contact:read', 'contact:write'])]
-    #[ORM\Column(type: 'string', length: 25, nullable: true)]
-    protected ?string $mobilePhone = null;
-
-    #[Groups(['contact:read', 'contact:write'])]
     #[ORM\ManyToMany(targetEntity: Deal::class, mappedBy: 'contacts', fetch: 'LAZY')]
     protected Collection $deals;
+
+    #[Groups(['contact:read', 'contact:write'])]
+    #[ORM\Column(type: 'string', length: 25, nullable: true)]
+    protected ?string $mobilePhone = null;
 
     #[Groups(['contact:read', 'contact:write'])]
     #[ORM\Column(type: 'string', length: 150, nullable: true)]
@@ -249,16 +249,6 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getName(): string    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getFirstName(): string    {
         return $this->firstName;
     }
@@ -266,6 +256,16 @@ abstract class ContactGenerated extends EntityBase
     public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getName(): string    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -413,16 +413,6 @@ abstract class ContactGenerated extends EntityBase
         return $this;
     }
 
-    public function getMobilePhone(): ?string    {
-        return $this->mobilePhone;
-    }
-
-    public function setMobilePhone(?string $mobilePhone): self
-    {
-        $this->mobilePhone = $mobilePhone;
-        return $this;
-    }
-
     /**
      * @return Collection<int, Deal>
      */
@@ -447,6 +437,16 @@ abstract class ContactGenerated extends EntityBase
                 $deal->setContacts(null);
             }
         }
+        return $this;
+    }
+
+    public function getMobilePhone(): ?string    {
+        return $this->mobilePhone;
+    }
+
+    public function setMobilePhone(?string $mobilePhone): self
+    {
+        $this->mobilePhone = $mobilePhone;
         return $this;
     }
 

@@ -6,6 +6,10 @@ namespace App\Controller;
 
 use App\Controller\Generated\DealControllerGenerated;
 use App\Entity\Deal;
+use App\Repository\PipelineStageRepository;
+use App\Security\Voter\DealVoter;
+use App\Service\Pipeline\DealMovementService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -110,4 +114,55 @@ final class DealController extends DealControllerGenerated
     // }
 
     // Add your custom controller methods here
+
+    /**
+     * API endpoint to move deal to different stage
+     */
+    #[Route('/{id}/move', name: 'api_deal_move', methods: ['POST'])]
+    public function moveDeal(
+        Deal $deal,
+        Request $request,
+        PipelineStageRepository $stageRepo,
+        DealMovementService $movementService
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
+        $stageId = $data['stageId'] ?? null;
+
+        if (!$stageId) {
+            return $this->json(['error' => 'Missing stageId'], 400);
+        }
+
+        $stage = $stageRepo->find($stageId);
+        if (!$stage) {
+            return $this->json(['error' => 'Stage not found'], 404);
+        }
+
+        // Check permissions
+        $this->denyAccessUnlessGranted(DealVoter::EDIT, $deal);
+
+        // Check if user can move this deal
+        if (!$deal->canBeMovedBy($this->getUser())) {
+            return $this->json(['error' => 'You cannot move this deal'], 403);
+        }
+
+        try {
+            $movementService->moveDealToStage($deal, $stage);
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Deal moved successfully',
+                'deal' => [
+                    'id' => $deal->getId()->toRfc4122(),
+                    'currentStage' => [
+                        'id' => $stage->getId()->toRfc4122(),
+                        'name' => $stage->getName(),
+                    ],
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'error' => 'Failed to move deal: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

@@ -1,0 +1,192 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pipeline.name }} - Pipeline{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Pipeline Kanban Board Styles - Inline */
+        .pipeline-board { display: flex; flex-direction: column; height: calc(100vh - 120px); background: #F8F9FA; border-radius: 12px; overflow: hidden; }
+        .pipeline-header { display: flex; align-items: center; justify-content: space-between; padding: 24px; background: white; border-bottom: 1px solid #E9ECEF; box-shadow: 0 1px 3px rgba(0,0,0,0.08); z-index: 10; }
+        .pipeline-header__title { font-size: 24px; font-weight: 700; color: #212529; margin: 0; display: flex; align-items: center; gap: 16px; }
+        .pipeline-header__metrics { display: flex; gap: 32px; font-size: 14px; }
+        .metric { display: flex; flex-direction: column; }
+        .metric__label { color: #868E96; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric__value { font-size: 20px; font-weight: 700; color: #212529; margin-top: 4px; }
+        .metric__value--positive { color: #51CF66; }
+        .pipeline-columns { display: flex; gap: 16px; padding: 24px; overflow-x: auto; flex: 1; scroll-behavior: smooth; }
+        .stage-column { flex: 0 0 320px; min-width: 320px; max-width: 320px; display: flex; flex-direction: column; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.3s; }
+        .stage-column.drop-zone--active { box-shadow: 0 4px 12px rgba(0,0,0,0.1), 0 0 0 2px #51CF66; }
+        .stage-column__header { padding: 20px; border-bottom: 2px solid #F1F3F5; }
+        .stage-column__header__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .stage-column__header__name { font-size: 16px; font-weight: 700; color: #212529; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stage-column__header__count { font-size: 14px; font-weight: 600; color: #868E96; padding: 4px 12px; background: #F1F3F5; border-radius: 12px; }
+        .stage-column__header__metrics { display: flex; justify-content: space-between; font-size: 13px; }
+        .stage-column__cards { flex: 1; padding: 16px; overflow-y: auto; min-height: 200px; }
+        .deal-card { background: white; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-left: 4px solid transparent; cursor: grab; transition: all 0.3s; position: relative; }
+        .deal-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .deal-card.is-dragging { opacity: 0.5; transform: rotate(3deg); }
+        .deal-card--hot { border-left-color: #FF6B6B; }
+        .deal-card--healthy { border-left-color: #51CF66; }
+        .deal-card--risk { border-left-color: #FAB005; }
+        .deal-card--cold { border-left-color: #748FFC; }
+        .deal-card__header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+        .deal-card__ai-score { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; font-weight: 800; font-size: 16px; flex-shrink: 0; color: white; }
+        .deal-card__ai-score--hot { background: linear-gradient(135deg, #FF6B6B, #FA5252); box-shadow: 0 4px 12px rgba(255,107,107,0.4); }
+        .deal-card__ai-score--healthy { background: linear-gradient(135deg, #51CF66, #40C057); box-shadow: 0 4px 12px rgba(81,207,102,0.4); }
+        .deal-card__ai-score--risk { background: linear-gradient(135deg, #FAB005, #F59F00); box-shadow: 0 4px 12px rgba(250,176,5,0.4); }
+        .deal-card__ai-score--cold { background: linear-gradient(135deg, #748FFC, #5C7CFA); box-shadow: 0 4px 12px rgba(116,143,252,0.4); }
+        .deal-card__title { flex: 1; margin-left: 12px; }
+        .deal-card__title h4 { font-size: 15px; font-weight: 700; color: #212529; margin: 0 0 4px 0; line-height: 1.3; }
+        .deal-card__title .company-name { font-size: 13px; color: #868E96; font-weight: 500; }
+        .deal-card__amount { font-size: 20px; font-weight: 800; color: #212529; margin-bottom: 12px; }
+        .deal-card__progress { margin-bottom: 12px; }
+        .deal-card__progress__bar { height: 6px; background: #E9ECEF; border-radius: 3px; overflow: hidden; position: relative; }
+        .deal-card__progress__bar__fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+        .deal-card__progress__label { display: flex; justify-content: space-between; margin-top: 4px; font-size: 12px; color: #868E96; font-weight: 600; }
+        .deal-card__meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 13px; color: #495057; flex-wrap: wrap; }
+        .meta-item { display: flex; align-items: center; gap: 4px; }
+        .deal-card__insights { margin-bottom: 12px; }
+        .insight-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px; margin-bottom: 8px; border-radius: 8px; font-size: 13px; line-height: 1.4; }
+        .insight-item--risk { background: rgba(250,176,5,0.1); color: #D08E00; border-left: 3px solid #FAB005; }
+        .deal-card__company-info { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 8px; background: #F8F9FA; border-radius: 8px; font-size: 12px; }
+        .info-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: white; border-radius: 4px; font-weight: 600; color: #495057; }
+        .deal-card__tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .tag { padding: 4px 10px; background: #E7F5FF; color: #1864AB; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+        .deal-card__recommendation { display: flex; align-items: center; gap: 8px; padding: 12px; background: linear-gradient(135deg, #667EEA, #764BA2); color: white; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
+        .deal-card__actions { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.3s; }
+        .deal-card:hover .deal-card__actions { opacity: 1; }
+        .deal-card__actions button { width: 28px; height: 28px; border-radius: 6px; border: none; background: white; color: #495057; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.15s; }
+        .deal-card__actions button:hover { background: #F8F9FA; transform: scale(1.1); }
+        .deal-detail-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .deal-detail-overlay.show { display: flex; align-items: center; justify-content: flex-end; }
+        .deal-detail-panel { width: 600px; height: 100%; background: white; box-shadow: -4px 0 12px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s; }
+        .deal-detail-panel.show { transform: translateX(0); }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @media (max-width: 768px) {
+            .pipeline-columns { padding: 16px; }
+            .stage-column { flex: 0 0 280px; min-width: 280px; max-width: 280px; }
+            .pipeline-header { flex-direction: column; gap: 16px; }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="pipeline-board"
+     data-controller="pipeline-board"
+     data-pipeline-board-pipeline-id-value="{{ pipeline.id }}"
+     data-pipeline-board-refresh-interval-value="30000">
+
+    {# Pipeline Header #}
+    <div class="pipeline-header" data-pipeline-board-target="metrics">
+        <div class="pipeline-header__title">
+            <i class="bi bi-{{ pipeline.icon ?? 'diagram-3' }}"></i>
+            <span>{{ pipeline.name }}</span>
+        </div>
+
+        <div class="pipeline-header__metrics">
+            <div class="metric">
+                <span class="metric__label">Total Value</span>
+                <span class="metric__value" data-value>
+                    {{ '$%s'|format((metrics.totalPipelineValue ?? 0)|number_format(0)) }}
+                </span>
+            </div>
+            <div class="metric">
+                <span class="metric__label">Forecast</span>
+                <span class="metric__value metric__value--positive" data-value>
+                    {{ '$%s'|format((metrics.forecastedRevenue ?? 0)|number_format(0)) }}
+                </span>
+            </div>
+            <div class="metric">
+                <span class="metric__label">Deals</span>
+                <span class="metric__value" data-value>
+                    {{ metrics.activeDealsCount ?? 0 }}
+                </span>
+            </div>
+            <div class="metric">
+                <span class="metric__label">Avg Cycle</span>
+                <span class="metric__value">
+                    {{ metrics.avgCycleTime ?? 0 }} days
+                </span>
+            </div>
+        </div>
+
+        <div class="pipeline-header__actions">
+            <button type="button"
+                    class="btn btn-primary"
+                    data-controller="modal-opener"
+                    data-action="click->modal-opener#open"
+                    data-modal-opener-url-value="{{ path('deal_new', {modal: 1}) }}">
+                <i class="bi bi-plus-lg"></i> New Deal
+            </button>
+        </div>
+    </div>
+
+    {# Stage Columns #}
+    <div class="pipeline-columns">
+        {% set stages = pipeline.stages|sort((a, b) => a.displayOrder <=> b.displayOrder) %}
+        {% for stage in stages %}
+            {% set stageDeals = stage.deals|filter(d => d.dealStatus in ['open', 'in_progress']) %}
+            {% set stageValue = stageDeals|reduce((sum, d) => sum + (d.expectedAmount ?? 0), 0) %}
+            {% set avgDays = stageDeals|length > 0 ? (stageDeals|reduce((sum, d) => sum + (d.daysInCurrentStage ?? 0), 0) / stageDeals|length) : 0 %}
+
+            <div class="stage-column"
+                 data-pipeline-board-target="column"
+                 data-stage-id="{{ stage.id }}">
+
+                <div class="stage-column__header" style="color: {{ stage.color ?? '#228BE6' }};">
+                    <div class="stage-column__header__top">
+                        <h3 class="stage-column__header__name">{{ stage.name }}</h3>
+                        <span class="stage-column__header__count" data-count>
+                            {{ stageDeals|length }}
+                        </span>
+                    </div>
+
+                    <div class="stage-column__header__metrics">
+                        <div class="metric">
+                            <span class="metric__label">Value</span>
+                            <span class="metric__value" data-value>
+                                ${{ stageValue|number_format(0) }}
+                            </span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Avg Days</span>
+                            <span class="metric__value">
+                                {{ avgDays|round }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stage-column__cards" data-cards>
+                    {% for deal in stageDeals %}
+                        {{ include('pipeline/_deal_card.html.twig', {deal: deal}) }}
+                    {% endfor %}
+
+                    {% if stageDeals|length == 0 %}
+                        <div class="text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-1"></i>
+                            <p class="mt-2">No deals in this stage</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{# Deal Detail Panel #}
+<div class="deal-detail-overlay"
+     data-controller="deal-detail"
+     data-deal-detail-target="overlay"
+     data-action="click->deal-detail#handleOverlayClick">
+
+    <div class="deal-detail-panel"
+         data-deal-detail-target="panel">
+        <div data-deal-detail-target="content">
+            {# Content loaded dynamically #}
+        </div>
+    </div>
+</div>
+{% endblock %}

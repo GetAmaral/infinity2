@@ -137,15 +137,15 @@ resources:
       officialName:
         description: "Official full country name"
         example: "United States of America"
+      subregion:
+        description: "UN geographic subregion"
+        example: "Northern America"
       active:
         description: "Whether country is active in the system"
         example: "1"
         # Advanced filters
         filters:
           - type: BooleanFilter
-      subregion:
-        description: "UN geographic subregion"
-        example: "Northern America"
       latitude:
         description: "Geographic latitude"
         example: "38.9072"

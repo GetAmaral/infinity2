@@ -9,11 +9,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use App\Entity\Pipeline;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -34,157 +33,21 @@ abstract class PipelineStageTypeGenerated extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $builder->add('name', TextType::class, [
+            'label' => 'Name',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+                'placeholder' => 'Enter name',
+            ],
+        ]);
+
         $builder->add('description', TextType::class, [
             'label' => 'Description',
             'required' => false,
             'attr' => [
                 'class' => 'form-input-modern',
                 'placeholder' => 'Enter description',
-            ],
-        ]);
-
-        $builder->add('probability', IntegerType::class, [
-            'label' => 'Probability',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        // Exclude nested collections when form is used inside another collection
-        if (empty($options['exclude_parent'])) {
-        $builder->add('dealStages', CollectionType::class, [
-            'label' => 'DealStages',
-            'required' => false,
-            'entry_type' => \App\Form\DealStageType::class,
-            'entry_options' => [
-                'label' => false,
-                'exclude_parent' => true,
-            ],
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'attr' => [
-                'data-controller' => 'live-collection',
-                'data-live-collection-allow-add-value' => '1',
-                'data-live-collection-allow-delete-value' => '1',
-                'data-live-collection-max-items-value' => '99',
-                'class' => 'form-input-modern',
-            ],
-        ]);
-        }
-
-        $builder->add('final', CheckboxType::class, [
-            'label' => 'Final',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('won', CheckboxType::class, [
-            'label' => 'Won',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('lost', CheckboxType::class, [
-            'label' => 'Lost',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('active', CheckboxType::class, [
-            'label' => 'Active',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('color', ColorType::class, [
-            'label' => 'Color',
-            'required' => true,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        // Exclude nested collections when form is used inside another collection
-        if (empty($options['exclude_parent'])) {
-        $builder->add('deals', CollectionType::class, [
-            'label' => 'Deals',
-            'required' => false,
-            'entry_type' => \App\Form\DealType::class,
-            'entry_options' => [
-                'label' => false,
-                'exclude_parent' => true,
-            ],
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'attr' => [
-                'data-controller' => 'live-collection',
-                'data-live-collection-allow-add-value' => '1',
-                'data-live-collection-allow-delete-value' => '1',
-                'data-live-collection-max-items-value' => '99',
-                'class' => 'form-input-modern',
-            ],
-        ]);
-        }
-
-        $builder->add('displayOrder', IntegerType::class, [
-            'label' => 'Display Order',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-            ],
-        ]);
-
-        $builder->add('migrationCriteria', TextType::class, [
-            'label' => 'MigrationCriteria',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-input-modern',
-                'placeholder' => 'Enter migrationcriteria',
-            ],
-        ]);
-
-        $builder->add('next', EntityType::class, [
-            'label' => 'Next',
-            'required' => false,
-            'class' => \App\Entity\PipelineStage::class,
-            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                $qb = $er->createQueryBuilder('e');
-
-                // Determine best field to sort by
-                $metadata = $er->getClassMetadata();
-                $sortField = 'id';
-                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
-                    if ($metadata->hasField($field)) {
-                        $sortField = $field;
-                        break;
-                    }
-                }
-
-                // Use LOWER() for case-insensitive sorting
-                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
-            },
-            'attr' => [
-                'data-controller' => 'relation-select',
-                'data-relation-select-entity-value' => 'PipelineStage',
-                'data-relation-select-route-value' => 'pipeline_stage_api_search_unrelated',
-                'data-relation-select-add-route-value' => 'pipeline_stage_new_modal',
-                'data-relation-select-multiple-value' => 'false',
-                'data-relation-select-one-to-one-value' => 'true',
-                'placeholder' => 'Select pipelinestage',
-                'class' => 'form-input-modern',
             ],
         ]);
 
@@ -207,7 +70,10 @@ abstract class PipelineStageTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -222,6 +88,62 @@ abstract class PipelineStageTypeGenerated extends AbstractType
             ],
         ]);
         }
+
+        $builder->add('displayOrder', IntegerType::class, [
+            'label' => 'Display Order',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('probability', IntegerType::class, [
+            'label' => 'Probability',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('color', ColorType::class, [
+            'label' => 'Color',
+            'required' => true,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('active', CheckboxType::class, [
+            'label' => 'Active',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('won', CheckboxType::class, [
+            'label' => 'Won',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('lost', CheckboxType::class, [
+            'label' => 'Lost',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
+
+        $builder->add('final', CheckboxType::class, [
+            'label' => 'Final',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-input-modern',
+            ],
+        ]);
 
         $builder->add('previous', EntityType::class, [
             'label' => 'Previous',
@@ -240,7 +162,10 @@ abstract class PipelineStageTypeGenerated extends AbstractType
                     }
                 }
 
-                // Use LOWER() for case-insensitive sorting
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
                 return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
             },
             'attr' => [
@@ -255,38 +180,49 @@ abstract class PipelineStageTypeGenerated extends AbstractType
             ],
         ]);
 
-        $builder->add('stageName', TextType::class, [
-            'label' => 'Stage Name',
-            'required' => true,
+        $builder->add('next', EntityType::class, [
+            'label' => 'Next',
+            'required' => false,
+            'class' => \App\Entity\PipelineStage::class,
+            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                $qb = $er->createQueryBuilder('e');
+
+                // Determine best field to sort by
+                $metadata = $er->getClassMetadata();
+                $sortField = 'id';
+                foreach (['name', 'title', 'label', 'slug', 'subject'] as $field) {
+                    if ($metadata->hasField($field)) {
+                        $sortField = $field;
+                        break;
+                    }
+                }
+
+                // Use LOWER() for case-insensitive sorting (skip for UUID id fields)
+                if ($sortField === 'id') {
+                    return $qb->orderBy('e.id', 'ASC');
+                }
+                return $qb->orderBy('LOWER(e.' . $sortField . ')', 'ASC');
+            },
             'attr' => [
+                'data-controller' => 'relation-select',
+                'data-relation-select-entity-value' => 'PipelineStage',
+                'data-relation-select-route-value' => 'pipeline_stage_api_search_unrelated',
+                'data-relation-select-add-route-value' => 'pipeline_stage_new_modal',
+                'data-relation-select-multiple-value' => 'false',
+                'data-relation-select-one-to-one-value' => 'true',
+                'placeholder' => 'Select pipelinestage',
                 'class' => 'form-input-modern',
-                'placeholder' => 'Enter stage name',
             ],
         ]);
 
-        // Exclude nested collections when form is used inside another collection
-        if (empty($options['exclude_parent'])) {
-        $builder->add('tasks', CollectionType::class, [
-            'label' => 'Tasks',
+        $builder->add('migrationCriteria', TextType::class, [
+            'label' => 'MigrationCriteria',
             'required' => false,
-            'entry_type' => \App\Form\TaskType::class,
-            'entry_options' => [
-                'label' => false,
-                'exclude_parent' => true,
-            ],
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
             'attr' => [
-                'data-controller' => 'live-collection',
-                'data-live-collection-allow-add-value' => '1',
-                'data-live-collection-allow-delete-value' => '1',
-                'data-live-collection-max-items-value' => '99',
                 'class' => 'form-input-modern',
+                'placeholder' => 'Enter migrationcriteria',
             ],
         ]);
-        }
 
     }
 
