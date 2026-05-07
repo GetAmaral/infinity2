@@ -149,6 +149,7 @@ curl -k https://localhost/health/detailed | jq .
 |----------|-------------|
 | [VPS Deployment](docs/VPS_DEPLOYMENT.md) | Production VPS workflow, automated deployment |
 | [Production Deployment](docs/ProductionDeployment.md) | Full production setup, CI/CD, rollback |
+| [Rebuild from Scratch](docs/REBUILD_FROM_SCRATCH.md) | Resurrect prod VPS from git + local backup (after decommission) |
 
 ### Troubleshooting
 

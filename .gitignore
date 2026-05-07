@@ -159,6 +159,9 @@ composer.phar
 *.backup
 *.old
 
+# VPS decommission backups (DB dumps, var/, secrets, GPG keys — never commit)
+/backups/vps-prod/
+
 # API documentation generated files
 /api-docs/
 
