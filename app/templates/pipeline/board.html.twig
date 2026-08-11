@@ -1,73 +1,83 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ pipeline.name }} - Pipeline{% endblock %}
+{% block title %}{{ pipeline.name }} - {{ 'pipeline.board.title'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        /* Pipeline Kanban Board Styles - Inline */
-        .pipeline-board { display: flex; flex-direction: column; height: calc(100vh - 120px); background: #F8F9FA; border-radius: 12px; overflow: hidden; }
-        .pipeline-header { display: flex; align-items: center; justify-content: space-between; padding: 24px; background: white; border-bottom: 1px solid #E9ECEF; box-shadow: 0 1px 3px rgba(0,0,0,0.08); z-index: 10; }
-        .pipeline-header__title { font-size: 24px; font-weight: 700; color: #212529; margin: 0; display: flex; align-items: center; gap: 16px; }
-        .pipeline-header__metrics { display: flex; gap: 32px; font-size: 14px; }
-        .metric { display: flex; flex-direction: column; }
-        .metric__label { color: #868E96; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-        .metric__value { font-size: 20px; font-weight: 700; color: #212529; margin-top: 4px; }
-        .metric__value--positive { color: #51CF66; }
-        .pipeline-columns { display: flex; gap: 16px; padding: 24px; overflow-x: auto; flex: 1; scroll-behavior: smooth; }
-        .stage-column { flex: 0 0 320px; min-width: 320px; max-width: 320px; display: flex; flex-direction: column; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.3s; }
-        .stage-column.drop-zone--active { box-shadow: 0 4px 12px rgba(0,0,0,0.1), 0 0 0 2px #51CF66; }
-        .stage-column__header { padding: 20px; border-bottom: 2px solid #F1F3F5; }
-        .stage-column__header__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-        .stage-column__header__name { font-size: 16px; font-weight: 700; color: #212529; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stage-column__header__count { font-size: 14px; font-weight: 600; color: #868E96; padding: 4px 12px; background: #F1F3F5; border-radius: 12px; }
-        .stage-column__header__metrics { display: flex; justify-content: space-between; font-size: 13px; }
-        .stage-column__cards { flex: 1; padding: 16px; overflow-y: auto; min-height: 200px; }
-        .deal-card { background: white; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-left: 4px solid transparent; cursor: grab; transition: all 0.3s; position: relative; }
-        .deal-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
-        .deal-card.is-dragging { opacity: 0.5; transform: rotate(3deg); }
-        .deal-card--hot { border-left-color: #FF6B6B; }
-        .deal-card--healthy { border-left-color: #51CF66; }
-        .deal-card--risk { border-left-color: #FAB005; }
-        .deal-card--cold { border-left-color: #748FFC; }
-        .deal-card__header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-        .deal-card__ai-score { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; font-weight: 800; font-size: 16px; flex-shrink: 0; color: white; }
-        .deal-card__ai-score--hot { background: linear-gradient(135deg, #FF6B6B, #FA5252); box-shadow: 0 4px 12px rgba(255,107,107,0.4); }
-        .deal-card__ai-score--healthy { background: linear-gradient(135deg, #51CF66, #40C057); box-shadow: 0 4px 12px rgba(81,207,102,0.4); }
-        .deal-card__ai-score--risk { background: linear-gradient(135deg, #FAB005, #F59F00); box-shadow: 0 4px 12px rgba(250,176,5,0.4); }
-        .deal-card__ai-score--cold { background: linear-gradient(135deg, #748FFC, #5C7CFA); box-shadow: 0 4px 12px rgba(116,143,252,0.4); }
-        .deal-card__title { flex: 1; margin-left: 12px; }
-        .deal-card__title h4 { font-size: 15px; font-weight: 700; color: #212529; margin: 0 0 4px 0; line-height: 1.3; }
-        .deal-card__title .company-name { font-size: 13px; color: #868E96; font-weight: 500; }
-        .deal-card__amount { font-size: 20px; font-weight: 800; color: #212529; margin-bottom: 12px; }
-        .deal-card__progress { margin-bottom: 12px; }
-        .deal-card__progress__bar { height: 6px; background: #E9ECEF; border-radius: 3px; overflow: hidden; position: relative; }
-        .deal-card__progress__bar__fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
-        .deal-card__progress__label { display: flex; justify-content: space-between; margin-top: 4px; font-size: 12px; color: #868E96; font-weight: 600; }
-        .deal-card__meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 13px; color: #495057; flex-wrap: wrap; }
-        .meta-item { display: flex; align-items: center; gap: 4px; }
-        .deal-card__insights { margin-bottom: 12px; }
-        .insight-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px; margin-bottom: 8px; border-radius: 8px; font-size: 13px; line-height: 1.4; }
-        .insight-item--risk { background: rgba(250,176,5,0.1); color: #D08E00; border-left: 3px solid #FAB005; }
-        .deal-card__company-info { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 8px; background: #F8F9FA; border-radius: 8px; font-size: 12px; }
-        .info-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: white; border-radius: 4px; font-weight: 600; color: #495057; }
-        .deal-card__tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-        .tag { padding: 4px 10px; background: #E7F5FF; color: #1864AB; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
-        .deal-card__recommendation { display: flex; align-items: center; gap: 8px; padding: 12px; background: linear-gradient(135deg, #667EEA, #764BA2); color: white; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
-        .deal-card__actions { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.3s; }
+        /* Pipeline Kanban Board - Compact Design with Theme Support */
+        .pipeline-board { display: flex; flex-direction: column; height: calc(100vh - 60px); background: var(--luminai-dark-surface, #F1F3F5); overflow: hidden; }
+        .pipeline-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--luminai-card-bg, #fff); border-bottom: 1px solid var(--luminai-border, #DEE2E6); gap: 12px; flex-wrap: wrap; }
+        .pipeline-header__title { font-size: 14px; font-weight: 600; color: var(--luminai-text, #212529); margin: 0; display: flex; align-items: center; gap: 6px; }
+        .pipeline-header__title i { font-size: 14px; color: var(--luminai-primary, #6D28D9); }
+        .pipeline-header__metrics { display: flex; gap: 16px; font-size: 11px; }
+        .metric { display: flex; align-items: center; gap: 4px; }
+        .metric__label { color: var(--luminai-text-muted, #868E96); font-weight: 500; }
+        .metric__value { font-size: 12px; font-weight: 700; color: var(--luminai-text, #212529); }
+        .metric__value--positive { color: #37B24D; }
+        .pipeline-header__actions .btn { padding: 4px 10px; font-size: 12px; }
+        .pipeline-columns { display: flex; gap: 8px; padding: 8px; overflow-x: auto; flex: 1; }
+        .stage-column { flex: 0 0 240px; min-width: 240px; max-width: 240px; display: flex; flex-direction: column; background: var(--luminai-card-bg, #fff); border-radius: 6px; box-shadow: 0 1px 2px var(--luminai-shadow, rgba(0,0,0,0.06)); }
+        .stage-column.drop-zone--active { box-shadow: 0 0 0 2px #37B24D; }
+        .stage-column__header { padding: 8px 10px; border-bottom: 2px solid; background: var(--luminai-hover-bg, #FAFAFA); }
+        .stage-column__header__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+        .stage-column__header__name { font-size: 11px; font-weight: 700; color: var(--luminai-text, #495057); text-transform: uppercase; letter-spacing: 0.3px; }
+        .stage-column__header__count { font-size: 11px; font-weight: 600; color: var(--luminai-text-muted, #868E96); padding: 1px 6px; background: var(--luminai-border, #E9ECEF); border-radius: 8px; }
+        .stage-column__header__metrics { display: flex; justify-content: space-between; }
+        .stage-column__header__metrics .metric { flex-direction: column; align-items: flex-start; gap: 0; }
+        .stage-column__header__metrics .metric__label { font-size: 9px; color: var(--luminai-text-muted, #ADB5BD); }
+        .stage-column__header__metrics .metric__value { font-size: 11px; font-weight: 600; color: var(--luminai-text, #212529); }
+        .stage-column__cards { flex: 1; padding: 6px; overflow-y: auto; min-height: 100px; }
+        .stage-column__cards::-webkit-scrollbar { width: 4px; }
+        .stage-column__cards::-webkit-scrollbar-thumb { background: var(--luminai-border, #DEE2E6); border-radius: 2px; }
+
+        /* Compact Deal Cards */
+        .deal-card { background: var(--luminai-card-bg, #fff); border-radius: 4px; padding: 8px; margin-bottom: 6px; box-shadow: 0 1px 2px var(--luminai-shadow, rgba(0,0,0,0.05)); border-left: 3px solid transparent; cursor: pointer; transition: all 0.15s; position: relative; }
+        .deal-card:hover { box-shadow: 0 2px 6px var(--luminai-shadow, rgba(0,0,0,0.1)); background: var(--luminai-hover-bg, #f8f9fa); }
+        .deal-card--hot { border-left-color: #F03E3E; }
+        .deal-card--healthy { border-left-color: #37B24D; }
+        .deal-card--risk { border-left-color: #F59F00; }
+        .deal-card--cold { border-left-color: #4C6EF5; }
+        .deal-card__header { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px; }
+        .deal-card__ai-score { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-weight: 700; font-size: 10px; flex-shrink: 0; color: white; margin-top: 2px; }
+        .deal-card__ai-score--hot { background: #F03E3E; }
+        .deal-card__ai-score--healthy { background: #37B24D; }
+        .deal-card__ai-score--risk { background: #F59F00; }
+        .deal-card__ai-score--cold { background: #4C6EF5; }
+        .deal-card__title { flex: 1; min-width: 0; }
+        .deal-card__title h4 { font-size: 12px; font-weight: 600; color: var(--luminai-text, #212529); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; }
+        .deal-card__title .deal-card__amount { font-size: 13px; font-weight: 700; color: var(--luminai-text, #212529); display: block; }
+        .deal-card__contact { display: flex; flex-direction: column; gap: 2px; margin-bottom: 6px; font-size: 10px; }
+        .deal-card__contact .contact-name { color: var(--luminai-text, #495057); font-weight: 500; display: flex; align-items: center; gap: 3px; }
+        .deal-card__contact .company-name { color: var(--luminai-text-muted, #868E96); display: flex; align-items: center; gap: 3px; }
+        .deal-card__contact i { font-size: 9px; opacity: 0.7; }
+        .deal-card__message { background: var(--luminai-hover-bg, #f8f9fa); border-radius: 3px; padding: 4px 6px; margin-bottom: 6px; font-size: 10px; }
+        .deal-card__message .message-date { color: var(--luminai-text-muted, #868E96); font-size: 9px; display: block; margin-bottom: 2px; }
+        .deal-card__message .message-preview { color: var(--luminai-text-secondary, #495057); line-height: 1.3; display: block; }
+        .deal-card__meta { display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--luminai-text-muted, #868E96); flex-wrap: wrap; }
+        .deal-card__meta .meta-item { display: flex; align-items: center; gap: 2px; }
+        .deal-card__meta .meta-item i { font-size: 9px; }
+        .deal-card__actions { position: absolute; top: 4px; right: 4px; display: flex; gap: 2px; opacity: 0; transition: opacity 0.15s; }
         .deal-card:hover .deal-card__actions { opacity: 1; }
-        .deal-card__actions button { width: 28px; height: 28px; border-radius: 6px; border: none; background: white; color: #495057; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.15s; }
-        .deal-card__actions button:hover { background: #F8F9FA; transform: scale(1.1); }
-        .deal-detail-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .deal-card__actions button, .deal-card__actions .deal-card__action-btn { width: 20px; height: 20px; border-radius: 3px; border: none; background: var(--luminai-hover-bg, #F8F9FA); color: var(--luminai-text-muted, #495057); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; text-decoration: none; }
+        .deal-card__actions button:hover, .deal-card__actions .deal-card__action-btn:hover { background: var(--luminai-border, #E9ECEF); }
+        .deal-card__actions .deal-card__action-btn { color: #37B24D; }
+        .deal-card__actions .deal-card__action-btn--new { color: var(--luminai-text-muted, #868E96); }
+
+        /* Detail Panel */
+        .deal-detail-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--luminai-overlay-bg, rgba(0,0,0,0.4)); z-index: 1000; }
         .deal-detail-overlay.show { display: flex; align-items: center; justify-content: flex-end; }
-        .deal-detail-panel { width: 600px; height: 100%; background: white; box-shadow: -4px 0 12px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s; }
+        .deal-detail-panel { width: 480px; height: 100%; background: var(--luminai-card-bg, #fff); box-shadow: -2px 0 8px var(--luminai-shadow, rgba(0,0,0,0.1)); transform: translateX(100%); transition: transform 0.2s; overflow-y: auto; }
         .deal-detail-panel.show { transform: translateX(0); }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* Empty State */
+        .stage-empty { font-size: 11px; padding: 16px 8px; text-align: center; color: var(--luminai-text-muted, #868E96); }
+        .stage-empty i { font-size: 20px; opacity: 0.5; }
+        .stage-empty p { margin-top: 4px; }
+
         @media (max-width: 768px) {
-            .pipeline-columns { padding: 16px; }
-            .stage-column { flex: 0 0 280px; min-width: 280px; max-width: 280px; }
-            .pipeline-header { flex-direction: column; gap: 16px; }
+            .stage-column { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
+            .pipeline-header { padding: 6px 8px; }
         }
     </style>
 {% endblock %}
@@ -87,27 +97,27 @@
 
         <div class="pipeline-header__metrics">
             <div class="metric">
-                <span class="metric__label">Total Value</span>
+                <span class="metric__label">{{ 'pipeline.metrics.total_value'|trans }}</span>
                 <span class="metric__value" data-value>
                     {{ '$%s'|format((metrics.totalPipelineValue ?? 0)|number_format(0)) }}
                 </span>
             </div>
             <div class="metric">
-                <span class="metric__label">Forecast</span>
+                <span class="metric__label">{{ 'pipeline.metrics.forecast'|trans }}</span>
                 <span class="metric__value metric__value--positive" data-value>
                     {{ '$%s'|format((metrics.forecastedRevenue ?? 0)|number_format(0)) }}
                 </span>
             </div>
             <div class="metric">
-                <span class="metric__label">Deals</span>
+                <span class="metric__label">{{ 'pipeline.metrics.deals'|trans }}</span>
                 <span class="metric__value" data-value>
                     {{ metrics.activeDealsCount ?? 0 }}
                 </span>
             </div>
             <div class="metric">
-                <span class="metric__label">Avg Cycle</span>
+                <span class="metric__label">{{ 'pipeline.metrics.avg_cycle'|trans }}</span>
                 <span class="metric__value">
-                    {{ metrics.avgCycleTime ?? 0 }} days
+                    {{ 'pipeline.metrics.days'|trans({'%count%': metrics.avgCycleTime ?? 0}) }}
                 </span>
             </div>
         </div>
@@ -118,7 +128,7 @@
                     data-controller="modal-opener"
                     data-action="click->modal-opener#open"
                     data-modal-opener-url-value="{{ path('deal_new', {modal: 1}) }}">
-                <i class="bi bi-plus-lg"></i> New Deal
+                <i class="bi bi-plus-lg"></i> {{ 'pipeline.actions.new_deal'|trans }}
             </button>
         </div>
     </div>
@@ -145,13 +155,13 @@
 
                     <div class="stage-column__header__metrics">
                         <div class="metric">
-                            <span class="metric__label">Value</span>
+                            <span class="metric__label">{{ 'pipeline.stage.value'|trans }}</span>
                             <span class="metric__value" data-value>
                                 ${{ stageValue|number_format(0) }}
                             </span>
                         </div>
                         <div class="metric">
-                            <span class="metric__label">Avg Days</span>
+                            <span class="metric__label">{{ 'pipeline.stage.avg_days'|trans }}</span>
                             <span class="metric__value">
                                 {{ avgDays|round }}
                             </span>
@@ -165,9 +175,9 @@
                     {% endfor %}
 
                     {% if stageDeals|length == 0 %}
-                        <div class="text-center text-muted py-5">
-                            <i class="bi bi-inbox fs-1"></i>
-                            <p class="mt-2">No deals in this stage</p>
+                        <div class="stage-empty">
+                            <i class="bi bi-inbox"></i>
+                            <p>{{ 'pipeline.stage.empty'|trans }}</p>
                         </div>
                     {% endif %}
                 </div>

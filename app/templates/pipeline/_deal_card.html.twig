@@ -1,4 +1,5 @@
 {% set aiScoreClass = deal.isHotDeal ? 'hot' : (deal.isAtRisk ? 'risk' : (deal.aiScore >= 60 ? 'healthy' : 'cold')) %}
+{% set chatTalk = deal.chatTalk %}
 
 <div class="deal-card deal-card--{{ aiScoreClass }}"
      data-pipeline-board-target="card"
@@ -9,128 +10,54 @@
      data-owner-id="{{ deal.owner ? deal.owner.id : '' }}"
      data-action="click->deal-detail#open">
 
-    {# Header: AI Score + Title #}
+    {# Header: Title + Amount #}
     <div class="deal-card__header">
-        <div class="deal-card__ai-score deal-card__ai-score--{{ aiScoreClass }}">
-            {% if deal.aiScore %}
-                {{ deal.aiScore }}
-            {% else %}
-                🤖
-            {% endif %}
-        </div>
-
+        {% if deal.aiScore %}
+        <div class="deal-card__ai-score deal-card__ai-score--{{ aiScoreClass }}">{{ deal.aiScore }}</div>
+        {% endif %}
         <div class="deal-card__title">
             <h4>{{ deal.name }}</h4>
-            <span class="company-name">
-                <i class="bi bi-building"></i>
-                {{ deal.company ? deal.company.name : 'No Company' }}
-            </span>
+            <span class="deal-card__amount">${{ (deal.expectedAmount ?? 0)|number_format(0) }}</span>
         </div>
     </div>
 
-    {# Amount #}
-    <div class="deal-card__amount">
-        ${{ (deal.expectedAmount ?? 0)|number_format(0) }}
+    {# Contact & Company #}
+    <div class="deal-card__contact">
+        {% if deal.primaryContact %}
+        <span class="contact-name"><i class="bi bi-person-fill"></i> {{ deal.primaryContact.name }}</span>
+        {% endif %}
+        {% if deal.company %}
+        <span class="company-name"><i class="bi bi-building"></i> {{ deal.company.name }}</span>
+        {% endif %}
     </div>
 
-    {# Win Probability Progress Bar #}
-    {% if deal.winProbability %}
-        <div class="deal-card__progress">
-            <div class="deal-card__progress__bar">
-                <div class="deal-card__progress__bar__fill"
-                     style="width: {{ deal.winProbability }}%;
-                            background: linear-gradient(90deg,
-                                {{ deal.winProbability >= 75 ? '#51CF66' : (deal.winProbability >= 50 ? '#FAB005' : '#FF6B6B') }},
-                                {{ deal.winProbability >= 75 ? '#40C057' : (deal.winProbability >= 50 ? '#F59F00' : '#FA5252') }});">
-                </div>
-            </div>
-            <div class="deal-card__progress__label">
-                <span>Win Probability</span>
-                <span>{{ deal.winProbability|number_format(1) }}%</span>
-            </div>
-        </div>
+    {# Last Message Preview #}
+    {% if chatTalk and chatTalk.lastMessagePreview %}
+    <div class="deal-card__message">
+        <span class="message-date">{{ chatTalk.dateLastMessage ? chatTalk.dateLastMessage|date('d/m H:i') : '' }}</span>
+        <span class="message-preview">{{ chatTalk.lastMessagePreview|length > 40 ? chatTalk.lastMessagePreview|slice(0, 40) ~ '...' : chatTalk.lastMessagePreview }}</span>
+    </div>
     {% endif %}
 
-    {# Meta Information #}
+    {# Meta Information - Compact #}
     <div class="deal-card__meta">
-        <div class="meta-item">
-            <i class="bi bi-person-circle icon"></i>
-            {{ deal.owner ? deal.owner.name : 'Unassigned' }}
-        </div>
-        {% if deal.expectedClosureDate %}
-            <div class="meta-item">
-                <i class="bi bi-calendar-event icon"></i>
-                {{ deal.expectedClosureDate|date('M d') }}
-            </div>
-        {% endif %}
-        {% if deal.daysInCurrentStage %}
-            <div class="meta-item">
-                <i class="bi bi-clock icon"></i>
-                {{ deal.daysInCurrentStage }}d
-            </div>
-        {% endif %}
+        <span class="meta-item"><i class="bi bi-person-badge"></i> {{ deal.owner ? deal.owner.name|split(' ')[0] : ('pipeline.card.unassigned'|trans) }}</span>
+        {% if deal.expectedClosureDate %}<span class="meta-item"><i class="bi bi-calendar"></i> {{ deal.expectedClosureDate|date('d/m') }}</span>{% endif %}
+        {% if deal.daysInCurrentStage %}<span class="meta-item"><i class="bi bi-clock"></i> {{ deal.daysInCurrentStage|round }}d</span>{% endif %}
     </div>
-
-    {# AI Insights #}
-    {% if deal.riskFactors is defined and deal.riskFactors is iterable and deal.riskFactors|length > 0 %}
-        <div class="deal-card__insights">
-            <div class="insight-item insight-item--risk">
-                <span class="icon">⚠️</span>
-                <span>{{ deal.riskFactors[0] }}</span>
-            </div>
-        </div>
-    {% endif %}
-
-    {# Company Info Badges #}
-    {% if deal.company %}
-        <div class="deal-card__company-info">
-            {% if deal.company.companySize %}
-                <span class="info-badge">
-                    <i class="bi bi-people"></i>
-                    {{ deal.company.companySize }}
-                </span>
-            {% endif %}
-            {% if deal.company.industry %}
-                <span class="info-badge">
-                    <i class="bi bi-briefcase"></i>
-                    {{ deal.company.industry }}
-                </span>
-            {% endif %}
-        </div>
-    {% endif %}
-
-    {# Tags #}
-    {% if deal.tags is defined and deal.tags|length > 0 %}
-        <div class="deal-card__tags">
-            {% for tag in deal.tags|slice(0, 3) %}
-                <span class="tag" style="background: {{ tag.color }}20; color: {{ tag.color }};">
-                    {{ tag.name }}
-                </span>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    {# AI Recommendation #}
-    {% if deal.recommendedActions is defined and deal.recommendedActions is iterable and deal.recommendedActions|length > 0 %}
-        <div class="deal-card__recommendation">
-            <span class="icon">🎯</span>
-            <span>{{ deal.recommendedActions[0] }}</span>
-        </div>
-    {% endif %}
 
     {# Quick Actions (Show on hover) #}
     <div class="deal-card__actions">
+        {% if chatTalk %}
+        <a href="{{ path('chat_talk', {id: chatTalk.id}) }}" class="deal-card__action-btn" title="{{ 'pipeline.card.chat'|trans }}" data-action="click->pipeline-board#stopPropagation"><i class="bi bi-chat-dots-fill"></i></a>
+        {% else %}
+        <a href="{{ path('chat_new_from_deal', {id: deal.id}) }}" class="deal-card__action-btn deal-card__action-btn--new" title="{{ 'pipeline.card.new_chat'|trans }}" data-action="click->pipeline-board#stopPropagation"><i class="bi bi-chat-dots"></i></a>
+        {% endif %}
         <button type="button"
-                data-action="click->deal-detail#open"
-                data-deal-id="{{ deal.id }}"
-                title="View Details">
-            <i class="bi bi-eye"></i>
-        </button>
-        <button type="button"
-                data-action="click->pipeline-board#scoreDeal"
-                data-deal-id="{{ deal.id }}"
-                title="Re-analyze with AI">
-            <i class="bi bi-lightning"></i>
-        </button>
+                data-controller="modal-opener"
+                data-modal-opener-url-value="{{ path('deal_edit', {id: deal.id, modal: 1}) }}"
+                data-action="click->modal-opener#open click->pipeline-board#stopPropagation"
+                title="{{ 'pipeline.card.edit'|trans }}"><i class="bi bi-pencil"></i></button>
+        <button type="button" data-action="click->pipeline-board#scoreDeal click->pipeline-board#stopPropagation" data-deal-id="{{ deal.id }}" title="{{ 'pipeline.card.analyze'|trans }}"><i class="bi bi-lightning"></i></button>
     </div>
 </div>

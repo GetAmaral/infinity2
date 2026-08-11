@@ -80,11 +80,9 @@
                             </button>
                         </div>
                     {% else %}
-                        {{ form_widget(child, {
-                            'attr': {
-                                'class': 'form-input-modern' ~ (child.vars.errors|length > 0 ? ' input-error' : '')
-                            }
-                        }) }}
+                        {# Render without attr override to avoid array-to-string conversion errors #}
+                        {# Form theme handles styling via form_theme directive #}
+                        {{ form_widget(child) }}
                     {% endif %}
                 {% endif %}
                 {{ form_errors(child) }}

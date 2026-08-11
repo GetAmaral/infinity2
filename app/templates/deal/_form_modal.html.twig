@@ -2,8 +2,24 @@
 {# This template extends the generated one. Override specific blocks to customize. #}
 {# Generated template: deal/generated/_form_modal_generated.html.twig #}
 
-{% extends 'deal/generated/_form_modal_generated.html.twig' %}
+{% extends '_base_modal.html.twig' %}
 
-{# Uncomment to customize specific blocks: #}
-{# {% block page_icon %}<i class="bi bi-custom-icon text-neon fs-2 me-3"></i>{% endblock %} #}
-{# {% block grid_view_item_template %}...custom grid layout...{% endblock %} #}
+{# Apply custom form theme for error display #}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{# Configure modal appearance and behavior #}
+{% set entity_type = 'deal' %}
+{% set icon = 'currency-dollar' %}
+{% set form_action = (is_edit and deal.id) ? path('deal_edit', {id: deal.id}) : path('deal_new') %}
+{% set title_create = 'deal.modal.create.title'|trans({}, 'deal') %}
+{% set title_edit = 'deal.modal.edit.title'|trans({}, 'deal') %}
+{% set subtitle_create = 'deal.modal.create.subtitle'|trans({}, 'deal') %}
+{% set subtitle_edit = 'deal.modal.edit.subtitle'|trans({}, 'deal') %}
+{% set submit_key = is_edit ? 'button.save.changes' : 'deal.button.create.deal' %}
+{% set submit_domain = is_edit ? 'messages' : 'deal' %}
+{% set entity = deal %}
+
+{# Use form_rest() to render all fields safely #}
+{% block modal_body %}
+    {{ form_rest(form) }}
+{% endblock %}

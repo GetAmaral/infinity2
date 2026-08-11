@@ -2,3 +2,27 @@ form:
   validation:
     errors_found: 'Form has validation errors'
     please_correct: 'Please correct the errors below and try again.'
+
+pipeline:
+  board:
+    title: 'Pipeline'
+  metrics:
+    total_value: 'Total Value'
+    forecast: 'Forecast'
+    deals: 'Deals'
+    avg_cycle: 'Avg Cycle'
+    days: '%count% days'
+  actions:
+    new_deal: 'New Deal'
+  stage:
+    value: 'Value'
+    avg_days: 'Avg Days'
+    empty: 'No deals in this stage'
+  card:
+    view: 'View Details'
+    edit: 'Edit Deal'
+    analyze: 'Analyze with AI'
+    chat: 'Open Chat'
+    new_chat: 'Start New Chat'
+    unassigned: 'Unassigned'
+    no_company: 'No Company'

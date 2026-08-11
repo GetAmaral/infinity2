@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Deal;
 use App\Entity\Talk;
 use App\Entity\TalkMessage;
+use App\Entity\TalkType;
 use App\Repository\TalkMessageRepository;
 use App\Repository\TalkRepository;
 use App\Security\Voter\TalkVoter;
@@ -50,6 +52,48 @@ final class TalkChatController extends AbstractController
         return $this->render('chat/index.html.twig', [
             'currentTalk' => $talk,
         ]);
+    }
+
+    /**
+     * Create a new talk from a deal and redirect to chat
+     */
+    #[Route('/new/deal/{id}', name: 'chat_new_from_deal', methods: ['GET'])]
+    public function newFromDeal(Deal $deal): Response
+    {
+        $user = $this->getUser();
+
+        // Get first available TalkType
+        $talkType = $this->entityManager->getRepository(TalkType::class)->findOneBy([]);
+        if (!$talkType) {
+            throw $this->createNotFoundException('No TalkType configured. Please create a TalkType first.');
+        }
+
+        // Create new talk linked to deal and its primary contact
+        $talk = new Talk();
+        $talk->setOrganization($user->getOrganization());
+        $talk->setOwner($user);
+        $talk->setTalkType($talkType);
+        $talk->setDeal($deal);
+        $talk->setSubject($deal->getName() ?: 'Deal Chat');
+        $talk->setStatus(0); // 0 = open
+        $talk->setChannel(0); // 0 = internal
+        $talk->setMessageCount(0);
+        $talk->setDateStart(new \DateTimeImmutable());
+
+        // Link to primary contact if available
+        if ($deal->getPrimaryContact()) {
+            $talk->setContact($deal->getPrimaryContact());
+        }
+
+        // Link to company if available
+        if ($deal->getCompany()) {
+            $talk->setCompany($deal->getCompany());
+        }
+
+        $this->entityManager->persist($talk);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('chat_talk', ['id' => $talk->getId()]);
     }
 
     /**

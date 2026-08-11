@@ -54,11 +54,7 @@ export default class extends Controller {
         // Store original position for rollback
         this.originalParent = this.draggedCard.parentElement;
         this.originalNextSibling = this.draggedCard.nextSibling;
-
-        // Show drop zones
-        this.columnTargets.forEach(col => {
-            col.classList.add('drop-zone--active');
-        });
+        this.originalColumn = this.draggedCard.closest('[data-stage-id]');
 
         // Haptic feedback on mobile
         if (navigator.vibrate) {
@@ -83,21 +79,41 @@ export default class extends Controller {
         event.dataTransfer.dropEffect = 'move';
 
         const dropZone = event.currentTarget;
+        const column = dropZone.closest('[data-stage-id]');
+
         dropZone.classList.add('drag-over');
+
+        // Highlight only the hovered column (not the original one)
+        if (column && column !== this.originalColumn) {
+            column.classList.add('drop-zone--active');
+        }
     }
 
     handleDragLeave(event) {
-        event.currentTarget.classList.remove('drag-over');
+        const dropZone = event.currentTarget;
+        const column = dropZone.closest('[data-stage-id]');
+
+        dropZone.classList.remove('drag-over');
+
+        // Remove highlight from column
+        if (column) {
+            column.classList.remove('drop-zone--active');
+        }
     }
 
     async handleDrop(event) {
         event.preventDefault();
         event.currentTarget.classList.remove('drag-over');
 
+        // Remove highlight from dropped column
+        const targetColumn = event.currentTarget.closest('[data-stage-id]');
+        if (targetColumn) {
+            targetColumn.classList.remove('drop-zone--active');
+        }
+
         const dealId = event.dataTransfer.getData('dealId');
         if (!dealId || !this.draggedCard) return;
 
-        const targetColumn = event.currentTarget.closest('[data-stage-id]');
         const newStageId = targetColumn.dataset.stageId;
         const oldStageId = this.draggedCard.closest('[data-stage-id]').dataset.stageId;
 
@@ -422,6 +438,10 @@ export default class extends Controller {
         }
     }
 
+    stopPropagation(event) {
+        event.stopPropagation();
+    }
+
     startAutoRefresh() {
         if (this.refreshIntervalValue > 0) {
             this.refreshTimer = setInterval(() => {
@@ -457,22 +477,28 @@ export default class extends Controller {
             document.body.appendChild(container);
         }
 
+        // Get border color based on type
+        const borderColor = type === 'success' ? '#37B24D' : type === 'error' ? '#F03E3E' : '#228BE6';
+
         // Create toast
         const toast = document.createElement('div');
         toast.className = `toast toast--${type}`;
         toast.style.cssText = `
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 16px 24px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--luminai-card-bg, #fff);
+            color: var(--luminai-text, #212529);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px var(--luminai-shadow, rgba(0, 0, 0, 0.15));
             transform: translateX(400px);
             opacity: 0;
             transition: all 0.3s ease-out;
-            max-width: 400px;
-            border-left: 4px solid ${type === 'success' ? '#51CF66' : type === 'error' ? '#FF6B6B' : '#228BE6'};
+            max-width: 320px;
+            font-size: 13px;
+            border: 1px solid var(--luminai-border, rgba(0,0,0,0.1));
+            border-left: 3px solid ${borderColor};
         `;
         toast.textContent = message;
 
@@ -497,16 +523,16 @@ export default class extends Controller {
         const oldCardsContainer = oldColumn.querySelector('[data-cards]');
         const oldDealCards = oldCardsContainer.querySelectorAll('.deal-card');
 
-        let oldEmptyMessage = oldCardsContainer.querySelector('.text-center.text-muted');
+        let oldEmptyMessage = oldCardsContainer.querySelector('.stage-empty');
 
         if (oldDealCards.length === 0) {
             // Show empty message if it doesn't exist
             if (!oldEmptyMessage) {
                 oldEmptyMessage = document.createElement('div');
-                oldEmptyMessage.className = 'text-center text-muted py-5';
+                oldEmptyMessage.className = 'stage-empty';
                 oldEmptyMessage.innerHTML = `
-                    <i class="bi bi-inbox fs-1"></i>
-                    <p class="mt-2">No deals in this stage</p>
+                    <i class="bi bi-inbox"></i>
+                    <p>No deals in this stage</p>
                 `;
                 oldCardsContainer.appendChild(oldEmptyMessage);
             }
@@ -521,7 +547,7 @@ export default class extends Controller {
         const newCardsContainer = newColumn.querySelector('[data-cards]');
         const newDealCards = newCardsContainer.querySelectorAll('.deal-card');
 
-        let newEmptyMessage = newCardsContainer.querySelector('.text-center.text-muted');
+        let newEmptyMessage = newCardsContainer.querySelector('.stage-empty');
 
         if (newDealCards.length > 0 && newEmptyMessage) {
             // Remove empty message since we now have deals
@@ -530,21 +556,42 @@ export default class extends Controller {
     }
 
     updateColumnCounts(oldColumn, newColumn) {
-        // Update old column count
-        const oldCardsContainer = oldColumn.querySelector('[data-cards]');
-        const oldDealCards = oldCardsContainer.querySelectorAll('.deal-card');
-        const oldCountBadge = oldColumn.querySelector('[data-count]');
-        if (oldCountBadge) {
-            oldCountBadge.textContent = oldDealCards.length;
+        // Update old column
+        this.updateColumnMetrics(oldColumn);
+
+        // Update new column
+        this.updateColumnMetrics(newColumn);
+    }
+
+    updateColumnMetrics(column) {
+        const cardsContainer = column.querySelector('[data-cards]');
+        const dealCards = cardsContainer.querySelectorAll('.deal-card');
+
+        // Update count badge
+        const countBadge = column.querySelector('[data-count]');
+        if (countBadge) {
+            countBadge.textContent = dealCards.length;
         }
 
-        // Update new column count
-        const newCardsContainer = newColumn.querySelector('[data-cards]');
-        const newDealCards = newCardsContainer.querySelectorAll('.deal-card');
-        const newCountBadge = newColumn.querySelector('[data-count]');
-        if (newCountBadge) {
-            newCountBadge.textContent = newDealCards.length;
+        // Calculate and update total value
+        let totalValue = 0;
+        dealCards.forEach(card => {
+            const amount = parseFloat(card.dataset.amount) || 0;
+            totalValue += amount;
+        });
+
+        // Update value display
+        const valueDisplay = column.querySelector('.stage-column__header__metrics [data-value]');
+        if (valueDisplay) {
+            valueDisplay.textContent = '$' + this.formatNumber(totalValue);
         }
+    }
+
+    formatNumber(num) {
+        return new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(num);
     }
 
     disconnect() {

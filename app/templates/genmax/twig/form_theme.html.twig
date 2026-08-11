@@ -2,6 +2,39 @@
 
 {% use 'bootstrap_5_layout.html.twig' %}
 
+{# Override widget_attributes to filter out array values that cause rendering errors #}
+{% block widget_attributes -%}
+    id="{{ id }}" name="{{ full_name }}"
+    {%- if disabled %} disabled="disabled"{% endif -%}
+    {%- if required %} required="required"{% endif -%}
+    {%- for attrname, attrvalue in attr -%}
+        {%- if attrvalue is not iterable -%}
+            {{- " " -}}
+            {%- if attrname in ['placeholder', 'title'] -%}
+                {{- attrname }}="{{ translation_domain is same as(false) or attrvalue is null ? attrvalue : attrvalue|trans(attr_translation_parameters, translation_domain) }}"
+            {%- elseif attrvalue is same as(true) -%}
+                {{- attrname }}="{{ attrname }}"
+            {%- elseif attrvalue is not same as(false) -%}
+                {{- attrname }}="{{ attrvalue }}"
+            {%- endif -%}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endblock widget_attributes %}
+
+{# Override attributes block to filter out array values #}
+{% block attributes -%}
+    {%- for attrname, attrvalue in attr -%}
+        {%- if attrvalue is not iterable -%}
+            {{- " " -}}
+            {%- if attrvalue is same as(true) -%}
+                {{- attrname }}="{{ attrname }}"
+            {%- elseif attrvalue is not same as(false) -%}
+                {{- attrname }}="{{ attrvalue }}"
+            {%- endif -%}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endblock attributes %}
+
 {# Form row with modern Luminai styling #}
 {% block form_row -%}
     <div class="form-group-modern mb-3{% if errors|length > 0 %} has-error{% endif %}">
@@ -33,25 +66,46 @@
 
 {# Text inputs #}
 {% block form_widget_simple -%}
-    {% set attr = attr|merge({
-        'class': (attr.class|default('') ~ ' form-input-modern' ~ (errors|length > 0 ? ' is-invalid' : ''))|trim
+    {# Filter out any array attributes before merging to avoid array-to-string conversion #}
+    {% set safeAttr = {} %}
+    {% for key, value in attr %}
+        {% if value is not iterable %}
+            {% set safeAttr = safeAttr|merge({(key): value}) %}
+        {% endif %}
+    {% endfor %}
+    {% set attr = safeAttr|merge({
+        'class': (safeAttr.class|default('') ~ ' form-input-modern' ~ (errors|length > 0 ? ' is-invalid' : ''))|trim
     }) %}
     {{- parent() -}}
 {%- endblock form_widget_simple %}
 
 {# Textarea #}
 {% block textarea_widget -%}
-    {% set attr = attr|merge({
-        'class': (attr.class|default('') ~ ' form-input-modern' ~ (errors|length > 0 ? ' is-invalid' : ''))|trim,
-        'rows': attr.rows|default(3)
+    {# Filter out any array attributes before merging to avoid array-to-string conversion #}
+    {% set safeAttr = {} %}
+    {% for key, value in attr %}
+        {% if value is not iterable %}
+            {% set safeAttr = safeAttr|merge({(key): value}) %}
+        {% endif %}
+    {% endfor %}
+    {% set attr = safeAttr|merge({
+        'class': (safeAttr.class|default('') ~ ' form-input-modern' ~ (errors|length > 0 ? ' is-invalid' : ''))|trim,
+        'rows': safeAttr.rows|default(3)
     }) %}
     {{- parent() -}}
 {%- endblock textarea_widget %}
 
 {# Select #}
 {% block choice_widget_collapsed -%}
-    {% set attr = attr|merge({
-        'class': (attr.class|default('') ~ ' form-input-modern' ~ (errors|length > 0 ? ' is-invalid' : ''))|trim
+    {# Filter out any array attributes before merging to avoid array-to-string conversion #}
+    {% set safeAttr = {} %}
+    {% for key, value in attr %}
+        {% if value is not iterable %}
+            {% set safeAttr = safeAttr|merge({(key): value}) %}
+        {% endif %}
+    {% endfor %}
+    {% set attr = safeAttr|merge({
+        'class': (safeAttr.class|default('') ~ ' form-input-modern' ~ (errors|length > 0 ? ' is-invalid' : ''))|trim
     }) %}
     {{- parent() -}}
 {%- endblock choice_widget_collapsed %}

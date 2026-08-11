@@ -96,4 +96,39 @@ class Deal extends DealGenerated
 
         return false;
     }
+
+    /**
+     * Get the relevant talk for chat link
+     * Priority: 1) Open talk linked to deal, 2) Latest talk of primary contact
+     */
+    public function getChatTalk(): ?Talk
+    {
+        // First: check for talks directly linked to this deal
+        if ($this->talks && !$this->talks->isEmpty()) {
+            // Get the most recent talk linked to this deal
+            $dealTalks = $this->talks->toArray();
+            usort($dealTalks, fn($a, $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
+            return $dealTalks[0] ?? null;
+        }
+
+        // Second: get latest talk from primary contact
+        if ($this->primaryContact) {
+            $contactTalks = $this->primaryContact->getTalks();
+            if ($contactTalks && !$contactTalks->isEmpty()) {
+                $talks = $contactTalks->toArray();
+                usort($talks, fn($a, $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
+                return $talks[0] ?? null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if deal has a chat talk available
+     */
+    public function hasChatTalk(): bool
+    {
+        return $this->getChatTalk() !== null;
+    }
 }
